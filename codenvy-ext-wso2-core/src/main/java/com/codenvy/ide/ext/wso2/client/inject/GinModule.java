@@ -21,7 +21,11 @@ import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.google.gwt.inject.client.AbstractGinModule;
 
 
-/** @author Valeriy Svydenko */
+/**
+ * The module that contains configuration of the plugin.
+ *
+ * @author Valeriy Svydenko
+ */
 @ExtensionGinModule
 public class GinModule extends AbstractGinModule {
     /** {@inheritDoc} */

@@ -28,7 +28,7 @@ import com.google.inject.Singleton;
  * @author Valeriy Svydenko
  */
 @Singleton
-@Extension(title = "WSO2 Extension", version = "1.0.0-M1")
+@Extension(title = "Integration Flow WSO2 plugin", version = "1.0.0-M1")
 public class WSO2Extension {
 
     @Inject
