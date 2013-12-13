@@ -19,7 +19,13 @@ package com.codenvy.ide.ext.wso2.client;
 
 
 import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.template.TemplateAgent;
+import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.ext.wso2.client.wizard.project.CreateESBConfProjectPage;
+import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -30,8 +36,26 @@ import com.google.inject.Singleton;
 @Singleton
 @Extension(title = "Integration Flow WSO2 plugin", version = "1.0.0-M1")
 public class WSO2Extension {
+    public static final String WSO2_PROJECT_ID              = "WSO2Project";
+    public static final String ESB_CONFIGURATION_PROJECT_ID = "ESBConfigurationProject";
 
     @Inject
-    public WSO2Extension() {
+    public WSO2Extension(LocalizationConstant locale,
+                         ProjectTypeAgent projectTypeAgent,
+                         TemplateAgent templateAgent,
+                         Provider<CreateESBConfProjectPage> createESBConfProjectPage) {
+
+        projectTypeAgent.register(WSO2_PROJECT_ID,
+                                  locale.wso2ProjectTitle(),
+                                  null,
+                                  WSO2_PROJECT_ID,
+                                  Collections.<String>createArray());
+
+        templateAgent.register(ESB_CONFIGURATION_PROJECT_ID,
+                               locale.wso2ProjectEsbTitle(),
+                               null,
+                               WSO2_PROJECT_ID,
+                               Collections.<String>createArray(ESB_CONFIGURATION_PROJECT_ID),
+                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createESBConfProjectPage));
     }
 }
