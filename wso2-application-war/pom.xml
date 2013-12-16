@@ -297,14 +297,4 @@ from Codenvy S.A..
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <!-- Used for GWT SuperDevMode. -->
-        <profile>
-            <id>dev</id>
-            <properties>
-                <ide.module>com.codenvy.ide.IDE_dev</ide.module>
-            </properties>
-        </profile>
-    </profiles>
 </project>
