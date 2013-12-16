@@ -28,9 +28,9 @@ from Codenvy S.A..
         <artifactId>codenvy-ext-wso2-parent</artifactId>
         <version>1.0.0-M1-SNAPSHOT</version>
     </parent>
-    <name>Codenvy :: Packaging :: Application</name>
+    <name>WSO2 :: Packaging :: Application</name>
     <packaging>war</packaging>
-    <artifactId>codenvy-application-war</artifactId>
+    <artifactId>wso2-application-war</artifactId>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -55,24 +55,6 @@ from Codenvy S.A..
             <groupId>com.google.gwt.inject</groupId>
             <artifactId>gin</artifactId>
             <version>${gin.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-            <version>${junit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
-            <version>${mockito.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.gwt-test-utils</groupId>
-            <artifactId>gwt-test-utils</artifactId>
-            <scope>test</scope>
-            <version>${gwt-test-utils.version}</version>
         </dependency>
 
         <dependency>
@@ -132,11 +114,6 @@ from Codenvy S.A..
             <artifactId>codenvy-ext-java</artifactId>
             <version>${codenvy.version}</version>
         </dependency>
-        <!--dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-java-runtime</artifactId>
-            <version>${project.version}</version>
-        </dependency-->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-demo</artifactId>
@@ -147,11 +124,6 @@ from Codenvy S.A..
             <artifactId>codenvy-ext-css</artifactId>
             <version>${codenvy.version}</version>
         </dependency>
-        <!--  <dependency>
-              <groupId>com.codenvy.ide</groupId>
-              <artifactId>codenvy-ext-git</artifactId>
-              <version>${project.version}</version>
-          </dependency>-->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-github</artifactId>
@@ -167,7 +139,6 @@ from Codenvy S.A..
             <artifactId>codenvy-ext-tutorials</artifactId>
             <version>${codenvy.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-wso2-core</artifactId>

@@ -38,7 +38,7 @@
 
     <modules>
         <module>codenvy-ext-wso2-core</module>
-        <module>codenvy-application-war</module>
-        <module>codenvy-packaging-standalone-tomcat</module>
+        <module>wso2-application-war</module>
+        <module>wso2-packaging-standalone-tomcat</module>
     </modules>
 </project>

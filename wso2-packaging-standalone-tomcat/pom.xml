@@ -29,16 +29,16 @@ from Codenvy S.A..
         <version>1.0.0-M1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>codenvy-packaging-standalone-tomcat</artifactId>
+    <artifactId>wso2-packaging-standalone-tomcat</artifactId>
     <packaging>pom</packaging>
-    <name>Codenvy :: Assemblies Tomcat</name>
+    <name>WSO2 :: Assemblies Tomcat</name>
 
     <dependencies>
         <!-- WARs -->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-application-war</artifactId>
-            <version>${codenvy.version}</version>
+            <artifactId>wso2-application-war</artifactId>
+            <version>${project.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
@@ -488,10 +488,15 @@ from Codenvy S.A..
 
                                 <!-- Copy resources to re-build Codenvy IDE with 3rd-party extensions. -->
                                 <copy todir="${project.build.directory}/tomcat-ide/sdk-resources" overwrite="true">
-                                    <fileset dir="${project.build.directory}/../../codenvy-application-war" includes="src/**, pom.xml"/>
+                                    <fileset dir="${project.build.directory}/../../wso2-application-war" includes="src/**, pom.xml"/>
                                 </copy>
 
-                                <unwar src="${project.build.directory}/packager-conf/war/codenvy-application-war-${codenvy.version}.war"
+                                <copy todir="${project.build.directory}/tomcat-ide/sdk-resources" overwrite="true">
+                                    <fileset dir="${project.build.directory}/../../wso2-application-war" includes="src/**, pom.xml"/>
+                                </copy>
+
+
+                                <unwar src="${project.build.directory}/packager-conf/war/wso2-application-war-${project.version}.war"
                                        dest="${project.build.directory}/packager-conf/war/ide">
                                 </unwar>
 
