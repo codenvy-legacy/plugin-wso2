@@ -34,15 +34,15 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import org.mockito.testng.MockitoTestNGListener;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 
@@ -50,8 +50,6 @@ import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
 import static org.mockito.Answers.RETURNS_MOCKS;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyObject;
@@ -63,13 +61,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 
 /**
  * Testing {@link CreateESBConfProjectPage} functionality.
  *
  * @author Andrey Plotnikov
  */
-@RunWith(MockitoJUnitRunner.class)
+@Listeners(value = {MockitoTestNGListener.class})
 public class CreateESBConfProjectPageTest {
     public static final String SOME_TEXT = "some text";
 
@@ -93,7 +93,7 @@ public class CreateESBConfProjectPageTest {
     private DtoFactory               dtoFactory;
     private CreateESBConfProjectPage page;
 
-    @Before
+    @BeforeMethod
     public void setUp() throws Exception {
         when(wizardContext.getData(PROJECT_NAME)).thenReturn(SOME_TEXT);
         when(wizardContext.getData(PAAS)).thenReturn(paas);

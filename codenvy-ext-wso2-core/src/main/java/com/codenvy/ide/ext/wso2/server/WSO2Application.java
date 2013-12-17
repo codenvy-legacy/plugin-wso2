@@ -31,6 +31,6 @@ public class WSO2Application extends Application {
     /** {@inheritDoc} */
     @Override
     public Set<Class<?>> getClasses() {
-        return Collections.<Class<?>>singleton(TemplateService.class);
+        return Collections.<Class<?>>singleton(WSO2ProjectCreationService.class);
     }
 }

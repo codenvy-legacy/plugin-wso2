@@ -62,8 +62,8 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
  * @author Andrey Plotnikov
  */
 @Path("{ws-name}/templates")
-public class TemplateService {
-    private static final Log LOG = ExoLogger.getLogger(TemplateService.class);
+public class WSO2ProjectCreationService {
+    private static final Log LOG = ExoLogger.getLogger(WSO2ProjectCreationService.class);
 
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
@@ -71,7 +71,7 @@ public class TemplateService {
     @Path("esbconf")
     @POST
     @Consumes(APPLICATION_JSON)
-    public void createNotificationTutorialProject(ESBProjectInfo projectInfo) throws VirtualFileSystemException, IOException {
+    public void createESBConfProject(ESBProjectInfo projectInfo) throws VirtualFileSystemException, IOException {
         ArrayList<Property> properties = new ArrayList<>();
 
         addProperty("vfs:mimeType", Collections.singletonList("text/vnd.ideproject+directory"), properties);
@@ -140,7 +140,7 @@ public class TemplateService {
      *
      * @param name
      *         name that the project need to has
-     * @param tutorialPath
+     * @param templatePath
      *         place where zip file exists
      * @param properties
      *         properties those need to be applied
@@ -148,10 +148,10 @@ public class TemplateService {
      * @throws IOException
      */
     private void createProject(@NotNull String name,
-                               @NotNull String tutorialPath,
+                               @NotNull String templatePath,
                                @NotNull List<Property> properties) throws VirtualFileSystemException, IOException {
 
-        InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(tutorialPath);
+        InputStream templateStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(templatePath);
 
         if (templateStream == null) {
             throw new InvalidArgumentException("Can't find template");
