@@ -18,26 +18,49 @@
 package com.codenvy.ide.ext.wso2.client.wizard.project;
 
 import com.codenvy.ide.api.paas.PaaS;
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.Template;
 import com.codenvy.ide.api.ui.wizard.Wizard;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
+import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
+import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
+import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Answers;
+import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
+
+import java.lang.reflect.Method;
 
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.TEMPLATE;
-import static com.codenvy.ide.ext.wso2.client.WSO2Extension.ESB_CONFIGURATION_PROJECT_ID;
+import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
+import static org.mockito.Answers.RETURNS_MOCKS;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -54,7 +77,7 @@ public class CreateESBConfProjectPageTest {
     private Wizard.UpdateDelegate    delegate;
     @Mock
     private WizardContext            wizardContext;
-    @Mock(answer = Answers.RETURNS_MOCKS)
+    @Mock(answer = RETURNS_MOCKS)
     private CreateESBConfProjectView view;
     @Mock
     private LocalizationConstant     locale;
@@ -62,14 +85,23 @@ public class CreateESBConfProjectPageTest {
     private PaaS                     paas;
     @Mock
     private Template                 template;
+    @Mock
+    private WSO2ClientService        service;
+    @Mock
+    private ResourceProvider         resourceProvider;
+    @Mock
+    private DtoFactory               dtoFactory;
     private CreateESBConfProjectPage page;
 
     @Before
     public void setUp() throws Exception {
+        when(wizardContext.getData(PROJECT_NAME)).thenReturn(SOME_TEXT);
         when(wizardContext.getData(PAAS)).thenReturn(paas);
         when(wizardContext.getData(TEMPLATE)).thenReturn(template);
+        when(dtoFactory.createDto(Matchers.<Class<ESBProjectInfo>>anyObject()))
+                .thenReturn(mock(ESBProjectInfo.class, Mockito.RETURNS_MOCKS));
 
-        page = new CreateESBConfProjectPage(view, locale);
+        page = new CreateESBConfProjectPage(view, locale, service, resourceProvider, dtoFactory);
         page.setContext(wizardContext);
         page.setUpdateDelegate(delegate);
     }
@@ -225,8 +257,7 @@ public class CreateESBConfProjectPageTest {
     public void generalNoticeShouldBeShown() throws Exception {
         prepareTestWhenAllFieldsAreFilled();
 
-        assertEquals(SOME_TEXT, page.getNotice());
-        verify(locale).wizardProjectNoticeGeneral();
+        assertNull(page.getNotice());
     }
 
     @Test
@@ -246,8 +277,6 @@ public class CreateESBConfProjectPageTest {
         when(view.getParentGroupID()).thenReturn(SOME_TEXT);
         when(view.getParentArtifactID()).thenReturn(SOME_TEXT);
         when(view.getParentVersion()).thenReturn(SOME_TEXT);
-
-        when(locale.wizardProjectNoticeGeneral()).thenReturn(SOME_TEXT);
     }
 
     @Test
@@ -260,15 +289,6 @@ public class CreateESBConfProjectPageTest {
     }
 
     @Test
-    public void commitCallbackShouldBeExecuted() throws Exception {
-        WizardPage.CommitCallback callback = mock(WizardPage.CommitCallback.class);
-
-        page.commit(callback);
-
-        verify(callback).onSuccess();
-    }
-
-    @Test
     public void updateControlMethodShouldBeExecutedWhenSomeFieldContentIsChanged() throws Exception {
         page.onValueChanged();
 
@@ -276,10 +296,20 @@ public class CreateESBConfProjectPageTest {
     }
 
     @Test
+    public void enableStateShouldBeChangedForParentPomConfPanel() throws Exception {
+        reset(view);
+
+        page.onParentPomConfChanged();
+
+        verify(view).setParentPomConfEnable(anyBoolean());
+        verify(delegate).updateControls();
+    }
+
+    @Test
     public void pageShouldNotBeInContextWhenPaasProvidesTemplate() {
         when(paas.isProvideTemplate()).thenReturn(true);
 
-        assertEquals(page.inContext(), false);
+        assertEquals(false, page.inContext());
     }
 
     @Test
@@ -287,7 +317,7 @@ public class CreateESBConfProjectPageTest {
         when(paas.isProvideTemplate()).thenReturn(true);
         when(template.getId()).thenReturn(SOME_TEXT);
 
-        assertEquals(page.inContext(), false);
+        assertEquals(false, page.inContext());
     }
 
     @Test
@@ -295,6 +325,112 @@ public class CreateESBConfProjectPageTest {
         when(paas.isProvideTemplate()).thenReturn(false);
         when(template.getId()).thenReturn(ESB_CONFIGURATION_PROJECT_ID);
 
-        assertEquals(page.inContext(), true);
+        assertEquals(true, page.inContext());
+    }
+
+    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
+    @Test
+    public void onFailureMethodInCommitCallbackShouldBeExecutedWhenSomeProblemHappened() throws Exception {
+        final Throwable throwable = mock(Throwable.class);
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
+                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
+                onFailure.invoke(callback, throwable);
+                return callback;
+            }
+        }).when(service).createESBConfProject((ESBProjectInfo)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+
+        WizardPage.CommitCallback commitCallback = mock(WizardPage.CommitCallback.class);
+
+        page.commit(commitCallback);
+
+        verify(commitCallback).onFailure(throwable);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void onFailureMethodInCommitCallbackShouldBeExecutedWhenRequestExceptionHappened() throws Exception {
+        doThrow(RequestException.class).when(service)
+                .createESBConfProject((ESBProjectInfo)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+
+        WizardPage.CommitCallback commitCallback = mock(WizardPage.CommitCallback.class);
+
+        page.commit(commitCallback);
+
+        verify(commitCallback).onFailure((RequestException)anyObject());
+    }
+
+    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
+    @Test
+    public void onSuccessMethodInCommitCallbackShouldBeExecutedWhenGetProjectRquestIsFailed() throws Exception {
+        final Throwable throwable = mock(Throwable.class);
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, (Void)null);
+                return callback;
+            }
+        }).when(service).createESBConfProject((ESBProjectInfo)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
+                callback.onFailure(throwable);
+                return callback;
+            }
+        }).when(resourceProvider).getProject(anyString(), (AsyncCallback<Project>)anyObject());
+
+        WizardPage.CommitCallback commitCallback = mock(WizardPage.CommitCallback.class);
+
+        page.commit(commitCallback);
+
+        verify(commitCallback).onFailure(throwable);
+        verify(resourceProvider).getProject(eq(SOME_TEXT), (AsyncCallback<Project>)anyObject());
+    }
+
+    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
+    @Test
+    public void onSuccessMethodInCommitCallbackShouldBeExecutedWhenNoProblemHappened() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, (Void)null);
+                return callback;
+            }
+        }).when(service).createESBConfProject((ESBProjectInfo)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
+                callback.onSuccess(mock(Project.class));
+                return callback;
+            }
+        }).when(resourceProvider).getProject(anyString(), (AsyncCallback<Project>)anyObject());
+        when(view.isParentPomConfEnable()).thenReturn(true);
+
+        WizardPage.CommitCallback commitCallback = mock(WizardPage.CommitCallback.class);
+
+        page.commit(commitCallback);
+
+        verify(view).getArtifactID();
+        verify(view).getGroupID();
+        verify(view).getVersion();
+        verify(view).getParentArtifactID();
+        verify(view).getParentGroupID();
+        verify(view).getParentVersion();
+
+        verify(commitCallback).onSuccess();
+        verify(resourceProvider).getProject(eq(SOME_TEXT), (AsyncCallback<Project>)anyObject());
     }
 }

@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.wso2.client.wizard.project;
 
 import com.codenvy.ide.annotations.NotNull;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -153,8 +154,15 @@ public class CreateESBConfProjectViewImpl extends Composite implements CreateESB
         parentVersion.setText(version);
     }
 
+    @SuppressWarnings("UnusedParameters")
     @UiHandler({"groupID", "artifactID", "version", "parentGroupID", "parentArtifactID", "parentVersion"})
-    public void onValueChanged(@SuppressWarnings("UnusedParameters") KeyUpEvent event) {
+    public void onValueChanged(KeyUpEvent event) {
         delegate.onValueChanged();
+    }
+
+    @SuppressWarnings("UnusedParameters")
+    @UiHandler("parentPomConf")
+    public void onParentPomConfChanged(ClickEvent event) {
+        delegate.onParentPomConfChanged();
     }
 }

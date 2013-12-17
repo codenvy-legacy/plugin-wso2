@@ -34,6 +34,9 @@ public interface CreateESBConfProjectView extends View<CreateESBConfProjectView.
 
         /** Performs some actions in response to a user's changing information about pom file. */
         void onValueChanged();
+
+        /** Performs some actions in response to a user's changing enable state of parent pom configuration panel. */
+        void onParentPomConfChanged();
     }
 
     /** @return inputted group id */

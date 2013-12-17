@@ -50,9 +50,6 @@ public interface LocalizationConstant extends Messages {
     @Key("wizard.project.title")
     String wizardProjectTitle();
 
-    @Key("wizard.project.notice.general")
-    String wizardProjectNoticeGeneral();
-
     @Key("wizard.project.notice.emptyGroupId")
     String wizardProjectNoticeEmptyGroupId();
 

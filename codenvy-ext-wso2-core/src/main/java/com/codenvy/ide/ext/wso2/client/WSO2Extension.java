@@ -28,6 +28,9 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
+import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
+
 /**
  * Extension used to demonstrate the WSO2 plugins.
  *
@@ -36,9 +39,8 @@ import com.google.inject.Singleton;
 @Singleton
 @Extension(title = "Integration Flow WSO2 plugin", version = "1.0.0-M1")
 public class WSO2Extension {
-    public static final String WSO2_PROJECT_ID              = "WSO2Project";
-    public static final String ESB_CONFIGURATION_PROJECT_ID = "ESBConfigurationProject";
 
+    @SuppressWarnings("unchecked")
     @Inject
     public WSO2Extension(LocalizationConstant locale,
                          ProjectTypeAgent projectTypeAgent,

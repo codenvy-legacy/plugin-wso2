@@ -18,12 +18,21 @@
 package com.codenvy.ide.ext.wso2.client.wizard.project;
 
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
+import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
+import com.codenvy.ide.ext.wso2.shared.Constants;
+import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
+import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
-import static com.codenvy.ide.ext.wso2.client.WSO2Extension.ESB_CONFIGURATION_PROJECT_ID;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 
 /**
  * The wizard page provides creating an empty ESB configuration project. Also checks inputted information on the page.
@@ -33,13 +42,24 @@ import static com.codenvy.ide.ext.wso2.client.WSO2Extension.ESB_CONFIGURATION_PR
 public class CreateESBConfProjectPage extends AbstractTemplatePage implements CreateESBConfProjectView.ActionDelegate {
 
     private CreateESBConfProjectView view;
+    private WSO2ClientService        service;
+    private ResourceProvider         resourceProvider;
+    private DtoFactory               dtoFactory;
     private LocalizationConstant     locale;
 
     @Inject
-    public CreateESBConfProjectPage(CreateESBConfProjectView view, LocalizationConstant locale) {
-        super(locale.wizardProjectTitle(), null, ESB_CONFIGURATION_PROJECT_ID);
+    public CreateESBConfProjectPage(CreateESBConfProjectView view,
+                                    LocalizationConstant locale,
+                                    WSO2ClientService service,
+                                    ResourceProvider resourceProvider,
+                                    DtoFactory dtoFactory) {
+
+        super(locale.wizardProjectTitle(), null, Constants.ESB_CONFIGURATION_PROJECT_ID);
 
         this.view = view;
+        this.service = service;
+        this.resourceProvider = resourceProvider;
+        this.dtoFactory = dtoFactory;
         this.view.setDelegate(this);
         this.locale = locale;
 
@@ -87,7 +107,7 @@ public class CreateESBConfProjectPage extends AbstractTemplatePage implements Cr
             }
         }
 
-        return locale.wizardProjectNoticeGeneral();
+        return null;
     }
 
     /** {@inheritDoc} */
@@ -108,14 +128,60 @@ public class CreateESBConfProjectPage extends AbstractTemplatePage implements Cr
 
     /** {@inheritDoc} */
     @Override
-    public void commit(@NotNull CommitCallback callback) {
-        // TODO need to add creating project on server side. It must be fixed in WSOTWO-2
-        super.commit(callback);
+    public void commit(@NotNull final CommitCallback callback) {
+        final String projectName = wizardContext.getData(PROJECT_NAME);
+
+        ESBProjectInfo projectInfo = dtoFactory.createDto(ESBProjectInfo.class)
+                                               .withProjectName(projectName)
+                                               .withGroupID(view.getGroupID())
+                                               .withArtifactID(view.getArtifactID())
+                                               .withVersion(view.getVersion());
+
+        boolean parentPomConfEnable = view.isParentPomConfEnable();
+        projectInfo.setParentPomConf(parentPomConfEnable);
+        if (parentPomConfEnable) {
+            projectInfo = projectInfo.withParentGroupID(view.getParentGroupID())
+                                     .withParentArtifactID(view.getParentArtifactID())
+                                     .withParentVersion(view.getParentVersion());
+        }
+
+        try {
+            service.createESBConfProject(projectInfo, new AsyncRequestCallback<Void>() {
+                @Override
+                protected void onSuccess(Void aVoid) {
+                    resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
+                        @Override
+                        public void onSuccess(Project result) {
+                            callback.onSuccess();
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            callback.onFailure(caught);
+                        }
+                    });
+                }
+
+                @Override
+                protected void onFailure(Throwable throwable) {
+                    callback.onFailure(throwable);
+                }
+            });
+        } catch (RequestException e) {
+            callback.onFailure(e);
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void onValueChanged() {
+        delegate.updateControls();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onParentPomConfChanged() {
+        view.setParentPomConfEnable(view.isParentPomConfEnable());
         delegate.updateControls();
     }
 }

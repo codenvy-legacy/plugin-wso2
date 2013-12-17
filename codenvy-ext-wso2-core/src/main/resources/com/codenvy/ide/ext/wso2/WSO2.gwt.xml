@@ -30,4 +30,6 @@
     <inherits name="com.codenvy.ide.collections.Collections"/>
 
     <source path="client"/>
+    <source path='shared'/>
+
 </module>
