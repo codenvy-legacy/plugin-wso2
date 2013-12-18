@@ -34,6 +34,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
+import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -91,6 +92,7 @@ public class CreateESBConfProjectPageTest {
     private ResourceProvider         resourceProvider;
     @Mock
     private DtoFactory               dtoFactory;
+    @InjectMocks
     private CreateESBConfProjectPage page;
 
     @BeforeMethod
@@ -98,10 +100,10 @@ public class CreateESBConfProjectPageTest {
         when(wizardContext.getData(PROJECT_NAME)).thenReturn(SOME_TEXT);
         when(wizardContext.getData(PAAS)).thenReturn(paas);
         when(wizardContext.getData(TEMPLATE)).thenReturn(template);
+
         when(dtoFactory.createDto(Matchers.<Class<ESBProjectInfo>>anyObject()))
                 .thenReturn(mock(ESBProjectInfo.class, Mockito.RETURNS_MOCKS));
 
-        page = new CreateESBConfProjectPage(view, locale, service, resourceProvider, dtoFactory);
         page.setContext(wizardContext);
         page.setUpdateDelegate(delegate);
     }

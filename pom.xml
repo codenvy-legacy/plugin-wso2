@@ -36,6 +36,7 @@
         <codenvy.version>3.0.0-M5-SNAPSHOT</codenvy.version>
         <mockitong.version>0.3</mockitong.version>
         <testng.version>6.8</testng.version>
+        <everrest.assured.version>0.14</everrest.assured.version>
     </properties>
 
     <modules>

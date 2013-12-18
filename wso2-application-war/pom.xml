@@ -121,7 +121,7 @@ from Codenvy S.A..
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-css</artifactId>
+            <artifactId>codenvy-ext-web</artifactId>
             <version>${codenvy.version}</version>
         </dependency>
         <dependency>
@@ -252,7 +252,7 @@ from Codenvy S.A..
                         <configuration>
                             <tasks>
                                 <move todir="${project.build.directory}/${project.artifactId}-${project.version}/_app/javaParserWorker">
-                                    <fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/javaParserWorker" />
+                                    <fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/javaParserWorker"/>
                                 </move>
                             </tasks>
                         </configuration>

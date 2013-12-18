@@ -35,8 +35,8 @@ import org.apache.maven.model.Parent;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.codenvy.commons.env.EnvironmentContext.WORKSPACE_ID;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
@@ -63,7 +64,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
  */
 @Path("{ws-name}/templates")
 public class WSO2ProjectCreationService {
-    private static final Log LOG = ExoLogger.getLogger(WSO2ProjectCreationService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WSO2ProjectCreationService.class);
 
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
@@ -117,7 +118,7 @@ public class WSO2ProjectCreationService {
 
     /** @return virtual file system id */
     private String getVfsID() {
-        return (String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
+        return (String)EnvironmentContext.getCurrent().getVariable(WORKSPACE_ID);
     }
 
     /**
