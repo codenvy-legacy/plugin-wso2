@@ -1,0 +1,221 @@
+/*
+ * CODENVY CONFIDENTIAL
+ * __________________
+ * 
+ *  [2012] - [2013] Codenvy, S.A. 
+ *  All Rights Reserved.
+ * 
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
+ */
+package com.codenvy.ide.ext.wso2.client.upload;
+
+import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
+import com.codenvy.ide.ui.Button;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.*;
+import com.google.inject.Inject;
+
+/**
+ * The implementation of {@link ImportFileView}.
+ *
+ * @author Valeriy Svydenko
+ */
+public class ImportFileViewImpl extends DialogBox implements ImportFileView {
+    interface ImportFileViewImplUiBinder extends UiBinder<Widget, ImportFileViewImpl> {
+    }
+
+    private ActionDelegate delegate;
+    @UiField
+    Button    btnCancel;
+    @UiField
+    Button    btnImport;
+    @UiField
+    FormPanel uploadForm;
+    @UiField
+    TextBox   url;
+    @UiField(provided = true)
+    final LocalizationConstant locale;
+    @UiField
+    RadioButton useUrl;
+    @UiField
+    RadioButton useLocalPath;
+    FileUpload file;
+
+    @Inject
+    public ImportFileViewImpl(ImportFileViewImplUiBinder ourUiBinder, LocalizationConstant locale) {
+        this.locale = locale;
+
+        Widget widget = ourUiBinder.createAndBindUi(this);
+
+        this.setText(locale.wso2ImportDialogTitle());
+        this.setWidget(widget);
+
+        bind();
+    }
+
+    /** Bind handlers. */
+    private void bind() {
+        uploadForm.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+
+            @Override
+            public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
+                delegate.onSubmitComplete(event.getResults());
+            }
+        });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getUrl() {
+        return url.getText();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setUrl(@NotNull String url) {
+        this.url.setText(url);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isUseUrl() {
+        return useUrl.getValue();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isUseLocalPath() {
+        return useLocalPath.getValue();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setUseLocalPath(boolean isUseLocalPath) {
+        useLocalPath.setValue(isUseLocalPath);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getFileName() {
+        return file.getFilename();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getTextUrl() {
+        return url.getText();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setEnabledImportButton(boolean enabled) {
+        btnImport.setEnabled(enabled);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setEnterUrlFieldEnabled(boolean enabled) {
+        url.setEnabled(enabled);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setAction(@NotNull String url) {
+        uploadForm.setAction(url);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setEncoding(@NotNull String encodingType) {
+        uploadForm.setEncoding(encodingType);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void submit() {
+        uploadForm.submit();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void close() {
+        this.hide();
+
+        uploadForm.remove(file);
+        file = null;
+
+        url.setText("");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void showDialog() {
+        file = new FileUpload();
+        file.setHeight("26px");
+        file.setWidth("100%");
+        file.addChangeHandler(new ChangeHandler() {
+            @Override
+            public void onChange(ChangeEvent changeEvent) {
+                delegate.onFileNameChanged();
+            }
+        });
+
+        uploadForm.add(file);
+
+        this.center();
+        this.show();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setDelegate(ActionDelegate actionDelegate) {
+        this.delegate = actionDelegate;
+    }
+
+    @SuppressWarnings("UnusedParameters")
+    @UiHandler("btnCancel")
+    public void onCancelClicked(ClickEvent event) {
+        delegate.onCancelClicked();
+    }
+
+    @SuppressWarnings("UnusedParameters")
+    @UiHandler("btnImport")
+    public void onImportClicked(ClickEvent event) {
+        delegate.onImportClicked();
+    }
+
+    @SuppressWarnings("UnusedParameters")
+    @UiHandler("useUrl")
+    public void onUseUrlClicked(ClickEvent event) {
+        file.setEnabled(false);
+        delegate.onUseUrlChosen();
+    }
+
+    @SuppressWarnings("UnusedParameters")
+    @UiHandler("useLocalPath")
+    public void onUseLocalPathClicked(ClickEvent event) {
+        file.setEnabled(true);
+        delegate.onUseLocalPathChosen();
+    }
+
+    @SuppressWarnings("UnusedParameters")
+    @UiHandler("url")
+    public void onUrlChanged(KeyUpEvent event) {
+        delegate.onUrlChanged();
+    }
+}

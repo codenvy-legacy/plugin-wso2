@@ -73,4 +73,31 @@ public interface LocalizationConstant extends Messages {
 
     @Key("wso2.project.esb.title")
     String wso2ProjectEsbTitle();
+
+    @Key("wso2.main.action.title")
+    String wso2MainActionTitle();
+
+    @Key("wso2.import.action.title")
+    String wso2ImportActionTitle();
+
+    @Key("wso2.import.action.description")
+    String wso2ImportActionDescription();
+
+    @Key("wso2.button.cancel")
+    String wso2ButtonCancel();
+
+    @Key("wso2.button.import")
+    String wso2ButtonImport();
+
+    @Key("wso2.file.name.title")
+    String wso2FileNameTitle();
+
+    @Key("wso2.use.url.label")
+    String wso2UseUrlLabel();
+
+    @Key("wso2.url.label.title")
+    String wso2UrlLabelTitle();
+
+    @Key("wso2.import.dialog.title")
+    String wso2ImportDialogTitle();
 }
