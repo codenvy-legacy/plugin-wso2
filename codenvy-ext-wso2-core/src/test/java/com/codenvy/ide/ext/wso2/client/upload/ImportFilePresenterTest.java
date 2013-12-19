@@ -29,13 +29,13 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import static org.mockito.Answers.RETURNS_MOCKS;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Testing {@link ImportFilePresenter} functionality.
+ * Here we're testing {@link ImportFilePresenter}.
  *
  * @author Valeriy Svydenko
  */

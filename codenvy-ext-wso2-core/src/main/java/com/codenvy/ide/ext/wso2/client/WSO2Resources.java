@@ -15,25 +15,22 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.wso2.shared;
+package com.codenvy.ide.ext.wso2.client;
+
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.TextResource;
 
 /**
- * Contains general constants that needed on client and server side.
+ * Resources for WSO2 plugin.
  *
- * @author Andrey Plotnikov
  * @author Dmitry Kuleshov
  */
-public interface Constants {
+public interface WSO2Resources extends ClientBundle {
 
-    String WSO2_PROJECT_ID              = "WSO2Project";
-    String ESB_CONFIGURATION_PROJECT_ID = "ESBConfigurationProject";
-    /**
-     * Dedicated mime type name for WSO2 ESB configuration files
-     */
-    String ESB_XML_MIME_TYPE = "text/xml-esb";
-    /**
-     * Extension name for WSO2 ESB configuration files
-     */
-    String ESB_XML_EXTENSION = "xml";
+    @Source("xml.js")
+    TextResource xmlParserJS();
 
+    @Source("xml_file.png")
+    ImageResource xmlFileIcon();
 }
