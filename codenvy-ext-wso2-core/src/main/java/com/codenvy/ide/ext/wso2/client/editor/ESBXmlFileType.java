@@ -15,29 +15,22 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.wso2.shared;
+package com.codenvy.ide.ext.wso2.client.editor;
+
+import com.google.inject.BindingAnnotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Contains general constants that needed on client and server side.
+ * The annotation for defining ESB xml file type.
  *
  * @author Andrey Plotnikov
- * @author Dmitry Kuleshov
  */
-public interface Constants {
-
-    String WSO2_PROJECT_ID              = "WSO2Project";
-    String ESB_CONFIGURATION_PROJECT_ID = "ESBConfigurationProject";
-
-    String WSO2_ACTION_GROUP       = "WSO2ActionGroup";
-    String WSO2_NEW_RESOURCE_GROUP = "WSO2NewResourceGroup";
-
-    /**
-     * Dedicated mime type name for WSO2 ESB configuration files
-     */
-    String ESB_XML_MIME_TYPE = "text/xml-esb";
-    /**
-     * Extension name for WSO2 ESB configuration files
-     */
-    String ESB_XML_EXTENSION = "xml";
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD, ElementType.TYPE})
+@BindingAnnotation
+public @interface ESBXmlFileType {
 }

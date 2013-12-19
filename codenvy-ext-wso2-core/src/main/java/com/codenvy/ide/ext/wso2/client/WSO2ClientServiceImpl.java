@@ -37,8 +37,9 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  * @author Andrey Plotnikov
  */
 public class WSO2ClientServiceImpl implements WSO2ClientService {
-    private static final String BASE_URL                = '/' + Utils.getWorkspaceName() + "/templates";
-    private static final String CREATE_ESB_CONF_PROJECT = BASE_URL + "/esbconf";
+
+    private static final String TEMPLATE_BASE_URL       = '/' + Utils.getWorkspaceName() + "/templates";
+    private static final String CREATE_ESB_CONF_PROJECT = TEMPLATE_BASE_URL + "/esbconf";
 
     private String     restContext;
     private Loader     loader;
@@ -55,6 +56,7 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
     @Override
     public void createESBConfProject(@NotNull ESBProjectInfo projectInfo, @NotNull AsyncRequestCallback<Void> callback)
             throws RequestException {
+
         String requestUrl = restContext + CREATE_ESB_CONF_PROJECT;
 
         loader.setMessage("Creating new project...");

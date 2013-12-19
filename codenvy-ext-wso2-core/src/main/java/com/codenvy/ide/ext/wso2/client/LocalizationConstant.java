@@ -100,4 +100,25 @@ public interface LocalizationConstant extends Messages {
 
     @Key("wso2.import.dialog.title")
     String wso2ImportDialogTitle();
+
+    @Key("wizard.file.endpoint.title")
+    String wizardFileEndpointTitle();
+
+    @Key("wizard.file.endpoint.notice.emptyName")
+    String wizardFileEndpointNoticeEmptyName();
+
+    @Key("wizard.file.endpoint.fields.name")
+    String wizardFileEndpointFieldsName();
+
+    @Key("wizard.file.endpoint.notice.fileExists")
+    String wizardFileEndpointNoticeFileExists();
+
+    @Key("wso2.actions.createEndpoint.title")
+    String wso2ActionsCreateEndpointTitle();
+
+    @Key("wso2.action.new")
+    String wso2ActionNew();
+
+    @Key("wizard.file.endpoint.notice.incorrectName")
+    String wizardFileEndpointNoticeIncorrectName();
 }

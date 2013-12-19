@@ -23,6 +23,7 @@ import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
+import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ext.wso2.shared.Constants;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
 import com.codenvy.ide.resources.model.Project;
@@ -33,6 +34,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
 
 /**
  * The wizard page provides creating an empty ESB configuration project. Also checks inputted information on the page.
@@ -52,9 +54,10 @@ public class CreateESBConfProjectPage extends AbstractTemplatePage implements Cr
                                     LocalizationConstant locale,
                                     WSO2ClientService service,
                                     ResourceProvider resourceProvider,
-                                    DtoFactory dtoFactory) {
+                                    DtoFactory dtoFactory,
+                                    WSO2Resources resources) {
 
-        super(locale.wizardProjectTitle(), null, Constants.ESB_CONFIGURATION_PROJECT_ID);
+        super(locale.wizardProjectTitle(), resources.esb_project_wizard(), ESB_CONFIGURATION_PROJECT_ID);
 
         this.view = view;
         this.service = service;

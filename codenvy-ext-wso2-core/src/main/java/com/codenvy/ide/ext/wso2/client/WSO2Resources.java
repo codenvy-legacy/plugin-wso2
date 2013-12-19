@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.wso2.client;
 
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
 
@@ -29,8 +30,21 @@ import com.google.gwt.resources.client.TextResource;
 public interface WSO2Resources extends ClientBundle {
 
     @Source("xml.js")
-    TextResource xmlParserJS();
+    DataResource xmlParserJS();
 
     @Source("xml_file.png")
     ImageResource xmlFileIcon();
+
+    @Source("endpoint-template.txt")
+    TextResource endpointTemplate();
+
+    @Source("endpoint-icon.png")
+    ImageResource endpointIcon();
+
+    @Source("endpoint-wizard.png")
+    ImageResource endpoint_wizard();
+
+    @Source("esb-project-wizard.png")
+    ImageResource esb_project_wizard();
+
 }

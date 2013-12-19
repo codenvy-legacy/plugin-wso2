@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.wso2.client;
+package com.codenvy.ide.ext.wso2.client.editor;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.wso2.shared.Constants;

@@ -23,18 +23,28 @@ import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.template.TemplateAgent;
-import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
+import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.ext.wso2.client.action.CreateEndpointAction;
+import com.codenvy.ide.ext.wso2.client.action.ImportFileAction;
+import com.codenvy.ide.ext.wso2.client.editor.ESBXmlFileType;
+import com.codenvy.ide.ext.wso2.client.editor.XmlEditorProvider;
 import com.codenvy.ide.ext.wso2.client.wizard.project.CreateESBConfProjectPage;
-import com.codenvy.ide.ext.wso2.shared.Constants;
 import com.codenvy.ide.resources.ProjectTypeAgent;
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.api.ui.action.Constraints.FIRST;
+import static com.codenvy.ide.api.ui.action.Constraints.LAST;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_MENU;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
+import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_ACTION_GROUP;
+import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_NEW_RESOURCE_GROUP;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
 import static com.google.gwt.core.client.ScriptInjector.TOP_WINDOW;
 
@@ -50,44 +60,44 @@ import static com.google.gwt.core.client.ScriptInjector.TOP_WINDOW;
 @Extension(title = "WSO2 Integration Flow Plugin", version = "1.0.0-M1")
 public class WSO2Extension {
 
-    @SuppressWarnings("unchecked")
     @Inject
     public WSO2Extension(LocalizationConstant locale,
                          ProjectTypeAgent projectTypeAgent,
                          TemplateAgent templateAgent,
                          Provider<CreateESBConfProjectPage> createESBConfProjectPage,
+                         ActionManager actionManager,
+                         ImportFileAction importFileAction,
+                         CreateEndpointAction createEndpointAction,
                          WSO2Resources wso2Resources,
                          ResourceProvider resourceProvider,
                          EditorRegistry editorRegistry,
                          XmlEditorProvider xmlEditorProvider,
-                         NewResourceAgent newResourceAgent,
-                         NewEsbXmlFileProvider newEsbXmlFileProvider) {
+                         @ESBXmlFileType FileType esbXmlFileType) {
 
         initProject(locale, projectTypeAgent, templateAgent, createESBConfProjectPage);
-        initXmlEditor(wso2Resources, resourceProvider, editorRegistry, xmlEditorProvider, newResourceAgent, newEsbXmlFileProvider);
+        initXmlEditor(wso2Resources, resourceProvider, editorRegistry, xmlEditorProvider, esbXmlFileType);
+        initActions(locale, actionManager, importFileAction, createEndpointAction);
     }
 
     private void initXmlEditor(WSO2Resources wso2Resources,
                                ResourceProvider resourceProvider,
                                EditorRegistry editorRegistry,
                                XmlEditorProvider xmlEditorProvider,
-                               NewResourceAgent newResourceAgent,
-                               NewEsbXmlFileProvider newEsbXmlFileProvider) {
-        // TODO change String to a Link
-        ScriptInjector.fromString(wso2Resources.xmlParserJS().getText()).setWindow(TOP_WINDOW).inject();
+                               FileType esbXmlFileType) {
 
-        FileType esbXmlFile = new FileType(wso2Resources.xmlFileIcon(), Constants.ESB_XML_MIME_TYPE, Constants.ESB_XML_EXTENSION);
-        resourceProvider.registerFileType(esbXmlFile);
+        ScriptInjector.fromUrl(wso2Resources.xmlParserJS().getSafeUri().asString()).setWindow(TOP_WINDOW).inject();
 
-        editorRegistry.register(esbXmlFile, xmlEditorProvider);
+        resourceProvider.registerFileType(esbXmlFileType);
 
-        newResourceAgent.register(newEsbXmlFileProvider);
+        editorRegistry.register(esbXmlFileType, xmlEditorProvider);
     }
 
+    @SuppressWarnings("unchecked")
     private void initProject(LocalizationConstant locale,
                              ProjectTypeAgent projectTypeAgent,
                              TemplateAgent templateAgent,
                              Provider<CreateESBConfProjectPage> createESBConfProjectPage) {
+
         projectTypeAgent.register(WSO2_PROJECT_ID,
                                   locale.wso2ProjectTitle(),
                                   null,
@@ -100,5 +110,32 @@ public class WSO2Extension {
                                WSO2_PROJECT_ID,
                                Collections.<String>createArray(ESB_CONFIGURATION_PROJECT_ID),
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createESBConfProjectPage));
+    }
+
+    private void initActions(LocalizationConstant locale,
+                             ActionManager actionManager,
+                             ImportFileAction importFileAction,
+                             CreateEndpointAction createEndpointAction) {
+
+        DefaultActionGroup wso2MainMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_MENU);
+        DefaultActionGroup wso2ContextMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
+
+        DefaultActionGroup wso2ActionGroup = new DefaultActionGroup(locale.wso2MainActionTitle(), false, actionManager);
+        actionManager.registerAction(WSO2_ACTION_GROUP, wso2ActionGroup);
+
+        DefaultActionGroup wso2NewGroup = new DefaultActionGroup(locale.wso2ActionNew(), true, actionManager);
+        actionManager.registerAction(WSO2_NEW_RESOURCE_GROUP, wso2ActionGroup);
+
+        wso2ActionGroup.add(wso2NewGroup);
+        wso2ActionGroup.add(importFileAction);
+        wso2ActionGroup.addSeparator();
+
+        wso2NewGroup.add(createEndpointAction);
+
+        wso2MainMenu.add(wso2ActionGroup, LAST);
+        wso2MainMenu.addSeparator();
+
+        wso2ContextMenu.add(wso2ActionGroup, FIRST);
+        wso2ContextMenu.addSeparator();
     }
 }

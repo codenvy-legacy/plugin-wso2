@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.wso2.client;
+package com.codenvy.ide.ext.wso2.client.editor;
 
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
@@ -32,15 +32,11 @@ import com.google.inject.Provider;
  * @author Dmitry Kuleshov
  */
 public class XmlEditorProvider implements EditorProvider {
+
     private final DocumentProvider            documentProvider;
     private       Provider<CodenvyTextEditor> editorProvider;
     private final NotificationManager         notificationManager;
 
-    /**
-     * @param documentProvider
-     * @param editorProvider
-     * @param notificationManager
-     */
     @Inject
     public XmlEditorProvider(DocumentProvider documentProvider,
                              Provider<CodenvyTextEditor> editorProvider,

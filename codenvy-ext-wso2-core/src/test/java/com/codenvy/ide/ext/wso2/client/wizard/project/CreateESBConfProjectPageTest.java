@@ -26,6 +26,7 @@ import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
+import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -92,6 +93,8 @@ public class CreateESBConfProjectPageTest {
     private ResourceProvider         resourceProvider;
     @Mock
     private DtoFactory               dtoFactory;
+    @Mock
+    private WSO2Resources            resources;
     @InjectMocks
     private CreateESBConfProjectPage page;
 
@@ -367,7 +370,7 @@ public class CreateESBConfProjectPageTest {
 
     @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
     @Test
-    public void onSuccessMethodInCommitCallbackShouldBeExecutedWhenGetProjectRquestIsFailed() throws Exception {
+    public void onSuccessMethodInCommitCallbackShouldBeExecutedWhenGetProjectRequestIsFailed() throws Exception {
         final Throwable throwable = mock(Throwable.class);
         doAnswer(new Answer() {
             @Override

@@ -2,8 +2,8 @@
  * CODENVY CONFIDENTIAL
  * __________________
  * 
- *  [2012] - [2013] Codenvy, S.A. 
- *  All Rights Reserved.
+ * [2012] - [2013] Codenvy, S.A. 
+ * All Rights Reserved.
  * 
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
@@ -18,67 +18,69 @@
 package com.codenvy.ide.ext.wso2.client.action;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.api.notification.Notification;
-import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.api.ui.wizard.DefaultWizard;
+import com.codenvy.ide.api.ui.wizard.DefaultWizardFactory;
+import com.codenvy.ide.api.ui.wizard.WizardDialog;
+import com.codenvy.ide.api.ui.wizard.WizardDialogFactory;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
-import com.codenvy.ide.ext.wso2.client.upload.ImportFilePresenter;
+import com.codenvy.ide.ext.wso2.client.WSO2Resources;
+import com.codenvy.ide.ext.wso2.client.wizard.files.CreateEndpointPage;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
-import com.google.gwt.inject.client.AsyncProvider;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import com.google.inject.Provider;
 
-import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
 /**
- * The action for importing configuration files.
+ * The action for creating a endpoint.
  *
- * @author Valeriy Svydenko
+ * @author Andrey Plotnikov
  */
-@Singleton
-public class ImportFileAction extends Action {
+public class CreateEndpointAction extends Action {
 
-    private AsyncProvider<ImportFilePresenter> importFilePresenter;
-    private NotificationManager                notificationManager;
-    private ResourceProvider                   resourceProvider;
+    private WizardDialog                 dialog;
+    private LocalizationConstant         locale;
+    private WizardDialogFactory          wizardDialogFactory;
+    private DefaultWizardFactory         defaultWizardFactory;
+    private Provider<CreateEndpointPage> createEndpointPage;
+    private ResourceProvider             resourceProvider;
 
     @Inject
-    public ImportFileAction(LocalizationConstant local,
-                            AsyncProvider<ImportFilePresenter> importFilePresenter,
-                            NotificationManager notificationManager,
-                            ResourceProvider resourceProvider) {
+    public CreateEndpointAction(LocalizationConstant locale,
+                                WizardDialogFactory wizardDialogFactory,
+                                DefaultWizardFactory defaultWizardFactory,
+                                Provider<CreateEndpointPage> createEndpointPage,
+                                WSO2Resources resources,
+                                ResourceProvider resourceProvider) {
 
-        super(local.wso2ImportActionTitle(), local.wso2ImportActionDescription(), null);
+        super(locale.wso2ActionsCreateEndpointTitle(), null, resources.endpointIcon());
 
-        this.importFilePresenter = importFilePresenter;
-        this.notificationManager = notificationManager;
+        this.locale = locale;
+        this.wizardDialogFactory = wizardDialogFactory;
+        this.defaultWizardFactory = defaultWizardFactory;
+        this.createEndpointPage = createEndpointPage;
         this.resourceProvider = resourceProvider;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-        importFilePresenter.get(new AsyncCallback<ImportFilePresenter>() {
-            @Override
-            public void onSuccess(ImportFilePresenter presenter) {
-                presenter.showDialog();
-            }
+    public void actionPerformed(ActionEvent e) {
+        if (dialog == null) {
+            DefaultWizard wizard = defaultWizardFactory.create(locale.wizardFileEndpointTitle());
+            wizard.addPage(createEndpointPage);
 
-            @Override
-            public void onFailure(Throwable caught) {
-                Notification notification = new Notification(caught.getMessage(), ERROR);
-                notificationManager.showNotification(notification);
-            }
-        });
+            dialog = wizardDialogFactory.create(wizard);
+        }
+
+        dialog.show();
     }
 
     /** {@inheritDoc} */
