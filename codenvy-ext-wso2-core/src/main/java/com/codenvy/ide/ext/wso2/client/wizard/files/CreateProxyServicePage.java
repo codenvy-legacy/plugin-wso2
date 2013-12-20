@@ -26,41 +26,39 @@ import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ext.wso2.client.editor.ESBXmlFileType;
 import com.codenvy.ide.ext.wso2.client.wizard.files.view.CreateResourceView;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
-import static com.codenvy.ide.ext.wso2.shared.Constants.SEQUENCE_FOLDER_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.PROXY_SERVICE_FOLDER_NAME;
 
 /**
- * The wizard page provides creating 'Sequence'. Also checks inputted information on the page.
+ * The wizard page provides creating 'Proxy Service'. Also checks inputted information on the page.
  *
  * @author Andrey Plotnikov
  */
-@Singleton
-public class CreateSequencePage extends AbstractCreateResourcePage {
+public class CreateProxyServicePage extends AbstractCreateResourcePage {
 
     private WSO2Resources resources;
 
     @Inject
-    public CreateSequencePage(CreateResourceView view,
-                              LocalizationConstant locale,
-                              ResourceProvider resourceProvider,
-                              WSO2Resources resources,
-                              EditorAgent editorAgent,
-                              @ESBXmlFileType FileType esbXmlFileType) {
+    public CreateProxyServicePage(CreateResourceView view,
+                                  LocalizationConstant locale,
+                                  ResourceProvider resourceProvider,
+                                  WSO2Resources resources,
+                                  EditorAgent editorAgent,
+                                  @ESBXmlFileType FileType esbXmlFileType) {
 
-        super(view, locale.wizardFileEndpointTitle(), resources.sequence_wizard(), locale, resourceProvider, editorAgent,
-              SEQUENCE_FOLDER_NAME, esbXmlFileType);
+        super(view, locale.wizardFileProxyServiceTitle(), resources.proxy_service_wizard(), locale, resourceProvider, editorAgent,
+              PROXY_SERVICE_FOLDER_NAME, esbXmlFileType);
 
         this.resources = resources;
 
-        view.setResourceNameTitle(locale.wizardFileSequenceFieldsName());
+        view.setResourceNameTitle(locale.wizardFileProxyServiceFieldsName());
     }
 
     /** {@inheritDoc} */
     @Override
     public String getNotice() {
         if (view.getResourceName().isEmpty()) {
-            return locale.wizardFileSequenceNoticeEmptyName();
+            return locale.wizardFileProxyServiceNoticeEmptyName();
         }
 
         return super.getNotice();
@@ -69,8 +67,8 @@ public class CreateSequencePage extends AbstractCreateResourcePage {
     /** {@inheritDoc} */
     @Override
     public void commit(@NotNull CommitCallback callback) {
-        String sequenceTemplate = resources.sequenceTemplate().getText();
-        content = sequenceTemplate.replaceAll("@name", view.getResourceName());
+        String proxyServiceTemplate = resources.proxyServiceTemplate().getText();
+        content = proxyServiceTemplate.replaceAll("@name", view.getResourceName());
 
         super.commit(callback);
     }

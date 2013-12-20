@@ -53,7 +53,6 @@ public class CreateEndpointPage extends AbstractCreateResourcePage {
 
         this.resources = resources;
 
-        view.setDelegate(this);
         view.setResourceNameTitle(locale.wizardFileEndpointFieldsName());
     }
 

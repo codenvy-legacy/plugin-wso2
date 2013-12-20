@@ -42,6 +42,7 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.mockito.testng.MockitoTestNGListener;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -73,7 +74,8 @@ import static org.testng.Assert.assertNull;
  */
 @Listeners(value = {MockitoTestNGListener.class})
 public class CreateESBConfProjectPageTest {
-    public static final String SOME_TEXT = "some text";
+    public static final String SOME_TEXT  = "some text";
+    public static final String EMPTY_TEXT = "";
 
     @Mock
     private Wizard.UpdateDelegate    delegate;
@@ -98,6 +100,24 @@ public class CreateESBConfProjectPageTest {
     @InjectMocks
     private CreateESBConfProjectPage page;
 
+    @BeforeClass
+    public void classInitialization() throws Exception {
+        page.setContext(wizardContext);
+        page.setUpdateDelegate(delegate);
+
+        verify(locale).wizardProjectTitle();
+        verify(resources).esb_project_wizard();
+
+        verify(view).setDelegate(eq(page));
+        verify(view).setArtifactID(eq(EMPTY_TEXT));
+        verify(view).setGroupID(eq(EMPTY_TEXT));
+        verify(view).setVersion(eq(EMPTY_TEXT));
+        verify(view).setParentPomConfEnable(eq(false));
+        verify(view).setParentArtifactID(eq(EMPTY_TEXT));
+        verify(view).setParentGroupID(eq(EMPTY_TEXT));
+        verify(view).setParentVersion(eq(EMPTY_TEXT));
+    }
+
     @BeforeMethod
     public void setUp() throws Exception {
         when(wizardContext.getData(PROJECT_NAME)).thenReturn(SOME_TEXT);
@@ -106,9 +126,6 @@ public class CreateESBConfProjectPageTest {
 
         when(dtoFactory.createDto(Matchers.<Class<ESBProjectInfo>>anyObject()))
                 .thenReturn(mock(ESBProjectInfo.class, Mockito.RETURNS_MOCKS));
-
-        page.setContext(wizardContext);
-        page.setUpdateDelegate(delegate);
     }
 
     @Test

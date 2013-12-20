@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.wso2.client.action;
 
-import com.codenvy.ide.ext.wso2.client.wizard.files.CreateEndpointPage;
+import com.codenvy.ide.ext.wso2.client.wizard.files.CreateProxyServicePage;
 import com.google.inject.Provider;
 
 import org.mockito.Mock;
@@ -27,34 +27,34 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Here we're testing {@link CreateEndpointAction}.
+ * Here we're testing {@link CreateProxyServiceAction}.
  *
  * @author Andrey Plotnikov
  */
-public class CreateEndpointActionTest extends AbstractCreateResourceActionTest {
+public class CreateProxyServiceActionTest extends AbstractCreateResourceActionTest {
 
     @Mock
-    private Provider<CreateEndpointPage> createEndpointPage;
+    private Provider<CreateProxyServicePage> createProxyServicePage;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        page = createEndpointPage;
-        action = new CreateEndpointAction(locale, wizardDialogFactory, defaultWizardFactory, createEndpointPage, resources);
+        page = createProxyServicePage;
+        action = new CreateProxyServiceAction(locale, wizardDialogFactory, defaultWizardFactory, createProxyServicePage, resources);
 
-        verify(locale).wso2ActionsCreateEndpointTitle();
-        verify(resources).endpointIcon();
+        verify(locale).wso2ActionsCreateProxyServiceTitle();
+        verify(resources).proxyServiceIcon();
     }
 
     @Override
     public void wizardShouldBeCreated() throws Exception {
-        when(locale.wizardFileEndpointTitle()).thenReturn(SOME_TEXT);
+        when(locale.wizardFileProxyServiceTitle()).thenReturn(SOME_TEXT);
 
         super.wizardShouldBeCreated();
     }
 
     @Override
     public void wizardShouldBeNotRecreated() throws Exception {
-        when(locale.wizardFileEndpointTitle()).thenReturn(SOME_TEXT);
+        when(locale.wizardFileProxyServiceTitle()).thenReturn(SOME_TEXT);
 
         super.wizardShouldBeNotRecreated();
     }

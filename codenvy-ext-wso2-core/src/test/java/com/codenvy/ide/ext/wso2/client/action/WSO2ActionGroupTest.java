@@ -33,6 +33,7 @@ import com.google.inject.Provider;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.testng.MockitoTestNGListener;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -43,6 +44,7 @@ import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
@@ -75,6 +77,11 @@ public class WSO2ActionGroupTest {
     private Presentation                 presentation;
     @InjectMocks
     private WSO2ActionGroup              action;
+
+    @BeforeClass
+    public void checkInitializeProcess() throws Exception {
+        verify(locale).wso2MainActionTitle();
+    }
 
     @BeforeMethod
     public void setUp() throws Exception {

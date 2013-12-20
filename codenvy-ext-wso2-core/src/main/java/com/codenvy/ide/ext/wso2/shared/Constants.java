@@ -29,14 +29,19 @@ public interface Constants {
     String SRC_FOLDER_NAME            = "src";
     String SYNAPSE_CONFIG_FOLDER_NAME = "synapse-config";
 
-    String ENDPOINTS_FOLDER_NAME = "endpoints";
-    String SEQUENCE_FOLDER_NAME  = "sequences";
+    String ENDPOINTS_FOLDER_NAME     = "endpoints";
+    String SEQUENCE_FOLDER_NAME      = "sequences";
+    String PROXY_SERVICE_FOLDER_NAME = "proxy-services";
 
     String WSO2_PROJECT_ID              = "WSO2Project";
     String ESB_CONFIGURATION_PROJECT_ID = "ESBConfigurationProject";
 
-    String WSO2_ACTION_GROUP       = "WSO2ActionGroup";
-    String WSO2_NEW_RESOURCE_GROUP = "WSO2NewResourceGroup";
+    String WSO2_ACTION_GROUP           = "WSO2ActionGroup";
+    String WSO2_NEW_RESOURCE_GROUP     = "WSO2NewResourceGroup";
+    String IMPORT_FILE_ACTION          = "ImportFileAction";
+    String CREATE_ENDPOINT_ACTION      = "CreateEndpointAction";
+    String CREATE_SEQUENCE_ACTION      = "CreateSequenceAction";
+    String CREATE_PROXY_SERVICE_ACTION = "CreateProxyServiceAction";
 
     /**
      * Dedicated mime type name for WSO2 ESB configuration files

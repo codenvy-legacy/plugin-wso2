@@ -20,29 +20,29 @@ package com.codenvy.ide.ext.wso2.client.wizard.files;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static com.codenvy.ide.ext.wso2.shared.Constants.ENDPOINTS_FOLDER_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.PROXY_SERVICE_FOLDER_NAME;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Here we're testing {@link CreateEndpointPage}.
+ * Here we're testing {@link CreateProxyServicePage}.
  *
  * @author Andrey Plotnikov
  */
-public class CreateEndpointPageTest extends AbstractCreateResourcePageTest {
+public class CreateProxyServicePageTest extends AbstractCreateResourcePageTest {
 
     @BeforeMethod
     @Override
     public void setUp() throws Exception {
-        page = new CreateEndpointPage(view, locale, resourceProvider, resources, editorAgent, fileType);
+        page = new CreateProxyServicePage(view, locale, resourceProvider, resources, editorAgent, fileType);
 
-        verify(locale).wizardFileEndpointTitle();
-        verify(locale).wizardFileEndpointFieldsName();
-        verify(resources).endpoint_wizard();
+        verify(locale).wizardFileProxyServiceTitle();
+        verify(locale).wizardFileProxyServiceFieldsName();
+        verify(resources).proxy_service_wizard();
 
-        parentFolderName = ENDPOINTS_FOLDER_NAME;
+        parentFolderName = PROXY_SERVICE_FOLDER_NAME;
 
         super.setUp();
     }
@@ -50,21 +50,21 @@ public class CreateEndpointPageTest extends AbstractCreateResourcePageTest {
     @Test
     public void emptyResourceNameNoticeShouldBeShown() throws Exception {
         when(view.getResourceName()).thenReturn(EMPTY_TEXT);
-        when(locale.wizardFileEndpointNoticeEmptyName()).thenReturn(SOME_TEXT);
+        when(locale.wizardFileProxyServiceNoticeEmptyName()).thenReturn(SOME_TEXT);
 
         page.go(container);
         page.onValueChanged();
 
         assertEquals(page.getNotice(), SOME_TEXT);
 
-        verify(locale).wizardFileEndpointNoticeEmptyName();
+        verify(locale).wizardFileProxyServiceNoticeEmptyName();
     }
 
     @Override
     public void onFailureMethodInCommitCallbackShouldBeExecuted() throws Exception {
         super.onFailureMethodInCommitCallbackShouldBeExecuted();
 
-        verify(resources).endpointTemplate();
+        verify(resources).proxyServiceTemplate();
         verify(view, times(2)).getResourceName();
     }
 
@@ -72,7 +72,7 @@ public class CreateEndpointPageTest extends AbstractCreateResourcePageTest {
     public void onSuccessMethodInCommitCallbackShouldBeExecuted() throws Exception {
         super.onSuccessMethodInCommitCallbackShouldBeExecuted();
 
-        verify(resources).endpointTemplate();
+        verify(resources).proxyServiceTemplate();
         verify(view, times(2)).getResourceName();
     }
 }

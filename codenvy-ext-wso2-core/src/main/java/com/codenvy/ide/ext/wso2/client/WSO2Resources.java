@@ -41,17 +41,26 @@ public interface WSO2Resources extends ClientBundle {
     @Source("sequence-template.txt")
     TextResource sequenceTemplate();
 
+    @Source("proxy-service.txt")
+    TextResource proxyServiceTemplate();
+
     @Source("endpoint-icon.png")
     ImageResource endpointIcon();
 
     @Source("sequence-icon.png")
     ImageResource sequenceIcon();
 
+    @Source("proxy-service-icon.png")
+    ImageResource proxyServiceIcon();
+
     @Source("endpoint-wizard.png")
     ImageResource endpoint_wizard();
 
     @Source("sequence-wizard.png")
     ImageResource sequence_wizard();
+
+    @Source("proxy-service-wizard.png")
+    ImageResource proxy_service_wizard();
 
     @Source("esb-project-wizard.png")
     ImageResource esb_project_wizard();

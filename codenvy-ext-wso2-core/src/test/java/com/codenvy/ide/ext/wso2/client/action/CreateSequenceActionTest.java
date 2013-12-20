@@ -21,10 +21,9 @@ import com.codenvy.ide.ext.wso2.client.wizard.files.CreateSequencePage;
 import com.google.inject.Provider;
 
 import org.mockito.Mock;
-import org.mockito.testng.MockitoTestNGListener;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Listeners;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -32,7 +31,6 @@ import static org.mockito.Mockito.when;
  *
  * @author Andrey Plotnikov
  */
-@Listeners(value = {MockitoTestNGListener.class})
 public class CreateSequenceActionTest extends AbstractCreateResourceActionTest {
 
     @Mock
@@ -42,6 +40,9 @@ public class CreateSequenceActionTest extends AbstractCreateResourceActionTest {
     public void setUp() throws Exception {
         page = createSequencePage;
         action = new CreateSequenceAction(locale, wizardDialogFactory, defaultWizardFactory, createSequencePage, resources);
+
+        verify(locale).wso2ActionsCreateSequenceTitle();
+        verify(resources).sequenceIcon();
     }
 
     @Override

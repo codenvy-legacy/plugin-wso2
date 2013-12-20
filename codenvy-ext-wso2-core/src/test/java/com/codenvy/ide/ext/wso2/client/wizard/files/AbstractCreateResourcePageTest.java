@@ -103,6 +103,9 @@ public abstract class AbstractCreateResourcePageTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
+        verify(view).setDelegate((CreateResourceView.ActionDelegate)anyObject());
+        verify(view).setResourceNameTitle(anyString());
+
         when(resourceProvider.getActiveProject()).thenReturn(activeProject);
 
         when(activeProject.getChildren()).thenReturn(Collections.<Resource>createArray(src));
