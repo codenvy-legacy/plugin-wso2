@@ -44,6 +44,9 @@ public interface WSO2Resources extends ClientBundle {
     @Source("proxy-service.txt")
     TextResource proxyServiceTemplate();
 
+    @Source("local-entry-template.txt")
+    TextResource localEntryTemplate();
+
     @Source("endpoint-icon.png")
     ImageResource endpointIcon();
 
@@ -53,6 +56,9 @@ public interface WSO2Resources extends ClientBundle {
     @Source("proxy-service-icon.png")
     ImageResource proxyServiceIcon();
 
+    @Source("local-entry-icon.png")
+    ImageResource localEntryIcon();
+
     @Source("endpoint-wizard.png")
     ImageResource endpoint_wizard();
 
@@ -61,6 +67,9 @@ public interface WSO2Resources extends ClientBundle {
 
     @Source("proxy-service-wizard.png")
     ImageResource proxy_service_wizard();
+
+    @Source("local-entry-wizard.png")
+    ImageResource local_entry_wizard();
 
     @Source("esb-project-wizard.png")
     ImageResource esb_project_wizard();

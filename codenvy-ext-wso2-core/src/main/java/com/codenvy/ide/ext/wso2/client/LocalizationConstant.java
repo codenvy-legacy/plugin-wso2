@@ -145,4 +145,16 @@ public interface LocalizationConstant extends Messages {
 
     @Key("wso2.actions.createProxyService.title")
     String wso2ActionsCreateProxyServiceTitle();
+
+    @Key("wizard.file.localEntry.title")
+    String wizardFileLocalEntryTitle();
+
+    @Key("wizard.file.localEntry.notice.emptyName")
+    String wizardFileLocalEntryNoticeEmptyName();
+
+    @Key("wizard.file.localEntry.fields.name")
+    String wizardFileLocalEntryFieldsName();
+
+    @Key("wso2.actions.createLocalEntry.title")
+    String wso2ActionsCreateLocalEntryTitle();
 }

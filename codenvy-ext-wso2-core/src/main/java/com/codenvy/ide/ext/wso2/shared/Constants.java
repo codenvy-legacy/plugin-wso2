@@ -32,6 +32,7 @@ public interface Constants {
     String ENDPOINTS_FOLDER_NAME     = "endpoints";
     String SEQUENCE_FOLDER_NAME      = "sequences";
     String PROXY_SERVICE_FOLDER_NAME = "proxy-services";
+    String LOCAL_ENTRY_FOLDER_NAME   = "local-entries";
 
     String WSO2_PROJECT_ID              = "WSO2Project";
     String ESB_CONFIGURATION_PROJECT_ID = "ESBConfigurationProject";
@@ -42,6 +43,7 @@ public interface Constants {
     String CREATE_ENDPOINT_ACTION      = "CreateEndpointAction";
     String CREATE_SEQUENCE_ACTION      = "CreateSequenceAction";
     String CREATE_PROXY_SERVICE_ACTION = "CreateProxyServiceAction";
+    String CREATE_LOCAL_ENTRY_ACTION   = "CreateLocalEntryAction";
 
     /**
      * Dedicated mime type name for WSO2 ESB configuration files
