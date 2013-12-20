@@ -28,7 +28,9 @@ import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.wso2.client.action.CreateEndpointAction;
+import com.codenvy.ide.ext.wso2.client.action.CreateSequenceAction;
 import com.codenvy.ide.ext.wso2.client.action.ImportFileAction;
+import com.codenvy.ide.ext.wso2.client.action.WSO2ActionGroup;
 import com.codenvy.ide.ext.wso2.client.editor.ESBXmlFileType;
 import com.codenvy.ide.ext.wso2.client.editor.XmlEditorProvider;
 import com.codenvy.ide.ext.wso2.client.wizard.project.CreateESBConfProjectPage;
@@ -68,6 +70,7 @@ public class WSO2Extension {
                          ActionManager actionManager,
                          ImportFileAction importFileAction,
                          CreateEndpointAction createEndpointAction,
+                         CreateSequenceAction createSequenceAction,
                          WSO2Resources wso2Resources,
                          ResourceProvider resourceProvider,
                          EditorRegistry editorRegistry,
@@ -76,7 +79,7 @@ public class WSO2Extension {
 
         initProject(locale, projectTypeAgent, templateAgent, createESBConfProjectPage);
         initXmlEditor(wso2Resources, resourceProvider, editorRegistry, xmlEditorProvider, esbXmlFileType);
-        initActions(locale, actionManager, importFileAction, createEndpointAction);
+        initActions(locale, resourceProvider, actionManager, importFileAction, createEndpointAction, createSequenceAction);
     }
 
     private void initXmlEditor(WSO2Resources wso2Resources,
@@ -113,14 +116,17 @@ public class WSO2Extension {
     }
 
     private void initActions(LocalizationConstant locale,
+                             ResourceProvider resourceProvider,
                              ActionManager actionManager,
                              ImportFileAction importFileAction,
-                             CreateEndpointAction createEndpointAction) {
+                             CreateEndpointAction createEndpointAction,
+                             CreateSequenceAction createSequenceAction) {
 
         DefaultActionGroup wso2MainMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_MENU);
         DefaultActionGroup wso2ContextMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
 
-        DefaultActionGroup wso2ActionGroup = new DefaultActionGroup(locale.wso2MainActionTitle(), false, actionManager);
+        DefaultActionGroup wso2ActionGroup = new WSO2ActionGroup(locale, actionManager, resourceProvider);
+
         actionManager.registerAction(WSO2_ACTION_GROUP, wso2ActionGroup);
 
         DefaultActionGroup wso2NewGroup = new DefaultActionGroup(locale.wso2ActionNew(), true, actionManager);
@@ -128,9 +134,9 @@ public class WSO2Extension {
 
         wso2ActionGroup.add(wso2NewGroup);
         wso2ActionGroup.add(importFileAction);
-        wso2ActionGroup.addSeparator();
 
         wso2NewGroup.add(createEndpointAction);
+        wso2NewGroup.add(createSequenceAction);
 
         wso2MainMenu.add(wso2ActionGroup, LAST);
         wso2MainMenu.addSeparator();

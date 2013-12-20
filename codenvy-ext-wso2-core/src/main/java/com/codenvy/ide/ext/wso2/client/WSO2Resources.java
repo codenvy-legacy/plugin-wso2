@@ -38,11 +38,20 @@ public interface WSO2Resources extends ClientBundle {
     @Source("endpoint-template.txt")
     TextResource endpointTemplate();
 
+    @Source("sequence-template.txt")
+    TextResource sequenceTemplate();
+
     @Source("endpoint-icon.png")
     ImageResource endpointIcon();
 
+    @Source("sequence-icon.png")
+    ImageResource sequenceIcon();
+
     @Source("endpoint-wizard.png")
     ImageResource endpoint_wizard();
+
+    @Source("sequence-wizard.png")
+    ImageResource sequence_wizard();
 
     @Source("esb-project-wizard.png")
     ImageResource esb_project_wizard();

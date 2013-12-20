@@ -20,24 +20,24 @@ package com.codenvy.ide.ext.wso2.client.wizard.files;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static com.codenvy.ide.ext.wso2.shared.Constants.ENDPOINTS_FOLDER_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.SEQUENCE_FOLDER_NAME;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Here we're testing {@link CreateEndpointPage}.
+ * Here we're testing {@link CreateSequencePage}.
  *
  * @author Andrey Plotnikov
  */
-public class CreateEndpointPageTest extends AbstractCreateResourcePageTest {
+public class CreateSequencePageTest extends AbstractCreateResourcePageTest {
 
     @BeforeMethod
     @Override
     public void setUp() throws Exception {
-        page = new CreateEndpointPage(view, locale, resourceProvider, resources, editorAgent, fileType);
-        parentFolderName = ENDPOINTS_FOLDER_NAME;
+        page = new CreateSequencePage(view, locale, resourceProvider, resources, editorAgent, fileType);
+        parentFolderName = SEQUENCE_FOLDER_NAME;
 
         super.setUp();
     }
@@ -45,21 +45,21 @@ public class CreateEndpointPageTest extends AbstractCreateResourcePageTest {
     @Test
     public void emptyResourceNameNoticeShouldBeShown() throws Exception {
         when(view.getResourceName()).thenReturn(EMPTY_TEXT);
-        when(locale.wizardFileEndpointNoticeEmptyName()).thenReturn(SOME_TEXT);
+        when(locale.wizardFileSequenceNoticeEmptyName()).thenReturn(SOME_TEXT);
 
         page.go(container);
         page.onValueChanged();
 
         assertEquals(page.getNotice(), SOME_TEXT);
 
-        verify(locale).wizardFileEndpointNoticeEmptyName();
+        verify(locale).wizardFileSequenceNoticeEmptyName();
     }
 
     @Override
     public void onFailureMethodInCommitCallbackShouldBeExecuted() throws Exception {
         super.onFailureMethodInCommitCallbackShouldBeExecuted();
 
-        verify(resources).endpointTemplate();
+        verify(resources).sequenceTemplate();
         verify(view, times(2)).getResourceName();
     }
 
@@ -67,7 +67,7 @@ public class CreateEndpointPageTest extends AbstractCreateResourcePageTest {
     public void onSuccessMethodInCommitCallbackShouldBeExecuted() throws Exception {
         super.onSuccessMethodInCommitCallbackShouldBeExecuted();
 
-        verify(resources).endpointTemplate();
+        verify(resources).sequenceTemplate();
         verify(view, times(2)).getResourceName();
     }
 }

@@ -42,11 +42,11 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import static com.codenvy.ide.ext.wso2.client.wizard.files.AbstractCreateResourcePage.MAIN_FOLDER_NAME;
-import static com.codenvy.ide.ext.wso2.client.wizard.files.AbstractCreateResourcePage.SRC_NAME;
-import static com.codenvy.ide.ext.wso2.client.wizard.files.AbstractCreateResourcePage.SYNAPSE_CONFIG_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_EXTENSION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_MIME_TYPE;
+import static com.codenvy.ide.ext.wso2.shared.Constants.MAIN_FOLDER_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.SRC_FOLDER_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NAME;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.Answers.RETURNS_MOCKS;
 import static org.mockito.Matchers.anyObject;
@@ -57,6 +57,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 
 /**
  * The basic test for testing create WSO2 resource pages.
@@ -67,7 +68,7 @@ import static org.testng.Assert.assertEquals;
 public abstract class AbstractCreateResourcePageTest {
 
     public static final String EMPTY_TEXT         = "";
-    public static final String SOME_TEXT          = "some text";
+    public static final String SOME_TEXT          = "someText";
     public static final String FULL_RESOURCE_NAME = SOME_TEXT + '.' + ESB_XML_EXTENSION;
 
     @Mock
@@ -109,7 +110,7 @@ public abstract class AbstractCreateResourcePageTest {
         when(main.getChildren()).thenReturn(Collections.<Resource>createArray(synapse_config));
         when(synapse_config.getChildren()).thenReturn(Collections.<Resource>createArray(parentFolder));
 
-        when(src.getName()).thenReturn(SRC_NAME);
+        when(src.getName()).thenReturn(SRC_FOLDER_NAME);
         when(main.getName()).thenReturn(MAIN_FOLDER_NAME);
         when(synapse_config.getName()).thenReturn(SYNAPSE_CONFIG_FOLDER_NAME);
         when(parentFolder.getName()).thenReturn(parentFolderName);
@@ -158,7 +159,7 @@ public abstract class AbstractCreateResourcePageTest {
         when(view.getResourceName()).thenReturn(SOME_TEXT);
         page.onValueChanged();
 
-        assertEquals(page.isCompleted(), false);
+        assertEquals(page.isCompleted(), true);
     }
 
     @Test
@@ -191,6 +192,48 @@ public abstract class AbstractCreateResourcePageTest {
         page.onValueChanged();
 
         verify(delegate).updateControls();
+    }
+
+    @Test
+    public void incorrectNameNoticeShouldBeShown() throws Exception {
+        when(view.getResourceName()).thenReturn("projectName!");
+        when(locale.wizardFileResourceNoticeIncorrectName()).thenReturn(SOME_TEXT);
+
+        page.go(container);
+        page.onValueChanged();
+
+        assertEquals(page.getNotice(), SOME_TEXT);
+
+        verify(locale).wizardFileResourceNoticeIncorrectName();
+    }
+
+    @Test
+    public void fileExistsNoticeShouldBeShown() throws Exception {
+        when(view.getResourceName()).thenReturn(SOME_TEXT);
+        when(locale.wizardFileResourceNoticeFileExists()).thenReturn(SOME_TEXT);
+        when(view.getResourceName()).thenReturn(SOME_TEXT);
+
+        Resource file = mock(Resource.class);
+        when(file.getName()).thenReturn(FULL_RESOURCE_NAME);
+
+        when(parentFolder.getChildren()).thenReturn(Collections.<Resource>createArray(file));
+
+        page.go(container);
+        page.onValueChanged();
+
+        assertEquals(page.getNotice(), SOME_TEXT);
+
+        verify(locale).wizardFileResourceNoticeFileExists();
+    }
+
+    @Test
+    public void emptyNoticeShouldBeShown() throws Exception {
+        when(view.getResourceName()).thenReturn("projectName");
+
+        page.go(container);
+        page.onValueChanged();
+
+        assertNull(page.getNotice());
     }
 
     @SuppressWarnings("unchecked")

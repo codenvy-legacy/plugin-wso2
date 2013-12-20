@@ -25,6 +25,13 @@ package com.codenvy.ide.ext.wso2.shared;
  */
 public interface Constants {
 
+    String MAIN_FOLDER_NAME           = "main";
+    String SRC_FOLDER_NAME            = "src";
+    String SYNAPSE_CONFIG_FOLDER_NAME = "synapse-config";
+
+    String ENDPOINTS_FOLDER_NAME = "endpoints";
+    String SEQUENCE_FOLDER_NAME  = "sequences";
+
     String WSO2_PROJECT_ID              = "WSO2Project";
     String ESB_CONFIGURATION_PROJECT_ID = "ESBConfigurationProject";
 

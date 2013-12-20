@@ -110,15 +110,27 @@ public interface LocalizationConstant extends Messages {
     @Key("wizard.file.endpoint.fields.name")
     String wizardFileEndpointFieldsName();
 
-    @Key("wizard.file.endpoint.notice.fileExists")
-    String wizardFileEndpointNoticeFileExists();
-
     @Key("wso2.actions.createEndpoint.title")
     String wso2ActionsCreateEndpointTitle();
 
     @Key("wso2.action.new")
     String wso2ActionNew();
 
-    @Key("wizard.file.endpoint.notice.incorrectName")
-    String wizardFileEndpointNoticeIncorrectName();
+    @Key("wizard.file.resource.notice.fileExists")
+    String wizardFileResourceNoticeFileExists();
+
+    @Key("wizard.file.resource.notice.incorrectName")
+    String wizardFileResourceNoticeIncorrectName();
+
+    @Key("wizard.file.sequence.title")
+    String wizardFileSequenceTitle();
+
+    @Key("wizard.file.sequence.notice.emptyName")
+    String wizardFileSequenceNoticeEmptyName();
+
+    @Key("wizard.file.sequence.fields.name")
+    String wizardFileSequenceFieldsName();
+
+    @Key("wso2.actions.createSequence.title")
+    String wso2ActionsCreateSequenceTitle();
 }

@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.wso2.client.action;
 
-import com.codenvy.ide.ext.wso2.client.wizard.files.CreateEndpointPage;
+import com.codenvy.ide.ext.wso2.client.wizard.files.CreateSequencePage;
 import com.google.inject.Provider;
 
 import org.mockito.Mock;
@@ -28,32 +28,32 @@ import org.testng.annotations.Listeners;
 import static org.mockito.Mockito.when;
 
 /**
- * Here we're testing {@link CreateEndpointAction}.
+ * Here we're testing {@link CreateSequenceAction}.
  *
  * @author Andrey Plotnikov
  */
 @Listeners(value = {MockitoTestNGListener.class})
-public class CreateEndpointActionTest extends AbstractCreateResourceActionTest {
+public class CreateSequenceActionTest extends AbstractCreateResourceActionTest {
 
     @Mock
-    private Provider<CreateEndpointPage> createEndpointPage;
+    private Provider<CreateSequencePage> createSequencePage;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        page = createEndpointPage;
-        action = new CreateEndpointAction(locale, wizardDialogFactory, defaultWizardFactory, createEndpointPage, resources);
+        page = createSequencePage;
+        action = new CreateSequenceAction(locale, wizardDialogFactory, defaultWizardFactory, createSequencePage, resources);
     }
 
     @Override
     public void wizardShouldBeCreated() throws Exception {
-        when(locale.wizardFileEndpointTitle()).thenReturn(SOME_TEXT);
+        when(locale.wizardFileSequenceTitle()).thenReturn(SOME_TEXT);
 
         super.wizardShouldBeCreated();
     }
 
     @Override
     public void wizardShouldBeNotRecreated() throws Exception {
-        when(locale.wizardFileEndpointTitle()).thenReturn(SOME_TEXT);
+        when(locale.wizardFileSequenceTitle()).thenReturn(SOME_TEXT);
 
         super.wizardShouldBeNotRecreated();
     }

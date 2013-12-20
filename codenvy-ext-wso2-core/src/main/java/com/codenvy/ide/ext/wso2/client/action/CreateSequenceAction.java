@@ -25,44 +25,44 @@ import com.codenvy.ide.api.ui.wizard.WizardDialog;
 import com.codenvy.ide.api.ui.wizard.WizardDialogFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
-import com.codenvy.ide.ext.wso2.client.wizard.files.CreateEndpointPage;
+import com.codenvy.ide.ext.wso2.client.wizard.files.CreateSequencePage;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- * The action for creating a endpoint.
+ * The action for creating a sequence.
  *
  * @author Andrey Plotnikov
  */
-public class CreateEndpointAction extends Action {
+public class CreateSequenceAction extends Action {
 
     private WizardDialog                 dialog;
     private LocalizationConstant         locale;
     private WizardDialogFactory          wizardDialogFactory;
     private DefaultWizardFactory         defaultWizardFactory;
-    private Provider<CreateEndpointPage> createEndpointPage;
+    private Provider<CreateSequencePage> createSequencePage;
 
     @Inject
-    public CreateEndpointAction(LocalizationConstant locale,
+    public CreateSequenceAction(LocalizationConstant locale,
                                 WizardDialogFactory wizardDialogFactory,
                                 DefaultWizardFactory defaultWizardFactory,
-                                Provider<CreateEndpointPage> createEndpointPage,
+                                Provider<CreateSequencePage> createSequencePage,
                                 WSO2Resources resources) {
 
-        super(locale.wso2ActionsCreateEndpointTitle(), null, resources.endpointIcon());
+        super(locale.wso2ActionsCreateSequenceTitle(), null, resources.sequenceIcon());
 
         this.locale = locale;
         this.wizardDialogFactory = wizardDialogFactory;
         this.defaultWizardFactory = defaultWizardFactory;
-        this.createEndpointPage = createEndpointPage;
+        this.createSequencePage = createSequencePage;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (dialog == null) {
-            DefaultWizard wizard = defaultWizardFactory.create(locale.wizardFileEndpointTitle());
-            wizard.addPage(createEndpointPage);
+            DefaultWizard wizard = defaultWizardFactory.create(locale.wizardFileSequenceTitle());
+            wizard.addPage(createSequencePage);
 
             dialog = wizardDialogFactory.create(wizard);
         }

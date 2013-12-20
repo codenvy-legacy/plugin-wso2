@@ -28,40 +28,40 @@ import com.codenvy.ide.ext.wso2.client.wizard.files.view.CreateResourceView;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.ext.wso2.shared.Constants.ENDPOINTS_FOLDER_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.SEQUENCE_FOLDER_NAME;
 
 /**
- * The wizard page provides creating 'Endpoint'. Also checks inputted information on the page.
+ * The wizard page provides creating 'Sequence'. Also checks inputted information on the page.
  *
  * @author Andrey Plotnikov
  */
 @Singleton
-public class CreateEndpointPage extends AbstractCreateResourcePage {
+public class CreateSequencePage extends AbstractCreateResourcePage {
 
     private WSO2Resources resources;
 
     @Inject
-    public CreateEndpointPage(CreateResourceView view,
+    public CreateSequencePage(CreateResourceView view,
                               LocalizationConstant locale,
                               ResourceProvider resourceProvider,
                               WSO2Resources resources,
                               EditorAgent editorAgent,
                               @ESBXmlFileType FileType esbXmlFileType) {
 
-        super(view, locale.wizardFileEndpointTitle(), resources.endpoint_wizard(), locale, resourceProvider, editorAgent,
-              ENDPOINTS_FOLDER_NAME, esbXmlFileType);
+        super(view, locale.wizardFileEndpointTitle(), resources.sequence_wizard(), locale, resourceProvider, editorAgent,
+              SEQUENCE_FOLDER_NAME, esbXmlFileType);
 
         this.resources = resources;
 
         view.setDelegate(this);
-        view.setResourceNameTitle(locale.wizardFileEndpointFieldsName());
+        view.setResourceNameTitle(locale.wizardFileSequenceFieldsName());
     }
 
     /** {@inheritDoc} */
     @Override
     public String getNotice() {
         if (view.getResourceName().isEmpty()) {
-            return locale.wizardFileEndpointNoticeEmptyName();
+            return locale.wizardFileSequenceNoticeEmptyName();
         }
 
         return super.getNotice();
@@ -70,8 +70,8 @@ public class CreateEndpointPage extends AbstractCreateResourcePage {
     /** {@inheritDoc} */
     @Override
     public void commit(@NotNull CommitCallback callback) {
-        String endpointTemplate = resources.endpointTemplate().getText();
-        content = endpointTemplate.replaceAll("@name", view.getResourceName());
+        String sequenceTemplate = resources.sequenceTemplate().getText();
+        content = sequenceTemplate.replaceAll("@name", view.getResourceName());
 
         super.commit(callback);
     }

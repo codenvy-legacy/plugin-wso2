@@ -35,16 +35,16 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
+import static com.codenvy.ide.ext.wso2.shared.Constants.MAIN_FOLDER_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.SRC_FOLDER_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NAME;
+
 /**
  * The abstract implementation of the wizard page. This page provides an ability to create WSO2 resources in a given place.
  *
  * @author Andrey Plotnikov
  */
 public abstract class AbstractCreateResourcePage extends AbstractWizardPage implements CreateResourceView.ActionDelegate {
-
-    public static final String SRC_NAME                   = "src";
-    public static final String MAIN_FOLDER_NAME           = "main";
-    public static final String SYNAPSE_CONFIG_FOLDER_NAME = "synapse-config";
 
     private ResourceProvider resourceProvider;
     private EditorAgent      editorAgent;
@@ -81,6 +81,20 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
 
     /** {@inheritDoc} */
     @Override
+    public String getNotice() {
+        if (incorrectName) {
+            return locale.wizardFileResourceNoticeIncorrectName();
+        }
+
+        if (hasSameFile) {
+            return locale.wizardFileResourceNoticeFileExists();
+        }
+
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public boolean isCompleted() {
         return !view.getResourceName().isEmpty() && !hasSameFile && !incorrectName;
     }
@@ -102,7 +116,7 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
     public void go(AcceptsOneWidget container) {
         activeProject = resourceProvider.getActiveProject();
 
-        Resource src = getResourceByName(activeProject, SRC_NAME);
+        Resource src = getResourceByName(activeProject, SRC_FOLDER_NAME);
         Resource main = getResourceByName((Folder)src, MAIN_FOLDER_NAME);
         Resource synapse_config = getResourceByName((Folder)main, SYNAPSE_CONFIG_FOLDER_NAME);
         parentFolder = (Folder)getResourceByName((Folder)synapse_config, parentFolderName);
