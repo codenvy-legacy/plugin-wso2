@@ -19,6 +19,7 @@ package com.codenvy.ide.ext.wso2.client.editor;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.wso2.shared.Constants;
+import com.codenvy.ide.texteditor.api.AutoEditStrategy;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.parser.BasicTokenFactory;
@@ -38,5 +39,11 @@ public class XmlEditorConfiguration extends TextEditorConfiguration {
         CmParser parser = getParserForMime(Constants.ESB_XML_MIME_TYPE);
         parser.setNameAndFactory(Constants.ESB_XML_EXTENSION, new BasicTokenFactory());
         return parser;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public AutoEditStrategy[] getAutoEditStrategies(TextEditorPartView view, String contentType) {
+        return new AutoEditStrategy[]{new TagAutoCompleter(view)};
     }
 }
