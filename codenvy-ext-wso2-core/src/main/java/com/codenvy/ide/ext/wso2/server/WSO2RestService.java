@@ -28,8 +28,8 @@ import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.wso2.client.upload.FileInfo;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
+import com.codenvy.ide.ext.wso2.shared.FileInfo;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
@@ -45,6 +45,8 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -134,15 +136,17 @@ public class WSO2RestService {
     @Path("detect")
     @POST
     @Consumes(APPLICATION_JSON)
-    public void detectConfigurationFile(FileInfo fileInfo) throws VirtualFileSystemException {
+    public Response detectConfigurationFile(FileInfo fileInfo) throws VirtualFileSystemException {
         VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(getVfsID());
         MountPoint mountPoint = vfsProvider.getMountPoint(false);
         VirtualFile file = mountPoint.getVirtualFile(fileInfo.getProjectName() + "/" + fileInfo.getFileName());
 
-        moveFile(file, mountPoint, fileInfo.getProjectName());
+        String result = moveFile(file, mountPoint, fileInfo.getProjectName());
+
+        return Response.ok(result, MediaType.TEXT_HTML).build();
     }
 
-    private void moveFile(@NotNull VirtualFile file, @NotNull MountPoint mountPoint, @NotNull String projectName)
+    private String moveFile(@NotNull VirtualFile file, @NotNull MountPoint mountPoint, @NotNull String projectName)
             throws VirtualFileSystemException {
 
         String parentFolder = getParentFolderForImportingFile(file);
@@ -151,8 +155,10 @@ public class WSO2RestService {
                     projectName + "/" + SRC_FOLDER_NAME + "/" + MAIN_FOLDER_NAME + "/" + SYNAPSE_CONFIG_FOLDER_NAME + "/" +
                     parentFolder), null);
         } catch (VirtualFileSystemException e) {
-            LOG.error("Cant move file", e);
+            file.delete(null);
+            return e.getMessage();
         }
+        return parentFolder;
     }
 
     @Path("upload")

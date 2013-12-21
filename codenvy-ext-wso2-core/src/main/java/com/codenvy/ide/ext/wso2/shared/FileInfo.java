@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.wso2.client.upload;
+package com.codenvy.ide.ext.wso2.shared;
 
 import com.codenvy.dto.shared.DTO;
 

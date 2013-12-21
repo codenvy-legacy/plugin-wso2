@@ -78,12 +78,20 @@ public interface ImportFileView extends View<ImportFileView.ActionDelegate> {
     boolean isUseLocalPath();
 
     /**
-     * Select url button.
+     * Select local button.
      *
      * @param isUseLocalPath
      *         <code>true</code> to select use url, <code>false</code> not to select
      */
     void setUseLocalPath(boolean isUseLocalPath);
+
+    /**
+     * Select url button.
+     *
+     * @param isUseUrl
+     *         <code>true</code> to select use url, <code>false</code> not to select
+     */
+    void setUseUrl(boolean isUseUrl);
 
     /** @return file name */
     @NotNull

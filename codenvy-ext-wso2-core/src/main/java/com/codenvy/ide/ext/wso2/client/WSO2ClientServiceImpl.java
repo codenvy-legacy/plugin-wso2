@@ -19,8 +19,8 @@ package com.codenvy.ide.ext.wso2.client;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.ext.wso2.client.upload.FileInfo;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
+import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.loader.Loader;
@@ -70,7 +70,8 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void detectConfigurationFile(@NotNull FileInfo fileInfo, @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
+    public void detectConfigurationFile(@NotNull FileInfo fileInfo, @NotNull AsyncRequestCallback<String> callback)
+            throws RequestException {
         String requestUrl = restContext + DETECT_CONFIGURATION_FILE;
 
         loader.setMessage("Importing file...");

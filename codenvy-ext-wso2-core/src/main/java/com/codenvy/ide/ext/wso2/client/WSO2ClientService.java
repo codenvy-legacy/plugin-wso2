@@ -18,8 +18,8 @@
 package com.codenvy.ide.ext.wso2.client;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.wso2.client.upload.FileInfo;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
+import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.ImplementedBy;
@@ -52,7 +52,7 @@ public interface WSO2ClientService {
      *         callback that need to execute when the answer is come
      * @throws RequestException
      */
-    void detectConfigurationFile(@NotNull FileInfo fileInfo, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+    void detectConfigurationFile(@NotNull FileInfo fileInfo, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Upload a configuration file from url.

@@ -18,23 +18,34 @@
 package com.codenvy.ide.ext.wso2.client.upload;
 
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.annotations.Nullable;
+import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
+import com.codenvy.ide.ext.wso2.shared.FileInfo;
+import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.Utils;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import com.google.web.bindery.event.shared.EventBus;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.ext.wso2.shared.Constants.MAIN_FOLDER_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.SRC_FOLDER_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NAME;
 
 /**
  * The presenter for import configuration files.
@@ -47,6 +58,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
     private final String UPLOAD_FILE_PATH = "/vfs/v2/uploadfile/";
 
     private ImportFileView       view;
+    private EventBus             eventBus;
     private ConsolePart          console;
     private NotificationManager  notificationManager;
     private String               restContext;
@@ -63,8 +75,10 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
                                NotificationManager notificationManager,
                                ResourceProvider resourceProvider,
                                DtoFactory dtoFactory,
-                               LocalizationConstant local) {
+                               LocalizationConstant local,
+                               EventBus eventBus) {
         this.view = view;
+        this.eventBus = eventBus;
         this.view.setDelegate(this);
         this.console = console;
         this.notificationManager = notificationManager;
@@ -131,20 +145,37 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
                                           .withFileName(view.getFileName())
                                           .withProjectName(resourceProvider.getActiveProject().getName());
             try {
-                service.detectConfigurationFile(fileInfo, new AsyncRequestCallback<Void>() {
+                service.detectConfigurationFile(fileInfo, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                     @Override
-                    protected void onSuccess(Void aVoid) {
-                        resourceProvider.getActiveProject().refreshTree(new AsyncCallback<Project>() {
-                            @Override
-                            public void onSuccess(Project project) {
-                                view.close();
-                            }
+                    protected void onSuccess(String callback) {
+                        if (callback.endsWith("already exists.")) {
+                            console.print(callback);
+                            view.setMessage(local.wso2ImportDialogError());
+                        } else {
 
-                            @Override
-                            public void onFailure(Throwable exception) {
-                                showError(exception);
-                            }
-                        });
+                            Project activeProject = resourceProvider.getActiveProject();
+
+                            Resource src = getResourceByName(activeProject, SRC_FOLDER_NAME);
+                            Resource main = getResourceByName((Folder)src, MAIN_FOLDER_NAME);
+                            Resource synapse_config = getResourceByName((Folder)main, SYNAPSE_CONFIG_FOLDER_NAME);
+                            final Folder parentFolder = (Folder)getResourceByName((Folder)synapse_config, callback);
+                            // TODO
+                            // activeProject.findResourceById()
+
+
+                            resourceProvider.getActiveProject().refreshTree(parentFolder, new AsyncCallback<Folder>() {
+                                @Override
+                                public void onSuccess(Folder folder) {
+                                    eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(parentFolder));
+                                    view.close();
+                                }
+
+                                @Override
+                                public void onFailure(Throwable exception) {
+                                    showError(exception);
+                                }
+                            });
+                        }
                     }
 
                     @Override
@@ -163,6 +194,28 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
             Notification notification = new Notification(result, ERROR);
             notificationManager.showNotification(notification);
         }
+    }
+
+    /**
+     * Find resource by name in parent folder
+     *
+     * @param parent
+     *         place where child should be
+     * @param name
+     *         name that child should have
+     * @return {@link com.codenvy.ide.resources.model.Resource}
+     */
+    @Nullable
+    private Resource getResourceByName(@NotNull Folder parent, @NotNull String name) {
+        Array<Resource> children = parent.getChildren();
+
+        for (Resource child : children.asIterable()) {
+            if (name.equals(child.getName())) {
+                return child;
+            }
+        }
+
+        return null;
     }
 
     private void showError(@NotNull Throwable throwable) {
@@ -218,10 +271,12 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
 
     /** Show dialog. */
     public void showDialog() {
+        view.setUseUrl(false);
         view.setUseLocalPath(true);
         view.setMessage("");
         view.setEnabledImportButton(false);
         view.setEnterUrlFieldEnabled(false);
+        view.setUrl("");
         view.showDialog();
     }
 }

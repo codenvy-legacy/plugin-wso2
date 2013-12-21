@@ -119,10 +119,20 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
         useLocalPath.setValue(isUseLocalPath);
     }
 
+    @Override
+    public void setUseUrl(boolean isUseUrl) {
+        useUrl.setValue(isUseUrl);
+    }
+
     /** {@inheritDoc} */
     @Override
     public String getFileName() {
-        return file.getFilename();
+        String fileName = file.getFilename();
+        if (fileName.indexOf("\\") > 0) {
+            return fileName.substring(fileName.lastIndexOf('\\') + 1, fileName.length());
+        } else {
+            return fileName;
+        }
     }
 
     @Override
