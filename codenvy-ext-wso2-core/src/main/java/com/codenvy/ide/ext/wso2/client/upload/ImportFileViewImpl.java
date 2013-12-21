@@ -132,12 +132,6 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
 
     /** {@inheritDoc} */
     @Override
-    public String getTextUrl() {
-        return url.getText();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void setEnabledImportButton(boolean enabled) {
         btnImport.setEnabled(enabled);
     }

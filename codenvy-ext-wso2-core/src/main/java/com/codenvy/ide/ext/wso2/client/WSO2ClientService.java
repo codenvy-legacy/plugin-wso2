@@ -53,4 +53,15 @@ public interface WSO2ClientService {
      * @throws RequestException
      */
     void detectConfigurationFile(@NotNull FileInfo fileInfo, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+
+    /**
+     * Upload a configuration file from url.
+     *
+     * @param fileInfo
+     *         information about configuration file
+     * @param callback
+     *         callback that need to execute when the answer is come
+     * @throws RequestException
+     */
+    void uploadFile(@NotNull FileInfo fileInfo, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 }

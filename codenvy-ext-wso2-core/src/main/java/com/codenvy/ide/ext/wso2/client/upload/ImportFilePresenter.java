@@ -55,15 +55,6 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
     private DtoFactory           dtoFactory;
     private LocalizationConstant local;
 
-    /**
-     * Create presenter.
-     *
-     * @param view
-     * @param notificationManager
-     * @param console
-     * @param dtoFactory
-     * @param local
-     */
     @Inject
     public ImportFilePresenter(ImportFileView view,
                                WSO2ClientService service,
@@ -93,11 +84,43 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onImportClicked() {
-        Project activeProject = resourceProvider.getActiveProject();
-        view.setAction(restContext + '/' + Utils.getWorkspaceName() + UPLOAD_FILE_PATH + activeProject.getId());
+        final Project activeProject = resourceProvider.getActiveProject();
 
+        if (view.isUseLocalPath()) {
+            view.setAction(restContext + '/' + Utils.getWorkspaceName() + UPLOAD_FILE_PATH + activeProject.getId());
 
-        view.submit();
+            view.submit();
+        } else {
+            FileInfo fileInfo = dtoFactory.createDto(FileInfo.class)
+                                          .withFileName(view.getUrl())
+                                          .withProjectName(activeProject.getName());
+
+            try {
+                service.uploadFile(fileInfo, new AsyncRequestCallback<Void>() {
+                    @Override
+                    protected void onSuccess(Void result) {
+                        activeProject.refreshTree(new AsyncCallback<Project>() {
+                            @Override
+                            public void onSuccess(Project result) {
+                                view.close();
+                            }
+
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                showError(caught);
+                            }
+                        });
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        showError(exception);
+                    }
+                });
+            } catch (RequestException e) {
+                showError(e);
+            }
+        }
     }
 
     /** {@inheritDoc} */
@@ -109,7 +132,6 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
                                           .withProjectName(resourceProvider.getActiveProject().getName());
             try {
                 service.detectConfigurationFile(fileInfo, new AsyncRequestCallback<Void>() {
-
                     @Override
                     protected void onSuccess(Void aVoid) {
                         resourceProvider.getActiveProject().refreshTree(new AsyncCallback<Project>() {
@@ -120,8 +142,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
 
                             @Override
                             public void onFailure(Throwable exception) {
-                                Notification notification = new Notification(exception.getMessage(), ERROR);
-                                notificationManager.showNotification(notification);
+                                showError(exception);
                             }
                         });
                     }
@@ -132,16 +153,21 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
                     }
                 });
             } catch (RequestException e) {
-                e.printStackTrace();
+                showError(e);
             }
         } else {
             if (result.startsWith("<pre>") && result.endsWith("</pre>")) {
-                result.substring(5, (result.length() - 6));
+                result = result.substring(5, (result.length() - 6));
             }
             console.print(result);
             Notification notification = new Notification(result, ERROR);
             notificationManager.showNotification(notification);
         }
+    }
+
+    private void showError(@NotNull Throwable throwable) {
+        Notification notification = new Notification(throwable.getMessage(), ERROR);
+        notificationManager.showNotification(notification);
     }
 
     /** {@inheritDoc} */

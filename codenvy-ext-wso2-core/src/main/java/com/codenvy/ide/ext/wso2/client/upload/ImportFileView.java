@@ -97,10 +97,6 @@ public interface ImportFileView extends View<ImportFileView.ActionDelegate> {
      */
     void setMessage(@NotNull String message);
 
-    /** @return url */
-    @NotNull
-    String getTextUrl();
-
     /**
      * Change the enable state of the import button.
      *

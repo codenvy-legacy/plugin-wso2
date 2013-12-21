@@ -42,6 +42,7 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
     private static final String TEMPLATE_BASE_URL         = '/' + Utils.getWorkspaceName() + "/wso2";
     private static final String CREATE_ESB_CONF_PROJECT   = TEMPLATE_BASE_URL + "/templates/esbconf";
     private static final String DETECT_CONFIGURATION_FILE = TEMPLATE_BASE_URL + "/detect";
+    private static final String UPLOAD_CONFIGURATION_FILE = TEMPLATE_BASE_URL + "/upload";
 
     private String     restContext;
     private Loader     loader;
@@ -71,6 +72,17 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
     @Override
     public void detectConfigurationFile(@NotNull FileInfo fileInfo, @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
         String requestUrl = restContext + DETECT_CONFIGURATION_FILE;
+
+        loader.setMessage("Importing file...");
+
+        AsyncRequest.build(POST, requestUrl).data(dtoFactory.toJson(fileInfo)).header(CONTENT_TYPE, "application/json").loader(loader).send(
+                callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void uploadFile(@NotNull FileInfo fileInfo, @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
+        String requestUrl = restContext + UPLOAD_CONFIGURATION_FILE;
 
         loader.setMessage("Importing file...");
 

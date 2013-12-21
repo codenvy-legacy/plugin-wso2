@@ -52,6 +52,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -59,6 +60,7 @@ import java.util.List;
 import static com.codenvy.commons.env.EnvironmentContext.WORKSPACE_ID;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ENDPOINTS_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
+import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_MIME_TYPE;
 import static com.codenvy.ide.ext.wso2.shared.Constants.LOCAL_ENTRY_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.MAIN_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.PROXY_SERVICE_FOLDER_NAME;
@@ -135,18 +137,44 @@ public class WSO2RestService {
     public void detectConfigurationFile(FileInfo fileInfo) throws VirtualFileSystemException {
         VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(getVfsID());
         MountPoint mountPoint = vfsProvider.getMountPoint(false);
-        VirtualFile virtualFile = mountPoint.getVirtualFile(fileInfo.getProjectName() + "/" + fileInfo.getFileName());
+        VirtualFile file = mountPoint.getVirtualFile(fileInfo.getProjectName() + "/" + fileInfo.getFileName());
 
-        String parentFolder = getParentFolderForImportingFile(virtualFile);
+        moveFile(file, mountPoint, fileInfo.getProjectName());
+    }
 
+    private void moveFile(@NotNull VirtualFile file, @NotNull MountPoint mountPoint, @NotNull String projectName)
+            throws VirtualFileSystemException {
+
+        String parentFolder = getParentFolderForImportingFile(file);
         try {
-            virtualFile.moveTo(mountPoint.getVirtualFile(
-                    fileInfo.getProjectName() + "/" + SRC_FOLDER_NAME + "/" + MAIN_FOLDER_NAME + "/" + SYNAPSE_CONFIG_FOLDER_NAME +
-                    "/" + parentFolder), null);
+            file.moveTo(mountPoint.getVirtualFile(
+                    projectName + "/" + SRC_FOLDER_NAME + "/" + MAIN_FOLDER_NAME + "/" + SYNAPSE_CONFIG_FOLDER_NAME + "/" +
+                    parentFolder), null);
         } catch (VirtualFileSystemException e) {
             LOG.error("Cant move file", e);
         }
+    }
 
+    @Path("upload")
+    @POST
+    @Consumes(APPLICATION_JSON)
+    public void uploadConfigurationFile(FileInfo fileInfo) throws VirtualFileSystemException {
+        VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(getVfsID());
+        MountPoint mountPoint = vfsProvider.getMountPoint(false);
+        VirtualFile projectParent = mountPoint.getVirtualFile(fileInfo.getProjectName());
+
+        String filePath = fileInfo.getFileName();
+        String[] pathElements = filePath.split("/");
+        String fileName = pathElements[pathElements.length - 1];
+
+        try {
+            InputStream is = URI.create(fileInfo.getFileName()).toURL().openStream();
+            VirtualFile file = projectParent.createFile(fileName, ESB_XML_MIME_TYPE, is);
+
+            moveFile(file, mountPoint, fileInfo.getProjectName());
+        } catch (IOException e) {
+            LOG.error("Can't create " + fileName + " file", e);
+        }
     }
 
     /**
@@ -160,7 +188,7 @@ public class WSO2RestService {
         InputStream fileContent = virtualFile.getContent().getStream();
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 
-        String parentFolder = "";
+        String parentFolder;
 
         try {
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
