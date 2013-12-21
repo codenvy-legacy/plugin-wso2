@@ -18,13 +18,15 @@
 package com.codenvy.ide.ext.wso2.client.editor;
 
 import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.ext.wso2.shared.Constants;
 import com.codenvy.ide.texteditor.api.AutoEditStrategy;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.parser.BasicTokenFactory;
 import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.codenvy.ide.texteditor.api.parser.Parser;
+
+import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_EXTENSION;
+import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_MIME_TYPE;
 
 /**
  * The XML file type editor configuration.
@@ -36,8 +38,8 @@ public class XmlEditorConfiguration extends TextEditorConfiguration {
     /** {@inheritDoc} */
     @Override
     public Parser getParser(@NotNull TextEditorPartView view) {
-        CmParser parser = getParserForMime(Constants.ESB_XML_MIME_TYPE);
-        parser.setNameAndFactory(Constants.ESB_XML_EXTENSION, new BasicTokenFactory());
+        CmParser parser = getParserForMime(ESB_XML_MIME_TYPE);
+        parser.setNameAndFactory(ESB_XML_EXTENSION, new BasicTokenFactory());
         return parser;
     }
 
