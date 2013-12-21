@@ -49,22 +49,23 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Testing {@link WSO2ProjectCreationService} functionality.
+ * Testing {@link WSO2RestService} functionality.
  *
  * @author Andrey Plotnikov
  */
 @Listeners(value = {EverrestJetty.class, MockitoTestNGListener.class})
-public class WSO2ProjectCreationServiceTest {
+public class WSO2RestServiceTest {
     public static final String POM_CONTENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                                             "<project xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\"\n" +
+                                             "<project xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache" +
+                                             ".org/xsd/maven-4.0.0.xsd\"\n" +
                                              "         xmlns=\"http://maven.apache.org/POM/4.0.0\"\n" +
                                              "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
                                              "</project>";
 
     @Mock(answer = RETURNS_DEEP_STUBS)
-    private VirtualFileSystemRegistry  vfsRegistry;
+    private VirtualFileSystemRegistry vfsRegistry;
     @InjectMocks
-    private WSO2ProjectCreationService service;
+    private WSO2RestService           service;
 
     @SuppressWarnings("unchecked")
     @Test
@@ -88,7 +89,7 @@ public class WSO2ProjectCreationServiceTest {
         when(pomFile.getContent()).thenReturn(contentStream);
 
         Response response = given().header("Content-Type", "application/json").body(DtoFactory.getInstance().toJson(projectInfo)).when()
-                .post("/dev-monit/templates/esbconf");
+                .post("/dev-monit/wso2/templates/esbconf");
 
         assertEquals(response.getStatusCode(), 204);
 

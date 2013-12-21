@@ -27,7 +27,14 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FileUpload;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 /**
@@ -54,10 +61,13 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
     RadioButton useUrl;
     @UiField
     RadioButton useLocalPath;
+    @UiField
+    HTML        message;
     FileUpload file;
 
     @Inject
-    public ImportFileViewImpl(ImportFileViewImplUiBinder ourUiBinder, LocalizationConstant locale) {
+    public ImportFileViewImpl(ImportFileViewImplUiBinder ourUiBinder,
+                              LocalizationConstant locale) {
         this.locale = locale;
 
         Widget widget = ourUiBinder.createAndBindUi(this);
@@ -115,6 +125,11 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
         return file.getFilename();
     }
 
+    @Override
+    public void setMessage(@NotNull String message) {
+        this.message.setHTML(message);
+    }
+
     /** {@inheritDoc} */
     @Override
     public String getTextUrl() {
@@ -141,12 +156,6 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
 
     /** {@inheritDoc} */
     @Override
-    public void setEncoding(@NotNull String encodingType) {
-        uploadForm.setEncoding(encodingType);
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void submit() {
         uploadForm.submit();
     }
@@ -165,18 +174,27 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
+        uploadForm.setEncoding(FormPanel.ENCODING_MULTIPART);
+        uploadForm.setMethod(FormPanel.METHOD_POST);
+
+        VerticalPanel panel = new VerticalPanel();
+        uploadForm.setWidget(panel);
+
         file = new FileUpload();
+        file.setName("ImportFile");
         file.setHeight("26px");
         file.setWidth("100%");
         file.addChangeHandler(new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent changeEvent) {
-                delegate.onFileNameChanged();
+                if (!file.getFilename().endsWith(".xml")) {
+                    delegate.onFileNameChangedWithInvalidFormat();
+                } else {
+                    delegate.onFileNameChanged();
+                }
             }
         });
-
-        uploadForm.add(file);
-
+        panel.add(file);
         this.center();
         this.show();
     }

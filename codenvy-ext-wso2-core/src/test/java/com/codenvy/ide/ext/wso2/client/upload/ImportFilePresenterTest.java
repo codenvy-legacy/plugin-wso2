@@ -24,15 +24,12 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.testng.MockitoTestNGListener;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import static org.mockito.Answers.RETURNS_MOCKS;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
 
 /**
  * Here we're testing {@link ImportFilePresenter}.
@@ -41,11 +38,9 @@ import static org.testng.Assert.assertEquals;
  */
 @Listeners(value = {MockitoTestNGListener.class})
 public class ImportFilePresenterTest {
-    public static final String  MESSAGE         = "message";
-    public static final Boolean DISABLE_ELEMENT = false;
-    public static final Boolean ENABLE_ELEMENT  = true;
+    public static final String MESSAGE = "message";
 
-    @Mock(answer = RETURNS_MOCKS)
+    @Mock
     ImportFileView      view;
     @Mock
     ConsolePart         console;
@@ -54,53 +49,25 @@ public class ImportFilePresenterTest {
     @InjectMocks
     ImportFilePresenter importFilePresenter;
 
-    @BeforeMethod
-    public void setUp() {
+    @Test
+    public void importButtonAndUrlFieldShouldBeDisable() {
         importFilePresenter.showDialog();
+
+        verify(view).setEnabledImportButton(eq(false));
+        verify(view).setEnterUrlFieldEnabled(eq(false));
     }
 
     @Test
-    public void testShowDialog() {
-        verify(view).setEnabledImportButton(eq(DISABLE_ELEMENT));
-        verify(view).setEnterUrlFieldEnabled(eq(DISABLE_ELEMENT));
-        verify(view).setUseLocalPath(eq(ENABLE_ELEMENT));
-    }
-
-    @Test
-    public void onCancelClicked() {
+    public void closeButtonShouldBeExecuted() {
         importFilePresenter.onCancelClicked();
+
         verify(view).close();
     }
 
-    @Test
-    public void testWhenUrlRadioButtonChosen() {
+    public void prepareWhenUrlButtonChosen() {
         importFilePresenter.onUseUrlChosen();
 
         when(view.getUrl()).thenReturn(MESSAGE);
         when(view.isUseUrl()).thenReturn(true);
-
-        verify(view).setEnterUrlFieldEnabled(eq(ENABLE_ELEMENT));
-        verify(view).setEnabledImportButton(eq(DISABLE_ELEMENT));
-        verify(view).setUseLocalPath(ENABLE_ELEMENT);
-
-        assertEquals(MESSAGE, view.getUrl());
-
-        importFilePresenter.onUrlChanged();
-        verify(view).setEnabledImportButton(eq(ENABLE_ELEMENT));
-    }
-
-    @Test
-    public void testWhenLocalFileRadioButtonChosen() {
-        importFilePresenter.onUseLocalPathChosen();
-
-        when(view.getFileName()).thenReturn(MESSAGE);
-        when(view.isUseLocalPath()).thenReturn(true);
-
-        verify(view).setEnabledImportButton(eq(DISABLE_ELEMENT));
-        assertEquals(MESSAGE, view.getFileName());
-
-        importFilePresenter.onFileNameChanged();
-
-        verify(view).setEnabledImportButton(eq(ENABLE_ELEMENT));
     }
 }

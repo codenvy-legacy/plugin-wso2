@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.wso2.client;
 
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.ext.wso2.client.upload.FileInfo;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -41,4 +42,15 @@ public interface WSO2ClientService {
      * @throws RequestException
      */
     void createESBConfProject(@NotNull ESBProjectInfo projectInfo, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+
+    /**
+     * Detect configuration file with given name.
+     *
+     * @param fileInfo
+     *         information about configuration file
+     * @param callback
+     *         callback that need to execute when the answer is come
+     * @throws RequestException
+     */
+    void detectConfigurationFile(@NotNull FileInfo fileInfo, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
 }

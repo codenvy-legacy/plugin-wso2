@@ -47,6 +47,9 @@ public interface ImportFileView extends View<ImportFileView.ActionDelegate> {
         /** Performs any actions appropriate in response to the user having changed file name field. */
         void onFileNameChanged();
 
+        /** Performs actions appropriate in response to the user having changed file with invalid format. */
+        void onFileNameChangedWithInvalidFormat();
+
         /** Performs any actions appropriate in response to the user having changed url field. */
         void onUrlChanged();
 
@@ -86,6 +89,14 @@ public interface ImportFileView extends View<ImportFileView.ActionDelegate> {
     @NotNull
     String getFileName();
 
+    /**
+     * Set error message
+     *
+     * @param message
+     *         the message
+     */
+    void setMessage(@NotNull String message);
+
     /** @return url */
     @NotNull
     String getTextUrl();
@@ -113,14 +124,6 @@ public interface ImportFileView extends View<ImportFileView.ActionDelegate> {
      *         the form's action
      */
     void setAction(@NotNull String url);
-
-    /**
-     * Sets the encoding used for submitting this form.
-     *
-     * @param encodingType
-     *         the form's encoding
-     */
-    void setEncoding(@NotNull String encodingType);
 
     /** Submits the form. */
     void submit();

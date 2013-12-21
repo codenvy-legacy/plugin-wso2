@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.wso2.client;
 
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
@@ -28,6 +29,15 @@ import com.google.gwt.resources.client.TextResource;
  * @author Dmitry Kuleshov
  */
 public interface WSO2Resources extends ClientBundle {
+
+    public interface WSO2Style extends CssResource {
+
+        String importErrorFont();
+
+    }
+
+    @Source({"WSO2Style.css", "com/codenvy/ide/ext/wso2/client/WSO2Style.css"})
+    WSO2Style wso2Style();
 
     @Source("xml.js")
     DataResource xmlParserJS();

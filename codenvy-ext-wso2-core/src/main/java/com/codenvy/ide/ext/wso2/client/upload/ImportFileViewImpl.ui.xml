@@ -3,6 +3,8 @@
              xmlns:c='urn:import:com.codenvy.ide.ui'>
 
     <ui:with field='locale' type='com.codenvy.ide.ext.wso2.client.LocalizationConstant'/>
+    <ui:with field='res' type='com.codenvy.ide.ext.wso2.client.WSO2Resources'/>
+
 
     <ui:style>
         .alignBtn {
@@ -22,7 +24,7 @@
         }
     </ui:style>
 
-    <g:DockLayoutPanel unit="PX" width="350px" height="138px" addStyleNames="{style.emptyBorder}">
+    <g:DockLayoutPanel unit="PX" width="350px" height="165px" addStyleNames="{style.emptyBorder}">
 
         <g:north size="50.0">
 
@@ -75,6 +77,10 @@
             </g:FlowPanel>
 
         </g:south>
+
+        <g:north size="50.0">
+            <g:HTML ui:field="message" addStyleNames="{res.wso2Style.importErrorFont}"/>
+        </g:north>
 
     </g:DockLayoutPanel>
 

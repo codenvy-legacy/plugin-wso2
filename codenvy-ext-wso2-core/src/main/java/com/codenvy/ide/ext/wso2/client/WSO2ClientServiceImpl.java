@@ -19,6 +19,7 @@ package com.codenvy.ide.ext.wso2.client;
 
 import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.ext.wso2.client.upload.FileInfo;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -38,8 +39,9 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  */
 public class WSO2ClientServiceImpl implements WSO2ClientService {
 
-    private static final String TEMPLATE_BASE_URL       = '/' + Utils.getWorkspaceName() + "/templates";
-    private static final String CREATE_ESB_CONF_PROJECT = TEMPLATE_BASE_URL + "/esbconf";
+    private static final String TEMPLATE_BASE_URL         = '/' + Utils.getWorkspaceName() + "/wso2";
+    private static final String CREATE_ESB_CONF_PROJECT   = TEMPLATE_BASE_URL + "/templates/esbconf";
+    private static final String DETECT_CONFIGURATION_FILE = TEMPLATE_BASE_URL + "/detect";
 
     private String     restContext;
     private Loader     loader;
@@ -63,5 +65,16 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
 
         AsyncRequest.build(POST, requestUrl).data(dtoFactory.toJson(projectInfo)).header(CONTENT_TYPE, "application/json").loader(loader)
                     .send(callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void detectConfigurationFile(@NotNull FileInfo fileInfo, @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
+        String requestUrl = restContext + DETECT_CONFIGURATION_FILE;
+
+        loader.setMessage("Importing file...");
+
+        AsyncRequest.build(POST, requestUrl).data(dtoFactory.toJson(fileInfo)).header(CONTENT_TYPE, "application/json").loader(loader).send(
+                callback);
     }
 }

@@ -28,6 +28,7 @@ import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.annotations.NotNull;
+import com.codenvy.ide.ext.wso2.client.upload.FileInfo;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
 
 import org.apache.maven.model.Model;
@@ -37,11 +38,16 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -51,7 +57,14 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.codenvy.commons.env.EnvironmentContext.WORKSPACE_ID;
+import static com.codenvy.ide.ext.wso2.shared.Constants.ENDPOINTS_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
+import static com.codenvy.ide.ext.wso2.shared.Constants.LOCAL_ENTRY_FOLDER_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.MAIN_FOLDER_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.PROXY_SERVICE_FOLDER_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.SEQUENCE_FOLDER_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.SRC_FOLDER_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
@@ -62,14 +75,14 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
  *
  * @author Andrey Plotnikov
  */
-@Path("{ws-name}/templates")
-public class WSO2ProjectCreationService {
-    private static final Logger LOG = LoggerFactory.getLogger(WSO2ProjectCreationService.class);
+@Path("{ws-name}/wso2")
+public class WSO2RestService {
+    private static final Logger LOG = LoggerFactory.getLogger(WSO2RestService.class);
 
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
 
-    @Path("esbconf")
+    @Path("templates/esbconf")
     @POST
     @Consumes(APPLICATION_JSON)
     public void createESBConfProject(ESBProjectInfo projectInfo) throws VirtualFileSystemException, IOException {
@@ -114,6 +127,70 @@ public class WSO2ProjectCreationService {
             LOG.warn("Error occurred while setting project coordinates.", e);
             throw new IllegalStateException(e.getMessage(), e);
         }
+    }
+
+    @Path("detect")
+    @POST
+    @Consumes(APPLICATION_JSON)
+    public void detectConfigurationFile(FileInfo fileInfo) throws VirtualFileSystemException {
+        VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(getVfsID());
+        MountPoint mountPoint = vfsProvider.getMountPoint(false);
+        VirtualFile virtualFile = mountPoint.getVirtualFile(fileInfo.getProjectName() + "/" + fileInfo.getFileName());
+
+        String parentFolder = getParentFolderForImportingFile(virtualFile);
+
+        try {
+            virtualFile.moveTo(mountPoint.getVirtualFile(
+                    fileInfo.getProjectName() + "/" + SRC_FOLDER_NAME + "/" + MAIN_FOLDER_NAME + "/" + SYNAPSE_CONFIG_FOLDER_NAME +
+                    "/" + parentFolder), null);
+        } catch (VirtualFileSystemException e) {
+            LOG.error("Cant move file", e);
+        }
+
+    }
+
+    /**
+     * Determines parent folder for importing file.
+     *
+     * @param virtualFile
+     *         importing file
+     * @return parent folder for file or empty string if file is not esb configuration
+     */
+    private String getParentFolderForImportingFile(VirtualFile virtualFile) throws VirtualFileSystemException {
+        InputStream fileContent = virtualFile.getContent().getStream();
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+
+        String parentFolder = "";
+
+        try {
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document document = dBuilder.parse(fileContent);
+            document.getDocumentElement().normalize();
+
+            String rootNode = document.getDocumentElement().getNodeName();
+            switch (rootNode) {
+                case "endpoint":
+                    parentFolder = ENDPOINTS_FOLDER_NAME;
+                    break;
+                case "sequence":
+                    parentFolder = SEQUENCE_FOLDER_NAME;
+                    break;
+                case "proxy":
+                    parentFolder = PROXY_SERVICE_FOLDER_NAME;
+                    break;
+                case "localEntry":
+                    parentFolder = LOCAL_ENTRY_FOLDER_NAME;
+                    break;
+                default:
+                    parentFolder = "";
+                    break;
+            }
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            virtualFile.delete(null);
+            throw new IllegalStateException(e);
+        }
+
+        return parentFolder;
     }
 
     /** @return virtual file system id */

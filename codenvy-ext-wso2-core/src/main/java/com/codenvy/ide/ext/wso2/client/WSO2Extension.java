@@ -31,7 +31,7 @@ import com.codenvy.ide.ext.wso2.client.action.CreateEndpointAction;
 import com.codenvy.ide.ext.wso2.client.action.CreateLocalEntryAction;
 import com.codenvy.ide.ext.wso2.client.action.CreateProxyServiceAction;
 import com.codenvy.ide.ext.wso2.client.action.CreateSequenceAction;
-import com.codenvy.ide.ext.wso2.client.action.ImportFileAction;
+import com.codenvy.ide.ext.wso2.client.action.ImportSynapseAction;
 import com.codenvy.ide.ext.wso2.client.action.WSO2ActionGroup;
 import com.codenvy.ide.ext.wso2.client.editor.ESBXmlFileType;
 import com.codenvy.ide.ext.wso2.client.editor.XmlEditorProvider;
@@ -51,8 +51,9 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_LOCAL_ENTRY_ACTIO
 import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_PROXY_SERVICE_ACTION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_SEQUENCE_ACTION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
-import static com.codenvy.ide.ext.wso2.shared.Constants.IMPORT_FILE_ACTION;
+import static com.codenvy.ide.ext.wso2.shared.Constants.IMPORT_SYNAPSE_ACTION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_ACTION_GROUP;
+import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_IMPORT_RESOURCE_GROUP;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_NEW_RESOURCE_GROUP;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
 import static com.google.gwt.core.client.ScriptInjector.TOP_WINDOW;
@@ -75,7 +76,7 @@ public class WSO2Extension {
                          TemplateAgent templateAgent,
                          Provider<CreateESBConfProjectPage> createESBConfProjectPage,
                          ActionManager actionManager,
-                         ImportFileAction importFileAction,
+                         ImportSynapseAction importSynapseAction,
                          CreateEndpointAction createEndpointAction,
                          CreateSequenceAction createSequenceAction,
                          CreateProxyServiceAction createProxyServiceAction,
@@ -86,12 +87,14 @@ public class WSO2Extension {
                          XmlEditorProvider xmlEditorProvider,
                          @ESBXmlFileType FileType esbXmlFileType) {
 
+        wso2Resources.wso2Style().ensureInjected();
+
         initProject(locale, projectTypeAgent, templateAgent, createESBConfProjectPage);
         initXmlEditor(wso2Resources, resourceProvider, editorRegistry, xmlEditorProvider, esbXmlFileType);
         initActions(locale,
                     resourceProvider,
                     actionManager,
-                    importFileAction,
+                    importSynapseAction,
                     createEndpointAction,
                     createSequenceAction,
                     createProxyServiceAction,
@@ -134,7 +137,7 @@ public class WSO2Extension {
     private void initActions(LocalizationConstant locale,
                              ResourceProvider resourceProvider,
                              ActionManager actionManager,
-                             ImportFileAction importFileAction,
+                             ImportSynapseAction importSynapseAction,
                              CreateEndpointAction createEndpointAction,
                              CreateSequenceAction createSequenceAction,
                              CreateProxyServiceAction createProxyServiceAction,
@@ -149,19 +152,24 @@ public class WSO2Extension {
         DefaultActionGroup wso2NewGroup = new DefaultActionGroup(locale.wso2ActionNew(), true, actionManager);
         actionManager.registerAction(WSO2_NEW_RESOURCE_GROUP, wso2NewGroup);
 
-        actionManager.registerAction(IMPORT_FILE_ACTION, importFileAction);
+        DefaultActionGroup wso2ImportGroup = new DefaultActionGroup(locale.wso2ImportActionTitle(), true, actionManager);
+        actionManager.registerAction(WSO2_IMPORT_RESOURCE_GROUP, wso2ImportGroup);
+
+        actionManager.registerAction(IMPORT_SYNAPSE_ACTION, importSynapseAction);
         actionManager.registerAction(CREATE_ENDPOINT_ACTION, createEndpointAction);
         actionManager.registerAction(CREATE_SEQUENCE_ACTION, createSequenceAction);
         actionManager.registerAction(CREATE_PROXY_SERVICE_ACTION, createProxyServiceAction);
         actionManager.registerAction(CREATE_LOCAL_ENTRY_ACTION, createLocalEntryAction);
 
         wso2ActionGroup.add(wso2NewGroup);
-        wso2ActionGroup.add(importFileAction);
+        wso2ActionGroup.add(wso2ImportGroup);
 
         wso2NewGroup.add(createEndpointAction);
         wso2NewGroup.add(createSequenceAction);
         wso2NewGroup.add(createProxyServiceAction);
         wso2NewGroup.add(createLocalEntryAction);
+
+        wso2ImportGroup.add(importSynapseAction);
 
         wso2MainMenu.add(wso2ActionGroup, LAST);
         wso2MainMenu.addSeparator();

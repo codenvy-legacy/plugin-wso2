@@ -36,17 +36,17 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * @author Valeriy Svydenko
  */
 @Singleton
-public class ImportFileAction extends Action {
+public class ImportSynapseAction extends Action {
 
     private AsyncProvider<ImportFilePresenter> importFilePresenter;
     private NotificationManager                notificationManager;
 
     @Inject
-    public ImportFileAction(LocalizationConstant local,
-                            AsyncProvider<ImportFilePresenter> importFilePresenter,
-                            NotificationManager notificationManager) {
+    public ImportSynapseAction(LocalizationConstant local,
+                               AsyncProvider<ImportFilePresenter> importFilePresenter,
+                               NotificationManager notificationManager) {
 
-        super(local.wso2ImportActionTitle(), local.wso2ImportActionDescription(), null);
+        super(local.wso2ImportSynapseConfig(), local.wso2ImportActionDescription(), null);
 
         this.importFilePresenter = importFilePresenter;
         this.notificationManager = notificationManager;

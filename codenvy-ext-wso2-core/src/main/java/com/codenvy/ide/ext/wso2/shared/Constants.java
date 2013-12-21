@@ -39,19 +39,16 @@ public interface Constants {
 
     String WSO2_ACTION_GROUP           = "WSO2ActionGroup";
     String WSO2_NEW_RESOURCE_GROUP     = "WSO2NewResourceGroup";
-    String IMPORT_FILE_ACTION          = "ImportFileAction";
+    String WSO2_IMPORT_RESOURCE_GROUP  = "WSO2ImportResourceGroup";
+    String IMPORT_SYNAPSE_ACTION       = "ImportSynapseAction";
     String CREATE_ENDPOINT_ACTION      = "CreateEndpointAction";
     String CREATE_SEQUENCE_ACTION      = "CreateSequenceAction";
     String CREATE_PROXY_SERVICE_ACTION = "CreateProxyServiceAction";
     String CREATE_LOCAL_ENTRY_ACTION   = "CreateLocalEntryAction";
 
-    /**
-     * Dedicated mime type name for WSO2 ESB configuration files
-     */
+    /** Dedicated mime type name for WSO2 ESB configuration files */
     String ESB_XML_MIME_TYPE = "text/xml-esb";
-    /**
-     * Extension name for WSO2 ESB configuration files
-     */
+    /** Extension name for WSO2 ESB configuration files */
     String ESB_XML_EXTENSION = "xml";
 
 }

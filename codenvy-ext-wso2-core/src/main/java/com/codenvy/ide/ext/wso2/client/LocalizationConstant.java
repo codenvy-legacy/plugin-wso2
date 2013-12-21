@@ -80,7 +80,7 @@ public interface LocalizationConstant extends Messages {
     @Key("wso2.import.action.title")
     String wso2ImportActionTitle();
 
-    @Key("wso2.import.action.description")
+    @Key("wso2.import.synapse.description")
     String wso2ImportActionDescription();
 
     @Key("wso2.button.cancel")
@@ -92,14 +92,17 @@ public interface LocalizationConstant extends Messages {
     @Key("wso2.file.name.title")
     String wso2FileNameTitle();
 
-    @Key("wso2.use.url.label")
-    String wso2UseUrlLabel();
-
     @Key("wso2.url.label.title")
     String wso2UrlLabelTitle();
 
     @Key("wso2.import.dialog.title")
     String wso2ImportDialogTitle();
+
+    @Key("wso2.import.dialog.error")
+    String wso2ImportDialogError();
+
+    @Key("wso2.import.file.format.error")
+    String wso2ImportFileFormatError();
 
     @Key("wizard.file.endpoint.title")
     String wizardFileEndpointTitle();
@@ -157,4 +160,8 @@ public interface LocalizationConstant extends Messages {
 
     @Key("wso2.actions.createLocalEntry.title")
     String wso2ActionsCreateLocalEntryTitle();
+
+    @Key("wso2.import.synapse.config")
+    String wso2ImportSynapseConfig();
+
 }
