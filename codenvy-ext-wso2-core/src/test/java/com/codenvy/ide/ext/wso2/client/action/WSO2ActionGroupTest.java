@@ -81,6 +81,7 @@ public class WSO2ActionGroupTest {
     @BeforeClass
     public void checkInitializeProcess() throws Exception {
         verify(locale).wso2MainActionTitle();
+        verify(resources).wso2GroupIcon();
     }
 
     @BeforeMethod

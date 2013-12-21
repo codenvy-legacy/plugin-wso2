@@ -89,9 +89,10 @@ public class WSO2Extension {
 
         wso2Resources.wso2Style().ensureInjected();
 
-        initProject(locale, projectTypeAgent, templateAgent, createESBConfProjectPage);
+        initProject(locale, wso2Resources, projectTypeAgent, templateAgent, createESBConfProjectPage);
         initXmlEditor(wso2Resources, resourceProvider, editorRegistry, xmlEditorProvider, esbXmlFileType);
         initActions(locale,
+                    wso2Resources,
                     resourceProvider,
                     actionManager,
                     importSynapseAction,
@@ -116,25 +117,27 @@ public class WSO2Extension {
 
     @SuppressWarnings("unchecked")
     private void initProject(LocalizationConstant locale,
+                             WSO2Resources wso2Resources,
                              ProjectTypeAgent projectTypeAgent,
                              TemplateAgent templateAgent,
                              Provider<CreateESBConfProjectPage> createESBConfProjectPage) {
 
         projectTypeAgent.register(WSO2_PROJECT_ID,
                                   locale.wso2ProjectTitle(),
-                                  null,
+                                  wso2Resources.wso2_project_wizard(),
                                   WSO2_PROJECT_ID,
                                   Collections.<String>createArray());
 
         templateAgent.register(ESB_CONFIGURATION_PROJECT_ID,
                                locale.wso2ProjectEsbTitle(),
-                               null,
+                               wso2Resources.esb_template_icon(),
                                WSO2_PROJECT_ID,
                                Collections.<String>createArray(ESB_CONFIGURATION_PROJECT_ID),
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createESBConfProjectPage));
     }
 
     private void initActions(LocalizationConstant locale,
+                             WSO2Resources wso2Resources,
                              ResourceProvider resourceProvider,
                              ActionManager actionManager,
                              ImportSynapseAction importSynapseAction,
@@ -146,7 +149,7 @@ public class WSO2Extension {
         DefaultActionGroup wso2MainMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_MENU);
         DefaultActionGroup wso2ContextMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
 
-        DefaultActionGroup wso2ActionGroup = new WSO2ActionGroup(locale, actionManager, resourceProvider);
+        DefaultActionGroup wso2ActionGroup = new WSO2ActionGroup(locale, wso2Resources, actionManager, resourceProvider);
         actionManager.registerAction(WSO2_ACTION_GROUP, wso2ActionGroup);
 
         DefaultActionGroup wso2NewGroup = new DefaultActionGroup(locale.wso2ActionNew(), true, actionManager);

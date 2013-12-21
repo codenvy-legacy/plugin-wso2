@@ -57,6 +57,9 @@ public interface WSO2Resources extends ClientBundle {
     @Source("local-entry-template.txt")
     TextResource localEntryTemplate();
 
+    @Source("wso2-action-group-icon.png")
+    ImageResource wso2GroupIcon();
+
     @Source("endpoint-icon.png")
     ImageResource endpointIcon();
 
@@ -81,7 +84,13 @@ public interface WSO2Resources extends ClientBundle {
     @Source("local-entry-wizard.png")
     ImageResource local_entry_wizard();
 
+    @Source("new-project-wizard-icon.png")
+    ImageResource wso2_project_wizard();
+
     @Source("esb-project-wizard.png")
     ImageResource esb_project_wizard();
+
+    @Source("esb-template-icon.png")
+    ImageResource esb_template_icon();
 
 }
