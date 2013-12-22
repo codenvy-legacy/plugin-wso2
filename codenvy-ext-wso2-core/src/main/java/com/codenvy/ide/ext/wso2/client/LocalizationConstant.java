@@ -164,4 +164,16 @@ public interface LocalizationConstant extends Messages {
     @Key("wso2.import.synapse.config")
     String wso2ImportSynapseConfig();
 
+    @Key("wso2.file.overwrite.title")
+    String wso2FileOverwriteTitle();
+
+    @Key("wso2.import.file.already.exists")
+    String wso2ImportFileAlreadyExists();
+
+    @Key("wso2.button.overwrite")
+    String wso2ButtonOverwrite();
+
+    @Key("wso2.button.rename")
+    String wso2ButtonRename();
+
 }

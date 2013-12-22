@@ -45,6 +45,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.DocumentBuilder;
@@ -155,7 +156,6 @@ public class WSO2RestService {
                     projectName + "/" + SRC_FOLDER_NAME + "/" + MAIN_FOLDER_NAME + "/" + SYNAPSE_CONFIG_FOLDER_NAME + "/" +
                     parentFolder), null);
         } catch (VirtualFileSystemException e) {
-            file.delete(null);
             return e.getMessage();
         }
         return parentFolder;
@@ -181,6 +181,30 @@ public class WSO2RestService {
         } catch (IOException e) {
             LOG.error("Can't create " + fileName + " file", e);
         }
+    }
+
+    @Path("file/{operation}")
+    @POST
+    @Consumes(APPLICATION_JSON)
+    public Response overwriteConfigurationFile(@PathParam("operation") String operation, FileInfo fileInfo) throws VirtualFileSystemException {
+        VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(getVfsID());
+        MountPoint mountPoint = vfsProvider.getMountPoint(false);
+        VirtualFile file = mountPoint.getVirtualFile(fileInfo.getProjectName() + "/" + fileInfo.getFileName());
+        String parentFolder = getParentFolderForImportingFile(file);
+        VirtualFile oldFile = mountPoint.getVirtualFile(
+                fileInfo.getProjectName() + "/" + SRC_FOLDER_NAME + "/" + MAIN_FOLDER_NAME + "/" + SYNAPSE_CONFIG_FOLDER_NAME + "/" +
+                parentFolder + "/" + fileInfo.getFileName());
+        if ("overwrite".equals(operation)) {
+            oldFile.updateContent(oldFile.getMediaType(), file.getContent().getStream(), null);
+            file.delete(null);
+        } else if ("rename".equals(operation)) {
+            file.rename(fileInfo.getNewFileName(), file.getMediaType(), null);
+            file = mountPoint.getVirtualFile(fileInfo.getProjectName() + "/" + fileInfo.getNewFileName());
+            moveFile(file, mountPoint, fileInfo.getProjectName());
+        } else {
+            file.delete(null);
+        }
+        return Response.ok(parentFolder, MediaType.TEXT_HTML).build();
     }
 
     /**

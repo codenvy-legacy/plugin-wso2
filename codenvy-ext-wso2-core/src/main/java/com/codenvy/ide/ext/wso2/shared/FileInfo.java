@@ -38,4 +38,10 @@ public interface FileInfo {
     void setProjectName(String projectName);
 
     FileInfo withProjectName(String projectName);
+
+    String getNewFileName();
+
+    void setNewFileName(String newFileName);
+
+    FileInfo withNewFileName(String newFileName);
 }

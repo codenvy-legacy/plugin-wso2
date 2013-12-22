@@ -28,6 +28,7 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
+import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
@@ -58,18 +59,20 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
 
     private final String UPLOAD_FILE_PATH = "/vfs/v2/uploadfile/";
 
-    private ImportFileView       view;
-    private EventBus             eventBus;
-    private ConsolePart          console;
-    private NotificationManager  notificationManager;
-    private String               restContext;
-    private ResourceProvider     resourceProvider;
-    private WSO2ClientService    service;
-    private DtoFactory           dtoFactory;
-    private LocalizationConstant local;
+    private ImportFileView         view;
+    private EventBus               eventBus;
+    private ConsolePart            console;
+    private NotificationManager    notificationManager;
+    private String                 restContext;
+    private ResourceProvider       resourceProvider;
+    private WSO2ClientService      service;
+    private DtoFactory             dtoFactory;
+    private LocalizationConstant   local;
+    private OverwriteFilePresenter overwrite;
 
     @Inject
     public ImportFilePresenter(ImportFileView view,
+                               OverwriteFilePresenter overwrite,
                                WSO2ClientService service,
                                ConsolePart console,
                                @Named("restContext") String restContext,
@@ -88,6 +91,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
         this.service = service;
         this.dtoFactory = dtoFactory;
         this.local = local;
+        this.overwrite = overwrite;
     }
 
     /** {@inheritDoc} */
@@ -150,8 +154,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
                     @Override
                     protected void onSuccess(final String callback) {
                         if (callback.endsWith("already exists. ")) {
-                            console.print(callback);
-                            view.setMessage(local.wso2ImportDialogError());
+                            overwrite.showDialog(view.getFileName());
                         } else {
                             final Folder parentFolder;
 
