@@ -156,6 +156,7 @@ public class WSO2Extension {
         actionManager.registerAction(WSO2_NEW_RESOURCE_GROUP, wso2NewGroup);
 
         DefaultActionGroup wso2ImportGroup = new DefaultActionGroup(locale.wso2ImportActionTitle(), true, actionManager);
+        wso2ImportGroup.getTemplatePresentation().setIcon(wso2Resources.uploadIcon());
         actionManager.registerAction(WSO2_IMPORT_RESOURCE_GROUP, wso2ImportGroup);
 
         actionManager.registerAction(IMPORT_SYNAPSE_ACTION, importSynapseAction);

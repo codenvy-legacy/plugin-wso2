@@ -22,6 +22,7 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
+import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ext.wso2.client.upload.ImportFilePresenter;
 import com.google.gwt.inject.client.AsyncProvider;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -40,16 +41,19 @@ public class ImportSynapseAction extends Action {
 
     private AsyncProvider<ImportFilePresenter> importFilePresenter;
     private NotificationManager                notificationManager;
+    private WSO2Resources                      wso2Resources;
 
     @Inject
     public ImportSynapseAction(LocalizationConstant local,
                                AsyncProvider<ImportFilePresenter> importFilePresenter,
-                               NotificationManager notificationManager) {
+                               NotificationManager notificationManager,
+                               WSO2Resources wso2Resources) {
 
-        super(local.wso2ImportSynapseConfig(), local.wso2ImportActionDescription(), null);
+        super(local.wso2ImportSynapseConfig(), local.wso2ImportActionDescription(), wso2Resources.synapseIcon());
 
         this.importFilePresenter = importFilePresenter;
         this.notificationManager = notificationManager;
+        this.wso2Resources = wso2Resources;
     }
 
     /** {@inheritDoc} */

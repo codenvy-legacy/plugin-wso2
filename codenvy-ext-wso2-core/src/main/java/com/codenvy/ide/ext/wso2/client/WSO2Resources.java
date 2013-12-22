@@ -93,4 +93,10 @@ public interface WSO2Resources extends ClientBundle {
     @Source("esb-template-icon.png")
     ImageResource esb_template_icon();
 
+    @Source("upload.png")
+    ImageResource uploadIcon();
+
+    @Source("synapse-icon.png")
+    ImageResource synapseIcon();
+
 }

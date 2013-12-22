@@ -29,6 +29,7 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
+import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
@@ -141,32 +142,36 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
     @Override
     public void onSubmitComplete(@NotNull String result) {
         if (result.isEmpty()) {
-            FileInfo fileInfo = dtoFactory.createDto(FileInfo.class)
-                                          .withFileName(view.getFileName())
-                                          .withProjectName(resourceProvider.getActiveProject().getName());
+            final FileInfo fileInfo = dtoFactory.createDto(FileInfo.class)
+                                                .withFileName(view.getFileName())
+                                                .withProjectName(resourceProvider.getActiveProject().getName());
             try {
                 service.detectConfigurationFile(fileInfo, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                     @Override
-                    protected void onSuccess(String callback) {
-                        if (callback.endsWith("already exists.")) {
+                    protected void onSuccess(final String callback) {
+                        if (callback.endsWith("already exists. ")) {
                             console.print(callback);
                             view.setMessage(local.wso2ImportDialogError());
                         } else {
+                            final Folder parentFolder;
 
                             Project activeProject = resourceProvider.getActiveProject();
 
                             Resource src = getResourceByName(activeProject, SRC_FOLDER_NAME);
                             Resource main = getResourceByName((Folder)src, MAIN_FOLDER_NAME);
                             Resource synapse_config = getResourceByName((Folder)main, SYNAPSE_CONFIG_FOLDER_NAME);
-                            final Folder parentFolder = (Folder)getResourceByName((Folder)synapse_config, callback);
-                            // TODO
-                            // activeProject.findResourceById()
+                            if (callback.isEmpty()) {
+                                parentFolder = (Folder)synapse_config;
+                            } else {
+                                parentFolder = (Folder)getResourceByName((Folder)synapse_config, callback);
+                            }
 
 
                             resourceProvider.getActiveProject().refreshTree(parentFolder, new AsyncCallback<Folder>() {
                                 @Override
                                 public void onSuccess(Folder folder) {
-                                    eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(parentFolder));
+                                    File file = (File)parentFolder.findResourceByName(fileInfo.getFileName(), "file");
+                                    eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(file));
                                     view.close();
                                 }
 
