@@ -117,12 +117,14 @@ public class WSO2RestService {
             pom.setArtifactId(projectInfo.getArtifactID());
             pom.setVersion(projectInfo.getVersion());
 
-            Parent parentPom = new Parent();
-            parentPom.setVersion(projectInfo.getVersion());
-            parentPom.setGroupId(projectInfo.getParentGroupID());
-            parentPom.setArtifactId(projectInfo.getParentArtifactID());
+            if (projectInfo.isParentPomConf()) {
+                Parent parentPom = new Parent();
+                parentPom.setVersion(projectInfo.getVersion());
+                parentPom.setGroupId(projectInfo.getParentGroupID());
+                parentPom.setArtifactId(projectInfo.getParentArtifactID());
 
-            pom.setParent(parentPom);
+                pom.setParent(parentPom);
+            }
 
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             pomWriter.write(stream, pom);

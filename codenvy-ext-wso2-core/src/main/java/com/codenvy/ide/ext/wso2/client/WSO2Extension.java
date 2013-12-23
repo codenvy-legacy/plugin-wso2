@@ -176,9 +176,7 @@ public class WSO2Extension {
         wso2ImportGroup.add(importSynapseAction);
 
         wso2MainMenu.add(wso2ActionGroup, LAST);
-        wso2MainMenu.addSeparator();
 
         wso2ContextMenu.add(wso2ActionGroup, FIRST);
-        wso2ContextMenu.addSeparator();
     }
 }
