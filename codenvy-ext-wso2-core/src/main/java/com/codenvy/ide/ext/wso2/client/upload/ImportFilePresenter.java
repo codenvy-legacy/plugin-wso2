@@ -57,6 +57,12 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NA
 @Singleton
 public class ImportFilePresenter implements ImportFileView.ActionDelegate {
 
+    /** Required for delegating close function in another model. */
+    public interface ImportFileFiewUtils {
+        /** Call when need close the view. */
+        void closeView();
+    }
+
     private final String UPLOAD_FILE_PATH = "/vfs/v2/uploadfile/";
 
     private ImportFileView         view;
@@ -154,7 +160,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
                     @Override
                     protected void onSuccess(final String callback) {
                         if (callback.endsWith("already exists. ")) {
-                            overwrite.showDialog(view.getFileName());
+                            overwrite.showDialog(view.getFileName(), new ViewUtils());
                         } else {
                             final Folder parentFolder;
 
@@ -274,6 +280,14 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
                 view.setMessage("");
                 view.setEnabledImportButton(true);
             }
+        }
+    }
+
+    /** The implementation of {@link com.codenvy.ide.ext.wso2.client.upload.ImportFilePresenter.ImportFileFiewUtils}. */
+    private class ViewUtils implements ImportFileFiewUtils {
+        @Override
+        public void closeView() {
+            view.close();
         }
     }
 

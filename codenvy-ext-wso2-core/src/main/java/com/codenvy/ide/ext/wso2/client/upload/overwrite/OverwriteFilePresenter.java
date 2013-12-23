@@ -27,6 +27,7 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
+import com.codenvy.ide.ext.wso2.client.upload.ImportFilePresenter;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
@@ -66,6 +67,7 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
     private LocalizationConstant local;
 
     private String oldFileName = "";
+    private ImportFilePresenter.ImportFileFiewUtils parentViewUtils;
 
     @Inject
     public OverwriteFilePresenter(OverwriteFileView view,
@@ -94,11 +96,13 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
     @Override
     public void onRenameButtonClicked() {
         modifyExistingFile(RENAME_FILE_OPERATION);
+        parentViewUtils.closeView();
     }
 
     @Override
     public void onOverwriteButtonClicked() {
         modifyExistingFile(OVERWRITE_FILE_OPERATION);
+        parentViewUtils.closeView();
     }
 
     @Override
@@ -207,11 +211,12 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
         notificationManager.showNotification(notification);
     }
 
-    public void showDialog(String fileName) {
+    public void showDialog(String fileName, ImportFilePresenter.ImportFileFiewUtils parentViewUtils) {
         view.setMessage(local.wso2ImportFileAlreadyExists());
         view.setFileName(fileName);
         view.setEnabledRenameButton(false);
         view.showDialog();
         oldFileName = view.getFileName();
+        this.parentViewUtils = parentViewUtils;
     }
 }

@@ -64,4 +64,16 @@ public interface WSO2ClientService {
      * @throws RequestException
      */
     void uploadFile(@NotNull FileInfo fileInfo, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+
+    /**
+     * Modify configuration file with given name.
+     *
+     * @param fileInfo
+     *         information about configuration file
+     * @param callback
+     *         callback that need to execute when the answer is come
+     * @throws RequestException
+     */
+    void modifyFile(@NotNull FileInfo fileInfo, @NotNull String operation, @NotNull AsyncRequestCallback<String> callback)
+            throws RequestException;
 }
