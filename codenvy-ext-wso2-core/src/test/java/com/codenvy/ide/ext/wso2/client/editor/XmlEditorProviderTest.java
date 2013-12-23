@@ -26,12 +26,10 @@ import com.google.inject.Provider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static junit.framework.Assert.assertEquals;
-import static org.mockito.Matchers.anyObject;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -45,19 +43,25 @@ import static org.mockito.Mockito.when;
 public class XmlEditorProviderTest {
 
     @Mock
-    private CodenvyTextEditor           codenvyTextEditor;
+    private CodenvyTextEditor                codenvyTextEditor;
     @Mock
-    private DocumentProvider            documentProvider;
+    private DocumentProvider                 documentProvider;
     @Mock
-    private Provider<CodenvyTextEditor> editorProvider;
+    private Provider<CodenvyTextEditor>      editorProvider;
     @Mock
-    private NotificationManager         notificationManager;
-    @InjectMocks
-    private XmlEditorProvider           xmlEditorProvider;
+    private Provider<XmlEditorConfiguration> xmlEditorConfigurationProvider;
+    @Mock
+    private XmlEditorConfiguration           XmlEditorConfiguration;
+    @Mock
+    private NotificationManager              notificationManager;
+    private XmlEditorProvider                xmlEditorProvider;
 
     @Before
     public void setUp() throws Exception {
         when(editorProvider.get()).thenReturn(codenvyTextEditor);
+        when(xmlEditorConfigurationProvider.get()).thenReturn(XmlEditorConfiguration);
+
+        xmlEditorProvider = new XmlEditorProvider(documentProvider, editorProvider, xmlEditorConfigurationProvider, notificationManager);
     }
 
     @Test
@@ -66,7 +70,9 @@ public class XmlEditorProviderTest {
 
         assertEquals(codenvyTextEditor, editor);
 
+        verify(xmlEditorConfigurationProvider).get();
+
         verify(editorProvider).get();
-        verify(codenvyTextEditor).initialize((XmlEditorConfiguration)anyObject(), eq(documentProvider), eq(notificationManager));
+        verify(codenvyTextEditor).initialize(eq(XmlEditorConfiguration), eq(documentProvider), eq(notificationManager));
     }
 }

@@ -33,17 +33,20 @@ import com.google.inject.Provider;
  */
 public class XmlEditorProvider implements EditorProvider {
 
-    private final DocumentProvider            documentProvider;
-    private       Provider<CodenvyTextEditor> editorProvider;
-    private final NotificationManager         notificationManager;
+    private final DocumentProvider                 documentProvider;
+    private final Provider<CodenvyTextEditor>      editorProvider;
+    private final Provider<XmlEditorConfiguration> xmlEditorConfigurationProvider;
+    private final NotificationManager              notificationManager;
 
     @Inject
     public XmlEditorProvider(DocumentProvider documentProvider,
                              Provider<CodenvyTextEditor> editorProvider,
+                             Provider<XmlEditorConfiguration> XmlEditorConfigurationProvider,
                              NotificationManager notificationManager) {
-        super();
+
         this.documentProvider = documentProvider;
         this.editorProvider = editorProvider;
+        xmlEditorConfigurationProvider = XmlEditorConfigurationProvider;
         this.notificationManager = notificationManager;
     }
 
@@ -51,7 +54,7 @@ public class XmlEditorProvider implements EditorProvider {
     @Override
     public EditorPartPresenter getEditor() {
         CodenvyTextEditor textEditor = editorProvider.get();
-        textEditor.initialize(new XmlEditorConfiguration(), documentProvider, notificationManager);
+        textEditor.initialize(xmlEditorConfigurationProvider.get(), documentProvider, notificationManager);
         return textEditor;
     }
 }

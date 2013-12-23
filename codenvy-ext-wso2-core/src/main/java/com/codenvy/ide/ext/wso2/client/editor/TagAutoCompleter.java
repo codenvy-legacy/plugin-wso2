@@ -24,6 +24,8 @@ import com.codenvy.ide.text.Region;
 import com.codenvy.ide.texteditor.api.AutoEditStrategy;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.util.loging.Log;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 /**
  * This very class provides support for the XML tag auto completion. By tag auto completions we mean adding enclosing tags during editing
@@ -35,7 +37,8 @@ public class TagAutoCompleter implements AutoEditStrategy {
 
     private TextEditorPartView editor;
 
-    public TagAutoCompleter(TextEditorPartView editor) {
+    @Inject
+    public TagAutoCompleter(@Assisted TextEditorPartView editor) {
         this.editor = editor;
     }
 
@@ -91,11 +94,6 @@ public class TagAutoCompleter implements AutoEditStrategy {
     }
 
     private String getTagCompletion(DocumentCommand command, String tag) {
-        StringBuffer sb = new StringBuffer(command.text);
-        sb.append('<');
-        sb.append('/');
-        sb.append(tag);
-        sb.append('>');
-        return sb.toString();
+        return command.text + "</" + tag + '>';
     }
 }

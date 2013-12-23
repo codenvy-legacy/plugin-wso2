@@ -24,6 +24,7 @@ import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.parser.BasicTokenFactory;
 import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.codenvy.ide.texteditor.api.parser.Parser;
+import com.google.inject.Inject;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_EXTENSION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_MIME_TYPE;
@@ -34,6 +35,13 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_MIME_TYPE;
  * @author Dmitry Kuleshov
  */
 public class XmlEditorConfiguration extends TextEditorConfiguration {
+
+    private AutoCompleterFactory autoCompleterFactory;
+
+    @Inject
+    public XmlEditorConfiguration(AutoCompleterFactory autoCompleterFactory) {
+        this.autoCompleterFactory = autoCompleterFactory;
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -46,6 +54,6 @@ public class XmlEditorConfiguration extends TextEditorConfiguration {
     /** {@inheritDoc} */
     @Override
     public AutoEditStrategy[] getAutoEditStrategies(TextEditorPartView view, String contentType) {
-        return new AutoEditStrategy[]{new TagAutoCompleter(view)};
+        return new AutoEditStrategy[]{autoCompleterFactory.createAutoCompleter(view)};
     }
 }

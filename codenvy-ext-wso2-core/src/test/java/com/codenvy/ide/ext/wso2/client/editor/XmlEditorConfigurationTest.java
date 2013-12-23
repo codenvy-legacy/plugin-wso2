@@ -23,12 +23,16 @@ import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import static org.mockito.Answers.RETURNS_MOCKS;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Here we're testing {@link XmlEditorConfiguration}.
@@ -40,12 +44,10 @@ public class XmlEditorConfigurationTest extends GwtTestWithMockito {
 
     @Mock
     private TextEditorPartView     view;
+    @Mock(answer = RETURNS_MOCKS)
+    private AutoCompleterFactory   autoCompleterFactory;
+    @InjectMocks
     private XmlEditorConfiguration xmlEditorConfiguration;
-
-    @Before
-    public void setUp() throws Exception {
-        xmlEditorConfiguration = new XmlEditorConfiguration();
-    }
 
     @Test
     public void parserShouldBeInitialized() throws Exception {
@@ -61,6 +63,8 @@ public class XmlEditorConfigurationTest extends GwtTestWithMockito {
         assertEquals(autoEditStrategies.length, 1);
 
         AutoEditStrategy autoEditStrategy = autoEditStrategies[0];
-        assertEquals(autoEditStrategy instanceof TagAutoCompleter, true);
+        assertTrue(autoEditStrategy instanceof TagAutoCompleter);
+
+        verify(autoCompleterFactory).createAutoCompleter(eq(view));
     }
 }
