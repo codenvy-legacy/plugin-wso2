@@ -83,7 +83,7 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void uploadFile(@NotNull FileInfo fileInfo, @NotNull AsyncRequestCallback<Void> callback) throws RequestException {
+    public void uploadFile(@NotNull FileInfo fileInfo, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String requestUrl = restContext + UPLOAD_CONFIGURATION_FILE;
 
         loader.setMessage("Importing file...");
@@ -94,7 +94,7 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void modifyFile(@NotNull FileInfo fileInfo, @NotNull String operation, @NotNull AsyncRequestCallback<String>callback)
+    public void modifyFile(@NotNull FileInfo fileInfo, @NotNull String operation, @NotNull AsyncRequestCallback<String> callback)
             throws RequestException {
         String requestUrl = restContext + MODIFY_CONFIGURATION_FILE + "/" + operation;
 

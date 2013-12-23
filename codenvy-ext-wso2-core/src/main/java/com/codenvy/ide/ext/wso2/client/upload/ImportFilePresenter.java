@@ -116,25 +116,16 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
 
             view.submit();
         } else {
-            FileInfo fileInfo = dtoFactory.createDto(FileInfo.class)
-                                          .withFileName(view.getUrl())
-                                          .withProjectName(activeProject.getName());
+            final FileInfo fileInfo = dtoFactory.createDto(FileInfo.class)
+                                                .withFileName(view.getUrl())
+                                                .withProjectName(activeProject.getName());
 
             try {
-                service.uploadFile(fileInfo, new AsyncRequestCallback<Void>() {
+                service.uploadFile(fileInfo, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                     @Override
-                    protected void onSuccess(Void result) {
-                        activeProject.refreshTree(new AsyncCallback<Project>() {
-                            @Override
-                            public void onSuccess(Project result) {
-                                view.close();
-                            }
-
-                            @Override
-                            public void onFailure(Throwable caught) {
-                                showError(caught);
-                            }
-                        });
+                    protected void onSuccess(String callback) {
+                        refreshTreeWithParentFolder(callback, fileInfo.getFileName().substring(fileInfo.getFileName().lastIndexOf('/') + 1,
+                                                                                               fileInfo.getFileName().length()));
                     }
 
                     @Override
@@ -159,37 +150,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
                 service.detectConfigurationFile(fileInfo, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                     @Override
                     protected void onSuccess(final String callback) {
-                        if (callback.endsWith("already exists. ")) {
-                            overwrite.showDialog(view.getFileName(), new ViewUtils());
-                        } else {
-                            final Folder parentFolder;
-
-                            Project activeProject = resourceProvider.getActiveProject();
-
-                            Resource src = getResourceByName(activeProject, SRC_FOLDER_NAME);
-                            Resource main = getResourceByName((Folder)src, MAIN_FOLDER_NAME);
-                            Resource synapse_config = getResourceByName((Folder)main, SYNAPSE_CONFIG_FOLDER_NAME);
-                            if (callback.isEmpty()) {
-                                parentFolder = (Folder)synapse_config;
-                            } else {
-                                parentFolder = (Folder)getResourceByName((Folder)synapse_config, callback);
-                            }
-
-
-                            resourceProvider.getActiveProject().refreshTree(parentFolder, new AsyncCallback<Folder>() {
-                                @Override
-                                public void onSuccess(Folder folder) {
-                                    File file = (File)parentFolder.findResourceByName(fileInfo.getFileName(), "file");
-                                    eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(file));
-                                    view.close();
-                                }
-
-                                @Override
-                                public void onFailure(Throwable exception) {
-                                    showError(exception);
-                                }
-                            });
-                        }
+                        refreshTreeWithParentFolder(callback, fileInfo.getFileName());
                     }
 
                     @Override
@@ -207,6 +168,49 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
             console.print(result);
             Notification notification = new Notification(result, ERROR);
             notificationManager.showNotification(notification);
+        }
+    }
+
+    /**
+     * Refresh a parent tree
+     *
+     * @param response
+     *         the name of parent folder
+     * @param fileName
+     *         name of the file
+     * @return {@link com.codenvy.ide.resources.model.Resource}
+     */
+    private void refreshTreeWithParentFolder(String response, final String fileName) {
+        if (response.endsWith("already exists. ")) {
+            overwrite.showDialog(fileName, new ViewUtils());
+        } else {
+            final Folder parentFolder;
+
+            Project activeProject = resourceProvider.getActiveProject();
+
+            Resource src = getResourceByName(activeProject, SRC_FOLDER_NAME);
+            Resource main = getResourceByName((Folder)src, MAIN_FOLDER_NAME);
+            Resource synapse_config = getResourceByName((Folder)main, SYNAPSE_CONFIG_FOLDER_NAME);
+            if (response.isEmpty()) {
+                parentFolder = (Folder)synapse_config;
+            } else {
+                parentFolder = (Folder)getResourceByName((Folder)synapse_config, response);
+            }
+
+
+            resourceProvider.getActiveProject().refreshTree(parentFolder, new AsyncCallback<Folder>() {
+                @Override
+                public void onSuccess(Folder folder) {
+                    File file = (File)parentFolder.findResourceByName(fileName, "file");
+                    eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(file));
+                    view.close();
+                }
+
+                @Override
+                public void onFailure(Throwable exception) {
+                    showError(exception);
+                }
+            });
         }
     }
 

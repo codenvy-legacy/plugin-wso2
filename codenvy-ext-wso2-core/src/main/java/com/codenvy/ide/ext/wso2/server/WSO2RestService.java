@@ -164,7 +164,7 @@ public class WSO2RestService {
     @Path("upload")
     @POST
     @Consumes(APPLICATION_JSON)
-    public void uploadConfigurationFile(FileInfo fileInfo) throws VirtualFileSystemException {
+    public Response uploadConfigurationFile(FileInfo fileInfo) throws VirtualFileSystemException {
         VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(getVfsID());
         MountPoint mountPoint = vfsProvider.getMountPoint(false);
         VirtualFile projectParent = mountPoint.getVirtualFile(fileInfo.getProjectName());
@@ -173,20 +173,26 @@ public class WSO2RestService {
         String[] pathElements = filePath.split("/");
         String fileName = pathElements[pathElements.length - 1];
 
+        String parentFolder = "";
+
         try {
             InputStream is = URI.create(fileInfo.getFileName()).toURL().openStream();
             VirtualFile file = projectParent.createFile(fileName, ESB_XML_MIME_TYPE, is);
 
-            moveFile(file, mountPoint, fileInfo.getProjectName());
+            parentFolder = moveFile(file, mountPoint, fileInfo.getProjectName());
+
         } catch (IOException e) {
             LOG.error("Can't create " + fileName + " file", e);
+            parentFolder = e.getMessage();
         }
+        return Response.ok(parentFolder, MediaType.TEXT_HTML).build();
     }
 
     @Path("file/{operation}")
     @POST
     @Consumes(APPLICATION_JSON)
-    public Response overwriteConfigurationFile(@PathParam("operation") String operation, FileInfo fileInfo) throws VirtualFileSystemException {
+    public Response overwriteConfigurationFile(@PathParam("operation") String operation, FileInfo fileInfo)
+            throws VirtualFileSystemException {
         VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(getVfsID());
         MountPoint mountPoint = vfsProvider.getMountPoint(false);
         VirtualFile file = mountPoint.getVirtualFile(fileInfo.getProjectName() + "/" + fileInfo.getFileName());

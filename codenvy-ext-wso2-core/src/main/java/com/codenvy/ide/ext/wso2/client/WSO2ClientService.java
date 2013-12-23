@@ -63,7 +63,7 @@ public interface WSO2ClientService {
      *         callback that need to execute when the answer is come
      * @throws RequestException
      */
-    void uploadFile(@NotNull FileInfo fileInfo, @NotNull AsyncRequestCallback<Void> callback) throws RequestException;
+    void uploadFile(@NotNull FileInfo fileInfo, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Modify configuration file with given name.
