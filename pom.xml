@@ -33,7 +33,7 @@
     <name>Codenvy Extension :: WSO2 parent</name>
 
     <properties>
-        <codenvy.version>3.0.0-M5-SNAPSHOT</codenvy.version>
+        <codenvy.version>3.0.0-M6</codenvy.version>
         <mockitong.version>0.3</mockitong.version>
         <testng.version>6.8</testng.version>
         <everrest.assured.version>0.14</everrest.assured.version>
