@@ -23,6 +23,7 @@ import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
+import com.codenvy.ide.ext.wso2.shared.FileInfo;
 
 import org.everrest.core.RequestHandler;
 import org.everrest.core.ResourceBinder;
@@ -69,13 +70,16 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class WSO2RestServiceTest {
 
-    public static final String BASE_URI    = "http://localhost";
-    public static final String POM_CONTENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                                             "<project xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache" +
-                                             ".org/xsd/maven-4.0.0.xsd\"\n" +
-                                             "         xmlns=\"http://maven.apache.org/POM/4.0.0\"\n" +
-                                             "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
-                                             "</project>";
+    public static final String BASE_URI                      = "http://localhost";
+    public static final String POM_CONTENT                   = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                                                               "<project xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 " +
+                                                               "http://maven.apache" +
+                                                               ".org/xsd/maven-4.0.0.xsd\"\n" +
+                                                               "         xmlns=\"http://maven.apache.org/POM/4.0.0\"\n" +
+                                                               "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
+                                                               "</project>";
+    public static final String SYNAPSE_CONFIGURATION_CONTENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                                                               "<sequence xmlns=\"http://ws.apache.org/ns/synapse\" name=\"s\"></sequence>";
 
     @Mock(answer = RETURNS_DEEP_STUBS)
     private VirtualFileSystemRegistry vfsRegistry;
@@ -137,5 +141,59 @@ public class WSO2RestServiceTest {
         verify(projectFolder).updateProperties((List<Property>)anyObject(), eq((String)null));
 
         verify(pomFile).updateContent(anyString(), (InputStream)anyObject(), eq((String)null));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void fileShouldBeDetected() throws Exception {
+        String projectName = "projectName";
+        String fileName = "fileName";
+
+        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(fileName).withNewFileName(fileName)
+                                      .withProjectName(projectName);
+
+        InputStream is = new ByteArrayInputStream(SYNAPSE_CONFIGURATION_CONTENT.getBytes());
+        ContentStream contentStream = new ContentStream(null, is, null);
+
+        VirtualFile synapseFile = mock(VirtualFile.class, RETURNS_MOCKS);
+
+        when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString())).thenReturn(synapseFile);
+        when(synapseFile.getContent()).thenReturn(contentStream);
+
+        Map<String, List<String>> headers = new HashMap<>(1);
+        headers.put("Content-Type", Arrays.asList("application/json"));
+
+        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
+
+        ContainerResponse response = launcher.service("POST", "/dev-monit/wso2/detect", BASE_URI, headers, data, null);
+
+        assertEquals(200, response.getStatus());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void fileShouldBeUpload() throws Exception {
+        String projectName = "projectName";
+        String fileName = "fileName";
+
+        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(fileName).withNewFileName(fileName)
+                                      .withProjectName(projectName);
+
+        InputStream is = new ByteArrayInputStream(SYNAPSE_CONFIGURATION_CONTENT.getBytes());
+        ContentStream contentStream = new ContentStream(null, is, null);
+
+        VirtualFile synapseFile = mock(VirtualFile.class, RETURNS_MOCKS);
+
+        when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString())).thenReturn(synapseFile);
+        when(synapseFile.getContent()).thenReturn(contentStream);
+
+        Map<String, List<String>> headers = new HashMap<>(1);
+        headers.put("Content-Type", Arrays.asList("application/json"));
+
+        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
+
+        ContainerResponse response = launcher.service("POST", "/dev-monit/wso2/file/delete", BASE_URI, headers, data, null);
+
+        assertEquals(200, response.getStatus());
     }
 }
