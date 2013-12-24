@@ -137,7 +137,7 @@ from Codenvy S.A..
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-wso2-core</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
@@ -172,7 +172,7 @@ from Codenvy S.A..
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
+                <version>${version.exec.plugin}</version>
                 <executions>
                     <execution>
                         <id>extManager-client</id>
@@ -260,21 +260,21 @@ from Codenvy S.A..
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.1.1</version>
+                <version>${version.war.plugin}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>${version.compiler.plugin}</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.8</version>
+                <version>${version.buildhelper.plugin}</version>
                 <executions>
                     <execution>
                         <id>add-source</id>
