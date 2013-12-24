@@ -33,20 +33,24 @@ import com.codenvy.ide.resources.model.Resource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
-import org.mockito.testng.MockitoTestNGListener;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_EXTENSION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_MIME_TYPE;
 import static com.codenvy.ide.ext.wso2.shared.Constants.MAIN_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SRC_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NAME;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.Answers.RETURNS_MOCKS;
 import static org.mockito.Matchers.anyObject;
@@ -56,15 +60,13 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
 
 /**
  * The basic test for testing create WSO2 resource pages.
  *
  * @author Andrey Plotnikov
  */
-@Listeners(value = {MockitoTestNGListener.class})
+@RunWith(MockitoJUnitRunner.class)
 public abstract class AbstractCreateResourcePageTest {
 
     public static final String EMPTY_TEXT         = "";
@@ -101,7 +103,7 @@ public abstract class AbstractCreateResourcePageTest {
     protected String                     parentFolderName;
     protected AbstractCreateResourcePage page;
 
-    @BeforeMethod
+    @Before
     public void setUp() throws Exception {
         verify(view).setDelegate((CreateResourceView.ActionDelegate)anyObject());
         verify(view).setResourceNameTitle(anyString());
@@ -137,22 +139,21 @@ public abstract class AbstractCreateResourcePageTest {
 
         page.onValueChanged();
 
-        assertEquals(page.isCompleted(), false);
+        assertEquals(false, page.isCompleted());
     }
 
-    @Test(dataProvider = "resource-names")
-    public void pageShouldBeNotCompletedWhenFileNameIsIncorrect(String resourceName) throws Exception {
+    @Test
+    public void pageShouldBeNotCompletedWhenFileNameIsIncorrect() throws Exception {
+        List<String> names = Arrays.asList("", "$projectName", "project%Name", "projectName!");
+
         page.go(container);
 
-        when(view.getResourceName()).thenReturn(resourceName);
-        page.onValueChanged();
+        for (String name : names) {
+            when(view.getResourceName()).thenReturn(name);
+            page.onValueChanged();
 
-        assertEquals(page.isCompleted(), false);
-    }
-
-    @DataProvider(name = "resource-names")
-    public Object[][] resourceNames() {
-        return new Object[][]{{""}, {"$projectName"}, {"project%Name"}, {"projectName!"}};
+            assertEquals(false, page.isCompleted());
+        }
     }
 
     @Test
@@ -162,7 +163,7 @@ public abstract class AbstractCreateResourcePageTest {
         when(view.getResourceName()).thenReturn(SOME_TEXT);
         page.onValueChanged();
 
-        assertEquals(page.isCompleted(), true);
+        assertEquals(true, page.isCompleted());
     }
 
     @Test
@@ -205,7 +206,7 @@ public abstract class AbstractCreateResourcePageTest {
         page.go(container);
         page.onValueChanged();
 
-        assertEquals(page.getNotice(), SOME_TEXT);
+        assertEquals(SOME_TEXT, page.getNotice());
 
         verify(locale).wizardFileResourceNoticeIncorrectName();
     }
@@ -224,7 +225,7 @@ public abstract class AbstractCreateResourcePageTest {
         page.go(container);
         page.onValueChanged();
 
-        assertEquals(page.getNotice(), SOME_TEXT);
+        assertEquals(SOME_TEXT, page.getNotice());
 
         verify(locale).wizardFileResourceNoticeFileExists();
     }

@@ -23,20 +23,34 @@ import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
-import com.jayway.restassured.response.Response;
 
-import org.everrest.assured.EverrestJetty;
+import org.everrest.core.RequestHandler;
+import org.everrest.core.ResourceBinder;
+import org.everrest.core.impl.ApplicationContextImpl;
+import org.everrest.core.impl.ApplicationProviderBinder;
+import org.everrest.core.impl.ContainerResponse;
+import org.everrest.core.impl.EverrestConfiguration;
+import org.everrest.core.impl.ProviderBinder;
+import org.everrest.core.impl.RequestDispatcher;
+import org.everrest.core.impl.RequestHandlerImpl;
+import org.everrest.core.impl.ResourceBinderImpl;
+import org.everrest.core.tools.DependencySupplierImpl;
+import org.everrest.core.tools.ResourceLauncher;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.testng.MockitoTestNGListener;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static com.jayway.restassured.RestAssured.given;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyObject;
@@ -46,15 +60,16 @@ import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
 
 /**
  * Testing {@link WSO2RestService} functionality.
  *
  * @author Andrey Plotnikov
  */
-@Listeners(value = {EverrestJetty.class, MockitoTestNGListener.class})
+@RunWith(MockitoJUnitRunner.class)
 public class WSO2RestServiceTest {
+
+    public static final String BASE_URI    = "http://localhost";
     public static final String POM_CONTENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                                              "<project xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache" +
                                              ".org/xsd/maven-4.0.0.xsd\"\n" +
@@ -66,6 +81,25 @@ public class WSO2RestServiceTest {
     private VirtualFileSystemRegistry vfsRegistry;
     @InjectMocks
     private WSO2RestService           service;
+    private ResourceLauncher          launcher;
+
+    @Before
+    public void setUp() throws Exception {
+        DependencySupplierImpl dependencies = new DependencySupplierImpl();
+        dependencies.addComponent(VirtualFileSystemRegistry.class, vfsRegistry);
+
+        ResourceBinder resources = new ResourceBinderImpl();
+        resources.addResource(WSO2RestService.class, null);
+
+        ProviderBinder providers = new ApplicationProviderBinder();
+        RequestHandler requestHandler = new RequestHandlerImpl(new RequestDispatcher(resources),
+                                                               providers,
+                                                               dependencies,
+                                                               new EverrestConfiguration());
+        ApplicationContextImpl.setCurrent(new ApplicationContextImpl(null, null, ProviderBinder.getInstance()));
+
+        launcher = new ResourceLauncher(requestHandler);
+    }
 
     @SuppressWarnings("unchecked")
     @Test
@@ -88,10 +122,14 @@ public class WSO2RestServiceTest {
         when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString())).thenReturn(pomFile);
         when(pomFile.getContent()).thenReturn(contentStream);
 
-        Response response = given().header("Content-Type", "application/json").body(DtoFactory.getInstance().toJson(projectInfo)).when()
-                .post("/dev-monit/wso2/templates/esbconf");
+        Map<String, List<String>> headers = new HashMap<>(1);
+        headers.put("Content-Type", Arrays.asList("application/json"));
 
-        assertEquals(response.getStatusCode(), 204);
+        byte[] data = DtoFactory.getInstance().toJson(projectInfo).getBytes();
+
+        ContainerResponse response = launcher.service("POST", "/dev-monit/wso2/templates/esbconf", BASE_URI, headers, data, null);
+
+        assertEquals(204, response.getStatus());
 
         verify(rootFolder).createFolder(eq(projectName));
 

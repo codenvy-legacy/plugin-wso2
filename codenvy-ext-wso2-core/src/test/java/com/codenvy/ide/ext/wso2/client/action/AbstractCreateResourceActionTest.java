@@ -29,10 +29,10 @@ import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ext.wso2.client.wizard.files.AbstractCreateResourcePage;
 import com.google.inject.Provider;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.testng.MockitoTestNGListener;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -46,7 +46,7 @@ import static org.mockito.Mockito.when;
  *
  * @author Andrey Plotnikov
  */
-@Listeners(value = {MockitoTestNGListener.class})
+@RunWith(MockitoJUnitRunner.class)
 public abstract class AbstractCreateResourceActionTest {
 
     public static final String SOME_TEXT = "some text";

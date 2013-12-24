@@ -30,30 +30,29 @@ import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ext.wso2.client.wizard.files.CreateEndpointPage;
 import com.google.inject.Provider;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.testng.MockitoTestNGListener;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
 import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
 
 /**
  * Here we're testing {@link WSO2ActionGroup}.
  *
  * @author Andrey Plotnikov
  */
-@Listeners(value = {MockitoTestNGListener.class})
+@RunWith(MockitoJUnitRunner.class)
 public class WSO2ActionGroupTest {
 
     @Mock
@@ -78,14 +77,11 @@ public class WSO2ActionGroupTest {
     @InjectMocks
     private WSO2ActionGroup              action;
 
-    @BeforeClass
-    public void checkInitializeProcess() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         verify(locale).wso2MainActionTitle();
         verify(resources).wso2GroupIcon();
-    }
 
-    @BeforeMethod
-    public void setUp() throws Exception {
         presentation = new Presentation();
     }
 
@@ -93,11 +89,11 @@ public class WSO2ActionGroupTest {
     public void actionShouldBeInvisibleWhenNoProjectIsOpened() throws Exception {
         when(actionEvent.getPresentation()).thenReturn(presentation);
 
-        assertEquals(presentation.isVisible(), true);
+        assertEquals(true, presentation.isVisible());
 
         action.update(actionEvent);
 
-        assertEquals(presentation.isVisible(), false);
+        assertEquals(false, presentation.isVisible());
     }
 
     @Test
@@ -108,11 +104,11 @@ public class WSO2ActionGroupTest {
         when(resourceProvider.getActiveProject().getProperty(eq(PROPERTY_MIXIN_NATURES)).getValue())
                 .thenReturn(Collections.createArray("secondaryNature"));
 
-        assertEquals(presentation.isVisible(), true);
+        assertEquals(true, presentation.isVisible());
 
         action.update(actionEvent);
 
-        assertEquals(presentation.isVisible(), false);
+        assertEquals(false, presentation.isVisible());
     }
 
     @Test
@@ -123,11 +119,11 @@ public class WSO2ActionGroupTest {
         when(resourceProvider.getActiveProject().getProperty(eq(PROPERTY_MIXIN_NATURES)).getValue())
                 .thenReturn(Collections.createArray("secondaryNature"));
 
-        assertEquals(presentation.isVisible(), true);
+        assertEquals(true, presentation.isVisible());
 
         action.update(actionEvent);
 
-        assertEquals(presentation.isVisible(), false);
+        assertEquals(false, presentation.isVisible());
     }
 
     @Test
@@ -138,10 +134,10 @@ public class WSO2ActionGroupTest {
         when(resourceProvider.getActiveProject().getProperty(eq(PROPERTY_MIXIN_NATURES)).getValue())
                 .thenReturn(Collections.createArray(ESB_CONFIGURATION_PROJECT_ID));
 
-        assertEquals(presentation.isVisible(), true);
+        assertEquals(true, presentation.isVisible());
 
         action.update(actionEvent);
 
-        assertEquals(presentation.isVisible(), true);
+        assertEquals(true, presentation.isVisible());
     }
 }

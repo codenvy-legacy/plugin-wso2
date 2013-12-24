@@ -20,8 +20,8 @@ package com.codenvy.ide.ext.wso2.client.action;
 import com.codenvy.ide.ext.wso2.client.wizard.files.CreateEndpointPage;
 import com.google.inject.Provider;
 
+import org.junit.Before;
 import org.mockito.Mock;
-import org.testng.annotations.BeforeMethod;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,7 +36,7 @@ public class CreateEndpointActionTest extends AbstractCreateResourceActionTest {
     @Mock
     private Provider<CreateEndpointPage> createEndpointPage;
 
-    @BeforeMethod
+    @Before
     public void setUp() throws Exception {
         page = createEndpointPage;
         action = new CreateEndpointAction(locale, wizardDialogFactory, defaultWizardFactory, createEndpointPage, resources);

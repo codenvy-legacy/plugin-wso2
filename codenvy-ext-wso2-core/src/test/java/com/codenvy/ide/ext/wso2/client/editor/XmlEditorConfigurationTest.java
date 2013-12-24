@@ -27,12 +27,12 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Answers.RETURNS_MOCKS;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
 
 /**
  * Here we're testing {@link XmlEditorConfiguration}.
@@ -60,7 +60,7 @@ public class XmlEditorConfigurationTest extends GwtTestWithMockito {
     public void configurationShouldContainTagAutoCompleter() throws Exception {
         AutoEditStrategy[] autoEditStrategies = xmlEditorConfiguration.getAutoEditStrategies(view, "contentType");
 
-        assertEquals(autoEditStrategies.length, 1);
+        assertEquals(1, autoEditStrategies.length);
 
         AutoEditStrategy autoEditStrategy = autoEditStrategies[0];
         assertTrue(autoEditStrategy instanceof TagAutoCompleter);

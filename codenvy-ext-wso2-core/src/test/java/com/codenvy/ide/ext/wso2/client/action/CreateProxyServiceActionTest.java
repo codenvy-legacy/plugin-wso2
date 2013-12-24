@@ -20,8 +20,8 @@ package com.codenvy.ide.ext.wso2.client.action;
 import com.codenvy.ide.ext.wso2.client.wizard.files.CreateProxyServicePage;
 import com.google.inject.Provider;
 
+import org.junit.Before;
 import org.mockito.Mock;
-import org.testng.annotations.BeforeMethod;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,7 +36,7 @@ public class CreateProxyServiceActionTest extends AbstractCreateResourceActionTe
     @Mock
     private Provider<CreateProxyServicePage> createProxyServicePage;
 
-    @BeforeMethod
+    @Before
     public void setUp() throws Exception {
         page = createProxyServicePage;
         action = new CreateProxyServiceAction(locale, wizardDialogFactory, defaultWizardFactory, createProxyServicePage, resources);

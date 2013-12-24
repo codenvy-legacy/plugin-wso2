@@ -17,14 +17,13 @@
  */
 package com.codenvy.ide.ext.wso2.client.wizard.files;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.LOCAL_ENTRY_FOLDER_NAME;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
 
 /**
  * Here we're testing {@link CreateLocalEntryPage}.
@@ -33,7 +32,6 @@ import static org.testng.Assert.assertEquals;
  */
 public class CreateLocalEntryPageTest extends AbstractCreateResourcePageTest {
 
-    @BeforeMethod
     @Override
     public void setUp() throws Exception {
         page = new CreateLocalEntryPage(view, locale, resourceProvider, resources, editorAgent, fileType);
@@ -55,7 +53,7 @@ public class CreateLocalEntryPageTest extends AbstractCreateResourcePageTest {
         page.go(container);
         page.onValueChanged();
 
-        assertEquals(page.getNotice(), SOME_TEXT);
+        assertEquals(SOME_TEXT, page.getNotice());
 
         verify(locale).wizardFileLocalEntryNoticeEmptyName();
     }
