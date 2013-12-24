@@ -202,15 +202,19 @@ public class WSO2RestService {
         VirtualFile oldFile = mountPoint.getVirtualFile(
                 fileInfo.getProjectName() + "/" + SRC_FOLDER_NAME + "/" + MAIN_FOLDER_NAME + "/" + SYNAPSE_CONFIG_FOLDER_NAME + "/" +
                 parentFolder + "/" + fileInfo.getFileName());
-        if ("overwrite".equals(operation)) {
-            oldFile.updateContent(oldFile.getMediaType(), file.getContent().getStream(), null);
-            file.delete(null);
-        } else if ("rename".equals(operation)) {
-            file.rename(fileInfo.getNewFileName(), file.getMediaType(), null);
-            file = mountPoint.getVirtualFile(fileInfo.getProjectName() + "/" + fileInfo.getNewFileName());
-            moveFile(file, mountPoint, fileInfo.getProjectName());
-        } else {
-            file.delete(null);
+        switch (operation) {
+            case "overwrite":
+                oldFile.updateContent(oldFile.getMediaType(), file.getContent().getStream(), null);
+                file.delete(null);
+                break;
+            case "rename":
+                file.rename(fileInfo.getNewFileName(), file.getMediaType(), null);
+                file = mountPoint.getVirtualFile(fileInfo.getProjectName() + "/" + fileInfo.getNewFileName());
+                moveFile(file, mountPoint, fileInfo.getProjectName());
+                break;
+            default:
+                file.delete(null);
+                break;
         }
         return Response.ok(parentFolder, MediaType.TEXT_HTML).build();
     }

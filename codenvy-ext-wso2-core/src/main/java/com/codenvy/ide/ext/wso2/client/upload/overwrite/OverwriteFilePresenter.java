@@ -67,7 +67,7 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
     private LocalizationConstant local;
 
     private String oldFileName = "";
-    private ImportFilePresenter.ImportFileFiewUtils parentViewUtils;
+    private ImportFilePresenter.ViewCloseHandler parentViewUtils;
 
     @Inject
     public OverwriteFilePresenter(OverwriteFileView view,
@@ -96,13 +96,13 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
     @Override
     public void onRenameButtonClicked() {
         modifyExistingFile(RENAME_FILE_OPERATION);
-        parentViewUtils.closeView();
+        parentViewUtils.onCloseView();
     }
 
     @Override
     public void onOverwriteButtonClicked() {
         modifyExistingFile(OVERWRITE_FILE_OPERATION);
-        parentViewUtils.closeView();
+        parentViewUtils.onCloseView();
     }
 
     @Override
@@ -211,7 +211,7 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
         notificationManager.showNotification(notification);
     }
 
-    public void showDialog(String fileName, ImportFilePresenter.ImportFileFiewUtils parentViewUtils) {
+    public void showDialog(String fileName, ImportFilePresenter.ViewCloseHandler parentViewUtils) {
         view.setMessage(local.wso2ImportFileAlreadyExists());
         view.setFileName(fileName);
         view.setEnabledRenameButton(false);

@@ -58,9 +58,9 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NA
 public class ImportFilePresenter implements ImportFileView.ActionDelegate {
 
     /** Required for delegating close function in another model. */
-    public interface ImportFileFiewUtils {
+    public interface ViewCloseHandler {
         /** Call when need close the view. */
-        void closeView();
+        void onCloseView();
     }
 
     private final String UPLOAD_FILE_PATH = "/vfs/v2/uploadfile/";
@@ -75,6 +75,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
     private DtoFactory             dtoFactory;
     private LocalizationConstant   local;
     private OverwriteFilePresenter overwrite;
+    private ViewCloseHandler       viewCloseHandler;
 
     @Inject
     public ImportFilePresenter(ImportFileView view,
@@ -178,11 +179,16 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
      *         the name of parent folder
      * @param fileName
      *         name of the file
-     * @return {@link com.codenvy.ide.resources.model.Resource}
      */
     private void refreshTreeWithParentFolder(String response, final String fileName) {
         if (response.endsWith("already exists. ")) {
-            overwrite.showDialog(fileName, new ViewUtils());
+            viewCloseHandler = new ViewCloseHandler() {
+                @Override
+                public void onCloseView() {
+                    view.close();
+                }
+            };
+            overwrite.showDialog(fileName, viewCloseHandler);
         } else {
             final Folder parentFolder;
 
@@ -284,14 +290,6 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
                 view.setMessage("");
                 view.setEnabledImportButton(true);
             }
-        }
-    }
-
-    /** The implementation of {@link com.codenvy.ide.ext.wso2.client.upload.ImportFilePresenter.ImportFileFiewUtils}. */
-    private class ViewUtils implements ImportFileFiewUtils {
-        @Override
-        public void closeView() {
-            view.close();
         }
     }
 
