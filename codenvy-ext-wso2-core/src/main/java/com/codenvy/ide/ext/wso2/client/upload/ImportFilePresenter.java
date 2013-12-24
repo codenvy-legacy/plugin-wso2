@@ -78,7 +78,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
     private ViewCloseHandler       viewCloseHandler;
 
     @Inject
-    public ImportFilePresenter(ImportFileView view,
+    public ImportFilePresenter(final ImportFileView view,
                                OverwriteFilePresenter overwrite,
                                WSO2ClientService service,
                                ConsolePart console,
@@ -99,6 +99,12 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
         this.dtoFactory = dtoFactory;
         this.local = local;
         this.overwrite = overwrite;
+        viewCloseHandler = new ViewCloseHandler() {
+            @Override
+            public void onCloseView() {
+                view.close();
+            }
+        };
     }
 
     /** {@inheritDoc} */
@@ -182,12 +188,6 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
      */
     private void refreshTreeWithParentFolder(String response, final String fileName) {
         if (response.endsWith("already exists. ")) {
-            viewCloseHandler = new ViewCloseHandler() {
-                @Override
-                public void onCloseView() {
-                    view.close();
-                }
-            };
             overwrite.showDialog(fileName, viewCloseHandler);
         } else {
             final Folder parentFolder;

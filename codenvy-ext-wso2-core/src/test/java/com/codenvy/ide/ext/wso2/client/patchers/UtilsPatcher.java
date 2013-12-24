@@ -24,11 +24,11 @@ import com.googlecode.gwt.test.patchers.PatchMethod;
 /**
  * The patcher for {@link Utils}. Replace native method in it.
  *
- * @author Valeriy Svydenko */
+ * @author Valeriy Svydenko
+ */
 @PatchClass(Utils.class)
 public class UtilsPatcher {
 
-    /** @return workspace name */
     @PatchMethod(override = true)
     public static String getWorkspaceName() {
         return "workspaceName";
