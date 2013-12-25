@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.wso2.server;
 import com.codenvy.api.vfs.server.ContentStream;
 import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
+import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
@@ -70,6 +71,8 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class WSO2RestServiceTest {
 
+    public static final String PROJECT_NAME                  = "projectName";
+    public static final String FILE_NAME                     = "fileName";
     public static final String BASE_URI                      = "http://localhost";
     public static final String POM_CONTENT                   = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                                                                "<project xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 " +
@@ -79,10 +82,12 @@ public class WSO2RestServiceTest {
                                                                "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
                                                                "</project>";
     public static final String SYNAPSE_CONFIGURATION_CONTENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                                                               "<sequence xmlns=\"http://ws.apache.org/ns/synapse\" name=\"s\"></sequence>";
+                                                               "<sequence></sequence>";
 
     @Mock(answer = RETURNS_DEEP_STUBS)
     private VirtualFileSystemRegistry vfsRegistry;
+    @Mock
+    private VirtualFile               synapseFile;
     @InjectMocks
     private WSO2RestService           service;
     private ResourceLauncher          launcher;
@@ -105,15 +110,21 @@ public class WSO2RestServiceTest {
         launcher = new ResourceLauncher(requestHandler);
     }
 
+    private ContainerResponse prepareResponseLauncherService(String method, String path, byte[] data) throws Exception {
+        Map<String, List<String>> headers = new HashMap<>(1);
+        headers.put("Content-Type", Arrays.asList("application/json"));
+
+        ContainerResponse response = launcher.service(method, "/dev-monit/wso2/" + path, BASE_URI, headers, data, null);
+
+        return response;
+    }
+
     @SuppressWarnings("unchecked")
     @Test
     public void projectShouldBeCreated() throws Exception {
-        String projectName = "projectName";
-
         ESBProjectInfo projectInfo =
-                DtoFactory.getInstance().createDto(ESBProjectInfo.class).withProjectName(projectName).withGroupID("groupID")
+                DtoFactory.getInstance().createDto(ESBProjectInfo.class).withProjectName(PROJECT_NAME).withGroupID("groupID")
                           .withArtifactID("artifactID").withVersion("version");
-
         InputStream is = new ByteArrayInputStream(POM_CONTENT.getBytes());
         ContentStream contentStream = new ContentStream(null, is, null);
 
@@ -126,16 +137,16 @@ public class WSO2RestServiceTest {
         when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString())).thenReturn(pomFile);
         when(pomFile.getContent()).thenReturn(contentStream);
 
-        Map<String, List<String>> headers = new HashMap<>(1);
-        headers.put("Content-Type", Arrays.asList("application/json"));
+        when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getRoot()).thenReturn(rootFolder);
+        when(rootFolder.createFolder(anyString())).thenReturn(projectFolder);
 
         byte[] data = DtoFactory.getInstance().toJson(projectInfo).getBytes();
 
-        ContainerResponse response = launcher.service("POST", "/dev-monit/wso2/templates/esbconf", BASE_URI, headers, data, null);
+        ContainerResponse response = prepareResponseLauncherService("POST", "templates/esbconf", data);
 
         assertEquals(204, response.getStatus());
 
-        verify(rootFolder).createFolder(eq(projectName));
+        verify(rootFolder).createFolder(eq(PROJECT_NAME));
 
         verify(projectFolder).unzip((InputStream)anyObject(), eq(true));
         verify(projectFolder).updateProperties((List<Property>)anyObject(), eq((String)null));
@@ -143,57 +154,77 @@ public class WSO2RestServiceTest {
         verify(pomFile).updateContent(anyString(), (InputStream)anyObject(), eq((String)null));
     }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void fileShouldBeDetected() throws Exception {
-        String projectName = "projectName";
-        String fileName = "fileName";
-
-        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(fileName).withNewFileName(fileName)
-                                      .withProjectName(projectName);
-
+    private void prepareForFileModificationRequestTest() throws VirtualFileSystemException {
         InputStream is = new ByteArrayInputStream(SYNAPSE_CONFIGURATION_CONTENT.getBytes());
         ContentStream contentStream = new ContentStream(null, is, null);
 
-        VirtualFile synapseFile = mock(VirtualFile.class, RETURNS_MOCKS);
-
         when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString())).thenReturn(synapseFile);
+        when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString()).getName())
+                .thenReturn("synapseName");
         when(synapseFile.getContent()).thenReturn(contentStream);
+    }
 
-        Map<String, List<String>> headers = new HashMap<>(1);
-        headers.put("Content-Type", Arrays.asList("application/json"));
+    @SuppressWarnings("unchecked")
+    @Test
+    public void fileShouldBeDetected() throws Exception {
+        prepareForFileModificationRequestTest();
+
+        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
+                                      .withProjectName(PROJECT_NAME);
 
         byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
 
-        ContainerResponse response = launcher.service("POST", "/dev-monit/wso2/detect", BASE_URI, headers, data, null);
+        ContainerResponse response = prepareResponseLauncherService("POST", "detect", data);
 
         assertEquals(200, response.getStatus());
     }
 
     @SuppressWarnings("unchecked")
     @Test
-    public void fileShouldBeUpload() throws Exception {
-        String projectName = "projectName";
-        String fileName = "fileName";
+    public void fileShouldBeDeleted() throws Exception {
+        prepareForFileModificationRequestTest();
 
-        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(fileName).withNewFileName(fileName)
-                                      .withProjectName(projectName);
-
-        InputStream is = new ByteArrayInputStream(SYNAPSE_CONFIGURATION_CONTENT.getBytes());
-        ContentStream contentStream = new ContentStream(null, is, null);
-
-        VirtualFile synapseFile = mock(VirtualFile.class, RETURNS_MOCKS);
-
-        when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString())).thenReturn(synapseFile);
-        when(synapseFile.getContent()).thenReturn(contentStream);
-
-        Map<String, List<String>> headers = new HashMap<>(1);
-        headers.put("Content-Type", Arrays.asList("application/json"));
+        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
+                                      .withProjectName(PROJECT_NAME);
 
         byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
 
-        ContainerResponse response = launcher.service("POST", "/dev-monit/wso2/file/delete", BASE_URI, headers, data, null);
+        ContainerResponse response = prepareResponseLauncherService("POST", "file/delete", data);
 
+        verify(synapseFile).delete(anyString());
+        assertEquals(200, response.getStatus());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void fileShouldBeUploadWithRenamingName() throws Exception {
+        prepareForFileModificationRequestTest();
+
+        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
+                                      .withProjectName(PROJECT_NAME);
+
+        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
+
+        ContainerResponse response = prepareResponseLauncherService("POST", "file/rename", data);
+
+        verify(synapseFile).rename(eq(FILE_NAME), anyString(), anyString());
+        assertEquals(200, response.getStatus());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void fileShouldBeUploadWithOverwritingContent() throws Exception {
+        prepareForFileModificationRequestTest();
+
+        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
+                                      .withProjectName(PROJECT_NAME);
+
+        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
+
+        ContainerResponse response = prepareResponseLauncherService("POST", "file/overwrite", data);
+
+        verify(synapseFile).updateContent(anyString(), (InputStream)anyObject(), anyString());
+        verify(synapseFile).delete(anyString());
         assertEquals(200, response.getStatus());
     }
 }

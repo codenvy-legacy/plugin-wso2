@@ -144,15 +144,13 @@ public class WSO2RestService {
         MountPoint mountPoint = vfsProvider.getMountPoint(false);
         VirtualFile file = mountPoint.getVirtualFile(fileInfo.getProjectName() + "/" + fileInfo.getFileName());
 
-        String result = moveFile(file, mountPoint, fileInfo.getProjectName());
+        String result = moveFile(file, mountPoint, fileInfo.getProjectName(), getParentFolderForImportingFile(file));
 
         return Response.ok(result, MediaType.TEXT_HTML).build();
     }
 
-    private String moveFile(@NotNull VirtualFile file, @NotNull MountPoint mountPoint, @NotNull String projectName)
+    private String moveFile(@NotNull VirtualFile file, @NotNull MountPoint mountPoint, @NotNull String projectName, String parentFolder)
             throws VirtualFileSystemException {
-
-        String parentFolder = getParentFolderForImportingFile(file);
         try {
             file.moveTo(mountPoint.getVirtualFile(
                     projectName + "/" + SRC_FOLDER_NAME + "/" + MAIN_FOLDER_NAME + "/" + SYNAPSE_CONFIG_FOLDER_NAME + "/" +
@@ -181,7 +179,7 @@ public class WSO2RestService {
             InputStream is = URI.create(fileInfo.getFileName()).toURL().openStream();
             VirtualFile file = projectParent.createFile(fileName, ESB_XML_MIME_TYPE, is);
 
-            parentFolder = moveFile(file, mountPoint, fileInfo.getProjectName());
+            parentFolder = moveFile(file, mountPoint, fileInfo.getProjectName(), getParentFolderForImportingFile(file));
 
         } catch (IOException e) {
             LOG.error("Can't create " + fileName + " file", e);
@@ -210,7 +208,7 @@ public class WSO2RestService {
             case "rename":
                 file.rename(fileInfo.getNewFileName(), file.getMediaType(), null);
                 file = mountPoint.getVirtualFile(fileInfo.getProjectName() + "/" + fileInfo.getNewFileName());
-                moveFile(file, mountPoint, fileInfo.getProjectName());
+                moveFile(file, mountPoint, fileInfo.getProjectName(), parentFolder);
                 break;
             default:
                 file.delete(null);
