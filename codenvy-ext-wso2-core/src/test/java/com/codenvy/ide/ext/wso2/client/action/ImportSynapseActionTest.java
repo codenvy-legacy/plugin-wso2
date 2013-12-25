@@ -17,30 +17,21 @@
  */
 package com.codenvy.ide.ext.wso2.client.action;
 
-import com.codenvy.ide.api.notification.Notification;
-import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ext.wso2.client.upload.ImportFilePresenter;
-import com.google.gwt.inject.client.AsyncProvider;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
+import com.google.inject.Provider;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 
-import java.lang.reflect.Method;
-
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Here we're testing {@link ImportSynapseAction}.
@@ -51,58 +42,31 @@ import static org.mockito.Mockito.verify;
 public class ImportSynapseActionTest {
 
     @Mock
-    private AsyncProvider<ImportFilePresenter> importFilePresenter;
+    private Provider<ImportFilePresenter> importFilePresenter;
     @Mock
-    private NotificationManager                notificationManager;
+    private ImportFilePresenter           presenter;
     @Mock
-    private ImportFilePresenter                presenter;
+    private WSO2Resources                 wso2Resources;
     @Mock
-    private WSO2Resources                      wso2Resources;
+    private LocalizationConstant          locale;
     @Mock
-    private LocalizationConstant               locale;
-    @Mock
-    private ActionEvent                        actionEvent;
+    private ActionEvent                   actionEvent;
     @InjectMocks
-    private ImportSynapseAction                action;
+    private ImportSynapseAction           action;
 
-    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
-    @Test
-    public void importWindowShouldBeNotShow() {
-        final Throwable throwable = mock(Throwable.class);
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncCallback<Void> callback = (AsyncCallback<Void>)arguments[0];
-                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
-                onFailure.invoke(callback, throwable);
-                return callback;
-            }
-        }).when(importFilePresenter).get((AsyncCallback<ImportFilePresenter>)anyObject());
+    @Before
+    public void setUp() throws Exception {
+        when(importFilePresenter.get()).thenReturn(presenter);
 
-        action.actionPerformed(actionEvent);
-
-        verify(throwable).getMessage();
-        verify(notificationManager).showNotification((Notification)anyObject());
+        verify(locale).wso2ImportSynapseConfig();
+        verify(locale).wso2ImportActionDescription();
+        verify(wso2Resources).synapseIcon();
     }
 
-    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
     @Test
     public void importWindowShouldBeShow() {
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncCallback<Void> callback = (AsyncCallback<Void>)arguments[0];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, presenter);
-                return callback;
-            }
-        }).when(importFilePresenter).get((AsyncCallback<ImportFilePresenter>)anyObject());
-
         action.actionPerformed(actionEvent);
 
         verify(presenter).showDialog();
     }
-
 }

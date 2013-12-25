@@ -17,19 +17,14 @@
  */
 package com.codenvy.ide.ext.wso2.client.action;
 
-import com.codenvy.ide.api.notification.Notification;
-import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ext.wso2.client.upload.ImportFilePresenter;
-import com.google.gwt.inject.client.AsyncProvider;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
-
-import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * The action for importing configuration files.
@@ -39,37 +34,22 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 @Singleton
 public class ImportSynapseAction extends Action {
 
-    private AsyncProvider<ImportFilePresenter> importFilePresenter;
-    private NotificationManager                notificationManager;
-    private WSO2Resources                      wso2Resources;
+    private Provider<ImportFilePresenter> importFilePresenter;
 
     @Inject
     public ImportSynapseAction(LocalizationConstant local,
-                               AsyncProvider<ImportFilePresenter> importFilePresenter,
-                               NotificationManager notificationManager,
+                               Provider<ImportFilePresenter> importFilePresenter,
                                WSO2Resources wso2Resources) {
 
         super(local.wso2ImportSynapseConfig(), local.wso2ImportActionDescription(), wso2Resources.synapseIcon());
 
         this.importFilePresenter = importFilePresenter;
-        this.notificationManager = notificationManager;
-        this.wso2Resources = wso2Resources;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        importFilePresenter.get(new AsyncCallback<ImportFilePresenter>() {
-            @Override
-            public void onSuccess(ImportFilePresenter presenter) {
-                presenter.showDialog();
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                Notification notification = new Notification(caught.getMessage(), ERROR);
-                notificationManager.showNotification(notification);
-            }
-        });
+        ImportFilePresenter presenter = importFilePresenter.get();
+        presenter.showDialog();
     }
 }
