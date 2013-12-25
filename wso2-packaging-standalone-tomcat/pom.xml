@@ -495,7 +495,6 @@ from Codenvy S.A..
                                     <fileset dir="${project.build.directory}/../../wso2-application-war" includes="src/**, pom.xml"/>
                                 </copy>
 
-
                                 <unwar src="${project.build.directory}/packager-conf/war/wso2-application-war-${project.version}.war"
                                        dest="${project.build.directory}/packager-conf/war/ide">
                                 </unwar>
@@ -510,6 +509,19 @@ from Codenvy S.A..
 
                                 <war destfile="${project.build.directory}/tomcat-ide/webapps/ide.war" needxmlfile="false">
                                     <fileset dir="${project.build.directory}/packager-conf/war/ide"/>
+                                </war>
+
+                                <unwar src="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-${codenvy.version}.war"
+                                       dest="${project.build.directory}/packager-conf/war/site">
+                                </unwar>
+
+                                <copy todir="${project.build.directory}/packager-conf/war/site" overwrite="true">
+                                    <fileset dir="${basedir}/src/main/resources/site"/>
+                                </copy>
+
+                                <war destfile="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-${codenvy.version}.war"
+                                     needxmlfile="false">
+                                    <fileset dir="${project.build.directory}/packager-conf/war/site"/>
                                 </war>
 
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${org.exoplatform.ide.version}.war"
