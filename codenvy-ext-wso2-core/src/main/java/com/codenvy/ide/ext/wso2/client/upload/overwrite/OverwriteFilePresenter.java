@@ -137,7 +137,7 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
         }
 
 
-        resourceProvider.getActiveProject().refreshTree(parentFolder, new AsyncCallback<Folder>() {
+        activeProject.refreshTree(parentFolder, new AsyncCallback<Folder>() {
             @Override
             public void onSuccess(Folder folder) {
                 File file = (File)parentFolder.findResourceByName(fileName, "file");
@@ -212,11 +212,13 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
     }
 
     public void showDialog(String fileName, ImportFilePresenter.ViewCloseHandler parentViewUtils) {
+        this.parentViewUtils = parentViewUtils;
+        oldFileName = fileName;
+
         view.setMessage(local.wso2ImportFileAlreadyExists());
         view.setFileName(fileName);
         view.setEnabledRenameButton(false);
+
         view.showDialog();
-        oldFileName = view.getFileName();
-        this.parentViewUtils = parentViewUtils;
     }
 }
