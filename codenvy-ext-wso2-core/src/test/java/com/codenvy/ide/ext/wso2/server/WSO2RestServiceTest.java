@@ -39,6 +39,7 @@ import org.everrest.core.impl.ResourceBinderImpl;
 import org.everrest.core.tools.DependencySupplierImpl;
 import org.everrest.core.tools.ResourceLauncher;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -209,6 +210,71 @@ public class WSO2RestServiceTest {
 
         verify(synapseFile).rename(eq(FILE_NAME), anyString(), anyString());
         assertEquals(200, response.getStatus());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void fileShouldBeUploadWithSomeProblem() throws Exception {
+        prepareForFileModificationRequestTest();
+
+        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
+                                      .withProjectName(PROJECT_NAME);
+
+        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
+
+        ContainerResponse response = prepareResponseLauncherService("POST", "upload", data);
+
+        assertEquals(500, response.getStatus());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Ignore
+    @Test
+    public void fileShouldBeUpload() throws Exception {
+        prepareForFileModificationRequestTest();
+        //TODO need some url only with xml content.
+        String fileForUpload = "http://www.w3schools.com/xml/note.xml";
+
+        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(fileForUpload).withNewFileName(FILE_NAME)
+                                      .withProjectName(PROJECT_NAME);
+
+        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
+
+        ContainerResponse response = prepareResponseLauncherService("POST", "upload", data);
+
+        assertEquals(200, response.getStatus());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void fileShouldBeDetectedWithSomeProblem() throws Exception {
+        prepareForFileModificationRequestTest();
+        when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString())).thenReturn(null);
+
+        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
+                                      .withProjectName(PROJECT_NAME);
+
+        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
+
+        ContainerResponse response = prepareResponseLauncherService("POST", "detect", data);
+
+        assertEquals(500, response.getStatus());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void fileShouldBeOverwrittenWithSomeProblem() throws Exception {
+        prepareForFileModificationRequestTest();
+        when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString())).thenReturn(null);
+
+        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
+                                      .withProjectName(PROJECT_NAME);
+
+        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
+
+        ContainerResponse response = prepareResponseLauncherService("POST", "file/overwrite", data);
+
+        assertEquals(500, response.getStatus());
     }
 
     @SuppressWarnings("unchecked")
