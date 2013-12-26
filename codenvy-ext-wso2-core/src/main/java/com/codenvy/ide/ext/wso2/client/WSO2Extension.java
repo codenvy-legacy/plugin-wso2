@@ -71,42 +71,16 @@ import static com.google.gwt.core.client.ScriptInjector.TOP_WINDOW;
 public class WSO2Extension {
 
     @Inject
-    public WSO2Extension(LocalizationConstant locale,
-                         ProjectTypeAgent projectTypeAgent,
-                         TemplateAgent templateAgent,
-                         Provider<CreateESBConfProjectPage> createESBConfProjectPage,
-                         ActionManager actionManager,
-                         ImportSynapseAction importSynapseAction,
-                         CreateEndpointAction createEndpointAction,
-                         CreateSequenceAction createSequenceAction,
-                         CreateProxyServiceAction createProxyServiceAction,
-                         CreateLocalEntryAction createLocalEntryAction,
-                         WSO2Resources wso2Resources,
-                         ResourceProvider resourceProvider,
-                         EditorRegistry editorRegistry,
-                         XmlEditorProvider xmlEditorProvider,
-                         @ESBXmlFileType FileType esbXmlFileType) {
-
+    public WSO2Extension(WSO2Resources wso2Resources) {
         wso2Resources.wso2Style().ensureInjected();
-
-        initProject(locale, wso2Resources, projectTypeAgent, templateAgent, createESBConfProjectPage);
-        initXmlEditor(wso2Resources, resourceProvider, editorRegistry, xmlEditorProvider, esbXmlFileType);
-        initActions(locale,
-                    wso2Resources,
-                    resourceProvider,
-                    actionManager,
-                    importSynapseAction,
-                    createEndpointAction,
-                    createSequenceAction,
-                    createProxyServiceAction,
-                    createLocalEntryAction);
     }
 
-    private void initXmlEditor(WSO2Resources wso2Resources,
-                               ResourceProvider resourceProvider,
-                               EditorRegistry editorRegistry,
-                               XmlEditorProvider xmlEditorProvider,
-                               FileType esbXmlFileType) {
+    @Inject
+    public void initXmlEditor(WSO2Resources wso2Resources,
+                              ResourceProvider resourceProvider,
+                              EditorRegistry editorRegistry,
+                              XmlEditorProvider xmlEditorProvider,
+                              @ESBXmlFileType FileType esbXmlFileType) {
 
         ScriptInjector.fromUrl(wso2Resources.xmlParserJS().getSafeUri().asString()).setWindow(TOP_WINDOW).inject();
 
@@ -116,11 +90,12 @@ public class WSO2Extension {
     }
 
     @SuppressWarnings("unchecked")
-    private void initProject(LocalizationConstant locale,
-                             WSO2Resources wso2Resources,
-                             ProjectTypeAgent projectTypeAgent,
-                             TemplateAgent templateAgent,
-                             Provider<CreateESBConfProjectPage> createESBConfProjectPage) {
+    @Inject
+    public void initProject(LocalizationConstant locale,
+                            WSO2Resources wso2Resources,
+                            ProjectTypeAgent projectTypeAgent,
+                            TemplateAgent templateAgent,
+                            Provider<CreateESBConfProjectPage> createESBConfProjectPage) {
 
         projectTypeAgent.register(WSO2_PROJECT_ID,
                                   locale.wso2ProjectTitle(),
@@ -136,15 +111,16 @@ public class WSO2Extension {
                                Collections.<Provider<? extends AbstractTemplatePage>>createArray(createESBConfProjectPage));
     }
 
-    private void initActions(LocalizationConstant locale,
-                             WSO2Resources wso2Resources,
-                             ResourceProvider resourceProvider,
-                             ActionManager actionManager,
-                             ImportSynapseAction importSynapseAction,
-                             CreateEndpointAction createEndpointAction,
-                             CreateSequenceAction createSequenceAction,
-                             CreateProxyServiceAction createProxyServiceAction,
-                             CreateLocalEntryAction createLocalEntryAction) {
+    @Inject
+    public void initActions(LocalizationConstant locale,
+                            WSO2Resources wso2Resources,
+                            ResourceProvider resourceProvider,
+                            ActionManager actionManager,
+                            ImportSynapseAction importSynapseAction,
+                            CreateEndpointAction createEndpointAction,
+                            CreateSequenceAction createSequenceAction,
+                            CreateProxyServiceAction createProxyServiceAction,
+                            CreateLocalEntryAction createLocalEntryAction) {
 
         DefaultActionGroup wso2MainMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_MENU);
         DefaultActionGroup wso2ContextMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
