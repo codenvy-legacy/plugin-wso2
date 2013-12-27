@@ -1,4 +1,4 @@
-filename=`ls wso2-packaging-standalone-tomcat/target | grep codenvy`
+filename=`ls target | grep codenvy`
 SSH_KEY_NAME=idex
 SSH_AS_USER_NAME=cl-server
 AS_IP=wso2preview.codenvy-dev.com
@@ -12,7 +12,7 @@ deleteFileIfExists() {
 }
 
     echo "upload new tomcat..."
-    scp -i ~/.ssh/${SSH_KEY_NAME} wso2-packaging-standalone-tomcat/target/${filename} ${SSH_AS_USER_NAME}@${AS_IP}:${home}
+    scp -i ~/.ssh/${SSH_KEY_NAME} target/${filename} ${SSH_AS_USER_NAME}@${AS_IP}:${home}
     echo "stoping tomcat"
     ssh -i ~/.ssh/${SSH_KEY_NAME} ${SSH_AS_USER_NAME}@${AS_IP} "cd ${home}/bin/;if [ -f catalina.sh ]; then ./catalina.sh stop -force; fi"
     echo "clean up"
