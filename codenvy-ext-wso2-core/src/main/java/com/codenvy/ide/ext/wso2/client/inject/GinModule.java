@@ -32,7 +32,7 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_MIME_TYPE;
 
 
 /**
- * The module that contains configuration of the plugin.
+ * The module that contains configuration of the client side part of the plugin.
  *
  * @author Valeriy Svydenko
  */

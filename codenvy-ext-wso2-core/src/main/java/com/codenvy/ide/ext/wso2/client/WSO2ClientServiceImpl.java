@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.wso2.client;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
@@ -29,6 +28,8 @@ import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import javax.validation.constraints.NotNull;
+
 import static com.codenvy.ide.rest.HTTPHeader.CONTENT_TYPE;
 import static com.google.gwt.http.client.RequestBuilder.POST;
 
@@ -39,7 +40,7 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
  */
 public class WSO2ClientServiceImpl implements WSO2ClientService {
 
-    private static final String TEMPLATE_BASE_URL         = '/' + Utils.getWorkspaceName() + "/wso2";
+    private static final String TEMPLATE_BASE_URL         = "/wso2/" + Utils.getWorkspaceName();
     private static final String CREATE_ESB_CONF_PROJECT   = TEMPLATE_BASE_URL + "/templates/esbconf";
     private static final String DETECT_CONFIGURATION_FILE = TEMPLATE_BASE_URL + "/detect";
     private static final String UPLOAD_CONFIGURATION_FILE = TEMPLATE_BASE_URL + "/upload";

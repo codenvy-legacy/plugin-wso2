@@ -17,12 +17,13 @@
  */
 package com.codenvy.ide.ext.wso2.client;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.ImplementedBy;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The service for working with 'WSO2' plugin's rest services.

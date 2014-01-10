@@ -17,14 +17,12 @@
  */
 package com.codenvy.ide.ext.wso2.client.wizard.project;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
-import com.codenvy.ide.ext.wso2.shared.Constants;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -32,6 +30,8 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+
+import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;

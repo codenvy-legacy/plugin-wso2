@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.wso2.server;
+package com.codenvy.ide.ext.wso2.server.rest;
 
 import com.codenvy.api.vfs.server.MountPoint;
 import com.codenvy.api.vfs.server.VirtualFile;
@@ -27,7 +27,6 @@ import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.dto.server.DtoFactory;
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 
@@ -42,6 +41,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import javax.inject.Inject;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -80,7 +80,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
  *
  * @author Andrey Plotnikov
  */
-@Path("{ws-name}/wso2")
+@Path("/wso2/{ws-name}")
 public class WSO2RestService {
     private static final Logger LOG = LoggerFactory.getLogger(WSO2RestService.class);
 
@@ -149,7 +149,10 @@ public class WSO2RestService {
         return Response.ok(result, MediaType.TEXT_HTML).build();
     }
 
-    private String moveFile(@NotNull VirtualFile file, @NotNull MountPoint mountPoint, @NotNull String projectName, String parentFolder)
+    private String moveFile(@NotNull VirtualFile file,
+                            @NotNull MountPoint mountPoint,
+                            @NotNull String projectName,
+                            @NotNull String parentFolder)
             throws VirtualFileSystemException {
         try {
             file.moveTo(mountPoint.getVirtualFile(

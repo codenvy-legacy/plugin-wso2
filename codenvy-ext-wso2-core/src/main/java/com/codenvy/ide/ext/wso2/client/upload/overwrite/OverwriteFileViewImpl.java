@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.wso2.client.upload.overwrite;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ui.Button;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -30,6 +29,8 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The implementation of {@link OverwriteFileView}.

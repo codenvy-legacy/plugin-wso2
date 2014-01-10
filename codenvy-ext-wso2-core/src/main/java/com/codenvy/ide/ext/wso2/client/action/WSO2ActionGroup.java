@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.wso2.client.action;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.action.ActionManager;
@@ -27,6 +26,8 @@ import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
+
+import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;

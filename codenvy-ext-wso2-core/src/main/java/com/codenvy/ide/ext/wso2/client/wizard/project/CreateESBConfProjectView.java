@@ -17,9 +17,10 @@
  */
 package com.codenvy.ide.ext.wso2.client.wizard.project;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The view of {@link CreateESBConfProjectPage}. Provides an ability to input information that pom.xml file need be contained.

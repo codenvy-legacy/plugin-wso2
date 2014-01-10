@@ -17,8 +17,6 @@
  */
 package com.codenvy.ide.ext.wso2.client.wizard.files;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -34,6 +32,9 @@ import com.codenvy.ide.resources.model.ResourceNameValidator;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.MAIN_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SRC_FOLDER_NAME;

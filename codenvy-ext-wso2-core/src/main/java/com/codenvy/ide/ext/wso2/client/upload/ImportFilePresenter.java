@@ -17,8 +17,6 @@
 */
 package com.codenvy.ide.ext.wso2.client.upload;
 
-import com.codenvy.ide.annotations.NotNull;
-import com.codenvy.ide.annotations.Nullable;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
@@ -44,6 +42,9 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
+
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.ext.wso2.shared.Constants.MAIN_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SRC_FOLDER_NAME;
@@ -62,8 +63,6 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
         /** Call when need close the view. */
         void onCloseView();
     }
-
-    private final String UPLOAD_FILE_PATH = "/vfs/v2/uploadfile/";
 
     private ImportFileView         view;
     private EventBus               eventBus;
@@ -119,7 +118,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
         final Project activeProject = resourceProvider.getActiveProject();
 
         if (view.isUseLocalPath()) {
-            view.setAction(restContext + '/' + Utils.getWorkspaceName() + UPLOAD_FILE_PATH + activeProject.getId());
+            view.setAction(restContext + "/vfs/" + Utils.getWorkspaceName() + "/v2/uploadfile/" + activeProject.getId());
 
             view.submit();
         } else {

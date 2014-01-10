@@ -56,20 +56,15 @@ from Codenvy S.A..
             <artifactId>gin</artifactId>
             <version>${gin.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${org.slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${org.slf4j.version}</version>
+            <groupId>com.codenvy.commons</groupId>
+            <artifactId>codenvy-commons-servlet</artifactId>
+            <version>${com.codenvy.commons.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-client</artifactId>
+            <scope>provided</scope>
             <version>${codenvy.version}</version>
         </dependency>
         <dependency>
@@ -77,37 +72,12 @@ from Codenvy S.A..
             <artifactId>codenvy-ide-core</artifactId>
             <version>${codenvy.version}</version>
         </dependency>
-
-        <!-- Server-side VFS -->
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-vfs</artifactId>
+            <scope>provided</scope>
             <version>${com.codenvy.platform-api.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-websocket</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-classic</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>httpclient</artifactId>
-                    <groupId>org.apache.httpcomponents</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>servlet-api</artifactId>
-                    <groupId>javax.servlet</groupId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.exoplatform.ide</groupId>
-                    <artifactId>exo-ide-server</artifactId>
-                </exclusion>
-            </exclusions>
-            <version>${org.exoplatform.ide.version}</version>
-        </dependency>
-
         <!-- Extensions -->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
@@ -117,6 +87,11 @@ from Codenvy S.A..
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-web</artifactId>
+            <version>${codenvy.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-git</artifactId>
             <version>${codenvy.version}</version>
         </dependency>
         <dependency>
@@ -131,19 +106,23 @@ from Codenvy S.A..
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-wso2-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-tutorials</artifactId>
             <version>${codenvy.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-wso2-core</artifactId>
-            <version>${project.parent.version}</version>
+            <artifactId>codenvy-ext-runner</artifactId>
+            <version>${codenvy.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>org.eclipse.jgit</groupId>
-            <artifactId>org.eclipse.jgit.http.server</artifactId>
-            <version>${jgit.version}</version>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-builder</artifactId>
+            <version>${codenvy.version}</version>
         </dependency>
 
         <dependency>
@@ -163,9 +142,13 @@ from Codenvy S.A..
     <build>
         <resources>
             <resource>
+                <directory>src/main/java</directory>
+            </resource>
+            <resource>
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
+        <sourceDirectory>src/main/java</sourceDirectory>
 
         <plugins>
             <!-- Source Generator invocation -->
@@ -230,6 +213,8 @@ from Codenvy S.A..
                                 <module>com.codenvy.ide.ext.java.JavaParserWorker</module>
                             </modules>
                             <logLevel>INFO</logLevel>
+                            <!--<style>PRETTY</style>-->
+                            <!--<enableClosureCompiler>true</enableClosureCompiler>-->
                         </configuration>
                         <goals>
                             <goal>compile</goal>
@@ -260,12 +245,16 @@ from Codenvy S.A..
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>${version.war.plugin}</version>
+                <configuration>
+                    <packagingIncludes>
+                        WEB-INF/lib/codenvy-commons-servlet-${com.codenvy.commons.version}.jar, WEB-INF/classes/com/codenvy/ide/servlet/*,
+                        WEB-INF/classes/META-INF/, _app/**
+                    </packagingIncludes>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${version.compiler.plugin}</version>
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>

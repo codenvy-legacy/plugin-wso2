@@ -17,9 +17,10 @@
  */
 package com.codenvy.ide.ext.wso2.client.wizard.files.view;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The view for creating WSO2 resources. Provides an ability to input resource name.

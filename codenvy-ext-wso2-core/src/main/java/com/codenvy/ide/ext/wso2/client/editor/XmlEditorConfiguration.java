@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.codenvy.ide.texteditor.api.AutoEditStrategy;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
@@ -25,6 +24,8 @@ import com.codenvy.ide.texteditor.api.parser.BasicTokenFactory;
 import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.codenvy.ide.texteditor.api.parser.Parser;
 import com.google.inject.Inject;
+
+import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_EXTENSION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_MIME_TYPE;

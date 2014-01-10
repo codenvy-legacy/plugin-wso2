@@ -23,6 +23,7 @@ import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.dto.server.DtoFactory;
+import com.codenvy.ide.ext.wso2.server.rest.WSO2RestService;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 
@@ -115,9 +116,7 @@ public class WSO2RestServiceTest {
         Map<String, List<String>> headers = new HashMap<>(1);
         headers.put("Content-Type", Arrays.asList("application/json"));
 
-        ContainerResponse response = launcher.service(method, "/dev-monit/wso2/" + path, BASE_URI, headers, data, null);
-
-        return response;
+        return launcher.service(method, "/wso2/dev-monit/" + path, BASE_URI, headers, data, null);
     }
 
     @SuppressWarnings("unchecked")

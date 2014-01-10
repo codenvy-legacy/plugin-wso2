@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.wso2.client.wizard.files.view;
 
-import com.codenvy.ide.annotations.NotNull;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -27,6 +26,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The implementation of {@link CreateResourceView}.

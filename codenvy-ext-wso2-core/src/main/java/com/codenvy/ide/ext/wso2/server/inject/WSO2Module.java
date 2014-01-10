@@ -2,7 +2,7 @@
  * CODENVY CONFIDENTIAL
  * __________________
  * 
- * [2012] - [2013] Codenvy, S.A. 
+ * [2012] - [2014] Codenvy, S.A. 
  * All Rights Reserved.
  * 
  * NOTICE:  All information contained herein is, and remains
@@ -15,25 +15,23 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.wso2.client.editor;
+package com.codenvy.ide.ext.wso2.server.inject;
 
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
-
-import javax.validation.constraints.NotNull;
+import com.codenvy.ide.ext.wso2.server.rest.WSO2RestService;
+import com.codenvy.inject.DynaModule;
+import com.google.inject.AbstractModule;
 
 /**
- * The factory for creating instances of {@link TagAutoCompleter}.
+ * The module that contains configuration of the server side part of the plugin.
  *
  * @author Andrey Plotnikov
  */
-public interface AutoCompleterFactory {
+@DynaModule
+public class WSO2Module extends AbstractModule {
 
-    /**
-     * Create an instance of {@link TagAutoCompleter} with a given editor.
-     *
-     * @param editor
-     *         editor that need to be used with a created autocompleter
-     * @return an instance of {@link TagAutoCompleter}
-     */
-    TagAutoCompleter createAutoCompleter(@NotNull TextEditorPartView editor);
+    /** {@inheritDoc} */
+    @Override
+    protected void configure() {
+        bind(WSO2RestService.class);
+    }
 }
