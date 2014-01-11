@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.wso2.shared;
 /**
  * Contains general constants that needed on client and server side.
  *
+ * @author Valeriy Svydenko
  * @author Andrey Plotnikov
  * @author Dmitry Kuleshov
  */
@@ -36,6 +37,8 @@ public interface Constants {
 
     String WSO2_PROJECT_ID              = "WSO2Project";
     String ESB_CONFIGURATION_PROJECT_ID = "ESBConfigurationProject";
+    String ESB_PROJECT_DESCRIPTION      = "ESB Configuration project.";
+    String PROJECT_MIME_TYPE            = "text/vnd.ideproject+directory";
 
     String WSO2_ACTION_GROUP           = "WSO2ActionGroup";
     String WSO2_NEW_RESOURCE_GROUP     = "WSO2NewResourceGroup";

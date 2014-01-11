@@ -26,6 +26,7 @@ import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.wso2.client.action.CreateEndpointAction;
 import com.codenvy.ide.ext.wso2.client.action.CreateLocalEntryAction;
@@ -37,6 +38,7 @@ import com.codenvy.ide.ext.wso2.client.editor.ESBXmlFileType;
 import com.codenvy.ide.ext.wso2.client.editor.XmlEditorProvider;
 import com.codenvy.ide.ext.wso2.client.wizard.project.CreateESBConfProjectPage;
 import com.codenvy.ide.resources.ProjectTypeAgent;
+import com.codenvy.ide.resources.model.Property;
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -51,7 +53,9 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_LOCAL_ENTRY_ACTIO
 import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_PROXY_SERVICE_ACTION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_SEQUENCE_ACTION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
+import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_PROJECT_DESCRIPTION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.IMPORT_SYNAPSE_ACTION;
+import static com.codenvy.ide.ext.wso2.shared.Constants.PROJECT_MIME_TYPE;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_ACTION_GROUP;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_IMPORT_RESOURCE_GROUP;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_NEW_RESOURCE_GROUP;
@@ -97,11 +101,19 @@ public class WSO2Extension {
                             TemplateAgent templateAgent,
                             Provider<CreateESBConfProjectPage> createESBConfProjectPage) {
 
+        Array<Property> wso2ProjectProperties = Collections.createArray();
+        wso2ProjectProperties.add(new Property("nature.mixin", Collections.createArray(ESB_CONFIGURATION_PROJECT_ID)));
+        wso2ProjectProperties.add(new Property("exoide:projectDescription", Collections.createArray(ESB_PROJECT_DESCRIPTION)));
+        wso2ProjectProperties.add(new Property("vfs:projectType", Collections.createArray(WSO2_PROJECT_ID)));
+        wso2ProjectProperties.add(new Property("nature.primary", Collections.createArray(WSO2_PROJECT_ID)));
+        wso2ProjectProperties.add(new Property("vfs:mimeType", Collections.createArray(PROJECT_MIME_TYPE)));
+
         projectTypeAgent.register(WSO2_PROJECT_ID,
                                   locale.wso2ProjectTitle(),
                                   wso2Resources.wso2_project_wizard(),
                                   WSO2_PROJECT_ID,
-                                  Collections.<String>createArray());
+                                  Collections.<String>createArray(),
+                                  wso2ProjectProperties);
 
         templateAgent.register(ESB_CONFIGURATION_PROJECT_ID,
                                locale.wso2ProjectEsbTitle(),
