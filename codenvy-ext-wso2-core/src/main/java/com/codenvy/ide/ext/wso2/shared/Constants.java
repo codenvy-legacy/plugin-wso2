@@ -48,6 +48,7 @@ public interface Constants {
     String CREATE_SEQUENCE_ACTION      = "CreateSequenceAction";
     String CREATE_PROXY_SERVICE_ACTION = "CreateProxyServiceAction";
     String CREATE_LOCAL_ENTRY_ACTION   = "CreateLocalEntryAction";
+    String LOGIN_WSO2_ACTION           = "LoginWSO2Action";
 
     /** Dedicated mime type name for WSO2 ESB configuration files */
     String ESB_XML_MIME_TYPE = "text/xml-esb";

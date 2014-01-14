@@ -24,14 +24,12 @@ import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ext.wso2.client.upload.ImportFilePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.google.inject.Singleton;
 
 /**
  * The action for importing configuration files.
  *
  * @author Valeriy Svydenko
  */
-@Singleton
 public class ImportSynapseAction extends Action {
 
     private Provider<ImportFilePresenter> importFilePresenter;

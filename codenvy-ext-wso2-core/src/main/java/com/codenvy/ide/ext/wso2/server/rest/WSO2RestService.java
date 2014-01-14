@@ -27,6 +27,9 @@ import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.dto.server.DtoFactory;
+import com.codenvy.ide.ext.git.server.provider.rest.ProviderException;
+import com.codenvy.ide.ext.git.shared.GitUrlVendorInfo;
+import com.codenvy.ide.ext.wso2.server.WSO2;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 
@@ -43,9 +46,11 @@ import org.xml.sax.SAXException;
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.DocumentBuilder;
@@ -86,6 +91,8 @@ public class WSO2RestService {
 
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
+    @Inject
+    private WSO2                      wso2;
 
     @Path("templates/esbconf")
     @POST
@@ -218,6 +225,13 @@ public class WSO2RestService {
                 break;
         }
         return Response.ok(parentFolder, MediaType.TEXT_HTML).build();
+    }
+
+    @GET
+    @Path("info")
+    @Produces(APPLICATION_JSON)
+    public GitUrlVendorInfo getInfoForVcsUrl() throws ProviderException {
+        return new GitUrlVendorInfo(wso2.getVendorName(), wso2.getVendorBaseHost(), wso2.getVendorOAuthScopes(), false);
     }
 
     /**

@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.wso2.client;
 
+import com.codenvy.ide.ext.git.shared.GitUrlVendorInfo;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -77,4 +78,14 @@ public interface WSO2ClientService {
      */
     void modifyFile(@NotNull FileInfo fileInfo, @NotNull String operation, @NotNull AsyncRequestCallback<String> callback)
             throws RequestException;
+
+    /**
+     * Get information about WSO2 service configuration.
+     *
+     * @param callback
+     *         callback that need to execute when the answer is come
+     * @throws RequestException
+     */
+    void getWSO2ServiceInfo(@NotNull AsyncRequestCallback<GitUrlVendorInfo> callback) throws RequestException;
+
 }

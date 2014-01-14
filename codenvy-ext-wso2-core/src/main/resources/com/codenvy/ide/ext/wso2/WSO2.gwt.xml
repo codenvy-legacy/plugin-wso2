@@ -28,6 +28,7 @@
     <inherits name="com.codenvy.ide.Api"/>
     <inherits name="com.google.gwt.inject.Inject"/>
     <inherits name="com.codenvy.ide.collections.Collections"/>
+    <inherits name="com.codenvy.ide.ext.git.Git"/>
 
     <source path="client"/>
     <source path='shared'/>

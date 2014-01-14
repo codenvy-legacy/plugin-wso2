@@ -52,6 +52,11 @@
             <artifactId>codenvy-ide-api</artifactId>
             <version>${codenvy.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-security</artifactId>
+            <version>${codenvy.version}</version>
+        </dependency>
 
         <!-- Server libraries -->
         <dependency>
@@ -65,10 +70,16 @@
             <version>${maven-model.version}</version>
         </dependency>
 
+        <!--Client and server libraries-->
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>${javax.validation.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-git</artifactId>
+            <version>${codenvy.version}</version>
         </dependency>
 
         <!-- Testing  libraries-->

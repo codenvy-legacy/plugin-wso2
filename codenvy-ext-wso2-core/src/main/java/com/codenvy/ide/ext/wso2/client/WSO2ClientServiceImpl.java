@@ -17,13 +17,17 @@
  */
 package com.codenvy.ide.ext.wso2.client;
 
+import com.codenvy.ide.MimeType;
 import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.ext.git.shared.GitUrlVendorInfo;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.Utils;
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -45,6 +49,7 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
     private static final String DETECT_CONFIGURATION_FILE = TEMPLATE_BASE_URL + "/detect";
     private static final String UPLOAD_CONFIGURATION_FILE = TEMPLATE_BASE_URL + "/upload";
     private static final String MODIFY_CONFIGURATION_FILE = TEMPLATE_BASE_URL + "/file";
+    private static final String GET_WSO2_SERVICE_INFO     = TEMPLATE_BASE_URL + "/info";
 
     private String     restContext;
     private Loader     loader;
@@ -101,5 +106,13 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
 
         AsyncRequest.build(POST, requestUrl).data(dtoFactory.toJson(fileInfo)).header(CONTENT_TYPE, "application/json").send(
                 callback);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void getWSO2ServiceInfo(@NotNull AsyncRequestCallback<GitUrlVendorInfo> callback) throws RequestException {
+        String url = restContext + GET_WSO2_SERVICE_INFO;
+
+        AsyncRequest.build(RequestBuilder.GET, url).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
     }
 }

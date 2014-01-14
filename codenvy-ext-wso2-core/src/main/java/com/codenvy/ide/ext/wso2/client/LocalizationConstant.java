@@ -176,4 +176,10 @@ public interface LocalizationConstant extends Messages {
     @Key("wso2.button.rename")
     String wso2ButtonRename();
 
+    @Key("authorize.need.body.oauth")
+    String authorizeNeedBodyOauth(String vendorProvider);
+
+    String loginSuccess();
+
+    String loginActionTitle();
 }

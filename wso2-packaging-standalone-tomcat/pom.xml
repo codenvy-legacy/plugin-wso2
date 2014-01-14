@@ -544,6 +544,9 @@ from Codenvy S.A..
                                 <copy todir="${project.build.directory}/packager-conf/war/api/WEB-INF/lib" overwrite="true">
                                     <fileset dir="${project.build.directory}/packager-conf/jar/"/>
                                 </copy>
+                                <copy todir="${project.build.directory}/packager-conf/war/api/WEB-INF/classes/codenvy" overwrite="true">
+                                    <fileset dir="${basedir}/src/main/resources/api"/>
+                                </copy>
 
                                 <war destfile="${project.build.directory}/packager-conf/war/codenvy-api-war-${codenvy.version}.war"
                                      needxmlfile="false">
