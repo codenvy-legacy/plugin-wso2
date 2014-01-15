@@ -44,16 +44,15 @@ import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMAR
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Here we're testing {@link WSO2ActionGroup}.
+ * Here we're testing {@link WSO2ProjectActionGroup}.
  *
  * @author Andrey Plotnikov
  */
 @RunWith(MockitoJUnitRunner.class)
-public class WSO2ActionGroupTest {
+public class WSO2ProjectActionGroupTest {
 
     @Mock
     private DefaultWizard                wizard;
@@ -75,13 +74,10 @@ public class WSO2ActionGroupTest {
     private ActionEvent                  actionEvent;
     private Presentation                 presentation;
     @InjectMocks
-    private WSO2ActionGroup              action;
+    private WSO2ProjectActionGroup       action;
 
     @Before
     public void setUp() throws Exception {
-        verify(locale).wso2MainActionTitle();
-        verify(resources).wso2GroupIcon();
-
         presentation = new Presentation();
     }
 

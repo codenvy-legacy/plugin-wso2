@@ -34,7 +34,7 @@ import com.codenvy.ide.ext.wso2.client.action.CreateProxyServiceAction;
 import com.codenvy.ide.ext.wso2.client.action.CreateSequenceAction;
 import com.codenvy.ide.ext.wso2.client.action.ImportSynapseAction;
 import com.codenvy.ide.ext.wso2.client.action.LoginAction;
-import com.codenvy.ide.ext.wso2.client.action.WSO2ActionGroup;
+import com.codenvy.ide.ext.wso2.client.action.WSO2ProjectActionGroup;
 import com.codenvy.ide.ext.wso2.client.editor.ESBXmlFileType;
 import com.codenvy.ide.ext.wso2.client.editor.XmlEditorProvider;
 import com.codenvy.ide.ext.wso2.client.wizard.project.CreateESBConfProjectPage;
@@ -60,6 +60,7 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.LOGIN_WSO2_ACTION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.PROJECT_MIME_TYPE;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_ACTION_GROUP;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_IMPORT_RESOURCE_GROUP;
+import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_MAIN_ACTION_GROUP;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_NEW_RESOURCE_GROUP;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
 import static com.google.gwt.core.client.ScriptInjector.TOP_WINDOW;
@@ -140,7 +141,12 @@ public class WSO2Extension {
         DefaultActionGroup wso2MainMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_MENU);
         DefaultActionGroup wso2ContextMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
 
-        DefaultActionGroup wso2ActionGroup = new WSO2ActionGroup(locale, wso2Resources, actionManager, resourceProvider);
+        DefaultActionGroup wso2MainGroup = new DefaultActionGroup(locale.wso2MainActionTitle(), true, actionManager);
+        actionManager.registerAction(WSO2_MAIN_ACTION_GROUP, wso2MainGroup);
+
+        wso2MainGroup.getTemplatePresentation().setIcon(wso2Resources.wso2GroupIcon());
+
+        DefaultActionGroup wso2ActionGroup = new WSO2ProjectActionGroup(actionManager, resourceProvider);
         actionManager.registerAction(WSO2_ACTION_GROUP, wso2ActionGroup);
 
         DefaultActionGroup wso2NewGroup = new DefaultActionGroup(locale.wso2ActionNew(), true, actionManager);
@@ -159,7 +165,9 @@ public class WSO2Extension {
 
         wso2ActionGroup.add(wso2NewGroup);
         wso2ActionGroup.add(wso2ImportGroup);
-        wso2ActionGroup.add(loginAction);
+
+        wso2MainGroup.add(wso2ActionGroup);
+        wso2MainGroup.add(loginAction);
 
         wso2NewGroup.add(createEndpointAction);
         wso2NewGroup.add(createSequenceAction);
@@ -168,8 +176,8 @@ public class WSO2Extension {
 
         wso2ImportGroup.add(importSynapseAction);
 
-        wso2MainMenu.add(wso2ActionGroup, LAST);
+        wso2MainMenu.add(wso2MainGroup, LAST);
 
-        wso2ContextMenu.add(wso2ActionGroup, FIRST);
+        wso2ContextMenu.add(wso2MainGroup, FIRST);
     }
 }

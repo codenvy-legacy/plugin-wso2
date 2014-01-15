@@ -40,7 +40,8 @@ public interface Constants {
     String ESB_PROJECT_DESCRIPTION      = "ESB Configuration project.";
     String PROJECT_MIME_TYPE            = "text/vnd.ideproject+directory";
 
-    String WSO2_ACTION_GROUP           = "WSO2ActionGroup";
+    String WSO2_MAIN_ACTION_GROUP      = "WSO2MainActionGroup";
+    String WSO2_ACTION_GROUP           = "WSO2ProjectActionGroup";
     String WSO2_NEW_RESOURCE_GROUP     = "WSO2NewResourceGroup";
     String WSO2_IMPORT_RESOURCE_GROUP  = "WSO2ImportResourceGroup";
     String IMPORT_SYNAPSE_ACTION       = "ImportSynapseAction";

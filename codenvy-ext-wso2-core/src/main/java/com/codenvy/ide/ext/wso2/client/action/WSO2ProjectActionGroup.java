@@ -22,8 +22,6 @@ import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
-import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 
@@ -39,20 +37,16 @@ import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMAR
  *
  * @author Andrey Plotnikov
  */
-public class WSO2ActionGroup extends DefaultActionGroup {
+public class WSO2ProjectActionGroup extends DefaultActionGroup {
 
     private ResourceProvider resourceProvider;
 
-    public WSO2ActionGroup(LocalizationConstant locale,
-                           WSO2Resources resources,
-                           ActionManager actionManager,
-                           ResourceProvider resourceProvider) {
+    public WSO2ProjectActionGroup(ActionManager actionManager,
+                                  ResourceProvider resourceProvider) {
 
-        super(locale.wso2MainActionTitle(), true, actionManager);
+        super(null, false, actionManager);
 
         this.resourceProvider = resourceProvider;
-
-        getTemplatePresentation().setIcon(resources.wso2GroupIcon());
     }
 
     /** {@inheritDoc} */
