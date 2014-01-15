@@ -133,7 +133,7 @@ public class LoginActionTest {
                 onFailure.invoke(callback, throwable);
                 return callback;
             }
-        }).when(service).getWSO2ServiceInfo((AsyncRequestCallback<GitUrlVendorInfo>)anyObject());
+        }).when(service).getWSO2ServiceInfo((AsyncRequestCallback<String>)anyObject());
 
         action.actionPerformed(actionEvent);
 
@@ -153,7 +153,7 @@ public class LoginActionTest {
                 return callback;
             }
         }).when(userService).getUser((AsyncRequestCallback<String>)anyObject());
-        doThrow(RequestException.class).when(service).getWSO2ServiceInfo((AsyncRequestCallback<GitUrlVendorInfo>)anyObject());
+        doThrow(RequestException.class).when(service).getWSO2ServiceInfo((AsyncRequestCallback<String>)anyObject());
 
         action.actionPerformed(actionEvent);
 

@@ -17,7 +17,6 @@
  */
 package com.codenvy.ide.ext.wso2.client;
 
-import com.codenvy.ide.ext.git.shared.GitUrlVendorInfo;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -86,6 +85,6 @@ public interface WSO2ClientService {
      *         callback that need to execute when the answer is come
      * @throws RequestException
      */
-    void getWSO2ServiceInfo(@NotNull AsyncRequestCallback<GitUrlVendorInfo> callback) throws RequestException;
+    void getWSO2ServiceInfo(@NotNull AsyncRequestCallback<String> callback) throws RequestException;
 
 }

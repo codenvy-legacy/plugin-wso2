@@ -19,7 +19,6 @@ package com.codenvy.ide.ext.wso2.client;
 
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.ext.git.shared.GitUrlVendorInfo;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.rest.AsyncRequest;
@@ -110,7 +109,7 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void getWSO2ServiceInfo(@NotNull AsyncRequestCallback<GitUrlVendorInfo> callback) throws RequestException {
+    public void getWSO2ServiceInfo(@NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restContext + GET_WSO2_SERVICE_INFO;
 
         AsyncRequest.build(RequestBuilder.GET, url).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);

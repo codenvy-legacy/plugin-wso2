@@ -231,7 +231,10 @@ public class WSO2RestService {
     @Path("info")
     @Produces(APPLICATION_JSON)
     public GitUrlVendorInfo getInfo() throws ProviderException {
-        return new GitUrlVendorInfo(wso2.getVendorName(), wso2.getVendorBaseHost(), wso2.getVendorOAuthScopes(), false);
+        return DtoFactory.getInstance().createDto(GitUrlVendorInfo.class)
+                         .withVendorName(wso2.getVendorName())
+                         .withVendorBaseHost(wso2.getVendorBaseHost())
+                         .withOAuthScopes(wso2.getVendorOAuthScopes());
     }
 
     /**

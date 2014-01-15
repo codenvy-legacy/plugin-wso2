@@ -24,7 +24,6 @@ import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.user.User;
 import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.ext.git.client.marshaller.GitUrlInfoUnmarshaller;
 import com.codenvy.ide.ext.git.shared.GitUrlVendorInfo;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
@@ -85,14 +84,14 @@ public class LoginAction extends Action implements OAuthCallback {
                 @Override
                 protected void onSuccess(String result) {
                     final User user = dtoFactory.createDtoFromJson(result, User.class);
-                    GitUrlInfoUnmarshaller unmarshaller = new GitUrlInfoUnmarshaller(new GitUrlVendorInfo());
                     try {
-                        service.getWSO2ServiceInfo(new AsyncRequestCallback<GitUrlVendorInfo>(unmarshaller) {
+                        service.getWSO2ServiceInfo(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                             @Override
-                            protected void onSuccess(GitUrlVendorInfo result) {
-                                boolean permitToRedirect = Window.confirm(locale.authorizeNeedBodyOauth(result.getVendorName()));
+                            protected void onSuccess(String result) {
+                                GitUrlVendorInfo gitUrlVendorInfo = dtoFactory.createDtoFromJson(result, GitUrlVendorInfo.class);
+                                boolean permitToRedirect = Window.confirm(locale.authorizeNeedBodyOauth(gitUrlVendorInfo.getVendorName()));
                                 if (permitToRedirect) {
-                                    String authUrl = restContext + "/oauth/authenticate?oauth_provider=" + result.getVendorName() +
+                                    String authUrl = restContext + "/oauth/authenticate?oauth_provider=" + gitUrlVendorInfo.getVendorName() +
                                                      "&userId=" + user.getUserId() + "&redirect_after_login=/ide/" +
                                                      Utils.getWorkspaceName();
                                     JsOAuthWindow authWindow = new JsOAuthWindow(authUrl, "error.url", 500, 980, LoginAction.this);
