@@ -23,6 +23,7 @@ import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.dto.server.DtoFactory;
+import com.codenvy.ide.ext.git.shared.GitUrlVendorInfo;
 import com.codenvy.ide.ext.wso2.server.rest.WSO2RestService;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
@@ -54,7 +55,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyObject;
@@ -89,6 +92,8 @@ public class WSO2RestServiceTest {
     @Mock(answer = RETURNS_DEEP_STUBS)
     private VirtualFileSystemRegistry vfsRegistry;
     @Mock
+    private WSO2                      wso2;
+    @Mock
     private VirtualFile               synapseFile;
     @InjectMocks
     private WSO2RestService           service;
@@ -98,6 +103,7 @@ public class WSO2RestServiceTest {
     public void setUp() throws Exception {
         DependencySupplierImpl dependencies = new DependencySupplierImpl();
         dependencies.addComponent(VirtualFileSystemRegistry.class, vfsRegistry);
+        dependencies.addComponent(WSO2.class, wso2);
 
         ResourceBinder resources = new ResourceBinderImpl();
         resources.addResource(WSO2RestService.class, null);
@@ -291,5 +297,27 @@ public class WSO2RestServiceTest {
         verify(synapseFile).updateContent(anyString(), (InputStream)anyObject(), anyString());
         verify(synapseFile).delete(anyString());
         assertEquals(200, response.getStatus());
+    }
+
+    @Test
+    public void informationOfWSO2ConfigurationShouldBeReturned() throws Exception {
+        String vendorName = "vendorName";
+        String vendorBaseHost = "vendorBaseHost";
+        List<String> vendorOAuthScopes = Arrays.asList("vendorOAuthScopes");
+
+        when(wso2.getVendorName()).thenReturn(vendorName);
+        when(wso2.getVendorBaseHost()).thenReturn(vendorBaseHost);
+        when(wso2.getVendorOAuthScopes()).thenReturn(vendorOAuthScopes);
+
+        ContainerResponse response = prepareResponseLauncherService("GET", "info", null);
+
+        GitUrlVendorInfo info = (GitUrlVendorInfo)response.getEntity();
+
+        assertEquals(200, response.getStatus());
+
+        assertEquals(info.getVendorName(), vendorName);
+        assertEquals(info.getVendorBaseHost(), vendorBaseHost);
+        assertArrayEquals(info.getOAuthScopes().toArray(), vendorOAuthScopes.toArray());
+        assertFalse(info.isGivenUrlSSH());
     }
 }

@@ -230,7 +230,7 @@ public class WSO2RestService {
     @GET
     @Path("info")
     @Produces(APPLICATION_JSON)
-    public GitUrlVendorInfo getInfoForVcsUrl() throws ProviderException {
+    public GitUrlVendorInfo getInfo() throws ProviderException {
         return new GitUrlVendorInfo(wso2.getVendorName(), wso2.getVendorBaseHost(), wso2.getVendorOAuthScopes(), false);
     }
 
