@@ -25,7 +25,7 @@
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ide-parent</artifactId>
-        <version>3.0.0-M7-SNAPSHOT</version>
+        <version>3.0.0-M8-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ext-wso2-parent</artifactId>
     <packaging>pom</packaging>
@@ -33,7 +33,7 @@
     <name>Codenvy Extension :: WSO2 parent</name>
 
     <properties>
-        <codenvy.version>3.0.0-M7-SNAPSHOT</codenvy.version>
+        <codenvy.version>3.0.0-M8-SNAPSHOT</codenvy.version>
     </properties>
 
     <modules>
