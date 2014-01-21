@@ -36,7 +36,7 @@
                     <g:Label text="{locale.groupID}"/>
                 </g:west>
                 <g:center>
-                    <g:TextBox width="400px" height="16px" ui:field="groupID"/>
+                    <g:TextBox width="400px" ui:field="groupID"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
@@ -47,7 +47,7 @@
                     <g:Label text="{locale.artifactId}"/>
                 </g:west>
                 <g:center>
-                    <g:TextBox width="400px" height="16px" ui:field="artifactID"/>
+                    <g:TextBox width="400px" ui:field="artifactID"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
@@ -58,7 +58,7 @@
                     <g:Label text="{locale.version}"/>
                 </g:west>
                 <g:center>
-                    <g:TextBox width="400px" height="16px" ui:field="version"/>
+                    <g:TextBox width="400px" ui:field="version"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
@@ -73,7 +73,7 @@
                     <g:Label text="{locale.parentGroupId}"/>
                 </g:west>
                 <g:center>
-                    <g:TextBox width="400px" height="16px" ui:field="parentGroupID"/>
+                    <g:TextBox width="400px" ui:field="parentGroupID"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
@@ -84,7 +84,7 @@
                     <g:Label text="{locale.parentArtifactId}"/>
                 </g:west>
                 <g:center>
-                    <g:TextBox width="400px" height="16px" ui:field="parentArtifactID"/>
+                    <g:TextBox width="400px" ui:field="parentArtifactID"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
@@ -95,7 +95,7 @@
                     <g:Label text="{locale.parentVersion}"/>
                 </g:west>
                 <g:center>
-                    <g:TextBox width="400px" height="16px" ui:field="parentVersion"/>
+                    <g:TextBox width="400px" ui:field="parentVersion"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>

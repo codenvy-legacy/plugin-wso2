@@ -7,9 +7,9 @@
             <g:Label ui:field="resourceNameTitle"/>
         </g:west>
 
-        <g:center>
-            <g:TextBox ui:field="resourceName" width="400px" height="16px"/>
-        </g:center>
+        <g:north size="25">
+            <g:TextBox ui:field="resourceName" width="400px"/>
+        </g:north>
 
     </g:DockLayoutPanel>
 

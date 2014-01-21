@@ -1,6 +1,5 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:c='urn:import:com.codenvy.ide.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:with field='locale' type='com.codenvy.ide.ext.wso2.client.LocalizationConstant'/>
     <ui:with field='res' type='com.codenvy.ide.ext.wso2.client.WSO2Resources'/>
@@ -59,7 +58,7 @@
                 </g:west>
 
                 <g:center>
-                    <g:TextBox width="313px" height="16px" ui:field="url"/>
+                    <g:TextBox width="313px" ui:field="url"/>
                 </g:center>
 
             </g:DockLayoutPanel>
@@ -69,11 +68,10 @@
         <g:south size="26.0">
 
             <g:FlowPanel>
-                <c:Button addStyleNames="{style.alignBtn}" text="{locale.wso2ButtonCancel}" width="60px" size="SMALL" type="DANGER"
-                          ui:field="btnCancel"/>
+                <g:Button addStyleNames="{style.alignBtn}" text="{locale.wso2ButtonCancel}" width="60px" ui:field="btnCancel"/>
 
-                <c:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.wso2ButtonImport}" width="60px" size="SMALL"
-                          type="SUCCESS" ui:field="btnImport"/>
+                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.wso2ButtonImport}" width="60px"
+                          ui:field="btnImport"/>
             </g:FlowPanel>
 
         </g:south>
