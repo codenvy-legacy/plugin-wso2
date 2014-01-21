@@ -78,6 +78,7 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
     private static final String MESSAGE        = "message";
     private static final String NOT_VALID_NAME = "configurationName";
     private static final String VALID_NAME     = "configurationName.xml";
+    private static final String PARENT_FOLDER  = "parentFolderName";
 
     @Mock(answer = RETURNS_DEEP_STUBS)
     private Folder                 parentFolder;
@@ -115,7 +116,6 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
     private DtoFactory             dtoFactory;
     @InjectMocks
     private ImportFilePresenter    importFilePresenter;
-    private String                 parentFolderName;
 
     @Before
     public void setUp() throws Exception {
@@ -271,7 +271,7 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
         verify(view).setMessage(Matchers.eq(MESSAGE));
     }
 
-    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
+    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode", "ThrowableResultOfMethodCallIgnored"})
     @Test
     public void onFailureMethodOnImportClickedCallbackShouldBeExecutedWhenSomeProblemHappened() throws Exception {
         final Throwable throwable = mock(Throwable.class);
@@ -337,6 +337,7 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
         verify(view).submit();
     }
 
+    @SuppressWarnings("unchecked")
     private void prepareTestForSuccessResultWhenMethodSubmitCalled() {
         when(dtoFactory.createDto((Class<FileInfo>)anyObject())).thenReturn(fileInfo);
         when(fileInfo.withFileName(anyString()).withProjectName(anyString())).thenReturn(fileInfo);
@@ -353,7 +354,7 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
         when(src.getName()).thenReturn(SRC_FOLDER_NAME);
         when(main.getName()).thenReturn(MAIN_FOLDER_NAME);
         when(synapse_config.getName()).thenReturn(SYNAPSE_CONFIG_FOLDER_NAME);
-        when(parentFolder.getName()).thenReturn(parentFolderName);
+        when(parentFolder.getName()).thenReturn(PARENT_FOLDER);
     }
 
     @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
@@ -486,7 +487,7 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
         verify(eventBus).fireEvent((Event<?>)anyObject());
     }
 
-    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
+    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode", "ThrowableResultOfMethodCallIgnored"})
     @Test
     public void onFailureMethodInSubmitCallbackShouldBeExecutedWhenSomeProblemHappenedAndResponseIsNotEmpty() throws Exception {
         prepareTestForSuccessResultWhenMethodSubmitCalled();
