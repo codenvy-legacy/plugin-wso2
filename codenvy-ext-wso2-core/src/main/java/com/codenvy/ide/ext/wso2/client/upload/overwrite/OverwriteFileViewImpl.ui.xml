@@ -29,7 +29,7 @@
             <g:HTML ui:field="message"/>
         </g:north>
 
-        <g:north size="25.0">
+        <g:north size="37.0">
             <g:TextBox width="340px" ui:field="fileName" addStyleNames="{style.spacing}"/>
         </g:north>
 
