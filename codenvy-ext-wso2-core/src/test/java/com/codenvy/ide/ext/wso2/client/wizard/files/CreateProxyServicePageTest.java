@@ -34,7 +34,7 @@ public class CreateProxyServicePageTest extends AbstractCreateResourcePageTest {
 
     @Override
     public void setUp() throws Exception {
-        page = new CreateProxyServicePage(view, locale, resourceProvider, resources, editorAgent, fileType);
+        page = new CreateProxyServicePage(view, locale, resourceProvider, resources, editorAgent, fileType, notificationManager);
 
         verify(locale).wizardFileProxyServiceTitle();
         verify(locale).wizardFileProxyServiceFieldsName();

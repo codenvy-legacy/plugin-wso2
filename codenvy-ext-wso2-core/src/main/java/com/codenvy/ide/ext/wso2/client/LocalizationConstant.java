@@ -122,6 +122,9 @@ public interface LocalizationConstant extends Messages {
     @Key("wizard.file.resource.notice.fileExists")
     String wizardFileResourceNoticeFileExists();
 
+    @Key("wizard.file.resource.notice.parentFolderNotExists")
+    String wizardFileResourceNoticeParentFolderNotExists();
+
     @Key("wizard.file.resource.notice.incorrectName")
     String wizardFileResourceNoticeIncorrectName();
 

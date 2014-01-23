@@ -34,7 +34,7 @@ public class CreateLocalEntryPageTest extends AbstractCreateResourcePageTest {
 
     @Override
     public void setUp() throws Exception {
-        page = new CreateLocalEntryPage(view, locale, resourceProvider, resources, editorAgent, fileType);
+        page = new CreateLocalEntryPage(view, locale, resourceProvider, resources, editorAgent, fileType, notificationManager);
 
         verify(locale).wizardFileLocalEntryTitle();
         verify(locale).wizardFileLocalEntryFieldsName();

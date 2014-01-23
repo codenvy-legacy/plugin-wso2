@@ -34,7 +34,7 @@ public class CreateEndpointPageTest extends AbstractCreateResourcePageTest {
 
     @Override
     public void setUp() throws Exception {
-        page = new CreateEndpointPage(view, locale, resourceProvider, resources, editorAgent, fileType);
+        page = new CreateEndpointPage(view, locale, resourceProvider, resources, editorAgent, fileType, notificationManager);
 
         verify(locale).wizardFileEndpointTitle();
         verify(locale).wizardFileEndpointFieldsName();

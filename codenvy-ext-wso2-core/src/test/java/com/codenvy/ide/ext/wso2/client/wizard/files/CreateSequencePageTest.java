@@ -34,7 +34,7 @@ public class CreateSequencePageTest extends AbstractCreateResourcePageTest {
 
     @Override
     public void setUp() throws Exception {
-        page = new CreateSequencePage(view, locale, resourceProvider, resources, editorAgent, fileType);
+        page = new CreateSequencePage(view, locale, resourceProvider, resources, editorAgent, fileType, notificationManager);
 
         verify(locale).wizardFileEndpointTitle();
         verify(locale).wizardFileSequenceFieldsName();

@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.wso2.client.wizard.files;
 
 import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
@@ -47,10 +48,11 @@ public class CreateSequencePage extends AbstractCreateResourcePage {
                               ResourceProvider resourceProvider,
                               WSO2Resources resources,
                               EditorAgent editorAgent,
-                              @ESBXmlFileType FileType esbXmlFileType) {
+                              @ESBXmlFileType FileType esbXmlFileType,
+                              NotificationManager notificationManager) {
 
         super(view, locale.wizardFileEndpointTitle(), resources.sequence_wizard(), locale, resourceProvider, editorAgent,
-              SEQUENCE_FOLDER_NAME, esbXmlFileType);
+              SEQUENCE_FOLDER_NAME, esbXmlFileType, notificationManager);
 
         this.resources = resources;
 

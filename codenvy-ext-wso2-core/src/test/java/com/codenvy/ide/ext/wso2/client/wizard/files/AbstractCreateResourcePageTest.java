@@ -18,6 +18,7 @@
 package com.codenvy.ide.ext.wso2.client.wizard.files;
 
 import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.Wizard;
@@ -95,6 +96,8 @@ public abstract class AbstractCreateResourcePageTest {
     @Mock
     protected LocalizationConstant       locale;
     @Mock
+    protected NotificationManager        notificationManager;
+    @Mock
     protected CreateResourceView         view;
     @Mock(answer = RETURNS_MOCKS)
     protected WSO2Resources              resources;
@@ -132,10 +135,10 @@ public abstract class AbstractCreateResourcePageTest {
 
         when(view.getResourceName()).thenReturn(SOME_TEXT);
 
-        Resource file = mock(Resource.class);
-        when(file.getName()).thenReturn(FULL_RESOURCE_NAME);
+        Folder folder = mock(Folder.class);
+        when(folder.getName()).thenReturn(FULL_RESOURCE_NAME);
 
-        when(parentFolder.getChildren()).thenReturn(Collections.<Resource>createArray(file));
+        when(parentFolder.getChildren()).thenReturn(Collections.<Resource>createArray(folder));
 
         page.onValueChanged();
 
@@ -217,10 +220,10 @@ public abstract class AbstractCreateResourcePageTest {
         when(locale.wizardFileResourceNoticeFileExists()).thenReturn(SOME_TEXT);
         when(view.getResourceName()).thenReturn(SOME_TEXT);
 
-        Resource file = mock(Resource.class);
-        when(file.getName()).thenReturn(FULL_RESOURCE_NAME);
+        Folder folder = mock(Folder.class);
+        when(folder.getName()).thenReturn(FULL_RESOURCE_NAME);
 
-        when(parentFolder.getChildren()).thenReturn(Collections.<Resource>createArray(file));
+        when(parentFolder.getChildren()).thenReturn(Collections.<Resource>createArray(folder));
 
         page.go(container);
         page.onValueChanged();

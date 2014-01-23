@@ -18,11 +18,13 @@
 package com.codenvy.ide.ext.wso2.client.wizard.files;
 
 import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
+import com.codenvy.ide.ext.wso2.client.shared.WSO2AsyncCallback;
 import com.codenvy.ide.ext.wso2.client.wizard.files.view.CreateResourceView;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
@@ -47,11 +49,12 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NA
  */
 public abstract class AbstractCreateResourcePage extends AbstractWizardPage implements CreateResourceView.ActionDelegate {
 
-    private ResourceProvider resourceProvider;
-    private EditorAgent      editorAgent;
-    private String           parentFolderName;
-    private FileType         fileType;
-    private Project          activeProject;
+    private ResourceProvider    resourceProvider;
+    private EditorAgent         editorAgent;
+    private String              parentFolderName;
+    private FileType            fileType;
+    private Project             activeProject;
+    private NotificationManager notificationManager;
 
     private   Folder               parentFolder;
     protected LocalizationConstant locale;
@@ -67,7 +70,8 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
                                       @NotNull ResourceProvider resourceProvider,
                                       @NotNull EditorAgent editorAgent,
                                       @NotNull String parentFolderName,
-                                      @NotNull FileType fileType) {
+                                      @NotNull FileType fileType,
+                                      NotificationManager notificationManager) {
 
         super(caption, icon);
 
@@ -78,6 +82,7 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
         this.fileType = fileType;
         this.view.setDelegate(this);
         this.locale = locale;
+        this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
@@ -91,13 +96,17 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
             return locale.wizardFileResourceNoticeFileExists();
         }
 
+        if (parentFolder == null) {
+            return locale.wizardFileResourceNoticeParentFolderNotExists();
+        }
+
         return null;
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean isCompleted() {
-        return !view.getResourceName().isEmpty() && !hasSameFile && !incorrectName;
+        return !view.getResourceName().isEmpty() && !hasSameFile && !incorrectName && !(parentFolder == null);
     }
 
     /** {@inheritDoc} */
@@ -117,10 +126,27 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
     public void go(AcceptsOneWidget container) {
         activeProject = resourceProvider.getActiveProject();
 
-        Resource src = getResourceByName(activeProject, SRC_FOLDER_NAME);
-        Resource main = getResourceByName((Folder)src, MAIN_FOLDER_NAME);
-        Resource synapse_config = getResourceByName((Folder)main, SYNAPSE_CONFIG_FOLDER_NAME);
-        parentFolder = (Folder)getResourceByName((Folder)synapse_config, parentFolderName);
+        getResourceByName(activeProject, SRC_FOLDER_NAME, new WSO2AsyncCallback<Resource>(notificationManager) {
+            @Override
+            public void onSuccess(Resource result) {
+                getResourceByName((Folder)result, MAIN_FOLDER_NAME, new WSO2AsyncCallback<Resource>(notificationManager) {
+                    @Override
+                    public void onSuccess(Resource result) {
+                        getResourceByName((Folder)result, SYNAPSE_CONFIG_FOLDER_NAME, new WSO2AsyncCallback<Resource>(notificationManager) {
+                            @Override
+                            public void onSuccess(Resource result) {
+                                getResourceByName((Folder)result, parentFolderName, new WSO2AsyncCallback<Resource>(notificationManager) {
+                                    @Override
+                                    public void onSuccess(Resource result) {
+                                        parentFolder = (Folder)result;
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
 
         container.setWidget(view);
     }
@@ -132,19 +158,24 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
      *         place where child should be
      * @param name
      *         name that child should have
-     * @return {@link Resource}
+     * @param callback
      */
-    @Nullable
-    private Resource getResourceByName(@NotNull Folder parent, @NotNull String name) {
+    private void getResourceByName(@NotNull Folder parent, @NotNull String name, @NotNull final AsyncCallback<Resource> callback) {
         Array<Resource> children = parent.getChildren();
 
         for (Resource child : children.asIterable()) {
             if (name.equals(child.getName())) {
-                return child;
+                callback.onSuccess(child);
+                return;
             }
         }
 
-        return null;
+        activeProject.createFolder(parent, name, new WSO2AsyncCallback<Folder>(notificationManager) {
+            @Override
+            public void onSuccess(Folder result) {
+                callback.onSuccess(result);
+            }
+        });
     }
 
     /** {@inheritDoc} */
@@ -153,7 +184,13 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
         String resourceName = view.getResourceName();
 
         incorrectName = !ResourceNameValidator.isFileNameValid(resourceName);
-        Resource file = getResourceByName(parentFolder, getResourceNameWithExtension(resourceName));
+        Resource file = null;
+        for (Resource child : parentFolder.getChildren().asIterable()) {
+            if (getResourceNameWithExtension(resourceName).equals(child.getName())) {
+                file = child;
+            }
+        }
+
         hasSameFile = file != null;
 
         delegate.updateControls();
