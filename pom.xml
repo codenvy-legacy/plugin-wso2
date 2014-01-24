@@ -40,5 +40,6 @@
         <module>codenvy-ext-wso2-core</module>
         <module>wso2-application-war</module>
         <module>wso2-packaging-standalone-tomcat</module>
+        <module>codenvy-ext-wso2-esbeditor</module>
     </modules>
 </project>
