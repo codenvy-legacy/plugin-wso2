@@ -24,7 +24,7 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
-import com.codenvy.ide.ext.wso2.client.shared.WSO2AsyncCallback;
+import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncCallback;
 import com.codenvy.ide.ext.wso2.client.wizard.files.view.CreateResourceView;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
@@ -71,7 +71,7 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
                                       @NotNull EditorAgent editorAgent,
                                       @NotNull String parentFolderName,
                                       @NotNull FileType fileType,
-                                      NotificationManager notificationManager) {
+                                      @NotNull NotificationManager notificationManager) {
 
         super(caption, icon);
 
