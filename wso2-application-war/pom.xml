@@ -26,7 +26,7 @@ from Codenvy S.A..
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ext-wso2-parent</artifactId>
-        <version>1.0.0-M1-SNAPSHOT</version>
+        <version>1.0.0-M2-SNAPSHOT</version>
     </parent>
     <name>WSO2 :: Packaging :: Application</name>
     <packaging>war</packaging>
@@ -113,11 +113,6 @@ from Codenvy S.A..
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-wso2-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-          <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-wso2-esbeditor</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

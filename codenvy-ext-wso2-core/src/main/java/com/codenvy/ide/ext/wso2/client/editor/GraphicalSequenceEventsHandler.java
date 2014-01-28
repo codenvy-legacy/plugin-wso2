@@ -1,4 +1,4 @@
-package com.codenvy.ide.ext.wso2.esb.graphical.editor;
+package com.codenvy.ide.ext.wso2.client.editor;
 
 import genmymodel.commands.serializable.SerializableCommand;
 import genmymodel.commands.serializable.type.EObjectUUID;
@@ -24,13 +24,18 @@ import org.genmymodel.gmmf.common.UndoRequestEvent;
 import com.genmymodel.ecoreonline.graphic.NodeWidget;
 import com.genmymodel.ecoreonline.graphic.event.handler.AutoResizeHandler;
 
-public class ClientEventsHandler implements CollaborationEventRequestHandler, AutoResizeHandler
+/**
+ * Get modeling events and executes the appropriated EMF commands
+ *
+ * @author Alexis Muller
+ */
+public class GraphicalSequenceEventsHandler implements CollaborationEventRequestHandler, AutoResizeHandler
 {
-	private static final Logger		logger	= Logger.getLogger(ClientEventsHandler.class.getName());
+	private static final Logger		logger	= Logger.getLogger(GraphicalSequenceEventsHandler.class.getName());
 	
 	private EditingDomain	editingDomain;
 	
-	public ClientEventsHandler()
+	public GraphicalSequenceEventsHandler()
 	{
 		ComposedAdapterFactory composedAdapterFactory = new ComposedAdapterFactory();
 		composedAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
@@ -45,7 +50,8 @@ public class ClientEventsHandler implements CollaborationEventRequestHandler, Au
 		Command emfCommand = tryConvert(event.getCommands(), event.getModel());
 		//enableCalculations(emfCommand); // Activate calculations for client
 		
-		/*if( emfCommand instanceof UnexecutableDeleteCommand )
+		/*
+		 if( emfCommand instanceof UnexecutableDeleteCommand )
 		{
 			emfCommand =
 				CommandsUtil.createDeleteCommand(model, editingDomain,
@@ -59,7 +65,8 @@ public class ClientEventsHandler implements CollaborationEventRequestHandler, Au
 				appKernel.fireError("Sorry, you cannot delete these elements");
 				return;
 			}
-		}*/
+		}
+		*/
 		
 		if( !emfCommand.canExecute() )
 		{

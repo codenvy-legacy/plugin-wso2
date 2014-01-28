@@ -1,4 +1,4 @@
-package com.codenvy.ide.ext.wso2.esb.graphical.editor;
+package com.codenvy.ide.ext.wso2.client.editor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,33 +38,43 @@ import com.google.web.bindery.event.shared.SimpleEventBus;
 import esbdiag.EsbdiagFactory;
 import esbdiag.widgets.ESBDiagramToolbar;
 
-public class WSO2EsbGraphicalEditor extends AbstractEditorPresenter
+/**
+ * ESB Graphical editor
+ *
+ * @author Alexis Muller
+ */
+public class GraphicalEditor extends AbstractEditorPresenter
 {
 
 	private RichTextArea textArea;
 	private ModelWidget modelWidget;
 	private Toolbar toolbar;
 	private ToolsController toolsController;
-	private ClientEventsHandler clientEventsHandler;
+	private GraphicalSequenceEventsHandler clientEventsHandler;
 	private ModelWidgetEventBus diagramEventBus;
 	private final List<HandlerRegistration> handlerRegistrations;
 
-	public WSO2EsbGraphicalEditor()
+	public GraphicalEditor()
 	{
 		this.handlerRegistrations = new ArrayList<HandlerRegistration>();
 	}
 
-	/** {@inheritDoc} */
+	/** 
+	 * Initialize the esb diagram, the model widget that contains the diagram, the esb model and 
+	 * the toolbar.
+	 */
 	@Override
 	protected void initializeEditor()
 	{
-		// create editor
+		
 		textArea = new RichTextArea();
 
+		// Create the model, that conforms the esb metamodel 
 		final EsbSequence newModel = EsbFactory.eINSTANCE.createEsbSequence();
 		GMMUtil.setUUID(newModel);
 		newModel.setName("NewESB");
-		// Create default diagram
+		
+		// Create the diagram
 		final Diagram diag = EsbdiagFactory.eINSTANCE.createESBDiagram();
 		final Plane plane = GraphicFactory.eINSTANCE.createPlane();
 		GMMUtil.setUUID(diag);
@@ -74,6 +84,7 @@ public class WSO2EsbGraphicalEditor extends AbstractEditorPresenter
 		diag.getPlane().setModelElement(newModel);
 		GraphicUtil.addDiagram(newModel, diag);
 
+		// Get them connected
 		diagramEventBus = new ModelWidgetEventBus();
 		modelWidget = new ModelWidget(diag, diagramEventBus);
 		toolbar = new ESBDiagramToolbar(modelWidget, diagramEventBus);
@@ -88,7 +99,7 @@ public class WSO2EsbGraphicalEditor extends AbstractEditorPresenter
 						@Override
 						public void onFailure(Throwable caught)
 						{
-							Log.error(WSO2EsbGraphicalEditor.class, caught);
+							Log.error(GraphicalEditor.class, caught);
 						}
 
 						@Override
@@ -121,7 +132,7 @@ public class WSO2EsbGraphicalEditor extends AbstractEditorPresenter
 		this.handlerRegistrations.add(this.getDiagramEventBus().addHandler(
 				ContextMenuEvent.getType(), toolsController));
 		
-		this.clientEventsHandler = new ClientEventsHandler();
+		this.clientEventsHandler = new GraphicalSequenceEventsHandler();
 		this.handlerRegistrations.add(this.getDiagramEventBus().addHandler(
 				CommandRequestEvent.TYPE, clientEventsHandler));
 	}
@@ -171,7 +182,9 @@ public class WSO2EsbGraphicalEditor extends AbstractEditorPresenter
 		return null;
 	}
 
-	/** {@inheritDoc} */
+	/** 
+	 * Handles the layout of the model widget
+	 */
 	@Override
 	public void go(AcceptsOneWidget container)
 	{

@@ -47,13 +47,17 @@ public interface Constants {
     String IMPORT_SYNAPSE_ACTION       = "ImportSynapseAction";
     String CREATE_ENDPOINT_ACTION      = "CreateEndpointAction";
     String CREATE_SEQUENCE_ACTION      = "CreateSequenceAction";
+    String CREATE_GRAPHICAL_SEQUENCE_ACTION      = "CreateGraphicalSequenceAction";
     String CREATE_PROXY_SERVICE_ACTION = "CreateProxyServiceAction";
     String CREATE_LOCAL_ENTRY_ACTION   = "CreateLocalEntryAction";
     String LOGIN_WSO2_ACTION           = "LoginWSO2Action";
 
     /** Dedicated mime type name for WSO2 ESB configuration files */
     String ESB_XML_MIME_TYPE = "text/xml-esb";
+    String ESB_GRAPHICAL_MIME_TYPE = "text/esb";
+    
     /** Extension name for WSO2 ESB configuration files */
     String ESB_XML_EXTENSION = "xml";
+    String ESB_GRAPHICAL_EXTENSION = "esb";
 
 }

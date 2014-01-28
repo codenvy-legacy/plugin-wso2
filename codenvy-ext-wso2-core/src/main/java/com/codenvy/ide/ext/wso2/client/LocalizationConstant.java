@@ -136,7 +136,16 @@ public interface LocalizationConstant extends Messages {
 
     @Key("wizard.file.sequence.fields.name")
     String wizardFileSequenceFieldsName();
+    
+    @Key("wizard.file.graphical.sequence.title")
+    String wizardFileGraphicalSequenceTitle();
 
+    @Key("wizard.file.graphical.sequence.notice.emptyName")
+    String wizardFileGraphicalSequenceNoticeEmptyName();
+
+    @Key("wizard.file.graphical.sequence.fields.name")
+    String wizardFileGraphicalSequenceFieldsName();
+    
     @Key("wso2.actions.createSequence.title")
     String wso2ActionsCreateSequenceTitle();
 

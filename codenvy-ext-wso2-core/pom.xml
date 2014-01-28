@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ext-wso2-parent</artifactId>
-        <version>1.0.0-M1-SNAPSHOT</version>
+        <version>1.0.0-M2-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ext-wso2-core</artifactId>
     <packaging>jar</packaging>
@@ -113,6 +113,14 @@
             <version>${ch.qos.logback.version}</version>
             <scope>test</scope>
         </dependency>
+        
+          <!-- GenMyModel libraries-->
+        <dependency>
+			<groupId>org.wso2.gmm</groupId>
+			<artifactId>wso2-graphic-esb</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
     </dependencies>
 
     <build>
