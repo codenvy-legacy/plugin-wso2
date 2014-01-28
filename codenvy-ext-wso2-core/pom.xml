@@ -81,6 +81,11 @@
             <artifactId>codenvy-ext-git</artifactId>
             <version>${codenvy.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.gmm</groupId>
+            <artifactId>wso2-graphic-esb</artifactId>
+            <version>${axellience.graphic.editor.version}</version>
+        </dependency>
 
         <!-- Testing  libraries-->
         <dependency>
