@@ -54,10 +54,8 @@ public interface Constants {
 
     /** Dedicated mime type name for WSO2 ESB configuration files */
     String ESB_XML_MIME_TYPE = "text/xml-esb";
-    String ESB_GRAPHICAL_MIME_TYPE = "text/esb";
     
     /** Extension name for WSO2 ESB configuration files */
     String ESB_XML_EXTENSION = "xml";
-    String ESB_GRAPHICAL_EXTENSION = "esb";
 
 }

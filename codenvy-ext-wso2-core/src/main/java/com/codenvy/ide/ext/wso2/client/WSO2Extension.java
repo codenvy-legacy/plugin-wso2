@@ -23,7 +23,6 @@ import static com.codenvy.ide.api.ui.action.Constraints.LAST;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_MENU;
 import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_ENDPOINT_ACTION;
-import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_GRAPHICAL_SEQUENCE_ACTION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_LOCAL_ENTRY_ACTION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_PROXY_SERVICE_ACTION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_SEQUENCE_ACTION;
@@ -39,8 +38,6 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_NEW_RESOURCE_GROUP;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
 import static com.google.gwt.core.client.ScriptInjector.TOP_WINDOW;
 
-import org.genmymodel.gmmf.common.GlobalBundle;
-
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.resources.FileType;
@@ -52,16 +49,13 @@ import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.wso2.client.action.CreateEndpointAction;
-import com.codenvy.ide.ext.wso2.client.action.CreateGraphicalSequenceAction;
 import com.codenvy.ide.ext.wso2.client.action.CreateLocalEntryAction;
 import com.codenvy.ide.ext.wso2.client.action.CreateProxyServiceAction;
 import com.codenvy.ide.ext.wso2.client.action.CreateSequenceAction;
 import com.codenvy.ide.ext.wso2.client.action.ImportSynapseAction;
 import com.codenvy.ide.ext.wso2.client.action.LoginAction;
 import com.codenvy.ide.ext.wso2.client.action.WSO2ProjectActionGroup;
-import com.codenvy.ide.ext.wso2.client.editor.ESBGraphicalFileType;
 import com.codenvy.ide.ext.wso2.client.editor.ESBXmlFileType;
-import com.codenvy.ide.ext.wso2.client.editor.GraphicalEditorProvider;
 import com.codenvy.ide.ext.wso2.client.editor.XmlEditorProvider;
 import com.codenvy.ide.ext.wso2.client.wizard.project.CreateESBConfProjectPage;
 import com.codenvy.ide.resources.ProjectTypeAgent;
@@ -87,8 +81,7 @@ public class WSO2Extension {
     @Inject
     public WSO2Extension(WSO2Resources wso2Resources) {
         wso2Resources.wso2Style().ensureInjected();
-        wso2Resources.myStyle().ensureInjected();
-        GlobalBundle bg = GlobalBundle.INSTANCE;
+        wso2Resources.wso2GraphicalEditorStyle().ensureInjected();
     }
 
     @Inject
@@ -103,19 +96,6 @@ public class WSO2Extension {
         resourceProvider.registerFileType(esbXmlFileType);
 
         editorRegistry.register(esbXmlFileType, xmlEditorProvider);
-    }
-
-    
-    @Inject
-    public void initGraphicalEditor(WSO2Resources wso2Resources,
-                              ResourceProvider resourceProvider,
-                              EditorRegistry editorRegistry,
-                              GraphicalEditorProvider graphicalEditorProvider,
-                              @ESBGraphicalFileType FileType esbGraphicalFileType) {
-
-        resourceProvider.registerFileType(esbGraphicalFileType);
-        
-        editorRegistry.register(esbGraphicalFileType, graphicalEditorProvider);
     }
     
     @SuppressWarnings("unchecked")
@@ -156,7 +136,6 @@ public class WSO2Extension {
                             ImportSynapseAction importSynapseAction,
                             CreateEndpointAction createEndpointAction,
                             CreateSequenceAction createSequenceAction,
-                            CreateGraphicalSequenceAction createGraphicalSequenceAction,
                             CreateProxyServiceAction createProxyServiceAction,
                             CreateLocalEntryAction createLocalEntryAction,
                             LoginAction loginAction) {
@@ -182,8 +161,6 @@ public class WSO2Extension {
         actionManager.registerAction(IMPORT_SYNAPSE_ACTION, importSynapseAction);
         actionManager.registerAction(CREATE_ENDPOINT_ACTION, createEndpointAction);
         actionManager.registerAction(CREATE_SEQUENCE_ACTION, createSequenceAction);
-        actionManager.registerAction(CREATE_GRAPHICAL_SEQUENCE_ACTION, createGraphicalSequenceAction);
-        
         actionManager.registerAction(CREATE_PROXY_SERVICE_ACTION, createProxyServiceAction);
         actionManager.registerAction(CREATE_LOCAL_ENTRY_ACTION, createLocalEntryAction);
         actionManager.registerAction(LOGIN_WSO2_ACTION, loginAction);
@@ -196,7 +173,6 @@ public class WSO2Extension {
 
         wso2NewGroup.add(createEndpointAction);
         wso2NewGroup.add(createSequenceAction);
-        wso2NewGroup.add(createGraphicalSequenceAction);
         wso2NewGroup.add(createProxyServiceAction);
         wso2NewGroup.add(createLocalEntryAction);
 

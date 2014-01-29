@@ -21,8 +21,15 @@ package com.codenvy.ide.ext.wso2.client.editor;
  * @author Andrey Plotnikov
  */
 
-import esbdiag.EsbdiagFactory;
-import esbdiag.widgets.ESBDiagramToolbar;
+import java.util.ArrayList;
+
+import org.eclipse.emf.ecore.util.GMMUtil;
+import org.genmymodel.gmmf.common.CommandRequestEvent;
+import org.genmymodel.gmmf.ui.ModelWidget;
+import org.genmymodel.gmmf.ui.tools.Toolbar;
+import org.genmymodel.gmmf.ui.tools.ToolsController;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbFactory;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.genmymodel.ecoreonline.graphic.Diagram;
@@ -41,35 +48,22 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.google.web.bindery.event.shared.SimpleEventBus;
 
-import org.eclipse.emf.ecore.util.GMMUtil;
-import org.genmymodel.gmmf.common.CommandRequestEvent;
-import org.genmymodel.gmmf.ui.ModelWidget;
-import org.genmymodel.gmmf.ui.ModelWidgetEventBus;
-import org.genmymodel.gmmf.ui.tools.Toolbar;
-import org.genmymodel.gmmf.ui.tools.ToolsController;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbFactory;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
-
-import java.util.ArrayList;
-import java.util.List;
+import esbdiag.EsbdiagFactory;
+import esbdiag.widgets.ESBDiagramToolbar;
 
 public class GraphicEditor extends AbstractEditorPresenter {
 
     private       ModelWidget               modelWidget;
     private       Toolbar                   toolbar;
     private       ToolsController           toolsController;
-    // TODO Why do you need this field? Probably it is local variable
-    private       ChangeConfHandler         changeConfHandler;
-    private       ModelWidgetEventBus       diagramEventBus;
-    // TODO the same question...
-    private final List<HandlerRegistration> handlerRegistrations;
+    private       EventBus       diagramEventBus;
 
     @Inject
-    public GraphicEditor() {
-        this.handlerRegistrations = new ArrayList<HandlerRegistration>();
+    public GraphicEditor(EventBus diagramEventBus) {
+        this.diagramEventBus = diagramEventBus;
     }
 
     /** {@inheritDoc} */
@@ -89,13 +83,7 @@ public class GraphicEditor extends AbstractEditorPresenter {
         diag.getPlane().setModelElement(newModel);
         GraphicUtil.addDiagram(newModel, diag);
 
-        /**
-         *  For the moment, we use the bus that connects the toolbar and the diagram.
-         *  Maybe should use YOUR bus here ?
-         */
-        // TODO what about use EventBus class not current implementation?
-        // TODO Why do you need ModelWidgetEventBus?
-        diagramEventBus = new ModelWidgetEventBus();
+        
         modelWidget = new ModelWidget(diag, diagramEventBus);
 
         // the ESB-specific toolbar
@@ -107,21 +95,22 @@ public class GraphicEditor extends AbstractEditorPresenter {
     }
 
     private void initBusHandlers() {
-        // toolsController
-        this.handlerRegistrations.add(getDiagramEventBus().addHandler(MouseDownEvent.getType(), toolsController));
-        this.handlerRegistrations.add(getDiagramEventBus().addHandler(MouseMoveEvent.getType(), toolsController));
-        this.handlerRegistrations.add(getDiagramEventBus().addHandler(MouseUpEvent.getType(), toolsController));
-        this.handlerRegistrations.add(getDiagramEventBus().addHandler(MouseOverEvent.getType(), toolsController));
-        this.handlerRegistrations.add(getDiagramEventBus().addHandler(MouseOutEvent.getType(), toolsController));
-        this.handlerRegistrations.add(getDiagramEventBus().addHandler(KeyDownEvent.getType(), toolsController));
-        this.handlerRegistrations.add(getDiagramEventBus().addHandler(ContextMenuEvent.getType(), toolsController));
+        
+    	/* toolsController */
+    	ArrayList<HandlerRegistration> handlerRegistrations = new ArrayList<HandlerRegistration>();
+        handlerRegistrations.add(getDiagramEventBus().addHandler(MouseDownEvent.getType(), toolsController));
+        handlerRegistrations.add(getDiagramEventBus().addHandler(MouseMoveEvent.getType(), toolsController));
+        handlerRegistrations.add(getDiagramEventBus().addHandler(MouseUpEvent.getType(), toolsController));
+        handlerRegistrations.add(getDiagramEventBus().addHandler(MouseOverEvent.getType(), toolsController));
+        handlerRegistrations.add(getDiagramEventBus().addHandler(MouseOutEvent.getType(), toolsController));
+        handlerRegistrations.add(getDiagramEventBus().addHandler(KeyDownEvent.getType(), toolsController));
+        handlerRegistrations.add(getDiagramEventBus().addHandler(ContextMenuEvent.getType(), toolsController));
 
         /* A handler listens every EMF command */
-        this.changeConfHandler = new ChangeConfHandler();
-        this.handlerRegistrations.add(getDiagramEventBus().addHandler(CommandRequestEvent.TYPE, changeConfHandler));
+        handlerRegistrations.add(getDiagramEventBus().addHandler(CommandRequestEvent.TYPE, new ChangeConfHandler()));
     }
 
-    public SimpleEventBus getDiagramEventBus() {
+    public EventBus getDiagramEventBus() {
         return diagramEventBus;
     }
 
@@ -169,7 +158,7 @@ public class GraphicEditor extends AbstractEditorPresenter {
         DockLayoutPanel panel = new DockLayoutPanel(Style.Unit.PX);
         panel.setWidth("100%");
         panel.setHeight("100%");
-        panel.addWest(toolbar, 60);
+        panel.addWest(toolbar, 90);
         panel.add(modelWidget);
 
         modelWidget.loadDiagram();
