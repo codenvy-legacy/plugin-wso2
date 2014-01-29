@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.wso2.client.shared;
+package com.codenvy.ide.ext.wso2.client.commons;
 
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
@@ -26,7 +26,8 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 /**
  * Class to receive a response from a remote procedure call.
  *
- * @author Valeriy Svydenko */
+ * @author Valeriy Svydenko
+ */
 public abstract class WSO2AsyncCallback<T> implements AsyncCallback<T> {
     private NotificationManager notificationManager;
 

@@ -161,11 +161,16 @@ public class WSO2RestService {
                             @NotNull String projectName,
                             @NotNull String parentFolder)
             throws VirtualFileSystemException {
+        String pathToFolder = SRC_FOLDER_NAME + "/" + MAIN_FOLDER_NAME + "/" + SYNAPSE_CONFIG_FOLDER_NAME + "/" +
+                              parentFolder;
         try {
-            file.moveTo(mountPoint.getVirtualFile(
-                    projectName + "/" + SRC_FOLDER_NAME + "/" + MAIN_FOLDER_NAME + "/" + SYNAPSE_CONFIG_FOLDER_NAME + "/" +
-                    parentFolder), null);
+            file.moveTo(mountPoint.getVirtualFile(projectName + "/" + pathToFolder), null);
         } catch (VirtualFileSystemException e) {
+            if (e.getMessage().endsWith("does not exists. ")) {
+                mountPoint.getVirtualFile(projectName).createFolder(pathToFolder);
+                file.moveTo(mountPoint.getVirtualFile(projectName + "/" + pathToFolder), null);
+                return parentFolder;
+            }
             return e.getMessage();
         }
         return parentFolder;

@@ -26,6 +26,7 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
+import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncCallback;
 import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.resources.model.File;
@@ -194,29 +195,54 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
             Project activeProject = resourceProvider.getActiveProject();
 
             Resource src = getResourceByName(activeProject, SRC_FOLDER_NAME);
-            Resource main = getResourceByName((Folder)src, MAIN_FOLDER_NAME);
-            Resource synapse_config = getResourceByName((Folder)main, SYNAPSE_CONFIG_FOLDER_NAME);
-            if (response.isEmpty()) {
-                parentFolder = (Folder)synapse_config;
+            if (src != null) {
+                Resource main = getResourceByName((Folder)src, MAIN_FOLDER_NAME);
+                if (main != null) {
+                    Resource synapse_config = getResourceByName((Folder)main, SYNAPSE_CONFIG_FOLDER_NAME);
+                    if (synapse_config != null) {
+                        if (response.isEmpty()) {
+                            parentFolder = (Folder)synapse_config;
+                        } else {
+                            parentFolder = (Folder)getResourceByName((Folder)synapse_config, response);
+                        }
+
+                        if (parentFolder != null) {
+                            activeProject.refreshTree(parentFolder, new AsyncCallback<Folder>() {
+                                @Override
+                                public void onSuccess(Folder folder) {
+                                    File file = (File)parentFolder.findResourceByName(fileName, "file");
+                                    eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(file));
+                                    view.close();
+                                }
+
+                                @Override
+                                public void onFailure(Throwable exception) {
+                                    showError(exception);
+                                }
+                            });
+                        } else {
+                            refreshProject();
+                        }
+                    } else {
+                        refreshProject();
+                    }
+                } else {
+                    refreshProject();
+                }
             } else {
-                parentFolder = (Folder)getResourceByName((Folder)synapse_config, response);
+                refreshProject();
             }
-
-
-            activeProject.refreshTree(parentFolder, new AsyncCallback<Folder>() {
-                @Override
-                public void onSuccess(Folder folder) {
-                    File file = (File)parentFolder.findResourceByName(fileName, "file");
-                    eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(file));
-                    view.close();
-                }
-
-                @Override
-                public void onFailure(Throwable exception) {
-                    showError(exception);
-                }
-            });
         }
+    }
+
+    /** Refresh a project tree. */
+    private void refreshProject() {
+        resourceProvider.getActiveProject().refreshTree(new WSO2AsyncCallback<Project>(notificationManager) {
+            @Override
+            public void onSuccess(Project result) {
+                view.close();
+            }
+        });
     }
 
     /**

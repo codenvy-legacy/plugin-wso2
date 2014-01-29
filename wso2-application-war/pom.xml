@@ -18,44 +18,22 @@ is strictly forbidden unless prior written permission is obtained
 from Codenvy S.A..
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
-        <groupId>com.codenvy.ide</groupId>
         <artifactId>codenvy-ext-wso2-parent</artifactId>
-        <version>1.0.0-M2-SNAPSHOT</version>
+        <groupId>com.codenvy.ide</groupId>
+        <version>1.0.0-M1-SNAPSHOT</version>
     </parent>
-    <name>WSO2 :: Packaging :: Application</name>
-    <packaging>war</packaging>
     <artifactId>wso2-application-war</artifactId>
-
+    <packaging>war</packaging>
+    <name>WSO2 :: Packaging :: Application</name>
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <generated.sources.directory>${project.build.directory}/generated-sources/gen</generated.sources.directory>
         <ide.module>com.codenvy.ide.IDE</ide.module>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
     <dependencies>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-servlet</artifactId>
-            <scope>runtime</scope>
-            <version>${gwt.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <scope>provided</scope>
-            <version>${gwt.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt.inject</groupId>
-            <artifactId>gin</artifactId>
-            <version>${gin.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-servlet</artifactId>
@@ -63,36 +41,12 @@ from Codenvy S.A..
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-client</artifactId>
-            <scope>provided</scope>
+            <artifactId>codenvy-ext-builder</artifactId>
             <version>${codenvy.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-core</artifactId>
-            <version>${codenvy.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.platform-api</groupId>
-            <artifactId>codenvy-api-project</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.platform-api</groupId>
-            <artifactId>codenvy-api-vfs</artifactId>
-            <scope>provided</scope>
-            <version>${com.codenvy.platform-api.version}</version>
-        </dependency>
-        <!-- Extensions -->
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-java</artifactId>
-            <version>${codenvy.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-web</artifactId>
+            <artifactId>codenvy-ext-extensions</artifactId>
             <version>${codenvy.version}</version>
         </dependency>
         <dependency>
@@ -105,19 +59,10 @@ from Codenvy S.A..
             <artifactId>codenvy-ext-github</artifactId>
             <version>${codenvy.version}</version>
         </dependency>
+        <!-- Extensions -->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-extensions</artifactId>
-            <version>${codenvy.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-wso2-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-tutorials</artifactId>
+            <artifactId>codenvy-ext-java</artifactId>
             <version>${codenvy.version}</version>
         </dependency>
         <dependency>
@@ -127,25 +72,74 @@ from Codenvy S.A..
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-builder</artifactId>
+            <artifactId>codenvy-ext-tutorials</artifactId>
             <version>${codenvy.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-web</artifactId>
+            <version>${codenvy.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-wso2-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-core</artifactId>
+            <version>${codenvy.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt.inject</groupId>
+            <artifactId>gin</artifactId>
+            <version>${gin.version}</version>
+        </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <scope>compile</scope>
             <version>${commons-io.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
-            <scope>compile</scope>
             <version>${reflections.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-client</artifactId>
+            <version>${codenvy.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-project</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-vfs</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+            <version>${gwt.version}</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
-
     <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
         <resources>
             <resource>
                 <directory>src/main/java</directory>
@@ -154,8 +148,6 @@ from Codenvy S.A..
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
-        <sourceDirectory>src/main/java</sourceDirectory>
-
         <plugins>
             <!-- Source Generator invocation -->
             <plugin>
@@ -204,7 +196,6 @@ from Codenvy S.A..
                     </execution>
                 </executions>
             </plugin>
-
             <!-- GWT Maven Plugin -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -212,6 +203,9 @@ from Codenvy S.A..
                 <version>${gwt.maven.plugin.version}</version>
                 <executions>
                     <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
                         <configuration>
                             <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
                             <modules>
@@ -222,9 +216,6 @@ from Codenvy S.A..
                             <!--<style>PRETTY</style>-->
                             <!--<enableClosureCompiler>true</enableClosureCompiler>-->
                         </configuration>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -235,16 +226,16 @@ from Codenvy S.A..
                     <execution>
                         <id>unwar-ide</id>
                         <phase>prepare-package</phase>
-                        <configuration>
-                            <tasks>
-                                <move todir="${project.build.directory}/${project.artifactId}-${project.version}/_app/javaParserWorker">
-                                    <fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/javaParserWorker"/>
-                                </move>
-                            </tasks>
-                        </configuration>
                         <goals>
                             <goal>run</goal>
                         </goals>
+                        <configuration>
+                            <tasks>
+                                <move todir="${project.build.directory}/${project.artifactId}-${project.version}/_app/javaParserWorker">
+                                    <fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/javaParserWorker" />
+                                </move>
+                            </tasks>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -252,10 +243,8 @@ from Codenvy S.A..
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
-                    <packagingIncludes>
-                        WEB-INF/lib/codenvy-commons-servlet-${com.codenvy.commons.version}.jar, WEB-INF/classes/com/codenvy/ide/servlet/*,
-                        WEB-INF/classes/META-INF/, _app/**
-                    </packagingIncludes>
+                    <packagingIncludes>WEB-INF/lib/codenvy-commons-servlet-${com.codenvy.commons.version}.jar, WEB-INF/classes/com/codenvy/ide/servlet/*,
+                        WEB-INF/classes/META-INF/, _app/**</packagingIncludes>
                 </configuration>
             </plugin>
             <plugin>
