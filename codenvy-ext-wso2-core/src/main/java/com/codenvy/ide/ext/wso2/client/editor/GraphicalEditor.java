@@ -186,7 +186,7 @@ public class GraphicalEditor extends AbstractEditorPresenter
 	{	
 		// should soon be dynamic
 		modelWidget.setSize("1500", "1500");
-		
+		//modelWidget.setstyle?
 		DockLayoutPanel panel = new DockLayoutPanel(Style.Unit.PX);
 		panel.setWidth("1500");
 		panel.setHeight("1500");

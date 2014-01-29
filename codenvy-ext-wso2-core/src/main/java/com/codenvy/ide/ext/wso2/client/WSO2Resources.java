@@ -17,11 +17,14 @@
  */
 package com.codenvy.ide.ext.wso2.client;
 
+import org.genmymodel.gmmf.common.WorkspaceCSS;
+
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
+import com.google.gwt.resources.client.ClientBundle.Source;
 
 /**
  * Resources for WSO2 plugin.
@@ -39,6 +42,9 @@ public interface WSO2Resources extends ClientBundle {
     @Source({"WSO2Style.css", "com/codenvy/ide/ext/wso2/client/WSO2Style.css"})
     WSO2Style wso2Style();
 
+    @Source({"workspace.css"})
+    WorkspaceCSS myStyle();
+    
     @Source("xml.js")
     DataResource xmlParserJS();
 
@@ -98,5 +104,25 @@ public interface WSO2Resources extends ClientBundle {
 
     @Source("synapse-icon.png")
     ImageResource synapseIcon();
+    
+	@Source("align-top-edges.png")
+	ImageResource alignTopEdgesIcon();
+	
+	@Source("align-vertical-centers.png")
+	ImageResource alignVerticalCentersIcon();
+	
+	@Source("align-bottom-edges.png")
+	ImageResource alignBottomEdgesIcon();
+	
+	@Source("align-left-edges.png")
+	ImageResource alignLeftEdgesIcon();
+	@Source("align-horizontal-centers.png")
+	ImageResource alignHorizontalCentersIcon();
+	@Source("align-right-edges.png")
+	ImageResource alignRightEdgesIcon();
+	@Source("distribute-vertical.png")
+	ImageResource distributeVerticalIcon();
+	@Source("distribute-horizontal.png")
+	ImageResource distributeHorizontalIcon();
 
 }

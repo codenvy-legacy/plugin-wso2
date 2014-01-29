@@ -39,6 +39,8 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_NEW_RESOURCE_GROUP;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
 import static com.google.gwt.core.client.ScriptInjector.TOP_WINDOW;
 
+import org.genmymodel.gmmf.common.GlobalBundle;
+
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.resources.FileType;
@@ -50,6 +52,7 @@ import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.wso2.client.action.CreateEndpointAction;
+import com.codenvy.ide.ext.wso2.client.action.CreateGraphicalSequenceAction;
 import com.codenvy.ide.ext.wso2.client.action.CreateLocalEntryAction;
 import com.codenvy.ide.ext.wso2.client.action.CreateProxyServiceAction;
 import com.codenvy.ide.ext.wso2.client.action.CreateSequenceAction;
@@ -84,6 +87,8 @@ public class WSO2Extension {
     @Inject
     public WSO2Extension(WSO2Resources wso2Resources) {
         wso2Resources.wso2Style().ensureInjected();
+        wso2Resources.myStyle().ensureInjected();
+        GlobalBundle bg = GlobalBundle.INSTANCE;
     }
 
     @Inject
@@ -151,7 +156,7 @@ public class WSO2Extension {
                             ImportSynapseAction importSynapseAction,
                             CreateEndpointAction createEndpointAction,
                             CreateSequenceAction createSequenceAction,
-                            CreateSequenceAction createGraphicalSequenceAction,
+                            CreateGraphicalSequenceAction createGraphicalSequenceAction,
                             CreateProxyServiceAction createProxyServiceAction,
                             CreateLocalEntryAction createLocalEntryAction,
                             LoginAction loginAction) {
