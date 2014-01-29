@@ -6,15 +6,12 @@ import java.util.List;
 import org.eclipse.emf.ecore.util.GMMUtil;
 import org.genmymodel.gmmf.common.CommandRequestEvent;
 import org.genmymodel.gmmf.ui.ModelWidget;
-import org.genmymodel.gmmf.ui.ModelWidgetEventBus;
 import org.genmymodel.gmmf.ui.tools.Toolbar;
 import org.genmymodel.gmmf.ui.tools.ToolsController;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbFactory;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
-import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.util.loging.Log;
 import com.genmymodel.ecoreonline.graphic.Diagram;
 import com.genmymodel.ecoreonline.graphic.GraphicFactory;
 import com.genmymodel.ecoreonline.graphic.Plane;
@@ -28,13 +25,11 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.RichTextArea;
+import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.google.web.bindery.event.shared.SimpleEventBus;
-
 import esbdiag.EsbdiagFactory;
 import esbdiag.widgets.ESBDiagramToolbar;
 
@@ -45,30 +40,27 @@ import esbdiag.widgets.ESBDiagramToolbar;
  */
 public class GraphicalEditor extends AbstractEditorPresenter
 {
-
-	private RichTextArea textArea;
 	private ModelWidget modelWidget;
 	private Toolbar toolbar;
 	private ToolsController toolsController;
 	private GraphicalSequenceEventsHandler clientEventsHandler;
-	private ModelWidgetEventBus diagramEventBus;
+	private EventBus diagramEventBus;
 	private final List<HandlerRegistration> handlerRegistrations;
 
-	public GraphicalEditor()
+	@Inject
+	public GraphicalEditor(EventBus diagramEventBus)
 	{
 		this.handlerRegistrations = new ArrayList<HandlerRegistration>();
+		this.diagramEventBus = diagramEventBus;
 	}
 
 	/** 
-	 * Initialize the esb diagram, the model widget that contains the diagram, the esb model and 
-	 * the toolbar.
+	 * Initialize the esb diagram, the model widget that contains the diagram,
+	 *  the esb model and the toolbar.
 	 */
 	@Override
 	protected void initializeEditor()
 	{
-		
-		textArea = new RichTextArea();
-
 		// Create the model, that conforms the esb metamodel 
 		final EsbSequence newModel = EsbFactory.eINSTANCE.createEsbSequence();
 		GMMUtil.setUUID(newModel);
@@ -85,13 +77,13 @@ public class GraphicalEditor extends AbstractEditorPresenter
 		GraphicUtil.addDiagram(newModel, diag);
 
 		// Get them connected
-		diagramEventBus = new ModelWidgetEventBus();
 		modelWidget = new ModelWidget(diag, diagramEventBus);
 		toolbar = new ESBDiagramToolbar(modelWidget, diagramEventBus);
 		this.toolsController = new ToolsController(modelWidget, diagramEventBus); 
 		
 		this.initBusHandlers();
 		
+		/*
 		if (input.getFile().getContent() == null)
 		{
 			input.getFile().getProject()
@@ -112,6 +104,7 @@ public class GraphicalEditor extends AbstractEditorPresenter
 		{
 			textArea.setHTML(input.getFile().getContent());
 		}
+		*/
 	}
 
 	private void initBusHandlers()
@@ -137,7 +130,7 @@ public class GraphicalEditor extends AbstractEditorPresenter
 				CommandRequestEvent.TYPE, clientEventsHandler));
 	}
 
-	public SimpleEventBus getDiagramEventBus()
+	public EventBus getDiagramEventBus()
 	{
 		return diagramEventBus;
 	}
@@ -154,13 +147,16 @@ public class GraphicalEditor extends AbstractEditorPresenter
 	{
 	}
 
-	/** {@inheritDoc} */
-	@Override
+
+	
+	// TODO
+	/*
 	public void activate()
 	{
 		textArea.setFocus(true);
 	}
-
+	*/
+	
 	/** {@inheritDoc} */
 	@Override
 	public String getTitle()
@@ -187,26 +183,25 @@ public class GraphicalEditor extends AbstractEditorPresenter
 	 */
 	@Override
 	public void go(AcceptsOneWidget container)
-	{
-		// textArea.setSize("100%", "100%");
+	{	
+		// should soon be dynamic
 		modelWidget.setSize("1500", "1500");
-		// textArea.setHTML(plane.toString());
-		/*
-		 * this.toolsController = new ToolsController(modelWidget, eventBus);
-		 */
-
-		// RichTextToolbar toolbar = new RichTextToolbar(textArea);
-
+		
 		DockLayoutPanel panel = new DockLayoutPanel(Style.Unit.PX);
 		panel.setWidth("1500");
 		panel.setHeight("1500");
 		panel.addWest(toolbar, 60);
-		panel.add(modelWidget);// textArea);
-		// panel.add(textArea);
+		panel.add(modelWidget);
 
 		modelWidget.loadDiagram();
 
 		// Add the components to a panel
 		container.setWidget(panel);
+	}
+
+	@Override
+	public void activate() {
+		// TODO Auto-generated method stub
+		
 	}
 }

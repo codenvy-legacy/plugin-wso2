@@ -81,6 +81,11 @@
             <artifactId>codenvy-ext-git</artifactId>
             <version>${codenvy.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.gmm</groupId>
+            <artifactId>wso2-graphic-esb</artifactId>
+            <version>${axellience.graphic.editor.version}</version>
+        </dependency>
 
         <!-- Testing  libraries-->
         <dependency>
@@ -112,15 +117,7 @@
             <artifactId>logback-classic</artifactId>
             <version>${ch.qos.logback.version}</version>
             <scope>test</scope>
-        </dependency>
-        
-          <!-- GenMyModel libraries-->
-        <dependency>
-			<groupId>org.wso2.gmm</groupId>
-			<artifactId>wso2-graphic-esb</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		
+        </dependency>		
     </dependencies>
 
     <build>

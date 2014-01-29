@@ -108,10 +108,8 @@ public class WSO2Extension {
                               GraphicalEditorProvider graphicalEditorProvider,
                               @ESBGraphicalFileType FileType esbGraphicalFileType) {
 
-        ScriptInjector.fromUrl(wso2Resources.xmlParserJS().getSafeUri().asString()).setWindow(TOP_WINDOW).inject();
-
         resourceProvider.registerFileType(esbGraphicalFileType);
-
+        
         editorRegistry.register(esbGraphicalFileType, graphicalEditorProvider);
     }
     

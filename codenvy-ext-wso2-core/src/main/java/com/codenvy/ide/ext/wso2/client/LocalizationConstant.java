@@ -148,6 +148,9 @@ public interface LocalizationConstant extends Messages {
     
     @Key("wso2.actions.createSequence.title")
     String wso2ActionsCreateSequenceTitle();
+    
+    @Key("wso2.actions.createGraphicalSequence.title")
+    String wso2ActionsCreateGraphicalSequenceTitle();
 
     @Key("wizard.file.proxyService.title")
     String wizardFileProxyServiceTitle();

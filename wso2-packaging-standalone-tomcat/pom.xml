@@ -24,8 +24,8 @@ from Codenvy S.A..
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.codenvy.ide</groupId>
-        <artifactId>codenvy-ext-wso2-parent</artifactId>
+    	<artifactId>codenvy-ext-wso2-parent</artifactId>
+        <groupId>com.codenvy.ide</groupId>        
         <version>1.0.0-M2-SNAPSHOT</version>
     </parent>
 
@@ -34,6 +34,17 @@ from Codenvy S.A..
     <name>WSO2 :: Assemblies Tomcat</name>
 
     <dependencies>
+    	<dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${ch.qos.logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${ch.qos.logback.version}</version>
+        </dependency>
+        
         <!-- WARs -->
         <dependency>
             <groupId>com.codenvy.ide</groupId>
@@ -190,16 +201,6 @@ from Codenvy S.A..
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
             <version>${org.slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${ch.qos.logback.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>${ch.qos.logback.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>

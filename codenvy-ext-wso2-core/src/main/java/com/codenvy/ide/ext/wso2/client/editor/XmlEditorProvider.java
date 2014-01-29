@@ -17,11 +17,8 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor;
 
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
-import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
-import com.codenvy.ide.api.notification.NotificationManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -33,28 +30,16 @@ import com.google.inject.Provider;
  */
 public class XmlEditorProvider implements EditorProvider {
 
-    private final DocumentProvider                 documentProvider;
-    private final Provider<CodenvyTextEditor>      editorProvider;
-    private final Provider<XmlEditorConfiguration> xmlEditorConfigurationProvider;
-    private final NotificationManager              notificationManager;
+    private Provider<ESBConfEditor> esbConfEditor;
 
     @Inject
-    public XmlEditorProvider(DocumentProvider documentProvider,
-                             Provider<CodenvyTextEditor> editorProvider,
-                             Provider<XmlEditorConfiguration> XmlEditorConfigurationProvider,
-                             NotificationManager notificationManager) {
-
-        this.documentProvider = documentProvider;
-        this.editorProvider = editorProvider;
-        xmlEditorConfigurationProvider = XmlEditorConfigurationProvider;
-        this.notificationManager = notificationManager;
+    public XmlEditorProvider(Provider<ESBConfEditor> esbConfEditor) {
+        this.esbConfEditor = esbConfEditor;
     }
 
     /** {@inheritDoc} */
     @Override
     public EditorPartPresenter getEditor() {
-        CodenvyTextEditor textEditor = editorProvider.get();
-        textEditor.initialize(xmlEditorConfigurationProvider.get(), documentProvider, notificationManager);
-        return textEditor;
+        return esbConfEditor.get();
     }
 }

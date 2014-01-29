@@ -40,23 +40,17 @@ import com.google.inject.Singleton;
 @Singleton
 public class CreateGraphicalSequencePage extends AbstractCreateResourcePage {
 
-   // private WSO2Resources resources;
-
     @Inject
     public CreateGraphicalSequencePage(CreateResourceView view,
                               LocalizationConstant locale,
                               ResourceProvider resourceProvider,
                               WSO2Resources resources,
                               EditorAgent editorAgent,
-                              @ESBGraphicalFileType FileType esbXmlFileType,
+                              @ESBGraphicalFileType FileType esbGraphicalFileType,
                               NotificationManager notificationManager) {
 
         super(view, locale.wizardFileGraphicalSequenceTitle(), resources.sequence_wizard(), locale, resourceProvider, editorAgent,
-              SEQUENCE_FOLDER_NAME, esbXmlFileType, notificationManager);
-
-        /* Do we really it here ? */
-        // TODO
-        //this.resources = resources;
+              SEQUENCE_FOLDER_NAME, esbGraphicalFileType, notificationManager);
 
         view.setResourceNameTitle(locale.wizardFileGraphicalSequenceFieldsName());
     }

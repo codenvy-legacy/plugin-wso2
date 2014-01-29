@@ -49,7 +49,7 @@ public class CreateGraphicalSequenceAction extends Action {
                                 Provider<CreateGraphicalSequencePage> createGraphicalSequencePage,
                                 WSO2Resources resources) {
 
-        super(locale.wso2ActionsCreateSequenceTitle(), null, resources.sequenceIcon());
+        super(locale.wso2ActionsCreateGraphicalSequenceTitle(), null, resources.sequenceIcon());
 
         this.locale = locale;
         this.wizardDialogFactory = wizardDialogFactory;
@@ -61,7 +61,7 @@ public class CreateGraphicalSequenceAction extends Action {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (dialog == null) {
-            DefaultWizard wizard = defaultWizardFactory.create(locale.wizardFileSequenceTitle());
+            DefaultWizard wizard = defaultWizardFactory.create(locale.wizardFileGraphicalSequenceTitle());
             wizard.addPage(createGraphicalSequencePage);
 
             dialog = wizardDialogFactory.create(wizard);
