@@ -24,7 +24,11 @@ import com.codenvy.ide.rest.Unmarshallable;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
-/** @author Valeriy Svydenko */
+/**
+ * Class to receive a response from a remote procedure call.
+ *
+ * @author Valeriy Svydenko
+ */
 public abstract class WSO2AsyncRequestCallback<T> extends AsyncRequestCallback<T> {
     private NotificationManager notificationManager;
 
@@ -35,9 +39,9 @@ public abstract class WSO2AsyncRequestCallback<T> extends AsyncRequestCallback<T
 
     public WSO2AsyncRequestCallback(NotificationManager notificationManager) {
         this(null, notificationManager);
-
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void onFailure(Throwable exception) {
         Notification notification = new Notification(exception.getMessage(), ERROR);
