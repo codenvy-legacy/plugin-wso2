@@ -37,7 +37,6 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.Utils;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -191,6 +190,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
             overwrite.showDialog(fileName, viewCloseHandler);
         } else {
             final Folder parentFolder;
+            boolean parentIsExist = false;
 
             Project activeProject = resourceProvider.getActiveProject();
 
@@ -205,31 +205,21 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
                         } else {
                             parentFolder = (Folder)getResourceByName((Folder)synapse_config, response);
                         }
-
                         if (parentFolder != null) {
-                            activeProject.refreshTree(parentFolder, new AsyncCallback<Folder>() {
+                            parentIsExist = true;
+                            activeProject.refreshTree(parentFolder, new WSO2AsyncCallback<Folder>(notificationManager) {
                                 @Override
                                 public void onSuccess(Folder folder) {
                                     File file = (File)parentFolder.findResourceByName(fileName, "file");
                                     eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(file));
                                     view.close();
                                 }
-
-                                @Override
-                                public void onFailure(Throwable exception) {
-                                    showError(exception);
-                                }
                             });
-                        } else {
-                            refreshProject();
                         }
-                    } else {
-                        refreshProject();
                     }
-                } else {
-                    refreshProject();
                 }
-            } else {
+            }
+            if (!parentIsExist) {
                 refreshProject();
             }
         }

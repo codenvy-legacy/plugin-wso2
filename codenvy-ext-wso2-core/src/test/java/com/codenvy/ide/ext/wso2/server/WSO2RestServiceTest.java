@@ -64,6 +64,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.RETURNS_MOCKS;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -72,6 +73,7 @@ import static org.mockito.Mockito.when;
  * Testing {@link WSO2RestService} functionality.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 @RunWith(MockitoJUnitRunner.class)
 public class WSO2RestServiceTest {
@@ -198,6 +200,27 @@ public class WSO2RestServiceTest {
         ContainerResponse response = prepareResponseLauncherService("POST", "file/delete", data);
 
         verify(synapseFile).delete(anyString());
+        assertEquals(200, response.getStatus());
+    }
+
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void fileShouldBeDetectWhenVirtualFileSystemExceptionHappened() throws Exception {
+        prepareForFileModificationRequestTest();
+
+        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
+                                      .withProjectName(PROJECT_NAME);
+
+        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
+
+        VirtualFileSystemException exception = mock(VirtualFileSystemException.class);
+        when(exception.getMessage()).thenReturn("does not exists.");
+
+        doThrow(exception).when(synapseFile).moveTo((VirtualFile)anyObject(), anyString());
+
+        ContainerResponse response = prepareResponseLauncherService("POST", "detect", data);
+
         assertEquals(200, response.getStatus());
     }
 

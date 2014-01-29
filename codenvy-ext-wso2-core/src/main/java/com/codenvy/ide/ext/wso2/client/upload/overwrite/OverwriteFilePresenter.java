@@ -25,6 +25,7 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
+import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncCallback;
 import com.codenvy.ide.ext.wso2.client.upload.ImportFilePresenter;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.resources.model.File;
@@ -34,7 +35,6 @@ import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -138,17 +138,12 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
         }
 
 
-        activeProject.refreshTree(parentFolder, new AsyncCallback<Folder>() {
+        activeProject.refreshTree(parentFolder, new WSO2AsyncCallback<Folder>(notificationManager) {
             @Override
             public void onSuccess(Folder folder) {
                 File file = (File)parentFolder.findResourceByName(fileName, "file");
                 eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(file));
                 view.close();
-            }
-
-            @Override
-            public void onFailure(Throwable exception) {
-                showError(exception);
             }
         });
     }
