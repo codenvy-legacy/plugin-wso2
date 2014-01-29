@@ -26,13 +26,13 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
 import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncCallback;
+import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
 import com.codenvy.ide.ext.wso2.client.upload.ImportFilePresenter;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
@@ -183,7 +183,7 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
                                             .withProjectName(resourceProvider.getActiveProject().getName());
 
         try {
-            service.modifyFile(fileInfo, operation, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+            service.modifyFile(fileInfo, operation, new WSO2AsyncRequestCallback<String>(new StringUnmarshaller(), notificationManager) {
                 @Override
                 protected void onSuccess(String callback) {
                     view.close();
@@ -191,20 +191,11 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
                         refreshTree(callback, fileInfo.getFileName());
                     }
                 }
-
-                @Override
-                protected void onFailure(Throwable throwable) {
-                    showError(throwable);
-                }
             });
         } catch (RequestException e) {
-            showError(e);
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
-    }
-
-    private void showError(@NotNull Throwable throwable) {
-        Notification notification = new Notification(throwable.getMessage(), ERROR);
-        notificationManager.showNotification(notification);
     }
 
     public void showDialog(String fileName, ImportFilePresenter.ViewCloseHandler parentViewUtils) {

@@ -27,6 +27,7 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
 import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncCallback;
+import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
 import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.resources.model.File;
@@ -127,16 +128,11 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
                                                 .withProjectName(activeProject.getName());
 
             try {
-                service.uploadFile(fileInfo, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                service.uploadFile(fileInfo, new WSO2AsyncRequestCallback<String>(new StringUnmarshaller(), notificationManager) {
                     @Override
                     protected void onSuccess(String callback) {
                         refreshTreeWithParentFolder(callback, fileInfo.getFileName().substring(fileInfo.getFileName().lastIndexOf('/') + 1,
                                                                                                fileInfo.getFileName().length()));
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        showError(exception);
                     }
                 });
             } catch (RequestException e) {

@@ -25,6 +25,7 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
+import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
 import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter;
 import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFileView;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
@@ -32,7 +33,6 @@ import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
@@ -160,12 +160,12 @@ public class OverwriteFilePresenterTest {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Object[] arguments = invocationOnMock.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                WSO2AsyncRequestCallback<String> callback = (WSO2AsyncRequestCallback<String>)arguments[2];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, throwable);
                 return callback;
             }
-        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (WSO2AsyncRequestCallback<String>)anyObject());
 
         when(resourceProvider.getActiveProject()).thenReturn(activeProject);
         when(view.getFileName()).thenReturn(FILE_NAME);
@@ -203,12 +203,12 @@ public class OverwriteFilePresenterTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                WSO2AsyncRequestCallback<String> callback = (WSO2AsyncRequestCallback<String>)arguments[2];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, "");
                 return callback;
             }
-        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (WSO2AsyncRequestCallback<String>)anyObject());
 
         overwriteFilePresenter.onCancelButtonClicked();
 
@@ -225,7 +225,7 @@ public class OverwriteFilePresenterTest {
         when(resourceProvider.getActiveProject().getName()).thenReturn(PROJECT_NAME);
 
         doThrow(RequestException.class).when(service).modifyFile((FileInfo)anyObject(), anyString(),
-                                                                 (AsyncRequestCallback<String>)anyObject());
+                                                                 (WSO2AsyncRequestCallback<String>)anyObject());
 
 
         overwriteFilePresenter.onCancelButtonClicked();
@@ -243,12 +243,12 @@ public class OverwriteFilePresenterTest {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Object[] arguments = invocationOnMock.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                WSO2AsyncRequestCallback<String> callback = (WSO2AsyncRequestCallback<String>)arguments[2];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, throwable);
                 return callback;
             }
-        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (WSO2AsyncRequestCallback<String>)anyObject());
 
         when(resourceProvider.getActiveProject()).thenReturn(activeProject);
         when(view.getFileName()).thenReturn(FILE_NAME);
@@ -272,12 +272,12 @@ public class OverwriteFilePresenterTest {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Object[] arguments = invocationOnMock.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                WSO2AsyncRequestCallback<String> callback = (WSO2AsyncRequestCallback<String>)arguments[2];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, throwable);
                 return callback;
             }
-        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (WSO2AsyncRequestCallback<String>)anyObject());
 
         when(resourceProvider.getActiveProject()).thenReturn(activeProject);
         when(view.getFileName()).thenReturn(FILE_NAME);
@@ -304,12 +304,12 @@ public class OverwriteFilePresenterTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                WSO2AsyncRequestCallback<String> callback = (WSO2AsyncRequestCallback<String>)arguments[2];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, "");
                 return callback;
             }
-        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (WSO2AsyncRequestCallback<String>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -352,12 +352,12 @@ public class OverwriteFilePresenterTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                WSO2AsyncRequestCallback<String> callback = (WSO2AsyncRequestCallback<String>)arguments[2];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, "");
                 return callback;
             }
-        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (WSO2AsyncRequestCallback<String>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -400,12 +400,12 @@ public class OverwriteFilePresenterTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                WSO2AsyncRequestCallback<String> callback = (WSO2AsyncRequestCallback<String>)arguments[2];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, "");
                 return callback;
             }
-        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (WSO2AsyncRequestCallback<String>)anyObject());
 
         final Throwable throwable = mock(Throwable.class);
         doAnswer(new Answer() {
@@ -441,12 +441,12 @@ public class OverwriteFilePresenterTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[2];
+                WSO2AsyncRequestCallback<String> callback = (WSO2AsyncRequestCallback<String>)arguments[2];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, "");
                 return callback;
             }
-        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (WSO2AsyncRequestCallback<String>)anyObject());
 
         final Throwable throwable = mock(Throwable.class);
         doAnswer(new Answer() {

@@ -27,6 +27,7 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
+import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -372,7 +373,7 @@ public class CreateESBConfProjectPageTest {
     @Test
     public void onFailureMethodInCommitCallbackShouldBeExecutedWhenRequestExceptionHappened() throws Exception {
         doThrow(RequestException.class).when(service)
-                .createESBConfProject((ESBProjectInfo)anyObject(), (AsyncRequestCallback<Void>)anyObject());
+                .createESBConfProject((ESBProjectInfo)anyObject(), (WSO2AsyncRequestCallback<Void>)anyObject());
 
         WizardPage.CommitCallback commitCallback = mock(WizardPage.CommitCallback.class);
 

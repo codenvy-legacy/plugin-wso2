@@ -22,10 +22,9 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.ext.git.shared.GitUrlVendorInfo;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
-import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -89,12 +88,12 @@ public class LoginActionTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[0];
+                WSO2AsyncRequestCallback<String> callback = (WSO2AsyncRequestCallback<String>)arguments[0];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, throwable);
                 return callback;
             }
-        }).when(userService).getUser((AsyncRequestCallback<String>)anyObject());
+        }).when(userService).getUser((WSO2AsyncRequestCallback<String>)anyObject());
 
         action.actionPerformed(actionEvent);
 
@@ -104,7 +103,7 @@ public class LoginActionTest {
     @SuppressWarnings("unchecked")
     @Test
     public void notificationShouldBeShownWhenGetUserRequestThrowRequestException() throws Exception {
-        doThrow(RequestException.class).when(userService).getUser((AsyncRequestCallback<String>)anyObject());
+        doThrow(RequestException.class).when(userService).getUser((WSO2AsyncRequestCallback<String>)anyObject());
 
         action.actionPerformed(actionEvent);
 
@@ -118,22 +117,22 @@ public class LoginActionTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[0];
+                WSO2AsyncRequestCallback<String> callback = (WSO2AsyncRequestCallback<String>)arguments[0];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onFailure.invoke(callback, SOME_CONTEXT);
                 return callback;
             }
-        }).when(userService).getUser((AsyncRequestCallback<String>)anyObject());
+        }).when(userService).getUser((WSO2AsyncRequestCallback<String>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[0];
+                WSO2AsyncRequestCallback<String> callback = (WSO2AsyncRequestCallback<String>)arguments[0];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, throwable);
                 return callback;
             }
-        }).when(service).getWSO2ServiceInfo((AsyncRequestCallback<String>)anyObject());
+        }).when(service).getWSO2ServiceInfo((WSO2AsyncRequestCallback<String>)anyObject());
 
         action.actionPerformed(actionEvent);
 
@@ -147,13 +146,13 @@ public class LoginActionTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[0];
+                WSO2AsyncRequestCallback<String> callback = (WSO2AsyncRequestCallback<String>)arguments[0];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onFailure.invoke(callback, SOME_CONTEXT);
                 return callback;
             }
-        }).when(userService).getUser((AsyncRequestCallback<String>)anyObject());
-        doThrow(RequestException.class).when(service).getWSO2ServiceInfo((AsyncRequestCallback<String>)anyObject());
+        }).when(userService).getUser((WSO2AsyncRequestCallback<String>)anyObject());
+        doThrow(RequestException.class).when(service).getWSO2ServiceInfo((WSO2AsyncRequestCallback<String>)anyObject());
 
         action.actionPerformed(actionEvent);
 
