@@ -30,7 +30,7 @@ import com.googlecode.gwt.test.patchers.PatchMethod;
 public class UtilsPatcher {
 
     @PatchMethod(override = true)
-    public static String getWorkspaceName() {
-        return "workspaceName";
+    public static String getWorkspaceId() {
+        return "workspaceId";
     }
 }

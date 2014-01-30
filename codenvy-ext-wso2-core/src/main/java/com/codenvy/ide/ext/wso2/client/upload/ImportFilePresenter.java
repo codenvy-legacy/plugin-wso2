@@ -119,7 +119,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
         final Project activeProject = resourceProvider.getActiveProject();
 
         if (view.isUseLocalPath()) {
-            view.setAction(restContext + "/vfs/" + Utils.getWorkspaceName() + "/v2/uploadfile/" + activeProject.getId());
+            view.setAction(restContext + "/vfs/" + Utils.getWorkspaceId() + "/v2/uploadfile/" + activeProject.getId());
 
             view.submit();
         } else {
