@@ -29,6 +29,7 @@ import java.lang.annotation.Target;
  *
  * @author Thomas Legrand
  */
+// TODO Probably this class isn't needed
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD, ElementType.TYPE})
 @BindingAnnotation

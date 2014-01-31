@@ -37,6 +37,7 @@ import com.google.inject.Singleton;
  *
  * @author Thomas Legrand
  */
+// TODO This class has never used
 @Singleton
 public class CreateGraphicalSequencePage extends AbstractCreateResourcePage {
 

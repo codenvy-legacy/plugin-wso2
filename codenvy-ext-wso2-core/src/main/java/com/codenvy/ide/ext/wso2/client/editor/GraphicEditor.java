@@ -97,14 +97,15 @@ public class GraphicEditor extends AbstractEditorPresenter {
     private void initBusHandlers() {
         
     	/* toolsController */
+        // TODO The following variable has never used...Why do you need it?
     	ArrayList<HandlerRegistration> handlerRegistrations = new ArrayList<HandlerRegistration>();
-        handlerRegistrations.add(getDiagramEventBus().addHandler(MouseDownEvent.getType(), toolsController));
-        handlerRegistrations.add(getDiagramEventBus().addHandler(MouseMoveEvent.getType(), toolsController));
-        handlerRegistrations.add(getDiagramEventBus().addHandler(MouseUpEvent.getType(), toolsController));
-        handlerRegistrations.add(getDiagramEventBus().addHandler(MouseOverEvent.getType(), toolsController));
-        handlerRegistrations.add(getDiagramEventBus().addHandler(MouseOutEvent.getType(), toolsController));
-        handlerRegistrations.add(getDiagramEventBus().addHandler(KeyDownEvent.getType(), toolsController));
-        handlerRegistrations.add(getDiagramEventBus().addHandler(ContextMenuEvent.getType(), toolsController));
+        handlerRegistrations.add(diagramEventBus.addHandler(MouseDownEvent.getType(), toolsController));
+        handlerRegistrations.add(diagramEventBus.addHandler(MouseMoveEvent.getType(), toolsController));
+        handlerRegistrations.add(diagramEventBus.addHandler(MouseUpEvent.getType(), toolsController));
+        handlerRegistrations.add(diagramEventBus.addHandler(MouseOverEvent.getType(), toolsController));
+        handlerRegistrations.add(diagramEventBus.addHandler(MouseOutEvent.getType(), toolsController));
+        handlerRegistrations.add(diagramEventBus.addHandler(KeyDownEvent.getType(), toolsController));
+        handlerRegistrations.add(diagramEventBus.addHandler(ContextMenuEvent.getType(), toolsController));
 
         /* A handler listens every EMF command */
         handlerRegistrations.add(getDiagramEventBus().addHandler(CommandRequestEvent.TYPE, new ChangeConfHandler()));

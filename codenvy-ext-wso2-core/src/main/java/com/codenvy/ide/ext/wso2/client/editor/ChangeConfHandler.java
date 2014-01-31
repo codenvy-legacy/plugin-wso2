@@ -63,7 +63,7 @@ public class ChangeConfHandler implements CollaborationEventRequestHandler, Auto
         Command emfCommand = tryConvert(event.getCommands(), event.getModel());
 
         if (!emfCommand.canExecute()) {
-            Log.error(this.getClass(), "The command cannot be executed.");
+            Log.error(getClass(), "The command cannot be executed.");
             return;
         }
 
@@ -105,7 +105,7 @@ public class ChangeConfHandler implements CollaborationEventRequestHandler, Auto
         try {
             cmd = command.convert(editingDomain, root);
         } catch (Exception e) {
-            Log.error(this.getClass(), e, "Error while converting command");
+            Log.error(getClass(), e, "Error while converting command");
             throw new RuntimeException("Command cannot be executed!");
         }
 
