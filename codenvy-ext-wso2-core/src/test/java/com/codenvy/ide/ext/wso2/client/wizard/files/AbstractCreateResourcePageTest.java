@@ -66,6 +66,7 @@ import static org.mockito.Mockito.when;
  * The basic test for testing create WSO2 resource pages.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 @RunWith(MockitoJUnitRunner.class)
 public abstract class AbstractCreateResourcePageTest {
@@ -141,6 +142,13 @@ public abstract class AbstractCreateResourcePageTest {
         when(parentFolder.getChildren()).thenReturn(Collections.<Resource>createArray(folder));
 
         page.onValueChanged();
+
+        assertEquals(false, page.isCompleted());
+    }
+
+    @Test
+    public void pageShouldBeNotCompletedWhenParentFolderIsNull() throws Exception {
+        when(view.getResourceName()).thenReturn(SOME_TEXT);
 
         assertEquals(false, page.isCompleted());
     }

@@ -25,16 +25,16 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
+import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncCallback;
+import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
 import com.codenvy.ide.ext.wso2.client.upload.ImportFilePresenter;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -138,17 +138,12 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
         }
 
 
-        activeProject.refreshTree(parentFolder, new AsyncCallback<Folder>() {
+        activeProject.refreshTree(parentFolder, new WSO2AsyncCallback<Folder>(notificationManager) {
             @Override
             public void onSuccess(Folder folder) {
                 File file = (File)parentFolder.findResourceByName(fileName, "file");
                 eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(file));
                 view.close();
-            }
-
-            @Override
-            public void onFailure(Throwable exception) {
-                showError(exception);
             }
         });
     }
@@ -188,7 +183,7 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
                                             .withProjectName(resourceProvider.getActiveProject().getName());
 
         try {
-            service.modifyFile(fileInfo, operation, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+            service.modifyFile(fileInfo, operation, new WSO2AsyncRequestCallback<String>(new StringUnmarshaller(), notificationManager) {
                 @Override
                 protected void onSuccess(String callback) {
                     view.close();
@@ -196,20 +191,11 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
                         refreshTree(callback, fileInfo.getFileName());
                     }
                 }
-
-                @Override
-                protected void onFailure(Throwable throwable) {
-                    showError(throwable);
-                }
             });
         } catch (RequestException e) {
-            showError(e);
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
         }
-    }
-
-    private void showError(@NotNull Throwable throwable) {
-        Notification notification = new Notification(throwable.getMessage(), ERROR);
-        notificationManager.showNotification(notification);
     }
 
     public void showDialog(String fileName, ImportFilePresenter.ViewCloseHandler parentViewUtils) {

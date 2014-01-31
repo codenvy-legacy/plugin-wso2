@@ -27,6 +27,7 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
+import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
 import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.resources.model.File;
@@ -279,12 +280,12 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
+                WSO2AsyncRequestCallback<Void> callback = (WSO2AsyncRequestCallback<Void>)arguments[1];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, throwable);
                 return callback;
             }
-        }).when(service).uploadFile((FileInfo)anyObject(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).uploadFile((FileInfo)anyObject(), (WSO2AsyncRequestCallback<String>)anyObject());
 
         when(dtoFactory.createDto(Matchers.<Class<FileInfo>>anyObject()))
                 .thenReturn(mock(FileInfo.class, Mockito.RETURNS_MOCKS));
@@ -304,12 +305,12 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
+                WSO2AsyncRequestCallback<Void> callback = (WSO2AsyncRequestCallback<Void>)arguments[1];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, "already exists. ");
                 return callback;
             }
-        }).when(service).uploadFile((FileInfo)anyObject(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).uploadFile((FileInfo)anyObject(), (WSO2AsyncRequestCallback<String>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {

@@ -38,7 +38,7 @@ public interface WSO2Resources extends ClientBundle {
 
     }
 
-    @Source({"WSO2Style.css", "com/codenvy/ide/ext/wso2/client/WSO2Style.css"})
+    @Source({"WSO2Style.css"})
     WSO2Style wso2Style();
 
     @Source({"workspace.css"})

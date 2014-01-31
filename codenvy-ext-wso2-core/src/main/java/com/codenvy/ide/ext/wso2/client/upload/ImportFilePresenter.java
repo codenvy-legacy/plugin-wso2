@@ -27,6 +27,7 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
 import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncCallback;
+import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
 import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.resources.model.File;
@@ -37,7 +38,6 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.Utils;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -119,7 +119,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
         final Project activeProject = resourceProvider.getActiveProject();
 
         if (view.isUseLocalPath()) {
-            view.setAction(restContext + "/vfs/" + Utils.getWorkspaceName() + "/v2/uploadfile/" + activeProject.getId());
+            view.setAction(restContext + "/vfs/" + Utils.getWorkspaceId() + "/v2/uploadfile/" + activeProject.getId());
 
             view.submit();
         } else {
@@ -128,16 +128,11 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
                                                 .withProjectName(activeProject.getName());
 
             try {
-                service.uploadFile(fileInfo, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                service.uploadFile(fileInfo, new WSO2AsyncRequestCallback<String>(new StringUnmarshaller(), notificationManager) {
                     @Override
                     protected void onSuccess(String callback) {
                         refreshTreeWithParentFolder(callback, fileInfo.getFileName().substring(fileInfo.getFileName().lastIndexOf('/') + 1,
                                                                                                fileInfo.getFileName().length()));
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        showError(exception);
                     }
                 });
             } catch (RequestException e) {
@@ -191,6 +186,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
             overwrite.showDialog(fileName, viewCloseHandler);
         } else {
             final Folder parentFolder;
+            boolean parentIsExist = false;
 
             Project activeProject = resourceProvider.getActiveProject();
 
@@ -205,31 +201,21 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
                         } else {
                             parentFolder = (Folder)getResourceByName((Folder)synapse_config, response);
                         }
-
                         if (parentFolder != null) {
-                            activeProject.refreshTree(parentFolder, new AsyncCallback<Folder>() {
+                            parentIsExist = true;
+                            activeProject.refreshTree(parentFolder, new WSO2AsyncCallback<Folder>(notificationManager) {
                                 @Override
                                 public void onSuccess(Folder folder) {
                                     File file = (File)parentFolder.findResourceByName(fileName, "file");
                                     eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(file));
                                     view.close();
                                 }
-
-                                @Override
-                                public void onFailure(Throwable exception) {
-                                    showError(exception);
-                                }
                             });
-                        } else {
-                            refreshProject();
                         }
-                    } else {
-                        refreshProject();
                     }
-                } else {
-                    refreshProject();
                 }
-            } else {
+            }
+            if (!parentIsExist) {
                 refreshProject();
             }
         }
