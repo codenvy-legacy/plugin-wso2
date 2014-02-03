@@ -56,10 +56,10 @@ import esbdiag.widgets.ESBDiagramToolbar;
 
 public class GraphicEditor extends AbstractEditorPresenter {
 
-    private       ModelWidget               modelWidget;
-    private       Toolbar                   toolbar;
-    private       ToolsController           toolsController;
-    private       EventBus       diagramEventBus;
+    private ModelWidget     modelWidget;
+    private Toolbar         toolbar;
+    private ToolsController toolsController;
+    private EventBus        diagramEventBus;
 
     @Inject
     public GraphicEditor(EventBus diagramEventBus) {
@@ -83,7 +83,7 @@ public class GraphicEditor extends AbstractEditorPresenter {
         diag.getPlane().setModelElement(newModel);
         GraphicUtil.addDiagram(newModel, diag);
 
-        
+
         modelWidget = new ModelWidget(diag, diagramEventBus);
 
         // the ESB-specific toolbar
@@ -95,10 +95,10 @@ public class GraphicEditor extends AbstractEditorPresenter {
     }
 
     private void initBusHandlers() {
-        
-    	/* toolsController */
+
+        /* toolsController */
         // TODO The following variable has never used...Why do you need it?
-    	ArrayList<HandlerRegistration> handlerRegistrations = new ArrayList<HandlerRegistration>();
+        ArrayList<HandlerRegistration> handlerRegistrations = new ArrayList<HandlerRegistration>();
         handlerRegistrations.add(diagramEventBus.addHandler(MouseDownEvent.getType(), toolsController));
         handlerRegistrations.add(diagramEventBus.addHandler(MouseMoveEvent.getType(), toolsController));
         handlerRegistrations.add(diagramEventBus.addHandler(MouseUpEvent.getType(), toolsController));
