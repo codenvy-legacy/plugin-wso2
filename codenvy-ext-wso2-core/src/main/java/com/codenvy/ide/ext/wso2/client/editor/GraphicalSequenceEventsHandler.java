@@ -26,102 +26,82 @@ import com.genmymodel.ecoreonline.graphic.event.handler.AutoResizeHandler;
 
 /**
  * Get modeling events and executes the appropriated EMF commands
- *
+ * 
  * @author Alexis Muller
  */
 // TODO This class has never used
 public class GraphicalSequenceEventsHandler implements CollaborationEventRequestHandler, AutoResizeHandler
 {
-	private static final Logger		logger	= Logger.getLogger(GraphicalSequenceEventsHandler.class.getName());
-	
-	private EditingDomain	editingDomain;
-	
-	public GraphicalSequenceEventsHandler()
-	{
-		ComposedAdapterFactory composedAdapterFactory = new ComposedAdapterFactory();
-		composedAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-		
-		final CommandStack commandStack = new BasicCommandStack();
-		editingDomain = new AdapterFactoryEditingDomain(composedAdapterFactory, commandStack);
-	}
+    private static final Logger logger = Logger.getLogger(GraphicalSequenceEventsHandler.class.getName());
 
-	@Override
-	public void commandRequest(CommandRequestEvent event)
-	{
-		Command emfCommand = tryConvert(event.getCommands(), event.getModel());
-		//enableCalculations(emfCommand); // Activate calculations for client
-		
-		/*
-		 if( emfCommand instanceof UnexecutableDeleteCommand )
-		{
-			emfCommand =
-				CommandsUtil.createDeleteCommand(model, editingDomain,
-					((UnexecutableDeleteCommand) emfCommand).geteObjectsToRemove());
-			try
-			{
-				command = CommandConverter.INSTANCE.convert(getProjectUUID(), emfCommand);
-			}
-			catch (Exception e)
-			{
-				appKernel.fireError("Sorry, you cannot delete these elements");
-				return;
-			}
-		}
-		*/
-		
-		if( !emfCommand.canExecute() )
-		{
-			logger.severe("The command cannot be executed.");
-			return;
-		}
-		
-		editingDomain.getCommandStack().execute(emfCommand);
-	}
+    private EditingDomain       editingDomain;
 
-	@Override
-	public void undoRequest(UndoRequestEvent event)
-	{
-		
-	}
+    public GraphicalSequenceEventsHandler()
+    {
+        ComposedAdapterFactory composedAdapterFactory = new ComposedAdapterFactory();
+        composedAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 
-	@Override
-	public void redoRequest(RedoRequestEvent event)
-	{
-		
-	}
+        final CommandStack commandStack = new BasicCommandStack();
+        editingDomain = new AdapterFactoryEditingDomain(composedAdapterFactory, commandStack);
+    }
 
-	@Override
-	public void setSelection(EObject model, Set<EObjectUUID> selectedElements)
-	{
-		
-	}
+    @Override
+    public void commandRequest(CommandRequestEvent event)
+    {
+        Command emfCommand = tryConvert(event.getCommands(), event.getModel());
 
-	@Override
-	public void messageRequest(MessageChatRequestEvent messageChatEvent)
-	{
-		
-	}
+        if (!emfCommand.canExecute())
+        {
+            logger.severe("The command cannot be executed.");
+            return;
+        }
 
-	@Override
-	public void autoResize(NodeWidget node, int width, int height)
-	{
-		
-	}
-	
-	protected Command tryConvert(SerializableCommand command, EObject root)
-	{
-		Command cmd = null;
-		try
-		{
-			cmd = command.convert(editingDomain, root);
-		}
-		catch (Exception e)
-		{
-			logger.log(Level.SEVERE, "Error while converting command", e);
-			throw new RuntimeException("Command cannot be executed!");
-		}
-		
-		return cmd;
-	}
-	
+        editingDomain.getCommandStack().execute(emfCommand);
+    }
+
+    @Override
+    public void undoRequest(UndoRequestEvent event)
+    {
+
+    }
+
+    @Override
+    public void redoRequest(RedoRequestEvent event)
+    {
+
+    }
+
+    @Override
+    public void setSelection(EObject model, Set<EObjectUUID> selectedElements)
+    {
+
+    }
+
+    @Override
+    public void messageRequest(MessageChatRequestEvent messageChatEvent)
+    {
+
+    }
+
+    @Override
+    public void autoResize(NodeWidget node, int width, int height)
+    {
+
+    }
+
+    protected Command tryConvert(SerializableCommand command, EObject root)
+    {
+        Command cmd = null;
+        try
+        {
+            cmd = command.convert(editingDomain, root);
+        } catch (Exception e)
+        {
+            logger.log(Level.SEVERE, "Error while converting command", e);
+            throw new RuntimeException("Command cannot be executed!");
+        }
+
+        return cmd;
+    }
+
 }
