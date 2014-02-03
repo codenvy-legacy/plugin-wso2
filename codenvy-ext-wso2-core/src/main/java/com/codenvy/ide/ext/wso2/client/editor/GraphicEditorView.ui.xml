@@ -1,0 +1,27 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:gmmf="urn:import:org.genmymodel.gmmf.ui"
+	xmlns:gmmf.tools="urn:import:org.genmymodel.gmmf.ui.tools"
+	xmlns:gmmf.properties="urn:import:org.genmymodel.gmmf.propertypanel">
+
+
+	<g:HTMLPanel>
+		<g:SplitLayoutPanel ui:field="splitLayout">
+			<!-- Model widgets -->
+			<g:center>
+				<g:HTMLPanel>
+					<gmmf.tools:Toolbar ui:field="toolbar" />
+					<gmmf:ModelWidget ui:field="modelWidget" />
+				</g:HTMLPanel>
+			</g:center>
+			<g:south size="325">
+				<g:FlowPanel addStyleNames="property-panel">
+					<g:Label addStyleNames="title">Properties</g:Label>
+					<gmmf.properties:PropertyPanel ui:field="propertyPanel"
+						addStyleNames="property-panel-content" />
+				</g:FlowPanel>
+			</g:south>
+		</g:SplitLayoutPanel>
+	</g:HTMLPanel>
+</ui:UiBinder>
+

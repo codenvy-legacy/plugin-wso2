@@ -25,6 +25,8 @@ import java.util.ArrayList;
 
 import org.eclipse.emf.ecore.util.GMMUtil;
 import org.genmymodel.gmmf.common.CommandRequestEvent;
+import org.genmymodel.gmmf.common.SelectModelElementEvent;
+import org.genmymodel.gmmf.propertypanel.PropertyPanel;
 import org.genmymodel.gmmf.ui.ModelWidget;
 import org.genmymodel.gmmf.ui.tools.Toolbar;
 import org.genmymodel.gmmf.ui.tools.ToolsController;
@@ -32,11 +34,11 @@ import org.wso2.developerstudio.eclipse.gmf.esb.EsbFactory;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
+import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.genmymodel.ecoreonline.graphic.Diagram;
 import com.genmymodel.ecoreonline.graphic.GraphicFactory;
 import com.genmymodel.ecoreonline.graphic.Plane;
 import com.genmymodel.ecoreonline.graphic.util.GraphicUtil;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -46,7 +48,9 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -56,14 +60,18 @@ import esbdiag.widgets.ESBDiagramToolbar;
 
 public class GraphicEditor extends AbstractEditorPresenter {
 
-    private ModelWidget     modelWidget;
-    private Toolbar         toolbar;
-    private ToolsController toolsController;
-    private EventBus        diagramEventBus;
+    private       WSO2Resources         wso2Resources;
+    private 	  ModelWidget			modelWidget;
+    private       Toolbar               toolbar;
+    private       ToolsController       toolsController;
+    private 	  PropertyPanel			propertyPanel;
+    private       EventBus              diagramEventBus;
+	private       ArrayList<HandlerRegistration> handlerRegistrations;
 
     @Inject
-    public GraphicEditor(EventBus diagramEventBus) {
+    public GraphicEditor(EventBus diagramEventBus, WSO2Resources wso2Resources) {
         this.diagramEventBus = diagramEventBus;
+        this.wso2Resources = wso2Resources;
     }
 
     /** {@inheritDoc} */
@@ -83,22 +91,20 @@ public class GraphicEditor extends AbstractEditorPresenter {
         diag.getPlane().setModelElement(newModel);
         GraphicUtil.addDiagram(newModel, diag);
 
-
-        modelWidget = new ModelWidget(diag, diagramEventBus);
+        
+        this.modelWidget = new ModelWidget(diag, diagramEventBus);
 
         // the ESB-specific toolbar
-        toolbar = new ESBDiagramToolbar(modelWidget, diagramEventBus);
+        this.toolbar = new ESBDiagramToolbar(modelWidget, diagramEventBus, wso2Resources.wso2GraphicalEditorStyle());
         this.toolsController = new ToolsController(modelWidget, diagramEventBus);
 
+        this.propertyPanel = new PropertyPanel();
         // Take a look at the ClientEventsHandler which execute the EMF commands, i.e each change made of the diagram & model
-        this.initBusHandlers();
-    }
-
-    private void initBusHandlers() {
-
+        
         /* toolsController */
         // TODO The following variable has never used...Why do you need it?
-        ArrayList<HandlerRegistration> handlerRegistrations = new ArrayList<HandlerRegistration>();
+    	// to Clean them on close
+    	handlerRegistrations = new ArrayList<HandlerRegistration>();
         handlerRegistrations.add(diagramEventBus.addHandler(MouseDownEvent.getType(), toolsController));
         handlerRegistrations.add(diagramEventBus.addHandler(MouseMoveEvent.getType(), toolsController));
         handlerRegistrations.add(diagramEventBus.addHandler(MouseUpEvent.getType(), toolsController));
@@ -108,11 +114,9 @@ public class GraphicEditor extends AbstractEditorPresenter {
         handlerRegistrations.add(diagramEventBus.addHandler(ContextMenuEvent.getType(), toolsController));
 
         /* A handler listens every EMF command */
-        handlerRegistrations.add(getDiagramEventBus().addHandler(CommandRequestEvent.TYPE, new ChangeConfHandler()));
-    }
-
-    public EventBus getDiagramEventBus() {
-        return diagramEventBus;
+        handlerRegistrations.add(diagramEventBus.addHandler(CommandRequestEvent.TYPE, new GraphicalSequenceEventsHandler()));
+        
+        handlerRegistrations.add(diagramEventBus.addHandler(SelectModelElementEvent.TYPE, propertyPanel));
     }
 
     /** {@inheritDoc} */
@@ -130,7 +134,18 @@ public class GraphicEditor extends AbstractEditorPresenter {
     public void activate() {
 
     }
-
+    
+    @Override
+    protected void handleClose()
+    {
+    	super.handleClose();
+    	
+    	for (HandlerRegistration registration : this.handlerRegistrations)
+    	{
+    		registration.removeHandler();
+    	}
+    }
+    
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
@@ -156,15 +171,23 @@ public class GraphicEditor extends AbstractEditorPresenter {
         // TODO use MVP pattern
         modelWidget.setSize(800, 800);
 
-        DockLayoutPanel panel = new DockLayoutPanel(Style.Unit.PX);
-        panel.setWidth("100%");
-        panel.setHeight("100%");
-        panel.addWest(toolbar, 90);
-        panel.add(modelWidget);
+        SplitLayoutPanel splitPanel = new SplitLayoutPanel();
+        splitPanel.setWidth("100%");
+        splitPanel.setHeight("100%");
+        FlowPanel fpanel = new FlowPanel();
+        fpanel.setWidth("100%");
+        fpanel.setHeight("100%");
+        fpanel.add(toolbar);
+        toolbar.setWidth("100px");
+        fpanel.add(modelWidget);
+        
+        splitPanel.add(fpanel);
+        
+        splitPanel.addSouth(propertyPanel, 200);
 
         modelWidget.loadDiagram();
 
         // Add the components to a panel
-        container.setWidget(panel);
+        container.setWidget(splitPanel);
     }
 }

@@ -29,7 +29,6 @@ import com.genmymodel.ecoreonline.graphic.event.handler.AutoResizeHandler;
  * 
  * @author Alexis Muller
  */
-// TODO This class has never used
 public class GraphicalSequenceEventsHandler implements CollaborationEventRequestHandler, AutoResizeHandler
 {
     private static final Logger logger = Logger.getLogger(GraphicalSequenceEventsHandler.class.getName());

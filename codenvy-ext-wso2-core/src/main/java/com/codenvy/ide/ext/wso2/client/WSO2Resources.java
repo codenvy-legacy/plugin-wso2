@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.wso2.client;
 
-import org.genmymodel.gmmf.common.WorkspaceCSS;
+import org.genmymodel.gmmf.common.ModelWidgetCSS;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
@@ -42,7 +42,7 @@ public interface WSO2Resources extends ClientBundle {
     WSO2Style wso2Style();
 
     @Source({"workspace.css"})
-    WorkspaceCSS wso2GraphicalEditorStyle();
+    ModelWidgetCSS wso2GraphicalEditorStyle();
     
     @Source("xml.js")
     DataResource xmlParserJS();
