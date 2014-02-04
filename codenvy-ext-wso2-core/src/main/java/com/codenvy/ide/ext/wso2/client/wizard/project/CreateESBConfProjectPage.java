@@ -22,7 +22,6 @@ import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
-import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -40,6 +39,7 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJEC
  * The wizard page provides creating an empty ESB configuration project. Also checks inputted information on the page.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class CreateESBConfProjectPage extends AbstractTemplatePage implements CreateESBConfProjectView.ActionDelegate {
 
@@ -54,10 +54,12 @@ public class CreateESBConfProjectPage extends AbstractTemplatePage implements Cr
                                     LocalizationConstant locale,
                                     WSO2ClientService service,
                                     ResourceProvider resourceProvider,
-                                    DtoFactory dtoFactory,
-                                    WSO2Resources resources) {
+                                    DtoFactory dtoFactory) {
 
-        super(locale.wizardProjectTitle(), resources.esb_project_wizard(), ESB_CONFIGURATION_PROJECT_ID);
+        super(null, null, ESB_CONFIGURATION_PROJECT_ID);
+
+        /*TODO workaround a Maven Information step in project creation wizard.
+        super(locale.wizardProjectTitle(), resources.esb_project_wizard(), ESB_CONFIGURATION_PROJECT_ID);*/
 
         this.view = view;
         this.service = service;
@@ -73,12 +75,6 @@ public class CreateESBConfProjectPage extends AbstractTemplatePage implements Cr
         this.view.setParentArtifactID("");
         this.view.setParentGroupID("");
         this.view.setParentVersion("");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean canSkip() {
-        return false;
     }
 
     /** {@inheritDoc} */
@@ -136,9 +132,9 @@ public class CreateESBConfProjectPage extends AbstractTemplatePage implements Cr
 
         ESBProjectInfo projectInfo = dtoFactory.createDto(ESBProjectInfo.class)
                                                .withProjectName(projectName)
-                                               .withGroupID(view.getGroupID())
-                                               .withArtifactID(view.getArtifactID())
-                                               .withVersion(view.getVersion());
+                                               .withGroupID("com.example.pop")
+                                               .withArtifactID("pop")
+                                               .withVersion("1.0.0");
 
         boolean parentPomConfEnable = view.isParentPomConfEnable();
         projectInfo.setParentPomConf(parentPomConfEnable);
