@@ -51,7 +51,7 @@ public class CreateSequencePage extends AbstractCreateResourcePage {
                               @ESBXmlFileType FileType esbXmlFileType,
                               NotificationManager notificationManager) {
 
-        super(view, locale.wizardFileEndpointTitle(), resources.sequence_wizard(), locale, resourceProvider, editorAgent,
+        super(view, locale.wizardFileSequenceTitle(), resources.sequence_wizard(), locale, resourceProvider, editorAgent,
               SEQUENCE_FOLDER_NAME, esbXmlFileType, notificationManager);
 
         this.resources = resources;
