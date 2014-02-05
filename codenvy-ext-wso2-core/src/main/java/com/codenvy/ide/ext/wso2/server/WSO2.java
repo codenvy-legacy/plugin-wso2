@@ -34,13 +34,8 @@ import javax.inject.Named;
 public class WSO2 extends GitVendorService {
 
     @Inject
-    protected WSO2(@Named("wso2.vendorName") String vendorName,
-                   @Named("wso2.vendorBaseHost") String vendorBaseHost,
-                   @Named("wso2.vendorUrlPattern") String vendorUrlPattern,
-                   @Named("wso2.vendorOAuthScopes") String[] vendorOAuthScopes,
-                   @Named("wso2.vendorSupportOAuth2") boolean oauth2) {
-
-        super(vendorName, vendorBaseHost, vendorUrlPattern, vendorOAuthScopes, oauth2);
+    protected WSO2(@Named("wso2.vendorBaseHost") String vendorBaseHost, @Named("wso2.vendorUrlPattern") String vendorUrlPattern) {
+        super("wso2", vendorBaseHost, vendorUrlPattern, new String[0], true);
     }
 
     /** {@inheritDoc} */
