@@ -47,6 +47,8 @@
             <artifactId>codenvy-ide-security</artifactId>
             <version>${codenvy.version}</version>
         </dependency>
+        
+             
         <!-- Server libraries -->
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
@@ -58,6 +60,7 @@
             <artifactId>gin</artifactId>
             <version>${gin.version}</version>
         </dependency>
+        
         <!--Client and server libraries-->
         <dependency>
             <groupId>javax.validation</groupId>
@@ -69,6 +72,14 @@
             <artifactId>maven-model</artifactId>
             <version>${maven-model.version}</version>
         </dependency>
+        
+         <!--  Axellience libraries -->
+        <dependency>
+            <groupId>org.wso2.gmm</groupId>
+            <artifactId>wso2-graphic-esb</artifactId>
+            <version>${axellience.graphic.editor.version}</version>
+        </dependency>
+        
         <!-- Client libraries -->
         <dependency>
             <groupId>com.google.gwt</groupId>
@@ -107,6 +118,7 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
+                
     </dependencies>
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>

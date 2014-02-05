@@ -18,6 +18,26 @@
 package com.codenvy.ide.ext.wso2.client;
 
 
+import static com.codenvy.ide.api.ui.action.Constraints.FIRST;
+import static com.codenvy.ide.api.ui.action.Constraints.LAST;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_MENU;
+import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_ENDPOINT_ACTION;
+import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_LOCAL_ENTRY_ACTION;
+import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_PROXY_SERVICE_ACTION;
+import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_SEQUENCE_ACTION;
+import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
+import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_PROJECT_DESCRIPTION;
+import static com.codenvy.ide.ext.wso2.shared.Constants.IMPORT_SYNAPSE_ACTION;
+import static com.codenvy.ide.ext.wso2.shared.Constants.LOGIN_WSO2_ACTION;
+import static com.codenvy.ide.ext.wso2.shared.Constants.PROJECT_MIME_TYPE;
+import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_ACTION_GROUP;
+import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_IMPORT_RESOURCE_GROUP;
+import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_MAIN_ACTION_GROUP;
+import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_NEW_RESOURCE_GROUP;
+import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
+import static com.google.gwt.core.client.ScriptInjector.TOP_WINDOW;
+
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.resources.FileType;
@@ -45,26 +65,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.api.ui.action.Constraints.FIRST;
-import static com.codenvy.ide.api.ui.action.Constraints.LAST;
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_MENU;
-import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_ENDPOINT_ACTION;
-import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_LOCAL_ENTRY_ACTION;
-import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_PROXY_SERVICE_ACTION;
-import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_SEQUENCE_ACTION;
-import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
-import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_PROJECT_DESCRIPTION;
-import static com.codenvy.ide.ext.wso2.shared.Constants.IMPORT_SYNAPSE_ACTION;
-import static com.codenvy.ide.ext.wso2.shared.Constants.LOGIN_WSO2_ACTION;
-import static com.codenvy.ide.ext.wso2.shared.Constants.PROJECT_MIME_TYPE;
-import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_ACTION_GROUP;
-import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_IMPORT_RESOURCE_GROUP;
-import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_MAIN_ACTION_GROUP;
-import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_NEW_RESOURCE_GROUP;
-import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
-import static com.google.gwt.core.client.ScriptInjector.TOP_WINDOW;
-
 /**
  * Codenvy IDE3 extension provides functionality for WSO2 integration. This at the time of this writing includes major operations for WSO2
  * ESB configuration manipulation: import/upload, create, edit, remove etc.
@@ -72,6 +72,7 @@ import static com.google.gwt.core.client.ScriptInjector.TOP_WINDOW;
  * @author Valeriy Svydenko
  * @author Andrey Plotnikov
  * @author Dmitry Kuleshov
+ * @author Thomas Legrand
  */
 @Singleton
 @Extension(title = "WSO2 Integration Flow Plugin", version = "1.0.0-M1")
@@ -80,6 +81,7 @@ public class WSO2Extension {
     @Inject
     public WSO2Extension(WSO2Resources wso2Resources) {
         wso2Resources.wso2Style().ensureInjected();
+        wso2Resources.wso2GraphicalEditorStyle().ensureInjected();
     }
 
     @Inject
@@ -95,7 +97,7 @@ public class WSO2Extension {
 
         editorRegistry.register(esbXmlFileType, xmlEditorProvider);
     }
-
+    
     @SuppressWarnings("unchecked")
     @Inject
     public void initProject(LocalizationConstant locale,

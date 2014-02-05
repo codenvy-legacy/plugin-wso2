@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.ext.wso2.client;
 
+import org.genmymodel.gmmf.common.WorkspaceCSS;
+
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.DataResource;
@@ -39,6 +41,9 @@ public interface WSO2Resources extends ClientBundle {
     @Source({"WSO2Style.css"})
     WSO2Style wso2Style();
 
+    @Source({"workspace.css"})
+    WorkspaceCSS wso2GraphicalEditorStyle();
+    
     @Source("xml.js")
     DataResource xmlParserJS();
 
@@ -98,5 +103,32 @@ public interface WSO2Resources extends ClientBundle {
 
     @Source("synapse-icon.png")
     ImageResource synapseIcon();
+    
+    /* We should find a better solution to reuse the WorkspaceCSS
+     * It implied a refactory, working on it (29-01-2014)
+     */
+	@Source("icons/align-top-edges.png")
+	ImageResource alignTopEdgesIcon();
+	
+	@Source("icons/align-vertical-centers.png")
+	ImageResource alignVerticalCentersIcon();
+	
+	@Source("icons/align-bottom-edges.png")
+	ImageResource alignBottomEdgesIcon();
+	
+	@Source("icons/align-left-edges.png")
+	ImageResource alignLeftEdgesIcon();
+	
+	@Source("icons/align-horizontal-centers.png")
+	ImageResource alignHorizontalCentersIcon();
+	
+	@Source("icons/align-right-edges.png")
+	ImageResource alignRightEdgesIcon();
+	
+	@Source("icons/distribute-vertical.png")
+	ImageResource distributeVerticalIcon();
+	
+	@Source("icons/distribute-horizontal.png")
+	ImageResource distributeHorizontalIcon();
 
 }
