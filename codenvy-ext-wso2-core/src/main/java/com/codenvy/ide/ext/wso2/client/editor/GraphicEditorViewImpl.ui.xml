@@ -6,12 +6,14 @@
 
 
 	<g:HTMLPanel>
-		<g:SplitLayoutPanel ui:field="splitLayout">
+		<g:SplitLayoutPanel ui:field="splitLayout" height="100%" width="100%">
 			<!-- Model widgets -->
 			<g:center>
 				<g:HorizontalPanel>
 					<gmmf.tools:Toolbar ui:field="toolbar" />
-					<gmmf:ModelWidget ui:field="modelWidget" />
+					<g:ScrollPanel>
+						<gmmf:ModelWidget ui:field="modelWidget" />
+					</g:ScrollPanel>
 				</g:HorizontalPanel>
 			</g:center>
 			<g:south size="325">
