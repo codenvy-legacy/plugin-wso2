@@ -29,13 +29,13 @@ import com.genmymodel.ecoreonline.graphic.event.handler.AutoResizeHandler;
  * 
  * @author Alexis Muller
  */
-public class GraphicalSequenceEventsHandler implements CollaborationEventRequestHandler, AutoResizeHandler
+public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoResizeHandler
 {
-    private static final Logger logger = Logger.getLogger(GraphicalSequenceEventsHandler.class.getName());
+    private static final Logger logger = Logger.getLogger(SeqEventsHandler.class.getName());
 
     private EditingDomain       editingDomain;
 
-    public GraphicalSequenceEventsHandler()
+    public SeqEventsHandler()
     {
         ComposedAdapterFactory composedAdapterFactory = new ComposedAdapterFactory();
         composedAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
@@ -49,6 +49,8 @@ public class GraphicalSequenceEventsHandler implements CollaborationEventRequest
     {
         Command emfCommand = tryConvert(event.getCommands(), event.getModel());
 
+        // TODO: renable the delete cmd
+        
         if (!emfCommand.canExecute())
         {
             logger.severe("The command cannot be executed.");

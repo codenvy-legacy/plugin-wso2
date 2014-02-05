@@ -72,6 +72,11 @@
         </dependency>
         
          <!--  Axellience libraries -->
+		<dependency>
+			<groupId>org.genmymodel.gmmf</groupId>
+			<artifactId>gmmf-propertypanel</artifactId>
+			<version>${gmmf.version}</version>
+		</dependency>
         <dependency>
             <groupId>org.wso2.gmm</groupId>
             <artifactId>wso2-graphic-esb</artifactId>

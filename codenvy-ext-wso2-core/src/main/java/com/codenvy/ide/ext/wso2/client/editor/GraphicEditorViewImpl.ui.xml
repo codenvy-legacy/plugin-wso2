@@ -9,10 +9,10 @@
 		<g:SplitLayoutPanel ui:field="splitLayout">
 			<!-- Model widgets -->
 			<g:center>
-				<g:HTMLPanel>
+				<g:HorizontalPanel>
 					<gmmf.tools:Toolbar ui:field="toolbar" />
 					<gmmf:ModelWidget ui:field="modelWidget" />
-				</g:HTMLPanel>
+				</g:HorizontalPanel>
 			</g:center>
 			<g:south size="325">
 				<g:FlowPanel addStyleNames="property-panel">
