@@ -4,5 +4,5 @@ import com.google.gwt.user.client.ui.IsWidget;
 
 public interface GraphicEditorView extends IsWidget
 {
-	void setPresenter (GraphicEditor presenter);
+    void setPresenter(GraphicEditor presenter);
 }

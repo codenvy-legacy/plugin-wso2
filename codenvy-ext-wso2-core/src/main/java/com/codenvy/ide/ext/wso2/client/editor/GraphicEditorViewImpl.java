@@ -29,31 +29,31 @@ import esbdiag.widgets.ESBDiagramToolbar;
 public class GraphicEditorViewImpl extends Composite implements GraphicEditorView
 {
 
-	interface GEUIBinder extends UiBinder<Widget, GraphicEditorViewImpl> {
-	};
-	private static GEUIBinder binder = GWT.create(GEUIBinder.class); 
-	
-	//private GraphicEditor presenter;
-	
-	@UiField(provided = true)
-	Toolbar toolbar;
-	
-	@UiField(provided = true)
-	ModelWidget modelWidget;
-	
-	@UiField
-	PropertyPanel propertyPanel;
-	
-    private       ToolsController       toolsController;
-    //private       EventBus              diagramEventBus;
-	
-	public GraphicEditorViewImpl(Diagram diagram, ModelWidgetCSS modelWidgetCss)
-	{
-		EventBus diagramEventBus = new SimpleEventBus();// Must be local to the widget
-		
-		this.modelWidget = new ModelWidget(diagram, diagramEventBus);
+    interface GEUIBinder extends UiBinder<Widget, GraphicEditorViewImpl> {
+    };
 
-        // the ESB-specific toolbar
+    private static GEUIBinder binder = GWT.create(GEUIBinder.class);
+
+
+    @UiField(provided = true)
+    Toolbar                   toolbar;
+
+    @UiField(provided = true)
+    ModelWidget               modelWidget;
+
+    @UiField
+    PropertyPanel             propertyPanel;
+
+    private ToolsController   toolsController;
+
+    public GraphicEditorViewImpl(Diagram diagram, ModelWidgetCSS modelWidgetCss)
+    {
+        /* Must be local to the widget */
+        EventBus diagramEventBus = new SimpleEventBus();
+
+        this.modelWidget = new ModelWidget(diagram, diagramEventBus);
+
+        /* the ESB-specific toolbar */
         this.toolbar = new ESBDiagramToolbar(modelWidget, diagramEventBus, modelWidgetCss);
 
         this.toolsController = new ToolsController(modelWidget, diagramEventBus);
@@ -72,18 +72,19 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
 
         /* A handler listens every EMF command */
         diagramEventBus.addHandler(CommandRequestEvent.TYPE, new SeqEventsHandler());
-        
-        
+
+        /* Bind */
         initWidget(binder.createAndBindUi(this));
 
         /* event for the property panel */
         diagramEventBus.addHandler(SelectModelElementEvent.TYPE, propertyPanel);
-	}
+    }
 
-	@Override
-	public void setPresenter(GraphicEditor presenter)
-	{
-		//this.presenter = presenter;
-	}
+    @Override
+    public void setPresenter(GraphicEditor presenter)
+    {
+        // TODO ?
+        // this.presenter = presenter;
+    }
 
 }

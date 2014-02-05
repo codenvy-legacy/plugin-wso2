@@ -39,9 +39,9 @@ import esbdiag.EsbdiagFactory;
 
 public class GraphicEditor extends AbstractEditorPresenter {
 
-    private       WSO2Resources         wso2Resources;
-    private 	  GraphicEditorView     view;
-	
+    private WSO2Resources     wso2Resources;
+    private GraphicEditorView view;
+
     @Inject
     public GraphicEditor(WSO2Resources wso2Resources) {
         this.wso2Resources = wso2Resources;
@@ -50,7 +50,7 @@ public class GraphicEditor extends AbstractEditorPresenter {
     /** {@inheritDoc} */
     @Override
     protected void initializeEditor() {
-    	
+
         final EsbSequence newModel = EsbFactory.eINSTANCE.createEsbSequence();
         GMMUtil.setUUID(newModel);
         newModel.setName("NewESB");
@@ -66,8 +66,8 @@ public class GraphicEditor extends AbstractEditorPresenter {
         GraphicUtil.addDiagram(newModel, diag);
 
 
-    	view = new GraphicEditorViewImpl(diag, wso2Resources.wso2GraphicalEditorStyle());
-        
+        view = new GraphicEditorViewImpl(diag, wso2Resources.wso2GraphicalEditorStyle());
+
     }
 
     /** {@inheritDoc} */
@@ -85,7 +85,7 @@ public class GraphicEditor extends AbstractEditorPresenter {
     public void activate() {
 
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
@@ -107,26 +107,15 @@ public class GraphicEditor extends AbstractEditorPresenter {
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-    	
+
         // TODO ugly. need to use something like DockLayoutPanel where we can use not absolute values
         // TODO use MVP pattern
-        /*modelWidget.setSize(800, 800);
-
-        SplitLayoutPanel splitPanel = new SplitLayoutPanel();
-        splitPanel.setWidth("100%");
-        splitPanel.setHeight("100%");
-        FlowPanel fpanel = new FlowPanel();
-        fpanel.setWidth("100%");
-        fpanel.setHeight("100%");
-        fpanel.add(toolbar);
-        toolbar.setWidth("100px");
-        fpanel.add(modelWidget);
-        
-        splitPanel.add(fpanel);
-        
-        splitPanel.addSouth(propertyPanel, 200);
-
-        modelWidget.loadDiagram();*/
+        /*
+         * modelWidget.setSize(800, 800); SplitLayoutPanel splitPanel = new SplitLayoutPanel(); splitPanel.setWidth("100%");
+         * splitPanel.setHeight("100%"); FlowPanel fpanel = new FlowPanel(); fpanel.setWidth("100%"); fpanel.setHeight("100%");
+         * fpanel.add(toolbar); toolbar.setWidth("100px"); fpanel.add(modelWidget); splitPanel.add(fpanel);
+         * splitPanel.addSouth(propertyPanel, 200); modelWidget.loadDiagram();
+         */
 
         // Add the components to a panel
         container.setWidget(view);
