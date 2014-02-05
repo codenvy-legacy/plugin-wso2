@@ -107,16 +107,6 @@ public class GraphicEditor extends AbstractEditorPresenter {
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-
-        // TODO ugly. need to use something like DockLayoutPanel where we can use not absolute values
-        // TODO use MVP pattern
-        /*
-         * modelWidget.setSize(800, 800); SplitLayoutPanel splitPanel = new SplitLayoutPanel(); splitPanel.setWidth("100%");
-         * splitPanel.setHeight("100%"); FlowPanel fpanel = new FlowPanel(); fpanel.setWidth("100%"); fpanel.setHeight("100%");
-         * fpanel.add(toolbar); toolbar.setWidth("100px"); fpanel.add(modelWidget); splitPanel.add(fpanel);
-         * splitPanel.addSouth(propertyPanel, 200); modelWidget.loadDiagram();
-         */
-
         // Add the components to a panel
         container.setWidget(view);
     }

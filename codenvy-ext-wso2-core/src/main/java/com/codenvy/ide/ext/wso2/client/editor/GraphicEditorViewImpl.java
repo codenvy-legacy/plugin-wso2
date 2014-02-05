@@ -80,11 +80,4 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
         diagramEventBus.addHandler(SelectModelElementEvent.TYPE, propertyPanel);
     }
 
-    @Override
-    public void setPresenter(GraphicEditor presenter)
-    {
-        // TODO ?
-        // this.presenter = presenter;
-    }
-
 }
