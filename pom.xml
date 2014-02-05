@@ -27,6 +27,6 @@
 	<properties>
 		<axellience.graphic.editor.version>0.0.1-SNAPSHOT</axellience.graphic.editor.version>
 		<codenvy.version>3.0.0-M8-SNAPSHOT</codenvy.version>
-		<gmmf.version>0.11.0-SNAPSHOT</gmmf.version>
+		<gmmf.version>0.9.2-wso2-SNAPSHOT</gmmf.version>
 	</properties>
 </project>

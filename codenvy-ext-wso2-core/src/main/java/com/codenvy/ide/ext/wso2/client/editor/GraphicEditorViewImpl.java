@@ -67,9 +67,7 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
         diagramEventBus.addHandler(KeyDownEvent.getType(), toolsController);
         diagramEventBus.addHandler(ContextMenuEvent.getType(), toolsController);
 
-        /* event for the property panel */
-        diagramEventBus.addHandler(SelectModelElementEvent.TYPE, propertyPanel);
-        
+        modelWidget.setSize(2048, 2048);
         modelWidget.loadDiagram();
 
         /* A handler listens every EMF command */
@@ -77,6 +75,9 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
         
         
         initWidget(binder.createAndBindUi(this));
+
+        /* event for the property panel */
+        diagramEventBus.addHandler(SelectModelElementEvent.TYPE, propertyPanel);
 	}
 
 	@Override

@@ -40,7 +40,7 @@ import esbdiag.EsbdiagFactory;
 public class GraphicEditor extends AbstractEditorPresenter {
 
     private       WSO2Resources         wso2Resources;
-    //private 	  GraphicEditorView     view;
+    private 	  GraphicEditorView     view;
 	
     @Inject
     public GraphicEditor(WSO2Resources wso2Resources) {
@@ -66,7 +66,7 @@ public class GraphicEditor extends AbstractEditorPresenter {
         GraphicUtil.addDiagram(newModel, diag);
 
 
-    	//view = new GraphicEditorViewImpl(diag, wso2Resources.wso2GraphicalEditorStyle());
+    	view = new GraphicEditorViewImpl(diag, wso2Resources.wso2GraphicalEditorStyle());
         
     }
 
@@ -129,6 +129,6 @@ public class GraphicEditor extends AbstractEditorPresenter {
         modelWidget.loadDiagram();*/
 
         // Add the components to a panel
-        //container.setWidget(view);
+        container.setWidget(view);
     }
 }
