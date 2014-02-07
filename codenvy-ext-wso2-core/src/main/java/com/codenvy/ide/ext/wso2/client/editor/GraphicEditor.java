@@ -36,17 +36,17 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import esbdiag.EsbdiagFactory;
-import esbdiag.properties.LogMediatorProperties;
+import esbdiag.properties.LogMediatorPropertiesPresenter;
 
 public class GraphicEditor extends AbstractEditorPresenter {
 
     private WSO2Resources     wso2Resources;
     private GraphicEditorView view;
     
-    private LogMediatorProperties logProperties;
+    private LogMediatorPropertiesPresenter logProperties;
 
     @Inject
-    public GraphicEditor(WSO2Resources wso2Resources, LogMediatorProperties logProperties) {
+    public GraphicEditor(WSO2Resources wso2Resources, LogMediatorPropertiesPresenter logProperties) {
         this.wso2Resources = wso2Resources;
         this.logProperties = logProperties;
     }

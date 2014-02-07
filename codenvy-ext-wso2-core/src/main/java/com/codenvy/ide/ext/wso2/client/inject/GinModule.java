@@ -30,9 +30,6 @@ import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 
-import esbdiag.properties.LogMediatorProperties;
-import esbdiag.properties.LogMediatorPropertiesImpl;
-
 
 /**
  * The module that contains configuration of the client side part of the plugin.
@@ -46,7 +43,6 @@ public class GinModule extends AbstractGinModule {
     @Override
     protected void configure() {
         install(new GinFactoryModuleBuilder().build(AutoCompleterFactory.class));
-        bind(LogMediatorProperties.class).to(LogMediatorPropertiesImpl.class);
     }
 
     @Provides

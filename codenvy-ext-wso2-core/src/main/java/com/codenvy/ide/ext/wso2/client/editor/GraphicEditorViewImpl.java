@@ -3,7 +3,7 @@ package com.codenvy.ide.ext.wso2.client.editor;
 import org.genmymodel.gmmf.common.CommandRequestEvent;
 import org.genmymodel.gmmf.common.ModelWidgetCSS;
 import org.genmymodel.gmmf.common.SelectModelElementEvent;
-import org.genmymodel.gmmf.propertypanel.PropertyForm;
+import org.genmymodel.gmmf.propertypanel.PropertyPresenter;
 import org.genmymodel.gmmf.propertypanel.PropertyPanel;
 import org.genmymodel.gmmf.ui.ModelWidget;
 import org.genmymodel.gmmf.ui.tools.Toolbar;
@@ -25,7 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
-import esbdiag.properties.LogMediatorProperties;
+import esbdiag.properties.LogMediatorPropertiesView;
 import esbdiag.widgets.ESBDiagramToolbar;
 
 public class GraphicEditorViewImpl extends Composite implements GraphicEditorView
@@ -81,12 +81,12 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
         /* event for the property panel */
         diagramEventBus.addHandler(SelectModelElementEvent.TYPE, propertyPanel);
         
-        /*LogMediatorProperties logProperties = GWT.create(LogMediatorProperties.class);
+        /*LogMediatorPropertiesView logProperties = GWT.create(LogMediatorPropertiesView.class);
         propertyPanel.add(logProperties);*/
     }
 
 	@Override
-	public void addPropertyForm(PropertyForm... forms)
+	public void addPropertyForm(PropertyPresenter... forms)
 	{
 		this.propertyPanel.add(forms);
 	}
