@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
+import esbdiag.properties.LogMediatorProperties;
 import esbdiag.widgets.ESBDiagramToolbar;
 
 public class GraphicEditorViewImpl extends Composite implements GraphicEditorView
@@ -78,6 +79,8 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
 
         /* event for the property panel */
         diagramEventBus.addHandler(SelectModelElementEvent.TYPE, propertyPanel);
+        
+        propertyPanel.add((LogMediatorProperties)GWT.create(LogMediatorProperties.class));
     }
 
 }
