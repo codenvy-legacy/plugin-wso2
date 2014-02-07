@@ -36,15 +36,19 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import esbdiag.EsbdiagFactory;
+import esbdiag.properties.LogMediatorProperties;
 
 public class GraphicEditor extends AbstractEditorPresenter {
 
     private WSO2Resources     wso2Resources;
     private GraphicEditorView view;
+    
+    private LogMediatorProperties logProperties;
 
     @Inject
-    public GraphicEditor(WSO2Resources wso2Resources) {
+    public GraphicEditor(WSO2Resources wso2Resources, LogMediatorProperties logProperties) {
         this.wso2Resources = wso2Resources;
+        this.logProperties = logProperties;
     }
 
     /** {@inheritDoc} */
@@ -68,6 +72,7 @@ public class GraphicEditor extends AbstractEditorPresenter {
 
         view = new GraphicEditorViewImpl(diag, wso2Resources.wso2GraphicalEditorStyle());
 
+        view.addPropertyForm(logProperties);
     }
 
     /** {@inheritDoc} */

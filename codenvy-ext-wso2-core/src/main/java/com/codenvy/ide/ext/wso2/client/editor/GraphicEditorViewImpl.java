@@ -3,6 +3,7 @@ package com.codenvy.ide.ext.wso2.client.editor;
 import org.genmymodel.gmmf.common.CommandRequestEvent;
 import org.genmymodel.gmmf.common.ModelWidgetCSS;
 import org.genmymodel.gmmf.common.SelectModelElementEvent;
+import org.genmymodel.gmmf.propertypanel.PropertyForm;
 import org.genmymodel.gmmf.propertypanel.PropertyPanel;
 import org.genmymodel.gmmf.ui.ModelWidget;
 import org.genmymodel.gmmf.ui.tools.Toolbar;
@@ -80,7 +81,16 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
         /* event for the property panel */
         diagramEventBus.addHandler(SelectModelElementEvent.TYPE, propertyPanel);
         
-        propertyPanel.add((LogMediatorProperties)GWT.create(LogMediatorProperties.class));
+        /*LogMediatorProperties logProperties = GWT.create(LogMediatorProperties.class);
+        propertyPanel.add(logProperties);*/
     }
+
+	@Override
+	public void addPropertyForm(PropertyForm... forms)
+	{
+		this.propertyPanel.add(forms);
+	}
+    
+    
 
 }
