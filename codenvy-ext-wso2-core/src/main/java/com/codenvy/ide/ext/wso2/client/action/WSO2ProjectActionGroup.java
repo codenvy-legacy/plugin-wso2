@@ -21,23 +21,19 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Property;
-
-import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
-import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
-import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
-import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 
 /**
  * The main action group for WSO2 plugin. This group contains all action those are provided with the plugin.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class WSO2ProjectActionGroup extends DefaultActionGroup {
+
+    public static final String PROPERTY_PROJECT_TYPE = "vfs:projectType";
 
     private ResourceProvider resourceProvider;
 
@@ -55,34 +51,12 @@ public class WSO2ProjectActionGroup extends DefaultActionGroup {
         boolean visible = false;
 
         Project activeProject = resourceProvider.getActiveProject();
+
         if (activeProject != null) {
-            Property primaryNature = activeProject.getProperty(PROPERTY_PRIMARY_NATURE);
-            Property secondaryNature = activeProject.getProperty(PROPERTY_MIXIN_NATURES);
-
-            boolean hasPrimaryNatureValue = hasValue(WSO2_PROJECT_ID, primaryNature.getValue());
-            boolean hasSecondaryNatureValue = hasValue(ESB_CONFIGURATION_PROJECT_ID, secondaryNature.getValue());
-
-            visible = hasPrimaryNatureValue && hasSecondaryNatureValue;
+            String projectType = (String)activeProject.getPropertyValue(PROPERTY_PROJECT_TYPE);
+            visible = ESB_CONFIGURATION_PROJECT_ID.equals(projectType);
         }
 
         e.getPresentation().setVisible(visible);
-    }
-
-    /**
-     * Returns whether list of values contains the given value.
-     *
-     * @param value
-     *         value that need to find
-     * @param values
-     *         list of values
-     * @return <code>true</code> if the value is included in the list, and <code>false</code> if it's not
-     */
-    private boolean hasValue(@NotNull String value, @NotNull Array<String> values) {
-        for (String val : values.asIterable()) {
-            if (value.equals(val)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

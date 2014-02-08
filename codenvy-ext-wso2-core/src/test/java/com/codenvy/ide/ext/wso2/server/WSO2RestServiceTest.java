@@ -21,11 +21,9 @@ import com.codenvy.api.vfs.server.ContentStream;
 import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.ext.git.shared.GitUrlVendorInfo;
 import com.codenvy.ide.ext.wso2.server.rest.WSO2RestService;
-import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 
 import org.everrest.core.RequestHandler;
@@ -63,7 +61,6 @@ import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -81,13 +78,6 @@ public class WSO2RestServiceTest {
     public static final String PROJECT_NAME                  = "projectName";
     public static final String FILE_NAME                     = "fileName";
     public static final String BASE_URI                      = "http://localhost";
-    public static final String POM_CONTENT                   = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                                                               "<project xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 " +
-                                                               "http://maven.apache" +
-                                                               ".org/xsd/maven-4.0.0.xsd\"\n" +
-                                                               "         xmlns=\"http://maven.apache.org/POM/4.0.0\"\n" +
-                                                               "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
-                                                               "</project>";
     public static final String SYNAPSE_CONFIGURATION_CONTENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                                                                "<sequence></sequence>";
 
@@ -125,41 +115,6 @@ public class WSO2RestServiceTest {
         headers.put("Content-Type", Arrays.asList("application/json"));
 
         return launcher.service(method, "/wso2/dev-monit/" + path, BASE_URI, headers, data, null);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Test
-    public void projectShouldBeCreated() throws Exception {
-        ESBProjectInfo projectInfo =
-                DtoFactory.getInstance().createDto(ESBProjectInfo.class).withProjectName(PROJECT_NAME).withGroupID("groupID")
-                          .withArtifactID("artifactID").withVersion("version");
-        InputStream is = new ByteArrayInputStream(POM_CONTENT.getBytes());
-        ContentStream contentStream = new ContentStream(null, is, null);
-
-        VirtualFile projectFolder = mock(VirtualFile.class, RETURNS_MOCKS);
-        VirtualFile rootFolder = mock(VirtualFile.class, RETURNS_MOCKS);
-        VirtualFile pomFile = mock(VirtualFile.class, RETURNS_MOCKS);
-
-        when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getRoot()).thenReturn(rootFolder);
-        when(rootFolder.createFolder(anyString())).thenReturn(projectFolder);
-        when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString())).thenReturn(pomFile);
-        when(pomFile.getContent()).thenReturn(contentStream);
-
-        when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getRoot()).thenReturn(rootFolder);
-        when(rootFolder.createFolder(anyString())).thenReturn(projectFolder);
-
-        byte[] data = DtoFactory.getInstance().toJson(projectInfo).getBytes();
-
-        ContainerResponse response = prepareResponseLauncherService("POST", "templates/esbconf", data);
-
-        assertEquals(204, response.getStatus());
-
-        verify(rootFolder).createFolder(eq(PROJECT_NAME));
-
-        verify(projectFolder).unzip((InputStream)anyObject(), eq(true));
-        verify(projectFolder).updateProperties((List<Property>)anyObject(), eq((String)null));
-
-        verify(pomFile).updateContent(anyString(), (InputStream)anyObject(), eq((String)null));
     }
 
     private void prepareForFileModificationRequestTest() throws VirtualFileSystemException {
