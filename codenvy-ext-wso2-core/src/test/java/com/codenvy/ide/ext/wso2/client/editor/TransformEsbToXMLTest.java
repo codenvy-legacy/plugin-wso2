@@ -17,15 +17,9 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor;
 
+import javax.sound.midi.Sequence;
+
 import org.junit.Test;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbFactory;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbLink;
-import org.wso2.developerstudio.eclipse.gmf.esb.FilterMediator;
-import org.wso2.developerstudio.eclipse.gmf.esb.LogMediator;
-import org.wso2.developerstudio.eclipse.gmf.esb.Mediator;
-import org.wso2.developerstudio.eclipse.gmf.esb.NamespacedProperty;
-import org.wso2.developerstudio.eclipse.gmf.esb.PropertyMediator;
-import org.wso2.developerstudio.eclipse.gmf.esb.Sequence;
 
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.xml.client.Document;
@@ -81,7 +75,8 @@ public class TransformEsbToXMLTest extends GWTTestCase {
         Element xmlSequence = doc.createElement("sequence");
         xmlSequence.setAttribute("name", sequence.getDescription());
 
-
+        // Namespace additionalNs : getAdditionalNamespaces()
+        
         for (Mediator mediator : sequence.getIncludedMediators())
         {
             Element e = null;
