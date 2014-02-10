@@ -17,9 +17,18 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor;
 
-import javax.sound.midi.Sequence;
+
 
 import org.junit.Test;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbFactory;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbLink;
+import org.wso2.developerstudio.eclipse.gmf.esb.FilterElseBranch;
+import org.wso2.developerstudio.eclipse.gmf.esb.FilterMediator;
+import org.wso2.developerstudio.eclipse.gmf.esb.FilterThenBranch;
+import org.wso2.developerstudio.eclipse.gmf.esb.LogMediator;
+import org.wso2.developerstudio.eclipse.gmf.esb.NamespacedProperty;
+import org.wso2.developerstudio.eclipse.gmf.esb.PropertyMediator;
+import org.wso2.developerstudio.eclipse.gmf.esb.Sequence;
 
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.xml.client.Document;
@@ -72,6 +81,18 @@ public class TransformEsbToXMLTest extends GWTTestCase {
 
         assertNotNull(sequence);
 
+        try {
+            Element root = doc.createElement("root");
+            sequence.save(root);
+            
+            doc.appendChild(root);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        
+        
+        
+        /*
         Element xmlSequence = doc.createElement("sequence");
         xmlSequence.setAttribute("name", sequence.getDescription());
 
@@ -102,7 +123,7 @@ public class TransformEsbToXMLTest extends GWTTestCase {
         }
 
         doc.appendChild(xmlSequence);
-
+        */
         return doc;
     }
 
@@ -118,11 +139,15 @@ public class TransformEsbToXMLTest extends GWTTestCase {
 
         LogMediator logMediator = EsbFactory.eINSTANCE.createLogMediator();
         logMediator.setDescription("log 1");
-
+        
         PropertyMediator propertyMediator = EsbFactory.eINSTANCE.createPropertyMediator();
         propertyMediator.setDescription("property 1");
 
         FilterMediator filterMediator = EsbFactory.eINSTANCE.createFilterMediator();
+        FilterThenBranch filterThenBranch = EsbFactory.eINSTANCE.createFilterThenBranch();
+        FilterElseBranch filterElseBranch = EsbFactory.eINSTANCE.createFilterElseBranch();
+        filterMediator.setThenBranch(filterThenBranch);
+        filterMediator.setElseBranch(filterElseBranch);        
         filterMediator.setDescription("filter 1");
         filterMediator.setRegex("default_regex");
         NamespacedProperty namespacedProperty = EsbFactory.eINSTANCE.createNamespacedProperty();
@@ -141,7 +166,7 @@ public class TransformEsbToXMLTest extends GWTTestCase {
         sequence.getIncludedMediators().add(logMediator);
         sequence.getIncludedMediators().add(propertyMediator);
         sequence.getIncludedMediators().add(filterMediator);
-
+  
         return sequence;
     }
 
