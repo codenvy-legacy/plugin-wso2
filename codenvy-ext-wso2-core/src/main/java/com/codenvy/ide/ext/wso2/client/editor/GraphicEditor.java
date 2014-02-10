@@ -34,6 +34,7 @@ import com.genmymodel.ecoreonline.graphic.util.GraphicUtil;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 
 import esbdiag.EsbdiagFactory;
 import esbdiag.properties.LogMediatorPropertiesPresenter;
@@ -42,13 +43,17 @@ public class GraphicEditor extends AbstractEditorPresenter {
 
     private WSO2Resources     wso2Resources;
     private GraphicEditorView view;
+    private EventBus globalBus;
     
     private LogMediatorPropertiesPresenter logProperties;
 
     @Inject
-    public GraphicEditor(WSO2Resources wso2Resources, LogMediatorPropertiesPresenter logProperties) {
+    public GraphicEditor(WSO2Resources wso2Resources, LogMediatorPropertiesPresenter logProperties,EventBus globalBus) {
         this.wso2Resources = wso2Resources;
         this.logProperties = logProperties;
+        this.globalBus = globalBus;
+        
+        
     }
 
     /** {@inheritDoc} */
@@ -70,9 +75,12 @@ public class GraphicEditor extends AbstractEditorPresenter {
         GraphicUtil.addDiagram(newModel, diag);
 
 
-        view = new GraphicEditorViewImpl(diag, wso2Resources.wso2GraphicalEditorStyle());
+        view = new GraphicEditorViewImpl(diag, wso2Resources.wso2GraphicalEditorStyle(),globalBus);
 
         view.addPropertyForm(logProperties);
+        
+        // temporary
+        globalBus.addHandler(GraphicalSequenceChangeEvent.TYPE, new GraphicalSequenceChangeHandlerImpl());
     }
 
     /** {@inheritDoc} */

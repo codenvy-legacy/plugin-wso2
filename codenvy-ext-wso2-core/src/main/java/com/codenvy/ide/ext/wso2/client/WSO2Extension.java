@@ -18,36 +18,12 @@
 package com.codenvy.ide.ext.wso2.client;
 
 
-import static com.codenvy.ide.api.ui.action.Constraints.FIRST;
-import static com.codenvy.ide.api.ui.action.Constraints.LAST;
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_MENU;
-import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_ENDPOINT_ACTION;
-import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_LOCAL_ENTRY_ACTION;
-import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_PROXY_SERVICE_ACTION;
-import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_SEQUENCE_ACTION;
-import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
-import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_PROJECT_DESCRIPTION;
-import static com.codenvy.ide.ext.wso2.shared.Constants.IMPORT_SYNAPSE_ACTION;
-import static com.codenvy.ide.ext.wso2.shared.Constants.LOGIN_WSO2_ACTION;
-import static com.codenvy.ide.ext.wso2.shared.Constants.PROJECT_MIME_TYPE;
-import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_ACTION_GROUP;
-import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_IMPORT_RESOURCE_GROUP;
-import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_MAIN_ACTION_GROUP;
-import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_NEW_RESOURCE_GROUP;
-import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
-import static com.google.gwt.core.client.ScriptInjector.TOP_WINDOW;
-
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.template.TemplateAgent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.api.ui.wizard.template.AbstractTemplatePage;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.wso2.client.action.CreateEndpointAction;
 import com.codenvy.ide.ext.wso2.client.action.CreateLocalEntryAction;
 import com.codenvy.ide.ext.wso2.client.action.CreateProxyServiceAction;
@@ -57,13 +33,25 @@ import com.codenvy.ide.ext.wso2.client.action.LoginAction;
 import com.codenvy.ide.ext.wso2.client.action.WSO2ProjectActionGroup;
 import com.codenvy.ide.ext.wso2.client.editor.ESBXmlFileType;
 import com.codenvy.ide.ext.wso2.client.editor.XmlEditorProvider;
-import com.codenvy.ide.ext.wso2.client.wizard.project.CreateESBConfProjectPage;
-import com.codenvy.ide.resources.ProjectTypeAgent;
-import com.codenvy.ide.resources.model.Property;
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
+
+import static com.codenvy.ide.api.ui.action.Constraints.FIRST;
+import static com.codenvy.ide.api.ui.action.Constraints.LAST;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_MENU;
+import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_ENDPOINT_ACTION;
+import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_LOCAL_ENTRY_ACTION;
+import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_PROXY_SERVICE_ACTION;
+import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_SEQUENCE_ACTION;
+import static com.codenvy.ide.ext.wso2.shared.Constants.IMPORT_SYNAPSE_ACTION;
+import static com.codenvy.ide.ext.wso2.shared.Constants.LOGIN_WSO2_ACTION;
+import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_ACTION_GROUP;
+import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_IMPORT_RESOURCE_GROUP;
+import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_MAIN_ACTION_GROUP;
+import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_NEW_RESOURCE_GROUP;
+import static com.google.gwt.core.client.ScriptInjector.TOP_WINDOW;
 
 /**
  * Codenvy IDE3 extension provides functionality for WSO2 integration. This at the time of this writing includes major operations for WSO2
@@ -72,7 +60,6 @@ import com.google.inject.Singleton;
  * @author Valeriy Svydenko
  * @author Andrey Plotnikov
  * @author Dmitry Kuleshov
- * @author Thomas Legrand
  */
 @Singleton
 @Extension(title = "WSO2 Integration Flow Plugin", version = "1.0.0-M1")
@@ -81,7 +68,6 @@ public class WSO2Extension {
     @Inject
     public WSO2Extension(WSO2Resources wso2Resources) {
         wso2Resources.wso2Style().ensureInjected();
-        wso2Resources.wso2GraphicalEditorStyle().ensureInjected();
     }
 
     @Inject
@@ -96,36 +82,6 @@ public class WSO2Extension {
         resourceProvider.registerFileType(esbXmlFileType);
 
         editorRegistry.register(esbXmlFileType, xmlEditorProvider);
-    }
-    
-    @SuppressWarnings("unchecked")
-    @Inject
-    public void initProject(LocalizationConstant locale,
-                            WSO2Resources wso2Resources,
-                            ProjectTypeAgent projectTypeAgent,
-                            TemplateAgent templateAgent,
-                            Provider<CreateESBConfProjectPage> createESBConfProjectPage) {
-
-        Array<Property> wso2ProjectProperties = Collections.createArray();
-        wso2ProjectProperties.add(new Property("nature.mixin", Collections.createArray(ESB_CONFIGURATION_PROJECT_ID)));
-        wso2ProjectProperties.add(new Property("exoide:projectDescription", Collections.createArray(ESB_PROJECT_DESCRIPTION)));
-        wso2ProjectProperties.add(new Property("vfs:projectType", Collections.createArray(WSO2_PROJECT_ID)));
-        wso2ProjectProperties.add(new Property("nature.primary", Collections.createArray(WSO2_PROJECT_ID)));
-        wso2ProjectProperties.add(new Property("vfs:mimeType", Collections.createArray(PROJECT_MIME_TYPE)));
-
-        projectTypeAgent.register(WSO2_PROJECT_ID,
-                                  locale.wso2ProjectTitle(),
-                                  wso2Resources.wso2_project_wizard(),
-                                  WSO2_PROJECT_ID,
-                                  Collections.<String>createArray(),
-                                  wso2ProjectProperties);
-
-        templateAgent.register(ESB_CONFIGURATION_PROJECT_ID,
-                               locale.wso2ProjectEsbTitle(),
-                               wso2Resources.esb_template_icon(),
-                               WSO2_PROJECT_ID,
-                               Collections.<String>createArray(ESB_CONFIGURATION_PROJECT_ID),
-                               Collections.<Provider<? extends AbstractTemplatePage>>createArray(createESBConfProjectPage));
     }
 
     @Inject

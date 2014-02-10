@@ -22,6 +22,7 @@ package com.codenvy.ide.ext.wso2.client.editor;
 import org.junit.Test;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbFactory;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbLink;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 import org.wso2.developerstudio.eclipse.gmf.esb.FilterElseBranch;
 import org.wso2.developerstudio.eclipse.gmf.esb.FilterMediator;
 import org.wso2.developerstudio.eclipse.gmf.esb.FilterThenBranch;
@@ -61,7 +62,7 @@ public class TransformEsbToXMLTest extends GWTTestCase {
     public void testTransformModelToXml()
     {
         // Create an ESB sequence (EMF model conforming esb.ecore)
-        Sequence sequence = createEsbSequence();
+        EsbSequence sequence = createEsbSequence();
 
         // Parse the sequence to render an XML document
         Document document = parseSequence(sequence);
@@ -75,56 +76,19 @@ public class TransformEsbToXMLTest extends GWTTestCase {
      * @param sequence
      * @return
      */
-    private Document parseSequence(Sequence sequence)
+    private Document parseSequence(EsbSequence sequence)
     {
-        Document doc = XMLParser.createDocument();
+        Document document = XMLParser.createDocument();
 
         assertNotNull(sequence);
 
-        try {
-            Element root = doc.createElement("root");
-            sequence.save(root);
+        try {            
+            sequence.save(document);            
             
-            doc.appendChild(root);
         } catch (Exception e1) {
             e1.printStackTrace();
         }
-        
-        
-        
-        /*
-        Element xmlSequence = doc.createElement("sequence");
-        xmlSequence.setAttribute("name", sequence.getDescription());
-
-        // Namespace additionalNs : getAdditionalNamespaces()
-        
-        for (Mediator mediator : sequence.getIncludedMediators())
-        {
-            Element e = null;
-
-            if (mediator instanceof PropertyMediator)
-            {
-                e = doc.createElement("property");
-            }
-            else if (mediator instanceof FilterMediator)
-            {
-                e = doc.createElement("filter");
-                FilterMediator filter = (FilterMediator)mediator;
-                e.setAttribute("source", filter.getSource().getPropertyValue());
-                e.setAttribute("regex", filter.getRegex());
-            }
-            else if (mediator instanceof LogMediator)
-            {
-                e = doc.createElement("log");
-            }
-
-            e.setAttribute("description", mediator.getDescription());
-            xmlSequence.appendChild(e);
-        }
-
-        doc.appendChild(xmlSequence);
-        */
-        return doc;
+        return document;
     }
 
     /**
@@ -132,10 +96,10 @@ public class TransformEsbToXMLTest extends GWTTestCase {
      * 
      * @return
      */
-    private Sequence createEsbSequence()
+    private EsbSequence createEsbSequence()
     {
-        Sequence sequence = EsbFactory.eINSTANCE.createSequence();
-        sequence.setDescription("sequence 1");
+        EsbSequence sequence = EsbFactory.eINSTANCE.createEsbSequence();
+        sequence.setName("sequence 1");
 
         LogMediator logMediator = EsbFactory.eINSTANCE.createLogMediator();
         logMediator.setDescription("log 1");
@@ -163,9 +127,9 @@ public class TransformEsbToXMLTest extends GWTTestCase {
         linkPropertyToFilter.setSource(propertyMediator.getOutputConnector());
         linkPropertyToFilter.setTarget(filterMediator.getInputConnector());
 
-        sequence.getIncludedMediators().add(logMediator);
-        sequence.getIncludedMediators().add(propertyMediator);
-        sequence.getIncludedMediators().add(filterMediator);
+        sequence.getChildMediators().add(logMediator);
+        sequence.getChildMediators().add(propertyMediator);
+        sequence.getChildMediators().add(filterMediator);
   
         return sequence;
     }

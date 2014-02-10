@@ -48,7 +48,7 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
 
     private ToolsController   toolsController;
 
-    public GraphicEditorViewImpl(Diagram diagram, ModelWidgetCSS modelWidgetCss)
+    public GraphicEditorViewImpl(Diagram diagram, ModelWidgetCSS modelWidgetCss,EventBus globalBus)
     {
         /* Must be local to the widget */
         EventBus diagramEventBus = new SimpleEventBus();
@@ -73,7 +73,7 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
         modelWidget.loadDiagram();
 
         /* A handler listens every EMF command */
-        diagramEventBus.addHandler(CommandRequestEvent.TYPE, new SeqEventsHandler());
+        diagramEventBus.addHandler(CommandRequestEvent.TYPE, new SeqEventsHandler(globalBus));
 
         /* Bind */
         initWidget(binder.createAndBindUi(this));

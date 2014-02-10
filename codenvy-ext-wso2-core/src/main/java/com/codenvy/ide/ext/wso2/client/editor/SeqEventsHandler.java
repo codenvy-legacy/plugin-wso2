@@ -32,6 +32,7 @@ import org.genmymodel.gmmf.common.CommandRequestEvent;
 import org.genmymodel.gmmf.common.MessageChatRequestEvent;
 import org.genmymodel.gmmf.common.RedoRequestEvent;
 import org.genmymodel.gmmf.common.UndoRequestEvent;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
 import com.genmymodel.ecoreonline.graphic.Anchor;
 import com.genmymodel.ecoreonline.graphic.Connector;
@@ -42,6 +43,7 @@ import com.genmymodel.ecoreonline.graphic.NodeWidget;
 import com.genmymodel.ecoreonline.graphic.PlaneElement;
 import com.genmymodel.ecoreonline.graphic.Segment;
 import com.genmymodel.ecoreonline.graphic.event.handler.AutoResizeHandler;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Get modeling events and executes the appropriated EMF commands
@@ -53,9 +55,11 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
     private static final Logger logger = Logger.getLogger(SeqEventsHandler.class.getName());
 
     private EditingDomain       editingDomain;
-
-    public SeqEventsHandler()
+    private EventBus eventBus;
+    
+    public SeqEventsHandler(EventBus eventBus)
     {
+        this.eventBus = eventBus;
         ComposedAdapterFactory composedAdapterFactory = new ComposedAdapterFactory();
         composedAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 
@@ -84,6 +88,12 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
         }
 
         editingDomain.getCommandStack().execute(emfCommand);
+        
+        // warn the graphical has changed
+        EsbSequence esbSequence = (EsbSequence) event.getModel();
+        
+        GraphicalSequenceChangeEvent graphicSequencehasChangedEvent = new GraphicalSequenceChangeEvent(esbSequence);
+        eventBus.fireEvent(graphicSequencehasChangedEvent);
     }
 
     @Override
