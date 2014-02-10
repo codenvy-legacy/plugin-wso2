@@ -19,7 +19,6 @@ package com.codenvy.ide.ext.wso2.client;
 
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.ext.wso2.shared.ESBProjectInfo;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -44,7 +43,6 @@ import static com.google.gwt.http.client.RequestBuilder.POST;
 public class WSO2ClientServiceImpl implements WSO2ClientService {
 
     private static final String TEMPLATE_BASE_URL         = "/wso2/" + Utils.getWorkspaceName();
-    private static final String CREATE_ESB_CONF_PROJECT   = TEMPLATE_BASE_URL + "/templates/esbconf";
     private static final String DETECT_CONFIGURATION_FILE = TEMPLATE_BASE_URL + "/detect";
     private static final String UPLOAD_CONFIGURATION_FILE = TEMPLATE_BASE_URL + "/upload";
     private static final String MODIFY_CONFIGURATION_FILE = TEMPLATE_BASE_URL + "/file";
@@ -59,19 +57,6 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
         this.restContext = restContext;
         this.loader = loader;
         this.dtoFactory = dtoFactory;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void createESBConfProject(@NotNull ESBProjectInfo projectInfo, @NotNull AsyncRequestCallback<Void> callback)
-            throws RequestException {
-
-        String requestUrl = restContext + CREATE_ESB_CONF_PROJECT;
-
-        loader.setMessage("Creating new project...");
-
-        AsyncRequest.build(POST, requestUrl).data(dtoFactory.toJson(projectInfo)).header(CONTENT_TYPE, "application/json").loader(loader)
-                    .send(callback);
     }
 
     /** {@inheritDoc} */

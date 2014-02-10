@@ -24,7 +24,6 @@ import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.DefaultWizardFactory;
 import com.codenvy.ide.api.ui.wizard.WizardDialog;
 import com.codenvy.ide.api.ui.wizard.WizardDialogFactory;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ext.wso2.client.wizard.files.CreateEndpointPage;
@@ -38,9 +37,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
-import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
-import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_MIXIN_NATURES;
-import static com.codenvy.ide.resources.model.ProjectDescription.PROPERTY_PRIMARY_NATURE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.Matchers.eq;
@@ -50,6 +46,7 @@ import static org.mockito.Mockito.when;
  * Here we're testing {@link WSO2ProjectActionGroup}.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 @RunWith(MockitoJUnitRunner.class)
 public class WSO2ProjectActionGroupTest {
@@ -84,6 +81,7 @@ public class WSO2ProjectActionGroupTest {
     @Test
     public void actionShouldBeInvisibleWhenNoProjectIsOpened() throws Exception {
         when(actionEvent.getPresentation()).thenReturn(presentation);
+        when(resourceProvider.getActiveProject()).thenReturn(null);
 
         assertEquals(true, presentation.isVisible());
 
@@ -93,27 +91,9 @@ public class WSO2ProjectActionGroupTest {
     }
 
     @Test
-    public void actionShouldBeInvisibleWhenPrimaryNatureIsIncorrect() throws Exception {
+    public void actionShouldBeInvisibleWhenProjectTypeIsNotValid() throws Exception {
         when(actionEvent.getPresentation()).thenReturn(presentation);
-        when(resourceProvider.getActiveProject().getProperty(eq(PROPERTY_PRIMARY_NATURE)).getValue())
-                .thenReturn(Collections.createArray("primaryNature"));
-        when(resourceProvider.getActiveProject().getProperty(eq(PROPERTY_MIXIN_NATURES)).getValue())
-                .thenReturn(Collections.createArray("secondaryNature"));
-
-        assertEquals(true, presentation.isVisible());
-
-        action.update(actionEvent);
-
-        assertEquals(false, presentation.isVisible());
-    }
-
-    @Test
-    public void actionShouldBeInvisibleWhenSecondaryNatureIsIncorrect() throws Exception {
-        when(actionEvent.getPresentation()).thenReturn(presentation);
-        when(resourceProvider.getActiveProject().getProperty(eq(PROPERTY_PRIMARY_NATURE)).getValue())
-                .thenReturn(Collections.createArray(WSO2_PROJECT_ID));
-        when(resourceProvider.getActiveProject().getProperty(eq(PROPERTY_MIXIN_NATURES)).getValue())
-                .thenReturn(Collections.createArray("secondaryNature"));
+        when((resourceProvider.getActiveProject().getPropertyValue(eq("vfs:projectType")))).thenReturn("projectType");
 
         assertEquals(true, presentation.isVisible());
 
@@ -125,10 +105,7 @@ public class WSO2ProjectActionGroupTest {
     @Test
     public void actionShouldBeVisible() throws Exception {
         when(actionEvent.getPresentation()).thenReturn(presentation);
-        when(resourceProvider.getActiveProject().getProperty(eq(PROPERTY_PRIMARY_NATURE)).getValue())
-                .thenReturn(Collections.createArray(WSO2_PROJECT_ID));
-        when(resourceProvider.getActiveProject().getProperty(eq(PROPERTY_MIXIN_NATURES)).getValue())
-                .thenReturn(Collections.createArray(ESB_CONFIGURATION_PROJECT_ID));
+        when(resourceProvider.getActiveProject().getPropertyValue(eq("vfs:projectType"))).thenReturn(ESB_CONFIGURATION_PROJECT_ID);
 
         assertEquals(true, presentation.isVisible());
 
