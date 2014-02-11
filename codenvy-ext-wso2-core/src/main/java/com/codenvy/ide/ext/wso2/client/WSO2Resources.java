@@ -38,10 +38,10 @@ public interface WSO2Resources extends ClientBundle {
 
     }
 
-    @Source({"WSO2Style.css"})
+    @Source({"css/WSO2Style.css"})
     WSO2Style wso2Style();
 
-    @Source({"workspace.css"})
+    @Source({"css/workspace.css"})
     ModelWidgetCSS wso2GraphicalEditorStyle();
     
     @Source("xml.js")
