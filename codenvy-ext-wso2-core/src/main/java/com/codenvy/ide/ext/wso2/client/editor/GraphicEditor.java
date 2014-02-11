@@ -17,10 +17,6 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor;
 
-/**
- * @author Andrey Plotnikov
- */
-
 import org.eclipse.emf.ecore.util.GMMUtil;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbFactory;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
@@ -46,6 +42,10 @@ import esbdiag.properties.respondmediator.RespondMediatorPropertiesPresenter;
 import esbdiag.properties.sendmediator.SendMediatorPropertiesPresenter;
 import esbdiag.properties.switchmediator.SwitchMediatorPropertiesPresenter;
 
+/**
+ * @author Andrey Plotnikov
+ * @author Justin Trentesaux
+ */
 public class GraphicEditor extends AbstractEditorPresenter {
 
     private WSO2Resources                  wso2Resources;

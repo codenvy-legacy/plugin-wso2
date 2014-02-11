@@ -29,20 +29,17 @@ import com.google.gwt.resources.client.TextResource;
  * Resources for WSO2 plugin.
  *
  * @author Dmitry Kuleshov
+ * @author Justin Trentesaux
  */
-public interface WSO2Resources extends ClientBundle {
+public interface WSO2Resources extends ClientBundle{
 
-    public interface WSO2Style extends CssResource {
-
+    public interface WSO2Style extends CssResource, ModelWidgetCSS{
         String importErrorFont();
-
+        String graphicContainer();
     }
-
-    @Source({"css/WSO2Style.css"})
-    WSO2Style wso2Style();
-
-    @Source({"css/workspace.css"})
-    ModelWidgetCSS wso2GraphicalEditorStyle();
+    
+    @Source({"css/WSO2Style.css", "css/ModelWidgetStyle.css"})
+    WSO2Style wso2Style(); 
     
     @Source("xml.js")
     DataResource xmlParserJS();

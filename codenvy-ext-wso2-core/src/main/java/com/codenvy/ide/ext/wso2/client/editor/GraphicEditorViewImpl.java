@@ -26,6 +26,8 @@ import org.genmymodel.gmmf.ui.ModelWidget;
 import org.genmymodel.gmmf.ui.tools.Toolbar;
 import org.genmymodel.gmmf.ui.tools.ToolsController;
 
+import com.codenvy.ide.ext.wso2.client.WSO2Resources;
+import com.codenvy.ide.ext.wso2.client.WSO2Resources.WSO2Style;
 import com.genmymodel.ecoreonline.graphic.Diagram;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
@@ -44,6 +46,10 @@ import com.google.web.bindery.event.shared.SimpleEventBus;
 
 import esbdiag.widgets.ESBDiagramToolbar;
 
+/**
+ * @author Alexis Muller
+ * @author Justin Trentesaux
+ */
 public class GraphicEditorViewImpl extends Composite implements GraphicEditorView
 {
 
@@ -52,20 +58,24 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
 
     private static GEUIBinder binder = GWT.create(GEUIBinder.class);
 
+    @UiField(provided = true)
+    protected WSO2Style       style;
 
     @UiField(provided = true)
-    Toolbar                   toolbar;
+    protected Toolbar         toolbar;
 
     @UiField(provided = true)
-    ModelWidget               modelWidget;
+    protected ModelWidget     modelWidget;
 
     @UiField
-    PropertyPanel             propertyPanel;
+    protected PropertyPanel   propertyPanel;
 
     private ToolsController   toolsController;
 
-    public GraphicEditorViewImpl(Diagram diagram, ModelWidgetCSS modelWidgetCss, EventBus globalBus)
+    public GraphicEditorViewImpl(Diagram diagram, WSO2Resources resources)
     {
+        this.style = resources.wso2Style();
+
         /* Must be local to the widget */
         EventBus diagramEventBus = new SimpleEventBus();
 
