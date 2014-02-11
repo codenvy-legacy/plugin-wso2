@@ -89,7 +89,7 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
         modelWidget.loadDiagram();
 
         /* A handler listens every EMF command */
-        globalBus.addHandler(CommandRequestEvent.TYPE, new SeqEventsHandler());
+        globalBus.addHandler(CommandRequestEvent.TYPE, new SeqEventsHandler(globalBus));
 
         /* Bind */
         initWidget(binder.createAndBindUi(this));
