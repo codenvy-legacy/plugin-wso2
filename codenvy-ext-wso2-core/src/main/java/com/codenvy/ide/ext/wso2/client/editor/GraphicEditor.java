@@ -105,7 +105,7 @@ public class GraphicEditor extends AbstractEditorPresenter {
         GraphicUtil.addDiagram(newModel, diag);
 
         // create the view
-        view = new GraphicEditorViewImpl(diag, wso2Resources.wso2GraphicalEditorStyle(), globalBus);
+        view = new GraphicEditorViewImpl(diag, wso2Resources, globalBus);
         view.addPropertyForm(logProperties,
         		propertyProperties,
         		respondProperties,
