@@ -57,6 +57,7 @@ public class GraphicEditor extends AbstractEditorPresenter {
     		EventBus globalBus) {
         this.wso2Resources = wso2Resources;
         this.logProperties = logProperties;
+        this.propertyProperties = propertyProperties;
         this.globalBus = globalBus;
         
         
