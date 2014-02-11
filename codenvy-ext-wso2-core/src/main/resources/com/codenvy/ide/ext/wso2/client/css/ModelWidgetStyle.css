@@ -33,16 +33,17 @@
 	left: 0;
 	z-index: 21;
 	width: 28px;
-	border: 1px solid #000;
+	border-left: 1px solid #000;
 	
 	-moz-transition: width toolAnimDuration linear;
     -webkit-transition: width toolAnimDuration linear;
     transition: width toolAnimDuration linear;
 }
 
-.toolbar.expand {
-	width: 112px;
-}
+.toolbar.expand {width: 112px;}
+
+.toolbar span{display: none;} /* TMP */
+.toolbar.expand span{display: inline-block;} /* TMP */
 
 .tool{
 	position: relative;
