@@ -1,10 +1,27 @@
+/*
+ * CODENVY CONFIDENTIAL
+ * __________________
+ * 
+ * [2012] - [2014] Codenvy, S.A. 
+ * All Rights Reserved.
+ * 
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
+ */
 package com.codenvy.ide.ext.wso2.client.editor;
 
 import org.genmymodel.gmmf.common.CommandRequestEvent;
 import org.genmymodel.gmmf.common.ModelWidgetCSS;
 import org.genmymodel.gmmf.common.SelectModelElementEvent;
-import org.genmymodel.gmmf.propertypanel.PropertyPresenter;
 import org.genmymodel.gmmf.propertypanel.PropertyPanel;
+import org.genmymodel.gmmf.propertypanel.PropertyPresenter;
 import org.genmymodel.gmmf.ui.ModelWidget;
 import org.genmymodel.gmmf.ui.tools.Toolbar;
 import org.genmymodel.gmmf.ui.tools.ToolsController;
@@ -25,7 +42,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
-import esbdiag.properties.LogMediatorPropertiesView;
 import esbdiag.widgets.ESBDiagramToolbar;
 
 public class GraphicEditorViewImpl extends Composite implements GraphicEditorView
@@ -48,7 +64,7 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
 
     private ToolsController   toolsController;
 
-    public GraphicEditorViewImpl(Diagram diagram, ModelWidgetCSS modelWidgetCss,EventBus globalBus)
+    public GraphicEditorViewImpl(Diagram diagram, ModelWidgetCSS modelWidgetCss, EventBus globalBus)
     {
         /* Must be local to the widget */
         EventBus diagramEventBus = new SimpleEventBus();
@@ -80,17 +96,17 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
 
         /* event for the property panel */
         diagramEventBus.addHandler(SelectModelElementEvent.TYPE, propertyPanel);
-        
-        /*LogMediatorPropertiesView logProperties = GWT.create(LogMediatorPropertiesView.class);
-        propertyPanel.add(logProperties);*/
+
+        /*
+         * LogMediatorPropertiesView logProperties = GWT.create(LogMediatorPropertiesView.class); propertyPanel.add(logProperties);
+         */
     }
 
-	@Override
-	public void addPropertyForm(PropertyPresenter... forms)
-	{
-		this.propertyPanel.add(forms);
-	}
-    
-    
+    @Override
+    public void addPropertyForm(PropertyPresenter... forms)
+    {
+        this.propertyPanel.add(forms);
+    }
+
 
 }
