@@ -43,10 +43,10 @@ import esbdiag.properties.propertymediator.PropertyMediatorPropertiesPresenter;
 
 public class GraphicEditor extends AbstractEditorPresenter {
 
-    private WSO2Resources     wso2Resources;
-    private GraphicEditorView view;
-    private EventBus globalBus;
-    
+    private WSO2Resources                  wso2Resources;
+    private GraphicEditorView              view;
+    private EventBus                       globalBus;
+
     private LogMediatorPropertiesPresenter logProperties;
     private PropertyMediatorPropertiesPresenter propertyProperties;
 
@@ -57,7 +57,6 @@ public class GraphicEditor extends AbstractEditorPresenter {
     		EventBus globalBus) {
         this.wso2Resources = wso2Resources;
         this.logProperties = logProperties;
-        this.propertyProperties = propertyProperties;
         this.globalBus = globalBus;
         
         
@@ -84,12 +83,14 @@ public class GraphicEditor extends AbstractEditorPresenter {
         diag.getPlane().setModelElement(newModel);
         GraphicUtil.addDiagram(newModel, diag);
 
-
-        view = new GraphicEditorViewImpl(diag,
-        		wso2Resources.wso2GraphicalEditorStyle(),
-        		globalBus);
-
+        // create the view
+        view = new GraphicEditorViewImpl(diag, wso2Resources.wso2GraphicalEditorStyle(), globalBus);
         view.addPropertyForm(logProperties, propertyProperties);
+
+        // add a handler for detecting changes on the sequence
+        // TODO Set the handler that updates the content of the XML editor
+        globalBus.addHandler(GraphicalSequenceChangeEvent.TYPE, new GraphicalSequenceChangeHandlerImpl());
+
     }
 
     /** {@inheritDoc} */

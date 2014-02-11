@@ -2,7 +2,7 @@
  * CODENVY CONFIDENTIAL
  * __________________
  * 
- * [2012] - [2013] Codenvy, S.A. 
+ * [2012] - [2014] Codenvy, S.A. 
  * All Rights Reserved.
  * 
  * NOTICE:  All information contained herein is, and remains
@@ -17,21 +17,16 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor;
 
-import com.google.inject.BindingAnnotation;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * The annotation for defining ESB graphical sequence file type.
- *
+ * Handler to warn changes occurring in a ESB graphical sequence
  * @author Thomas Legrand
+ *
  */
-// TODO Probably this class isn't needed
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD, ElementType.TYPE})
-@BindingAnnotation
-public @interface ESBGraphicalFileType {
+public interface GraphicalSequenceChangeHandler extends EventHandler {
+
+    public void hasChanged(EsbSequence sequence);
 }
