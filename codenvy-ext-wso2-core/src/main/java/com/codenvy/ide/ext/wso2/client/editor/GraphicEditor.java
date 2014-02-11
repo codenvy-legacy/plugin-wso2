@@ -30,25 +30,40 @@ import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.genmymodel.ecoreonline.graphic.Diagram;
 import com.genmymodel.ecoreonline.graphic.GraphicFactory;
 import com.genmymodel.ecoreonline.graphic.Plane;
+import com.genmymodel.ecoreonline.graphic.impl.GraphicPackageImpl;
 import com.genmymodel.ecoreonline.graphic.util.GraphicUtil;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 
 import esbdiag.EsbdiagFactory;
-import esbdiag.properties.LogMediatorPropertiesPresenter;
+import esbdiag.properties.logmediator.LogMediatorPropertiesPresenter;
+import esbdiag.properties.propertymediator.PropertyMediatorPropertiesPresenter;
 
 public class GraphicEditor extends AbstractEditorPresenter {
 
     private WSO2Resources     wso2Resources;
     private GraphicEditorView view;
+    private EventBus globalBus;
     
     private LogMediatorPropertiesPresenter logProperties;
+    private PropertyMediatorPropertiesPresenter propertyProperties;
 
     @Inject
-    public GraphicEditor(WSO2Resources wso2Resources, LogMediatorPropertiesPresenter logProperties) {
+    public GraphicEditor(WSO2Resources wso2Resources,
+    		LogMediatorPropertiesPresenter logProperties,
+    		PropertyMediatorPropertiesPresenter propertyProperties,
+    		EventBus globalBus) {
         this.wso2Resources = wso2Resources;
         this.logProperties = logProperties;
+        this.propertyProperties = propertyProperties;
+        this.globalBus = globalBus;
+        
+        
+        // /!\ needed for compliance with condenvy injector /!\
+        // must be changed
+        GraphicPackageImpl.globalBus = globalBus;
     }
 
     /** {@inheritDoc} */
@@ -70,9 +85,11 @@ public class GraphicEditor extends AbstractEditorPresenter {
         GraphicUtil.addDiagram(newModel, diag);
 
 
-        view = new GraphicEditorViewImpl(diag, wso2Resources.wso2GraphicalEditorStyle());
+        view = new GraphicEditorViewImpl(diag,
+        		wso2Resources.wso2GraphicalEditorStyle(),
+        		globalBus);
 
-        view.addPropertyForm(logProperties);
+        view.addPropertyForm(logProperties, propertyProperties);
     }
 
     /** {@inheritDoc} */

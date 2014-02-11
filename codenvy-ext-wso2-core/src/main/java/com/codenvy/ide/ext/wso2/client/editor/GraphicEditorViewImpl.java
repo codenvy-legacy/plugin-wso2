@@ -3,8 +3,8 @@ package com.codenvy.ide.ext.wso2.client.editor;
 import org.genmymodel.gmmf.common.CommandRequestEvent;
 import org.genmymodel.gmmf.common.ModelWidgetCSS;
 import org.genmymodel.gmmf.common.SelectModelElementEvent;
-import org.genmymodel.gmmf.propertypanel.PropertyPresenter;
 import org.genmymodel.gmmf.propertypanel.PropertyPanel;
+import org.genmymodel.gmmf.propertypanel.PropertyPresenter;
 import org.genmymodel.gmmf.ui.ModelWidget;
 import org.genmymodel.gmmf.ui.tools.Toolbar;
 import org.genmymodel.gmmf.ui.tools.ToolsController;
@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
-import esbdiag.properties.LogMediatorPropertiesView;
 import esbdiag.widgets.ESBDiagramToolbar;
 
 public class GraphicEditorViewImpl extends Composite implements GraphicEditorView
@@ -48,7 +47,7 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
 
     private ToolsController   toolsController;
 
-    public GraphicEditorViewImpl(Diagram diagram, ModelWidgetCSS modelWidgetCss)
+    public GraphicEditorViewImpl(Diagram diagram, ModelWidgetCSS modelWidgetCss, EventBus globalBus)
     {
         /* Must be local to the widget */
         EventBus diagramEventBus = new SimpleEventBus();
@@ -56,9 +55,9 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
         this.modelWidget = new ModelWidget(diagram, diagramEventBus);
 
         /* the ESB-specific toolbar */
-        this.toolbar = new ESBDiagramToolbar(modelWidget, diagramEventBus, modelWidgetCss);
+        this.toolbar = new ESBDiagramToolbar(modelWidget, globalBus, modelWidgetCss);
 
-        this.toolsController = new ToolsController(modelWidget, diagramEventBus);
+        this.toolsController = new ToolsController(modelWidget, globalBus);
 
         /* toolsController */
         diagramEventBus.addHandler(MouseDownEvent.getType(), toolsController);
@@ -73,15 +72,15 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
         modelWidget.loadDiagram();
 
         /* A handler listens every EMF command */
-        diagramEventBus.addHandler(CommandRequestEvent.TYPE, new SeqEventsHandler());
+        globalBus.addHandler(CommandRequestEvent.TYPE, new SeqEventsHandler());
 
         /* Bind */
         initWidget(binder.createAndBindUi(this));
 
         /* event for the property panel */
-        diagramEventBus.addHandler(SelectModelElementEvent.TYPE, propertyPanel);
+        globalBus.addHandler(SelectModelElementEvent.TYPE, propertyPanel);
         
-        /*LogMediatorPropertiesView logProperties = GWT.create(LogMediatorPropertiesView.class);
+        /*PropertyMediatorPropertiesView logProperties = GWT.create(PropertyMediatorPropertiesView.class);
         propertyPanel.add(logProperties);*/
     }
 
