@@ -40,6 +40,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import esbdiag.EsbdiagFactory;
 import esbdiag.properties.logmediator.LogMediatorPropertiesPresenter;
 import esbdiag.properties.propertymediator.PropertyMediatorPropertiesPresenter;
+import esbdiag.properties.respondmediator.RespondMediatorPropertiesPresenter;
+import esbdiag.properties.sendmediator.SendMediatorPropertiesPresenter;
 
 public class GraphicEditor extends AbstractEditorPresenter {
 
@@ -49,15 +51,21 @@ public class GraphicEditor extends AbstractEditorPresenter {
 
     private LogMediatorPropertiesPresenter logProperties;
     private PropertyMediatorPropertiesPresenter propertyProperties;
+    private RespondMediatorPropertiesPresenter respondProperties;
+    private SendMediatorPropertiesPresenter sendProperties;
 
     @Inject
     public GraphicEditor(WSO2Resources wso2Resources,
     		LogMediatorPropertiesPresenter logProperties,
     		PropertyMediatorPropertiesPresenter propertyProperties,
+    		RespondMediatorPropertiesPresenter respondProperties,
+    		SendMediatorPropertiesPresenter sendProperties,
     		EventBus globalBus) {
         this.wso2Resources = wso2Resources;
         this.logProperties = logProperties;
         this.propertyProperties = propertyProperties;
+        this.respondProperties = respondProperties;
+        this.sendProperties = sendProperties;
         this.globalBus = globalBus;
         
         
@@ -86,7 +94,10 @@ public class GraphicEditor extends AbstractEditorPresenter {
 
         // create the view
         view = new GraphicEditorViewImpl(diag, wso2Resources.wso2GraphicalEditorStyle(), globalBus);
-        view.addPropertyForm(logProperties, propertyProperties);
+        view.addPropertyForm(logProperties,
+        		propertyProperties,
+        		respondProperties,
+        		sendProperties);
 
         // add a handler for detecting changes on the sequence
         // TODO Set the handler that updates the content of the XML editor
