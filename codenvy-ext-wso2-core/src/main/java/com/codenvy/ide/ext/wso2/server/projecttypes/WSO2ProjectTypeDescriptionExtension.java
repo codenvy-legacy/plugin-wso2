@@ -18,10 +18,10 @@
 package com.codenvy.ide.ext.wso2.server.projecttypes;
 
 
+import com.codenvy.api.project.server.ProjectTypeDescriptionExtension;
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.shared.AttributeDescription;
 import com.codenvy.api.project.shared.ProjectType;
-import com.codenvy.api.project.shared.ProjectTypeDescriptionExtension;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
