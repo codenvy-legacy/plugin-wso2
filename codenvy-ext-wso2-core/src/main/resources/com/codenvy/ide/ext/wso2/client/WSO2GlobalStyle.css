@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- * 
- * [2012] - [2014] Codenvy, S.A. 
+ *
+ * [2012] - [2013] Codenvy, S.A.
  * All Rights Reserved.
- * 
+ *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -15,18 +15,36 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.wso2.client.editor;
+ 
+@CHARSET "UTF-8";
 
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
+.importErrorFont {
+	cursor: default;
+	font-family: mainFontFamily;
+	font-size: fontSize;
+	font-style: normal;
+	font-weight: normal;
+	color: #d21a1a;
+}
 
-import com.google.gwt.event.shared.EventHandler;
+.graphicContainer{
+	z-index: 0;
+}
 
-/**
- * Handler to warn changes occurring in a ESB graphical sequence
- * 
- * @author Thomas Legrand
- */
-public interface GraphicalSequenceChangeHandler extends EventHandler {
+.wso2PropertyPanelTitle{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 18px;
+	padding: 2px 5px;
+}
 
-    public void hasChanged(EsbSequence sequence);
+.wso2PropertyPanel{
+	position: absolute;
+	top: 20px;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	overflow: auto;
 }
