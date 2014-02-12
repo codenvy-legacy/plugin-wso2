@@ -50,28 +50,28 @@ import esbdiag.util.EsbdiagUtil;
  */
 public class GraphicEditor extends AbstractEditorPresenter {
 
-    private WSO2Resources                  wso2Resources;
-    private GraphicEditorView              view;
-    private EventBus                       globalBus;
+    private WSO2Resources                       wso2Resources;
+    private GraphicEditorView                   view;
+    private EventBus                            globalBus;
 
-    private LogMediatorPropertiesPresenter logProperties;
+    private LogMediatorPropertiesPresenter      logProperties;
     private PropertyMediatorPropertiesPresenter propertyProperties;
-    private RespondMediatorPropertiesPresenter respondProperties;
-    private SendMediatorPropertiesPresenter sendProperties;
-    private SwitchMediatorPropertiesPresenter switchProperties;
-    private CallMediatorPropertiesPresenter	callProperties;
-    private HeaderMediatorPropertiesPresenter headerProperties;
+    private RespondMediatorPropertiesPresenter  respondProperties;
+    private SendMediatorPropertiesPresenter     sendProperties;
+    private SwitchMediatorPropertiesPresenter   switchProperties;
+    private CallMediatorPropertiesPresenter     callProperties;
+    private HeaderMediatorPropertiesPresenter   headerProperties;
 
     @Inject
     public GraphicEditor(WSO2Resources wso2Resources,
-    		LogMediatorPropertiesPresenter logProperties,
-    		PropertyMediatorPropertiesPresenter propertyProperties,
-    		RespondMediatorPropertiesPresenter respondProperties,
-    		SendMediatorPropertiesPresenter sendProperties,
-    		SwitchMediatorPropertiesPresenter switchProperties,
-    		CallMediatorPropertiesPresenter	callProperties,
-    		HeaderMediatorPropertiesPresenter headerProperties,
-    		EventBus globalBus) {
+                         LogMediatorPropertiesPresenter logProperties,
+                         PropertyMediatorPropertiesPresenter propertyProperties,
+                         RespondMediatorPropertiesPresenter respondProperties,
+                         SendMediatorPropertiesPresenter sendProperties,
+                         SwitchMediatorPropertiesPresenter switchProperties,
+                         CallMediatorPropertiesPresenter callProperties,
+                         HeaderMediatorPropertiesPresenter headerProperties,
+                         EventBus globalBus) {
         this.wso2Resources = wso2Resources;
         this.logProperties = logProperties;
         this.propertyProperties = propertyProperties;
@@ -81,8 +81,8 @@ public class GraphicEditor extends AbstractEditorPresenter {
         this.callProperties = callProperties;
         this.headerProperties = headerProperties;
         this.globalBus = globalBus;
-        
-        
+
+
         // /!\ needed for compliance with condenvy injector /!\
         // must be changed
         GraphicPackageImpl.globalBus = globalBus;
@@ -110,12 +110,12 @@ public class GraphicEditor extends AbstractEditorPresenter {
         // create the view
         view = new GraphicEditorViewImpl(diag, wso2Resources, globalBus);
         view.addPropertyForm(logProperties,
-        		propertyProperties,
-        		respondProperties,
-        		sendProperties,
-        		switchProperties,
-        		callProperties,
-        		headerProperties);
+                             propertyProperties,
+                             respondProperties,
+                             sendProperties,
+                             switchProperties,
+                             callProperties,
+                             headerProperties);
 
         // add a handler for detecting changes on the sequence
         // TODO Set the handler that updates the content of the XML editor

@@ -23,8 +23,8 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler to warn changes occurring in a ESB graphical sequence
+ * 
  * @author Thomas Legrand
- *
  */
 public interface GraphicalSequenceChangeHandler extends EventHandler {
 
