@@ -23,8 +23,9 @@ import java.util.logging.Logger;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
 /**
- * This class illustrates how to handle a GraphicalSequenceChangeEvent It creates an ESBToXMLMapper to create the XML corresponding to the
- * given ESB sequence (model) This class is an example, not made to last
+ * This class illustrates how to handle a GraphicalSequenceChangeEvent
+ * It creates an ESBToXMLMapper that transforms the ESB sequence into XML 
+ * This class is an example, not made to last
  * 
  * @author Thomas Legrand
  */
