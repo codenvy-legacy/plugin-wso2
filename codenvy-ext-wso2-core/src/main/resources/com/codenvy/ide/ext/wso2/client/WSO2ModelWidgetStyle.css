@@ -142,7 +142,6 @@
 	right: 0;
 	overflow: auto;
 	transition: left toolAnimDuration linear;
-	background-color: #474747;
 }
 
 .modelWidget.expand{
@@ -173,15 +172,11 @@
 .pauseLabel{}
 .statusToolContainer{}
 .statusToolSeparator{}
-@sprite .alignTopEdges{gwt-image: "alignTopEdgesIcon";}
-@sprite .alignVerticalCenters{gwt-image: "alignVerticalCentersIcon";}
-@sprite .alignBottomEdges{gwt-image: "alignBottomEdgesIcon";}
-@sprite .alignLeftEdges{gwt-image: "alignLeftEdgesIcon";}
-@sprite .alignHorizontalCenters{gwt-image: "alignHorizontalCentersIcon";}
-@sprite .alignRightEdges{gwt-image: "alignRightEdgesIcon";}
-@sprite .distributeVertical{gwt-image: "distributeVerticalIcon";}
-@sprite .distributeHorizontal{gwt-image: "distributeHorizontalIcon";}
-
-
-
-
+.alignTopEdges{}
+.alignVerticalCenters{}
+.alignBottomEdges{}
+.alignLeftEdges{}
+.alignHorizontalCenters{}
+.alignRightEdges{}
+.distributeVertical{}
+.distributeHorizontal{}

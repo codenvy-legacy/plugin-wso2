@@ -25,20 +25,25 @@ import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
 
+import esbdiag.resources.WSO2EsbResources;
+
 /**
  * Resources for WSO2 plugin.
  *
  * @author Dmitry Kuleshov
  * @author Justin Trentesaux
  */
-public interface WSO2Resources extends ClientBundle{
+public interface WSO2Resources extends ClientBundle, WSO2EsbResources{
 
+    // TODO: Remove inheritance of ModelWidgetCSS and add inheritance to GMMFResources
     public interface WSO2Style extends CssResource, ModelWidgetCSS{
         String importErrorFont();
         String graphicContainer();
+        String wso2PropertyPanelTitle();
+        String wso2PropertyPanel();
     }
     
-    @Source({"css/WSO2Style.css", "css/ModelWidgetStyle.css"})
+    @Source({"WSO2GlobalStyle.css", "WSO2ModelWidgetStyle.css"})
     WSO2Style wso2Style(); 
     
     @Source("xml.js")

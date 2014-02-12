@@ -68,6 +68,7 @@ public class WSO2Extension {
     @Inject
     public WSO2Extension(WSO2Resources wso2Resources) {
         wso2Resources.wso2Style().ensureInjected();
+        wso2Resources.esbStyle().ensureInjected();
     }
 
     @Inject

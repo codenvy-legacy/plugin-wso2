@@ -82,7 +82,7 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
         this.modelWidget = new ModelWidget(diagram, diagramEventBus);
 
         /* the ESB-specific toolbar */
-        this.toolbar = new ESBDiagramToolbar(modelWidget, globalBus, resources.wso2Style());
+        this.toolbar = new ESBDiagramToolbar(modelWidget, globalBus, resources.wso2Style(), resources);
 
         this.toolsController = new ToolsController(modelWidget, globalBus);
 

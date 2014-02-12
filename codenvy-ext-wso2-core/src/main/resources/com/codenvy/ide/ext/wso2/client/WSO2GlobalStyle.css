@@ -28,6 +28,23 @@
 }
 
 .graphicContainer{
-	position: relative;
 	z-index: 0;
+}
+
+.wso2PropertyPanelTitle{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 18px;
+	padding: 2px 5px;
+}
+
+.wso2PropertyPanel{
+	position: absolute;
+	top: 20px;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	overflow: auto;
 }

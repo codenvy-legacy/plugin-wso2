@@ -41,9 +41,11 @@ import esbdiag.properties.propertymediator.PropertyMediatorPropertiesPresenter;
 import esbdiag.properties.respondmediator.RespondMediatorPropertiesPresenter;
 import esbdiag.properties.sendmediator.SendMediatorPropertiesPresenter;
 import esbdiag.properties.switchmediator.SwitchMediatorPropertiesPresenter;
+import esbdiag.util.EsbdiagUtil;
 
 /**
  * @author Andrey Plotnikov
+ * @author Alexis Muller
  * @author Justin Trentesaux
  */
 public class GraphicEditor extends AbstractEditorPresenter {
@@ -84,6 +86,7 @@ public class GraphicEditor extends AbstractEditorPresenter {
         // /!\ needed for compliance with condenvy injector /!\
         // must be changed
         GraphicPackageImpl.globalBus = globalBus;
+        EsbdiagUtil.ESB_RESOURCES = wso2Resources;
     }
 
     /** {@inheritDoc} */

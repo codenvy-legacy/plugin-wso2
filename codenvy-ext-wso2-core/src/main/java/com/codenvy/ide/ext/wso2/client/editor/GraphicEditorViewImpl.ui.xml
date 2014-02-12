@@ -15,10 +15,9 @@
 				</g:FlowPanel>
 			</g:center>
 			<g:south size="325">
-				<g:FlowPanel addStyleNames="property-panel">
-					<g:Label addStyleNames="title">Properties</g:Label>
-					<gmmf.properties:PropertyPanel ui:field="propertyPanel"
-						addStyleNames="property-panel-content" />
+				<g:FlowPanel addStyleNames="property-panel" styleName="">
+					<g:Label styleName="{style.wso2PropertyPanelTitle}">Properties</g:Label>
+					<gmmf.properties:PropertyPanel ui:field="propertyPanel" styleName="{style.wso2PropertyPanel}" />
 				</g:FlowPanel>
 			</g:south>
 		</g:SplitLayoutPanel>
