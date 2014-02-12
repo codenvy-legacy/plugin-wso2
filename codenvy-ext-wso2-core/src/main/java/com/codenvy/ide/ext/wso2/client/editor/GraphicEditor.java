@@ -38,6 +38,7 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
 import esbdiag.EsbdiagFactory;
+import esbdiag.properties.addressendpoint.AddressEndPointPropertiesPresenter;
 import esbdiag.properties.callmediator.CallMediatorPropertiesPresenter;
 import esbdiag.properties.headermediator.HeaderMediatorPropertiesPresenter;
 import esbdiag.properties.logmediator.LogMediatorPropertiesPresenter;
@@ -59,6 +60,7 @@ public class GraphicEditor extends AbstractEditorPresenter {
     private SwitchMediatorPropertiesPresenter switchProperties;
     private CallMediatorPropertiesPresenter	callProperties;
     private HeaderMediatorPropertiesPresenter headerProperties;
+    private AddressEndPointPropertiesPresenter addressProperties;
 
     @Inject
     public GraphicEditor(WSO2Resources wso2Resources,
@@ -69,6 +71,7 @@ public class GraphicEditor extends AbstractEditorPresenter {
     		SwitchMediatorPropertiesPresenter switchProperties,
     		CallMediatorPropertiesPresenter	callProperties,
     		HeaderMediatorPropertiesPresenter headerProperties,
+    		AddressEndPointPropertiesPresenter addressProperties,
     		EventBus globalBus) {
         this.wso2Resources = wso2Resources;
         this.logProperties = logProperties;
@@ -78,6 +81,7 @@ public class GraphicEditor extends AbstractEditorPresenter {
         this.switchProperties = switchProperties;
         this.callProperties = callProperties;
         this.headerProperties = headerProperties;
+        this.addressProperties = addressProperties;
         this.globalBus = globalBus;
         
         
@@ -112,7 +116,8 @@ public class GraphicEditor extends AbstractEditorPresenter {
         		sendProperties,
         		switchProperties,
         		callProperties,
-        		headerProperties);
+        		headerProperties,
+        		addressProperties);
 
         // add a handler for detecting changes on the sequence
         // TODO Set the handler that updates the content of the XML editor
