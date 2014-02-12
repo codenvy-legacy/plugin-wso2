@@ -18,10 +18,11 @@
 package com.codenvy.ide.ext.wso2.server.projecttypes;
 
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
+import com.codenvy.api.project.server.ProjectTypeExtension;
 import com.codenvy.api.project.server.VfsPropertyValueProvider;
 import com.codenvy.api.project.shared.Attribute;
+import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
-import com.codenvy.api.project.shared.ProjectTypeExtension;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
+import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_PROJECT_DESCRIPTION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
 
 /**
@@ -53,9 +55,18 @@ public class WSO2ProjectTypeExtension implements ProjectTypeExtension {
     @Override
     public List<Attribute> getPredefinedAttributes() {
         final List<Attribute> list = new ArrayList<>(1);
-        // TODO: provide a single value for predefined attributes. Avoid using ValueProviders
-        // VfsPropertyValueProvider is used as temporary solution because we don't have any way to get attribute's value on the client side
         list.add(new Attribute("language", new VfsPropertyValueProvider("language", WSO2_PROJECT_ID)));
+        return list;
+    }
+
+    @Override
+    public List<ProjectTemplateDescription> getTemplates() {
+        final List<ProjectTemplateDescription> list = new ArrayList<>(1);
+        list.add(new ProjectTemplateDescription("zip",
+                                                ESB_CONFIGURATION_PROJECT_ID,
+                                                ESB_PROJECT_DESCRIPTION,
+                                                "templates/esbproject.zip"));
+
         return list;
     }
 }

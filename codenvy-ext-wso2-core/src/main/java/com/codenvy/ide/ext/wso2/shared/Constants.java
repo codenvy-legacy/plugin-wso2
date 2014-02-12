@@ -38,7 +38,6 @@ public interface Constants {
     String WSO2_PROJECT_ID              = "WSO2Project";
     String ESB_CONFIGURATION_PROJECT_ID = "ESBConfigurationProject";
     String ESB_PROJECT_DESCRIPTION      = "ESB Configuration project.";
-    String PROJECT_MIME_TYPE            = "text/vnd.ideproject+directory";
 
     String WSO2_MAIN_ACTION_GROUP       = "WSO2MainActionGroup";
     String WSO2_ACTION_GROUP            = "WSO2ProjectActionGroup";
