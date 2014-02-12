@@ -18,7 +18,6 @@
 package com.codenvy.ide.ext.wso2.client.editor;
 
 import org.genmymodel.gmmf.common.CommandRequestEvent;
-import org.genmymodel.gmmf.common.ModelWidgetCSS;
 import org.genmymodel.gmmf.common.SelectModelElementEvent;
 import org.genmymodel.gmmf.propertypanel.PropertyPanel;
 import org.genmymodel.gmmf.propertypanel.PropertyPresenter;
