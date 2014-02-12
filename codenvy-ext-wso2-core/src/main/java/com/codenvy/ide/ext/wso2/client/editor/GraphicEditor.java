@@ -17,10 +17,6 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor;
 
-/**
- * @author Andrey Plotnikov
- */
-
 import org.eclipse.emf.ecore.util.GMMUtil;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbFactory;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
@@ -45,7 +41,13 @@ import esbdiag.properties.propertymediator.PropertyMediatorPropertiesPresenter;
 import esbdiag.properties.respondmediator.RespondMediatorPropertiesPresenter;
 import esbdiag.properties.sendmediator.SendMediatorPropertiesPresenter;
 import esbdiag.properties.switchmediator.SwitchMediatorPropertiesPresenter;
+import esbdiag.util.EsbdiagUtil;
 
+/**
+ * @author Andrey Plotnikov
+ * @author Alexis Muller
+ * @author Justin Trentesaux
+ */
 public class GraphicEditor extends AbstractEditorPresenter {
 
     private WSO2Resources                  wso2Resources;
@@ -84,6 +86,7 @@ public class GraphicEditor extends AbstractEditorPresenter {
         // /!\ needed for compliance with condenvy injector /!\
         // must be changed
         GraphicPackageImpl.globalBus = globalBus;
+        EsbdiagUtil.ESB_RESOURCES = wso2Resources;
     }
 
     /** {@inheritDoc} */
@@ -105,7 +108,7 @@ public class GraphicEditor extends AbstractEditorPresenter {
         GraphicUtil.addDiagram(newModel, diag);
 
         // create the view
-        view = new GraphicEditorViewImpl(diag, wso2Resources.wso2GraphicalEditorStyle(), globalBus);
+        view = new GraphicEditorViewImpl(diag, wso2Resources, globalBus);
         view.addPropertyForm(logProperties,
         		propertyProperties,
         		respondProperties,

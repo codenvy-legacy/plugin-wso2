@@ -1,0 +1,50 @@
+/*
+ * CODENVY CONFIDENTIAL
+ * __________________
+ *
+ * [2012] - [2013] Codenvy, S.A.
+ * All Rights Reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
+ */
+ 
+@CHARSET "UTF-8";
+
+.importErrorFont {
+	cursor: default;
+	font-family: mainFontFamily;
+	font-size: fontSize;
+	font-style: normal;
+	font-weight: normal;
+	color: #d21a1a;
+}
+
+.graphicContainer{
+	z-index: 0;
+}
+
+.wso2PropertyPanelTitle{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 18px;
+	padding: 2px 5px;
+}
+
+.wso2PropertyPanel{
+	position: absolute;
+	top: 20px;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	overflow: auto;
+}
