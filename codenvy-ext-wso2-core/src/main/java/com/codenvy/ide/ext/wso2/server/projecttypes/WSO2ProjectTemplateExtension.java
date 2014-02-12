@@ -17,11 +17,10 @@
  */
 package com.codenvy.ide.ext.wso2.server.projecttypes;
 
-
-import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
-import com.codenvy.api.project.shared.AttributeDescription;
+import com.codenvy.api.project.server.ProjectTemplateRegistry;
+import com.codenvy.api.project.shared.ProjectTemplateDescription;
+import com.codenvy.api.project.shared.ProjectTemplateExtension;
 import com.codenvy.api.project.shared.ProjectType;
-import com.codenvy.api.project.shared.ProjectTypeDescriptionExtension;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -29,34 +28,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
+import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
 
 /**
- * {@link ProjectTypeDescriptionExtension} to register project types.
+ * {@link com.codenvy.api.project.shared.ProjectTemplateExtension} to register WSO2 project template.
  *
  * @author Valeriy Svydenko
  */
 @Singleton
-public class WSO2ProjectTypeDescriptionExtension implements ProjectTypeDescriptionExtension {
+public class WSO2ProjectTemplateExtension implements ProjectTemplateExtension {
+
     @Inject
-    public WSO2ProjectTypeDescriptionExtension(ProjectTypeDescriptionRegistry registry) {
-        registry.registerDescription(this);
+    public WSO2ProjectTemplateExtension(ProjectTemplateRegistry registry) {
+        registry.register(this);
     }
 
     /** {@inheritDoc} */
     @Override
-    public List<ProjectType> getProjectTypes() {
-        final List<ProjectType> list = new ArrayList<>(1);
-        list.add(new ProjectType(ESB_CONFIGURATION_PROJECT_ID, "WSO2 Integration Flow Project"));
-        return list;
+    public ProjectType getProjectType() {
+        return new ProjectType(ESB_CONFIGURATION_PROJECT_ID, "WSO2 Integration Flow Project");
     }
 
     /** {@inheritDoc} */
     @Override
-    public List<AttributeDescription> getAttributeDescriptions() {
-        final List<AttributeDescription> list = new ArrayList<>(3);
-        list.add(new AttributeDescription("language"));
-        list.add(new AttributeDescription("exoide:classpath"));
-        list.add(new AttributeDescription("folders.source"));
+    public List<ProjectTemplateDescription> getTemplateDescriptions() {
+        final List<ProjectTemplateDescription> list = new ArrayList<>(1);
+        list.add(new ProjectTemplateDescription(ESB_CONFIGURATION_PROJECT_ID,
+                                                "ESB Configuration Project",
+                                                WSO2_PROJECT_ID,
+                                                "templates/esbproject.zip"));
+
         return list;
     }
 }
