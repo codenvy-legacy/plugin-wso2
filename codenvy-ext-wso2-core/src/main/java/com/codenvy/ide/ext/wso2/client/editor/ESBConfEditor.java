@@ -69,8 +69,11 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     /** {@inheritDoc} */
     @Override
     protected void initializeEditor() {
+        view.setEnableTextEditorButton(false);
+        view.setEnableGraphicalEditorButton(true);
+        view.setEnableBothEditorButton(true);
+
         view.showTextEditor(textEditor);
-        view.showGraphicalEditor(graphicEditor);
     }
 
     /** {@inheritDoc} */
@@ -122,5 +125,35 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onTextEditorButtonClicked() {
+        view.setEnableTextEditorButton(false);
+        view.setEnableGraphicalEditorButton(true);
+        view.setEnableBothEditorButton(true);
+
+        view.showTextEditor(textEditor);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGraphicalEditorButtonClicked() {
+        view.setEnableTextEditorButton(true);
+        view.setEnableGraphicalEditorButton(false);
+        view.setEnableBothEditorButton(true);
+
+        view.showGraphicalEditor(graphicEditor);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onAssociateEditorButtonClicked() {
+        view.setEnableTextEditorButton(true);
+        view.setEnableGraphicalEditorButton(true);
+        view.setEnableBothEditorButton(false);
+
+        view.showEditors(graphicEditor, textEditor);
     }
 }

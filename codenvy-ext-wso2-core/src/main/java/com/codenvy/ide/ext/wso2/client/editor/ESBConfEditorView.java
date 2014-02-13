@@ -33,10 +33,25 @@ import javax.validation.constraints.NotNull;
 public interface ESBConfEditorView extends View<ESBConfEditorView.ActionDelegate> {
 
     public interface ActionDelegate {
+
+        void onTextEditorButtonClicked();
+
+        void onGraphicalEditorButtonClicked();
+
+        void onAssociateEditorButtonClicked();
+
     }
+
+    void setEnableTextEditorButton(boolean enable);
+
+    void setEnableGraphicalEditorButton(boolean enable);
+
+    void setEnableBothEditorButton(boolean enable);
 
     void showTextEditor(@NotNull CodenvyTextEditor textEditor);
 
     void showGraphicalEditor(@NotNull AbstractEditorPresenter graphicalEditor);
+
+    void showEditors(@NotNull AbstractEditorPresenter graphicalEditor, @NotNull CodenvyTextEditor textEditor);
 
 }
