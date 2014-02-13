@@ -29,6 +29,20 @@
 
 .graphicContainer{
 	z-index: 0;
+	-moz-user-select: -moz-none;
+   	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+ 
+.graphicContainer textarea:focus,
+.graphicContainer input:focus{
+	-webkit-user-select: text;
+	-khtml-user-select: text;
+	-moz-user-select: text;
+	-o-user-select: text;
+	user-select: text;
 }
 
 .wso2PropertyPanelTitle{
