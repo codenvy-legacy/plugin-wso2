@@ -21,6 +21,8 @@ import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorConfiguration;
+import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorProvider;
 import com.google.inject.Provider;
 
 import org.junit.Before;

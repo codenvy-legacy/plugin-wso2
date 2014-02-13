@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.wso2.client.editor;
+package com.codenvy.ide.ext.wso2.client.editor.text;
 
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;

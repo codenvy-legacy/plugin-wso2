@@ -23,11 +23,10 @@ import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorInitException;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.google.gwt.dom.client.Style;
+import com.codenvy.ide.ext.wso2.client.editor.graphical.GraphicEditor;
+import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorConfiguration;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -39,18 +38,21 @@ import javax.validation.constraints.NotNull;
  *
  * @author Andrey Plotnikov
  */
-public class ESBConfEditor extends AbstractEditorPresenter {
+public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEditorView.ActionDelegate {
 
+    private ESBConfEditorView view;
     private GraphicEditor     graphicEditor;
     private CodenvyTextEditor textEditor;
 
     @Inject
-    public ESBConfEditor(DocumentProvider documentProvider,
+    public ESBConfEditor(ESBConfEditorView view,
+                         DocumentProvider documentProvider,
                          Provider<CodenvyTextEditor> editorProvider,
                          Provider<XmlEditorConfiguration> xmlEditorConfigurationProvider,
                          NotificationManager notificationManager,
                          GraphicEditor graphicEditor) {
-
+        this.view = view;
+        this.view.setDelegate(this);
         this.graphicEditor = graphicEditor;
         this.textEditor = editorProvider.get();
         textEditor.initialize(xmlEditorConfigurationProvider.get(), documentProvider, notificationManager);
@@ -61,12 +63,14 @@ public class ESBConfEditor extends AbstractEditorPresenter {
     public void init(@NotNull EditorInput input) throws EditorInitException {
         super.init(input);
         textEditor.init(input);
+        graphicEditor.init(input);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void initializeEditor() {
-        graphicEditor.initializeEditor();
+        view.showTextEditor(textEditor);
+        view.showGraphicalEditor(graphicEditor);
     }
 
     /** {@inheritDoc} */
@@ -117,26 +121,6 @@ public class ESBConfEditor extends AbstractEditorPresenter {
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        // TODO use MVP pattern for this code
-        // TODO style tabs
-        TabLayoutPanel tabPanel = new TabLayoutPanel(20, Style.Unit.PX);
-        tabPanel.setAnimationDuration(0);
-        tabPanel.setHeight("100%");
-        tabPanel.setWidth("100%");
-
-        graphicEditor.go(addWidget(tabPanel, "Graphic editor"));
-        textEditor.go(addWidget(tabPanel, "Text editor"));
-
-        container.setWidget(tabPanel);
-    }
-
-    private SimplePanel addWidget(@NotNull TabLayoutPanel tabPanel, @NotNull String title) {
-        SimplePanel panel = new SimplePanel();
-        panel.setHeight("100%");
-        panel.setHeight("100%");
-
-        tabPanel.add(panel, title);
-
-        return panel;
+        container.setWidget(view);
     }
 }

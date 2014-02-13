@@ -29,13 +29,16 @@
     <version>1.0.0-M1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Codenvy Extension :: WSO2 parent</name>
+
     <modules>
         <module>codenvy-ext-wso2-core</module>
         <module>wso2-application-war</module>
         <module>wso2-packaging-standalone-tomcat</module>
     </modules>
+
     <properties>
-    	<axellience.graphic.editor.version>0.0.3-SNAPSHOT</axellience.graphic.editor.version>
+        <axellience.graphic.editor.version>0.0.3-SNAPSHOT</axellience.graphic.editor.version>
         <codenvy.version>3.0.0-M8</codenvy.version>
     </properties>
+
 </project>

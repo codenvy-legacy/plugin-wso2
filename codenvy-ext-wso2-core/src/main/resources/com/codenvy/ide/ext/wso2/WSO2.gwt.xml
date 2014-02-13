@@ -38,9 +38,9 @@
     <inherits name="org.genmymodel.gmmf.ui.ModelWidget"/>
     <inherits name="org.wso2.developerstudio.eclipse.gmf.esb.Esb"/>
     <inherits name="esbdiag.Esbdiag"/>
-	<inherits name="com.google.gwt.xml.XML" />
-	
+    <inherits name="com.google.gwt.xml.XML"/>
+
     <source path="client"/>
-    <source path='shared'/>
-    
+    <source path="shared"/>
+
 </module>

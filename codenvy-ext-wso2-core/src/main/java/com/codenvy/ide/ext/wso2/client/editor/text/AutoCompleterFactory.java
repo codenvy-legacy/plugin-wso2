@@ -2,7 +2,7 @@
  * CODENVY CONFIDENTIAL
  * __________________
  * 
- * [2012] - [2014] Codenvy, S.A. 
+ * [2012] - [2013] Codenvy, S.A. 
  * All Rights Reserved.
  * 
  * NOTICE:  All information contained herein is, and remains
@@ -15,20 +15,25 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.wso2.client.editor;
+package com.codenvy.ide.ext.wso2.client.editor.text;
 
-import com.google.gwt.event.shared.EventHandler;
-
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
+import com.codenvy.ide.texteditor.api.TextEditorPartView;
 
 import javax.validation.constraints.NotNull;
 
 /**
- * Handler to warn changes occurring in a ESB graphical sequence
+ * The factory for creating instances of {@link TagAutoCompleter}.
  *
- * @author Thomas Legrand
+ * @author Andrey Plotnikov
  */
-public interface GraphicalSequenceChangeHandler extends EventHandler {
+public interface AutoCompleterFactory {
 
-    void hasChanged(@NotNull EsbSequence sequence);
+    /**
+     * Create an instance of {@link TagAutoCompleter} with a given editor.
+     *
+     * @param editor
+     *         editor that need to be used with a created autocompleter
+     * @return an instance of {@link TagAutoCompleter}
+     */
+    TagAutoCompleter createAutoCompleter(@NotNull TextEditorPartView editor);
 }

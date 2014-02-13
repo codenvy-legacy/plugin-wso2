@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- * 
- * [2012] - [2013] Codenvy, S.A. 
+ *
+ * [2012] - [2014] Codenvy, S.A.
  * All Rights Reserved.
- * 
+ *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -17,23 +17,26 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor;
 
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
+import com.codenvy.ide.api.editor.AbstractEditorPresenter;
+import com.codenvy.ide.api.editor.CodenvyTextEditor;
+import com.codenvy.ide.api.mvp.View;
+import com.google.inject.ImplementedBy;
 
 import javax.validation.constraints.NotNull;
 
 /**
- * The factory for creating instances of {@link TagAutoCompleter}.
+ * The view of {@link ESBConfEditor}.
  *
  * @author Andrey Plotnikov
  */
-public interface AutoCompleterFactory {
+@ImplementedBy(ESBConfEditorViewImpl.class)
+public interface ESBConfEditorView extends View<ESBConfEditorView.ActionDelegate> {
 
-    /**
-     * Create an instance of {@link TagAutoCompleter} with a given editor.
-     *
-     * @param editor
-     *         editor that need to be used with a created autocompleter
-     * @return an instance of {@link TagAutoCompleter}
-     */
-    TagAutoCompleter createAutoCompleter(@NotNull TextEditorPartView editor);
+    public interface ActionDelegate {
+    }
+
+    void showTextEditor(@NotNull CodenvyTextEditor textEditor);
+
+    void showGraphicalEditor(@NotNull AbstractEditorPresenter graphicalEditor);
+
 }

@@ -15,10 +15,11 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.wso2.client.editor;
+package com.codenvy.ide.ext.wso2.client.editor.text;
 
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
+import com.codenvy.ide.ext.wso2.client.editor.ESBConfEditor;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 

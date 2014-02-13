@@ -17,20 +17,17 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.codenvy.ide.util.loging.Log;
 
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
 /**
  * This class illustrates how to handle a GraphicalSequenceChangeEvent It creates an ESBToXMLMapper that transforms the ESB sequence into
  * XML This class is an example, not made to last
- * 
+ *
  * @author Thomas Legrand
  */
 public class GraphicalSequenceChangeHandlerImpl implements GraphicalSequenceChangeHandler {
-
-    private static final Logger logger = Logger.getLogger(GraphicalSequenceChangeHandlerImpl.class.getName());
 
     @Override
     public void hasChanged(EsbSequence sequence) {
@@ -39,12 +36,9 @@ public class GraphicalSequenceChangeHandlerImpl implements GraphicalSequenceChan
 
         try {
             // do whatever you want: fill the XML text editor
-            logger.log(Level.WARNING, "XML: " + esbToXMLMapper.transform(sequence));
-
+            Log.info(getClass(), "XML: " + esbToXMLMapper.transform(sequence));
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
 }

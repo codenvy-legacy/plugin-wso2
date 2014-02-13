@@ -22,15 +22,17 @@ import genmymodel.commands.custom.GMMCommand;
 import genmymodel.commands.serializable.SerializableCommand;
 import genmymodel.commands.serializable.type.EObjectUUID;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.codenvy.ide.util.loging.Log;
+import com.genmymodel.ecoreonline.graphic.Anchor;
+import com.genmymodel.ecoreonline.graphic.Connector;
+import com.genmymodel.ecoreonline.graphic.DiagramElement;
+import com.genmymodel.ecoreonline.graphic.GraphicPackage;
+import com.genmymodel.ecoreonline.graphic.Node;
+import com.genmymodel.ecoreonline.graphic.NodeWidget;
+import com.genmymodel.ecoreonline.graphic.PlaneElement;
+import com.genmymodel.ecoreonline.graphic.Segment;
+import com.genmymodel.ecoreonline.graphic.event.handler.AutoResizeHandler;
+import com.google.web.bindery.event.shared.EventBus;
 
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.Command;
@@ -51,31 +53,25 @@ import org.genmymodel.gmmf.common.RedoRequestEvent;
 import org.genmymodel.gmmf.common.UndoRequestEvent;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
-import com.genmymodel.ecoreonline.graphic.Anchor;
-import com.genmymodel.ecoreonline.graphic.Connector;
-import com.genmymodel.ecoreonline.graphic.DiagramElement;
-import com.genmymodel.ecoreonline.graphic.GraphicPackage;
-import com.genmymodel.ecoreonline.graphic.Node;
-import com.genmymodel.ecoreonline.graphic.NodeWidget;
-import com.genmymodel.ecoreonline.graphic.PlaneElement;
-import com.genmymodel.ecoreonline.graphic.Segment;
-import com.genmymodel.ecoreonline.graphic.event.handler.AutoResizeHandler;
-import com.google.web.bindery.event.shared.EventBus;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Get modeling events and executes the appropriated EMF commands
- * 
+ *
  * @author Alexis Muller
  */
-public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoResizeHandler
-{
-    private static final Logger logger = Logger.getLogger(SeqEventsHandler.class.getName());
+public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoResizeHandler {
 
-    private EditingDomain       editingDomain;
-    private EventBus            eventBus;
+    private EditingDomain editingDomain;
+    private EventBus      eventBus;
 
-    public SeqEventsHandler(EventBus eventBus)
-    {
+    public SeqEventsHandler(EventBus eventBus) {
         this.eventBus = eventBus;
         ComposedAdapterFactory composedAdapterFactory = new ComposedAdapterFactory();
         composedAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
@@ -85,22 +81,19 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
     }
 
     @Override
-    public void commandRequest(CommandRequestEvent event)
-    {
+    public void commandRequest(CommandRequestEvent event) {
         Command emfCommand = tryConvert(event.getCommands(), event.getModel());
 
         enableCalculations(emfCommand); // Activate calculations for client
 
-        if (emfCommand instanceof UnexecutableDeleteCommand)
-        {
+        if (emfCommand instanceof UnexecutableDeleteCommand) {
             emfCommand =
-                         createDeleteCommand(event.getModel(), editingDomain,
-                                             ((UnexecutableDeleteCommand)emfCommand).geteObjectsToRemove());
+                    createDeleteCommand(event.getModel(), editingDomain,
+                                        ((UnexecutableDeleteCommand)emfCommand).geteObjectsToRemove());
         }
 
-        if (!emfCommand.canExecute())
-        {
-            logger.severe("The command cannot be executed.");
+        if (!emfCommand.canExecute()) {
+            Log.error(getClass(), "The command cannot be executed.");
             return;
         }
 
@@ -113,59 +106,48 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
     }
 
     @Override
-    public void undoRequest(UndoRequestEvent event)
-    {
+    public void undoRequest(UndoRequestEvent event) {
 
     }
 
     @Override
-    public void redoRequest(RedoRequestEvent event)
-    {
+    public void redoRequest(RedoRequestEvent event) {
 
     }
 
     @Override
-    public void setSelection(EObject model, Set<EObjectUUID> selectedElements)
-    {
+    public void setSelection(EObject model, Set<EObjectUUID> selectedElements) {
 
     }
 
     @Override
-    public void messageRequest(MessageChatRequestEvent messageChatEvent)
-    {
+    public void messageRequest(MessageChatRequestEvent messageChatEvent) {
 
     }
 
     @Override
-    public void autoResize(NodeWidget node, int width, int height)
-    {
+    public void autoResize(NodeWidget node, int width, int height) {
 
     }
 
-    protected Command tryConvert(SerializableCommand command, EObject root)
-    {
-        Command cmd = null;
-        try
-        {
+    protected Command tryConvert(SerializableCommand command, EObject root) {
+        Command cmd;
+        try {
             cmd = command.convert(editingDomain, root);
-        } catch (Exception e)
-        {
-            logger.log(Level.SEVERE, "Error while converting command", e);
+        } catch (Exception e) {
+            Log.error(getClass(), "Error while converting command", e);
             throw new RuntimeException("Command cannot be executed!");
         }
 
         return cmd;
     }
 
-    private void enableCalculations(Command command)
-    {
-        if (command instanceof GMMCommand)
-        {
+    private void enableCalculations(Command command) {
+        if (command instanceof GMMCommand) {
             ((GMMCommand)command).enableCalculations();
         }
 
-        if (command instanceof CompoundCommand)
-        {
+        if (command instanceof CompoundCommand) {
             for (Command innerCommand : ((CompoundCommand)command).getCommandList())
                 enableCalculations(innerCommand);
         }
@@ -175,11 +157,8 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
     /*
      * Theses operations will replaced by a service in the gmmf framework in future versions
      */
-
-
     private static Command createDeleteCommand(EObject root, EditingDomain editingDomain,
-                                               Collection<EObject> objectsToRemove)
-    {
+                                               Collection<EObject> objectsToRemove) {
         Comparator<EObject> comparator = new Comparator<EObject>() {
 
             private int getDepth(EObject element) {
@@ -224,11 +203,10 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
         // Adding command to allow undo/redo on property navigations and anchor attached elements
 
         Set<EObject> destroy = new HashSet<EObject>();
-        for (EObject eObject : toRemoveSet)
-        {
+        for (EObject eObject : toRemoveSet) {
             if (eObject instanceof Anchor) {
                 compoundCommand.append(new SetCommand(editingDomain, eObject, GraphicPackage.eINSTANCE
-                                                                                                      .getAnchor_AttachedElement(), null));
+                        .getAnchor_AttachedElement(), null));
             }
 
             if (eObject instanceof Node) {
@@ -264,14 +242,11 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
         return compoundCommand.unwrap();
     }
 
-    private static Set<EObject> findReferencedModelElements(Collection<EObject> eObjects)
-    {
+    private static Set<EObject> findReferencedModelElements(Collection<EObject> eObjects) {
         final Set<EObject> modelElements = new HashSet<EObject>();
 
-        for (EObject eObject : eObjects)
-        {
-            if (eObject instanceof DiagramElement)
-            {
+        for (EObject eObject : eObjects) {
+            if (eObject instanceof DiagramElement) {
                 DiagramElement diagramElement = (DiagramElement)eObject;
 
                 if (diagramElement.getModelElement() != null && !eObjects.contains(diagramElement.getModelElement()))
@@ -282,29 +257,23 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
         return modelElements;
     }
 
-    private static Set<EObject> findWidgetsToRemove(Set<EObject> toRemoveModelElements, EObject modelRoot)
-    {
+    private static Set<EObject> findWidgetsToRemove(Set<EObject> toRemoveModelElements, EObject modelRoot) {
         Set<EObject> allElements = new HashSet<EObject>();
 
         TreeIterator<EObject> contents = modelRoot.eAllContents();
-        while (contents.hasNext())
-        {
+        while (contents.hasNext()) {
             EObject eObject = contents.next();
-            if (eObject instanceof PlaneElement)
-            {
+            if (eObject instanceof PlaneElement) {
                 PlaneElement planeElement = (PlaneElement)eObject;
                 EObject element = planeElement.getModelElement();
 
-                if (element == null && toRemoveModelElements.contains(planeElement) && planeElement instanceof Segment)
-                {
+                if (element == null && toRemoveModelElements.contains(planeElement) && planeElement instanceof Segment) {
                     // Fix for segment with no model element
                     final Segment segment = (Segment)planeElement;
                     allElements.addAll(segment.getRelativeNodes());
                     addConnectorToDelete(allElements, segment.getSourceConnector());
                     addConnectorToDelete(allElements, segment.getTargetConnector());
-                }
-                else if (toRemoveModelElements.contains(element))
-                {
+                } else if (toRemoveModelElements.contains(element)) {
                     for (Anchor anchor : ((PlaneElement)planeElement).getAnchors())
                         addConnectorToDelete(allElements, anchor);
 
@@ -321,10 +290,8 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
         return allElements;
     }
 
-    private static void addConnectorToDelete(Set<EObject> allElements, Connector connector)
-    {
-        if (connector == null)
-        {
+    private static void addConnectorToDelete(Set<EObject> allElements, Connector connector) {
+        if (connector == null) {
             // the segment is already corrupted (missing connector)
             // let the user deleting the segment with no error
             return;
@@ -339,8 +306,7 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
 
     }
 
-    private static void addSegmentToDelete(Set<EObject> allElements, Segment segment)
-    {
+    private static void addSegmentToDelete(Set<EObject> allElements, Segment segment) {
         if (!allElements.add(segment))
             return; // segment already in the list
 
@@ -348,5 +314,4 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
         addConnectorToDelete(allElements, segment.getSourceConnector());
         addConnectorToDelete(allElements, segment.getTargetConnector());
     }
-
 }

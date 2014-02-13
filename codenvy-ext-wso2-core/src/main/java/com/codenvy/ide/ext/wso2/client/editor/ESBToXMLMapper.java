@@ -17,10 +17,10 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor;
 
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
-
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
+
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
 /**
  * The transformation ESB model (instance of wso2-esb) into wso2-specific XML
@@ -33,14 +33,14 @@ public class ESBToXMLMapper {
      * Transforms a EMF sequence model into XML matching WSO2 XSD.
      * The transformation code is contained in each model element
      * Example: PropertyMediatorImpl
+     *
      * @param sequence
      * @return
      * @throws Exception
      */
-    public Document transform(EsbSequence sequence) throws Exception
-    {
-        assert(sequence!=null);
-        
+    public Document transform(EsbSequence sequence) throws Exception {
+        assert (sequence != null);
+
         // use gwt.xml to create an XML doc
         Document document = XMLParser.createDocument();
 

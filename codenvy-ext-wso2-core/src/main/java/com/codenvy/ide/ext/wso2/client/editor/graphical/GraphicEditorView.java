@@ -15,13 +15,25 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.wso2.client.editor;
+package com.codenvy.ide.ext.wso2.client.editor.graphical;
+
+import com.codenvy.ide.api.mvp.View;
+import com.google.inject.ImplementedBy;
 
 import org.genmymodel.gmmf.propertypanel.PropertyPresenter;
 
-import com.google.gwt.user.client.ui.IsWidget;
+/**
+ * The view of {@link GraphicEditor}.
+ *
+ * @author Alexis Muller
+ * @author Andrey Plotnikov
+ */
+@ImplementedBy(GraphicEditorViewImpl.class)
+public interface GraphicEditorView extends View<GraphicEditorView.ActionDelegate> {
 
-public interface GraphicEditorView extends IsWidget
-{
-    public void addPropertyForm(PropertyPresenter... forms);
+    public interface ActionDelegate {
+    }
+
+    void addPropertyForm(PropertyPresenter... forms);
+
 }

@@ -23,7 +23,7 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_MIME_TYPE;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
-import com.codenvy.ide.ext.wso2.client.editor.AutoCompleterFactory;
+import com.codenvy.ide.ext.wso2.client.editor.text.AutoCompleterFactory;
 import com.codenvy.ide.ext.wso2.client.editor.ESBXmlFileType;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
