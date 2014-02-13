@@ -19,8 +19,6 @@ package com.codenvy.ide.ext.wso2.client;
 
 import esbdiag.resources.WSO2EsbResources;
 
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
@@ -33,10 +31,10 @@ import org.genmymodel.gmmf.common.ModelWidgetCSS;
  * @author Dmitry Kuleshov
  * @author Justin Trentesaux
  */
-public interface WSO2Resources extends ClientBundle, WSO2EsbResources {
+public interface WSO2Resources extends WSO2EsbResources {
 
     // TODO: Remove inheritance of ModelWidgetCSS and add inheritance to GMMFResources
-    public interface WSO2Style extends CssResource, ModelWidgetCSS {
+    public interface WSO2Style extends ModelWidgetCSS {
 
         String importErrorFont();
 

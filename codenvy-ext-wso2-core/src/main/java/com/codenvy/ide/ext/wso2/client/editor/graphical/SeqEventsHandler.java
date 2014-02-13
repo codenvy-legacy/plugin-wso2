@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.wso2.client.editor;
+package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
 import genmymodel.commands.UnexecutableDeleteCommand;
 import genmymodel.commands.custom.GMMCommand;

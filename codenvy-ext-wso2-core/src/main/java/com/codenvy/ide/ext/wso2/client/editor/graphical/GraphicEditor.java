@@ -29,9 +29,6 @@ import esbdiag.util.EsbdiagUtil;
 
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
-import com.codenvy.ide.ext.wso2.client.editor.GraphicalSequenceChangeEvent;
-import com.codenvy.ide.ext.wso2.client.editor.GraphicalSequenceChangeHandlerImpl;
-import com.codenvy.ide.ext.wso2.client.editor.SeqEventsHandler;
 import com.genmymodel.ecoreonline.graphic.impl.GraphicPackageImpl;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -39,6 +36,9 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.genmymodel.gmmf.common.CommandRequestEvent;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * The graphical editor for ESB configuration.
@@ -47,7 +47,7 @@ import org.genmymodel.gmmf.common.CommandRequestEvent;
  * @author Alexis Muller
  * @author Justin Trentesaux
  */
-public class GraphicEditor extends AbstractEditorPresenter implements GraphicEditorView.ActionDelegate {
+public class GraphicEditor extends AbstractEditorPresenter implements GraphicEditorView.ActionDelegate, GraphicalSequenceChangeHandler {
 
     private GraphicEditorView                   view;
     private EventBus                            globalBus;
@@ -109,13 +109,14 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
 
         // add a handler for detecting changes on the sequence
         // TODO Set the handler that updates the content of the XML editor
-        globalBus.addHandler(GraphicalSequenceChangeEvent.TYPE, new GraphicalSequenceChangeHandlerImpl());
+        globalBus.addHandler(GraphicalSequenceChangeEvent.TYPE, this);
 
     }
 
     /** {@inheritDoc} */
     @Override
     public void doSave() {
+        updateDirtyState(false);
     }
 
     /** {@inheritDoc} */
@@ -150,5 +151,23 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void hasChanged(@NotNull EsbSequence sequence) {
+        updateDirtyState(true);
+
+        // TODO This code illustrates how to handle a GraphicalSequenceChangeEvent It creates an ESBToXMLMapper that transforms the ESB sequence into
+        // XML This class is an example,not made to last
+
+//        ESBToXMLMapper esbToXMLMapper = new ESBToXMLMapper();
+//
+//        try {
+//            // do whatever you want: fill the XML text editor
+//            Log.info(getClass(), "XML: " + esbToXMLMapper.transform(sequence));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 }

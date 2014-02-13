@@ -19,15 +19,19 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
-    <!--TODO Will be changed in the future-->
-    <g:TabLayoutPanel barHeight="20" barUnit="PX" height="100%" width="100%">
-        <g:tab>
-            <g:header>Text editor</g:header>
-            <g:SimplePanel ui:field="textEditorPanel" height="100%" width="100%"/>
-        </g:tab>
-        <g:tab>
-            <g:header>Graphic editor</g:header>
-            <g:SimplePanel ui:field="graphicalEditorPanel" height="100%" width="100%"/>
-        </g:tab>
-    </g:TabLayoutPanel>
+    <ui:with field="locale" type="com.codenvy.ide.ext.wso2.client.LocalizationConstant"/>
+
+    <g:DockLayoutPanel height="100%" width="100%" unit="PX">
+        <g:south size="30">
+            <g:FlowPanel>
+                <g:Button text="{locale.editorText}" ui:field="textEditorChoose" width="100px"/>
+                <g:Button text="{locale.editorGraphical}" ui:field="graphicalEditorChoose" width="100px"/>
+                <g:Button text="{locale.editorAssociate}" ui:field="associateEditorChoose" width="100px"/>
+            </g:FlowPanel>
+        </g:south>
+        <g:center>
+            <g:SimplePanel ui:field="mainPanel"/>
+        </g:center>
+    </g:DockLayoutPanel>
+
 </ui:UiBinder>
