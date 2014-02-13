@@ -23,6 +23,8 @@ import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorInitException;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
+import com.codenvy.ide.api.ui.workspace.PropertyListener;
 import com.codenvy.ide.ext.wso2.client.editor.graphical.GraphicEditor;
 import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorConfiguration;
 import com.google.gwt.resources.client.ImageResource;
@@ -56,6 +58,16 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         this.graphicEditor = graphicEditor;
         this.textEditor = editorProvider.get();
         textEditor.initialize(xmlEditorConfigurationProvider.get(), documentProvider, notificationManager);
+
+        PropertyListener propertyListener = new PropertyListener() {
+            @Override
+            public void propertyChanged(PartPresenter source, int propId) {
+                firePropertyChange(propId);
+            }
+        };
+
+        this.graphicEditor.addPropertyListener(propertyListener);
+        textEditor.addPropertyListener(propertyListener);
     }
 
     /** {@inheritDoc} */
@@ -79,8 +91,14 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     /** {@inheritDoc} */
     @Override
     public void doSave() {
-        // TODO check active editor and execute save on it
-        textEditor.doSave();
+        // TODO need to think how to improve it
+        if (textEditor.isDirty()) {
+            textEditor.doSave();
+        }
+
+        if (graphicEditor.isDirty()) {
+            graphicEditor.doSave();
+        }
     }
 
     /** {@inheritDoc} */
@@ -95,6 +113,12 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     public void activate() {
         // TODO check active editor and execute active on it
         textEditor.activate();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isDirty() {
+        return graphicEditor.isDirty() || textEditor.isDirty();
     }
 
     /** {@inheritDoc} */
