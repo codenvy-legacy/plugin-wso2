@@ -51,7 +51,10 @@ import org.genmymodel.gmmf.common.CommandRequestEvent;
 import org.genmymodel.gmmf.common.MessageChatRequestEvent;
 import org.genmymodel.gmmf.common.RedoRequestEvent;
 import org.genmymodel.gmmf.common.UndoRequestEvent;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbConnector;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbLink;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
+import org.wso2.developerstudio.eclipse.gmf.esb.ModelObject;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -62,7 +65,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Get modeling events and executes the appropriated EMF commands
+ * Get modeling events and executes the appropriated EMF commands.
  *
  * @author Alexis Muller
  */
@@ -88,8 +91,7 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
 
         if (emfCommand instanceof UnexecutableDeleteCommand) {
             emfCommand =
-                    createDeleteCommand(event.getModel(), editingDomain,
-                                        ((UnexecutableDeleteCommand)emfCommand).geteObjectsToRemove());
+                    createDeleteCommand(event.getModel(), editingDomain, ((UnexecutableDeleteCommand)emfCommand).geteObjectsToRemove());
         }
 
         if (!emfCommand.canExecute()) {
@@ -99,10 +101,8 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
 
         editingDomain.getCommandStack().execute(emfCommand);
 
-        // warn the graphical has changed
-        EsbSequence esbSequence = (EsbSequence)event.getModel();
-        GraphicalSequenceChangeEvent graphicSequencehasChangedEvent = new GraphicalSequenceChangeEvent(esbSequence);
-        eventBus.fireEvent(graphicSequencehasChangedEvent);
+        // warn when the model has changed
+        fireModelChange(event, emfCommand);
     }
 
     @Override
@@ -153,9 +153,35 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
         }
     }
 
+    /**
+     * Fire a GraphicalSequenceChangeEvent only if the model has changed.
+     *
+     * @param event
+     */
+    private void fireModelChange(CommandRequestEvent event, Command emfCommand) {
+        @SuppressWarnings("unchecked")
+        Collection<EObject> affectedObjects = (Collection<EObject>)emfCommand.getAffectedObjects();
+        boolean hasModelChanged = false;
+
+        for (EObject eo : affectedObjects) {
+            // TODO improved the esb metamodel to have one common super class
+            if (eo instanceof ModelObject || eo instanceof EsbLink || eo instanceof EsbConnector) {
+                hasModelChanged = true;
+                break;
+            }
+        }
+
+        if (hasModelChanged) {
+            // if the model has changed, fire the event
+            EsbSequence esbSequence = (EsbSequence)event.getModel();
+            GraphicalSequenceChangeEvent graphicSequenceHasChangedEvent = new GraphicalSequenceChangeEvent(esbSequence);
+            eventBus.fireEvent(graphicSequenceHasChangedEvent);
+        }
+    }
+
 
     /*
-     * Theses operations will replaced by a service in the gmmf framework in future versions
+     * Theses operations will replaced by a service in the gmmf framework in future versions.
      */
     private static Command createDeleteCommand(EObject root, EditingDomain editingDomain,
                                                Collection<EObject> objectsToRemove) {
@@ -205,8 +231,7 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
         Set<EObject> destroy = new HashSet<EObject>();
         for (EObject eObject : toRemoveSet) {
             if (eObject instanceof Anchor) {
-                compoundCommand.append(new SetCommand(editingDomain, eObject, GraphicPackage.eINSTANCE
-                        .getAnchor_AttachedElement(), null));
+                compoundCommand.append(new SetCommand(editingDomain, eObject, GraphicPackage.eINSTANCE.getAnchor_AttachedElement(), null));
             }
 
             if (eObject instanceof Node) {
