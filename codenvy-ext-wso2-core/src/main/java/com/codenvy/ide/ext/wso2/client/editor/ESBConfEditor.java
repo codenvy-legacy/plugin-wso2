@@ -56,7 +56,7 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         this.view = view;
         this.view.setDelegate(this);
         this.graphicEditor = graphicEditor;
-        this.textEditor = editorProvider.get();
+        textEditor = editorProvider.get();
         textEditor.initialize(xmlEditorConfigurationProvider.get(), documentProvider, notificationManager);
 
         PropertyListener propertyListener = new PropertyListener() {
