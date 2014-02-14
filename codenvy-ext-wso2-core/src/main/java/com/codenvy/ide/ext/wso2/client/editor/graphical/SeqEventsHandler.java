@@ -22,13 +22,17 @@ import genmymodel.commands.custom.GMMCommand;
 import genmymodel.commands.serializable.SerializableCommand;
 import genmymodel.commands.serializable.type.EObjectUUID;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import com.codenvy.ide.util.loging.Log;
+import com.genmymodel.ecoreonline.graphic.Anchor;
+import com.genmymodel.ecoreonline.graphic.Connector;
+import com.genmymodel.ecoreonline.graphic.DiagramElement;
+import com.genmymodel.ecoreonline.graphic.GraphicPackage;
+import com.genmymodel.ecoreonline.graphic.Node;
+import com.genmymodel.ecoreonline.graphic.NodeWidget;
+import com.genmymodel.ecoreonline.graphic.PlaneElement;
+import com.genmymodel.ecoreonline.graphic.Segment;
+import com.genmymodel.ecoreonline.graphic.event.handler.AutoResizeHandler;
+import com.google.web.bindery.event.shared.EventBus;
 
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.Command;
@@ -52,21 +56,17 @@ import org.wso2.developerstudio.eclipse.gmf.esb.EsbLink;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 import org.wso2.developerstudio.eclipse.gmf.esb.ModelObject;
 
-import com.codenvy.ide.util.loging.Log;
-import com.genmymodel.ecoreonline.graphic.Anchor;
-import com.genmymodel.ecoreonline.graphic.Connector;
-import com.genmymodel.ecoreonline.graphic.DiagramElement;
-import com.genmymodel.ecoreonline.graphic.GraphicPackage;
-import com.genmymodel.ecoreonline.graphic.Node;
-import com.genmymodel.ecoreonline.graphic.NodeWidget;
-import com.genmymodel.ecoreonline.graphic.PlaneElement;
-import com.genmymodel.ecoreonline.graphic.Segment;
-import com.genmymodel.ecoreonline.graphic.event.handler.AutoResizeHandler;
-import com.google.web.bindery.event.shared.EventBus;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
- * Get modeling events and executes the appropriated EMF commands
- * 
+ * Get modeling events and executes the appropriated EMF commands.
+ *
  * @author Alexis Muller
  */
 public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoResizeHandler {
@@ -91,8 +91,7 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
 
         if (emfCommand instanceof UnexecutableDeleteCommand) {
             emfCommand =
-                         createDeleteCommand(event.getModel(), editingDomain,
-                                             ((UnexecutableDeleteCommand)emfCommand).geteObjectsToRemove());
+                    createDeleteCommand(event.getModel(), editingDomain, ((UnexecutableDeleteCommand)emfCommand).geteObjectsToRemove());
         }
 
         if (!emfCommand.canExecute()) {
@@ -155,38 +154,34 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
     }
 
     /**
-     * Fire a GraphicalSequenceChangeEvent only if the model has changed
-     * 
+     * Fire a GraphicalSequenceChangeEvent only if the model has changed.
+     *
      * @param event
      */
-    private void fireModelChange(CommandRequestEvent event, Command emfCommand)
-    {
+    private void fireModelChange(CommandRequestEvent event, Command emfCommand) {
         @SuppressWarnings("unchecked")
         Collection<EObject> affectedObjects = (Collection<EObject>)emfCommand.getAffectedObjects();
         boolean hasModelChanged = false;
 
-        for (EObject eo : affectedObjects)
-        {
+        for (EObject eo : affectedObjects) {
             // TODO improved the esb metamodel to have one common super class
-            if (eo instanceof ModelObject || eo instanceof EsbLink || eo instanceof EsbConnector)
-            {
+            if (eo instanceof ModelObject || eo instanceof EsbLink || eo instanceof EsbConnector) {
                 hasModelChanged = true;
                 break;
             }
         }
 
-        if (hasModelChanged)
-        {
+        if (hasModelChanged) {
             // if the model has changed, fire the event
             EsbSequence esbSequence = (EsbSequence)event.getModel();
-            GraphicalSequenceChangeEvent graphicSequencehasChangedEvent = new GraphicalSequenceChangeEvent(esbSequence);
-            eventBus.fireEvent(graphicSequencehasChangedEvent);
+            GraphicalSequenceChangeEvent graphicSequenceHasChangedEvent = new GraphicalSequenceChangeEvent(esbSequence);
+            eventBus.fireEvent(graphicSequenceHasChangedEvent);
         }
     }
 
 
     /*
-     * Theses operations will replaced by a service in the gmmf framework in future versions
+     * Theses operations will replaced by a service in the gmmf framework in future versions.
      */
     private static Command createDeleteCommand(EObject root, EditingDomain editingDomain,
                                                Collection<EObject> objectsToRemove) {
@@ -236,8 +231,7 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
         Set<EObject> destroy = new HashSet<EObject>();
         for (EObject eObject : toRemoveSet) {
             if (eObject instanceof Anchor) {
-                compoundCommand.append(new SetCommand(editingDomain, eObject, GraphicPackage.eINSTANCE
-                                                                                                      .getAnchor_AttachedElement(), null));
+                compoundCommand.append(new SetCommand(editingDomain, eObject, GraphicPackage.eINSTANCE.getAnchor_AttachedElement(), null));
             }
 
             if (eObject instanceof Node) {
