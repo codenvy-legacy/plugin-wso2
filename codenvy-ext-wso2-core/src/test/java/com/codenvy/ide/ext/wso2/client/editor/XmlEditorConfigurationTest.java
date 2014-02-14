@@ -63,6 +63,7 @@ public class XmlEditorConfigurationTest extends GwtTestWithMockito {
     public void configurationShouldContainTagAutoCompleter() throws Exception {
         AutoEditStrategy[] autoEditStrategies = xmlEditorConfiguration.getAutoEditStrategies(view, "contentType");
 
+        assertNotNull(autoEditStrategies);
         assertEquals(1, autoEditStrategies.length);
 
         AutoEditStrategy autoEditStrategy = autoEditStrategies[0];
