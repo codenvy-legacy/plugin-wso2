@@ -106,36 +106,6 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
         fireModelChange(event, emfCommand);
     }
 
-    /**
-     * Fire a GraphicalSequenceChangeEvent only if the model has changed
-     * 
-     * @param event
-     */
-    private void fireModelChange(CommandRequestEvent event, Command emfCommand)
-    {
-        @SuppressWarnings("unchecked")
-        Collection<EObject> affectedObjects = (Collection<EObject>)emfCommand.getAffectedObjects();
-        boolean hasModelChanged = false;
-
-        for (EObject eo : affectedObjects)
-        {
-            // TODO improved the esb metamodel to have one common super class
-            if (eo instanceof ModelObject || eo instanceof EsbLink || eo instanceof EsbConnector)
-            {
-                hasModelChanged = true;
-                break;
-            }
-        }
-
-        if (hasModelChanged)
-        {
-            // if the model has changed, fire the event
-            EsbSequence esbSequence = (EsbSequence)event.getModel();
-            GraphicalSequenceChangeEvent graphicSequencehasChangedEvent = new GraphicalSequenceChangeEvent(esbSequence);
-            eventBus.fireEvent(graphicSequencehasChangedEvent);
-        }
-    }
-
     @Override
     public void undoRequest(UndoRequestEvent event) {
 
@@ -181,6 +151,36 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
         if (command instanceof CompoundCommand) {
             for (Command innerCommand : ((CompoundCommand)command).getCommandList())
                 enableCalculations(innerCommand);
+        }
+    }
+
+    /**
+     * Fire a GraphicalSequenceChangeEvent only if the model has changed
+     * 
+     * @param event
+     */
+    private void fireModelChange(CommandRequestEvent event, Command emfCommand)
+    {
+        @SuppressWarnings("unchecked")
+        Collection<EObject> affectedObjects = (Collection<EObject>)emfCommand.getAffectedObjects();
+        boolean hasModelChanged = false;
+
+        for (EObject eo : affectedObjects)
+        {
+            // TODO improved the esb metamodel to have one common super class
+            if (eo instanceof ModelObject || eo instanceof EsbLink || eo instanceof EsbConnector)
+            {
+                hasModelChanged = true;
+                break;
+            }
+        }
+
+        if (hasModelChanged)
+        {
+            // if the model has changed, fire the event
+            EsbSequence esbSequence = (EsbSequence)event.getModel();
+            GraphicalSequenceChangeEvent graphicSequencehasChangedEvent = new GraphicalSequenceChangeEvent(esbSequence);
+            eventBus.fireEvent(graphicSequencehasChangedEvent);
         }
     }
 
