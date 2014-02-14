@@ -17,20 +17,19 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor;
 
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
-import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorConfiguration;
+import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorProvider;
 import com.google.inject.Provider;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -43,36 +42,22 @@ import static org.mockito.Mockito.when;
 public class XmlEditorProviderTest {
 
     @Mock
-    private CodenvyTextEditor                codenvyTextEditor;
+    private ESBConfEditor           esbConfEditor;
     @Mock
-    private DocumentProvider                 documentProvider;
-    @Mock
-    private Provider<CodenvyTextEditor>      editorProvider;
-    @Mock
-    private Provider<XmlEditorConfiguration> xmlEditorConfigurationProvider;
-    @Mock
-    private XmlEditorConfiguration           XmlEditorConfiguration;
-    @Mock
-    private NotificationManager              notificationManager;
-    private XmlEditorProvider                xmlEditorProvider;
+    private Provider<ESBConfEditor> esbConfEditorProvider;
+    @InjectMocks
+    private XmlEditorProvider       xmlEditorProvider;
 
     @Before
     public void setUp() throws Exception {
-        when(editorProvider.get()).thenReturn(codenvyTextEditor);
-        when(xmlEditorConfigurationProvider.get()).thenReturn(XmlEditorConfiguration);
-
-        xmlEditorProvider = new XmlEditorProvider(documentProvider, editorProvider, xmlEditorConfigurationProvider, notificationManager);
+        when(esbConfEditorProvider.get()).thenReturn(esbConfEditor);
     }
 
     @Test
     public void editorShouldBePrepared() throws Exception {
         EditorPartPresenter editor = xmlEditorProvider.getEditor();
 
-        assertEquals(codenvyTextEditor, editor);
-
-        verify(xmlEditorConfigurationProvider).get();
-
-        verify(editorProvider).get();
-        verify(codenvyTextEditor).initialize(eq(XmlEditorConfiguration), eq(documentProvider), eq(notificationManager));
+        assertEquals(esbConfEditor, editor);
+        verify(esbConfEditorProvider).get();
     }
 }

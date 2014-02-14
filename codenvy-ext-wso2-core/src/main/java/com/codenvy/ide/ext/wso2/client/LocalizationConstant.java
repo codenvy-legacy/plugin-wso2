@@ -185,4 +185,13 @@ public interface LocalizationConstant extends Messages {
     String loginSuccess();
 
     String loginActionTitle();
+
+    @Key("editor.text")
+    String editorText();
+
+    @Key("editor.graphical")
+    String editorGraphical();
+
+    @Key("editor.associate")
+    String editorAssociate();
 }

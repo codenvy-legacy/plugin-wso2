@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor;
 
+import com.codenvy.ide.ext.wso2.client.editor.text.TagAutoCompleter;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentCommand;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;

@@ -17,6 +17,9 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor;
 
+import com.codenvy.ide.ext.wso2.client.editor.text.AutoCompleterFactory;
+import com.codenvy.ide.ext.wso2.client.editor.text.TagAutoCompleter;
+import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorConfiguration;
 import com.codenvy.ide.texteditor.api.AutoEditStrategy;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.parser.CmParser;
@@ -60,6 +63,7 @@ public class XmlEditorConfigurationTest extends GwtTestWithMockito {
     public void configurationShouldContainTagAutoCompleter() throws Exception {
         AutoEditStrategy[] autoEditStrategies = xmlEditorConfiguration.getAutoEditStrategies(view, "contentType");
 
+        assertNotNull(autoEditStrategies);
         assertEquals(1, autoEditStrategies.length);
 
         AutoEditStrategy autoEditStrategy = autoEditStrategies[0];

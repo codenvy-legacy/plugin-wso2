@@ -32,7 +32,7 @@ import com.codenvy.ide.ext.wso2.client.action.ImportSynapseAction;
 import com.codenvy.ide.ext.wso2.client.action.LoginAction;
 import com.codenvy.ide.ext.wso2.client.action.WSO2ProjectActionGroup;
 import com.codenvy.ide.ext.wso2.client.editor.ESBXmlFileType;
-import com.codenvy.ide.ext.wso2.client.editor.XmlEditorProvider;
+import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorProvider;
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -68,6 +68,7 @@ public class WSO2Extension {
     @Inject
     public WSO2Extension(WSO2Resources wso2Resources) {
         wso2Resources.wso2Style().ensureInjected();
+        wso2Resources.esbStyle().ensureInjected();
     }
 
     @Inject
