@@ -17,8 +17,17 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
-import esbdiag.EsbdiagFactory;
-import esbdiag.widgets.ESBDiagramToolbar;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.util.GMMUtil;
+import org.genmymodel.gmmf.common.SelectModelElementEvent;
+import org.genmymodel.gmmf.propertypanel.PropertyPanel;
+import org.genmymodel.gmmf.propertypanel.PropertyPresenter;
+import org.genmymodel.gmmf.ui.ModelWidget;
+import org.genmymodel.gmmf.ui.tools.Toolbar;
+import org.genmymodel.gmmf.ui.tools.ToolsController;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbFactory;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbPackage;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.genmymodel.ecoreonline.graphic.Diagram;
@@ -40,19 +49,13 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.eclipse.emf.ecore.util.GMMUtil;
-import org.genmymodel.gmmf.common.SelectModelElementEvent;
-import org.genmymodel.gmmf.propertypanel.PropertyPanel;
-import org.genmymodel.gmmf.propertypanel.PropertyPresenter;
-import org.genmymodel.gmmf.ui.ModelWidget;
-import org.genmymodel.gmmf.ui.tools.Toolbar;
-import org.genmymodel.gmmf.ui.tools.ToolsController;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbFactory;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
+import esbdiag.EsbdiagFactory;
+import esbdiag.EsbdiagPackage;
+import esbdiag.widgets.ESBDiagramToolbar;
 
 /**
  * The implementation of {@link GraphicEditorView}.
- *
+ * 
  * @author Alexis Muller
  * @author Justin Trentesaux
  * @author Andrey Plotnikov
@@ -62,16 +65,24 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
     interface GEUIBinder extends UiBinder<Widget, GraphicEditorViewImpl> {
     }
 
+    static {
+        // register metamodels - should only be done once
+        EPackage.Registry.INSTANCE.put(EsbPackage.eINSTANCE.getNsURI(), EsbPackage.eINSTANCE);
+        EPackage.Registry.INSTANCE.put(EsbdiagPackage.eINSTANCE.getNsURI(), EsbdiagPackage.eINSTANCE);
+    }
+
     private static GEUIBinder binder = GWT.create(GEUIBinder.class);
 
     @UiField(provided = true)
-    Toolbar       toolbar;
+    Toolbar                   toolbar;
     @UiField(provided = true)
-    ModelWidget   modelWidget;
+    ModelWidget               modelWidget;
     @UiField
-    PropertyPanel propertyPanel;
+    PropertyPanel             propertyPanel;
     @UiField(provided = true)
-    WSO2Resources res;
+    WSO2Resources             res;
+
+    GraphicEditor             presenter;
 
     @Inject
     public GraphicEditorViewImpl(WSO2Resources resources, EventBus eventBus) {
@@ -120,7 +131,20 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
     /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
-        // do nothing for now
+
+        if (delegate instanceof GraphicEditor)
+        {
+            this.presenter = (GraphicEditor)delegate;
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onUnload() {
+        super.onUnload();
+
+        // removeHandler
+        this.presenter.onUnload();
     }
 
     /** {@inheritDoc} */

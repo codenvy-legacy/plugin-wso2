@@ -17,6 +17,22 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
+import javax.validation.constraints.NotNull;
+
+import org.genmymodel.gmmf.common.CommandRequestEvent;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
+
+import com.codenvy.ide.api.editor.AbstractEditorPresenter;
+import com.codenvy.ide.ext.wso2.client.WSO2Resources;
+import com.codenvy.ide.ext.wso2.client.editor.ESBToXMLMapper;
+import com.codenvy.ide.util.loging.Log;
+import com.genmymodel.ecoreonline.graphic.impl.GraphicPackageImpl;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.HandlerRegistration;
+
 import esbdiag.properties.addressendpoint.AddressEndPointPropertiesPresenter;
 import esbdiag.properties.callmediator.CallMediatorPropertiesPresenter;
 import esbdiag.properties.headermediator.HeaderMediatorPropertiesPresenter;
@@ -27,22 +43,9 @@ import esbdiag.properties.sendmediator.SendMediatorPropertiesPresenter;
 import esbdiag.properties.switchmediator.SwitchMediatorPropertiesPresenter;
 import esbdiag.util.EsbdiagUtil;
 
-import com.codenvy.ide.api.editor.AbstractEditorPresenter;
-import com.codenvy.ide.ext.wso2.client.WSO2Resources;
-import com.genmymodel.ecoreonline.graphic.impl.GraphicPackageImpl;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.inject.Inject;
-import com.google.web.bindery.event.shared.EventBus;
-
-import org.genmymodel.gmmf.common.CommandRequestEvent;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
-
-import javax.validation.constraints.NotNull;
-
 /**
  * The graphical editor for ESB configuration.
- *
+ * 
  * @author Andrey Plotnikov
  * @author Alexis Muller
  * @author Justin Trentesaux
@@ -59,6 +62,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     private CallMediatorPropertiesPresenter     callProperties;
     private HeaderMediatorPropertiesPresenter   headerProperties;
     private AddressEndPointPropertiesPresenter  addressProperties;
+    private HandlerRegistration                 registration;
 
     @Inject
     public GraphicEditor(GraphicEditorView view,
@@ -86,9 +90,9 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
         this.globalBus = globalBus;
 
         /* A handler listens every EMF command */
-        globalBus.addHandler(CommandRequestEvent.TYPE, new SeqEventsHandler(globalBus));
+        this.registration = globalBus.addHandler(CommandRequestEvent.TYPE, new SeqEventsHandler(globalBus));
 
-        // /!\ needed for compliance with condenvy injector /!\
+        // /!\ needed for compliance with codenvy injector /!\
         // must be changed
         GraphicPackageImpl.globalBus = globalBus;
         EsbdiagUtil.ESB_RESOURCES = wso2Resources;
@@ -158,16 +162,20 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     public void hasChanged(@NotNull EsbSequence sequence) {
         updateDirtyState(true);
 
-        // TODO This code illustrates how to handle a GraphicalSequenceChangeEvent It creates an ESBToXMLMapper that transforms the ESB sequence into
-        // XML This class is an example,not made to last
+        ESBToXMLMapper esbToXMLMapper = new ESBToXMLMapper();
 
-//        ESBToXMLMapper esbToXMLMapper = new ESBToXMLMapper();
-//
-//        try {
-//            // do whatever you want: fill the XML text editor
-//            Log.info(getClass(), "XML: " + esbToXMLMapper.transform(sequence));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            // do whatever you want: fill the XML text editor
+            Log.info(getClass(), "XML: " + esbToXMLMapper.transform(sequence));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /** {@inheritDoc} */
+    public void onUnload()
+    {
+        // remove handler
+        this.registration.removeHandler();
     }
 }
