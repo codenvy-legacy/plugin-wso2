@@ -59,6 +59,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     private CallMediatorPropertiesPresenter     callProperties;
     private HeaderMediatorPropertiesPresenter   headerProperties;
     private AddressEndPointPropertiesPresenter  addressProperties;
+    private EsbSequence                         sequence;
 
     @Inject
     public GraphicEditor(GraphicEditorView view,
@@ -113,6 +114,11 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
 
     }
 
+    /** @return ESB sequence content. */
+    public EsbSequence getSequence() {
+        return sequence;
+    }
+
     /** {@inheritDoc} */
     @Override
     public void doSave() {
@@ -156,18 +162,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     /** {@inheritDoc} */
     @Override
     public void hasChanged(@NotNull EsbSequence sequence) {
+        this.sequence = sequence;
         updateDirtyState(true);
-
-        // TODO This code illustrates how to handle a GraphicalSequenceChangeEvent It creates an ESBToXMLMapper that transforms the ESB sequence into
-        // XML This class is an example,not made to last
-
-//        ESBToXMLMapper esbToXMLMapper = new ESBToXMLMapper();
-//
-//        try {
-//            // do whatever you want: fill the XML text editor
-//            Log.info(getClass(), "XML: " + esbToXMLMapper.transform(sequence));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
 }
