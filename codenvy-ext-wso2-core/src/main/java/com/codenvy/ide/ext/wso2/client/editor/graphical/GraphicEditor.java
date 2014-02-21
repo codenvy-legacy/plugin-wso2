@@ -165,7 +165,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
 
         if (validityConstraints != null) {
 
-        	// TODO 
+        	// TODO n
            // ObjectValidator o = validityConstraints.get("Property Mediator");
            // this.propertyProperties.onUpdateValidation(o);
         }       
