@@ -33,14 +33,14 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
-import esbdiag.properties.addressendpoint.AddressEndPointPropertiesPresenter;
-import esbdiag.properties.callmediator.CallMediatorPropertiesPresenter;
-import esbdiag.properties.headermediator.HeaderMediatorPropertiesPresenter;
-import esbdiag.properties.logmediator.LogMediatorPropertiesPresenter;
-import esbdiag.properties.propertymediator.PropertyMediatorPropertiesPresenter;
-import esbdiag.properties.respondmediator.RespondMediatorPropertiesPresenter;
-import esbdiag.properties.sendmediator.SendMediatorPropertiesPresenter;
-import esbdiag.properties.switchmediator.SwitchMediatorPropertiesPresenter;
+import esbdiag.properties.addressendpoint.AddressEndPointPropertiesView.AddressEndPointPropertiesPresenter;
+import esbdiag.properties.callmediator.CallMediatorPropertiesView.CallMediatorPropertiesPresenter;
+import esbdiag.properties.headermediator.HeaderMediatorPropertiesView.HeaderMediatorPropertiesPresenter;
+import esbdiag.properties.logmediator.LogMediatorPropertiesView.LogMediatorPropertiesPresenter;
+import esbdiag.properties.propertymediator.PropertyMediatorPropertiesView.PropertyMediatorPropertiesPresenter;
+import esbdiag.properties.respondmediator.RespondMediatorPropertiesView.RespondMediatorPropertiesPresenter;
+import esbdiag.properties.sendmediator.SendMediatorPropertiesView.SendMediatorPropertiesPresenter;
+import esbdiag.properties.switchmediator.SwitchMediatorPropertiesView.SwitchMediatorPropertiesPresenter;
 import esbdiag.util.EsbdiagUtil;
 
 /**
