@@ -495,7 +495,7 @@ from Codenvy S.A..
                                 <copy overwrite="true" todir="${project.build.directory}/packager-conf/war/site">
                                     <fileset dir="${basedir}/src/main/resources/site" />
                                 </copy>
-                                <war destfile="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-3.0.0-M8.war.war" needxmlfile="false">
+                                <war destfile="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-3.0.0-M8.war" needxmlfile="false">
                                     <fileset dir="${project.build.directory}/packager-conf/war/site" />
                                 </war>
                                 <unwar dest="${project.build.directory}/packager-conf/war/api" src="${project.build.directory}/packager-conf/war/codenvy-api-war-${codenvy.version}.war" />
