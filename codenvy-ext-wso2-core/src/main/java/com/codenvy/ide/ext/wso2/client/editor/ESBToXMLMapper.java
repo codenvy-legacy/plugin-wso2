@@ -19,6 +19,8 @@ package com.codenvy.ide.ext.wso2.client.editor;
 
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
@@ -26,8 +28,14 @@ import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
  * The transformation ESB model (instance of wso2-esb) into wso2-specific XML
  *
  * @author Thomas Legrand
+ * @author Valeriy Svydenko
  */
+@Singleton
 public class ESBToXMLMapper {
+
+    @Inject
+    public ESBToXMLMapper() {
+    }
 
     /**
      * Transforms a EMF sequence model into XML matching WSO2 XSD.

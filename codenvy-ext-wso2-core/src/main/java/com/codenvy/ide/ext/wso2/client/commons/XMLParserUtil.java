@@ -20,26 +20,33 @@ package com.codenvy.ide.ext.wso2.client.commons;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Class with utility methods for formatting XML.
  *
  * @author Valeriy Svydenko
  */
+@Singleton
 public class XMLParserUtil {
 
     private static final String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
     private static final String tab             = "    ";
 
+    @Inject
+    public XMLParserUtil() {
+    }
+
     /**
-     * Parse string to XML element.
+     * Parse string to XML elements.
      *
      * @param document
      * @param outputXml
      * @param level
-     * @return XML string
+     * @return
      */
-    private static String parse(Node document, StringBuilder outputXml, int level) {
+    private String parse(Node document, StringBuilder outputXml, int level) {
         boolean lastNodeIsText = false;
 
         NodeList nodeList = document.getChildNodes();
@@ -100,7 +107,7 @@ public class XMLParserUtil {
      * @param XMLNode
      * @return
      */
-    public static String formatXMLString(Node XMLNode) {
+    public String formatXMLString(Node XMLNode) {
         StringBuilder outputXml = new StringBuilder();
         outputXml.append(XML_DECLARATION).append("\n");
         return parse(XMLNode, outputXml, 0).toString();
