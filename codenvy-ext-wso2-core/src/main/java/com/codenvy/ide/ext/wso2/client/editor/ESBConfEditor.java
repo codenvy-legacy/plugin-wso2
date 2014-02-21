@@ -180,4 +180,12 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
 
         view.showEditors(graphicEditor, textEditor);
     }
+    
+    /** {@inheritDoc} */
+    @Override
+    public boolean onClose()
+    {
+    	// should call textEditor.onClose ?
+    	return super.onClose() && this.graphicEditor.onClose();
+    }
 }

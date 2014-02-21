@@ -17,15 +17,16 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
+import java.util.HashMap;
+
 import javax.validation.constraints.NotNull;
 
 import org.genmymodel.gmmf.common.CommandRequestEvent;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
+import org.wso2.developerstudio.eclipse.gmf.esb.util.ObjectValidator;
 
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
-import com.codenvy.ide.ext.wso2.client.editor.ESBToXMLMapper;
-import com.codenvy.ide.util.loging.Log;
 import com.genmymodel.ecoreonline.graphic.impl.GraphicPackageImpl;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -159,23 +160,25 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
 
     /** {@inheritDoc} */
     @Override
-    public void hasChanged(@NotNull EsbSequence sequence) {
+    public void hasChanged(@NotNull EsbSequence sequence, HashMap<String, ObjectValidator> validityConstraints) {
         updateDirtyState(true);
 
-        ESBToXMLMapper esbToXMLMapper = new ESBToXMLMapper();
+        if (validityConstraints != null) {
 
-        try {
-            // do whatever you want: fill the XML text editor
-            Log.info(getClass(), "XML: " + esbToXMLMapper.transform(sequence));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        	// TODO 
+           // ObjectValidator o = validityConstraints.get("Property Mediator");
+           // this.propertyProperties.onUpdateValidation(o);
+        }       
     }
-
+     
     /** {@inheritDoc} */
-    public void onUnload()
+    @Override
+    public boolean onClose()
     {
-        // remove handler
+    	// remove handler
         this.registration.removeHandler();
+        
+        return super.onClose();
     }
+    
 }

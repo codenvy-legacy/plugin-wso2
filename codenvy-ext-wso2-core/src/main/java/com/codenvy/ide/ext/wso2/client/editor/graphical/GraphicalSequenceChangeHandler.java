@@ -17,18 +17,21 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
-import com.google.gwt.event.shared.EventHandler;
-
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
+import java.util.HashMap;
 
 import javax.validation.constraints.NotNull;
 
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
+import org.wso2.developerstudio.eclipse.gmf.esb.util.ObjectValidator;
+
+import com.google.gwt.event.shared.EventHandler;
+
 /**
  * Handler to warn changes occurring in a ESB graphical sequence
- *
+ * 
  * @author Thomas Legrand
  */
 public interface GraphicalSequenceChangeHandler extends EventHandler {
 
-    void hasChanged(@NotNull EsbSequence sequence);
+    void hasChanged(@NotNull EsbSequence sequence, HashMap<String, ObjectValidator> validityConstraints);
 }
