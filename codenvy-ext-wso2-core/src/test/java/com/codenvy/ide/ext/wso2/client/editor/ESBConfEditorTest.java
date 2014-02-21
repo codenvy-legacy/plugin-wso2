@@ -291,7 +291,7 @@ public class ESBConfEditorTest {
         com.codenvy.ide.text.Document txtDocument = mock(com.codenvy.ide.text.Document.class);
         when(esbToXMLMapper.transform((EsbSequence)anyObject())).thenReturn(document);
         when(textEditor.getDocument()).thenReturn(txtDocument);
-        when(xmlParserUtil.formatXMLString((Node)anyObject())).thenReturn("some text");
+        when(xmlParserUtil.formatXML((Node)anyObject())).thenReturn("some text");
 
         esbConfEditor.propertyChanged(graphicEditor, EditorPartPresenter.PROP_DIRTY);
 

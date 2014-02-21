@@ -24,7 +24,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M10-SNAPSHOT</version>
+        <version>3.0.0-M10</version>
     </parent>
     <artifactId>codenvy-ext-wso2-parent</artifactId>
     <version>1.0.0-M1-SNAPSHOT</version>
@@ -39,7 +39,7 @@
 
     <properties>
         <axellience.graphic.editor.version>0.0.3-SNAPSHOT</axellience.graphic.editor.version>
-        <codenvy.version>3.0.0-M10-SNAPSHOT</codenvy.version>
+        <codenvy.version>3.0.0-M10</codenvy.version>
     </properties>
 
 </project>

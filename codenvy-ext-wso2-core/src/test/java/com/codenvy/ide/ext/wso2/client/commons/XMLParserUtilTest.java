@@ -30,12 +30,14 @@ import static org.junit.Assert.assertEquals;
  * Here we're testing {@link XMLParserUtil}.
  *
  * @author Valeriy Svydenko
+ * @author Andrey Plotnikov
  */
 @GwtModule("com.codenvy.ide.ext.wso2.WSO2")
 public class XMLParserUtilTest extends GwtTestWithMockito {
+
     private XMLParserUtil xmlParserUtil;
-    String inputData;
-    String expectedResult;
+    private String        inputData;
+    private String        expectedResult;
 
     @Before
     public void setUp() throws Exception {
@@ -52,7 +54,7 @@ public class XMLParserUtilTest extends GwtTestWithMockito {
     @Test
     public void testFormatXmlIfDocumentHasOnlyOneNode() {
         prepareOnlyOneNode();
-        assertEquals(expectedResult, xmlParserUtil.formatXMLString(XMLParser.parse(inputData).getDocumentElement()));
+        assertEquals(expectedResult, xmlParserUtil.formatXML(XMLParser.parse(inputData).getDocumentElement()));
     }
 
     private void prepareInheritedNodes() {
@@ -68,7 +70,7 @@ public class XMLParserUtilTest extends GwtTestWithMockito {
     @Test
     public void testFormatXmlIfDocumentHasInheritedNodes() {
         prepareInheritedNodes();
-        assertEquals(expectedResult, xmlParserUtil.formatXMLString(XMLParser.parse(inputData).getDocumentElement()));
+        assertEquals(expectedResult, xmlParserUtil.formatXML(XMLParser.parse(inputData).getDocumentElement()));
     }
 
     private void prepareInheritedNodes2() {
@@ -92,12 +94,13 @@ public class XMLParserUtilTest extends GwtTestWithMockito {
     @Test
     public void testFormatXmlIfDocumentHasInheritedNodes2() {
         prepareInheritedNodes2();
-        assertEquals(expectedResult, xmlParserUtil.formatXMLString(XMLParser.parse(inputData).getDocumentElement()));
+        assertEquals(expectedResult, xmlParserUtil.formatXML(XMLParser.parse(inputData).getDocumentElement()));
     }
 
     private void prepareIfTwoNodes() {
-        inputData = "<root><sequence name1=\"value1\" name=\"value\" name2=\"NewESB\"></sequence><sequence name12=\"value1\" name22=\"value\" " +
-                    "name32=\"NewESB\"></sequence></root>";
+        inputData =
+                "<root><sequence name1=\"value1\" name=\"value\" name2=\"NewESB\"></sequence><sequence name12=\"value1\" name22=\"value\" " +
+                "name32=\"NewESB\"></sequence></root>";
 
         expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                          "<root>\n" +
@@ -109,6 +112,6 @@ public class XMLParserUtilTest extends GwtTestWithMockito {
     @Test
     public void testIfXmlHaveTwoNodes() {
         prepareIfTwoNodes();
-        assertEquals(expectedResult, xmlParserUtil.formatXMLString(XMLParser.parse(inputData).getDocumentElement()));
+        assertEquals(expectedResult, xmlParserUtil.formatXML(XMLParser.parse(inputData).getDocumentElement()));
     }
 }

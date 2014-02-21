@@ -195,7 +195,7 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
             try {
                 Document seq = esbToXMLMapper.transform(sequence);
 
-                textEditor.getDocument().set(xmlParserUtil.formatXMLString(seq.getDocumentElement()));
+                textEditor.getDocument().set(xmlParserUtil.formatXML(seq.getDocumentElement()));
             } catch (Exception e) {
                 Notification notification = new Notification(e.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
