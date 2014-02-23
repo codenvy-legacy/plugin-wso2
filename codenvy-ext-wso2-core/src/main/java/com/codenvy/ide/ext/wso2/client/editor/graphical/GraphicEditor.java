@@ -17,13 +17,10 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
-import java.util.HashMap;
-
 import javax.validation.constraints.NotNull;
 
 import org.genmymodel.gmmf.common.CommandRequestEvent;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
-import org.wso2.developerstudio.eclipse.gmf.esb.util.ObjectValidator;
 
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
@@ -160,15 +157,8 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
 
     /** {@inheritDoc} */
     @Override
-    public void hasChanged(@NotNull EsbSequence sequence, HashMap<String, ObjectValidator> validityConstraints) {
-        updateDirtyState(true);
-
-        if (validityConstraints != null) {
-
-        	// TODO n
-           // ObjectValidator o = validityConstraints.get("Property Mediator");
-           // this.propertyProperties.onUpdateValidation(o);
-        }       
+    public void hasChanged(@NotNull EsbSequence sequence) {
+        updateDirtyState(true);   
     }
      
     /** {@inheritDoc} */

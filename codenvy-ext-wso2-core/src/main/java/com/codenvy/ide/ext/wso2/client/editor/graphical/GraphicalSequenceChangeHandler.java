@@ -17,12 +17,9 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
-import java.util.HashMap;
-
 import javax.validation.constraints.NotNull;
 
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
-import org.wso2.developerstudio.eclipse.gmf.esb.util.ObjectValidator;
 
 import com.google.gwt.event.shared.EventHandler;
 
@@ -33,5 +30,5 @@ import com.google.gwt.event.shared.EventHandler;
  */
 public interface GraphicalSequenceChangeHandler extends EventHandler {
 
-    void hasChanged(@NotNull EsbSequence sequence, HashMap<String, ObjectValidator> validityConstraints);
+    void hasChanged(@NotNull EsbSequence sequence);
 }

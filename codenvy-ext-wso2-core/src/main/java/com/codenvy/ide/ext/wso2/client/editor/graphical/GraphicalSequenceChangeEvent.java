@@ -17,12 +17,9 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
-import java.util.HashMap;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
 import com.google.web.bindery.event.shared.Event;
-
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
-import org.wso2.developerstudio.eclipse.gmf.esb.util.ObjectValidator;
 
 /**
  * Event used when an ESB sequence has changed, i.e where there's any change on the diagram and the model
@@ -36,12 +33,8 @@ public class GraphicalSequenceChangeEvent extends Event<GraphicalSequenceChangeH
     // the ESB sequence model
     private EsbSequence                                      esbSequence;
 
-    // validity constraints
-    HashMap<String, ObjectValidator>                         validityConstraints;
-
-    public GraphicalSequenceChangeEvent(EsbSequence esbSequence, HashMap<String, ObjectValidator> validityConstraints) {
+    public GraphicalSequenceChangeEvent(EsbSequence esbSequence) {
         this.esbSequence = esbSequence;
-        this.validityConstraints = validityConstraints;
     }
 
     /** {@inheritDoc} */
@@ -53,6 +46,6 @@ public class GraphicalSequenceChangeEvent extends Event<GraphicalSequenceChangeH
     /** {@inheritDoc} */
     @Override
     protected void dispatch(GraphicalSequenceChangeHandler handler) {
-        handler.hasChanged(esbSequence, validityConstraints);
+        handler.hasChanged(esbSequence);
     }
 }

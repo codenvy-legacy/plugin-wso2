@@ -25,7 +25,6 @@ import genmymodel.commands.serializable.type.EObjectUUID;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,9 +50,7 @@ import org.genmymodel.gmmf.common.UndoRequestEvent;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbConnector;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbLink;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
-import org.wso2.developerstudio.eclipse.gmf.esb.Mediator;
 import org.wso2.developerstudio.eclipse.gmf.esb.ModelObject;
-import org.wso2.developerstudio.eclipse.gmf.esb.util.ObjectValidator;
 
 import com.codenvy.ide.util.loging.Log;
 import com.genmymodel.ecoreonline.graphic.Anchor;
@@ -177,19 +174,10 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
 
         if (hasModelChanged) {
 
-            // gather failed validity constraints
-            HashMap<String, ObjectValidator> validityConstraints = new HashMap<String, ObjectValidator>();
-            for (EObject eo : affectedObjects) {
-                if (eo instanceof Mediator)
-                {
-                    validityConstraints.putAll(((Mediator)eo).validate());
-                }
-            }
-
             // warn handlers the model has just changed
             EsbSequence esbSequence = (EsbSequence)event.getModel();
             GraphicalSequenceChangeEvent graphicSequenceHasChangedEvent =
-                                                                          new GraphicalSequenceChangeEvent(esbSequence, validityConstraints);
+                                                                          new GraphicalSequenceChangeEvent(esbSequence);
             eventBus.fireEvent(graphicSequenceHasChangedEvent);
         }
     }
