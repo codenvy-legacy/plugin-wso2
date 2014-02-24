@@ -47,10 +47,7 @@ import org.genmymodel.gmmf.common.CommandRequestEvent;
 import org.genmymodel.gmmf.common.MessageChatRequestEvent;
 import org.genmymodel.gmmf.common.RedoRequestEvent;
 import org.genmymodel.gmmf.common.UndoRequestEvent;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbConnector;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbLink;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
-import org.wso2.developerstudio.eclipse.gmf.esb.ModelObject;
 
 import com.codenvy.ide.util.loging.Log;
 import com.genmymodel.ecoreonline.graphic.Anchor;
@@ -62,7 +59,6 @@ import com.genmymodel.ecoreonline.graphic.NodeWidget;
 import com.genmymodel.ecoreonline.graphic.PlaneElement;
 import com.genmymodel.ecoreonline.graphic.Segment;
 import com.genmymodel.ecoreonline.graphic.event.handler.AutoResizeHandler;
-import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Get modeling events and executes the appropriated EMF commands.
@@ -71,20 +67,24 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoResizeHandler {
 
+	private EsbSequence	  sequence;
     private EditingDomain editingDomain;
-    private EventBus      eventBus;
 
-    public SeqEventsHandler(EventBus eventBus) {
-        this.eventBus = eventBus;
+    public SeqEventsHandler(EsbSequence sequence) {
         ComposedAdapterFactory composedAdapterFactory = new ComposedAdapterFactory();
         composedAdapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 
         final CommandStack commandStack = new BasicCommandStack();
+        this.sequence = sequence;
         editingDomain = new AdapterFactoryEditingDomain(composedAdapterFactory, commandStack);
     }
 
     @Override
     public void commandRequest(CommandRequestEvent event) {
+    	if (this.sequence != event.getModel()) { // Not my sequence
+    		return;
+    	}
+    	
         Command emfCommand = tryConvert(event.getCommands(), event.getModel());
 
         enableCalculations(emfCommand); // Activate calculations for client
@@ -100,9 +100,6 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
         }
 
         editingDomain.getCommandStack().execute(emfCommand);
-
-        // warn when the model has changed
-        fireModelChange(event, emfCommand);
     }
 
     @Override
@@ -150,35 +147,6 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
         if (command instanceof CompoundCommand) {
             for (Command innerCommand : ((CompoundCommand)command).getCommandList())
                 enableCalculations(innerCommand);
-        }
-    }
-
-    /**
-     * Fire a GraphicalSequenceChangeEvent only if the model has changed.
-     * 
-     * @param event
-     */
-    private void fireModelChange(CommandRequestEvent event, Command emfCommand) {
-        @SuppressWarnings("unchecked")
-        Collection<EObject> affectedObjects = (Collection<EObject>)emfCommand.getAffectedObjects();
-        boolean hasModelChanged = false;
-
-        // determine if the model -not the diagram - has changed
-        for (EObject eo : affectedObjects) {
-
-            if (eo instanceof ModelObject || eo instanceof EsbLink || eo instanceof EsbConnector) {
-                hasModelChanged = true;
-                break;
-            }
-        }
-
-        if (hasModelChanged) {
-
-            // warn handlers the model has just changed
-            EsbSequence esbSequence = (EsbSequence)event.getModel();
-            GraphicalSequenceChangeEvent graphicSequenceHasChangedEvent =
-                                                                          new GraphicalSequenceChangeEvent(esbSequence);
-            eventBus.fireEvent(graphicSequenceHasChangedEvent);
         }
     }
 

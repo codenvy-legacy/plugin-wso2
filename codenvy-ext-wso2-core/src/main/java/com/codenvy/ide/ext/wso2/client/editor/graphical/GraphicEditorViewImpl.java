@@ -41,6 +41,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.SimpleEventBus;
 
 import esbdiag.widgets.ESBDiagramToolbar;
 
@@ -67,12 +68,16 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
     @UiField(provided = true)
     WSO2Resources             res;
     
-    private EventBus eventBus;
+    private EventBus globalBus;
+    
+    // This event bus is internal to each diagram widget instance
+    private EventBus diagramEventBus;
 
     @Inject
-    public GraphicEditorViewImpl(WSO2Resources resources, EventBus eventBus) {
+    public GraphicEditorViewImpl(WSO2Resources resources, EventBus globalBus) {
         this.res = resources;
-        this.eventBus = eventBus;
+        this.globalBus = globalBus;
+        this.diagramEventBus = new SimpleEventBus();
     }
     
     /** {@inheritDoc} */
@@ -80,21 +85,21 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
     public void initModelingWidgets(EsbSequence sequence, Diagram diagram) {
 
     	/* ModelWidget comes from GMMF framework */
-        this.modelWidget = new ModelWidget(diagram, eventBus);
+        this.modelWidget = new ModelWidget(diagram, diagramEventBus);
 
         /* the ESB-specific toolbar */
-        this.toolbar = new ESBDiagramToolbar(modelWidget, eventBus, res.wso2Style(), res);
+        this.toolbar = new ESBDiagramToolbar(modelWidget, this.globalBus, res.wso2Style(), res);
 
-        ToolsController toolsController = new ToolsController(modelWidget, eventBus);
+        ToolsController toolsController = new ToolsController(modelWidget, this.globalBus);
 
         /* toolsController */
-        eventBus.addHandler(MouseDownEvent.getType(), toolsController);
-        eventBus.addHandler(MouseMoveEvent.getType(), toolsController);
-        eventBus.addHandler(MouseUpEvent.getType(), toolsController);
-        eventBus.addHandler(MouseOverEvent.getType(), toolsController);
-        eventBus.addHandler(MouseOutEvent.getType(), toolsController);
-        eventBus.addHandler(KeyDownEvent.getType(), toolsController);
-        eventBus.addHandler(ContextMenuEvent.getType(), toolsController);
+        diagramEventBus.addHandler(MouseDownEvent.getType(), toolsController);
+        diagramEventBus.addHandler(MouseMoveEvent.getType(), toolsController);
+        diagramEventBus.addHandler(MouseUpEvent.getType(), toolsController);
+        diagramEventBus.addHandler(MouseOverEvent.getType(), toolsController);
+        diagramEventBus.addHandler(MouseOutEvent.getType(), toolsController);
+        diagramEventBus.addHandler(KeyDownEvent.getType(), toolsController);
+        diagramEventBus.addHandler(ContextMenuEvent.getType(), toolsController);
 
         // TODO need to change hard code size of panel
         modelWidget.setSize(2048, 2048);
@@ -103,7 +108,7 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
         initWidget(binder.createAndBindUi(this));
 
         /* event for the property panel */
-        eventBus.addHandler(SelectModelElementEvent.TYPE, propertyPanel);
+        this.globalBus.addHandler(SelectModelElementEvent.TYPE, propertyPanel);
     }
 
 
@@ -118,4 +123,10 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
     public void addPropertyForm(PropertyPresenter... forms) {
         propertyPanel.add(forms);
     }
+
+	@Override
+	public EventBus getDiagramEventBus()
+	{
+		return diagramEventBus;
+	}
 }

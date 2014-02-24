@@ -17,9 +17,10 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
-import javax.validation.constraints.NotNull;
-
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.GMMUtil;
 import org.genmymodel.gmmf.common.CommandRequestEvent;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbFactory;
@@ -58,7 +59,7 @@ import esbdiag.util.EsbdiagUtil;
  * @author Alexis Muller
  * @author Justin Trentesaux
  */
-public class GraphicEditor extends AbstractEditorPresenter implements GraphicEditorView.ActionDelegate, GraphicalSequenceChangeHandler {
+public class GraphicEditor extends AbstractEditorPresenter implements GraphicEditorView.ActionDelegate {
 
 	static {
         // register metamodels - should only be done once
@@ -67,7 +68,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     }
 	
     private GraphicEditorView                   view;
-    private EventBus                            globalBus;
+    
     private LogMediatorPropertiesPresenter      logProperties;
     private PropertyMediatorPropertiesPresenter propertyProperties;
     private RespondMediatorPropertiesPresenter  respondProperties;
@@ -77,7 +78,10 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     private HeaderMediatorPropertiesPresenter   headerProperties;
     private AddressEndPointPropertiesPresenter  addressProperties;
     private EsbSequence							sequence;
-    private HandlerRegistration                 registration;
+    
+    private EventBus							globalBus;
+    private Adapter 							sequenceObserver;
+    private HandlerRegistration					commandHandlerRegistration;
 
     @Inject
     public GraphicEditor(GraphicEditorView view,
@@ -91,7 +95,12 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
                          HeaderMediatorPropertiesPresenter headerProperties,
                          AddressEndPointPropertiesPresenter addressProperties,
                          EventBus globalBus) {
-
+    	
+    	// /!\ needed for compliance with condenvy injector /!\
+        // must be changed
+        GraphicPackageImpl.globalBus = globalBus;
+        EsbdiagUtil.ESB_RESOURCES = wso2Resources;
+              
         this.view = view;
         this.view.setDelegate(this);
         this.logProperties = logProperties;
@@ -103,22 +112,28 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
         this.headerProperties = headerProperties;
         this.addressProperties = addressProperties;
         this.globalBus = globalBus;
-
-        /* A handler listens every EMF command */
-        this.registration = globalBus.addHandler(CommandRequestEvent.TYPE, new SeqEventsHandler(globalBus));
-
-        // /!\ needed for compliance with condenvy injector /!\
-        // must be changed
-        GraphicPackageImpl.globalBus = globalBus;
-        EsbdiagUtil.ESB_RESOURCES = wso2Resources;
+        
+        // create the sequence observer
+        sequenceObserver = new EContentAdapter() {
+        	@Override
+			public void notifyChanged(Notification msg)
+			{
+        		super.notifyChanged(msg);
+        		
+				if (!msg.isTouch())
+				{
+					updateDirtyState(true);
+				}
+			}
+        };        
     }
 
     /** {@inheritDoc} */
     @Override
     protected void initializeEditor() {
 
-      
-
+    	// TODO: create or open sequence
+    	
         // create the sequence and its diagram
         sequence = EsbFactory.eINSTANCE.createEsbSequence();
         GMMUtil.setUUID(sequence);
@@ -144,10 +159,11 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
                 headerProperties,
                 addressProperties);
         
-        // add a handler for detecting changes on the sequence
-        globalBus.addHandler(GraphicalSequenceChangeEvent.TYPE, this);
+        /* A handler listens every EMF command */
+        commandHandlerRegistration = globalBus.addHandler(CommandRequestEvent.TYPE, new SeqEventsHandler(sequence)); 
         
-        
+        // add the observer for detecting changes on the sequence
+        sequence.eAdapters().add(sequenceObserver);
     }
 
     /** @return ESB sequence content. */
@@ -194,19 +210,14 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public void hasChanged(@NotNull EsbSequence sequence) {
-        updateDirtyState(true);
-    }
      
     /** {@inheritDoc} */
     @Override
-    public boolean onClose()
-    {
+    public boolean onClose() {
     	// remove handler
-        this.registration.removeHandler();
+    	commandHandlerRegistration.removeHandler();
+    	// remove observer
+        this.sequence.eAdapters().remove(this.sequenceObserver);
         
         return super.onClose();
     }
