@@ -188,6 +188,14 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
 
     /** {@inheritDoc} */
     @Override
+    public boolean onClose() {  
+       super.onClose();
+       graphicEditor.onClose();
+       return true;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
     public void propertyChanged(PartPresenter source, final int propId) {
         firePropertyChange(propId);
         if (propId == EditorPartPresenter.PROP_DIRTY && source instanceof GraphicEditor) {

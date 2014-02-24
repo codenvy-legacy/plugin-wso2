@@ -18,9 +18,11 @@
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
 import com.codenvy.ide.api.mvp.View;
+import com.genmymodel.ecoreonline.graphic.Diagram;
 import com.google.inject.ImplementedBy;
 
 import org.genmymodel.gmmf.propertypanel.PropertyPresenter;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
 /**
  * The view of {@link GraphicEditor}.
@@ -34,6 +36,7 @@ public interface GraphicEditorView extends View<GraphicEditorView.ActionDelegate
     public interface ActionDelegate {
     }
 
+    void initModelingWidgets(EsbSequence sequence, Diagram diagram);
     void addPropertyForm(PropertyPresenter... forms);
 
 }

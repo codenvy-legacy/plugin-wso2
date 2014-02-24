@@ -17,23 +17,16 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.util.GMMUtil;
 import org.genmymodel.gmmf.common.SelectModelElementEvent;
 import org.genmymodel.gmmf.propertypanel.PropertyPanel;
 import org.genmymodel.gmmf.propertypanel.PropertyPresenter;
 import org.genmymodel.gmmf.ui.ModelWidget;
 import org.genmymodel.gmmf.ui.tools.Toolbar;
 import org.genmymodel.gmmf.ui.tools.ToolsController;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbFactory;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbPackage;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.genmymodel.ecoreonline.graphic.Diagram;
-import com.genmymodel.ecoreonline.graphic.GraphicFactory;
-import com.genmymodel.ecoreonline.graphic.Plane;
-import com.genmymodel.ecoreonline.graphic.util.GraphicUtil;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.KeyDownEvent;
@@ -49,8 +42,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
-import esbdiag.EsbdiagFactory;
-import esbdiag.EsbdiagPackage;
 import esbdiag.widgets.ESBDiagramToolbar;
 
 /**
@@ -65,12 +56,6 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
     interface GEUIBinder extends UiBinder<Widget, GraphicEditorViewImpl> {
     }
 
-    static {
-        // register metamodels - should only be done once
-        EPackage.Registry.INSTANCE.put(EsbPackage.eINSTANCE.getNsURI(), EsbPackage.eINSTANCE);
-        EPackage.Registry.INSTANCE.put(EsbdiagPackage.eINSTANCE.getNsURI(), EsbdiagPackage.eINSTANCE);
-    }
-
     private static GEUIBinder binder = GWT.create(GEUIBinder.class);
 
     @UiField(provided = true)
@@ -81,29 +66,24 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
     PropertyPanel             propertyPanel;
     @UiField(provided = true)
     WSO2Resources             res;
+    
+    private EventBus eventBus;
 
     @Inject
     public GraphicEditorViewImpl(WSO2Resources resources, EventBus eventBus) {
         this.res = resources;
+        this.eventBus = eventBus;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public void initModelingWidgets(EsbSequence sequence, Diagram diagram) {
 
-        final EsbSequence newModel = EsbFactory.eINSTANCE.createEsbSequence();
-        GMMUtil.setUUID(newModel);
-        newModel.setName("NewESB");
-
-        // Create default diagram
-        final Diagram diagram = EsbdiagFactory.eINSTANCE.createESBDiagram();
-        final Plane plane = GraphicFactory.eINSTANCE.createPlane();
-        GMMUtil.setUUID(diagram);
-        GMMUtil.setUUID(plane);
-        diagram.setPlane(plane);
-        diagram.setName("NewESB" + "-diag");
-        diagram.getPlane().setModelElement(newModel);
-        GraphicUtil.addDiagram(newModel, diagram);
-
+    	/* ModelWidget comes from GMMF framework */
         this.modelWidget = new ModelWidget(diagram, eventBus);
 
         /* the ESB-specific toolbar */
-        this.toolbar = new ESBDiagramToolbar(modelWidget, eventBus, resources.wso2Style(), resources);
+        this.toolbar = new ESBDiagramToolbar(modelWidget, eventBus, res.wso2Style(), res);
 
         ToolsController toolsController = new ToolsController(modelWidget, eventBus);
 
@@ -125,6 +105,7 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
         /* event for the property panel */
         eventBus.addHandler(SelectModelElementEvent.TYPE, propertyPanel);
     }
+
 
     /** {@inheritDoc} */
     @Override
