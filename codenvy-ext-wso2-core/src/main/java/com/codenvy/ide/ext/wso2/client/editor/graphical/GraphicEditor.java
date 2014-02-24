@@ -117,14 +117,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     @Override
     protected void initializeEditor() {
 
-        view.addPropertyForm(logProperties,
-                             propertyProperties,
-                             respondProperties,
-                             sendProperties,
-                             switchProperties,
-                             callProperties,
-                             headerProperties,
-                             addressProperties);
+      
 
         // create the sequence and its diagram
         sequence = EsbFactory.eINSTANCE.createEsbSequence();
@@ -142,8 +135,19 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
         // init the modeling widgets
         view.initModelingWidgets(sequence, diagram);
         
+        view.addPropertyForm(logProperties,
+                propertyProperties,
+                respondProperties,
+                sendProperties,
+                switchProperties,
+                callProperties,
+                headerProperties,
+                addressProperties);
+        
         // add a handler for detecting changes on the sequence
         globalBus.addHandler(GraphicalSequenceChangeEvent.TYPE, this);
+        
+        
     }
 
     /** @return ESB sequence content. */
