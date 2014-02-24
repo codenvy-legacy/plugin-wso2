@@ -42,7 +42,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -61,6 +60,7 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.SEQUENCE_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SRC_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NAME;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static javax.ws.rs.core.MediaType.TEXT_HTML;
 
 /**
  * RESTful service for creating 'WSO2' projects.
@@ -83,11 +83,13 @@ public class WSO2RestService {
     public Response detectConfigurationFile(FileInfo fileInfo) throws VirtualFileSystemException {
         VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(getVfsID());
         MountPoint mountPoint = vfsProvider.getMountPoint(false);
+
         VirtualFile file = mountPoint.getVirtualFile(fileInfo.getProjectName() + "/" + fileInfo.getFileName());
+        file.updateContent(ESB_XML_MIME_TYPE, file.getContent().getStream(), null);
 
         String result = moveFile(file, mountPoint, fileInfo.getProjectName(), getParentFolderForImportingFile(file));
 
-        return Response.ok(result, MediaType.TEXT_HTML).build();
+        return Response.ok(result, TEXT_HTML).build();
     }
 
     private String moveFile(@NotNull VirtualFile file,
@@ -122,7 +124,7 @@ public class WSO2RestService {
         String[] pathElements = filePath.split("/");
         String fileName = pathElements[pathElements.length - 1];
 
-        String parentFolder = "";
+        String parentFolder;
 
         try {
             InputStream is = URI.create(fileInfo.getFileName()).toURL().openStream();
@@ -134,7 +136,8 @@ public class WSO2RestService {
             LOG.error("Can't create " + fileName + " file", e);
             parentFolder = e.getMessage();
         }
-        return Response.ok(parentFolder, MediaType.TEXT_HTML).build();
+
+        return Response.ok(parentFolder, TEXT_HTML).build();
     }
 
     @Path("file/{operation}")
@@ -142,6 +145,7 @@ public class WSO2RestService {
     @Consumes(APPLICATION_JSON)
     public Response overwriteConfigurationFile(@PathParam("operation") String operation, FileInfo fileInfo)
             throws VirtualFileSystemException {
+
         VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(getVfsID());
         MountPoint mountPoint = vfsProvider.getMountPoint(false);
         VirtualFile file = mountPoint.getVirtualFile(fileInfo.getProjectName() + "/" + fileInfo.getFileName());
@@ -149,6 +153,7 @@ public class WSO2RestService {
         VirtualFile oldFile = mountPoint.getVirtualFile(
                 fileInfo.getProjectName() + "/" + SRC_FOLDER_NAME + "/" + MAIN_FOLDER_NAME + "/" + SYNAPSE_CONFIG_FOLDER_NAME + "/" +
                 parentFolder + "/" + fileInfo.getFileName());
+
         switch (operation) {
             case "overwrite":
                 oldFile.updateContent(oldFile.getMediaType(), file.getContent().getStream(), null);
@@ -163,7 +168,8 @@ public class WSO2RestService {
                 file.delete(null);
                 break;
         }
-        return Response.ok(parentFolder, MediaType.TEXT_HTML).build();
+
+        return Response.ok(parentFolder, TEXT_HTML).build();
     }
 
     @GET

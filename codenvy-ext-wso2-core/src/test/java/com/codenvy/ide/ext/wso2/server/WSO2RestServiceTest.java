@@ -53,6 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_MIME_TYPE;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -140,6 +141,7 @@ public class WSO2RestServiceTest {
         ContainerResponse response = prepareResponseLauncherService("POST", "detect", data);
 
         assertEquals(200, response.getStatus());
+        verify(synapseFile).updateContent(eq(ESB_XML_MIME_TYPE), (InputStream)anyObject(), anyString());
     }
 
     @SuppressWarnings("unchecked")
@@ -161,7 +163,7 @@ public class WSO2RestServiceTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void fileShouldBeDetectWhenVirtualFileSystemExceptionHappened() throws Exception {
+    public void fileShouldBeNotDetectWhenVirtualFileSystemExceptionHappened() throws Exception {
         prepareForFileModificationRequestTest();
 
         FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
@@ -177,6 +179,7 @@ public class WSO2RestServiceTest {
         ContainerResponse response = prepareResponseLauncherService("POST", "detect", data);
 
         assertEquals(200, response.getStatus());
+        verify(synapseFile).updateContent(eq(ESB_XML_MIME_TYPE), (InputStream)anyObject(), anyString());
     }
 
     @SuppressWarnings("unchecked")
