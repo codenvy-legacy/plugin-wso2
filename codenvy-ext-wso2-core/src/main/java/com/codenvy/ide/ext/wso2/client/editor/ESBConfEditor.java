@@ -96,12 +96,8 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     /** {@inheritDoc} */
     @Override
     public void doSave() {
-        // TODO need to think how to improve it
-        if (textEditor.isDirty()) {
+        if (isDirty()) {
             textEditor.doSave();
-        }
-
-        if (graphicEditor.isDirty()) {
             graphicEditor.doSave();
         }
     }
@@ -189,17 +185,19 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     /** {@inheritDoc} */
     @Override
     public void propertyChanged(PartPresenter source, final int propId) {
-        firePropertyChange(propId);
         if (propId == EditorPartPresenter.PROP_DIRTY && source instanceof GraphicEditor) {
             EsbSequence sequence = graphicEditor.getSequence();
             try {
                 Document seq = esbToXMLMapper.transform(sequence);
-
                 textEditor.getDocument().set(xmlParserUtil.formatXML(seq.getDocumentElement()));
+
+                updateDirtyState(true);
             } catch (Exception e) {
                 Notification notification = new Notification(e.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
             }
+        } else {
+            firePropertyChange(propId);
         }
     }
 }

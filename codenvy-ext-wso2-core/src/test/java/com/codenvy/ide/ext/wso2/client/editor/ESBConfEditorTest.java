@@ -127,7 +127,7 @@ public class ESBConfEditorTest {
         esbConfEditor.doSave();
 
         verify(textEditor).doSave();
-        verify(graphicEditor, never()).doSave();
+        verify(graphicEditor).doSave();
     }
 
     @Test
@@ -136,7 +136,7 @@ public class ESBConfEditorTest {
 
         esbConfEditor.doSave();
 
-        verify(textEditor, never()).doSave();
+        verify(textEditor).doSave();
         verify(graphicEditor).doSave();
     }
 
