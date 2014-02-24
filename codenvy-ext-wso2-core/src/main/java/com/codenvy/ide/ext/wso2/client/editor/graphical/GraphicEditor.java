@@ -24,8 +24,6 @@ import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
-import com.codenvy.ide.ext.wso2.client.editor.ESBToXMLMapper;
-import com.codenvy.ide.util.loging.Log;
 import com.genmymodel.ecoreonline.graphic.impl.GraphicPackageImpl;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -45,7 +43,7 @@ import esbdiag.util.EsbdiagUtil;
 
 /**
  * The graphical editor for ESB configuration.
- * 
+ *
  * @author Andrey Plotnikov
  * @author Alexis Muller
  * @author Justin Trentesaux
@@ -62,6 +60,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     private CallMediatorPropertiesPresenter     callProperties;
     private HeaderMediatorPropertiesPresenter   headerProperties;
     private AddressEndPointPropertiesPresenter  addressProperties;
+    private EsbSequence							sequence;
     private HandlerRegistration                 registration;
 
     @Inject
@@ -92,7 +91,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
         /* A handler listens every EMF command */
         this.registration = globalBus.addHandler(CommandRequestEvent.TYPE, new SeqEventsHandler(globalBus));
 
-        // /!\ needed for compliance with codenvy injector /!\
+        // /!\ needed for compliance with condenvy injector /!\
         // must be changed
         GraphicPackageImpl.globalBus = globalBus;
         EsbdiagUtil.ESB_RESOURCES = wso2Resources;
@@ -117,6 +116,11 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
 
     }
 
+    /** @return ESB sequence content. */
+    public EsbSequence getSequence() {
+        return sequence;
+    }
+    
     /** {@inheritDoc} */
     @Override
     public void doSave() {
@@ -160,22 +164,18 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     /** {@inheritDoc} */
     @Override
     public void hasChanged(@NotNull EsbSequence sequence) {
+    	this.sequence = sequence;
         updateDirtyState(true);
-
-        ESBToXMLMapper esbToXMLMapper = new ESBToXMLMapper();
-
-        try {
-            // do whatever you want: fill the XML text editor
-            Log.info(getClass(), "XML: " + esbToXMLMapper.transform(sequence));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
-
+     
     /** {@inheritDoc} */
-    public void onUnload()
+    @Override
+    public boolean onClose()
     {
-        // remove handler
+    	// remove handler
         this.registration.removeHandler();
+        
+        return super.onClose();
     }
+    
 }

@@ -22,17 +22,13 @@ import genmymodel.commands.custom.GMMCommand;
 import genmymodel.commands.serializable.SerializableCommand;
 import genmymodel.commands.serializable.type.EObjectUUID;
 
-import com.codenvy.ide.util.loging.Log;
-import com.genmymodel.ecoreonline.graphic.Anchor;
-import com.genmymodel.ecoreonline.graphic.Connector;
-import com.genmymodel.ecoreonline.graphic.DiagramElement;
-import com.genmymodel.ecoreonline.graphic.GraphicPackage;
-import com.genmymodel.ecoreonline.graphic.Node;
-import com.genmymodel.ecoreonline.graphic.NodeWidget;
-import com.genmymodel.ecoreonline.graphic.PlaneElement;
-import com.genmymodel.ecoreonline.graphic.Segment;
-import com.genmymodel.ecoreonline.graphic.event.handler.AutoResizeHandler;
-import com.google.web.bindery.event.shared.EventBus;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.Command;
@@ -56,17 +52,21 @@ import org.wso2.developerstudio.eclipse.gmf.esb.EsbLink;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 import org.wso2.developerstudio.eclipse.gmf.esb.ModelObject;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import com.codenvy.ide.util.loging.Log;
+import com.genmymodel.ecoreonline.graphic.Anchor;
+import com.genmymodel.ecoreonline.graphic.Connector;
+import com.genmymodel.ecoreonline.graphic.DiagramElement;
+import com.genmymodel.ecoreonline.graphic.GraphicPackage;
+import com.genmymodel.ecoreonline.graphic.Node;
+import com.genmymodel.ecoreonline.graphic.NodeWidget;
+import com.genmymodel.ecoreonline.graphic.PlaneElement;
+import com.genmymodel.ecoreonline.graphic.Segment;
+import com.genmymodel.ecoreonline.graphic.event.handler.AutoResizeHandler;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Get modeling events and executes the appropriated EMF commands.
- *
+ * 
  * @author Alexis Muller
  */
 public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoResizeHandler {
@@ -91,7 +91,7 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
 
         if (emfCommand instanceof UnexecutableDeleteCommand) {
             emfCommand =
-                    createDeleteCommand(event.getModel(), editingDomain, ((UnexecutableDeleteCommand)emfCommand).geteObjectsToRemove());
+                         createDeleteCommand(event.getModel(), editingDomain, ((UnexecutableDeleteCommand)emfCommand).geteObjectsToRemove());
         }
 
         if (!emfCommand.canExecute()) {
@@ -155,7 +155,7 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
 
     /**
      * Fire a GraphicalSequenceChangeEvent only if the model has changed.
-     *
+     * 
      * @param event
      */
     private void fireModelChange(CommandRequestEvent event, Command emfCommand) {
@@ -163,8 +163,9 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
         Collection<EObject> affectedObjects = (Collection<EObject>)emfCommand.getAffectedObjects();
         boolean hasModelChanged = false;
 
+        // determine if the model -not the diagram - has changed
         for (EObject eo : affectedObjects) {
-            // TODO improved the esb metamodel to have one common super class
+
             if (eo instanceof ModelObject || eo instanceof EsbLink || eo instanceof EsbConnector) {
                 hasModelChanged = true;
                 break;
@@ -172,9 +173,11 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
         }
 
         if (hasModelChanged) {
-            // if the model has changed, fire the event
+
+            // warn handlers the model has just changed
             EsbSequence esbSequence = (EsbSequence)event.getModel();
-            GraphicalSequenceChangeEvent graphicSequenceHasChangedEvent = new GraphicalSequenceChangeEvent(esbSequence);
+            GraphicalSequenceChangeEvent graphicSequenceHasChangedEvent =
+                                                                          new GraphicalSequenceChangeEvent(esbSequence);
             eventBus.fireEvent(graphicSequenceHasChangedEvent);
         }
     }

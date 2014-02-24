@@ -82,8 +82,6 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
     @UiField(provided = true)
     WSO2Resources             res;
 
-    GraphicEditor             presenter;
-
     @Inject
     public GraphicEditorViewImpl(WSO2Resources resources, EventBus eventBus) {
         this.res = resources;
@@ -132,19 +130,6 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
     @Override
     public void setDelegate(ActionDelegate delegate) {
 
-        if (delegate instanceof GraphicEditor)
-        {
-            this.presenter = (GraphicEditor)delegate;
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onUnload() {
-        super.onUnload();
-
-        // removeHandler
-        this.presenter.onUnload();
     }
 
     /** {@inheritDoc} */

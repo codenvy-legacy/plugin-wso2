@@ -81,7 +81,7 @@ from Codenvy S.A..
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-site-war</artifactId>
-            <version>${codenvy.version}</version>
+            <version>3.0.0-M8</version>
             <type>war</type>
         </dependency>
         <dependency>
@@ -491,11 +491,11 @@ from Codenvy S.A..
                                 <war destfile="${project.build.directory}/tomcat-ide/webapps/ide.war" needxmlfile="false">
                                     <fileset dir="${project.build.directory}/packager-conf/war/ide" />
                                 </war>
-                                <unwar dest="${project.build.directory}/packager-conf/war/site" src="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-${codenvy.version}.war" />
+                                <unwar dest="${project.build.directory}/packager-conf/war/site" src="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-3.0.0-M8.war" />
                                 <copy overwrite="true" todir="${project.build.directory}/packager-conf/war/site">
                                     <fileset dir="${basedir}/src/main/resources/site" />
                                 </copy>
-                                <war destfile="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-${codenvy.version}.war" needxmlfile="false">
+                                <war destfile="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-3.0.0-M8.war" needxmlfile="false">
                                     <fileset dir="${project.build.directory}/packager-conf/war/site" />
                                 </war>
                                 <unwar dest="${project.build.directory}/packager-conf/war/api" src="${project.build.directory}/packager-conf/war/codenvy-api-war-${codenvy.version}.war" />
@@ -510,7 +510,7 @@ from Codenvy S.A..
                                 </war>
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${org.exoplatform.ide.version}.war" overwrite="true" tofile="${project.build.directory}/tomcat-ide/webapps/git.war" />
                                 <copy file="${project.build.directory}/packager-conf/war/codenvy-api-war-${codenvy.version}.war" overwrite="true" tofile="${project.build.directory}/tomcat-ide/webapps/api.war" />
-                                <copy file="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-${codenvy.version}.war" overwrite="true" tofile="${project.build.directory}/tomcat-ide/webapps/site.war" />
+                                <copy file="${project.build.directory}/packager-conf/war/codenvy-ide-site-war-3.0.0-M8.war" overwrite="true" tofile="${project.build.directory}/tomcat-ide/webapps/site.war" />
                                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${org.exoplatform.ide.version}.war" overwrite="true" tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" />
                                 <copy file="${project.build.directory}/packager-conf/war/codenvy-organization-packaging-api-war-${com.codenvy.organization.version}.war" overwrite="true" tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" />
                                 <unzip dest="${project.build.directory}/tomcat-ide" src="${project.build.directory}/ide-codeassistant-lucene-index.zip" />

@@ -22,29 +22,40 @@ import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorInitException;
 import com.codenvy.ide.api.editor.EditorInput;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PropertyListener;
+import com.codenvy.ide.ext.wso2.client.commons.XMLParserUtil;
 import com.codenvy.ide.ext.wso2.client.editor.graphical.GraphicEditor;
 import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorConfiguration;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.xml.client.Document;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
+
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * The editor for WSO2 ESB configuration.
  *
  * @author Andrey Plotnikov
  */
-public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEditorView.ActionDelegate {
+public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEditorView.ActionDelegate, PropertyListener {
 
-    private ESBConfEditorView view;
-    private GraphicEditor     graphicEditor;
-    private CodenvyTextEditor textEditor;
+    private ESBConfEditorView   view;
+    private GraphicEditor       graphicEditor;
+    private CodenvyTextEditor   textEditor;
+    private ESBToXMLMapper      esbToXMLMapper;
+    private NotificationManager notificationManager;
+    private XMLParserUtil       xmlParserUtil;
 
     @Inject
     public ESBConfEditor(ESBConfEditorView view,
@@ -52,22 +63,20 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
                          Provider<CodenvyTextEditor> editorProvider,
                          Provider<XmlEditorConfiguration> xmlEditorConfigurationProvider,
                          NotificationManager notificationManager,
-                         GraphicEditor graphicEditor) {
+                         GraphicEditor graphicEditor,
+                         ESBToXMLMapper esbToXMLMapper,
+                         XMLParserUtil xmlParserUtil) {
         this.view = view;
         this.view.setDelegate(this);
         this.graphicEditor = graphicEditor;
+        this.notificationManager = notificationManager;
+        this.esbToXMLMapper = esbToXMLMapper;
+        this.xmlParserUtil = xmlParserUtil;
         textEditor = editorProvider.get();
         textEditor.initialize(xmlEditorConfigurationProvider.get(), documentProvider, notificationManager);
 
-        PropertyListener propertyListener = new PropertyListener() {
-            @Override
-            public void propertyChanged(PartPresenter source, int propId) {
-                firePropertyChange(propId);
-            }
-        };
-
-        this.graphicEditor.addPropertyListener(propertyListener);
-        textEditor.addPropertyListener(propertyListener);
+        this.graphicEditor.addPropertyListener(this);
+        textEditor.addPropertyListener(this);
     }
 
     /** {@inheritDoc} */
@@ -81,11 +90,7 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     /** {@inheritDoc} */
     @Override
     protected void initializeEditor() {
-        view.setEnableTextEditorButton(false);
-        view.setEnableGraphicalEditorButton(true);
-        view.setEnableBothEditorButton(true);
-
-        view.showTextEditor(textEditor);
+        onTextEditorButtonClicked();
     }
 
     /** {@inheritDoc} */
@@ -179,5 +184,22 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         view.setEnableBothEditorButton(false);
 
         view.showEditors(graphicEditor, textEditor);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void propertyChanged(PartPresenter source, final int propId) {
+        firePropertyChange(propId);
+        if (propId == EditorPartPresenter.PROP_DIRTY && source instanceof GraphicEditor) {
+            EsbSequence sequence = graphicEditor.getSequence();
+            try {
+                Document seq = esbToXMLMapper.transform(sequence);
+
+                textEditor.getDocument().set(xmlParserUtil.formatXML(seq.getDocumentElement()));
+            } catch (Exception e) {
+                Notification notification = new Notification(e.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
+            }
+        }
     }
 }

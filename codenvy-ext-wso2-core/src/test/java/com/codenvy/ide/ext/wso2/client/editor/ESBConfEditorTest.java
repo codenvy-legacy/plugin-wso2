@@ -20,12 +20,17 @@ package com.codenvy.ide.ext.wso2.client.editor;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorInput;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.workspace.PropertyListener;
+import com.codenvy.ide.ext.wso2.client.commons.XMLParserUtil;
 import com.codenvy.ide.ext.wso2.client.editor.graphical.GraphicEditor;
 import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorConfiguration;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.Node;
 import com.google.inject.Provider;
 
 import org.junit.Before;
@@ -33,14 +38,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -64,12 +72,16 @@ public class ESBConfEditorTest {
     private Provider<XmlEditorConfiguration> xmlEditorConfigurationProvider;
     @Mock
     private NotificationManager              notificationManager;
-    @Mock
+    @Mock(answer = RETURNS_DEEP_STUBS)
     private GraphicEditor                    graphicEditor;
     @Mock
     private CodenvyTextEditor                textEditor;
     @Mock
     private EditorInput                      editorInput;
+    @Mock
+    private XMLParserUtil                    xmlParserUtil;
+    @Mock
+    private ESBToXMLMapper                   esbToXMLMapper;
     private ESBConfEditor                    esbConfEditor;
 
     @Before
@@ -84,7 +96,9 @@ public class ESBConfEditorTest {
                                           editorProvider,
                                           xmlEditorConfigurationProvider,
                                           notificationManager,
-                                          graphicEditor);
+                                          graphicEditor,
+                                          esbToXMLMapper,
+                                          xmlParserUtil);
 
         verify(view).setDelegate(eq(esbConfEditor));
         verify(editorProvider).get();
@@ -269,5 +283,28 @@ public class ESBConfEditorTest {
         verify(view).setEnableBothEditorButton(eq(false));
 
         verify(view).showEditors(eq(graphicEditor), eq(textEditor));
+    }
+
+    @Test
+    public void contentOfTextEditorShouldBeChangedIfPropertyIsDirty() throws Exception {
+        Document document = mock(Document.class);
+        com.codenvy.ide.text.Document txtDocument = mock(com.codenvy.ide.text.Document.class);
+        when(esbToXMLMapper.transform((EsbSequence)anyObject())).thenReturn(document);
+        when(textEditor.getDocument()).thenReturn(txtDocument);
+        when(xmlParserUtil.formatXML((Node)anyObject())).thenReturn("some text");
+
+        esbConfEditor.propertyChanged(graphicEditor, EditorPartPresenter.PROP_DIRTY);
+
+        verify(txtDocument).set(eq("some text"));
+    }
+
+    @Test
+    public void sequenceTransformationGenerateTheException() throws Exception {
+        Exception exception = mock(Exception.class);
+        doThrow(exception).when(esbToXMLMapper).transform((EsbSequence)anyObject());
+
+        esbConfEditor.propertyChanged(graphicEditor, EditorPartPresenter.PROP_DIRTY);
+
+        verify(notificationManager).showNotification((Notification)anyObject());
     }
 }
