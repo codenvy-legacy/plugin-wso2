@@ -111,10 +111,10 @@ public class ESBConfEditorTest {
     public void editorsShouldBeInitialized() throws Exception {
         esbConfEditor.init(editorInput);
 
-        verify(view).setEnableTextEditorButton(eq(false));
-        verify(view).setEnableGraphicalEditorButton(eq(true));
+        verify(view).setEnableTextEditorButton(eq(true));
+        verify(view).setEnableGraphicalEditorButton(eq(false));
         verify(view).setEnableBothEditorButton(eq(true));
-        verify(view).showTextEditor(eq(textEditor));
+        verify(view).showGraphicalEditor(eq(graphicEditor));
 
         verify(graphicEditor).init(eq(editorInput));
         verify(textEditor).init(eq(editorInput));

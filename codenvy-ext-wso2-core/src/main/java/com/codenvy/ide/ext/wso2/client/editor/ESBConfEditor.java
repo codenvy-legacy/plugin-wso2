@@ -90,7 +90,7 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     /** {@inheritDoc} */
     @Override
     protected void initializeEditor() {
-        onTextEditorButtonClicked();
+        onGraphicalEditorButtonClicked();
     }
 
     /** {@inheritDoc} */
