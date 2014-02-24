@@ -17,19 +17,11 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.util.EContentAdapter;
-import org.eclipse.emf.ecore.util.GMMUtil;
-import org.genmymodel.gmmf.common.CommandRequestEvent;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbFactory;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbPackage;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
-
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.genmymodel.ecoreonline.graphic.Diagram;
+import com.genmymodel.ecoreonline.graphic.DiagramElement;
+import com.genmymodel.ecoreonline.graphic.DiagramWidget;
 import com.genmymodel.ecoreonline.graphic.GraphicFactory;
 import com.genmymodel.ecoreonline.graphic.Plane;
 import com.genmymodel.ecoreonline.graphic.impl.GraphicPackageImpl;
@@ -52,6 +44,16 @@ import esbdiag.properties.sendmediator.SendMediatorPropertiesView.SendMediatorPr
 import esbdiag.properties.switchmediator.SwitchMediatorPropertiesView.SwitchMediatorPropertiesPresenter;
 import esbdiag.util.EsbdiagUtil;
 
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.util.EContentAdapter;
+import org.eclipse.emf.ecore.util.GMMUtil;
+import org.genmymodel.gmmf.common.CommandRequestEvent;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbFactory;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbPackage;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
+
 /**
  * The graphical editor for ESB configuration.
  *
@@ -61,14 +63,14 @@ import esbdiag.util.EsbdiagUtil;
  */
 public class GraphicEditor extends AbstractEditorPresenter implements GraphicEditorView.ActionDelegate {
 
-	static {
+    static {
         // register metamodels - should only be done once
         EPackage.Registry.INSTANCE.put(EsbPackage.eINSTANCE.getNsURI(), EsbPackage.eINSTANCE);
         EPackage.Registry.INSTANCE.put(EsbdiagPackage.eINSTANCE.getNsURI(), EsbdiagPackage.eINSTANCE);
     }
-	
-    private GraphicEditorView                   view;
-    
+
+    private GraphicEditorView view;
+
     private LogMediatorPropertiesPresenter      logProperties;
     private PropertyMediatorPropertiesPresenter propertyProperties;
     private RespondMediatorPropertiesPresenter  respondProperties;
@@ -77,11 +79,11 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     private CallMediatorPropertiesPresenter     callProperties;
     private HeaderMediatorPropertiesPresenter   headerProperties;
     private AddressEndPointPropertiesPresenter  addressProperties;
-    private EsbSequence							sequence;
-    
-    private EventBus							globalBus;
-    private Adapter 							sequenceObserver;
-    private HandlerRegistration					commandHandlerRegistration;
+    private EsbSequence                         sequence;
+
+    private EventBus            globalBus;
+    private Adapter             sequenceObserver;
+    private HandlerRegistration commandHandlerRegistration;
 
     @Inject
     public GraphicEditor(GraphicEditorView view,
@@ -95,12 +97,12 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
                          HeaderMediatorPropertiesPresenter headerProperties,
                          AddressEndPointPropertiesPresenter addressProperties,
                          EventBus globalBus) {
-    	
-    	// /!\ needed for compliance with condenvy injector /!\
+
+        // /!\ needed for compliance with condenvy injector /!\
         // must be changed
         GraphicPackageImpl.globalBus = globalBus;
         EsbdiagUtil.ESB_RESOURCES = wso2Resources;
-              
+
         this.view = view;
         this.view.setDelegate(this);
         this.logProperties = logProperties;
@@ -112,28 +114,28 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
         this.headerProperties = headerProperties;
         this.addressProperties = addressProperties;
         this.globalBus = globalBus;
-        
+
         // create the sequence observer
         sequenceObserver = new EContentAdapter() {
-        	@Override
-			public void notifyChanged(Notification msg)
-			{
-        		super.notifyChanged(msg);
-        		
-				if (!msg.isTouch())
-				{
-					updateDirtyState(true);
-				}
-			}
-        };        
+            @Override
+            public void notifyChanged(Notification msg) {
+                super.notifyChanged(msg);
+                // TODO Filter out diagram elements in a better way + ScheduledCommand
+                if (!msg.isTouch() && !(msg.getNotifier() instanceof DiagramElement)) {
+                    updateDirtyState(true);
+                }
+            }
+        };
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void initializeEditor() {
 
-    	// TODO: create or open sequence
-    	
+        // TODO: create or open sequence
+
         // create the sequence and its diagram
         sequence = EsbFactory.eINSTANCE.createEsbSequence();
         GMMUtil.setUUID(sequence);
@@ -146,80 +148,98 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
         diagram.setName("NewESB" + "-diag");
         diagram.getPlane().setModelElement(sequence);
         GraphicUtil.addDiagram(sequence, diagram);
-        
-        // init the modeling widgets
+
+        // init the modeling widgets on the view side
         view.initModelingWidgets(sequence, diagram);
-        
+
+        // add property panels
         view.addPropertyForm(logProperties,
-                propertyProperties,
-                respondProperties,
-                sendProperties,
-                switchProperties,
-                callProperties,
-                headerProperties,
-                addressProperties);
-        
-        /* A handler listens every EMF command */
-        commandHandlerRegistration = globalBus.addHandler(CommandRequestEvent.TYPE, new SeqEventsHandler(sequence)); 
-        
+            propertyProperties,
+            respondProperties,
+            sendProperties,
+            switchProperties,
+            callProperties,
+            headerProperties,
+            addressProperties);
+
+        // A handler listens every EMF command
+        commandHandlerRegistration = globalBus.addHandler(CommandRequestEvent.TYPE, new SeqEventsHandler(sequence));
+
         // add the observer for detecting changes on the sequence
         sequence.eAdapters().add(sequenceObserver);
     }
 
-    /** @return ESB sequence content. */
+    /**
+     * @return ESB sequence content.
+     */
     public EsbSequence getSequence() {
         return sequence;
     }
-    
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doSave() {
         updateDirtyState(false);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doSaveAs() {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void activate() {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getTitle() {
         return "ESB Editor: " + input.getFile().getName();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ImageResource getTitleImage() {
         return input.getImageResource();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getTitleToolTip() {
         return null;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
     }
-     
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean onClose() {
-    	// remove handler
-    	commandHandlerRegistration.removeHandler();
-    	// remove observer
+        // remove the handler that waits for EMF commands
+        commandHandlerRegistration.removeHandler();
+        // remove the observer that observes the sequence, the one who triggers updateDirtyState
         this.sequence.eAdapters().remove(this.sequenceObserver);
-        
         return super.onClose();
     }
-    
+
 }

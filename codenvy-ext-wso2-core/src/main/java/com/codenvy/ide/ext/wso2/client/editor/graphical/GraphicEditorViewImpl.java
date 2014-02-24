@@ -17,6 +17,18 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
+import com.codenvy.ide.ext.wso2.client.WSO2Resources;
+import com.genmymodel.ecoreonline.graphic.Diagram;
+import com.google.gwt.core.shared.GWT;
+import com.google.gwt.event.dom.client.*;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.SimpleEventBus;
+import esbdiag.widgets.ESBDiagramToolbar;
 import org.genmymodel.gmmf.common.SelectModelElementEvent;
 import org.genmymodel.gmmf.propertypanel.PropertyPanel;
 import org.genmymodel.gmmf.propertypanel.PropertyPresenter;
@@ -25,29 +37,9 @@ import org.genmymodel.gmmf.ui.tools.Toolbar;
 import org.genmymodel.gmmf.ui.tools.ToolsController;
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
-import com.codenvy.ide.ext.wso2.client.WSO2Resources;
-import com.genmymodel.ecoreonline.graphic.Diagram;
-import com.google.gwt.core.shared.GWT;
-import com.google.gwt.event.dom.client.ContextMenuEvent;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseMoveEvent;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
-import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.event.shared.SimpleEventBus;
-
-import esbdiag.widgets.ESBDiagramToolbar;
-
 /**
  * The implementation of {@link GraphicEditorView}.
- * 
+ *
  * @author Alexis Muller
  * @author Justin Trentesaux
  * @author Andrey Plotnikov
@@ -60,16 +52,16 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
     private static GEUIBinder binder = GWT.create(GEUIBinder.class);
 
     @UiField(provided = true)
-    Toolbar                   toolbar;
+    Toolbar       toolbar;
     @UiField(provided = true)
-    ModelWidget               modelWidget;
+    ModelWidget   modelWidget;
     @UiField
-    PropertyPanel             propertyPanel;
+    PropertyPanel propertyPanel;
     @UiField(provided = true)
-    WSO2Resources             res;
-    
+    WSO2Resources res;
+
     private EventBus globalBus;
-    
+
     // This event bus is internal to each diagram widget instance
     private EventBus diagramEventBus;
 
@@ -77,22 +69,25 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
     public GraphicEditorViewImpl(WSO2Resources resources, EventBus globalBus) {
         this.res = resources;
         this.globalBus = globalBus;
+        // we use a local bus for the communication between the toolbar and the widgets
         this.diagramEventBus = new SimpleEventBus();
     }
-    
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void initModelingWidgets(EsbSequence sequence, Diagram diagram) {
 
-    	/* ModelWidget comes from GMMF framework */
+        // ModelWidget comes from GMMF framework
         this.modelWidget = new ModelWidget(diagram, diagramEventBus);
 
-        /* the ESB-specific toolbar */
+        // the ESB-specific toolbar
         this.toolbar = new ESBDiagramToolbar(modelWidget, this.globalBus, res.wso2Style(), res);
 
         ToolsController toolsController = new ToolsController(modelWidget, this.globalBus);
 
-        /* toolsController */
+        // toolsController
         diagramEventBus.addHandler(MouseDownEvent.getType(), toolsController);
         diagramEventBus.addHandler(MouseMoveEvent.getType(), toolsController);
         diagramEventBus.addHandler(MouseUpEvent.getType(), toolsController);
@@ -107,26 +102,29 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
 
         initWidget(binder.createAndBindUi(this));
 
-        /* event for the property panel */
+        // event for the property panel
         this.globalBus.addHandler(SelectModelElementEvent.TYPE, propertyPanel);
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setDelegate(ActionDelegate delegate) {
 
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addPropertyForm(PropertyPresenter... forms) {
         propertyPanel.add(forms);
     }
 
-	@Override
-	public EventBus getDiagramEventBus()
-	{
-		return diagramEventBus;
-	}
+    @Override
+    public EventBus getDiagramEventBus() {
+        return diagramEventBus;
+    }
 }
