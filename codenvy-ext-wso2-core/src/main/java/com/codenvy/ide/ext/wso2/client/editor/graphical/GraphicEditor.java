@@ -17,20 +17,6 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
-import javax.validation.constraints.NotNull;
-
-import org.genmymodel.gmmf.common.CommandRequestEvent;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
-
-import com.codenvy.ide.api.editor.AbstractEditorPresenter;
-import com.codenvy.ide.ext.wso2.client.WSO2Resources;
-import com.genmymodel.ecoreonline.graphic.impl.GraphicPackageImpl;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.inject.Inject;
-import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.event.shared.HandlerRegistration;
-
 import esbdiag.properties.addressendpoint.AddressEndPointPropertiesPresenter;
 import esbdiag.properties.callmediator.CallMediatorPropertiesPresenter;
 import esbdiag.properties.headermediator.HeaderMediatorPropertiesPresenter;
@@ -41,9 +27,22 @@ import esbdiag.properties.sendmediator.SendMediatorPropertiesPresenter;
 import esbdiag.properties.switchmediator.SwitchMediatorPropertiesPresenter;
 import esbdiag.util.EsbdiagUtil;
 
+import com.codenvy.ide.api.editor.AbstractEditorPresenter;
+import com.codenvy.ide.ext.wso2.client.WSO2Resources;
+import com.genmymodel.ecoreonline.graphic.impl.GraphicPackageImpl;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
+
+import org.genmymodel.gmmf.common.CommandRequestEvent;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
+
+import javax.validation.constraints.NotNull;
+
 /**
  * The graphical editor for ESB configuration.
- * 
+ *
  * @author Andrey Plotnikov
  * @author Alexis Muller
  * @author Justin Trentesaux
@@ -90,7 +89,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
         /* A handler listens every EMF command */
         this.registration = globalBus.addHandler(CommandRequestEvent.TYPE, new SeqEventsHandler(globalBus));
 
-        // /!\ needed for compliance with codenvy injector /!\
+        // /!\ needed for compliance with condenvy injector /!\
         // must be changed
         GraphicPackageImpl.globalBus = globalBus;
         EsbdiagUtil.ESB_RESOURCES = wso2Resources;
@@ -158,7 +157,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     /** {@inheritDoc} */
     @Override
     public void hasChanged(@NotNull EsbSequence sequence) {
-        updateDirtyState(true);   
+        updateDirtyState(true);
     }
      
     /** {@inheritDoc} */
