@@ -17,12 +17,7 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor;
 
-import com.codenvy.ide.api.editor.AbstractEditorPresenter;
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
-import com.codenvy.ide.api.editor.DocumentProvider;
-import com.codenvy.ide.api.editor.EditorInitException;
-import com.codenvy.ide.api.editor.EditorInput;
-import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.editor.*;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
@@ -35,7 +30,6 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.xml.client.Document;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
 import javax.annotation.Nullable;
@@ -79,7 +73,9 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         textEditor.addPropertyListener(this);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void init(@NotNull EditorInput input) throws EditorInitException {
         super.init(input);
@@ -87,13 +83,17 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         graphicEditor.init(input);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void initializeEditor() {
         onTextEditorButtonClicked();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doSave() {
         // TODO need to think how to improve it
@@ -106,27 +106,35 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doSaveAs() {
         // TODO check active editor and execute saveAs on it
         textEditor.doSaveAs();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void activate() {
         // TODO check active editor and execute active on it
         textEditor.activate();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isDirty() {
         return graphicEditor.isDirty() || textEditor.isDirty();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getTitle() {
         if (isDirty()) {
@@ -136,27 +144,35 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Nullable
     @Override
     public ImageResource getTitleImage() {
         return input.getImageResource();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Nullable
     @Override
     public String getTitleToolTip() {
         return null;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onTextEditorButtonClicked() {
         view.setEnableTextEditorButton(false);
@@ -166,7 +182,9 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         view.showTextEditor(textEditor);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onGraphicalEditorButtonClicked() {
         view.setEnableTextEditorButton(true);
@@ -176,7 +194,9 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         view.showGraphicalEditor(graphicEditor);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onAssociateEditorButtonClicked() {
         view.setEnableTextEditorButton(true);
@@ -186,15 +206,19 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         view.showEditors(graphicEditor, textEditor);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean onClose() {  
-       super.onClose();
-       graphicEditor.onClose();
-       return true;
+    public boolean onClose() {
+        super.onClose();
+        graphicEditor.onClose();
+        return true;
     }
-    
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void propertyChanged(PartPresenter source, final int propId) {
         firePropertyChange(propId);
