@@ -17,10 +17,23 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
+import org.genmymodel.gmmf.common.SelectModelElementEvent;
+import org.genmymodel.gmmf.propertypanel.PropertyPanel;
+import org.genmymodel.gmmf.propertypanel.PropertyPresenter;
+import org.genmymodel.gmmf.ui.ModelWidget;
+import org.genmymodel.gmmf.ui.tools.Toolbar;
+import org.genmymodel.gmmf.ui.tools.ToolsController;
+
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.genmymodel.ecoreonline.graphic.Diagram;
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -28,14 +41,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
+
 import esbdiag.widgets.ESBDiagramToolbar;
-import org.genmymodel.gmmf.common.SelectModelElementEvent;
-import org.genmymodel.gmmf.propertypanel.PropertyPanel;
-import org.genmymodel.gmmf.propertypanel.PropertyPresenter;
-import org.genmymodel.gmmf.ui.ModelWidget;
-import org.genmymodel.gmmf.ui.tools.Toolbar;
-import org.genmymodel.gmmf.ui.tools.ToolsController;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
 /**
  * The implementation of {@link GraphicEditorView}.
@@ -71,19 +78,22 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
         this.globalBus = globalBus;
         // we use a local bus for the communication between the toolbar and the widgets
         this.diagramEventBus = new SimpleEventBus();
+        
+        // ModelWidget comes from GMMF framework
+        this.modelWidget = new ModelWidget(/*diagram,*/ diagramEventBus);
+
+        // the ESB-specific toolbar
+        this.toolbar = new ESBDiagramToolbar(modelWidget, this.globalBus, res.wso2Style(), res);
+        
+        initWidget(binder.createAndBindUi(this));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void initModelingWidgets(EsbSequence sequence, Diagram diagram) {
-
-        // ModelWidget comes from GMMF framework
-        this.modelWidget = new ModelWidget(diagram, diagramEventBus);
-
-        // the ESB-specific toolbar
-        this.toolbar = new ESBDiagramToolbar(modelWidget, this.globalBus, res.wso2Style(), res);
+    public void setDiagram(Diagram diagram) {
+ 
 
         ToolsController toolsController = new ToolsController(modelWidget, this.globalBus);
 
@@ -98,9 +108,8 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
 
         // TODO need to change hard code size of panel
         modelWidget.setSize(2048, 2048);
-        modelWidget.loadDiagram();
+        modelWidget.loadDiagram(diagram);
 
-        initWidget(binder.createAndBindUi(this));
 
         // event for the property panel
         this.globalBus.addHandler(SelectModelElementEvent.TYPE, propertyPanel);
