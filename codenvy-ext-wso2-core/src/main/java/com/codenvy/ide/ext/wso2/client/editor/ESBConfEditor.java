@@ -179,9 +179,7 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     /** {@inheritDoc} */
     @Override
     public boolean onClose() {
-        super.onClose();
-        graphicEditor.onClose();
-        return true;
+        return graphicEditor.onClose() && textEditor.onClose() && super.onClose();
     }
 
     /** {@inheritDoc} */
