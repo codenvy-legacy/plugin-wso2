@@ -17,12 +17,11 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
-import org.genmymodel.gmmf.propertypanel.PropertyPresenter;
-
 import com.codenvy.ide.api.mvp.View;
 import com.genmymodel.ecoreonline.graphic.Diagram;
 import com.google.inject.ImplementedBy;
 import com.google.web.bindery.event.shared.EventBus;
+import org.genmymodel.gmmf.propertypanel.PropertyPresenter;
 
 /**
  * The view of {@link GraphicEditor}.

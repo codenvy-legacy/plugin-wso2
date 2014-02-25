@@ -17,16 +17,6 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.util.EContentAdapter;
-import org.eclipse.emf.ecore.util.GMMUtil;
-import org.genmymodel.gmmf.common.CommandRequestEvent;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbFactory;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbPackage;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
-
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.genmymodel.ecoreonline.graphic.Diagram;
@@ -40,7 +30,6 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-
 import esbdiag.EsbdiagFactory;
 import esbdiag.EsbdiagPackage;
 import esbdiag.properties.addressendpoint.AddressEndPointPropertiesView.AddressEndPointPropertiesPresenter;
@@ -52,6 +41,15 @@ import esbdiag.properties.respondmediator.RespondMediatorPropertiesView.RespondM
 import esbdiag.properties.sendmediator.SendMediatorPropertiesView.SendMediatorPropertiesPresenter;
 import esbdiag.properties.switchmediator.SwitchMediatorPropertiesView.SwitchMediatorPropertiesPresenter;
 import esbdiag.util.EsbdiagUtil;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.util.EContentAdapter;
+import org.eclipse.emf.ecore.util.GMMUtil;
+import org.genmymodel.gmmf.common.CommandRequestEvent;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbFactory;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbPackage;
+import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
 /**
  * The graphical editor for ESB configuration.
@@ -148,7 +146,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
         diagram.getPlane().setModelElement(sequence);
         GraphicUtil.addDiagram(sequence, diagram);
 
-        // init the modeling widgets on the view side
+        // init the modelWidget with its diagrams and connect toolbar with widgets
         view.setDiagram(diagram);
 
         // add property panels
