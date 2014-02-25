@@ -125,9 +125,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
         };
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     protected void initializeEditor() {
 
@@ -173,63 +171,47 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
         return sequence;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void doSave() {
         updateDirtyState(false);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void doSaveAs() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void activate() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String getTitle() {
         return "ESB Editor: " + input.getFile().getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
         return input.getImageResource();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String getTitleToolTip() {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean onClose() {
         // remove the handler that waits for EMF commands
