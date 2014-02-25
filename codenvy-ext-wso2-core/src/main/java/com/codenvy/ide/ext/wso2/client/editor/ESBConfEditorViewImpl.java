@@ -65,10 +65,10 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
         bothEditorPanel.setSize("100%", "100%");
 
         graphicalEditorPanel = new SimplePanel();
-        bothEditorPanel.addWest(graphicalEditorPanel, 50);
-
         textEditorPanel = new SimplePanel();
-        bothEditorPanel.add(textEditorPanel);
+
+        bothEditorPanel.addWest(textEditorPanel, 50);
+        bothEditorPanel.add(graphicalEditorPanel);
     }
 
     /** {@inheritDoc} */
