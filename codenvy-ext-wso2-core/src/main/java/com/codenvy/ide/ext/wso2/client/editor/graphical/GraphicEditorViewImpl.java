@@ -73,18 +73,25 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
     public GraphicEditorViewImpl(WSO2Resources resources, EventBus eventBus) {
         this.res = resources;
         this.eventBus = eventBus;
+        
+        /* ModelWidget comes from GMMF framework */
+        this.modelWidget = new ModelWidget(eventBus);
+
+        /* the ESB-specific toolbar */
+        this.toolbar = new ESBDiagramToolbar(modelWidget, eventBus, res.wso2Style(), res);
+
+        // TODO need to change hard code size of panel
+        modelWidget.setSize(2048, 2048);
+        
+
+        initWidget(binder.createAndBindUi(this));
     }
     
     /** {@inheritDoc} */
     @Override
     public void initModelingWidgets(EsbSequence sequence, Diagram diagram) {
-
-    	/* ModelWidget comes from GMMF framework */
-        this.modelWidget = new ModelWidget(diagram, eventBus);
-
-        /* the ESB-specific toolbar */
-        this.toolbar = new ESBDiagramToolbar(modelWidget, eventBus, res.wso2Style(), res);
-
+        modelWidget.loadDiagram(diagram);
+        
         ToolsController toolsController = new ToolsController(modelWidget, eventBus);
 
         /* toolsController */
@@ -95,12 +102,6 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
         eventBus.addHandler(MouseOutEvent.getType(), toolsController);
         eventBus.addHandler(KeyDownEvent.getType(), toolsController);
         eventBus.addHandler(ContextMenuEvent.getType(), toolsController);
-
-        // TODO need to change hard code size of panel
-        modelWidget.setSize(2048, 2048);
-        modelWidget.loadDiagram();
-
-        initWidget(binder.createAndBindUi(this));
 
         /* event for the property panel */
         eventBus.addHandler(SelectModelElementEvent.TYPE, propertyPanel);
