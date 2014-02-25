@@ -30,6 +30,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+
 import esbdiag.EsbdiagFactory;
 import esbdiag.EsbdiagPackage;
 import esbdiag.properties.addressendpoint.AddressEndPointPropertiesView.AddressEndPointPropertiesPresenter;
@@ -39,8 +40,10 @@ import esbdiag.properties.logmediator.LogMediatorPropertiesView.LogMediatorPrope
 import esbdiag.properties.propertymediator.PropertyMediatorPropertiesView.PropertyMediatorPropertiesPresenter;
 import esbdiag.properties.respondmediator.RespondMediatorPropertiesView.RespondMediatorPropertiesPresenter;
 import esbdiag.properties.sendmediator.SendMediatorPropertiesView.SendMediatorPropertiesPresenter;
+import esbdiag.properties.sequence.SequencePropertiesView.SequencePropertiesPresenter;
 import esbdiag.properties.switchmediator.SwitchMediatorPropertiesView.SwitchMediatorPropertiesPresenter;
 import esbdiag.util.EsbdiagUtil;
+
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EPackage;
@@ -68,6 +71,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
 
     private GraphicEditorView view;
 
+    private SequencePropertiesPresenter         sequenceProperties;
     private LogMediatorPropertiesPresenter      logProperties;
     private PropertyMediatorPropertiesPresenter propertyProperties;
     private RespondMediatorPropertiesPresenter  respondProperties;
@@ -85,6 +89,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     @Inject
     public GraphicEditor(GraphicEditorView view,
                          WSO2Resources wso2Resources,
+                         SequencePropertiesPresenter sequenceProperties,
                          LogMediatorPropertiesPresenter logProperties,
                          PropertyMediatorPropertiesPresenter propertyProperties,
                          RespondMediatorPropertiesPresenter respondProperties,
@@ -102,6 +107,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
 
         this.view = view;
         this.view.setDelegate(this);
+        this.sequenceProperties = sequenceProperties;
         this.logProperties = logProperties;
         this.propertyProperties = propertyProperties;
         this.respondProperties = respondProperties;
@@ -148,7 +154,8 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
         view.setDiagram(diagram);
 
         // add property panels
-        view.addPropertyForm(logProperties,
+        view.addPropertyForm(sequenceProperties, 
+            logProperties,
             propertyProperties,
             respondProperties,
             sendProperties,
