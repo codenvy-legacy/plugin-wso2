@@ -17,12 +17,7 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor;
 
-import com.codenvy.ide.api.editor.AbstractEditorPresenter;
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
-import com.codenvy.ide.api.editor.DocumentProvider;
-import com.codenvy.ide.api.editor.EditorInitException;
-import com.codenvy.ide.api.editor.EditorInput;
-import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.editor.*;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
@@ -35,7 +30,6 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.xml.client.Document;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-
 import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
 import javax.annotation.Nullable;
@@ -180,6 +174,12 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         view.setEnableBothEditorButton(false);
 
         view.showEditors(graphicEditor, textEditor);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean onClose() {
+        return graphicEditor.onClose() && textEditor.onClose() && super.onClose();
     }
 
     /** {@inheritDoc} */

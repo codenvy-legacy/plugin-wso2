@@ -17,38 +17,24 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
-import esbdiag.EsbdiagFactory;
-import esbdiag.widgets.ESBDiagramToolbar;
-
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.genmymodel.ecoreonline.graphic.Diagram;
-import com.genmymodel.ecoreonline.graphic.GraphicFactory;
-import com.genmymodel.ecoreonline.graphic.Plane;
-import com.genmymodel.ecoreonline.graphic.util.GraphicUtil;
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.event.dom.client.ContextMenuEvent;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseMoveEvent;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-
-import org.eclipse.emf.ecore.util.GMMUtil;
+import com.google.web.bindery.event.shared.SimpleEventBus;
+import esbdiag.widgets.ESBDiagramToolbar;
 import org.genmymodel.gmmf.common.SelectModelElementEvent;
 import org.genmymodel.gmmf.propertypanel.PropertyPanel;
 import org.genmymodel.gmmf.propertypanel.PropertyPresenter;
 import org.genmymodel.gmmf.ui.ModelWidget;
 import org.genmymodel.gmmf.ui.tools.Toolbar;
 import org.genmymodel.gmmf.ui.tools.ToolsController;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbFactory;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
 /**
  * The implementation of {@link GraphicEditorView}.
@@ -73,59 +59,65 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
     @UiField(provided = true)
     WSO2Resources res;
 
+    private EventBus globalBus;
+
+    // This event bus is internal to each diagram widget instance
+    private EventBus diagramEventBus;
+
     @Inject
-    public GraphicEditorViewImpl(WSO2Resources resources, EventBus eventBus) {
+    public GraphicEditorViewImpl(WSO2Resources resources, EventBus globalBus) {
         this.res = resources;
+        this.globalBus = globalBus;
 
-        final EsbSequence newModel = EsbFactory.eINSTANCE.createEsbSequence();
-        GMMUtil.setUUID(newModel);
-        newModel.setName("NewESB");
+        // we use a local bus for the communication between the toolbar and the widgets
+        this.diagramEventBus = new SimpleEventBus();
 
-        // Create default diagram
-        final Diagram diagram = EsbdiagFactory.eINSTANCE.createESBDiagram();
-        final Plane plane = GraphicFactory.eINSTANCE.createPlane();
-        GMMUtil.setUUID(diagram);
-        GMMUtil.setUUID(plane);
-        diagram.setPlane(plane);
-        diagram.setName("NewESB" + "-diag");
-        diagram.getPlane().setModelElement(newModel);
-        GraphicUtil.addDiagram(newModel, diagram);
+        // ModelWidget comes from GMMF framework
+        this.modelWidget = new ModelWidget(diagramEventBus);
 
-        this.modelWidget = new ModelWidget(diagram, eventBus);
-
-        /* the ESB-specific toolbar */
-        this.toolbar = new ESBDiagramToolbar(modelWidget, eventBus, resources.wso2Style(), resources);
-
-        ToolsController toolsController = new ToolsController(modelWidget, eventBus);
-
-        /* toolsController */
-        eventBus.addHandler(MouseDownEvent.getType(), toolsController);
-        eventBus.addHandler(MouseMoveEvent.getType(), toolsController);
-        eventBus.addHandler(MouseUpEvent.getType(), toolsController);
-        eventBus.addHandler(MouseOverEvent.getType(), toolsController);
-        eventBus.addHandler(MouseOutEvent.getType(), toolsController);
-        eventBus.addHandler(KeyDownEvent.getType(), toolsController);
-        eventBus.addHandler(ContextMenuEvent.getType(), toolsController);
-
-        // TODO need to change hard code size of panel
-        modelWidget.setSize(2048, 2048);
-        modelWidget.loadDiagram();
+        // the ESB-specific toolbar
+        this.toolbar = new ESBDiagramToolbar(modelWidget, this.globalBus, res.wso2Style(), res);
 
         initWidget(binder.createAndBindUi(this));
-
-        /* event for the property panel */
-        eventBus.addHandler(SelectModelElementEvent.TYPE, propertyPanel);
     }
 
     /** {@inheritDoc} */
     @Override
+    public void setDiagram(Diagram diagram) {
+
+        // Link the toolbar to model widgets
+        ToolsController toolsController = new ToolsController(modelWidget, this.globalBus);
+        diagramEventBus.addHandler(MouseDownEvent.getType(), toolsController);
+        diagramEventBus.addHandler(MouseMoveEvent.getType(), toolsController);
+        diagramEventBus.addHandler(MouseUpEvent.getType(), toolsController);
+        diagramEventBus.addHandler(MouseOverEvent.getType(), toolsController);
+        diagramEventBus.addHandler(MouseOutEvent.getType(), toolsController);
+        diagramEventBus.addHandler(KeyDownEvent.getType(), toolsController);
+        diagramEventBus.addHandler(ContextMenuEvent.getType(), toolsController);
+
+        // TODO need to change hard code size of panel
+        modelWidget.setSize(2048, 2048);
+        modelWidget.loadDiagram(diagram);
+
+        // event for the property panel
+        this.globalBus.addHandler(SelectModelElementEvent.TYPE, propertyPanel);
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
     public void setDelegate(ActionDelegate delegate) {
-        // do nothing for now
+
     }
 
     /** {@inheritDoc} */
     @Override
     public void addPropertyForm(PropertyPresenter... forms) {
         propertyPanel.add(forms);
+    }
+
+    @Override
+    public EventBus getDiagramEventBus() {
+        return diagramEventBus;
     }
 }
