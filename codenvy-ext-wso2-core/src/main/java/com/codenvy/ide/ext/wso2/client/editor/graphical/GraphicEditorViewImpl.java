@@ -65,11 +65,11 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
     private EventBus diagramEventBus;
 
     @Inject
-    public GraphicEditorViewImpl(WSO2Resources resources, EventBus globalBus, ValiditionNotifierImpl validationNotifier) {
+    public GraphicEditorViewImpl(WSO2Resources resources, EventBus globalBus, ValidationNotifierImpl validationNotifier) {
         this.res = resources;
         this.globalBus = globalBus;
-       // this.validator = validator;
-        
+        // this.validator = validator;
+
         // we use a local bus for the communication between the toolbar and the widgets
         this.diagramEventBus = new SimpleEventBus();
 
@@ -82,7 +82,9 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
         initWidget(binder.createAndBindUi(this));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setDiagram(Diagram diagram) {
 
@@ -105,13 +107,17 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setDelegate(ActionDelegate delegate) {
 
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addPropertyForm(PropertyPresenter... forms) {
         propertyPanel.add(forms);

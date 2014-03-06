@@ -1,3 +1,20 @@
+/*
+ * CODENVY CONFIDENTIAL
+ * __________________
+ * 
+ * [2012] - [2014] Codenvy, S.A. 
+ * All Rights Reserved.
+ * 
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Codenvy S.A. and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Codenvy S.A.
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Codenvy S.A..
+ */
 package com.codenvy.ide.ext.wso2.client.editor;
 
 import java.util.Date;
@@ -18,11 +35,10 @@ import com.google.gwt.xml.client.Element;
 
 public class XmlToDiagramTest extends GWTTestCase {
 
-    public XmlToDiagramTest()
-    {
+    public XmlToDiagramTest() {
         super();
     }
-    
+
     /**
      * Returns the module name for GWT unit test running.
      */
@@ -30,72 +46,70 @@ public class XmlToDiagramTest extends GWTTestCase {
     public String getModuleName() {
         return "com.codenvy.ide.ext.wso2.WSO2";
     }
-    	
+
     /**
      * The main test
      */
     @Test
-    public void testTransformModelToXml()
-    {
-    	long start = new Date().getTime();
-    	
+    public void testTransformModelToXml() {
+        long start = new Date().getTime();
+
         // Create an ESB sequence (EMF model conforming esb.ecore)
         EsbSequence sequence = createEsbSequence();
 
         // Parse the sequence to render an XML document
         Document document = null;
-		try {
-			
-			ESBToXMLMapper esbToXMLMapper = new ESBToXMLMapper();
-			document = esbToXMLMapper.transform(sequence);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-        
-		// XML -> model
         try {
-			sequence = retrieveSequence(document);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-        
+
+            ESBToXMLMapper esbToXMLMapper = new ESBToXMLMapper();
+            document = esbToXMLMapper.transform(sequence);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // XML -> model
+        try {
+            sequence = retrieveSequence(document);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         // Model -> diagram
-        
+
         long end = new Date().getTime();
-        System.out.println("Duration: " + (end-start)/1000.0 + "s");
+        System.out.println("Duration: " + (end - start) / 1000.0 + "s");
     }
 
-    
-	private EsbSequence retrieveSequence (Document document) {
 
-		Element rootElem = null;
-		EsbSequence sequence = null;	
-		
-		try {
-			rootElem = document.getDocumentElement();	
+    private EsbSequence retrieveSequence(Document document) {
 
-			// Create the sequence
-			sequence = EsbFactory.eINSTANCE.loadModelObject(rootElem, EsbSequence.class, null);
-			
-			// Populate it
-			sequence.load(rootElem);
-			
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}	
-		
-		if (null != sequence) {
-			System.out.println("Load errors: " + sequence.getLoadErrors());
-		} else {
-			System.out.println("Corrupted or invalid esb configuration file.");
-		}
-		
-		return sequence;
-	}
-	
-    private EsbSequence createEsbSequence()
-    {
-    	EsbSequence sequence = EsbFactory.eINSTANCE.createEsbSequence();
+        Element rootElem = null;
+        EsbSequence sequence = null;
+
+        try {
+            rootElem = document.getDocumentElement();
+
+            // Create the sequence
+            sequence = EsbFactory.eINSTANCE.loadModelObject(rootElem, EsbSequence.class, null);
+
+            // Populate it
+            sequence.load(rootElem);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        if (null != sequence) {
+            System.out.println("Load errors: " + sequence.getLoadErrors());
+        } else {
+            System.out.println("Corrupted or invalid esb configuration file.");
+        }
+
+        return sequence;
+    }
+
+    private EsbSequence createEsbSequence() {
+        EsbSequence sequence = EsbFactory.eINSTANCE.createEsbSequence();
         sequence.setName("sequence 1");
 
         LogMediator logMediator = EsbFactory.eINSTANCE.createLogMediator();
@@ -111,7 +125,7 @@ public class XmlToDiagramTest extends GWTTestCase {
         namespacedProperty.setPropertyName("property");
         namespacedProperty.setPropertyValue("value");
         filterMediator.setSource(namespacedProperty);
-        
+
         SendMediator sendMediator = EsbFactory.eINSTANCE.createSendMediator();
         sendMediator.setDescription("Send");
 
