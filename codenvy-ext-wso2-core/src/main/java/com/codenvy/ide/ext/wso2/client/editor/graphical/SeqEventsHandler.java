@@ -218,11 +218,11 @@ public class SeqEventsHandler implements CollaborationEventRequestHandler, AutoR
             }
 
             if (eObject instanceof EsbLink) {
-            	
-            	 compoundCommand.append(new SetCommand(editingDomain,  eObject, EsbPackage.eINSTANCE.getEsbLink_Target(), null));
+
+                compoundCommand.append(new SetCommand(editingDomain, eObject, EsbPackage.eINSTANCE.getEsbLink_Target(), null));
             }
 
-            
+
             if (toRemoveSet.contains(eObject.eContainer())) { // We must clean the objects that will be auto-destroyed
                 destroy.add(eObject);
             }
