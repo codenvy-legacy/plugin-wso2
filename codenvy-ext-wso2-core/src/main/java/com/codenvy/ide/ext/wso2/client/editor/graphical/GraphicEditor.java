@@ -34,9 +34,11 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 import esbdiag.EsbdiagFactory;
 import esbdiag.EsbdiagPackage;
 import esbdiag.properties.addressendpoint.AddressEndPointPropertiesView.AddressEndPointPropertiesPresenter;
+import esbdiag.properties.callTemplatemediator.CallTemplateMediatorPropertiesView.CallTemplateMediatorPropertiesPresenter;
 import esbdiag.properties.callmediator.CallMediatorPropertiesView.CallMediatorPropertiesPresenter;
 import esbdiag.properties.headermediator.HeaderMediatorPropertiesView.HeaderMediatorPropertiesPresenter;
 import esbdiag.properties.logmediator.LogMediatorPropertiesView.LogMediatorPropertiesPresenter;
+import esbdiag.properties.payloadfactorymediator.PayloadFactoryMediatorPropertiesView.PayloadFactoryMediatorPropertiesPresenter;
 import esbdiag.properties.propertymediator.PropertyMediatorPropertiesView.PropertyMediatorPropertiesPresenter;
 import esbdiag.properties.respondmediator.RespondMediatorPropertiesView.RespondMediatorPropertiesPresenter;
 import esbdiag.properties.sendmediator.SendMediatorPropertiesView.SendMediatorPropertiesPresenter;
@@ -80,6 +82,8 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     private CallMediatorPropertiesPresenter     callProperties;
     private HeaderMediatorPropertiesPresenter   headerProperties;
     private AddressEndPointPropertiesPresenter  addressProperties;
+    private CallTemplateMediatorPropertiesPresenter callTemplateProperties;
+    private PayloadFactoryMediatorPropertiesPresenter payloadProperties;
     private EsbSequence                         sequence;
 
     private EventBus            globalBus;
@@ -98,6 +102,8 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
                          CallMediatorPropertiesPresenter callProperties,
                          HeaderMediatorPropertiesPresenter headerProperties,
                          AddressEndPointPropertiesPresenter addressProperties,
+                         CallTemplateMediatorPropertiesPresenter callTemplateProperties,
+                         PayloadFactoryMediatorPropertiesPresenter payloadProperties,
                          EventBus globalBus) {
 
         // /!\ needed for compliance with condenvy injector /!\
@@ -116,6 +122,8 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
         this.callProperties = callProperties;
         this.headerProperties = headerProperties;
         this.addressProperties = addressProperties;
+        this.callTemplateProperties = callTemplateProperties;
+        this.payloadProperties = payloadProperties;
         this.globalBus = globalBus;
 
         // create the sequence observer
@@ -162,7 +170,9 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
             switchProperties,
             callProperties,
             headerProperties,
-            addressProperties);
+            addressProperties,
+            callTemplateProperties,
+            payloadProperties);
 
         // A handler listens every EMF command
         commandHandlerRegistration = globalBus.addHandler(CommandRequestEvent.TYPE, new SeqEventsHandler(sequence));
