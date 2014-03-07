@@ -45,6 +45,11 @@
 	user-select: text;
 }
 
+.graphicContainer canvas:focus, 
+.graphicContainer div:focus{
+	outline: none;
+}
+
 .wso2PropertyPanelTitle{
 	position: absolute;
 	top: 0;
