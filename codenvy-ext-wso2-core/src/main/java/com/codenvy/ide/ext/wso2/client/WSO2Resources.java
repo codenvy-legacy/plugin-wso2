@@ -45,6 +45,9 @@ public interface WSO2Resources extends WSO2EsbResources {
         String wso2PropertyPanel();
     }
 
+    @Source("esb.xsd")
+    TextResource  xmlSchemaDefinition();
+
     @Source({"WSO2GlobalStyle.css", "WSO2ModelWidgetStyle.css"})
     WSO2Style wso2Style();
 

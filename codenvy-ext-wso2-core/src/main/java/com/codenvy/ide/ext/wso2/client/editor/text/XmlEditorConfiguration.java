@@ -17,14 +17,20 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.text;
 
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.ext.wso2.client.WSO2Resources;
+import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.AutoEditStrategy;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
+import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.parser.BasicTokenFactory;
 import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.codenvy.ide.texteditor.api.parser.Parser;
 import com.google.inject.Inject;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_EXTENSION;
@@ -38,10 +44,16 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_MIME_TYPE;
 public class XmlEditorConfiguration extends TextEditorConfiguration {
 
     private AutoCompleterFactory autoCompleterFactory;
+    private WSO2Resources        resources;
+    private XsdSchemaParser      xsdSchemaParser;
 
     @Inject
-    public XmlEditorConfiguration(AutoCompleterFactory autoCompleterFactory) {
+    public XmlEditorConfiguration(AutoCompleterFactory autoCompleterFactory,
+                                  WSO2Resources resources,
+                                  XsdSchemaParser xsdSchemaParser) {
         this.autoCompleterFactory = autoCompleterFactory;
+        this.resources = resources;
+        this.xsdSchemaParser = xsdSchemaParser;
     }
 
     /** {@inheritDoc} */
@@ -57,4 +69,15 @@ public class XmlEditorConfiguration extends TextEditorConfiguration {
     public AutoEditStrategy[] getAutoEditStrategies(TextEditorPartView view, String contentType) {
         return new AutoEditStrategy[]{autoCompleterFactory.createAutoCompleter(view)};
     }
+
+    /** {@inheritDoc} */
+    @Nullable
+    @Override
+    public StringMap<CodeAssistProcessor> getContentAssistantProcessors(@NotNull TextEditorPartView view) {
+        StringMap<CodeAssistProcessor> map = Collections.createStringMap();
+        map.put(Document.DEFAULT_CONTENT_TYPE, new XmlCodeAssistProcessor(xsdSchemaParser));
+        return map;
+    }
+
+
 }

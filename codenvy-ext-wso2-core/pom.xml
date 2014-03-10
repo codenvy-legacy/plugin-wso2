@@ -42,11 +42,6 @@
             <artifactId>codenvy-ide-api</artifactId>
             <version>${codenvy.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-security</artifactId>
-            <version>${codenvy.version}</version>
-        </dependency>
         <!-- Server libraries -->
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
