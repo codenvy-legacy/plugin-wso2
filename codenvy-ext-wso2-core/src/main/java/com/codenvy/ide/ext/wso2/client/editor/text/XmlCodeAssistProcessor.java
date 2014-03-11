@@ -19,6 +19,7 @@ package com.codenvy.ide.ext.wso2.client.editor.text;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.ext.wso2.client.commons.XsdSchemaParser;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Position;
@@ -30,6 +31,8 @@ import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;
 
+import java.util.HashSet;
+
 /**
  * Implementation of {@link CodeAssistProcessor} for XML files.
  *
@@ -38,7 +41,8 @@ import com.google.gwt.regexp.shared.SplitResult;
 public class XmlCodeAssistProcessor implements CodeAssistProcessor {
 
     private XsdSchemaParser xsdSchemaParser;
-    private String          textBeforeCursor = "";
+    private StringBuilder   textBeforeCursor;
+    private StringBuilder   textAfterCursor;
 
     public XmlCodeAssistProcessor(XsdSchemaParser xsdSchemaParser) {
         this.xsdSchemaParser = xsdSchemaParser;
@@ -54,11 +58,11 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
         }
 
         findTextBeforeCursor(view);
-        String triggeringString = computePrefixString(textBeforeCursor);
+        findTextAfterCursor(view);
+        String triggeringString = computePrefixString(textBeforeCursor.toString());
 
-        Log.info(getClass(), "textBefore = "  + textBeforeCursor);
-
-        if (textBeforeCursor.lastIndexOf('<') < textBeforeCursor.lastIndexOf('>') || triggeringString == null) {
+        if (textBeforeCursor.toString().lastIndexOf('<') < textBeforeCursor.toString().lastIndexOf('>') || triggeringString == null ||
+            triggeringString.startsWith("<") || triggeringString.startsWith("/")) {
             return;
         }
 
@@ -72,9 +76,10 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
                 XmlCompletionProposal[] proposals = prepareProposals(attributes, context, triggeringString);
                 if (proposals.length > 0) {
                     callback.proposalComputed(proposals);
+                } else {
+                    callback.proposalComputed(null);
                 }
             }
-            return;
         } catch (BadLocationException e) {
             Log.error(getClass(), e);
         }
@@ -108,10 +113,15 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
      */
     private XmlCompletionProposal[] prepareProposals(Array<String> attributes, InvocationContext context, String prefix) {
 
+        HashSet<String> introducedAttributes = getIntroducedAttributes();
+
         Array<String> actualProposals = Collections.createArray();
         for (int i = 0; i < attributes.size(); i++) {
-            if (attributes.get(i).startsWith(prefix)) {
-                actualProposals.add(attributes.get(i));
+            String attribute = attributes.get(i);
+            if (attribute.startsWith(prefix)) {
+                if (!introducedAttributes.contains(attribute)) {
+                    actualProposals.add(attributes.get(i));
+                }
             }
         }
         XmlCompletionProposal[] proposals = new XmlCompletionProposal[actualProposals.size()];
@@ -124,12 +134,46 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
     }
 
     /**
+     * Gets attributes that was introduce.
+     *
+     * @return a set with attributes.
+     */
+    private HashSet<String> getIntroducedAttributes() {
+        HashSet<String> attributes = new HashSet<String>();
+        int indexOfOpenTag = textBeforeCursor.toString().lastIndexOf('<');
+        int indexOfCloseTag = textAfterCursor.toString().indexOf('>');
+        StringBuilder currentTag = new StringBuilder();
+        if (indexOfOpenTag > 0) {
+            currentTag.append(textBeforeCursor.toString().substring(indexOfOpenTag, textBeforeCursor.length()));
+        }
+        if (indexOfCloseTag > 0) {
+            currentTag.append(textAfterCursor.toString().substring(0, indexOfCloseTag));
+        }
+        if (currentTag.toString().length() > 0) {
+            RegExp regexpSpaces = RegExp.compile("\\s+");
+            String textBeforeCursorWithoutSpaces = currentTag.toString().replaceAll("^\\s+", "");
+
+            SplitResult valueParts = regexpSpaces.split(textBeforeCursorWithoutSpaces);
+
+            for (int i = 0; i < valueParts.length(); i++) {
+                String attribute = valueParts.get(i);
+                int indexOfEq = attribute.indexOf('=');
+                if (indexOfEq > 0) {
+                    attributes.add(attribute.substring(0, indexOfEq));
+                }
+            }
+        }
+        return attributes;
+    }
+
+    /**
      * Finds a text that contains before position of the cursor.
      *
      * @param view
      *         the view whose document is used to compute the proposals
      */
     private void findTextBeforeCursor(TextEditorPartView view) {
+        textBeforeCursor = new StringBuilder();
         Document document = view.getDocument();
         Position cursor = view.getSelection().getCursorPosition();
         try {
@@ -140,19 +184,48 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
             boolean parsingLineWithCursor = true;
 
             while (line >= 0) {
-                StringBuilder text = new StringBuilder("");
                 if (parsingLineWithCursor) {
                     Region information = document.getLineInformation(line);
-                    text.append(document.get(information.getOffset(), column));
+                    textBeforeCursor.insert(0, document.get(information.getOffset(), column));
                     parsingLineWithCursor = false;
                 } else {
                     Region information = document.getLineInformation(line);
-                    text.append(document.get(information.getOffset(), information.getLength()));
+                    textBeforeCursor.insert(0, document.get(information.getOffset(), information.getLength()));
                 }
-
-                textBeforeCursor = text.append(textBeforeCursor).toString();
-
                 line--;
+            }
+        } catch (BadLocationException e) {
+            Log.error(getClass(), e);
+        }
+    }
+
+    /**
+     * Finds a text that contains after position of the cursor.
+     *
+     * @param view
+     *         the view whose document is used to compute the proposals
+     */
+    private void findTextAfterCursor(TextEditorPartView view) {
+        textAfterCursor = new StringBuilder();
+        Document document = view.getDocument();
+        Position cursor = view.getSelection().getCursorPosition();
+        try {
+            int line = document.getLineOfOffset(cursor.offset);
+            Region region = document.getLineInformation(line);
+            int column = cursor.getOffset() - region.getOffset();
+
+            boolean parsingLineWithCursor = true;
+
+            while (line < document.getNumberOfLines()) {
+                if (parsingLineWithCursor) {
+                    Region information = document.getLineInformation(line);
+                    textAfterCursor.append(document.get(information.getOffset(), information.getLength()).substring(column));
+                    parsingLineWithCursor = false;
+                } else {
+                    Region information = document.getLineInformation(line);
+                    textAfterCursor.append(document.get(information.getOffset(), information.getLength()).trim());
+                }
+                line++;
             }
         } catch (BadLocationException e) {
             Log.error(getClass(), e);
@@ -196,7 +269,7 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
     private String getTagToBeCompleted(String line) {
         int tagStartPosition = line.lastIndexOf('<') + 1;
         String substring = line.substring(tagStartPosition);
-        int tagEndPosition = tagStartPosition + substring.indexOf(" ");
+        int tagEndPosition = tagStartPosition + substring.indexOf(' ');
 
         return tagEndPosition < tagStartPosition ? substring : line.substring(tagStartPosition, tagEndPosition);
     }

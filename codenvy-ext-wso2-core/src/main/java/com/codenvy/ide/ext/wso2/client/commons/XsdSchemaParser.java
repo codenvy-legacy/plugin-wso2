@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.wso2.client.editor.text;
+package com.codenvy.ide.ext.wso2.client.commons;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -65,6 +65,7 @@ public class XsdSchemaParser {
         Array<String> attributesName = Collections.createArray();
 
         findComplexTypeNodes(childNodes, attributesName);
+        attributesName.add("description");
 
         return attributesName;
     }

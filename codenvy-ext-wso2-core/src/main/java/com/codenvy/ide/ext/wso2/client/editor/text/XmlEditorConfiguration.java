@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.wso2.client.editor.text;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
+import com.codenvy.ide.ext.wso2.client.commons.XsdSchemaParser;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.AutoEditStrategy;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
