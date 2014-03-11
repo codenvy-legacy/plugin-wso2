@@ -31,17 +31,16 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;
 
 /**
- * Implementation of {@link CodeAssistProcessor} for Xml files.
+ * Implementation of {@link CodeAssistProcessor} for XML files.
  *
  * @author Valeriy Svydenko
  */
 public class XmlCodeAssistProcessor implements CodeAssistProcessor {
 
     private XsdSchemaParser xsdSchemaParser;
-    private String          textBeforeCursor;
+    private String          textBeforeCursor = "";
 
     public XmlCodeAssistProcessor(XsdSchemaParser xsdSchemaParser) {
-        super();
         this.xsdSchemaParser = xsdSchemaParser;
     }
 
@@ -57,7 +56,9 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
         findTextBeforeCursor(view);
         String triggeringString = computePrefixString(textBeforeCursor);
 
-        if (textBeforeCursor.lastIndexOf("<") < textBeforeCursor.lastIndexOf(">") || triggeringString == null) {
+        Log.info(getClass(), "textBefore = "  + textBeforeCursor);
+
+        if (textBeforeCursor.lastIndexOf('<') < textBeforeCursor.lastIndexOf('>') || triggeringString == null) {
             return;
         }
 
@@ -71,12 +72,9 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
                 XmlCompletionProposal[] proposals = prepareProposals(attributes, context, triggeringString);
                 if (proposals.length > 0) {
                     callback.proposalComputed(proposals);
-                } else {
-                    callback.proposalComputed(null);
                 }
-            } else {
-                callback.proposalComputed(null);
             }
+            return;
         } catch (BadLocationException e) {
             Log.error(getClass(), e);
         }
@@ -90,10 +88,10 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
      * @return prefix
      */
     private String computePrefixString(String textBeforeCursor) {
-        RegExp REGEXP_SPACES = RegExp.compile("\\s+");
+        RegExp regexpSpaces = RegExp.compile("\\s+");
         textBeforeCursor = textBeforeCursor.replaceAll("^\\s+", "");
 
-        SplitResult valueParts = REGEXP_SPACES.split(textBeforeCursor);
+        SplitResult valueParts = regexpSpaces.split(textBeforeCursor);
 
         return valueParts.get(valueParts.length() - 1).trim();
     }
@@ -141,20 +139,18 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
 
             boolean parsingLineWithCursor = true;
 
-            textBeforeCursor = "";
-
-            while ((line >= 0)) {
-                String text;
+            while (line >= 0) {
+                StringBuilder text = new StringBuilder("");
                 if (parsingLineWithCursor) {
                     Region information = document.getLineInformation(line);
-                    text = document.get(information.getOffset(), column);
+                    text.append(document.get(information.getOffset(), column));
                     parsingLineWithCursor = false;
                 } else {
                     Region information = document.getLineInformation(line);
-                    text = document.get(information.getOffset(), information.getLength());
+                    text.append(document.get(information.getOffset(), information.getLength()));
                 }
 
-                textBeforeCursor = text + textBeforeCursor;
+                textBeforeCursor = text.append(textBeforeCursor).toString();
 
                 line--;
             }

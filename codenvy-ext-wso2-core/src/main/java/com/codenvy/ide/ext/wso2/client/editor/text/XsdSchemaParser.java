@@ -20,6 +20,7 @@ package com.codenvy.ide.ext.wso2.client.editor.text;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
+import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
@@ -34,6 +35,13 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class XsdSchemaParser {
+    public static final String NAME_NODE            = "name";
+    public static final String MEDIATOR_NODE        = "mediator";
+    public static final String ENDPOINT_NODE        = "endpoint";
+    public static final String COMPLEX_CONTENT_NODE = "xsd:complexcontent";
+    public static final String EXTENSION_NODE       = "xsd:extension";
+    public static final String ATTRIBUTE_NODE       = "xsd:attribute";
+    public static final String COMPLEX_TYPE_NODE    = "xsd:complexType";
 
     private WSO2Resources resources;
     private String        tag;
@@ -42,7 +50,6 @@ public class XsdSchemaParser {
     public XsdSchemaParser(WSO2Resources resources) {
         this.resources = resources;
     }
-
 
     /**
      * Returns an array of tag attributes.
@@ -53,7 +60,7 @@ public class XsdSchemaParser {
      */
     public Array<String> getAttributes(String tag) {
         this.tag = tag;
-        com.google.gwt.xml.client.Document xml = XMLParser.parse(resources.xmlSchemaDefinition().getText());
+        Document xml = XMLParser.parse(resources.xmlSchemaDefinition().getText());
         NodeList childNodes = xml.getFirstChild().getChildNodes();
         Array<String> attributesName = Collections.createArray();
 
@@ -63,31 +70,49 @@ public class XsdSchemaParser {
     }
 
     /**
-     * Compute attribute names.
+     * Compute attributes.
      *
      * @param nodes
      *         list of parent node
      * @param attributesName
      *         array of attribute names.
      */
-    private void computeAttributeNames(NodeList nodes, Array<String> attributesName) {
-        nodes = getNodesWithAttributes("xsd:complexcontent", nodes);
-        nodes = getNodesWithAttributes("xsd:extension", nodes);
+    private void computeAttributes(NodeList nodes, Array<String> attributesName) {
+        nodes = getNodesWithAttributes(COMPLEX_CONTENT_NODE, nodes);
+        nodes = getNodesWithAttributes(EXTENSION_NODE, nodes);
 
         for (int i = 0; i < nodes.getLength(); i++) {
-            if (nodes.item(i).getNodeName().equalsIgnoreCase("xsd:attribute")) {
-                NamedNodeMap attributesOfAttributeNode = nodes.item(i).getAttributes();
-                for (int j = 0; j < attributesOfAttributeNode.getLength(); j++) {
-                    if (attributesOfAttributeNode.item(j).getNodeName().equals("name")) {
-                        String attributeValue = attributesOfAttributeNode.item(j).getNodeValue();
-                        if (attributeValue.toLowerCase().startsWith(tag)) {
-                            attributeValue = attributeValue.substring(tag.length(), attributeValue.length());
-                        }
-                        attributesName
-                                .add(attributeValue.substring(0, 1).toLowerCase() + attributeValue.substring(1, attributeValue.length()));
-                        break;
-                    }
+
+            Node node = nodes.item(i);
+
+            if (ATTRIBUTE_NODE.equalsIgnoreCase(node.getNodeName())) {
+                NamedNodeMap attributesOfAttributeNode = node.getAttributes();
+                computeAttributeNames(attributesOfAttributeNode, attributesName);
+            }
+        }
+    }
+
+    /**
+     * Compute name of attributes.
+     *
+     * @param attributesOfAttributeNode
+     *         a map with attributes
+     * @param attributesName
+     *         an array with names of attributes.
+     */
+    private void computeAttributeNames(NamedNodeMap attributesOfAttributeNode, Array<String> attributesName) {
+        for (int i = 0; i < attributesOfAttributeNode.getLength(); i++) {
+
+            Node attribute = attributesOfAttributeNode.item(i);
+
+            if (NAME_NODE.equals(attribute.getNodeName())) {
+                String attributeValue = attribute.getNodeValue();
+                if (attributeValue.toLowerCase().startsWith(tag)) {
+                    attributeValue = attributeValue.substring(tag.length(), attributeValue.length());
                 }
+                attributesName
+                        .add(attributeValue.substring(0, 1).toLowerCase() + attributeValue.substring(1, attributeValue.length()));
+                break;
             }
         }
     }
@@ -111,7 +136,6 @@ public class XsdSchemaParser {
         return null;
     }
 
-
     /**
      * Finds nodes with 'complexType' name.
      *
@@ -121,10 +145,11 @@ public class XsdSchemaParser {
      *         array of attributes.
      */
     private void findComplexTypeNodes(NodeList nodes, Array<String> attributesName) {
-        String complexTypeTag = "xsd:complexType";
         for (int i = 0; i < nodes.getLength(); i++) {
+
             Node child = nodes.item(i);
-            if (child.getNodeName().equalsIgnoreCase(complexTypeTag)) {
+
+            if (COMPLEX_TYPE_NODE.equalsIgnoreCase(child.getNodeName())) {
                 computeChildOfComplexTypeNode(child.getAttributes(), child, attributesName);
             }
             if (attributesName.size() > 0) {
@@ -145,10 +170,12 @@ public class XsdSchemaParser {
      */
     private void computeChildOfComplexTypeNode(NamedNodeMap attributes, Node parent, Array<String> attributesName) {
         for (int i = 0; i < attributes.getLength(); i++) {
-            if (attributes.item(i).getNodeName().equals("name") &&
-                (attributes.item(i).getNodeValue().equalsIgnoreCase(tag + "mediator") ||
-                 attributes.item(i).getNodeValue().equalsIgnoreCase(tag + "endpoint"))) {
-                computeAttributeNames(parent.getChildNodes(), attributesName);
+
+            String nodeValue = attributes.item(i).getNodeValue();
+
+            if (NAME_NODE.equals(attributes.item(i).getNodeName()) &&
+                ((tag + MEDIATOR_NODE).equalsIgnoreCase(nodeValue) || (tag + ENDPOINT_NODE).equalsIgnoreCase(nodeValue))) {
+                computeAttributes(parent.getChildNodes(), attributesName);
                 return;
             }
         }
