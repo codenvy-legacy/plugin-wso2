@@ -17,10 +17,18 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
+import esbdiag.widgets.ESBDiagramToolbar;
+
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.genmymodel.ecoreonline.graphic.Diagram;
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -28,8 +36,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
-import esbdiag.widgets.ESBDiagramToolbar;
-import org.genmymodel.gmmf.common.SelectModelElementEvent;
+
+import org.genmymodel.gmmf.common.SelectElementEvent;
 import org.genmymodel.gmmf.propertypanel.PropertyPanel;
 import org.genmymodel.gmmf.propertypanel.PropertyPresenter;
 import org.genmymodel.gmmf.ui.ModelWidget;
@@ -103,7 +111,7 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
         modelWidget.loadDiagram(diagram);
 
         // event for the property panel
-        this.globalBus.addHandler(SelectModelElementEvent.TYPE, propertyPanel);
+        this.globalBus.addHandler(SelectElementEvent.TYPE, propertyPanel);
     }
 
 
