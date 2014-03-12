@@ -41,8 +41,6 @@ import java.util.HashSet;
 public class XmlCodeAssistProcessor implements CodeAssistProcessor {
 
     private XsdSchemaParser xsdSchemaParser;
-    private StringBuilder   textBeforeCursor;
-    private StringBuilder   textAfterCursor;
 
     public XmlCodeAssistProcessor(XsdSchemaParser xsdSchemaParser) {
         this.xsdSchemaParser = xsdSchemaParser;
@@ -57,12 +55,12 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
             return;
         }
 
-        findTextBeforeCursor(view);
-        findTextAfterCursor(view);
-        String triggeringString = computePrefixString(textBeforeCursor.toString());
+        String textBeforeCursor = getTextBeforeCursor(view);
+        String textAfterCursor = getTextAfterCursor(view);
+        String triggeringString = computePrefixString(textBeforeCursor);
 
-        if (textBeforeCursor.toString().lastIndexOf('<') < textBeforeCursor.toString().lastIndexOf('>') || triggeringString == null ||
-            triggeringString.startsWith("<") || triggeringString.startsWith("/")) {
+        if (textBeforeCursor.lastIndexOf('<') < textBeforeCursor.lastIndexOf('>') || triggeringString == null ||
+            triggeringString.startsWith("<") || triggeringString.endsWith("/")) {
             return;
         }
 
@@ -73,7 +71,8 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
 
             InvocationContext context = new InvocationContext(triggeringString, offset);
             if (attributes.size() > 0) {
-                XmlCompletionProposal[] proposals = prepareProposals(attributes, context, triggeringString);
+                XmlCompletionProposal[] proposals =
+                        prepareProposals(attributes, context, triggeringString, textAfterCursor, textBeforeCursor);
                 if (proposals.length > 0) {
                     callback.proposalComputed(proposals);
                 } else {
@@ -111,9 +110,10 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
      * @param prefix
      *         the text before cursor.
      */
-    private XmlCompletionProposal[] prepareProposals(Array<String> attributes, InvocationContext context, String prefix) {
+    private XmlCompletionProposal[] prepareProposals(Array<String> attributes, InvocationContext context, String prefix,
+                                                     String textAfterCursor, String textBeforeCursor) {
 
-        HashSet<String> introducedAttributes = getIntroducedAttributes();
+        HashSet<String> introducedAttributes = getIntroducedAttributes(textAfterCursor, textBeforeCursor);
 
         Array<String> actualProposals = Collections.createArray();
         for (int i = 0; i < attributes.size(); i++) {
@@ -138,16 +138,16 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
      *
      * @return a set with attributes.
      */
-    private HashSet<String> getIntroducedAttributes() {
+    private HashSet<String> getIntroducedAttributes(String textAfterCursor, String textBeforeCursor) {
         HashSet<String> attributes = new HashSet<String>();
-        int indexOfOpenTag = textBeforeCursor.toString().lastIndexOf('<');
-        int indexOfCloseTag = textAfterCursor.toString().indexOf('>');
+        int indexOfOpenTag = textBeforeCursor.lastIndexOf('<');
+        int indexOfCloseTag = textAfterCursor.indexOf('>');
         StringBuilder currentTag = new StringBuilder();
         if (indexOfOpenTag > 0) {
-            currentTag.append(textBeforeCursor.toString().substring(indexOfOpenTag, textBeforeCursor.length()));
+            currentTag.append(textBeforeCursor.substring(indexOfOpenTag, textBeforeCursor.length()));
         }
         if (indexOfCloseTag > 0) {
-            currentTag.append(textAfterCursor.toString().substring(0, indexOfCloseTag));
+            currentTag.append(textAfterCursor.substring(0, indexOfCloseTag));
         }
         if (currentTag.toString().length() > 0) {
             RegExp regexpSpaces = RegExp.compile("\\s+");
@@ -172,8 +172,8 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
      * @param view
      *         the view whose document is used to compute the proposals
      */
-    private void findTextBeforeCursor(TextEditorPartView view) {
-        textBeforeCursor = new StringBuilder();
+    private String getTextBeforeCursor(TextEditorPartView view) {
+        StringBuilder textBeforeCursor = new StringBuilder();
         Document document = view.getDocument();
         Position cursor = view.getSelection().getCursorPosition();
         try {
@@ -197,6 +197,7 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
         } catch (BadLocationException e) {
             Log.error(getClass(), e);
         }
+        return textBeforeCursor.toString();
     }
 
     /**
@@ -205,8 +206,8 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
      * @param view
      *         the view whose document is used to compute the proposals
      */
-    private void findTextAfterCursor(TextEditorPartView view) {
-        textAfterCursor = new StringBuilder();
+    private String getTextAfterCursor(TextEditorPartView view) {
+        StringBuilder textAfterCursor = new StringBuilder();
         Document document = view.getDocument();
         Position cursor = view.getSelection().getCursorPosition();
         try {
@@ -230,6 +231,7 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
         } catch (BadLocationException e) {
             Log.error(getClass(), e);
         }
+        return textAfterCursor.toString();
     }
 
     /** {@inheritDoc} */

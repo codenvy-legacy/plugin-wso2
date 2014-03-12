@@ -19,7 +19,6 @@ package com.codenvy.ide.ext.wso2.client.editor.text;
 
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
-import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ext.wso2.client.commons.XsdSchemaParser;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.AutoEditStrategy;
@@ -41,19 +40,17 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_MIME_TYPE;
  * The XML file type editor configuration.
  *
  * @author Dmitry Kuleshov
+ * @author Valeriy Svydenko
  */
 public class XmlEditorConfiguration extends TextEditorConfiguration {
 
     private AutoCompleterFactory autoCompleterFactory;
-    private WSO2Resources        resources;
     private XsdSchemaParser      xsdSchemaParser;
 
     @Inject
     public XmlEditorConfiguration(AutoCompleterFactory autoCompleterFactory,
-                                  WSO2Resources resources,
                                   XsdSchemaParser xsdSchemaParser) {
         this.autoCompleterFactory = autoCompleterFactory;
-        this.resources = resources;
         this.xsdSchemaParser = xsdSchemaParser;
     }
 
@@ -79,6 +76,4 @@ public class XmlEditorConfiguration extends TextEditorConfiguration {
         map.put(Document.DEFAULT_CONTENT_TYPE, new XmlCodeAssistProcessor(xsdSchemaParser));
         return map;
     }
-
-
 }

@@ -17,11 +17,15 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor;
 
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.ext.wso2.client.editor.text.AutoCompleterFactory;
 import com.codenvy.ide.ext.wso2.client.editor.text.TagAutoCompleter;
+import com.codenvy.ide.ext.wso2.client.editor.text.XmlCodeAssistProcessor;
 import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorConfiguration;
+import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.AutoEditStrategy;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
+import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
@@ -70,5 +74,16 @@ public class XmlEditorConfigurationTest extends GwtTestWithMockito {
         assertTrue(autoEditStrategy instanceof TagAutoCompleter);
 
         verify(autoCompleterFactory).createAutoCompleter(eq(view));
+    }
+
+    @Test
+    public void configurationShouldContainCodeAssistProcessor() {
+        StringMap<CodeAssistProcessor> codeAssistProcessorStringMap = xmlEditorConfiguration.getContentAssistantProcessors(view);
+
+        assertNotNull(codeAssistProcessorStringMap);
+        assertEquals(1, codeAssistProcessorStringMap.size());
+
+        CodeAssistProcessor processor = codeAssistProcessorStringMap.get(Document.DEFAULT_CONTENT_TYPE);
+        assertTrue(processor instanceof XmlCodeAssistProcessor);
     }
 }
