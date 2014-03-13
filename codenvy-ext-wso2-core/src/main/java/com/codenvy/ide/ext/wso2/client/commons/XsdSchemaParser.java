@@ -28,6 +28,8 @@ import com.google.gwt.xml.client.XMLParser;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.annotation.Nullable;
+
 /**
  * The utility class that provides an ability to format XSD and to get the attributes of the tag.
  *
@@ -38,10 +40,11 @@ public class XsdSchemaParser {
     public static final String NAME_NODE            = "name";
     public static final String MEDIATOR_NODE        = "mediator";
     public static final String ENDPOINT_NODE        = "endpoint";
-    public static final String COMPLEX_CONTENT_NODE = "xsd:complexcontent";
-    public static final String EXTENSION_NODE       = "xsd:extension";
-    public static final String ATTRIBUTE_NODE       = "xsd:attribute";
-    public static final String COMPLEX_TYPE_NODE    = "xsd:complexType";
+    public static final String COMPLEX_CONTENT_NODE = "complexcontent";
+    public static final String EXTENSION_NODE       = "extension";
+    public static final String ATTRIBUTE_NODE       = "attribute";
+    public static final String COMPLEX_TYPE_NODE    = "complexType";
+    public static final String PREFIX_NODE          = "xsd:";
 
     private WSO2Resources resources;
     private String        tag;
@@ -78,17 +81,19 @@ public class XsdSchemaParser {
      * @param attributesName
      *         array of attribute names.
      */
-    private void computeAttributes(NodeList nodes, Array<String> attributesName) {
+    private void computeAttributes(@Nullable NodeList nodes, Array<String> attributesName) {
         nodes = getNodesWithAttributes(COMPLEX_CONTENT_NODE, nodes);
         nodes = getNodesWithAttributes(EXTENSION_NODE, nodes);
+        if (nodes != null) {
+            for (int i = 0; i < nodes.getLength(); i++) {
 
-        for (int i = 0; i < nodes.getLength(); i++) {
+                Node node = nodes.item(i);
 
-            Node node = nodes.item(i);
-
-            if (ATTRIBUTE_NODE.equalsIgnoreCase(node.getNodeName())) {
-                NamedNodeMap attributesOfAttributeNode = node.getAttributes();
-                computeAttributeNames(attributesOfAttributeNode, attributesName);
+                if (ATTRIBUTE_NODE.equalsIgnoreCase(node.getNodeName()) ||
+                    (PREFIX_NODE + ATTRIBUTE_NODE).equalsIgnoreCase(node.getNodeName())) {
+                    NamedNodeMap attributesOfAttributeNode = node.getAttributes();
+                    computeAttributeNames(attributesOfAttributeNode, attributesName);
+                }
             }
         }
     }
@@ -110,9 +115,9 @@ public class XsdSchemaParser {
                 String attributeValue = attribute.getNodeValue();
                 if (attributeValue.toLowerCase().startsWith(tag)) {
                     attributeValue = attributeValue.substring(tag.length(), attributeValue.length());
+                    attributeValue = attributeValue.substring(0, 1).toLowerCase() + attributeValue.substring(1, attributeValue.length());
                 }
-                attributesName
-                        .add(attributeValue.substring(0, 1).toLowerCase() + attributeValue.substring(1, attributeValue.length()));
+                attributesName.add(attributeValue);
                 break;
             }
         }
@@ -129,7 +134,8 @@ public class XsdSchemaParser {
      */
     private NodeList getNodesWithAttributes(String nodeName, NodeList attributeNodes) {
         for (int i = 0; i < attributeNodes.getLength(); i++) {
-            if (attributeNodes.item(i).getNodeName().equalsIgnoreCase(nodeName)) {
+            if (attributeNodes.item(i).getNodeName().equalsIgnoreCase(nodeName) ||
+                attributeNodes.item(i).getNodeName().equalsIgnoreCase(PREFIX_NODE + nodeName)) {
                 attributeNodes = attributeNodes.item(i).getChildNodes();
                 return attributeNodes;
             }
@@ -150,7 +156,8 @@ public class XsdSchemaParser {
 
             Node child = nodes.item(i);
 
-            if (COMPLEX_TYPE_NODE.equalsIgnoreCase(child.getNodeName())) {
+            if (COMPLEX_TYPE_NODE.equalsIgnoreCase(child.getNodeName()) ||
+                (PREFIX_NODE + COMPLEX_TYPE_NODE).equalsIgnoreCase(child.getNodeName())) {
                 computeChildOfComplexTypeNode(child.getAttributes(), child, attributesName);
             }
             if (attributesName.size() > 0) {

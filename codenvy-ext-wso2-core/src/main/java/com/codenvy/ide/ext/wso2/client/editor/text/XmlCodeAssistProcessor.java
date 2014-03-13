@@ -31,6 +31,7 @@ import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;
 
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 
 /**
@@ -91,7 +92,7 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
      *         text before cursor
      * @return prefix
      */
-    private String computePrefixString(String textBeforeCursor) {
+    private String computePrefixString(@NotNull String textBeforeCursor) {
         RegExp regexpSpaces = RegExp.compile("\\s+");
         textBeforeCursor = textBeforeCursor.replaceAll("^\\s+", "");
 
@@ -110,8 +111,8 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
      * @param prefix
      *         the text before cursor.
      */
-    private XmlCompletionProposal[] prepareProposals(Array<String> attributes, InvocationContext context, String prefix,
-                                                     String textAfterCursor, String textBeforeCursor) {
+    private XmlCompletionProposal[] prepareProposals(Array<String> attributes, @NotNull InvocationContext context, @NotNull String prefix,
+                                                     @NotNull String textAfterCursor, @NotNull String textBeforeCursor) {
 
         HashSet<String> introducedAttributes = getIntroducedAttributes(textAfterCursor, textBeforeCursor);
 
@@ -138,7 +139,7 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
      *
      * @return a set with attributes.
      */
-    private HashSet<String> getIntroducedAttributes(String textAfterCursor, String textBeforeCursor) {
+    private HashSet<String> getIntroducedAttributes(@NotNull String textAfterCursor, @NotNull String textBeforeCursor) {
         HashSet<String> attributes = new HashSet<String>();
         int indexOfOpenTag = textBeforeCursor.lastIndexOf('<');
         int indexOfCloseTag = textAfterCursor.indexOf('>');
@@ -172,7 +173,7 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
      * @param view
      *         the view whose document is used to compute the proposals
      */
-    private String getTextBeforeCursor(TextEditorPartView view) {
+    private String getTextBeforeCursor(@NotNull TextEditorPartView view) {
         StringBuilder textBeforeCursor = new StringBuilder();
         Document document = view.getDocument();
         Position cursor = view.getSelection().getCursorPosition();
@@ -268,7 +269,7 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
      *         current line
      * @return name of the tag.
      */
-    private String getTagToBeCompleted(String line) {
+    private String getTagToBeCompleted(@NotNull String line) {
         int tagStartPosition = line.lastIndexOf('<') + 1;
         String substring = line.substring(tagStartPosition);
         int tagEndPosition = tagStartPosition + substring.indexOf(' ');
