@@ -17,13 +17,11 @@
  */
 package com.codenvy.ide.ext.wso2.client;
 
-import esbdiag.resources.WSO2EsbResources;
-
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
-
-import org.genmymodel.gmmf.common.ModelWidgetCSS;
 
 /**
  * Resources for WSO2 plugin.
@@ -31,10 +29,10 @@ import org.genmymodel.gmmf.common.ModelWidgetCSS;
  * @author Dmitry Kuleshov
  * @author Justin Trentesaux
  */
-public interface WSO2Resources extends WSO2EsbResources {
+public interface WSO2Resources extends ClientBundle {
 
     // TODO: Remove inheritance of ModelWidgetCSS and add inheritance to GMMFResources
-    public interface WSO2Style extends ModelWidgetCSS {
+    public interface WSO2Style extends CssResource {
 
         String importErrorFont();
 
@@ -43,10 +41,58 @@ public interface WSO2Resources extends WSO2EsbResources {
         String wso2PropertyPanelTitle();
 
         String wso2PropertyPanel();
+
+        String loadingPanel();
+
+        String toolbar();
+
+        String modelWidget();
+
+        String tool();
+
+        String statusToolContainer();
+
+        String selected();
+
+        String pauseLabel();
+
+        String connectedUsers();
+
+        String expand();
+
+        String distributeHorizontal();
+
+        String statusTool();
+
+        String savingLabel();
+
+        String changeModeAnchor();
+
+        String alignVerticalCenters();
+
+        String alignBottomEdges();
+
+        String toolSeparator();
+
+        String distributeVertical();
+
+        String shareButton();
+
+        String alignTopEdges();
+
+        String alignRightEdges();
+
+        String alignLeftEdges();
+
+        String alignHorizontalCenters();
+
+        String statusBar();
+
+        String statusToolSeparator();
     }
 
     @Source("esb.xsd")
-    TextResource  xmlSchemaDefinition();
+    TextResource xmlSchemaDefinition();
 
     @Source({"WSO2GlobalStyle.css", "WSO2ModelWidgetStyle.css"})
     WSO2Style wso2Style();

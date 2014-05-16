@@ -29,16 +29,8 @@
     <inherits name="com.google.gwt.inject.Inject"/>
     <inherits name="com.codenvy.ide.collections.Collections"/>
     <inherits name="com.codenvy.ide.ext.git.Git"/>
-
-    <!-->Axellience modules<-->
-    <inherits name="org.genmymodel.gmmf.common.Common"/>
-    <inherits name="org.eclipse.emf.edit.Edit"/>
-    <inherits name="com.genmymodel.ecoreonline.graphic.Graphic"/>
-    <inherits name="genmymodel.commands.Commands"/>
-    <inherits name="org.genmymodel.gmmf.ui.ModelWidget"/>
-    <inherits name="org.wso2.developerstudio.eclipse.gmf.esb.Esb"/>
-    <inherits name="esbdiag.Esbdiag"/>
     <inherits name="com.google.gwt.xml.XML"/>
+    <inherits name="com.codenvy.ide.Editor"/>
 
     <source path="client"/>
     <source path="shared"/>

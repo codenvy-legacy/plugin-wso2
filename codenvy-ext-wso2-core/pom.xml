@@ -18,7 +18,8 @@
     from Codenvy S.A..
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>codenvy-ext-wso2-parent</artifactId>
@@ -35,18 +36,28 @@
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-git</artifactId>
-            <version>${codenvy.version}</version>
+            <version>${version.codenvy}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-api</artifactId>
-            <version>${codenvy.version}</version>
+            <version>${version.codenvy}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>wso2-cmf-editor</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
         <!-- Server libraries -->
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-vfs</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-incubator</artifactId>
+            <version>2.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.google.gwt.inject</groupId>
@@ -64,13 +75,6 @@
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-model</artifactId>
             <version>${maven-model.version}</version>
-        </dependency>
-
-        <!--  Axellience libraries -->
-        <dependency>
-            <groupId>org.wso2.gmm</groupId>
-            <artifactId>wso2-graphic-esb</artifactId>
-            <version>${axellience.graphic.editor.version}</version>
         </dependency>
 
         <!-- Client libraries -->

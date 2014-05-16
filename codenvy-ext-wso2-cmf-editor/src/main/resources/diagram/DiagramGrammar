@@ -1,0 +1,524 @@
+Elements {
+    Log {
+        Relation {
+            SINGLE
+        }
+
+        Properties {
+            LogCategory {
+                Type {
+                    STRING
+                }
+                Value {
+                    INFO
+                }
+            }
+
+            LogLevel {
+                Type {
+                    STRING
+                }
+                Value {
+                    SIMPLE
+                }
+            }
+            
+            LogSeparator {
+                Type {
+                    STRING
+                }
+                Value {
+                    enter_text
+                }
+            }
+            
+            LogProperties{
+                Type {
+                    STRING
+                }
+                Value {
+                    enter_properties
+                }
+            }
+            
+            Description{
+                Type {
+                    STRING
+                }
+                Value {
+                    enter_description
+                }
+            }
+        }
+    }
+    
+    Property{
+        Relation {
+            SINGLE
+        }
+
+        Properties {
+            PropertyName {
+                Type { 
+                    STRING
+                }
+                Value { 
+                    propertyName
+                }
+            }
+            PropertyAction {
+                Type { 
+                    STRING 
+                }
+                Value {
+                    set
+                }
+            }
+            ValueType {
+                Type {
+                    STRING 
+                }
+                Value { 
+                    LITERAL
+                }
+            }
+            PropertyDataType {
+                Type { 
+                    STRING 
+                }
+                Value {
+                    $STRING
+                }
+            }
+            ValueLiteral {
+                Type {
+                    STRING
+                }
+                Value { 
+                    some_Value
+                }
+            }
+            ValueStringPattern {
+                Type {
+                    STRING
+                }
+                Value {
+                    enter_value_string_pattern
+                }
+            }
+            ValueStringCaptureGroup {
+                Type {
+                    INTEGER
+                }
+                Value {
+                    0
+                }
+            }
+            PropertyScope {
+                Type {
+                    STRING
+                }
+                Value {
+                    Synapse
+                }
+            }
+            Description {
+                Type {
+                    STRING
+                }
+                Value {
+                    enter_description
+                }
+            }
+        }
+    }
+    PayloadFactory {
+        Relation {
+            SINGLE
+        }
+
+        Properties {
+            PayloadFormat {
+                Type {
+                    STRING
+                }
+                Value {
+                    inline
+                }
+            }
+            Format {
+                Type {
+                    STRING
+                }
+                Value {
+                    inline
+                }
+            }
+            Args {
+                Type {
+                    STRING
+                }
+                Value {
+                    enter_arguments
+                }
+            }
+             MediaType {
+                Type {
+                    STRING
+                }
+                Value {
+                    xml
+                }
+            }
+            Description {
+                Type {
+                    STRING
+                }
+                Value {
+                    enter_description
+                }
+            }
+        }
+    }
+    Send {
+        Relation {
+            SINGLE
+        }
+
+        Properties {
+            SkipSerialization {
+                Type {
+                    BOOLEAN
+                }
+                Value {
+                    false
+                }
+            }
+            ReceivingSequencerType {
+                Type {
+                    STRING
+                }
+                Value {
+                    Default
+                }
+            }
+            BuildMessageBeforeSending{
+                Type {
+                    BOOLEAN
+                }
+                Value {
+                    false
+                }
+            }
+            Description {
+                Type {
+                    STRING
+                }
+                Value {
+                    enter_description
+                }
+            }
+        }
+    }
+    Header {
+        Relation {
+            SINGLE
+        }
+
+        Properties {
+            HeaderAction {
+                Type {
+                    STRING
+                }
+                Value {
+                    set
+                }
+            }
+            Scope {
+                Type {
+                    STRING
+                }
+                Value {
+                    Synapse
+                }
+            }
+            ValueType {
+                Type {
+                    STRING
+                }
+                Value {
+                    LITERAL
+                }
+            }
+            ValueLiteral {
+                Type {
+                    STRING
+                }
+                Value {
+                    header_Value
+                }
+            }
+            HeaderName {
+                Type {
+                    STRING
+                }
+                Value {
+                    header_name
+                }
+            }
+        }
+    }
+    Respond {
+        Relation {
+            SINGLE
+        }
+
+        Properties {
+            Description {
+                Type {
+                    STRING
+                }
+                Value {
+                    enter_description
+                }
+            }
+        }
+    }
+    Filter  {
+        Relation {
+            SINGLE
+        }
+
+        Properties {
+            ConditionType {
+                Type {
+                    STRING
+                }
+                Value {
+                    SOURCE_AND_REGEX
+                }
+            }
+            Source {
+                Type {
+                    STRING
+                }
+                Value {
+                    get-property
+                }
+            }
+            RegularExpression {
+                Type {
+                    STRING
+                }
+                Value {
+                    default/regex
+                }
+            }
+        }
+    }
+    Switch_mediator {
+        Relation {
+            SINGLE
+        }
+
+        Properties {
+            SourceXpath {
+                Type {
+                    STRING
+                }
+                Value {
+                    default/xpath
+                }
+            }
+            CaseBranches {
+                Type {
+                    STRING
+                }
+                Value {
+                    enter_case_branches
+                }
+            }
+        }
+    }
+    Sequence    {
+
+        Relation {
+            SINGLE
+        }
+
+        Properties {
+            ReferringSequenceType {
+                Type {
+                    STRING
+                }
+                Value {
+                    STATIC
+                }
+            }
+            StaticReferenceKey {
+                Type {
+                    STRING
+                }
+                Value {
+                    Sequence
+                }
+            }
+        }
+    }
+    Enrich {
+        Relation {
+            SINGLE
+        }
+
+        Properties {
+            CloneSource {
+                Type {
+                    BOOLEAN
+                }
+                Value {
+                    false
+                }
+            }
+            SourceType {
+                Type {
+                    STRING
+                }
+                Value {
+                    custom
+                }
+            }
+            SourceXpath {
+                Type {
+                    STRING
+                }
+                Value {
+                    default/xpath
+                }
+            }
+            TargetAction {
+                Type {
+                    STRING
+                }
+                Value {
+                    replace
+                }
+            }
+            TargetType {
+                Type {
+                    STRING
+                }
+                Value {
+                    custom
+                }
+            }
+            TargetXpath {
+                Type {
+                    STRING
+                }
+                Value {
+                    default/xpath
+                }
+            }
+            Description {
+                Type {
+                    STRING
+                }
+                Value {
+                    enter_description
+                }
+            }
+        }
+    }
+    LoopBack {
+        Relation {
+            SINGLE
+        }
+
+        Properties {
+            Description {
+                Type {
+                    STRING
+                }
+                Value {
+                    enter_description
+                }
+            }
+        }
+    }
+    CallTemplate {
+        Relation {
+            SINGLE
+        }
+
+        Properties {
+            AvailableTemplates {
+
+                Type {
+                    STRING
+                }
+                Value {
+                    enter_templates
+                }
+            }
+            TargetTemplate {
+                Type {
+                    STRING
+                }
+                Value {
+                    enter_target_template
+                }
+            }
+            Parameters {
+                Type {
+                    STRING
+                }
+                Value {
+                    enter_parameters
+                }
+            }
+            Description {
+                Type {
+                    STRING
+                }
+                Value {
+                    enter_description
+                }
+            }
+        }
+    }
+    Call {
+        Relation {
+            SINGLE
+        }
+
+        Properties {
+            EndpointType {
+                Type {
+                    STRING
+                }
+                Value {
+                    INLINE
+                }
+            }
+            Description {
+                Type {
+                    STRING
+                }
+                Value {
+                    enter_description
+                }
+            }
+        }
+    }
+}
+
+Connections {
+    Connection {
+        Type {
+            DIRECTED
+        }
+        Pairs {
+            {start <> finish}
+        }
+    }
+}

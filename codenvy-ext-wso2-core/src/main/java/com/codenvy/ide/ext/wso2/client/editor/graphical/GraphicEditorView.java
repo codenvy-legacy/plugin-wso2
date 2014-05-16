@@ -18,27 +18,17 @@
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
 import com.codenvy.ide.api.mvp.View;
-import com.genmymodel.ecoreonline.graphic.Diagram;
-import com.google.inject.ImplementedBy;
-import com.google.web.bindery.event.shared.EventBus;
-import org.genmymodel.gmmf.propertypanel.PropertyPresenter;
 
 /**
  * The view of {@link GraphicEditor}.
  *
- * @author Alexis Muller
  * @author Andrey Plotnikov
  */
-@ImplementedBy(GraphicEditorViewImpl.class)
 public interface GraphicEditorView extends View<GraphicEditorView.ActionDelegate> {
 
     public interface ActionDelegate {
     }
 
-    void setDiagram(Diagram diagram);
-
-    void addPropertyForm(PropertyPresenter... forms);
-
-    EventBus getDiagramEventBus();
+    void setDiagram(String diagram);
 
 }

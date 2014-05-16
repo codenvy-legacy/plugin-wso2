@@ -1,0 +1,11 @@
+DIAGRAM=/src/main/resources/diagram/DiagramGrammar
+EDITOR=/src/main/resources/editor/EditorGrammar
+SERIALIZATION=/src/main/resources/serialization/SerializationGrammar
+STYLE=/src/main/resources/style
+TEMPLATE_PATH=/target/template.zip
+TARGET_PATH=/target/editor
+MAIN_PACKAGE=com.codenvy.ide
+EDITOR_NAME=WSO2Editor
+MAVEN_ARTIFACT_ID=wso2-cmf-editor
+MAVEN_GROUP_ID=com.codenvy.ide
+MAVEN_ARTIFACT_NAME=WSO2 CMF Editor

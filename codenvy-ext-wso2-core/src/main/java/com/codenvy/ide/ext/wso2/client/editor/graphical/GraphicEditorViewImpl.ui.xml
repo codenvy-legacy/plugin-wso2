@@ -18,31 +18,8 @@
   -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui"
-             xmlns:gmmf="urn:import:org.genmymodel.gmmf.ui"
-             xmlns:gmmf.tools="urn:import:org.genmymodel.gmmf.ui.tools"
-             xmlns:gmmf.properties="urn:import:org.genmymodel.gmmf.propertypanel">
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
-    <ui:with type="com.codenvy.ide.ext.wso2.client.WSO2Resources" field="res"/>
-
-    <g:SplitLayoutPanel height="100%" width="100%">
-
-        <g:south size="325">
-            <!--TODO style must be from client bundle-->
-            <g:FlowPanel styleName="property-panel">
-                <!--TODO probably text need to be in locale constant-->
-                <g:Label addStyleNames="{res.wso2Style.wso2PropertyPanelTitle}" text="Properties"/>
-                <gmmf.properties:PropertyPanel ui:field="propertyPanel" styleName="{res.wso2Style.wso2PropertyPanel}"/>
-            </g:FlowPanel>
-        </g:south>
-
-        <g:center>
-            <g:FlowPanel styleName="{res.wso2Style.graphicContainer}">
-                <gmmf.tools:Toolbar ui:field="toolbar" styleName="{res.wso2Style.toolbar}"/>
-                <gmmf:ModelWidget ui:field="modelWidget" styleName="{res.wso2Style.modelWidget}"/>
-            </g:FlowPanel>
-        </g:center>
-
-    </g:SplitLayoutPanel>
+    <g:SimpleLayoutPanel height="100%" width="100%" ui:field="editor"/>
 
 </ui:UiBinder>

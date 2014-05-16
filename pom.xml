@@ -33,13 +33,14 @@
 
     <modules>
         <module>codenvy-ext-wso2-core</module>
+        <module>codenvy-ext-wso2-cmf-editor</module>
         <module>wso2-application-war</module>
         <module>wso2-packaging-standalone-tomcat</module>
     </modules>
 
     <properties>
-        <axellience.graphic.editor.version>0.0.3-SNAPSHOT</axellience.graphic.editor.version>
-        <codenvy.version>3.0.0-M10</codenvy.version>
+        <version.cmf>1.0.0-M1-SNAPSHOT</version.cmf>
+        <version.codenvy>3.0.0-M10</version.codenvy>
     </properties>
 
 </project>

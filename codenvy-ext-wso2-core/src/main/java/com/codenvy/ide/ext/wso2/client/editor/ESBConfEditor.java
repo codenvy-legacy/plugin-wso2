@@ -17,7 +17,12 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor;
 
-import com.codenvy.ide.api.editor.*;
+import com.codenvy.ide.api.editor.AbstractEditorPresenter;
+import com.codenvy.ide.api.editor.CodenvyTextEditor;
+import com.codenvy.ide.api.editor.DocumentProvider;
+import com.codenvy.ide.api.editor.EditorInitException;
+import com.codenvy.ide.api.editor.EditorInput;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
@@ -27,10 +32,8 @@ import com.codenvy.ide.ext.wso2.client.editor.graphical.GraphicEditor;
 import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorConfiguration;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.xml.client.Document;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import org.wso2.developerstudio.eclipse.gmf.esb.EsbSequence;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -47,7 +50,6 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     private ESBConfEditorView   view;
     private GraphicEditor       graphicEditor;
     private CodenvyTextEditor   textEditor;
-    private ESBToXMLMapper      esbToXMLMapper;
     private NotificationManager notificationManager;
     private XMLParserUtil       xmlParserUtil;
 
@@ -58,13 +60,11 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
                          Provider<XmlEditorConfiguration> xmlEditorConfigurationProvider,
                          NotificationManager notificationManager,
                          GraphicEditor graphicEditor,
-                         ESBToXMLMapper esbToXMLMapper,
                          XMLParserUtil xmlParserUtil) {
         this.view = view;
         this.view.setDelegate(this);
         this.graphicEditor = graphicEditor;
         this.notificationManager = notificationManager;
-        this.esbToXMLMapper = esbToXMLMapper;
         this.xmlParserUtil = xmlParserUtil;
         textEditor = editorProvider.get();
         textEditor.initialize(xmlEditorConfigurationProvider.get(), documentProvider, notificationManager);
@@ -186,10 +186,8 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     @Override
     public void propertyChanged(PartPresenter source, final int propId) {
         if (propId == EditorPartPresenter.PROP_DIRTY && source instanceof GraphicEditor) {
-            EsbSequence sequence = graphicEditor.getSequence();
             try {
-                Document seq = esbToXMLMapper.transform(sequence);
-                textEditor.getDocument().set(xmlParserUtil.formatXML(seq.getDocumentElement()));
+                textEditor.getDocument().set(graphicEditor.serialize());
 
                 updateDirtyState(true);
             } catch (Exception e) {
