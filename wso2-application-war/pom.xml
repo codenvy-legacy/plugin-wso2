@@ -205,9 +205,7 @@ from Codenvy S.A..
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
-                <!--<version>${gwt.maven.plugin.version}</version>-->
-                <!--TODO change this code after update to last version of SDK-->
-                <version>2.6.0</version>
+                <version>${gwt.maven.plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
