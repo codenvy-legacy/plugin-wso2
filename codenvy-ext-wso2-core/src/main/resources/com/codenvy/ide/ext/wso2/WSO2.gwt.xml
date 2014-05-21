@@ -29,7 +29,6 @@
     <inherits name="com.google.gwt.inject.Inject"/>
     <inherits name="com.codenvy.ide.collections.Collections"/>
     <inherits name="com.codenvy.ide.ext.git.Git"/>
-    <inherits name="com.google.gwt.xml.XML"/>
     <inherits name="com.codenvy.ide.Editor"/>
 
     <source path="client"/>

@@ -43,6 +43,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * The editor for WSO2 ESB configuration.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEditorView.ActionDelegate, PropertyListener {
 
@@ -191,23 +192,10 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
                 notificationManager.showNotification(notification);
             }
         } else if (propId == EditorPartPresenter.PROP_INPUT && source instanceof CodenvyTextEditor) {
-            String xml = trimXML(textEditor.getDocument().get());
-            graphicEditor.deserialize(xml);
+            graphicEditor.deserialize(textEditor.getDocument().get());
         } else {
             firePropertyChange(propId);
         }
-    }
-
-    @NotNull
-    private String trimXML(@NotNull String xmlContent) {
-        StringBuilder trimXML = new StringBuilder();
-
-        String[] rows = xmlContent.split("\n");
-        for (String row : rows) {
-            trimXML.append(row.trim());
-        }
-
-        return trimXML.toString();
     }
 
 }
