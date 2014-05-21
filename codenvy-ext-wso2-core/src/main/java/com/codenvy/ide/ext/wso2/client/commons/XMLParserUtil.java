@@ -26,7 +26,7 @@ import com.google.inject.Singleton;
 import javax.validation.constraints.NotNull;
 
 /**
- * The utility class that provides an ability to format XML node to readable string xl format.
+ * The utility class that provides an ability to format XML node to readable string XML format.
  *
  * @author Valeriy Svydenko
  * @author Andrey Plotnikov

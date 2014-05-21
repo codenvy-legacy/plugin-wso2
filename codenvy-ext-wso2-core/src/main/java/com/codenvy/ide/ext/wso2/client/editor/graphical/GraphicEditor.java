@@ -31,8 +31,6 @@ import javax.annotation.Nonnull;
  * The graphical editor for ESB configuration.
  *
  * @author Andrey Plotnikov
- * @author Alexis Muller
- * @author Justin Trentesaux
  */
 public class GraphicEditor extends AbstractEditorPresenter implements GraphicEditorView.ActionDelegate,
                                                                       AbstractEditor.EditorChangeListener {
@@ -114,6 +112,10 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     @Nonnull
     public String serialize() {
         return editor.serialize();
+    }
+
+    public void deserialize(@Nonnull String content) {
+        editor.deserialize(content);
     }
 
     /**

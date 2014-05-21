@@ -1,4 +1,22 @@
 Elements {
+    MainElement{
+        Components{
+            { Log }
+            { Property }
+            { PayloadFactory }
+            { Send }
+            { Header }
+            { Respond }
+            { Filter }
+            { Switch_mediator }
+            { Sequence }
+            { Enrich }
+            { LoopBack }
+            { CallTemplate }
+            { Call }
+        }
+    }
+
     Log {
         Relation {
             SINGLE
@@ -132,6 +150,7 @@ Elements {
             }
         }
     }
+
     PayloadFactory {
         Relation {
             SINGLE
@@ -180,6 +199,7 @@ Elements {
             }
         }
     }
+
     Send {
         Relation {
             SINGLE
@@ -220,6 +240,7 @@ Elements {
             }
         }
     }
+
     Header {
         Relation {
             SINGLE
@@ -268,6 +289,7 @@ Elements {
             }
         }
     }
+
     Respond {
         Relation {
             SINGLE
@@ -284,7 +306,8 @@ Elements {
             }
         }
     }
-    Filter  {
+
+    Filter {
         Relation {
             SINGLE
         }
@@ -316,6 +339,7 @@ Elements {
             }
         }
     }
+
     Switch_mediator {
         Relation {
             SINGLE
@@ -340,7 +364,8 @@ Elements {
             }
         }
     }
-    Sequence    {
+
+    Sequence {
 
         Relation {
             SINGLE
@@ -365,6 +390,7 @@ Elements {
             }
         }
     }
+
     Enrich {
         Relation {
             SINGLE
@@ -429,6 +455,7 @@ Elements {
             }
         }
     }
+
     LoopBack {
         Relation {
             SINGLE
@@ -445,6 +472,7 @@ Elements {
             }
         }
     }
+
     CallTemplate {
         Relation {
             SINGLE
@@ -486,6 +514,7 @@ Elements {
             }
         }
     }
+
     Call {
         Relation {
             SINGLE

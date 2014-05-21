@@ -27,7 +27,6 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PropertyListener;
-import com.codenvy.ide.ext.wso2.client.commons.XMLParserUtil;
 import com.codenvy.ide.ext.wso2.client.editor.graphical.GraphicEditor;
 import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorConfiguration;
 import com.google.gwt.resources.client.ImageResource;
@@ -51,7 +50,6 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     private GraphicEditor       graphicEditor;
     private CodenvyTextEditor   textEditor;
     private NotificationManager notificationManager;
-    private XMLParserUtil       xmlParserUtil;
 
     @Inject
     public ESBConfEditor(ESBConfEditorView view,
@@ -59,13 +57,11 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
                          Provider<CodenvyTextEditor> editorProvider,
                          Provider<XmlEditorConfiguration> xmlEditorConfigurationProvider,
                          NotificationManager notificationManager,
-                         GraphicEditor graphicEditor,
-                         XMLParserUtil xmlParserUtil) {
+                         GraphicEditor graphicEditor) {
         this.view = view;
         this.view.setDelegate(this);
         this.graphicEditor = graphicEditor;
         this.notificationManager = notificationManager;
-        this.xmlParserUtil = xmlParserUtil;
         textEditor = editorProvider.get();
         textEditor.initialize(xmlEditorConfigurationProvider.get(), documentProvider, notificationManager);
 
@@ -194,8 +190,24 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
                 Notification notification = new Notification(e.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
             }
+        } else if (propId == EditorPartPresenter.PROP_INPUT && source instanceof CodenvyTextEditor) {
+            String xml = trimXML(textEditor.getDocument().get());
+            graphicEditor.deserialize(xml);
         } else {
             firePropertyChange(propId);
         }
     }
+
+    @NotNull
+    private String trimXML(@NotNull String xmlContent) {
+        StringBuilder trimXML = new StringBuilder();
+
+        String[] rows = xmlContent.split("\n");
+        for (String row : rows) {
+            trimXML.append(row.trim());
+        }
+
+        return trimXML.toString();
+    }
+
 }
