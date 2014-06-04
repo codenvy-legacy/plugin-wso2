@@ -18,44 +18,49 @@
 package com.codenvy.ide.ext.wso2.server.projecttypes;
 
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
-import com.codenvy.api.project.server.VfsPropertyValueProvider;
+import com.codenvy.api.project.server.ProjectTypeExtension;
 import com.codenvy.api.project.shared.Attribute;
+import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
-import com.codenvy.api.project.shared.ProjectTypeExtension;
-import com.google.inject.Inject;
+import com.codenvy.ide.Constants;
 import com.google.inject.Singleton;
 
-import java.util.ArrayList;
+import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
+import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
 
 /**
- * {@link ProjectTypeExtension} to register WSO2 project type.
- *
  * @author Valeriy Svydenko
  */
 @Singleton
 public class WSO2ProjectTypeExtension implements ProjectTypeExtension {
+
     @Inject
     public WSO2ProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
         registry.registerProjectType(this);
     }
 
-    /** {@inheritDoc} */
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType(ESB_CONFIGURATION_PROJECT_ID, "WSO2 Integration Flow Project");
+        return new ProjectType(ESB_CONFIGURATION_PROJECT_ID, WSO2_PROJECT_ID, WSO2_PROJECT_ID);
     }
 
-    /** {@inheritDoc} */
     @Override
     public List<Attribute> getPredefinedAttributes() {
-        final List<Attribute> list = new ArrayList<>(1);
-        // TODO: provide a single value for predefined attributes. Avoid using ValueProviders
-        // VfsPropertyValueProvider is used as temporary solution because we don't have any way to get attribute's value on the client side
-        list.add(new Attribute("language", new VfsPropertyValueProvider("language", WSO2_PROJECT_ID)));
-        return list;
+        return Arrays.asList(new Attribute(Constants.LANGUAGE, WSO2_PROJECT_ID),
+                             new Attribute(Constants.FRAMEWORK, WSO2_PROJECT_ID));
     }
+
+    @Override
+    public List<ProjectTemplateDescription> getTemplates() {
+        return Arrays.asList(new ProjectTemplateDescription("zip",
+                                                            ESB_CONFIGURATION_PROJECT_NAME,
+                                                            "This is a simple ESB configuration project.",
+                                                            "templates/esbproject.zip"));
+    }
+
 }

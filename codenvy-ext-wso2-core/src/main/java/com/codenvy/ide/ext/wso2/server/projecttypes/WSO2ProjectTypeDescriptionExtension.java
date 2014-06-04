@@ -18,20 +18,24 @@
 package com.codenvy.ide.ext.wso2.server.projecttypes;
 
 
+import com.codenvy.api.project.server.ProjectTypeDescriptionExtension;
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.shared.AttributeDescription;
 import com.codenvy.api.project.shared.ProjectType;
-import com.codenvy.api.project.shared.ProjectTypeDescriptionExtension;
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import java.util.ArrayList;
+import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.List;
 
+import static com.codenvy.ide.Constants.FRAMEWORK;
+import static com.codenvy.ide.Constants.LANGUAGE;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
+import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
 
 /**
- * {@link ProjectTypeDescriptionExtension} to register project types.
+ * Register WSO2 extension {@link com.codenvy.api.project.server.ProjectTypeDescriptionExtension} to register project types.
  *
  * @author Valeriy Svydenko
  */
@@ -42,21 +46,14 @@ public class WSO2ProjectTypeDescriptionExtension implements ProjectTypeDescripti
         registry.registerDescription(this);
     }
 
-    /** {@inheritDoc} */
     @Override
     public List<ProjectType> getProjectTypes() {
-        final List<ProjectType> list = new ArrayList<>(1);
-        list.add(new ProjectType(ESB_CONFIGURATION_PROJECT_ID, "WSO2 Integration Flow Project"));
-        return list;
+        return Arrays.asList(new ProjectType(ESB_CONFIGURATION_PROJECT_ID, ESB_CONFIGURATION_PROJECT_NAME, WSO2_PROJECT_ID));
     }
 
-    /** {@inheritDoc} */
     @Override
     public List<AttributeDescription> getAttributeDescriptions() {
-        final List<AttributeDescription> list = new ArrayList<>(3);
-        list.add(new AttributeDescription("language"));
-        list.add(new AttributeDescription("exoide:classpath"));
-        list.add(new AttributeDescription("folders.source"));
-        return list;
+        return Arrays.asList(new AttributeDescription(LANGUAGE),
+                             new AttributeDescription(FRAMEWORK));
     }
 }

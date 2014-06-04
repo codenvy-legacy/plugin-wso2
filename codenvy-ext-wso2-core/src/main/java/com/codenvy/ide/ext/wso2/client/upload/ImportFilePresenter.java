@@ -22,6 +22,10 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
@@ -30,13 +34,9 @@ import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncCallback;
 import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
 import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
-import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.resources.model.Folder;
-import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
-import com.codenvy.ide.util.Utils;
+import com.codenvy.ide.util.Config;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -65,17 +65,17 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
         void onCloseView();
     }
 
-    private ImportFileView         view;
-    private EventBus               eventBus;
-    private ConsolePart            console;
-    private NotificationManager    notificationManager;
-    private String                 restContext;
-    private ResourceProvider       resourceProvider;
-    private WSO2ClientService      service;
-    private DtoFactory             dtoFactory;
-    private LocalizationConstant   local;
-    private OverwriteFilePresenter overwrite;
-    private ViewCloseHandler       viewCloseHandler;
+    private final ImportFileView         view;
+    private final EventBus               eventBus;
+    private final ConsolePart            console;
+    private final NotificationManager    notificationManager;
+    private final String                 restContext;
+    private final ResourceProvider       resourceProvider;
+    private final WSO2ClientService      service;
+    private final DtoFactory             dtoFactory;
+    private final LocalizationConstant   local;
+    private final OverwriteFilePresenter overwrite;
+    private final ViewCloseHandler       viewCloseHandler;
 
     @Inject
     public ImportFilePresenter(final ImportFileView view,
@@ -119,8 +119,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
         final Project activeProject = resourceProvider.getActiveProject();
 
         if (view.isUseLocalPath()) {
-            view.setAction(restContext + "/vfs/" + Utils.getWorkspaceId() + "/v2/uploadfile/" + activeProject.getId());
-
+            view.setAction(restContext + "/vfs/" + Config.getWorkspaceId() + "/v2/uploadfile/" + activeProject.getId());
             view.submit();
         } else {
             final FileInfo fileInfo = dtoFactory.createDto(FileInfo.class)
@@ -203,7 +202,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
                         }
                         if (parentFolder != null) {
                             parentIsExist = true;
-                            activeProject.refreshTree(parentFolder, new WSO2AsyncCallback<Folder>(notificationManager) {
+                            activeProject.refreshChildren(parentFolder, new WSO2AsyncCallback<Folder>(notificationManager) {
                                 @Override
                                 public void onSuccess(Folder folder) {
                                     File file = (File)parentFolder.findResourceByName(fileName, "file");
@@ -223,7 +222,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
 
     /** Refresh a project tree. */
     private void refreshProject() {
-        resourceProvider.getActiveProject().refreshTree(new WSO2AsyncCallback<Project>(notificationManager) {
+        resourceProvider.getActiveProject().refreshChildren(new WSO2AsyncCallback<Project>(notificationManager) {
             @Override
             public void onSuccess(Project result) {
                 view.close();
@@ -238,7 +237,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
      *         place where child should be
      * @param name
      *         name that child should have
-     * @return {@link com.codenvy.ide.resources.model.Resource}
+     * @return {@link Resource}
      */
     @Nullable
     private Resource getResourceByName(@NotNull Folder parent, @NotNull String name) {

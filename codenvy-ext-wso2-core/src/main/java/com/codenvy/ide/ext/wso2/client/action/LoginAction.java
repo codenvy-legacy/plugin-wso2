@@ -17,22 +17,23 @@
  */
 package com.codenvy.ide.ext.wso2.client.action;
 
+import com.codenvy.api.user.gwt.client.UserServiceClient;
+import com.codenvy.api.user.shared.dto.User;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.api.user.User;
-import com.codenvy.ide.api.user.UserClientService;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.git.shared.GitUrlVendorInfo;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
 import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.security.oauth.JsOAuthWindow;
 import com.codenvy.ide.security.oauth.OAuthCallback;
 import com.codenvy.ide.security.oauth.OAuthStatus;
-import com.codenvy.ide.util.Utils;
+import com.codenvy.ide.util.Config;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -48,24 +49,25 @@ import static com.codenvy.ide.security.oauth.OAuthStatus.LOGGED_IN;
  * The action for OAuth authorization on WSO2 AppFactory.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class LoginAction extends Action implements OAuthCallback {
-
-    private WSO2ClientService    service;
-    private NotificationManager  notificationManager;
-    private String               restContext;
-    private UserClientService    userService;
-    private DtoFactory           dtoFactory;
-    private LocalizationConstant locale;
+    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private final WSO2ClientService      service;
+    private final NotificationManager    notificationManager;
+    private final String                 restContext;
+    private final UserServiceClient      userService;
+    private final DtoFactory             dtoFactory;
+    private final LocalizationConstant   locale;
 
     @Inject
     public LoginAction(WSO2ClientService service,
                        NotificationManager notificationManager,
                        @Named("restContext") String restContext,
-                       UserClientService userService,
+                       UserServiceClient userService,
                        DtoFactory dtoFactory,
-                       LocalizationConstant locale) {
-
+                       LocalizationConstant locale,
+                       DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(locale.loginActionTitle(), null, null);
 
         this.service = service;
@@ -74,40 +76,44 @@ public class LoginAction extends Action implements OAuthCallback {
         this.userService = userService;
         this.dtoFactory = dtoFactory;
         this.locale = locale;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        try {
-            userService.getUser(new WSO2AsyncRequestCallback<String>(new StringUnmarshaller(), notificationManager) {
-                @Override
-                protected void onSuccess(String result) {
-                    final User user = dtoFactory.createDtoFromJson(result, User.class);
-                    try {
-                        service.getWSO2ServiceInfo(new WSO2AsyncRequestCallback<String>(new StringUnmarshaller(), notificationManager) {
-                            @Override
-                            protected void onSuccess(String result) {
-                                GitUrlVendorInfo gitUrlVendorInfo = dtoFactory.createDtoFromJson(result, GitUrlVendorInfo.class);
-                                boolean permitToRedirect = Window.confirm(locale.authorizeNeedBodyOauth(gitUrlVendorInfo.getVendorName()));
-                                if (permitToRedirect) {
-                                    String authUrl =
-                                            restContext + "/oauth/authenticate?oauth_provider=" + gitUrlVendorInfo.getVendorName() +
-                                            "&userId=" + user.getUserId() + "&redirect_after_login=/ide/" +
-                                            Utils.getWorkspaceName();
-                                    JsOAuthWindow authWindow = new JsOAuthWindow(authUrl, "error.url", 500, 980, LoginAction.this);
-                                    authWindow.loginWithOAuth();
-                                }
-                            }
-                        });
-                    } catch (RequestException e1) {
-                        showException(e1);
+        userService.getCurrentUser(
+                new WSO2AsyncRequestCallback<User>(dtoUnmarshallerFactory.newUnmarshaller(User.class), notificationManager) {
+                    @Override
+                    protected void onSuccess(User user) {
+                        final String userId = user.getId();
+                        try {
+                            service.getWSO2ServiceInfo(
+                                    new WSO2AsyncRequestCallback<String>(new StringUnmarshaller(), notificationManager) {
+                                        @Override
+                                        protected void onSuccess(String result) {
+                                            GitUrlVendorInfo gitUrlVendorInfo =
+                                                    dtoFactory.createDtoFromJson(result, GitUrlVendorInfo.class);
+                                            boolean permitToRedirect =
+                                                    Window.confirm(locale.authorizeNeedBodyOauth(gitUrlVendorInfo.getVendorName()));
+                                            if (permitToRedirect) {
+                                                //TODO reworking OAuth functionality
+                                                String authUrl =
+                                                        restContext + "/oauth/authenticate?oauth_provider=" +
+                                                        gitUrlVendorInfo.getVendorName() +
+                                                        "&userId=" + userId + "&redirect_after_login=/ide/" +
+                                                        Config.getWorkspaceName();
+                                                JsOAuthWindow authWindow =
+                                                        new JsOAuthWindow(authUrl, "error.url", 500, 980, LoginAction.this);
+                                                authWindow.loginWithOAuth();
+                                            }
+                                        }
+                                    });
+                        } catch (RequestException exception) {
+                            showException(exception);
+                        }
                     }
-                }
-            });
-        } catch (RequestException e1) {
-            showException(e1);
-        }
+                });
     }
 
     private void showException(@NotNull Throwable exception) {

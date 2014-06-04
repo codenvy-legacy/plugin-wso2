@@ -39,7 +39,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 /**
@@ -93,10 +92,9 @@ public class WSO2ProjectActionGroupTest {
     @Test
     public void actionShouldBeInvisibleWhenProjectTypeIsNotValid() throws Exception {
         when(actionEvent.getPresentation()).thenReturn(presentation);
-        when((resourceProvider.getActiveProject().getPropertyValue(eq("vfs:projectType")))).thenReturn("projectType");
+        when((resourceProvider.getActiveProject().getDescription().getProjectTypeId())).thenReturn("projectType");
 
         assertEquals(true, presentation.isVisible());
-
         action.update(actionEvent);
 
         assertEquals(false, presentation.isVisible());
@@ -105,7 +103,7 @@ public class WSO2ProjectActionGroupTest {
     @Test
     public void actionShouldBeVisible() throws Exception {
         when(actionEvent.getPresentation()).thenReturn(presentation);
-        when(resourceProvider.getActiveProject().getPropertyValue(eq("vfs:projectType"))).thenReturn(ESB_CONFIGURATION_PROJECT_ID);
+        when((resourceProvider.getActiveProject().getDescription().getProjectTypeId())).thenReturn(ESB_CONFIGURATION_PROJECT_ID);
 
         assertEquals(true, presentation.isVisible());
 

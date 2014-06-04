@@ -18,14 +18,18 @@
     from Codenvy S.A..
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M10</version>
+        <version>3.0.0-M17.1</version>
     </parent>
+
     <artifactId>codenvy-ext-wso2-parent</artifactId>
     <version>1.0.0-M1-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -34,8 +38,6 @@
     <modules>
         <module>codenvy-ext-wso2-core</module>
         <module>codenvy-ext-wso2-cmf-editor</module>
-        <module>wso2-application-war</module>
-        <module>wso2-packaging-standalone-tomcat</module>
     </modules>
 
     <properties>
@@ -44,7 +46,7 @@
         <gwt.maven.plugin.version>2.6.0</gwt.maven.plugin.version>
         <gwt.version>2.6.0</gwt.version>
         <version.cmf>1.0.0-M1-SNAPSHOT</version.cmf>
-        <version.codenvy>3.0.0-M10</version.codenvy>
+        <version.codenvy>3.0.0-M17.1</version.codenvy>
     </properties>
 
 </project>

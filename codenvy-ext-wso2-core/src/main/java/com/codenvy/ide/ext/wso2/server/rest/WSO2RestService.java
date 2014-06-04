@@ -23,9 +23,6 @@ import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.commons.env.EnvironmentContext;
-import com.codenvy.dto.server.DtoFactory;
-import com.codenvy.ide.ext.git.server.provider.rest.ProviderException;
-import com.codenvy.ide.ext.git.shared.GitUrlVendorInfo;
 import com.codenvy.ide.ext.wso2.server.WSO2;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 
@@ -37,11 +34,9 @@ import org.xml.sax.SAXException;
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -50,7 +45,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
-import static com.codenvy.commons.env.EnvironmentContext.WORKSPACE_ID;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ENDPOINTS_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_MIME_TYPE;
 import static com.codenvy.ide.ext.wso2.shared.Constants.LOCAL_ENTRY_FOLDER_NAME;
@@ -172,7 +166,7 @@ public class WSO2RestService {
         return Response.ok(parentFolder, TEXT_HTML).build();
     }
 
-    @GET
+/*    @GET
     @Path("info")
     @Produces(APPLICATION_JSON)
     public GitUrlVendorInfo getInfo() throws ProviderException {
@@ -180,7 +174,7 @@ public class WSO2RestService {
                          .withVendorName(wso2.getVendorName())
                          .withVendorBaseHost(wso2.getVendorBaseHost())
                          .withOAuthScopes(wso2.getVendorOAuthScopes());
-    }
+    }*/
 
     /**
      * Determines parent folder for importing file.
@@ -228,7 +222,7 @@ public class WSO2RestService {
 
     /** @return virtual file system id */
     private String getVfsID() {
-        return (String)EnvironmentContext.getCurrent().getVariable(WORKSPACE_ID);
+        return EnvironmentContext.getCurrent().getWorkspaceId();
     }
 
 }

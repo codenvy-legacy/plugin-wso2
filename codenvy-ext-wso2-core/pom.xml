@@ -18,20 +18,26 @@
     from Codenvy S.A..
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <artifactId>codenvy-ext-wso2-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
         <version>1.0.0-M1-SNAPSHOT</version>
     </parent>
+
     <artifactId>codenvy-ext-wso2-core</artifactId>
     <packaging>jar</packaging>
     <name>codenvy-ext-wso2-core</name>
+
     <properties>
         <dto-generator-out-directory>${project.build.directory}/generated-sources/dto/</dto-generator-out-directory>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
@@ -48,11 +54,12 @@
             <artifactId>wso2-cmf-editor</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+
         <!-- Server libraries -->
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-vfs</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
+            <version>${codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
@@ -62,7 +69,7 @@
         <dependency>
             <groupId>com.google.gwt.inject</groupId>
             <artifactId>gin</artifactId>
-            <version>${gin.version}</version>
+            <version>${com.google.gwt.gin.version}</version>
         </dependency>
 
         <!--Client and server libraries-->
@@ -105,22 +112,24 @@
         <dependency>
             <groupId>org.everrest</groupId>
             <artifactId>everrest-test</artifactId>
-            <version>${everrest.version}</version>
+            <version>${org.everrest.version}</version>
             <scope>test</scope>
         </dependency>
+
         <!-- Testing  libraries-->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
+            <version>${org.mockito.version}</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
+
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <testSourceDirectory>src/test/java</testSourceDirectory>
         <outputDirectory>target/classes</outputDirectory>
+
         <resources>
             <resource>
                 <directory>src/main/java</directory>
@@ -132,6 +141,7 @@
                 <directory>${project.build.directory}/generated-sources/dto/</directory>
             </resource>
         </resources>
+
         <testResources>
             <testResource>
                 <directory>src/test/java</directory>
@@ -140,6 +150,7 @@
                 <directory>src/test/resources</directory>
             </testResource>
         </testResources>
+
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -175,6 +186,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <executions>
@@ -187,10 +199,11 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>com.codenvy.platform-api</groupId>
                 <artifactId>codenvy-dto-maven-plugin</artifactId>
-                <version>${com.codenvy.platform-api.version}</version>
+                <version>${codenvy.platform-api.version}</version>
                 <executions>
                     <execution>
                         <id>generate-client-dto</id>
@@ -207,6 +220,7 @@
                             <impl>client</impl>
                         </configuration>
                     </execution>
+
                     <execution>
                         <id>generate-server-dto</id>
                         <phase>process-sources</phase>
@@ -223,6 +237,7 @@
                         </configuration>
                     </execution>
                 </executions>
+
                 <dependencies>
                     <dependency>
                         <groupId>com.codenvy.ide</groupId>
@@ -231,6 +246,8 @@
                     </dependency>
                 </dependencies>
             </plugin>
+
         </plugins>
     </build>
+
 </project>

@@ -17,17 +17,17 @@
  */
 package com.codenvy.ide.ext.wso2.client.patchers;
 
-import com.codenvy.ide.util.Utils;
+import com.codenvy.ide.util.Config;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 
 /**
- * The patcher for {@link Utils}. Replace native method in it.
+ * The patcher for {@link Config}. Replace native method in it.
  *
  * @author Valeriy Svydenko
  */
-@PatchClass(Utils.class)
-public class UtilsPatcher {
+@PatchClass(Config.class)
+public class ConfigPatcher {
 
     @PatchMethod(override = true)
     public static String getWorkspaceId() {

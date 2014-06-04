@@ -17,15 +17,11 @@
  */
 package com.codenvy.ide.ext.wso2.server.inject;
 
-import com.codenvy.ide.ext.git.server.provider.GitVendorService;
-import com.codenvy.ide.ext.wso2.server.WSO2;
-import com.codenvy.ide.ext.wso2.server.projecttypes.WSO2ProjectTemplateExtension;
 import com.codenvy.ide.ext.wso2.server.projecttypes.WSO2ProjectTypeDescriptionExtension;
 import com.codenvy.ide.ext.wso2.server.projecttypes.WSO2ProjectTypeExtension;
 import com.codenvy.ide.ext.wso2.server.rest.WSO2RestService;
 import com.codenvy.inject.DynaModule;
 import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.Multibinder;
 
 /**
  * The module that contains configuration of the server side part of the plugin.
@@ -40,11 +36,10 @@ public class WSO2Module extends AbstractModule {
     protected void configure() {
         bind(WSO2ProjectTypeDescriptionExtension.class);
         bind(WSO2ProjectTypeExtension.class);
-        bind(WSO2ProjectTemplateExtension.class);
 
         bind(WSO2RestService.class);
 
-        Multibinder<GitVendorService> gitVendorServices = Multibinder.newSetBinder(binder(), GitVendorService.class);
-        gitVendorServices.addBinding().to(WSO2.class);
+/*      Multibinder<GitVendorService> gitVendorServices = Multibinder.newSetBinder(binder(), GitVendorService.class);
+        gitVendorServices.addBinding().to(WSO2.class);*/
     }
 }

@@ -21,6 +21,10 @@ import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
@@ -29,10 +33,6 @@ import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
 import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter;
 import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFileView;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
-import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.resources.model.Folder;
-import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Resource;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
@@ -213,7 +213,7 @@ public class OverwriteFilePresenterTest {
         overwriteFilePresenter.onCancelButtonClicked();
 
         verify(view).close();
-        verify(activeProject, never()).refreshTree((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        verify(activeProject, never()).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
     }
 
     @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
@@ -319,7 +319,7 @@ public class OverwriteFilePresenterTest {
                 onSuccess.invoke(callback, parentFolder);
                 return callback;
             }
-        }).when(activeProject).refreshTree((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        }).when(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
@@ -335,7 +335,7 @@ public class OverwriteFilePresenterTest {
         overwriteFilePresenter.showDialog(FILE_NAME, parentViewUtils);
         overwriteFilePresenter.onRenameButtonClicked();
 
-        verify(activeProject).refreshTree((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        verify(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
         verify(parentViewUtils).onCloseView();
     }
 
@@ -367,7 +367,7 @@ public class OverwriteFilePresenterTest {
                 onSuccess.invoke(callback, parentFolder);
                 return callback;
             }
-        }).when(activeProject).refreshTree((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        }).when(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
@@ -383,7 +383,7 @@ public class OverwriteFilePresenterTest {
         overwriteFilePresenter.showDialog(FILE_NAME, parentViewUtils);
         overwriteFilePresenter.onOverwriteButtonClicked();
 
-        verify(activeProject).refreshTree((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        verify(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
         verify(parentViewUtils).onCloseView();
     }
 
@@ -417,12 +417,12 @@ public class OverwriteFilePresenterTest {
                 onFailure.invoke(callback, throwable);
                 return callback;
             }
-        }).when(activeProject).refreshTree((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        }).when(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
 
         overwriteFilePresenter.showDialog(FILE_NAME, parentViewUtils);
         overwriteFilePresenter.onOverwriteButtonClicked();
 
-        verify(activeProject).refreshTree((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        verify(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
         verify(parentViewUtils).onCloseView();
         verify(throwable).getMessage();
         verify(notificationManager).showNotification((Notification)anyObject());
@@ -458,12 +458,12 @@ public class OverwriteFilePresenterTest {
                 onFailure.invoke(callback, throwable);
                 return callback;
             }
-        }).when(activeProject).refreshTree((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        }).when(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
 
         overwriteFilePresenter.showDialog(FILE_NAME, parentViewUtils);
         overwriteFilePresenter.onRenameButtonClicked();
 
-        verify(activeProject).refreshTree((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        verify(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
         verify(parentViewUtils).onCloseView();
         verify(throwable).getMessage();
         verify(notificationManager).showNotification((Notification)anyObject());

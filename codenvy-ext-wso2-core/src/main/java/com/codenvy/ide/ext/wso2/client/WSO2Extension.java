@@ -24,6 +24,8 @@ import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
+import com.codenvy.ide.api.ui.wizard.ProjectWizard;
 import com.codenvy.ide.ext.wso2.client.action.CreateEndpointAction;
 import com.codenvy.ide.ext.wso2.client.action.CreateLocalEntryAction;
 import com.codenvy.ide.ext.wso2.client.action.CreateProxyServiceAction;
@@ -33,8 +35,10 @@ import com.codenvy.ide.ext.wso2.client.action.LoginAction;
 import com.codenvy.ide.ext.wso2.client.action.WSO2ProjectActionGroup;
 import com.codenvy.ide.ext.wso2.client.editor.ESBXmlFileType;
 import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorProvider;
+import com.codenvy.ide.ext.wso2.client.wizard.project.WSO2PagePresenter;
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.action.Constraints.FIRST;
@@ -45,6 +49,7 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_ENDPOINT_ACTION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_LOCAL_ENTRY_ACTION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_PROXY_SERVICE_ACTION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_SEQUENCE_ACTION;
+import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
 import static com.codenvy.ide.ext.wso2.shared.Constants.IMPORT_SYNAPSE_ACTION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.LOGIN_WSO2_ACTION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_ACTION_GROUP;
@@ -66,8 +71,14 @@ import static com.google.gwt.core.client.ScriptInjector.TOP_WINDOW;
 public class WSO2Extension {
 
     @Inject
-    public WSO2Extension(WSO2Resources wso2Resources) {
+    public WSO2Extension(WSO2Resources wso2Resources,
+                         Provider<WSO2PagePresenter> wso2PagePresenter,
+                         ProjectTypeWizardRegistry projectTypeWizardRegistry,
+                         ProjectWizard projectWizard) {
         wso2Resources.wso2Style().ensureInjected();
+
+        projectWizard.addPage(wso2PagePresenter);
+        projectTypeWizardRegistry.addWizard(ESB_CONFIGURATION_PROJECT_ID, projectWizard);
     }
 
     @Inject

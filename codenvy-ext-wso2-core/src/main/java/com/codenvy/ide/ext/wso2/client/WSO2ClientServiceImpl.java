@@ -18,14 +18,12 @@
 package com.codenvy.ide.ext.wso2.client;
 
 import com.codenvy.ide.MimeType;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
-import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.ui.loader.Loader;
-import com.codenvy.ide.util.Utils;
-import com.google.gwt.http.client.RequestBuilder;
+import com.codenvy.ide.util.Config;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -33,30 +31,32 @@ import com.google.inject.name.Named;
 import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.rest.HTTPHeader.CONTENT_TYPE;
-import static com.google.gwt.http.client.RequestBuilder.POST;
 
 /**
  * The implementation of {@link WSO2ClientService}.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class WSO2ClientServiceImpl implements WSO2ClientService {
 
-    private static final String TEMPLATE_BASE_URL         = "/wso2/" + Utils.getWorkspaceName();
+    private static final String TEMPLATE_BASE_URL         = "/wso2/" + Config.getWorkspaceId();
     private static final String DETECT_CONFIGURATION_FILE = TEMPLATE_BASE_URL + "/detect";
     private static final String UPLOAD_CONFIGURATION_FILE = TEMPLATE_BASE_URL + "/upload";
     private static final String MODIFY_CONFIGURATION_FILE = TEMPLATE_BASE_URL + "/file";
     private static final String GET_WSO2_SERVICE_INFO     = TEMPLATE_BASE_URL + "/info";
 
-    private String     restContext;
-    private Loader     loader;
-    private DtoFactory dtoFactory;
+    private final String              restContext;
+    private final Loader              loader;
+    private final AsyncRequestFactory asyncRequestFactory;
 
     @Inject
-    public WSO2ClientServiceImpl(@Named("restContext") String restContext, Loader loader, DtoFactory dtoFactory) {
+    public WSO2ClientServiceImpl(@Named("restContext") String restContext,
+                                 Loader loader,
+                                 AsyncRequestFactory asyncRequestFactory) {
         this.restContext = restContext;
         this.loader = loader;
-        this.dtoFactory = dtoFactory;
+        this.asyncRequestFactory = asyncRequestFactory;
     }
 
     /** {@inheritDoc} */
@@ -67,8 +67,8 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
 
         loader.setMessage("Importing file...");
 
-        AsyncRequest.build(POST, requestUrl).data(dtoFactory.toJson(fileInfo)).header(CONTENT_TYPE, "application/json").loader(loader).send(
-                callback);
+        asyncRequestFactory.createPostRequest(requestUrl, fileInfo, true).loader(loader).header(CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                           .send(callback);
     }
 
     /** {@inheritDoc} */
@@ -78,8 +78,8 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
 
         loader.setMessage("Importing file...");
 
-        AsyncRequest.build(POST, requestUrl).data(dtoFactory.toJson(fileInfo)).header(CONTENT_TYPE, "application/json").loader(loader).send(
-                callback);
+        asyncRequestFactory.createPostRequest(requestUrl, fileInfo, true).loader(loader).header(CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                           .send(callback);
     }
 
     /** {@inheritDoc} */
@@ -88,8 +88,8 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
             throws RequestException {
         String requestUrl = restContext + MODIFY_CONFIGURATION_FILE + "/" + operation;
 
-        AsyncRequest.build(POST, requestUrl).data(dtoFactory.toJson(fileInfo)).header(CONTENT_TYPE, "application/json").send(
-                callback);
+        asyncRequestFactory.createPostRequest(requestUrl, fileInfo, true).header(CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                           .send(callback);
     }
 
     /** {@inheritDoc} */
@@ -97,6 +97,7 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
     public void getWSO2ServiceInfo(@NotNull AsyncRequestCallback<String> callback) throws RequestException {
         String url = restContext + GET_WSO2_SERVICE_INFO;
 
-        AsyncRequest.build(RequestBuilder.GET, url).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+        asyncRequestFactory.createGetRequest(url).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+                           .send(callback);
     }
 }

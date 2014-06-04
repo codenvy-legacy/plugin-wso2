@@ -18,10 +18,10 @@
 package com.codenvy.ide.ext.wso2.client.action;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.resources.model.Project;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
 
@@ -32,14 +32,9 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJEC
  * @author Valeriy Svydenko
  */
 public class WSO2ProjectActionGroup extends DefaultActionGroup {
+    private final ResourceProvider resourceProvider;
 
-    public static final String PROPERTY_PROJECT_TYPE = "vfs:projectType";
-
-    private ResourceProvider resourceProvider;
-
-    public WSO2ProjectActionGroup(ActionManager actionManager,
-                                  ResourceProvider resourceProvider) {
-
+    public WSO2ProjectActionGroup(ActionManager actionManager, ResourceProvider resourceProvider) {
         super(null, false, actionManager);
 
         this.resourceProvider = resourceProvider;
@@ -53,7 +48,7 @@ public class WSO2ProjectActionGroup extends DefaultActionGroup {
         Project activeProject = resourceProvider.getActiveProject();
 
         if (activeProject != null) {
-            String projectType = (String)activeProject.getPropertyValue(PROPERTY_PROJECT_TYPE);
+            String projectType = activeProject.getDescription().getProjectTypeId();
             visible = ESB_CONFIGURATION_PROJECT_ID.equals(projectType);
         }
 

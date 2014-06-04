@@ -17,42 +17,35 @@
  */
 package com.codenvy.ide.ext.wso2.server;
 
-import com.codenvy.api.vfs.server.exceptions.NotSupportedException;
-import com.codenvy.ide.ext.git.server.provider.GitVendorService;
-import com.codenvy.ide.ext.git.server.provider.rest.ProviderException;
-import com.codenvy.ide.ext.ssh.server.SshKey;
-import com.codenvy.ide.ext.ssh.server.SshKeyStoreException;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-
 /**
  * Contains methods for retrieving data from WSO2 git server and processing it before sending to client side.
  *
  * @author Andrey Plotnikov
  */
-public class WSO2 extends GitVendorService {
+public class WSO2 {
+
+/*} extends GitVendorService {
 
     @Inject
     protected WSO2(@Named("wso2.vendorBaseHost") String vendorBaseHost, @Named("wso2.vendorUrlPattern") String vendorUrlPattern) {
         super("wso2", vendorBaseHost, vendorUrlPattern, new String[0], true);
     }
 
-    /** {@inheritDoc} */
+    *//** {@inheritDoc} *//*
     @Override
     public void uploadNewPublicKey(SshKey publicKey) throws ProviderException {
         throw new NotSupportedException("This operation is not supported for this service.");
     }
 
-    /** {@inheritDoc} */
+    *//** {@inheritDoc} *//*
     @Override
     public void generateAndUploadNewPublicKey() throws SshKeyStoreException, ProviderException {
         throw new NotSupportedException("This operation is not supported for this service.");
     }
 
-    /** {@inheritDoc} */
+    *//** {@inheritDoc} *//*
     @Override
     public boolean isRepositoryPrivate(String repositoryName) {
         return false;
-    }
+    }*/
 }

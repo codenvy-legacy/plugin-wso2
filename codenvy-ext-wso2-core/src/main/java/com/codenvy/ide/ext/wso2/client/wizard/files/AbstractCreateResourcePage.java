@@ -21,16 +21,16 @@ import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Resource;
+import com.codenvy.ide.api.resources.model.ResourceNameValidator;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncCallback;
 import com.codenvy.ide.ext.wso2.client.wizard.files.view.CreateResourceView;
-import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.resources.model.Folder;
-import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.resources.model.ResourceNameValidator;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -46,22 +46,23 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NA
  * The abstract implementation of the wizard page. This page provides an ability to create WSO2 resources in a given place.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public abstract class AbstractCreateResourcePage extends AbstractWizardPage implements CreateResourceView.ActionDelegate {
 
-    private ResourceProvider    resourceProvider;
-    private EditorAgent         editorAgent;
-    private String              parentFolderName;
-    private FileType            fileType;
-    private Project             activeProject;
-    private NotificationManager notificationManager;
+    private final ResourceProvider    resourceProvider;
+    private final EditorAgent         editorAgent;
+    private final String              parentFolderName;
+    private final FileType            fileType;
+    private       Project             activeProject;
+    private final NotificationManager notificationManager;
+    private       Folder              parentFolder;
 
-    private   Folder               parentFolder;
-    protected LocalizationConstant locale;
-    protected CreateResourceView   view;
-    protected boolean              hasSameFile;
-    protected boolean              incorrectName;
-    protected String               content;
+    protected final CreateResourceView   view;
+    protected       LocalizationConstant locale;
+    protected       boolean              hasSameFile;
+    protected       boolean              incorrectName;
+    protected       String               content;
 
     public AbstractCreateResourcePage(@NotNull CreateResourceView view,
                                       @NotNull String caption,
@@ -72,7 +73,6 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
                                       @NotNull String parentFolderName,
                                       @NotNull FileType fileType,
                                       @NotNull NotificationManager notificationManager) {
-
         super(caption, icon);
 
         this.view = view;
