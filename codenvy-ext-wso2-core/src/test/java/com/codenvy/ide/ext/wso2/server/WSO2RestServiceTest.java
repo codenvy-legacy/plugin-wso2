@@ -276,26 +276,4 @@ public class WSO2RestServiceTest {
         verify(synapseFile).delete(anyString());
         assertEquals(200, response.getStatus());
     }
-
-    /*@Test
-    public void informationOfWSO2ConfigurationShouldBeReturned() throws Exception {
-        String vendorName = "vendorName";
-        String vendorBaseHost = "vendorBaseHost";
-        List<String> vendorOAuthScopes = Arrays.asList("vendorOAuthScopes");
-
-        when(wso2.getVendorName()).thenReturn(vendorName);
-        when(wso2.getVendorBaseHost()).thenReturn(vendorBaseHost);
-        when(wso2.getVendorOAuthScopes()).thenReturn(vendorOAuthScopes);
-
-        ContainerResponse response = prepareResponseLauncherService("GET", "info", null);
-
-        GitUrlVendorInfo info = (GitUrlVendorInfo)response.getEntity();
-
-        assertEquals(200, response.getStatus());
-
-        assertEquals(info.getVendorName(), vendorName);
-        assertEquals(info.getVendorBaseHost(), vendorBaseHost);
-        assertArrayEquals(info.getOAuthScopes().toArray(), vendorOAuthScopes.toArray());
-        assertFalse(info.isGivenUrlSSH());
-    }*/
 }

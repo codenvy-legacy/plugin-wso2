@@ -23,7 +23,6 @@ import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.commons.env.EnvironmentContext;
-import com.codenvy.ide.ext.wso2.server.WSO2;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 
 import org.slf4j.Logger;
@@ -68,8 +67,6 @@ public class WSO2RestService {
 
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
-    @Inject
-    private WSO2                      wso2;
 
     @Path("detect")
     @POST
@@ -165,16 +162,6 @@ public class WSO2RestService {
 
         return Response.ok(parentFolder, TEXT_HTML).build();
     }
-
-/*    @GET
-    @Path("info")
-    @Produces(APPLICATION_JSON)
-    public GitUrlVendorInfo getInfo() throws ProviderException {
-        return DtoFactory.getInstance().createDto(GitUrlVendorInfo.class)
-                         .withVendorName(wso2.getVendorName())
-                         .withVendorBaseHost(wso2.getVendorBaseHost())
-                         .withOAuthScopes(wso2.getVendorOAuthScopes());
-    }*/
 
     /**
      * Determines parent folder for importing file.

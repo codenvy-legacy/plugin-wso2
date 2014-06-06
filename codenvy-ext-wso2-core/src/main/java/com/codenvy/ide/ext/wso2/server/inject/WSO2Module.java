@@ -17,11 +17,14 @@
  */
 package com.codenvy.ide.ext.wso2.server.inject;
 
+import com.codenvy.ide.ext.wso2.server.oauth.WSO2OAuthAuthenticatorProvider;
 import com.codenvy.ide.ext.wso2.server.projecttypes.WSO2ProjectTypeDescriptionExtension;
 import com.codenvy.ide.ext.wso2.server.projecttypes.WSO2ProjectTypeExtension;
 import com.codenvy.ide.ext.wso2.server.rest.WSO2RestService;
+import com.codenvy.ide.security.oauth.server.OAuthAuthenticatorProvider;
 import com.codenvy.inject.DynaModule;
 import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.Multibinder;
 
 /**
  * The module that contains configuration of the server side part of the plugin.
@@ -39,7 +42,8 @@ public class WSO2Module extends AbstractModule {
 
         bind(WSO2RestService.class);
 
-/*      Multibinder<GitVendorService> gitVendorServices = Multibinder.newSetBinder(binder(), GitVendorService.class);
-        gitVendorServices.addBinding().to(WSO2.class);*/
+        Multibinder<OAuthAuthenticatorProvider> oAuthAuthenticatorMultibinder =
+                Multibinder.newSetBinder(binder(), OAuthAuthenticatorProvider.class);
+        oAuthAuthenticatorMultibinder.addBinding().to(WSO2OAuthAuthenticatorProvider.class);
     }
 }

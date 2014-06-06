@@ -26,9 +26,6 @@ import com.google.gwt.i18n.client.Messages;
  */
 public interface LocalizationConstant extends Messages {
 
-    @Key("wizard.project.groupId")
-    String groupID();
-
     @Key("wizard.project.artifactId")
     String artifactId();
 
@@ -46,33 +43,6 @@ public interface LocalizationConstant extends Messages {
 
     @Key("wizard.project.specifyParentPom")
     String specifyParentPom();
-
-    @Key("wizard.project.title")
-    String wizardProjectTitle();
-
-    @Key("wizard.project.notice.emptyGroupId")
-    String wizardProjectNoticeEmptyGroupId();
-
-    @Key("wizard.project.notice.emptyArtifactId")
-    String wizardProjectNoticeEmptyArtifactId();
-
-    @Key("wizard.project.notice.emptyVersion")
-    String wizardProjectNoticeEmptyVersion();
-
-    @Key("wizard.project.notice.emptyParentGroupId")
-    String wizardProjectNoticeEmptyParentGroupId();
-
-    @Key("wizard.project.notice.emptyParentArtifactId")
-    String wizardProjectNoticeEmptyParentArtifactId();
-
-    @Key("wizard.project.notice.emptyParentVersion")
-    String wizardProjectNoticeEmptyParentVersion();
-
-    @Key("wso2.project.title")
-    String wso2ProjectTitle();
-
-    @Key("wso2.project.esb.title")
-    String wso2ProjectEsbTitle();
 
     @Key("wso2.main.action.title")
     String wso2MainActionTitle();
@@ -181,6 +151,9 @@ public interface LocalizationConstant extends Messages {
 
     @Key("authorize.need.body.oauth")
     String authorizeNeedBodyOauth(String vendorProvider);
+
+    @Key("authorize.need.title.oauth")
+    String authorizeNeedTitleOauth();
 
     String loginSuccess();
 
