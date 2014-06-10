@@ -23,7 +23,6 @@ import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorInitException;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PropertyListener;
@@ -37,8 +36,6 @@ import com.google.inject.Provider;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
-import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-
 /**
  * The editor for WSO2 ESB configuration.
  *
@@ -47,10 +44,11 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEditorView.ActionDelegate, PropertyListener {
 
-    private ESBConfEditorView   view;
-    private GraphicEditor       graphicEditor;
-    private CodenvyTextEditor   textEditor;
-    private NotificationManager notificationManager;
+    private final ESBConfEditorView view;
+    private final GraphicEditor     graphicEditor;
+    private final CodenvyTextEditor textEditor;
+
+    private boolean isGraphicalEditorChanged;
 
     @Inject
     public ESBConfEditor(ESBConfEditorView view,
@@ -62,7 +60,6 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         this.view = view;
         this.view.setDelegate(this);
         this.graphicEditor = graphicEditor;
-        this.notificationManager = notificationManager;
         textEditor = editorProvider.get();
         textEditor.initialize(xmlEditorConfigurationProvider.get(), documentProvider, notificationManager);
 
@@ -183,16 +180,17 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     @Override
     public void propertyChanged(PartPresenter source, final int propId) {
         if (propId == EditorPartPresenter.PROP_DIRTY && source instanceof GraphicEditor) {
-            try {
-                textEditor.getDocument().set(graphicEditor.serialize());
+            textEditor.getDocument().set(graphicEditor.serialize());
 
-                updateDirtyState(true);
-            } catch (Exception e) {
-                Notification notification = new Notification(e.getMessage(), ERROR);
-                notificationManager.showNotification(notification);
+            isGraphicalEditorChanged = true;
+            updateDirtyState(true);
+        } else if ((propId == EditorPartPresenter.PROP_INPUT || propId == EditorPartPresenter.PROP_DIRTY) &&
+                   source instanceof CodenvyTextEditor) {
+            if (isGraphicalEditorChanged) {
+                isGraphicalEditorChanged = false;
+            } else {
+                graphicEditor.deserialize(textEditor.getDocument().get());
             }
-        } else if (propId == EditorPartPresenter.PROP_INPUT && source instanceof CodenvyTextEditor) {
-            graphicEditor.deserialize(textEditor.getDocument().get());
         } else {
             firePropertyChange(propId);
         }
