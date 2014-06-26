@@ -24,9 +24,9 @@
     <g:DockLayoutPanel height="100%" width="100%" unit="PX">
         <g:south size="30">
             <g:FlowPanel>
-                <g:Button text="{locale.editorText}" ui:field="textEditorChoose" width="110px"/>
-                <g:Button text="{locale.editorGraphical}" ui:field="graphicalEditorChoose" width="110px"/>
-                <g:Button text="{locale.editorAssociate}" ui:field="associateEditorChoose" width="110px"/>
+                <g:Button text="{locale.editorText}" ui:field="textEditorChoose" width="95px"/>
+                <g:Button text="{locale.editorGraphical}" ui:field="graphicalEditorChoose" width="95px"/>
+                <g:Button text="{locale.editorAssociate}" ui:field="associateEditorChoose" width="95px"/>
             </g:FlowPanel>
         </g:south>
         <g:center>

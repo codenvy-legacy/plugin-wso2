@@ -1,6 +1,6 @@
 Elements {
     MainElement{
-        Components{
+        Components {
             { Log }
             { Property }
             { PayloadFactory }
@@ -50,7 +50,7 @@ Elements {
                 }
             }
             
-            LogProperties{
+            LogProperties {
                 Type {
                     STRING
                 }
@@ -222,7 +222,7 @@ Elements {
                     Default
                 }
             }
-            BuildMessageBeforeSending{
+            BuildMessageBeforeSending {
                 Type {
                     BOOLEAN
                 }
@@ -338,6 +338,22 @@ Elements {
                 }
             }
         }
+
+        Components {
+            { Log }
+            { Property }
+            { PayloadFactory }
+            { Send }
+            { Header }
+            { Respond }
+            { Filter }
+            { Switch_mediator }
+            { Sequence }
+            { Enrich }
+            { LoopBack }
+            { CallTemplate }
+            { Call }
+        }
     }
 
     Switch_mediator {
@@ -362,6 +378,22 @@ Elements {
                     enter_case_branches
                 }
             }
+        }
+
+        Components {
+            { Log }
+            { Property }
+            { PayloadFactory }
+            { Send }
+            { Header }
+            { Respond }
+            { Filter }
+            { Switch_mediator }
+            { Sequence }
+            { Enrich }
+            { LoopBack }
+            { CallTemplate }
+            { Call }
         }
     }
 

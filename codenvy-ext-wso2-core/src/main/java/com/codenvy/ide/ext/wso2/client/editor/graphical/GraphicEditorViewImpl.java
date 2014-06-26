@@ -48,12 +48,6 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
 
     /** {@inheritDoc} */
     @Override
-    public void setDiagram(String diagram) {
-        // TODO set diagram into widget
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void setDelegate(ActionDelegate delegate) {
         // do nothing for now
     }

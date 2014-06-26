@@ -27,8 +27,7 @@ import com.codenvy.ide.api.mvp.View;
 public interface GraphicEditorView extends View<GraphicEditorView.ActionDelegate> {
 
     public interface ActionDelegate {
-    }
 
-    void setDiagram(String diagram);
+    }
 
 }
