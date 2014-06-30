@@ -1,22 +1,26 @@
-Elements {
-    MainElement{
-        Components {
-            { Log }
-            { Property }
-            { PayloadFactory }
-            { Send }
-            { Header }
-            { Respond }
-            { Filter }
-            { Switch_mediator }
-            { Sequence }
-            { Enrich }
-            { LoopBack }
-            { CallTemplate }
-            { Call }
-        }
+RootElement {
+    Relation {
+        SINGLE
     }
 
+    Components {
+        { Log }
+        { Property }
+        { PayloadFactory }
+        { Send }
+        { Header }
+        { Respond }
+        { Filter }
+        { Switch_mediator }
+        { Sequence }
+        { Enrich }
+        { LoopBack }
+        { CallTemplate }
+        { Call }
+    }
+}
+
+Elements {
     Log {
         Relation {
             SINGLE
