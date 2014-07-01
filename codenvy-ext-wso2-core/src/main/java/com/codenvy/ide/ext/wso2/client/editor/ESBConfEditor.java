@@ -24,10 +24,17 @@ import com.codenvy.ide.api.editor.EditorInitException;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PropertyListener;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncCallback;
 import com.codenvy.ide.ext.wso2.client.editor.graphical.GraphicEditor;
 import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorConfiguration;
+import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -35,6 +42,8 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+
+import static com.codenvy.ide.MimeType.APPLICATION_XML;
 
 /**
  * The editor for WSO2 ESB configuration.
@@ -44,9 +53,13 @@ import javax.validation.constraints.NotNull;
  */
 public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEditorView.ActionDelegate, PropertyListener {
 
-    private final ESBConfEditorView view;
-    private final GraphicEditor     graphicEditor;
-    private final CodenvyTextEditor textEditor;
+    private static final String CODENVY_INTERNAL_FORMAT_EXTENSION = ".c5yd";
+
+    private final ESBConfEditorView   view;
+    private final NotificationManager notificationManager;
+    private final ResourceProvider    resourceProvider;
+    private final GraphicEditor       graphicEditor;
+    private final CodenvyTextEditor   textEditor;
 
     private boolean isGraphicalEditorChanged;
 
@@ -56,8 +69,11 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
                          Provider<CodenvyTextEditor> editorProvider,
                          Provider<XmlEditorConfiguration> xmlEditorConfigurationProvider,
                          NotificationManager notificationManager,
-                         GraphicEditor graphicEditor) {
+                         GraphicEditor graphicEditor,
+                         ResourceProvider resourceProvider) {
         this.view = view;
+        this.notificationManager = notificationManager;
+        this.resourceProvider = resourceProvider;
         this.view.setDelegate(this);
         this.graphicEditor = graphicEditor;
         textEditor = editorProvider.get();
@@ -87,6 +103,8 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         if (isDirty()) {
             textEditor.doSave();
             graphicEditor.doSave();
+
+            serializeToInternalFormat();
         }
     }
 
@@ -182,6 +200,8 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         if (propId == EditorPartPresenter.PROP_DIRTY && source instanceof GraphicEditor) {
             textEditor.getDocument().set(graphicEditor.serialize());
 
+            serializeToInternalFormat();
+
             isGraphicalEditorChanged = true;
             updateDirtyState(true);
         } else if ((propId == EditorPartPresenter.PROP_INPUT || propId == EditorPartPresenter.PROP_DIRTY) &&
@@ -189,11 +209,63 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
             if (isGraphicalEditorChanged) {
                 isGraphicalEditorChanged = false;
             } else {
-                graphicEditor.deserialize(textEditor.getDocument().get());
+                deserializeDiagram();
             }
         } else {
             firePropertyChange(propId);
         }
+    }
+
+    private void serializeToInternalFormat() {
+        File diagramFile = textEditor.getEditorInput().getFile();
+
+        final Folder parentFolder = diagramFile.getParent();
+        String internalFileName = getFileName(diagramFile);
+
+        final File internalFile = (File)parentFolder.findChildByName(internalFileName);
+        final Project activeProject = resourceProvider.getActiveProject();
+
+        if (internalFile == null) {
+            activeProject.createFile(parentFolder,
+                                     internalFileName,
+                                     graphicEditor.serializeInternalFormat(),
+                                     APPLICATION_XML,
+                                     new WSO2AsyncCallback<File>(notificationManager) {
+                                         @Override
+                                         public void onSuccess(File result) {
+                                             // do nothing
+                                         }
+                                     });
+        } else {
+            internalFile.setContent(graphicEditor.serializeInternalFormat());
+            activeProject.updateContent(internalFile, new WSO2AsyncCallback<File>(notificationManager) {
+                @Override
+                public void onSuccess(File result) {
+                    // do nothing
+                }
+            });
+        }
+    }
+
+    private void deserializeDiagram() {
+        File diagramFile = textEditor.getEditorInput().getFile();
+
+        Folder parentFolder = diagramFile.getParent();
+        String internalFileName = getFileName(diagramFile);
+
+        File internalFile = (File)parentFolder.findChildByName(internalFileName);
+
+        if (internalFile == null) {
+            graphicEditor.deserialize(textEditor.getDocument().get());
+        } else {
+            graphicEditor.deserializeInternalFormat(internalFile.getContent());
+        }
+    }
+
+    @NotNull
+    private String getFileName(@NotNull File file) {
+        Array<String> nameParts = StringUtils.split(file.getName(), ".");
+        return nameParts.get(0) + CODENVY_INTERNAL_FORMAT_EXTENSION;
     }
 
 }

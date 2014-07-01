@@ -114,8 +114,17 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
         return editor.serialize();
     }
 
+    @Nonnull
+    public String serializeInternalFormat() {
+        return editor.serializeInternalFormat();
+    }
+
     public void deserialize(@Nonnull String content) {
         editor.deserialize(content);
+    }
+
+    public void deserializeInternalFormat(@Nonnull String content) {
+        editor.deserializeInternalFormat(content);
     }
 
     /**
