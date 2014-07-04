@@ -60,6 +60,8 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     private final CodenvyTextEditor   textEditor;
 
     private boolean isGraphicalEditorChanged;
+    private File    internalFile;
+    private Project activeProject;
 
     @Inject
     public ESBConfEditor(ESBConfEditorView view,
@@ -99,10 +101,17 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     @Override
     public void doSave() {
         if (isDirty()) {
-            textEditor.doSave();
-            graphicEditor.doSave();
+            isGraphicalEditorChanged = true;
 
-            serializeToInternalFormat();
+            activeProject.updateContent(internalFile, new WSO2AsyncCallback<File>(notificationManager) {
+                @Override
+                public void onSuccess(File result) {
+                    ESBConfEditor.this.internalFile = result;
+
+                    textEditor.doSave();
+                    graphicEditor.doSave();
+                }
+            });
         }
     }
 
@@ -154,6 +163,9 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
+
+        isGraphicalEditorChanged = false;
+        activeProject = resourceProvider.getActiveProject();
     }
 
     /** {@inheritDoc} */
@@ -217,13 +229,11 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     private void serializeToInternalFormat() {
         File diagramFile = textEditor.getEditorInput().getFile();
 
-        final Folder parentFolder = diagramFile.getParent();
+        Folder parentFolder = diagramFile.getParent();
         String internalFileName = getFileName(diagramFile);
+        File internalFile = (File)parentFolder.findChildByName(internalFileName);
 
-        final File internalFile = (File)parentFolder.findChildByName(internalFileName);
-        final Project activeProject = resourceProvider.getActiveProject();
-
-        if (internalFile == null) {
+        if (this.internalFile == null && internalFile == null) {
             activeProject.createFile(parentFolder,
                                      internalFileName,
                                      graphicEditor.serializeInternalFormat(),
@@ -231,18 +241,17 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
                                      new WSO2AsyncCallback<File>(notificationManager) {
                                          @Override
                                          public void onSuccess(File result) {
-                                             // do nothing
+                                             ESBConfEditor.this.internalFile = result;
                                          }
                                      });
-        } else {
-            internalFile.setContent(graphicEditor.serializeInternalFormat());
-            activeProject.updateContent(internalFile, new WSO2AsyncCallback<File>(notificationManager) {
-                @Override
-                public void onSuccess(File result) {
-                    // do nothing
-                }
-            });
+            return;
         }
+
+        if (this.internalFile == null) {
+            this.internalFile = internalFile;
+        }
+
+        this.internalFile.setContent(graphicEditor.serializeInternalFormat());
     }
 
     private void deserializeDiagram() {

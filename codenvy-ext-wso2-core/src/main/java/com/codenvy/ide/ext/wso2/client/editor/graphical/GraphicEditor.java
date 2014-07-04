@@ -58,7 +58,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
      */
     @Override
     public void doSave() {
-        updateDirtyState(false);
+        dirtyState = false;
     }
 
     /**
