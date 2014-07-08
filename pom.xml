@@ -27,7 +27,7 @@
     </parent>
 
     <artifactId>codenvy-ext-wso2-parent</artifactId>
-    <version>1.0.0-M1-Alpha</version>
+    <version>1.0.0-M1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Codenvy :: WSO2 Plugin</name>
 
@@ -37,11 +37,7 @@
     </modules>
 
     <properties>
-        <!--TODO remove these versions after update to last version of SDK-->
-        <gwt-test-utils.version>0.47</gwt-test-utils.version>
-        <gwt.maven.plugin.version>2.6.0</gwt.maven.plugin.version>
-        <gwt.version>2.6.0</gwt.version>
-        <version.cmf>1.0.0-M1-Alpha</version.cmf>
+        <version.cmf>1.0.0-M1-SNAPSHOT</version.cmf>
         <version.codenvy>3.0.0-M17.1</version.codenvy>
     </properties>
 

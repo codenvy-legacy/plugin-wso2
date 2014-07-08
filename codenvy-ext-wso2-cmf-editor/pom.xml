@@ -22,7 +22,7 @@
     <parent>
         <artifactId>codenvy-ext-wso2-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>1.0.0-M1-Alpha</version>
+        <version>1.0.0-M1-SNAPSHOT</version>
     </parent>
 
     <artifactId>wso2-cmf-editor</artifactId>

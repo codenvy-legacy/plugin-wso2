@@ -23,7 +23,7 @@
     <parent>
         <artifactId>codenvy-ext-wso2-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>1.0.0-M1-Alpha</version>
+        <version>1.0.0-M1-SNAPSHOT</version>
     </parent>
 
     <artifactId>codenvy-ext-wso2-core</artifactId>
@@ -84,7 +84,7 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
+            <version>${com.google.gwt.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -96,7 +96,7 @@
         <dependency>
             <groupId>com.googlecode.gwt-test-utils</groupId>
             <artifactId>gwt-test-utils</artifactId>
-            <version>${gwt-test-utils.version}</version>
+            <version>${com.googlecode.gwt-test-utils.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
