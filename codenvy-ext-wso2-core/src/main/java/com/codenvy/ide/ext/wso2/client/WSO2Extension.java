@@ -24,6 +24,7 @@ import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.ui.wizard.ProjectWizard;
+import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.ext.wso2.client.action.CreateEndpointAction;
 import com.codenvy.ide.ext.wso2.client.action.CreateLocalEntryAction;
 import com.codenvy.ide.ext.wso2.client.action.CreateProxyServiceAction;
@@ -70,10 +71,12 @@ public class WSO2Extension {
 
     @Inject
     public WSO2Extension(WSO2Resources wso2Resources,
+                         EditorResources editorResources,
                          Provider<WSO2PagePresenter> wso2PagePresenter,
                          ProjectTypeWizardRegistry projectTypeWizardRegistry,
                          ProjectWizard projectWizard) {
         wso2Resources.wso2Style().ensureInjected();
+        editorResources.editorCSS().ensureInjected();
 
         projectWizard.addPage(wso2PagePresenter);
         projectTypeWizardRegistry.addWizard(ESB_CONFIGURATION_PROJECT_ID, projectWizard);
