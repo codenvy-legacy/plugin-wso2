@@ -33,6 +33,7 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.PROXY_SERVICE_FOLDER_NAM
  * The wizard page provides creating 'Proxy Service'. Also checks inputted information on the page.
  *
  * @author Andrey Plotnikov
+ * @author Dmitriy Shnurenko
  */
 public class CreateProxyServicePage extends AbstractCreateResourcePage {
 
@@ -47,8 +48,15 @@ public class CreateProxyServicePage extends AbstractCreateResourcePage {
                                   @ESBXmlFileType FileType esbXmlFileType,
                                   NotificationManager notificationManager) {
 
-        super(view, locale.wizardFileProxyServiceTitle(), resources.proxy_service_wizard(), locale, resourceProvider, editorAgent,
-              PROXY_SERVICE_FOLDER_NAME, esbXmlFileType, notificationManager);
+        super(view,
+              locale.wizardFileProxyServiceTitle(),
+              resources.proxy_service_wizard(),
+              locale,
+              resourceProvider,
+              editorAgent,
+              PROXY_SERVICE_FOLDER_NAME,
+              esbXmlFileType,
+              notificationManager);
 
         this.resources = resources;
 

@@ -25,7 +25,6 @@ import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.api.resources.model.ResourceNameValidator;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncCallback;
 import com.codenvy.ide.ext.wso2.client.wizard.files.view.CreateResourceView;
@@ -45,6 +44,7 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NA
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitriy Shnurenko
  */
 public abstract class AbstractCreateResourcePage extends AbstractWizardPage implements CreateResourceView.ActionDelegate {
 
@@ -158,20 +158,26 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
      *         name that child should have
      * @param callback
      */
-    private void getResourceByName(@NotNull Folder parent, @NotNull String name, @NotNull final AsyncCallback<Resource> callback) {
-        Array<Resource> children = parent.getChildren();
+    private void getResourceByName(@NotNull final Folder parent,
+                                   @NotNull final String name,
+                                   @NotNull final AsyncCallback<Resource> callback) {
 
-        for (Resource child : children.asIterable()) {
-            if (name.equals(child.getName())) {
-                callback.onSuccess(child);
-                return;
-            }
-        }
-
-        activeProject.createFolder(parent, name, new WSO2AsyncCallback<Folder>(notificationManager) {
+        activeProject.refreshChildren(parent, new WSO2AsyncCallback<Folder>(notificationManager) {
             @Override
             public void onSuccess(Folder result) {
-                callback.onSuccess(result);
+                Resource child = result.findChildByName(name);
+
+                if (child != null) {
+                    callback.onSuccess(child);
+                    return;
+                }
+
+                activeProject.createFolder(result, name, new WSO2AsyncCallback<Folder>(notificationManager) {
+                    @Override
+                    public void onSuccess(Folder result) {
+                        callback.onSuccess(result);
+                    }
+                });
             }
         });
     }

@@ -57,6 +57,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -65,6 +66,7 @@ import static org.mockito.Mockito.when;
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitriy Shnurenko
  */
 @RunWith(MockitoJUnitRunner.class)
 public abstract class AbstractCreateResourcePageTest {
@@ -112,20 +114,291 @@ public abstract class AbstractCreateResourcePageTest {
 
         when(resourceProvider.getActiveProject()).thenReturn(activeProject);
 
-        when(activeProject.getChildren()).thenReturn(Collections.<Resource>createArray(src));
-        when(src.getChildren()).thenReturn(Collections.<Resource>createArray(main));
-        when(main.getChildren()).thenReturn(Collections.<Resource>createArray(synapse_config));
-        when(synapse_config.getChildren()).thenReturn(Collections.<Resource>createArray(parentFolder));
-
         when(src.getName()).thenReturn(SRC_FOLDER_NAME);
         when(main.getName()).thenReturn(MAIN_FOLDER_NAME);
         when(synapse_config.getName()).thenReturn(SYNAPSE_CONFIG_FOLDER_NAME);
         when(parentFolder.getName()).thenReturn(parentFolderName);
 
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return src;
+            }
+        }).when(activeProject).findChildByName(anyString());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return main;
+            }
+        }).when(src).findChildByName(anyString());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return synapse_config;
+            }
+        }).when(main).findChildByName(anyString());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return parentFolder;
+            }
+        }).when(synapse_config).findChildByName(anyString());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                AsyncCallback callback = (AsyncCallback)args[1];
+                Folder folder = (Folder)args[0];
+                callback.onSuccess(folder);
+                return null;
+            }
+        }).when(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback)anyObject());
+
         page.setUpdateDelegate(delegate);
 
         when(fileType.getMimeTypes().get(0)).thenReturn(ESB_XML_MIME_TYPE);
         when(fileType.getExtension()).thenReturn(ESB_XML_EXTENSION);
+    }
+
+    @Test
+    public void folderTreeShouldBeCreatedWhenExistOnlyRootFolder() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Resource answer(InvocationOnMock invocation) throws Throwable {
+                return null;
+            }
+        }).when(activeProject).findChildByName(anyString());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return null;
+            }
+        }).when(src).findChildByName(anyString());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return null;
+            }
+        }).when(main).findChildByName(anyString());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return null;
+            }
+        }).when(synapse_config).findChildByName(anyString());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                AsyncCallback callBack = (AsyncCallback)args[2];
+                callBack.onSuccess(src);
+                return null;
+            }
+        }).when(activeProject).createFolder(eq(activeProject), eq(SRC_FOLDER_NAME), (AsyncCallback)anyObject());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                AsyncCallback callBack = (AsyncCallback)args[2];
+                callBack.onSuccess(main);
+                return null;
+            }
+        }).when(activeProject).createFolder(eq(src), eq(MAIN_FOLDER_NAME), (AsyncCallback)anyObject());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                AsyncCallback callBack = (AsyncCallback)args[2];
+                callBack.onSuccess(synapse_config);
+                return null;
+            }
+        }).when(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), (AsyncCallback)anyObject());
+
+        page.go(container);
+
+        verify(activeProject).createFolder(eq(activeProject), eq(SRC_FOLDER_NAME), (AsyncCallback)anyObject());
+        verify(activeProject).createFolder(eq(src), eq(MAIN_FOLDER_NAME), (AsyncCallback)anyObject());
+        verify(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), (AsyncCallback)anyObject());
+        verify(activeProject).createFolder(eq(synapse_config), eq(parentFolderName), (AsyncCallback)anyObject());
+
+        verify(container).setWidget(view);
+        verify(resourceProvider).getActiveProject();
+    }
+
+    @Test
+    public void folderTreeShouldBeCreatedWhenExistSrcLevelFolder() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return src;
+            }
+        }).when(activeProject).findChildByName(anyString());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return null;
+            }
+        }).when(src).findChildByName(anyString());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return null;
+            }
+        }).when(main).findChildByName(anyString());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return null;
+            }
+        }).when(synapse_config).findChildByName(anyString());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                AsyncCallback callBack = (AsyncCallback)args[2];
+                callBack.onSuccess(main);
+                return null;
+            }
+        }).when(activeProject).createFolder(eq(src), eq(MAIN_FOLDER_NAME), (AsyncCallback)anyObject());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                AsyncCallback callBack = (AsyncCallback)args[2];
+                callBack.onSuccess(synapse_config);
+                return null;
+            }
+        }).when(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), (AsyncCallback)anyObject());
+
+        page.go(container);
+
+        verify(activeProject).createFolder(eq(src), eq(MAIN_FOLDER_NAME), (AsyncCallback)anyObject());
+        verify(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), (AsyncCallback)anyObject());
+        verify(activeProject).createFolder(eq(synapse_config), eq(parentFolderName), (AsyncCallback)anyObject());
+
+        verify(activeProject, never()).createFolder(eq(activeProject), eq(SRC_FOLDER_NAME), (AsyncCallback)anyObject());
+
+        verify(container).setWidget(view);
+        verify(resourceProvider).getActiveProject();
+    }
+
+    @Test
+    public void folderTreeShouldBeCreatedWhenExistMainLevelFolder() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return src;
+            }
+        }).when(activeProject).findChildByName(anyString());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return main;
+            }
+        }).when(src).findChildByName(anyString());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return null;
+            }
+        }).when(main).findChildByName(anyString());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return null;
+            }
+        }).when(synapse_config).findChildByName(anyString());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                AsyncCallback callBack = (AsyncCallback)args[2];
+                callBack.onSuccess(synapse_config);
+                return null;
+            }
+        }).when(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), (AsyncCallback)anyObject());
+
+        page.go(container);
+
+        verify(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), (AsyncCallback)anyObject());
+        verify(activeProject).createFolder(eq(synapse_config), eq(parentFolderName), (AsyncCallback)anyObject());
+
+        verify(activeProject, never()).createFolder(eq(activeProject), eq(SRC_FOLDER_NAME), (AsyncCallback)anyObject());
+        verify(activeProject, never()).createFolder(eq(src), eq(MAIN_FOLDER_NAME), (AsyncCallback)anyObject());
+
+        verify(container).setWidget(view);
+        verify(resourceProvider).getActiveProject();
+    }
+
+    @Test
+    public void folderTreeShouldBeCreatedWhenExistSynapseConfigLevelFolder() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return src;
+            }
+        }).when(activeProject).findChildByName(anyString());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return main;
+            }
+        }).when(src).findChildByName(anyString());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return synapse_config;
+            }
+        }).when(main).findChildByName(anyString());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return null;
+            }
+        }).when(synapse_config).findChildByName(anyString());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                AsyncCallback callBack = (AsyncCallback)args[2];
+                callBack.onSuccess(synapse_config);
+                return null;
+            }
+        }).when(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), (AsyncCallback)anyObject());
+
+        page.go(container);
+
+        verify(activeProject).createFolder(eq(synapse_config), eq(parentFolderName), (AsyncCallback)anyObject());
+
+        verify(activeProject, never()).createFolder(eq(activeProject), eq(SRC_FOLDER_NAME), (AsyncCallback)anyObject());
+        verify(activeProject, never()).createFolder(eq(src), eq(MAIN_FOLDER_NAME), (AsyncCallback)anyObject());
+        verify(activeProject, never()).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), (AsyncCallback)anyObject());
+
+        verify(container).setWidget(view);
+        verify(resourceProvider).getActiveProject();
     }
 
     @Test
@@ -193,10 +466,18 @@ public abstract class AbstractCreateResourcePageTest {
     public void parentFolderShouldBeFound() throws Exception {
         page.go(container);
 
-        verify(activeProject).getChildren();
-        verify(src).getChildren();
-        verify(main).getChildren();
-        verify(synapse_config).getChildren();
+        verify(activeProject).findChildByName(anyString());
+        verify(src).findChildByName(anyString());
+        verify(main).findChildByName(anyString());
+        verify(synapse_config).findChildByName(anyString());
+
+        verify(activeProject, never()).createFolder(eq(activeProject), eq(SRC_FOLDER_NAME), (AsyncCallback)anyObject());
+        verify(activeProject, never()).createFolder(eq(src), eq(MAIN_FOLDER_NAME), (AsyncCallback)anyObject());
+        verify(activeProject, never()).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), (AsyncCallback)anyObject());
+        verify(activeProject, never()).createFolder(eq(synapse_config), eq(parentFolderName), (AsyncCallback)anyObject());
+
+        verify(container).setWidget(view);
+        verify(resourceProvider).getActiveProject();
     }
 
     @Test
@@ -224,7 +505,6 @@ public abstract class AbstractCreateResourcePageTest {
     public void fileExistsNoticeShouldBeShown() throws Exception {
         when(view.getResourceName()).thenReturn(SOME_TEXT);
         when(locale.wizardFileResourceNoticeFileExists()).thenReturn(SOME_TEXT);
-        when(view.getResourceName()).thenReturn(SOME_TEXT);
 
         Folder folder = mock(Folder.class);
         when(folder.getName()).thenReturn(FULL_RESOURCE_NAME);

@@ -34,6 +34,7 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.ENDPOINTS_FOLDER_NAME;
  * The wizard page provides creating 'Endpoint'. Also checks inputted information on the page.
  *
  * @author Andrey Plotnikov
+ * @author Dmitriy Shnurenko
  */
 @Singleton
 public class CreateEndpointPage extends AbstractCreateResourcePage {
@@ -49,8 +50,15 @@ public class CreateEndpointPage extends AbstractCreateResourcePage {
                               @ESBXmlFileType FileType esbXmlFileType,
                               NotificationManager notificationManager) {
 
-        super(view, locale.wizardFileEndpointTitle(), resources.endpoint_wizard(), locale, resourceProvider, editorAgent,
-              ENDPOINTS_FOLDER_NAME, esbXmlFileType, notificationManager);
+        super(view,
+              locale.wizardFileEndpointTitle(),
+              resources.endpoint_wizard(),
+              locale,
+              resourceProvider,
+              editorAgent,
+              ENDPOINTS_FOLDER_NAME,
+              esbXmlFileType,
+              notificationManager);
 
         this.resources = resources;
 

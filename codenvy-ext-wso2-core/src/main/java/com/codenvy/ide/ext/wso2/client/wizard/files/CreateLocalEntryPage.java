@@ -33,6 +33,7 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.LOCAL_ENTRY_FOLDER_NAME;
  * The wizard page provides creating 'Local Entry'. Also checks inputted information on the page.
  *
  * @author Andrey Plotnikov
+ * @author Dmitriy Shnurenko
  */
 public class CreateLocalEntryPage extends AbstractCreateResourcePage {
 
@@ -47,8 +48,14 @@ public class CreateLocalEntryPage extends AbstractCreateResourcePage {
                                 @ESBXmlFileType FileType esbXmlFileType,
                                 NotificationManager notificationManager) {
 
-        super(view, locale.wizardFileLocalEntryTitle(), resources.local_entry_wizard(), locale, resourceProvider, editorAgent,
-              LOCAL_ENTRY_FOLDER_NAME, esbXmlFileType, notificationManager);
+        super(view,
+              locale.wizardFileLocalEntryTitle(),
+              resources.local_entry_wizard(),
+              locale, resourceProvider,
+              editorAgent,
+              LOCAL_ENTRY_FOLDER_NAME,
+              esbXmlFileType,
+              notificationManager);
 
         this.resources = resources;
 
