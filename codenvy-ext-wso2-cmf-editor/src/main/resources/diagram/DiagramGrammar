@@ -29,7 +29,7 @@ Elements {
         Properties {
             LogCategory {
                 Type {
-                    STRING
+                    LogCategory
                 }
                 Value {
                     INFO
@@ -38,7 +38,7 @@ Elements {
 
             LogLevel {
                 Type {
-                    STRING
+                    LogLevel
                 }
                 Value {
                     SIMPLE
@@ -90,7 +90,7 @@ Elements {
             }
             PropertyAction {
                 Type { 
-                    STRING 
+                    PropertyAction
                 }
                 Value {
                     set
@@ -98,7 +98,7 @@ Elements {
             }
             ValueType {
                 Type {
-                    STRING 
+                    PropertyValueType
                 }
                 Value { 
                     LITERAL
@@ -138,7 +138,7 @@ Elements {
             }
             PropertyScope {
                 Type {
-                    STRING
+                    PropertyScope
                 }
                 Value {
                     Synapse
@@ -163,7 +163,7 @@ Elements {
         Properties {
             PayloadFormat {
                 Type {
-                    STRING
+                    PayloadFormatType
                 }
                 Value {
                     inline
@@ -187,7 +187,7 @@ Elements {
             }
              MediaType {
                 Type {
-                    STRING
+                    MediaType
                 }
                 Value {
                     xml
@@ -212,7 +212,7 @@ Elements {
         Properties {
             SkipSerialization {
                 Type {
-                    BOOLEAN
+                    EBoolean
                 }
                 Value {
                     false
@@ -220,7 +220,7 @@ Elements {
             }
             ReceivingSequencerType {
                 Type {
-                    STRING
+                    ReceivingSequenceType
                 }
                 Value {
                     Default
@@ -228,7 +228,7 @@ Elements {
             }
             BuildMessageBeforeSending {
                 Type {
-                    BOOLEAN
+                    EBoolean
                 }
                 Value {
                     false
@@ -253,7 +253,7 @@ Elements {
         Properties {
             HeaderAction {
                 Type {
-                    STRING
+                    HeaderAction
                 }
                 Value {
                     set
@@ -261,7 +261,7 @@ Elements {
             }
             Scope {
                 Type {
-                    STRING
+                    ScopeType
                 }
                 Value {
                     Synapse
@@ -269,7 +269,7 @@ Elements {
             }
             ValueType {
                 Type {
-                    STRING
+                    HeaderValueType
                 }
                 Value {
                     LITERAL
@@ -319,7 +319,7 @@ Elements {
         Properties {
             ConditionType {
                 Type {
-                    STRING
+                    FilterConditionType
                 }
                 Value {
                     SOURCE_AND_REGEX
@@ -410,10 +410,10 @@ Elements {
         Properties {
             ReferringSequenceType {
                 Type {
-                    STRING
+                    ReceivingSequenceType
                 }
                 Value {
-                    STATIC
+                    Static
                 }
             }
             StaticReferenceKey {
@@ -435,7 +435,7 @@ Elements {
         Properties {
             CloneSource {
                 Type {
-                    BOOLEAN
+                    EBoolean
                 }
                 Value {
                     false
@@ -443,7 +443,7 @@ Elements {
             }
             SourceType {
                 Type {
-                    STRING
+                    EnrichSourceType
                 }
                 Value {
                     custom
@@ -459,7 +459,7 @@ Elements {
             }
             TargetAction {
                 Type {
-                    STRING
+                    EnrichTargetAction
                 }
                 Value {
                     replace
@@ -467,7 +467,7 @@ Elements {
             }
             TargetType {
                 Type {
-                    STRING
+                    EnrichTargetType
                 }
                 Value {
                     custom
@@ -559,7 +559,7 @@ Elements {
         Properties {
             EndpointType {
                 Type {
-                    STRING
+                    CallMediatorEndpointType
                 }
                 Value {
                     INLINE
@@ -740,5 +740,99 @@ Connections {
             {Call <> CallTemplate}
             {Call <> Call}
         }
+    }
+}
+
+PropertyTypes {
+    CallMediatorEndpointType {
+        { INLINE }
+        { NONE }
+        { REGISTRYKEY }
+        { XPATH }
+    }
+    LogCategory {
+        { TRACE }
+        { DEBUG }
+        { INFO }
+        { WARN }
+        { ERROR }
+        { FATAL }
+    }
+    LogLevel {
+        { SIMPLE }
+        { HEADERS }
+        { FULL }
+        { CUSTOM }
+    }
+    PropertyValueType {
+        { LITERAL }
+        { EXPRESSION }
+    }
+    PropertyScope {
+        { Synapse }
+        { transport }
+        { axis2 }
+        { axis2-client }
+        { operation }
+    }
+    PropertyAction {
+        { set }
+        { remove }
+    }
+    MediaType {
+        { xml }
+        { json }
+    }
+    PayloadFormatType {
+        { Inline }
+        { Registry Reference }
+    }
+    EBoolean {
+        { true }
+        { false }
+    }
+    ReceivingSequenceType {
+        { Default }
+        { Static }
+        { Static }
+    }
+    HeaderAction {
+        { set }
+        { remove}
+    }
+    HeaderValueType {
+        { LITERAL }
+        { EXPRESSION }
+        { INLINE }
+    }
+    ScopeType {
+        { Synapse }
+        { transport }
+    }
+    FilterConditionType {
+        { SOURCE_AND_REGEX }
+        { XPATH }
+    }
+    ReceivingSequenceType {
+        { Static }
+        { Dynamic }
+    }
+    EnrichSourceType {
+        { custom }
+        { envelope }
+        { body }
+        { property }
+        { inline }
+    }
+    EnrichTargetAction {
+        { replace }
+        { child }
+        { sibling }
+    }
+    EnrichTargetType {
+        { custom }
+        { envelope }
+        { body }
+        { property }
     }
 }
