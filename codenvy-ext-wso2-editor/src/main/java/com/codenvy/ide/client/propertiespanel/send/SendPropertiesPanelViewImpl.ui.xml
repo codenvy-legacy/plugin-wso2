@@ -21,28 +21,28 @@
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
         <g:DockLayoutPanel>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
-                    <g:Label text="SkipSerialization"/>
-                    <g:ListBox ui:field="skipSerialization" width="126px"/>
+                    <g:Label text="Skip Serialization"/>
+                    <g:ListBox ui:field="skipSerialization" width="206px"/>
                 </g:FlowPanel>
             </g:north>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
-                    <g:Label text="ReceivingSequencerType"/>
-                    <g:ListBox ui:field="receivingSequencerType" width="126px"/>
+                    <g:Label text="Receiving Sequence Type"/>
+                    <g:ListBox ui:field="receivingSequencerType" width="206px"/>
                 </g:FlowPanel>
             </g:north>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
-                    <g:Label text="BuildMessageBeforeSending"/>
-                    <g:ListBox ui:field="buildMessageBeforeSending" width="126px"/>
+                    <g:Label text="Build Message Before Sending"/>
+                    <g:ListBox ui:field="buildMessageBeforeSending" width="206px"/>
                 </g:FlowPanel>
             </g:north>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
                     <g:Label text="Description"/>
-                    <g:TextBox ui:field="description" width="120px"/>
+                    <g:TextBox ui:field="description" width="200px"/>
                 </g:FlowPanel>
             </g:north>
         </g:DockLayoutPanel>

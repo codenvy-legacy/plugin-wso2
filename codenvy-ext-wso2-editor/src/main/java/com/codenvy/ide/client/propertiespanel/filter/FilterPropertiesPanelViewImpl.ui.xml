@@ -21,22 +21,22 @@
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
         <g:DockLayoutPanel>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
-                    <g:Label text="ConditionType"/>
-                    <g:ListBox ui:field="conditionType" width="126px"/>
+                    <g:Label text="Condition Type"/>
+                    <g:ListBox ui:field="conditionType" width="206px"/>
                 </g:FlowPanel>
             </g:north>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
                     <g:Label text="Source"/>
-                    <g:TextBox ui:field="source" width="120px"/>
+                    <g:TextBox ui:field="source" width="200px"/>
                 </g:FlowPanel>
             </g:north>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
-                    <g:Label text="RegularExpression"/>
-                    <g:TextBox ui:field="regularExpression" width="120px"/>
+                    <g:Label text="Regular Expression"/>
+                    <g:TextBox ui:field="regularExpression" width="200px"/>
                 </g:FlowPanel>
             </g:north>
         </g:DockLayoutPanel>

@@ -21,34 +21,34 @@
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
         <g:DockLayoutPanel>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
-                    <g:Label text="HeaderAction"/>
-                    <g:ListBox ui:field="headerAction" width="126px"/>
+                    <g:Label text="Header Action"/>
+                    <g:ListBox ui:field="headerAction" width="206px"/>
                 </g:FlowPanel>
             </g:north>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
                     <g:Label text="Scope"/>
-                    <g:ListBox ui:field="scope" width="126px"/>
+                    <g:ListBox ui:field="scope" width="206px"/>
                 </g:FlowPanel>
             </g:north>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
-                    <g:Label text="ValueType"/>
-                    <g:ListBox ui:field="valueType" width="126px"/>
+                    <g:Label text="Value Type"/>
+                    <g:ListBox ui:field="valueType" width="206px"/>
                 </g:FlowPanel>
             </g:north>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
-                    <g:Label text="ValueLiteral"/>
-                    <g:TextBox ui:field="valueLiteral" width="120px"/>
+                    <g:Label text="Value Literal"/>
+                    <g:TextBox ui:field="valueLiteral" width="200px"/>
                 </g:FlowPanel>
             </g:north>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
-                    <g:Label text="HeaderName"/>
-                    <g:TextBox ui:field="headerName" width="120px"/>
+                    <g:Label text="Header Name"/>
+                    <g:TextBox ui:field="headerName" width="200px"/>
                 </g:FlowPanel>
             </g:north>
         </g:DockLayoutPanel>

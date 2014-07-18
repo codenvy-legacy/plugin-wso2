@@ -21,10 +21,10 @@
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
         <g:DockLayoutPanel>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
                     <g:Label text="Description"/>
-                    <g:TextBox ui:field="description" width="120px"/>
+                    <g:TextBox ui:field="description" width="200px"/>
                 </g:FlowPanel>
             </g:north>
         </g:DockLayoutPanel>

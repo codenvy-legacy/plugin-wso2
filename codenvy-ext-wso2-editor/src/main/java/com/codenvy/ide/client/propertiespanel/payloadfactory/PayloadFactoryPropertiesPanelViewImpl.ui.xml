@@ -21,34 +21,34 @@
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
         <g:DockLayoutPanel>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
-                    <g:Label text="PayloadFormat"/>
-                    <g:ListBox ui:field="payloadFormat" width="126px"/>
+                    <g:Label text="Payload Format"/>
+                    <g:ListBox ui:field="payloadFormat" width="206px"/>
                 </g:FlowPanel>
             </g:north>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
                     <g:Label text="Format"/>
-                    <g:TextBox ui:field="format" width="120px"/>
+                    <g:TextBox ui:field="format" width="200px"/>
                 </g:FlowPanel>
             </g:north>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
                     <g:Label text="Args"/>
-                    <g:TextBox ui:field="args" width="120px"/>
+                    <g:TextBox ui:field="args" width="200px"/>
                 </g:FlowPanel>
             </g:north>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
-                    <g:Label text="MediaType"/>
-                    <g:ListBox ui:field="mediaType" width="126px"/>
+                    <g:Label text="Media Type"/>
+                    <g:ListBox ui:field="mediaType" width="206px"/>
                 </g:FlowPanel>
             </g:north>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
                     <g:Label text="Description"/>
-                    <g:TextBox ui:field="description" width="120px"/>
+                    <g:TextBox ui:field="description" width="200px"/>
                 </g:FlowPanel>
             </g:north>
         </g:DockLayoutPanel>

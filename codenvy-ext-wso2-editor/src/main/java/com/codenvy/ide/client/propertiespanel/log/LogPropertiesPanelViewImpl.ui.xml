@@ -21,34 +21,34 @@
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
         <g:DockLayoutPanel>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
-                    <g:Label text="LogCategory"/>
-                    <g:ListBox ui:field="logCategory" width="126px"/>
+                    <g:Label text="Log Category"/>
+                    <g:ListBox ui:field="logCategory" width="206px"/>
                 </g:FlowPanel>
             </g:north>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
-                    <g:Label text="LogLevel"/>
-                    <g:ListBox ui:field="logLevel" width="126px"/>
+                    <g:Label text="Log Level"/>
+                    <g:ListBox ui:field="logLevel" width="206px"/>
                 </g:FlowPanel>
             </g:north>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
-                    <g:Label text="LogSeparator"/>
-                    <g:TextBox ui:field="logSeparator" width="120px"/>
+                    <g:Label text="Log Separator"/>
+                    <g:TextBox ui:field="logSeparator" width="200px"/>
                 </g:FlowPanel>
             </g:north>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
-                    <g:Label text="LogProperties"/>
-                    <g:TextBox ui:field="logProperties" width="120px"/>
+                    <g:Label text="Properties"/>
+                    <g:TextBox ui:field="logProperties" width="200px"/>
                 </g:FlowPanel>
             </g:north>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
                     <g:Label text="Description"/>
-                    <g:TextBox ui:field="description" width="120px"/>
+                    <g:TextBox ui:field="description" width="200px"/>
                 </g:FlowPanel>
             </g:north>
         </g:DockLayoutPanel>

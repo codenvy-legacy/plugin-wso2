@@ -21,16 +21,16 @@
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
         <g:DockLayoutPanel>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
-                    <g:Label text="SourceXpath"/>
-                    <g:TextBox ui:field="sourceXpath" width="120px"/>
+                    <g:Label text="Source Xpath"/>
+                    <g:TextBox ui:field="sourceXpath" width="200px"/>
                 </g:FlowPanel>
             </g:north>
-            <g:north size="50.00">
+            <g:north size="60.00">
                 <g:FlowPanel>
-                    <g:Label text="CaseBranches"/>
-                    <g:TextBox ui:field="caseBranches" width="120px"/>
+                    <g:Label text="Case Branches"/>
+                    <g:TextBox ui:field="caseBranches" width="200px"/>
                 </g:FlowPanel>
             </g:north>
         </g:DockLayoutPanel>
