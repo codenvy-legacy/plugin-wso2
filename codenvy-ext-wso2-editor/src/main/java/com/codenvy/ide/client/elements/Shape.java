@@ -1,0 +1,145 @@
+/*
+ * Copyright 2014 Codenvy, S.A.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.codenvy.ide.client.elements;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * The main presentation of shape diagram element. It can contain and manage inner diagram elements. Inner diagram elements mean that this
+ * kind of elements provides an ability to have own diagram inside himself. This ability is optional.
+ *
+ * @author Andrey Plotnikov
+ */
+public interface Shape extends Element {
+
+    int UNDEFINED_POSITION = -1;
+
+    /**
+     * Add an inner shape into this one shape.
+     *
+     * @param shape
+     *         shape that need to be added
+     */
+    void addShape(@Nonnull Shape shape);
+
+    /**
+     * Remove a inner shape from this one shape.
+     *
+     * @param shape
+     *         shape that need to be removed
+     */
+    void removeShape(@Nonnull Shape shape);
+
+    /** @return a list of inner shapes */
+    @Nonnull
+    List<Shape> getShapes();
+
+    /** @return <code>true</code> if this shape has inner shapes, <code>false</code> it doesn't */
+    boolean hasShapes();
+
+    /**
+     * Add an inner link into this one shape.
+     *
+     * @param link
+     *         link that need to be added
+     */
+    void addLink(@Nonnull Link link);
+
+    /**
+     * Remove a inner link from this one shape.
+     *
+     * @param link
+     *         link that need to be removed
+     */
+    void removeLink(@Nonnull Link link);
+
+    /** @return a list of inner links */
+    @Nonnull
+    List<Link> getLinks();
+
+    /** @return <code>true</code> if this shape has inner links, <code>false</code> it doesn't */
+    boolean hasLinks();
+
+    /** @return the x-position of shape in workspace */
+    int getX();
+
+    /**
+     * Set the x-position of shape in workspace.
+     *
+     * @param x
+     *         x-position
+     */
+    void setX(int x);
+
+    /** @return the y-position of shape in workspace */
+    int getY();
+
+    /**
+     * Set y-position of shape in workspace.
+     *
+     * @param y
+     *         y-position
+     */
+    void setY(int y);
+
+    /** @return the list of available inner components */
+    Set<String> getComponents();
+
+    /** @return <code>true</code> if this shape has an ability to have inner components, <code>false</code> it doesn't */
+    boolean isContainer();
+
+    /**
+     * Deserialize diagram element with all inner elements.
+     *
+     * @param content
+     *         a serialized content
+     */
+    void deserialize(@Nonnull String content);
+
+    /**
+     * Deserialize diagram element with all inner elements and all properties(include internal properties).
+     *
+     * @param content
+     *         a serialized content
+     */
+    void deserializeInternalFormat(@Nonnull String content);
+
+    /**
+     * Changes the auto-alignment state of the element.
+     *
+     * @param isAutoAligned
+     *         <code>true</code> to enable auto-alignment state of inner elements, <code>false</code> to disable it
+     */
+    void setAutoAlignmentParam(boolean isAutoAligned);
+
+    /** @return <code>true</code> if the auto-alignment state of inner elements is enabled, <code>false</code> it isn't */
+    boolean isAutoAligned();
+
+    /**
+     * Checks a possibility to create a connection between current and given elements.
+     *
+     * @param connection
+     *         name of connection that is going to create
+     * @param targetElement
+     *         target element of connection
+     * @return <code>true</code> if it is possible to create a this connection of connection between current and given elements,
+     * <code>false</code> it isn't
+     */
+    boolean canCreateConnection(@Nonnull String connection, @Nonnull String targetElement);
+
+}

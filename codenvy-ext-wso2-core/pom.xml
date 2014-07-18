@@ -47,7 +47,7 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>wso2-cmf-editor</artifactId>
+            <artifactId>wso2-editor</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 

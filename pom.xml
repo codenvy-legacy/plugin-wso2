@@ -34,11 +34,13 @@
     <modules>
         <module>codenvy-ext-wso2-core</module>
         <module>codenvy-ext-wso2-cmf-editor</module>
+        <module>codenvy-ext-wso2-editor</module>
     </modules>
 
     <properties>
         <version.cmf>1.0.0-M1-SNAPSHOT</version.cmf>
         <version.codenvy>3.0.0-M17.1</version.codenvy>
+        <version.platform-api-gwt-client>0.8.0</version.platform-api-gwt-client>
     </properties>
 
 </project>

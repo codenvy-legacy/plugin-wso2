@@ -15,9 +15,8 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
-import com.codenvy.editor.api.editor.AbstractEditor;
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
-import com.codenvy.ide.client.WSO2Editor;
+import com.codenvy.ide.client.editor.WSO2Editor;
 import com.codenvy.ide.client.inject.Injector;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -31,7 +30,7 @@ import javax.annotation.Nonnull;
  * @author Andrey Plotnikov
  */
 public class GraphicEditor extends AbstractEditorPresenter implements GraphicEditorView.ActionDelegate,
-                                                                      AbstractEditor.EditorChangeListener {
+                                                                      WSO2Editor.EditorChangeListener {
 
     private final GraphicEditorView view;
     private final WSO2Editor        editor;

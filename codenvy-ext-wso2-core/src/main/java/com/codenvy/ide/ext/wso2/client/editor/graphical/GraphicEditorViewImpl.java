@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
-import com.codenvy.ide.client.WSO2Editor;
+import com.codenvy.ide.client.editor.WSO2Editor;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
