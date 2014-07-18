@@ -6,12 +6,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>cmf-parent</artifactId>
-        <groupId>com.codenvy.cmf</groupId>
+        <artifactId>codenvy-ext-wso2-parent</artifactId>
+        <groupId>com.codenvy.ide</groupId>
         <version>1.0.0-M1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.codenvy.ide</groupId>
     <artifactId>wso2-editor</artifactId>
     <name>WSO2 Editor</name>
 
@@ -39,7 +38,7 @@
         <dependency>
             <groupId>com.google.gwt.inject</groupId>
             <artifactId>gin</artifactId>
-            <version>${version.gin}</version>
+            <version>${com.google.gwt.gin.version}</version>
         </dependency>
         <dependency>
             <groupId>com.orange.links</groupId>
@@ -49,13 +48,13 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
-            <version>${version.gwt}</version>
+            <version>${com.google.gwt.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-dev</artifactId>
-            <version>${version.gwt}</version>
+            <version>${com.google.gwt.version}</version>
             <scope>runtime</scope>
         </dependency>
     </dependencies>

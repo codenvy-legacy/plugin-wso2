@@ -40,6 +40,10 @@
     <properties>
         <version.cmf>1.0.0-M1-SNAPSHOT</version.cmf>
         <version.codenvy>3.0.0-M17.1</version.codenvy>
+        <version.google.findbugs>2.0.2</version.google.findbugs>
+        <version.gwt.dnd>3.2.3</version.gwt.dnd>
+        <version.gwt.incubator>2.0.1</version.gwt.incubator>
+        <version.gwt.links>1.4.3-SNAPSHOT</version.gwt.links>
         <version.platform-api-gwt-client>0.8.0</version.platform-api-gwt-client>
     </properties>
 

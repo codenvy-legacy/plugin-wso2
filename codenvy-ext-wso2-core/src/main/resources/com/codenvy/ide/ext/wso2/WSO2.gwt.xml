@@ -27,7 +27,7 @@
     <inherits name="com.google.gwt.inject.Inject"/>
     <inherits name="com.codenvy.ide.collections.Collections"/>
     <inherits name="com.codenvy.ide.ext.git.Git"/>
-    <inherits name="com.codenvy.ide.Editor"/>
+    <inherits name="com.codenvy.ide.WSO2Editor"/>
 
     <source path="client"/>
     <source path="shared"/>
