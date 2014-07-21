@@ -43,7 +43,10 @@ public class Enrich extends RootElement {
                                                                                         TARGET_TYPE_PROPERTY_NAME,
                                                                                         TARGET_XPATH_PROPERTY_NAME,
                                                                                         DESCRIPTION_PROPERTY_NAME);
-    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList("x", "y", "uuid", "autoAlign",
+    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList(X_PROPERTY_NAME,
+                                                                                        Y_PROPERTY_NAME,
+                                                                                        UUID_PROPERTY_NAME,
+                                                                                        AUTO_ALIGN_PROPERTY_NAME,
                                                                                         CLONE_SOURCE_PROPERTY_NAME,
                                                                                         SOURCE_TYPE_PROPERTY_NAME,
                                                                                         SOURCE_XPATH_PROPERTY_NAME,

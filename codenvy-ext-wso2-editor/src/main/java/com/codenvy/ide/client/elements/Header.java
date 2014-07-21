@@ -39,7 +39,10 @@ public class Header extends RootElement {
                                                                                         VALUE_TYPE_PROPERTY_NAME,
                                                                                         VALUE_LITERAL_PROPERTY_NAME,
                                                                                         HEADER_NAME_PROPERTY_NAME);
-    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList("x", "y", "uuid", "autoAlign",
+    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList(X_PROPERTY_NAME,
+                                                                                        Y_PROPERTY_NAME,
+                                                                                        UUID_PROPERTY_NAME,
+                                                                                        AUTO_ALIGN_PROPERTY_NAME,
                                                                                         HEADER_ACTION_PROPERTY_NAME,
                                                                                         SCOPE_PROPERTY_NAME,
                                                                                         VALUE_TYPE_PROPERTY_NAME,

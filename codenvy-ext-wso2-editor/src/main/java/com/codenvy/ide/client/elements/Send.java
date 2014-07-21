@@ -37,7 +37,10 @@ public class Send extends RootElement {
                                                                                         RECEIVING_SEQUENCER_TYPE_PROPERTY_NAME,
                                                                                         BUILD_MESSAGE_BEFORE_SENDING_PROPERTY_NAME,
                                                                                         DESCRIPTION_PROPERTY_NAME);
-    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList("x", "y", "uuid", "autoAlign",
+    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList(X_PROPERTY_NAME,
+                                                                                        Y_PROPERTY_NAME,
+                                                                                        UUID_PROPERTY_NAME,
+                                                                                        AUTO_ALIGN_PROPERTY_NAME,
                                                                                         SKIP_SERIALIZATION_PROPERTY_NAME,
                                                                                         RECEIVING_SEQUENCER_TYPE_PROPERTY_NAME,
                                                                                         BUILD_MESSAGE_BEFORE_SENDING_PROPERTY_NAME,

@@ -31,7 +31,10 @@ public class Respond extends RootElement {
     private static final String DESCRIPTION_PROPERTY_NAME = "Description";
 
     private static final List<String> PROPERTIES                        = Arrays.asList(DESCRIPTION_PROPERTY_NAME);
-    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList("x", "y", "uuid", "autoAlign",
+    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList(X_PROPERTY_NAME,
+                                                                                        Y_PROPERTY_NAME,
+                                                                                        UUID_PROPERTY_NAME,
+                                                                                        AUTO_ALIGN_PROPERTY_NAME,
                                                                                         DESCRIPTION_PROPERTY_NAME);
     private static final List<String> AVAILABLE_FOR_CONNECTION_ELEMENTS = Collections.emptyList();
 

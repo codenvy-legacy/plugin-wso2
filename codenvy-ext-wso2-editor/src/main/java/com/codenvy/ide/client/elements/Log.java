@@ -39,7 +39,10 @@ public class Log extends RootElement {
                                                                                         LOG_SEPARATOR_PROPERTY_NAME,
                                                                                         LOG_PROPERTIES_PROPERTY_NAME,
                                                                                         DESCRIPTION_PROPERTY_NAME);
-    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList("x", "y", "uuid", "autoAlign",
+    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList(X_PROPERTY_NAME,
+                                                                                        Y_PROPERTY_NAME,
+                                                                                        UUID_PROPERTY_NAME,
+                                                                                        AUTO_ALIGN_PROPERTY_NAME,
                                                                                         LOG_CATEGORY_PROPERTY_NAME,
                                                                                         LOG_LEVEL_PROPERTY_NAME,
                                                                                         LOG_SEPARATOR_PROPERTY_NAME,

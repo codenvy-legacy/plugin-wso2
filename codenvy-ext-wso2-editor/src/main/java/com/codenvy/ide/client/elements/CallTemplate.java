@@ -37,7 +37,10 @@ public class CallTemplate extends RootElement {
                                                                                         TARGET_TEMPLATE_PROPERTY_NAME,
                                                                                         PARAMETERS_PROPERTY_NAME,
                                                                                         DESCRIPTION_PROPERTY_NAME);
-    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList("x", "y", "uuid", "autoAlign",
+    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList(X_PROPERTY_NAME,
+                                                                                        Y_PROPERTY_NAME,
+                                                                                        UUID_PROPERTY_NAME,
+                                                                                        AUTO_ALIGN_PROPERTY_NAME,
                                                                                         AVAILABLE_TEMPLATES_PROPERTY_NAME,
                                                                                         TARGET_TEMPLATE_PROPERTY_NAME,
                                                                                         PARAMETERS_PROPERTY_NAME,

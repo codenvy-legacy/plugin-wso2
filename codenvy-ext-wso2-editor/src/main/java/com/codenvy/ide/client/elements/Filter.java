@@ -35,7 +35,10 @@ public class Filter extends RootElement {
     private static final List<String> PROPERTIES                        = Arrays.asList(CONDITION_TYPE_PROPERTY_NAME,
                                                                                         SOURCE_PROPERTY_NAME,
                                                                                         REGULAR_EXPRESSION_PROPERTY_NAME);
-    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList("x", "y", "uuid", "autoAlign",
+    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList(X_PROPERTY_NAME,
+                                                                                        Y_PROPERTY_NAME,
+                                                                                        UUID_PROPERTY_NAME,
+                                                                                        AUTO_ALIGN_PROPERTY_NAME,
                                                                                         CONDITION_TYPE_PROPERTY_NAME,
                                                                                         SOURCE_PROPERTY_NAME,
                                                                                         REGULAR_EXPRESSION_PROPERTY_NAME);

@@ -39,7 +39,10 @@ public class PayloadFactory extends RootElement {
                                                                                         ARGS_PROPERTY_NAME,
                                                                                         MEDIA_TYPE_PROPERTY_NAME,
                                                                                         DESCRIPTION_PROPERTY_NAME);
-    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList("x", "y", "uuid", "autoAlign",
+    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList(X_PROPERTY_NAME,
+                                                                                        Y_PROPERTY_NAME,
+                                                                                        UUID_PROPERTY_NAME,
+                                                                                        AUTO_ALIGN_PROPERTY_NAME,
                                                                                         PAYLOAD_FORMAT_PROPERTY_NAME,
                                                                                         FORMAT_PROPERTY_NAME,
                                                                                         ARGS_PROPERTY_NAME,

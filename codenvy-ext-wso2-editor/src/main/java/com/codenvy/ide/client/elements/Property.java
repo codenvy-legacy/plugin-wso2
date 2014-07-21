@@ -47,7 +47,10 @@ public class Property extends RootElement {
                                                                                         VALUE_STRING_CAPTURE_GROUP_PROPERTY_NAME,
                                                                                         PROPERTY_SCOPE_PROPERTY_NAME,
                                                                                         DESCRIPTION_PROPERTY_NAME);
-    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList("x", "y", "uuid", "autoAlign",
+    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList(X_PROPERTY_NAME,
+                                                                                        Y_PROPERTY_NAME,
+                                                                                        UUID_PROPERTY_NAME,
+                                                                                        AUTO_ALIGN_PROPERTY_NAME,
                                                                                         PROPERTY_NAME_PROPERTY_NAME,
                                                                                         PROPERTY_ACTION_PROPERTY_NAME,
                                                                                         VALUE_TYPE_PROPERTY_NAME,
