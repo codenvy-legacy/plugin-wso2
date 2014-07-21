@@ -46,16 +46,16 @@ public class Log extends RootElement {
                                                                                         LOG_PROPERTIES_PROPERTY_NAME,
                                                                                         DESCRIPTION_PROPERTY_NAME);
     private static final List<String> AVAILABLE_FOR_CONNECTION_ELEMENTS = Arrays.asList(Log.ELEMENT_NAME,
-                                                                                        "Property",
-                                                                                        "PayloadFactory",
-                                                                                        "Send",
+                                                                                        Property.ELEMENT_NAME,
+                                                                                        PayloadFactory.ELEMENT_NAME,
+                                                                                        Send.ELEMENT_NAME,
                                                                                         Header.ELEMENT_NAME,
-                                                                                        "Respond",
+                                                                                        Respond.ELEMENT_NAME,
                                                                                         Filter.ELEMENT_NAME,
-                                                                                        "Switch_mediator",
-                                                                                        "Sequence",
+                                                                                        Switch_mediator.ELEMENT_NAME,
+                                                                                        Sequence.ELEMENT_NAME,
                                                                                         Enrich.ELEMENT_NAME,
-                                                                                        "LoopBack",
+                                                                                        LoopBack.ELEMENT_NAME,
                                                                                         CallTemplate.ELEMENT_NAME,
                                                                                         Call.ELEMENT_NAME);
 
