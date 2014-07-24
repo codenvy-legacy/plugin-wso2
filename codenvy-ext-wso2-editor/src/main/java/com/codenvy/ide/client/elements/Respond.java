@@ -26,7 +26,8 @@ import java.util.List;
  * @author Andrey Plotnikov
  */
 public class Respond extends RootElement {
-    public static final String ELEMENT_NAME = "respond";
+    public static final String ELEMENT_NAME       = "Respond";
+    public static final String SERIALIZATION_NAME = "respond";
 
     private static final String DESCRIPTION_PROPERTY_NAME = "Description";
 
@@ -41,7 +42,7 @@ public class Respond extends RootElement {
     private String description;
 
     public Respond() {
-        super(ELEMENT_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
         description = "enter_description";
 

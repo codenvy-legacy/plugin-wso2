@@ -26,7 +26,8 @@ import java.util.List;
  * @author Andrey Plotnikov
  */
 public class Switch_mediator extends RootElement {
-    public static final String ELEMENT_NAME = "switch_mediator";
+    public static final String ELEMENT_NAME       = "Switch";
+    public static final String SERIALIZATION_NAME = "switch";
 
     private static final String SOURCE_XPATH_PROPERTY_NAME       = "SourceXpath";
     private static final String CASE_BRANCHES_TYPE_PROPERTY_NAME = "CaseBranches";
@@ -70,7 +71,7 @@ public class Switch_mediator extends RootElement {
     private String caseBranches;
 
     public Switch_mediator() {
-        super(ELEMENT_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
         sourceXpath = "default/xpath";
         caseBranches = "enter_case_branches";

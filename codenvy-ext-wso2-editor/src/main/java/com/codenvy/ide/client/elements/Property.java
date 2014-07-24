@@ -26,7 +26,8 @@ import java.util.List;
  * @author Andrey Plotnikov
  */
 public class Property extends RootElement {
-    public static final String ELEMENT_NAME = "property";
+    public static final String ELEMENT_NAME       = "Property";
+    public static final String SERIALIZATION_NAME = "property";
 
     private static final String PROPERTY_NAME_PROPERTY_NAME              = "PropertyName";
     private static final String PROPERTY_ACTION_PROPERTY_NAME            = "PropertyAction";
@@ -85,7 +86,7 @@ public class Property extends RootElement {
     private String  description;
 
     public Property() {
-        super(ELEMENT_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
         propertyName = "propertyName";
         propertyAction = "set";

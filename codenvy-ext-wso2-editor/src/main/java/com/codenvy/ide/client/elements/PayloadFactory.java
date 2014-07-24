@@ -26,7 +26,8 @@ import java.util.List;
  * @author Andrey Plotnikov
  */
 public class PayloadFactory extends RootElement {
-    public static final String ELEMENT_NAME = "payloadFactory";
+    public static final String ELEMENT_NAME       = "PayloadFactory";
+    public static final String SERIALIZATION_NAME = "payloadFactory";
 
     private static final String PAYLOAD_FORMAT_PROPERTY_NAME = "PayloadFormat";
     private static final String FORMAT_PROPERTY_NAME         = "Format";
@@ -69,7 +70,7 @@ public class PayloadFactory extends RootElement {
     private String description;
 
     public PayloadFactory() {
-        super(ELEMENT_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
         payloadFormat = "inline";
         format = "inline";

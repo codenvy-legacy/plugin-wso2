@@ -26,7 +26,8 @@ import java.util.List;
  * @author Andrey Plotnikov
  */
 public class Log extends RootElement {
-    public static final String ELEMENT_NAME = "log";
+    public static final String ELEMENT_NAME       = "Log";
+    public static final String SERIALIZATION_NAME = "log";
 
     private static final String LOG_CATEGORY_PROPERTY_NAME   = "LogCategory";
     private static final String LOG_LEVEL_PROPERTY_NAME      = "LogLevel";
@@ -69,7 +70,7 @@ public class Log extends RootElement {
     private String description;
 
     public Log() {
-        super(ELEMENT_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
         logCategory = "INFO";
         logLevel = "SIMPLE";
@@ -125,6 +126,7 @@ public class Log extends RootElement {
         this.description = description;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     protected String serializeProperties() {
@@ -135,6 +137,7 @@ public class Log extends RootElement {
                "description=\"" + description + "\" ";
     }
 
+    /** {@inheritDoc} */
     @Override
     public void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();

@@ -26,7 +26,8 @@ import java.util.List;
  * @author Andrey Plotnikov
  */
 public class Send extends RootElement {
-    public static final String ELEMENT_NAME = "send";
+    public static final String ELEMENT_NAME       = "Send";
+    public static final String SERIALIZATION_NAME = "send";
 
     private static final String SKIP_SERIALIZATION_PROPERTY_NAME           = "SkipSerialization";
     private static final String RECEIVING_SEQUENCER_TYPE_PROPERTY_NAME     = "ReceivingSequencerType";
@@ -65,7 +66,7 @@ public class Send extends RootElement {
     private String description;
 
     public Send() {
-        super(ELEMENT_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
         skipSerialization = "false";
         receivingSequencerType = "Default";

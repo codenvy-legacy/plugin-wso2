@@ -59,7 +59,13 @@ public interface Element {
      */
     void setParent(@Nullable Shape parent);
 
+    /** @return a diagram element name */
+    @Nonnull
     String getElementName();
+
+    /** @return the name which needs to be shown in the serialization view of element */
+    @Nonnull
+    String getSerializationName();
 
     /**
      * Serialize diagram element with all inner elements.

@@ -15,8 +15,6 @@
  */
 package com.codenvy.ide.client.elements;
 
-import com.google.gwt.xml.client.Node;
-
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,7 +24,8 @@ import java.util.List;
  * @author Andrey Plotnikov
  */
 public class RootElement extends AbstractShape {
-    public static final String ELEMENT_NAME = "rootElement";
+    public static final String ELEMENT_NAME       = "RootElement";
+    public static final String SERIALIZATION_NAME = "sequence";
 
     private static final List<String> PROPERTIES                        = Collections.emptyList();
     private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList(X_PROPERTY_NAME,
@@ -48,55 +47,55 @@ public class RootElement extends AbstractShape {
                                                                                         CallTemplate.ELEMENT_NAME,
                                                                                         Call.ELEMENT_NAME);
 
-    public RootElement(@Nonnull String rootElement, @Nonnull List<String> properties, @Nonnull List<String> internalProperties) {
-        super(rootElement, properties, internalProperties);
+    public RootElement(@Nonnull String elementName,
+                       @Nonnull String title,
+                       @Nonnull String serializationName,
+                       @Nonnull List<String> properties,
+                       @Nonnull List<String> internalProperties) {
+        super(elementName, title, serializationName, properties, internalProperties);
     }
 
     public RootElement() {
-        this(ELEMENT_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+        this(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
         components.addAll(COMPONENTS);
         targetElements.put(Connection.CONNECTION_NAME, AVAILABLE_FOR_CONNECTION_ELEMENTS);
     }
 
+    /** {@inheritDoc} */
     @Override
     protected Element findElement(@Nonnull String elementName) {
         switch (elementName) {
-            case Log.ELEMENT_NAME:
+            case Log.SERIALIZATION_NAME:
                 return new Log();
-            case Property.ELEMENT_NAME:
+            case Property.SERIALIZATION_NAME:
                 return new Property();
-            case PayloadFactory.ELEMENT_NAME:
+            case PayloadFactory.SERIALIZATION_NAME:
                 return new PayloadFactory();
-            case Send.ELEMENT_NAME:
+            case Send.SERIALIZATION_NAME:
                 return new Send();
-            case Header.ELEMENT_NAME:
+            case Header.SERIALIZATION_NAME:
                 return new Header();
-            case Respond.ELEMENT_NAME:
+            case Respond.SERIALIZATION_NAME:
                 return new Respond();
-            case Filter.ELEMENT_NAME:
+            case Filter.SERIALIZATION_NAME:
                 return new Filter();
-            case Switch_mediator.ELEMENT_NAME:
+            case Switch_mediator.SERIALIZATION_NAME:
                 return new Switch_mediator();
-            case Sequence.ELEMENT_NAME:
+            case Sequence.SERIALIZATION_NAME:
                 return new Sequence();
-            case Enrich.ELEMENT_NAME:
+            case Enrich.SERIALIZATION_NAME:
                 return new Enrich();
-            case LoopBack.ELEMENT_NAME:
+            case LoopBack.SERIALIZATION_NAME:
                 return new LoopBack();
-            case CallTemplate.ELEMENT_NAME:
+            case CallTemplate.SERIALIZATION_NAME:
                 return new CallTemplate();
-            case Call.ELEMENT_NAME:
+            case Call.SERIALIZATION_NAME:
                 return new Call();
-            case Connection.CONNECTION_NAME:
+            case Connection.SERIALIZATION_NAME:
             default:
                 return new Connection();
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void applyProperty(@Nonnull Node node) {
     }
 
 }

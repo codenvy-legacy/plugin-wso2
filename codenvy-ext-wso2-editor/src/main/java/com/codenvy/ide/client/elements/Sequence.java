@@ -26,7 +26,8 @@ import java.util.List;
  * @author Andrey Plotnikov
  */
 public class Sequence extends RootElement {
-    public static final String ELEMENT_NAME = "sequence";
+    public static final String ELEMENT_NAME       = "Sequence";
+    public static final String SERIALIZATION_NAME = "sequence";
 
     private static final String REFERRING_SEQUENCE_PROPERTY_NAME   = "ReferringSequenceType";
     private static final String STATIC_REFERENCE_KEY_PROPERTY_NAME = "StaticReferenceKey";
@@ -57,7 +58,7 @@ public class Sequence extends RootElement {
     private String staticReferenceKey;
 
     public Sequence() {
-        super(ELEMENT_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
         referringSequenceType = "Static";
         staticReferenceKey = "Sequence";

@@ -22,14 +22,22 @@ import java.util.Collections;
  * @author Andrey Plotnikov
  */
 public class Connection extends AbstractLink {
-    public static final String CONNECTION_NAME = "Connection";
+    public static final String CONNECTION_NAME    = "Connection";
+    public static final String SERIALIZATION_NAME = "connection";
+
 
     public Connection() {
         this(null, null);
     }
 
     public Connection(@Nullable String source, @Nullable String target) {
-        super(source, target, CONNECTION_NAME, Collections.<String>emptyList(), Collections.<String>emptyList());
+        super(source,
+              target,
+              CONNECTION_NAME,
+              CONNECTION_NAME,
+              SERIALIZATION_NAME,
+              Collections.<String>emptyList(),
+              Collections.<String>emptyList());
     }
 
 }

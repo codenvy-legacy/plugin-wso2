@@ -50,9 +50,11 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
     private int     y;
 
     protected AbstractShape(@Nonnull String elementName,
+                            @Nonnull String title,
+                            @Nonnull String serializationName,
                             @Nonnull List<String> properties,
                             @Nonnull List<String> internalProperties) {
-        super(elementName, properties, internalProperties);
+        super(elementName, title, serializationName, properties, internalProperties);
 
         this.shapes = new ArrayList<>();
         this.links = new ArrayList<>();
@@ -164,7 +166,7 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
     @Nonnull
     @Override
     public String serialize() {
-        StringBuilder content = new StringBuilder("<" + getElementName() + ' ' + serializeProperties() + ">\n");
+        StringBuilder content = new StringBuilder("<" + getSerializationName() + ' ' + serializeProperties() + ">\n");
 
         Collections.sort(shapes);
 
@@ -172,7 +174,7 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
             content.append(shape.serialize());
         }
 
-        content.append("</").append(getElementName()).append(">\n");
+        content.append("</").append(getSerializationName()).append(">\n");
 
         return content.toString();
     }
@@ -283,6 +285,11 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
     }
 
     protected abstract Element findElement(@Nonnull String elementName);
+
+    /** {@inheritDoc} */
+    @Override
+    public void applyProperty(@Nonnull Node node) {
+    }
 
     /** {@inheritDoc} */
     @Override

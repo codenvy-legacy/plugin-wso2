@@ -26,7 +26,8 @@ import java.util.List;
  * @author Andrey Plotnikov
  */
 public class Header extends RootElement {
-    public static final String ELEMENT_NAME = "header";
+    public static final String ELEMENT_NAME       = "Header";
+    public static final String SERIALIZATION_NAME = "header";
 
     private static final String HEADER_ACTION_PROPERTY_NAME = "HeaderAction";
     private static final String SCOPE_PROPERTY_NAME         = "Scope";
@@ -69,7 +70,7 @@ public class Header extends RootElement {
     private String headerName;
 
     public Header() {
-        super(ELEMENT_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
         headerAction = "set";
         scope = "Synapse";

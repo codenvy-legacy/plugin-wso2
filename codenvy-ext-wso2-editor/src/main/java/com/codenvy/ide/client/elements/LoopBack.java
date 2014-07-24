@@ -27,7 +27,8 @@ import java.util.List;
  * @author Andrey Plotnikov
  */
 public class LoopBack extends RootElement {
-    public static final String ELEMENT_NAME = "loopBack";
+    public static final String ELEMENT_NAME       = "LoopBack";
+    public static final String SERIALIZATION_NAME = "loopBack";
 
     private static final String DESCRIPTION_PROPERTY_NAME = "Description";
 
@@ -42,7 +43,7 @@ public class LoopBack extends RootElement {
     private String description;
 
     public LoopBack() {
-        super(ELEMENT_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
         description = "enter_description";
 

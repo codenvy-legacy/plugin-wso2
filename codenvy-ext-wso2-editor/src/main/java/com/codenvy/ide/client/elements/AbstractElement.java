@@ -32,15 +32,21 @@ public abstract class AbstractElement implements Element {
 
     private       Shape        parent;
     private       String       title;
-    private       String       elementName;
+    private final String       elementName;
     private final List<String> properties;
     private final List<String> internalProperties;
+    private final String       serializationName;
 
-    protected AbstractElement(@Nonnull String elementName, @Nonnull List<String> properties, @Nonnull List<String> internalProperties) {
+    protected AbstractElement(@Nonnull String elementName,
+                              @Nonnull String title,
+                              @Nonnull String serializationName,
+                              @Nonnull List<String> properties,
+                              @Nonnull List<String> internalProperties) {
         this.elementName = elementName;
+        this.title = title;
+        this.serializationName = serializationName;
         this.properties = properties;
         this.internalProperties = internalProperties;
-        this.title = elementName;
         id = UUID.get();
     }
 
@@ -78,9 +84,17 @@ public abstract class AbstractElement implements Element {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getElementName() {
         return elementName;
+    }
+
+    /** {@inheritDoc} */
+    @Nonnull
+    @Override
+    public String getSerializationName() {
+        return serializationName;
     }
 
     /**

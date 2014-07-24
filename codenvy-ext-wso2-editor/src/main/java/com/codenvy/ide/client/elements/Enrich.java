@@ -26,7 +26,8 @@ import java.util.List;
  * @author Andrey Plotnikov
  */
 public class Enrich extends RootElement {
-    public static final String ELEMENT_NAME = "enrich";
+    public static final String ELEMENT_NAME       = "Enrich";
+    public static final String SERIALIZATION_NAME = "enrich";
 
     private static final String CLONE_SOURCE_PROPERTY_NAME  = "CloneSource";
     private static final String SOURCE_TYPE_PROPERTY_NAME   = "SourceType";
@@ -77,7 +78,7 @@ public class Enrich extends RootElement {
     private String description;
 
     public Enrich() {
-        super(ELEMENT_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
         cloneSource = "false";
         sourceType = "custom";

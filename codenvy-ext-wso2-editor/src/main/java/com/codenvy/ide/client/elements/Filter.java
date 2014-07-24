@@ -26,7 +26,8 @@ import java.util.List;
  * @author Andrey Plotnikov
  */
 public class Filter extends RootElement {
-    public static final String ELEMENT_NAME = "filter";
+    public static final String ELEMENT_NAME       = "Filter";
+    public static final String SERIALIZATION_NAME = "filter";
 
     private static final String CONDITION_TYPE_PROPERTY_NAME     = "ConditionType";
     private static final String SOURCE_PROPERTY_NAME             = "Source";
@@ -74,7 +75,7 @@ public class Filter extends RootElement {
     private String regularExpression;
 
     public Filter() {
-        super(ELEMENT_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
         conditionType = "SOURCE_AND_REGEX";
         source = "get-property";

@@ -26,7 +26,8 @@ import java.util.List;
  * @author Andrey Plotnikov
  */
 public class Call extends RootElement {
-    public static final String ELEMENT_NAME = "call";
+    public static final String ELEMENT_NAME       = "Call";
+    public static final String SERIALIZATION_NAME = "call";
 
     private static final String ENDPOINT_TYPE_PROPERTY_NAME = "EndpointType";
     private static final String DESCRIPTION_PROPERTY_NAME   = "Description";
@@ -57,7 +58,7 @@ public class Call extends RootElement {
     private String description;
 
     public Call() {
-        super(ELEMENT_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
         endpointType = "INLINE";
         description = "enter_description";

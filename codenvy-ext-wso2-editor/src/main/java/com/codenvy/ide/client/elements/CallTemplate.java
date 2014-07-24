@@ -26,7 +26,8 @@ import java.util.List;
  * @author Andrey Plotnikov
  */
 public class CallTemplate extends RootElement {
-    public static final String ELEMENT_NAME = "callTemplate";
+    public static final String ELEMENT_NAME       = "CallTemplate";
+    public static final String SERIALIZATION_NAME = "callTemplate";
 
     private static final String AVAILABLE_TEMPLATES_PROPERTY_NAME = "AvailableTemplates";
     private static final String TARGET_TEMPLATE_PROPERTY_NAME     = "TargetTemplate";
@@ -65,7 +66,7 @@ public class CallTemplate extends RootElement {
     private String description;
 
     public CallTemplate() {
-        super(ELEMENT_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
         availableTemplates = "enter_templates";
         targetTemplate = "enter_target_template";

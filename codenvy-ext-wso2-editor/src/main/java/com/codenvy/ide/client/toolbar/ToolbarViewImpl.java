@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.toolbar;
 
 import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.Call;
 import com.codenvy.ide.client.elements.CallTemplate;
 import com.codenvy.ide.client.elements.Enrich;
@@ -88,23 +89,52 @@ public class ToolbarViewImpl extends ToolbarView {
     private final Map<String, PushButton> buttons;
 
     @Inject
-    public ToolbarViewImpl(ToolbarViewImplUiBinder ourUiBinder, EditorResources resources) {
+    public ToolbarViewImpl(ToolbarViewImplUiBinder ourUiBinder,
+                           EditorResources resources,
+                           WSO2EditorLocalizationConstant localizationConstant) {
         buttons = new LinkedHashMap<>();
 
         log = new PushButton(new Image(resources.logToolbar()));
+        log.setTitle(localizationConstant.toolbarLogTooltip());
+
         property = new PushButton(new Image(resources.propertyToolbar()));
+        property.setTitle(localizationConstant.toolbarPropertyTooltip());
+
         payloadFactory = new PushButton(new Image(resources.payloadFactoryToolbar()));
+        payloadFactory.setTitle(localizationConstant.toolbarPayloadFactoryTooltip());
+
         send = new PushButton(new Image(resources.sendToolbar()));
+        send.setTitle(localizationConstant.toolbarSendTooltip());
+
         header = new PushButton(new Image(resources.headerToolbar()));
+        header.setTitle(localizationConstant.toolbarHeaderTooltip());
+
         respond = new PushButton(new Image(resources.respondToolbar()));
+        respond.setTitle(localizationConstant.toolbarRespondTooltip());
+
         filter = new PushButton(new Image(resources.filterToolbar()));
+        filter.setTitle(localizationConstant.toolbarFilterTooltip());
+
         switch_mediator = new PushButton(new Image(resources.switch_mediatorToolbar()));
+        switch_mediator.setTitle(localizationConstant.toolbarSwitchTooltip());
+
         sequence = new PushButton(new Image(resources.sequenceToolbar()));
+        sequence.setTitle(localizationConstant.toolbarSequenceTooltip());
+
         enrich = new PushButton(new Image(resources.enrichToolbar()));
+        enrich.setTitle(localizationConstant.toolbarEnrichTooltip());
+
         loopBack = new PushButton(new Image(resources.loopBackToolbar()));
+        loopBack.setTitle(localizationConstant.toolbarLoopBackTooltip());
+
         callTemplate = new PushButton(new Image(resources.callTemplateToolbar()));
+        callTemplate.setTitle(localizationConstant.toolbarCallTemplateTooltip());
+
         call = new PushButton(new Image(resources.callToolbar()));
+        call.setTitle(localizationConstant.toolbarCallTooltip());
+
         connection = new PushButton(new Image(resources.connection()));
+        connection.setTitle(localizationConstant.toolbarConnectionTooltip());
 
         buttons.put(Log.ELEMENT_NAME, log);
         buttons.put(Property.ELEMENT_NAME, property);

@@ -39,9 +39,11 @@ public abstract class AbstractLink extends AbstractElement implements Link {
     protected AbstractLink(@Nullable String source,
                            @Nullable String target,
                            @Nonnull String elementName,
+                           @Nonnull String title,
+                           @Nonnull String serializationName,
                            @Nonnull List<String> properties,
                            @Nonnull List<String> internalProperties) {
-        super(elementName, properties, internalProperties);
+        super(elementName, title, serializationName, properties, internalProperties);
 
         this.source = source;
         this.target = target;
@@ -85,11 +87,11 @@ public abstract class AbstractLink extends AbstractElement implements Link {
     @Nonnull
     @Override
     public String serializeInternalFormat() {
-        return '<' + getElementName() + ">\n" +
+        return '<' + getSerializationName() + ">\n" +
                "<source>\n" + source + "</source>\n" +
                "<target>\n" + target + "</target>\n" +
                "<uuid>\n" + id + "\n</uuid>\n" +
-               "</" + getElementName() + ">\n";
+               "</" + getSerializationName() + ">\n";
     }
 
     /** {@inheritDoc} */
