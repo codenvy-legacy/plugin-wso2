@@ -229,6 +229,25 @@ public class WorkspaceViewImpl extends WorkspaceView {
         }
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void setDefaultCursor() {
+        focusPanel.removeStyleName(resources.editorCSS().applyCursor());
+        focusPanel.removeStyleName(resources.editorCSS().errorCursor());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setApplyCursor() {
+        focusPanel.addStyleName(resources.editorCSS().applyCursor());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setErrorCursor() {
+        focusPanel.addStyleName(resources.editorCSS().errorCursor());
+    }
+
     @UiHandler("zoomIn")
     public void onZoomInButtonClicked(ClickEvent event) {
         delegate.onZoomInButtonClicked();

@@ -35,33 +35,20 @@ public class Header extends RootElement {
     private static final String VALUE_LITERAL_PROPERTY_NAME = "ValueLiteral";
     private static final String HEADER_NAME_PROPERTY_NAME   = "HeaderName";
 
-    private static final List<String> PROPERTIES                        = Arrays.asList(HEADER_ACTION_PROPERTY_NAME,
-                                                                                        SCOPE_PROPERTY_NAME,
-                                                                                        VALUE_TYPE_PROPERTY_NAME,
-                                                                                        VALUE_LITERAL_PROPERTY_NAME,
-                                                                                        HEADER_NAME_PROPERTY_NAME);
-    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList(X_PROPERTY_NAME,
-                                                                                        Y_PROPERTY_NAME,
-                                                                                        UUID_PROPERTY_NAME,
-                                                                                        AUTO_ALIGN_PROPERTY_NAME,
-                                                                                        HEADER_ACTION_PROPERTY_NAME,
-                                                                                        SCOPE_PROPERTY_NAME,
-                                                                                        VALUE_TYPE_PROPERTY_NAME,
-                                                                                        VALUE_LITERAL_PROPERTY_NAME,
-                                                                                        HEADER_NAME_PROPERTY_NAME);
-    private static final List<String> AVAILABLE_FOR_CONNECTION_ELEMENTS = Arrays.asList(Log.ELEMENT_NAME,
-                                                                                        Property.ELEMENT_NAME,
-                                                                                        PayloadFactory.ELEMENT_NAME,
-                                                                                        Send.ELEMENT_NAME,
-                                                                                        Header.ELEMENT_NAME,
-                                                                                        Respond.ELEMENT_NAME,
-                                                                                        Filter.ELEMENT_NAME,
-                                                                                        Switch_mediator.ELEMENT_NAME,
-                                                                                        Sequence.ELEMENT_NAME,
-                                                                                        Enrich.ELEMENT_NAME,
-                                                                                        LoopBack.ELEMENT_NAME,
-                                                                                        CallTemplate.ELEMENT_NAME,
-                                                                                        Call.ELEMENT_NAME);
+    private static final List<String> PROPERTIES          = Arrays.asList(HEADER_ACTION_PROPERTY_NAME,
+                                                                          SCOPE_PROPERTY_NAME,
+                                                                          VALUE_TYPE_PROPERTY_NAME,
+                                                                          VALUE_LITERAL_PROPERTY_NAME,
+                                                                          HEADER_NAME_PROPERTY_NAME);
+    private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
+                                                                          Y_PROPERTY_NAME,
+                                                                          UUID_PROPERTY_NAME,
+                                                                          AUTO_ALIGN_PROPERTY_NAME,
+                                                                          HEADER_ACTION_PROPERTY_NAME,
+                                                                          SCOPE_PROPERTY_NAME,
+                                                                          VALUE_TYPE_PROPERTY_NAME,
+                                                                          VALUE_LITERAL_PROPERTY_NAME,
+                                                                          HEADER_NAME_PROPERTY_NAME);
 
     private String headerAction;
     private String scope;
@@ -77,8 +64,6 @@ public class Header extends RootElement {
         valueType = "LITERAL";
         valueLiteral = "header_Value";
         headerName = "header_name";
-
-        targetElements.put(Connection.CONNECTION_NAME, AVAILABLE_FOR_CONNECTION_ELEMENTS);
     }
 
     @Nullable

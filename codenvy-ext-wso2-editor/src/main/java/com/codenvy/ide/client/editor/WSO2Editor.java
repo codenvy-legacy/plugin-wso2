@@ -18,8 +18,10 @@ package com.codenvy.ide.client.editor;
 import com.codenvy.ide.client.EditorState;
 import com.codenvy.ide.client.SelectionManager;
 import com.codenvy.ide.client.State;
+import com.codenvy.ide.client.MetaModelValidator;
 import com.codenvy.ide.client.elements.Call;
 import com.codenvy.ide.client.elements.CallTemplate;
+import com.codenvy.ide.client.elements.Connection;
 import com.codenvy.ide.client.elements.Enrich;
 import com.codenvy.ide.client.elements.Filter;
 import com.codenvy.ide.client.elements.Header;
@@ -77,6 +79,7 @@ public class WSO2Editor extends AbstractPresenter implements WorkspacePresenter.
     public WSO2Editor(WSO2EditorView view,
                       EditorFactory editorFactory,
                       SelectionManager selectionManager,
+                      MetaModelValidator metaModelValidator,
                       EmptyPropertiesPanelPresenter emptyPropertiesPanelPresenter,
                       LogPropertiesPanelPresenter logPropertiesPanelPresenter,
                       PropertyPropertiesPanelPresenter propertyPropertiesPanelPresenter,
@@ -142,6 +145,9 @@ public class WSO2Editor extends AbstractPresenter implements WorkspacePresenter.
         propertiesPanelManager.register(Call.class, callPropertiesPanelPresenter);
         callPropertiesPanelPresenter.addListener(this);
 
+        propertiesPanelManager.register(null, emptyPropertiesPanelPresenter);
+        emptyPropertiesPanelPresenter.addListener(this);
+
         propertyTypeManager.register("CallMediatorEndpointType", Arrays.asList("INLINE", "NONE", "REGISTRYKEY", "XPATH"));
         propertyTypeManager.register("LogCategory", Arrays.asList("TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"));
         propertyTypeManager.register("LogLevel", Arrays.asList("SIMPLE", "HEADERS", "FULL", "CUSTOM"));
@@ -161,8 +167,150 @@ public class WSO2Editor extends AbstractPresenter implements WorkspacePresenter.
         propertyTypeManager.register("EnrichTargetAction", Arrays.asList("replace", "child", "sibling"));
         propertyTypeManager.register("EnrichTargetType", Arrays.asList("custom", "envelope", "body", "property"));
 
-        propertiesPanelManager.register(null, emptyPropertiesPanelPresenter);
-        emptyPropertiesPanelPresenter.addListener(this);
+        metaModelValidator.register(Switch_mediator.ELEMENT_NAME, Connection.CONNECTION_NAME, Arrays.asList(Log.ELEMENT_NAME,
+                                                                                                                Property.ELEMENT_NAME,
+                                                                                                                PayloadFactory.ELEMENT_NAME,
+                                                                                                                Send.ELEMENT_NAME,
+                                                                                                                Header.ELEMENT_NAME,
+                                                                                                                Respond.ELEMENT_NAME,
+                                                                                                                Filter.ELEMENT_NAME,
+                                                                                                                Switch_mediator.ELEMENT_NAME,
+                                                                                                                Sequence.ELEMENT_NAME,
+                                                                                                                Enrich.ELEMENT_NAME,
+                                                                                                                LoopBack.ELEMENT_NAME,
+                                                                                                                CallTemplate.ELEMENT_NAME,
+                                                                                                                Call.ELEMENT_NAME));
+        metaModelValidator.register(Log.ELEMENT_NAME, Connection.CONNECTION_NAME, Arrays.asList(Log.ELEMENT_NAME,
+                                                                                                    Property.ELEMENT_NAME,
+                                                                                                    PayloadFactory.ELEMENT_NAME,
+                                                                                                    Send.ELEMENT_NAME,
+                                                                                                    Header.ELEMENT_NAME,
+                                                                                                    Respond.ELEMENT_NAME,
+                                                                                                    Filter.ELEMENT_NAME,
+                                                                                                    Switch_mediator.ELEMENT_NAME,
+                                                                                                    Sequence.ELEMENT_NAME,
+                                                                                                    Enrich.ELEMENT_NAME,
+                                                                                                    LoopBack.ELEMENT_NAME,
+                                                                                                    CallTemplate.ELEMENT_NAME,
+                                                                                                    Call.ELEMENT_NAME));
+        metaModelValidator.register(Call.ELEMENT_NAME, Connection.CONNECTION_NAME, Arrays.asList(Log.ELEMENT_NAME,
+                                                                                                     Property.ELEMENT_NAME,
+                                                                                                     PayloadFactory.ELEMENT_NAME,
+                                                                                                     Send.ELEMENT_NAME,
+                                                                                                     Header.ELEMENT_NAME,
+                                                                                                     Respond.ELEMENT_NAME,
+                                                                                                     Filter.ELEMENT_NAME,
+                                                                                                     Switch_mediator.ELEMENT_NAME,
+                                                                                                     Sequence.ELEMENT_NAME,
+                                                                                                     Enrich.ELEMENT_NAME,
+                                                                                                     LoopBack.ELEMENT_NAME,
+                                                                                                     CallTemplate.ELEMENT_NAME,
+                                                                                                     Call.ELEMENT_NAME));
+        metaModelValidator.register(Property.ELEMENT_NAME, Connection.CONNECTION_NAME, Arrays.asList(Log.ELEMENT_NAME,
+                                                                                                         Property.ELEMENT_NAME,
+                                                                                                         PayloadFactory.ELEMENT_NAME,
+                                                                                                         Send.ELEMENT_NAME,
+                                                                                                         Header.ELEMENT_NAME,
+                                                                                                         Respond.ELEMENT_NAME,
+                                                                                                         Filter.ELEMENT_NAME,
+                                                                                                         Switch_mediator.ELEMENT_NAME,
+                                                                                                         Sequence.ELEMENT_NAME,
+                                                                                                         Enrich.ELEMENT_NAME,
+                                                                                                         LoopBack.ELEMENT_NAME,
+                                                                                                         CallTemplate.ELEMENT_NAME,
+                                                                                                         Call.ELEMENT_NAME));
+        metaModelValidator.register(Enrich.ELEMENT_NAME, Connection.CONNECTION_NAME, Arrays.asList(Log.ELEMENT_NAME,
+                                                                                                       Property.ELEMENT_NAME,
+                                                                                                       PayloadFactory.ELEMENT_NAME,
+                                                                                                       Send.ELEMENT_NAME,
+                                                                                                       Header.ELEMENT_NAME,
+                                                                                                       Respond.ELEMENT_NAME,
+                                                                                                       Filter.ELEMENT_NAME,
+                                                                                                       Switch_mediator.ELEMENT_NAME,
+                                                                                                       Sequence.ELEMENT_NAME,
+                                                                                                       Enrich.ELEMENT_NAME,
+                                                                                                       LoopBack.ELEMENT_NAME,
+                                                                                                       CallTemplate.ELEMENT_NAME,
+                                                                                                       Call.ELEMENT_NAME));
+        metaModelValidator.register(Sequence.ELEMENT_NAME, Connection.CONNECTION_NAME, Arrays.asList(Log.ELEMENT_NAME,
+                                                                                                         Property.ELEMENT_NAME,
+                                                                                                         PayloadFactory.ELEMENT_NAME,
+                                                                                                         Send.ELEMENT_NAME,
+                                                                                                         Header.ELEMENT_NAME,
+                                                                                                         Respond.ELEMENT_NAME,
+                                                                                                         Filter.ELEMENT_NAME,
+                                                                                                         Switch_mediator.ELEMENT_NAME,
+                                                                                                         Sequence.ELEMENT_NAME,
+                                                                                                         Enrich.ELEMENT_NAME,
+                                                                                                         LoopBack.ELEMENT_NAME,
+                                                                                                         CallTemplate.ELEMENT_NAME,
+                                                                                                         Call.ELEMENT_NAME));
+        metaModelValidator.register(Send.ELEMENT_NAME, Connection.CONNECTION_NAME, Arrays.asList(Log.ELEMENT_NAME,
+                                                                                                     Property.ELEMENT_NAME,
+                                                                                                     PayloadFactory.ELEMENT_NAME,
+                                                                                                     Send.ELEMENT_NAME,
+                                                                                                     Header.ELEMENT_NAME,
+                                                                                                     Respond.ELEMENT_NAME,
+                                                                                                     Filter.ELEMENT_NAME,
+                                                                                                     Switch_mediator.ELEMENT_NAME,
+                                                                                                     Sequence.ELEMENT_NAME,
+                                                                                                     Enrich.ELEMENT_NAME,
+                                                                                                     LoopBack.ELEMENT_NAME,
+                                                                                                     CallTemplate.ELEMENT_NAME,
+                                                                                                     Call.ELEMENT_NAME));
+        metaModelValidator.register(PayloadFactory.ELEMENT_NAME, Connection.CONNECTION_NAME, Arrays.asList(Log.ELEMENT_NAME,
+                                                                                                               Property.ELEMENT_NAME,
+                                                                                                               PayloadFactory.ELEMENT_NAME,
+                                                                                                               Send.ELEMENT_NAME,
+                                                                                                               Header.ELEMENT_NAME,
+                                                                                                               Respond.ELEMENT_NAME,
+                                                                                                               Filter.ELEMENT_NAME,
+                                                                                                               Switch_mediator.ELEMENT_NAME,
+                                                                                                               Sequence.ELEMENT_NAME,
+                                                                                                               Enrich.ELEMENT_NAME,
+                                                                                                               LoopBack.ELEMENT_NAME,
+                                                                                                               CallTemplate.ELEMENT_NAME,
+                                                                                                               Call.ELEMENT_NAME));
+        metaModelValidator.register(Header.ELEMENT_NAME, Connection.CONNECTION_NAME, Arrays.asList(Log.ELEMENT_NAME,
+                                                                                                       Property.ELEMENT_NAME,
+                                                                                                       PayloadFactory.ELEMENT_NAME,
+                                                                                                       Send.ELEMENT_NAME,
+                                                                                                       Header.ELEMENT_NAME,
+                                                                                                       Respond.ELEMENT_NAME,
+                                                                                                       Filter.ELEMENT_NAME,
+                                                                                                       Switch_mediator.ELEMENT_NAME,
+                                                                                                       Sequence.ELEMENT_NAME,
+                                                                                                       Enrich.ELEMENT_NAME,
+                                                                                                       LoopBack.ELEMENT_NAME,
+                                                                                                       CallTemplate.ELEMENT_NAME,
+                                                                                                       Call.ELEMENT_NAME));
+        metaModelValidator.register(CallTemplate.ELEMENT_NAME, Connection.CONNECTION_NAME, Arrays.asList(Log.ELEMENT_NAME,
+                                                                                                             Property.ELEMENT_NAME,
+                                                                                                             PayloadFactory.ELEMENT_NAME,
+                                                                                                             Send.ELEMENT_NAME,
+                                                                                                             Header.ELEMENT_NAME,
+                                                                                                             Respond.ELEMENT_NAME,
+                                                                                                             Filter.ELEMENT_NAME,
+                                                                                                             Switch_mediator.ELEMENT_NAME,
+                                                                                                             Sequence.ELEMENT_NAME,
+                                                                                                             Enrich.ELEMENT_NAME,
+                                                                                                             LoopBack.ELEMENT_NAME,
+                                                                                                             CallTemplate.ELEMENT_NAME,
+                                                                                                             Call.ELEMENT_NAME));
+        metaModelValidator.register(Filter.ELEMENT_NAME, Connection.CONNECTION_NAME, Arrays.asList(Log.ELEMENT_NAME,
+                                                                                                       Property.ELEMENT_NAME,
+                                                                                                       PayloadFactory.ELEMENT_NAME,
+                                                                                                       Send.ELEMENT_NAME,
+                                                                                                       Header.ELEMENT_NAME,
+                                                                                                       Respond.ELEMENT_NAME,
+                                                                                                       Filter.ELEMENT_NAME,
+                                                                                                       Switch_mediator.ELEMENT_NAME,
+                                                                                                       Sequence.ELEMENT_NAME,
+                                                                                                       Enrich.ELEMENT_NAME,
+                                                                                                       LoopBack.ELEMENT_NAME,
+                                                                                                       CallTemplate.ELEMENT_NAME,
+                                                                                                       Call.ELEMENT_NAME));
+
 
         selectionManager.addListener(propertiesPanelManager);
         workspace.addDiagramChangeListener(this);

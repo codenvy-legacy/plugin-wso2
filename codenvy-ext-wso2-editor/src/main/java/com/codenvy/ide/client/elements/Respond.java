@@ -19,7 +19,6 @@ import com.google.gwt.xml.client.Node;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,13 +30,12 @@ public class Respond extends RootElement {
 
     private static final String DESCRIPTION_PROPERTY_NAME = "Description";
 
-    private static final List<String> PROPERTIES                        = Arrays.asList(DESCRIPTION_PROPERTY_NAME);
-    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList(X_PROPERTY_NAME,
-                                                                                        Y_PROPERTY_NAME,
-                                                                                        UUID_PROPERTY_NAME,
-                                                                                        AUTO_ALIGN_PROPERTY_NAME,
-                                                                                        DESCRIPTION_PROPERTY_NAME);
-    private static final List<String> AVAILABLE_FOR_CONNECTION_ELEMENTS = Collections.emptyList();
+    private static final List<String> PROPERTIES          = Arrays.asList(DESCRIPTION_PROPERTY_NAME);
+    private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
+                                                                          Y_PROPERTY_NAME,
+                                                                          UUID_PROPERTY_NAME,
+                                                                          AUTO_ALIGN_PROPERTY_NAME,
+                                                                          DESCRIPTION_PROPERTY_NAME);
 
     private String description;
 
@@ -45,8 +43,6 @@ public class Respond extends RootElement {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
         description = "enter_description";
-
-        targetElements.put(Connection.CONNECTION_NAME, AVAILABLE_FOR_CONNECTION_ELEMENTS);
     }
 
     public String getDescription() {

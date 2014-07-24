@@ -17,6 +17,7 @@ package com.codenvy.ide.client;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -34,6 +35,11 @@ public interface EditorResources extends ClientBundle {
         String selectErrorElementBelowCursor();
 
         String selectElementBelowCursor();
+        
+        String errorCursor();
+
+        String applyCursor();
+
     }
 
     @Source("editor.css")
@@ -365,5 +371,14 @@ public interface EditorResources extends ClientBundle {
 
     @Source("icons/Rmsequence.gif")
     ImageResource rmsequence();
+
+    //TODO fix problem with cursor
+    @Source("icons/cursors/CrystalClearno.cur")
+    @DataResource.MimeType("image/vnd.microsoft.icon")
+    DataResource applyCursor();
+
+    @Source("icons/cursors/CrystalClearno.cur")
+    @DataResource.MimeType("image/vnd.microsoft.icon")
+    DataResource errorCursor();
 
 }

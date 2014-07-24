@@ -33,42 +33,29 @@ public class Filter extends RootElement {
     private static final String SOURCE_PROPERTY_NAME             = "Source";
     private static final String REGULAR_EXPRESSION_PROPERTY_NAME = "RegularExpression";
 
-    private static final List<String> PROPERTIES                        = Arrays.asList(CONDITION_TYPE_PROPERTY_NAME,
-                                                                                        SOURCE_PROPERTY_NAME,
-                                                                                        REGULAR_EXPRESSION_PROPERTY_NAME);
-    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList(X_PROPERTY_NAME,
-                                                                                        Y_PROPERTY_NAME,
-                                                                                        UUID_PROPERTY_NAME,
-                                                                                        AUTO_ALIGN_PROPERTY_NAME,
-                                                                                        CONDITION_TYPE_PROPERTY_NAME,
-                                                                                        SOURCE_PROPERTY_NAME,
-                                                                                        REGULAR_EXPRESSION_PROPERTY_NAME);
-    private static final List<String> AVAILABLE_FOR_CONNECTION_ELEMENTS = Arrays.asList(Log.ELEMENT_NAME,
-                                                                                        Property.ELEMENT_NAME,
-                                                                                        PayloadFactory.ELEMENT_NAME,
-                                                                                        Send.ELEMENT_NAME,
-                                                                                        Header.ELEMENT_NAME,
-                                                                                        Respond.ELEMENT_NAME,
-                                                                                        Filter.ELEMENT_NAME,
-                                                                                        Switch_mediator.ELEMENT_NAME,
-                                                                                        Sequence.ELEMENT_NAME,
-                                                                                        Enrich.ELEMENT_NAME,
-                                                                                        LoopBack.ELEMENT_NAME,
-                                                                                        CallTemplate.ELEMENT_NAME,
-                                                                                        Call.ELEMENT_NAME);
-    private static final List<String> COMPONENTS                        = Arrays.asList(Log.ELEMENT_NAME,
-                                                                                        Property.ELEMENT_NAME,
-                                                                                        PayloadFactory.ELEMENT_NAME,
-                                                                                        Send.ELEMENT_NAME,
-                                                                                        Header.ELEMENT_NAME,
-                                                                                        Respond.ELEMENT_NAME,
-                                                                                        Filter.ELEMENT_NAME,
-                                                                                        Switch_mediator.ELEMENT_NAME,
-                                                                                        Sequence.ELEMENT_NAME,
-                                                                                        Enrich.ELEMENT_NAME,
-                                                                                        LoopBack.ELEMENT_NAME,
-                                                                                        CallTemplate.ELEMENT_NAME,
-                                                                                        Call.ELEMENT_NAME);
+    private static final List<String> PROPERTIES          = Arrays.asList(CONDITION_TYPE_PROPERTY_NAME,
+                                                                          SOURCE_PROPERTY_NAME,
+                                                                          REGULAR_EXPRESSION_PROPERTY_NAME);
+    private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
+                                                                          Y_PROPERTY_NAME,
+                                                                          UUID_PROPERTY_NAME,
+                                                                          AUTO_ALIGN_PROPERTY_NAME,
+                                                                          CONDITION_TYPE_PROPERTY_NAME,
+                                                                          SOURCE_PROPERTY_NAME,
+                                                                          REGULAR_EXPRESSION_PROPERTY_NAME);
+    private static final List<String> COMPONENTS          = Arrays.asList(Log.ELEMENT_NAME,
+                                                                          Property.ELEMENT_NAME,
+                                                                          PayloadFactory.ELEMENT_NAME,
+                                                                          Send.ELEMENT_NAME,
+                                                                          Header.ELEMENT_NAME,
+                                                                          Respond.ELEMENT_NAME,
+                                                                          Filter.ELEMENT_NAME,
+                                                                          Switch_mediator.ELEMENT_NAME,
+                                                                          Sequence.ELEMENT_NAME,
+                                                                          Enrich.ELEMENT_NAME,
+                                                                          LoopBack.ELEMENT_NAME,
+                                                                          CallTemplate.ELEMENT_NAME,
+                                                                          Call.ELEMENT_NAME);
 
     private String conditionType;
     private String source;
@@ -82,7 +69,6 @@ public class Filter extends RootElement {
         regularExpression = "default/regex";
 
         components.addAll(COMPONENTS);
-        targetElements.put(Connection.CONNECTION_NAME, AVAILABLE_FOR_CONNECTION_ELEMENTS);
     }
 
     @Nullable

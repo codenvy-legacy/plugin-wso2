@@ -17,6 +17,7 @@ package com.codenvy.ide.client.workspace;
 
 import com.codenvy.ide.client.EditorState;
 import com.codenvy.ide.client.HasState;
+import com.codenvy.ide.client.MetaModelValidator;
 import com.codenvy.ide.client.SelectionManager;
 import com.codenvy.ide.client.State;
 import com.codenvy.ide.client.common.ContentFormatter;
@@ -27,7 +28,6 @@ import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.Enrich;
 import com.codenvy.ide.client.elements.Filter;
 import com.codenvy.ide.client.elements.Header;
-import com.codenvy.ide.client.elements.Link;
 import com.codenvy.ide.client.elements.Log;
 import com.codenvy.ide.client.elements.LoopBack;
 import com.codenvy.ide.client.elements.PayloadFactory;
@@ -61,22 +61,28 @@ import static com.codenvy.ide.client.State.CREATING_NOTHING;
  */
 public class WorkspacePresenter extends AbstractPresenter implements WorkspaceView.ActionDelegate, HasState<State> {
 
+    private final MetaModelValidator              metaModelValidator;
+    private final EditorState<State>              state;
     private final Shape                           mainElement;
     private final Map<String, Element>            elements;
     private final List<DiagramChangeListener>     diagramChangeListeners;
     private final List<MainElementChangeListener> mainElementChangeListeners;
+    private final SelectionManager                selectionManager;
     private final ContextMenu                     contextMenu;
-    private       EditorState<State>              state;
-    private       String                          selectedElementId;
-    private       Shape                           nodeElement;
-    private       SelectionManager                selectionManager;
-    private       boolean                         isErrorElement;
+
+    private String  selectedElementId;
+    private Shape   nodeElement;
+    private boolean isErrorElement;
 
     @Inject
-    public WorkspacePresenter(WorkspaceView view, @Assisted EditorState<State> state, @Assisted SelectionManager selectionManager) {
+    public WorkspacePresenter(WorkspaceView view,
+                              MetaModelValidator metaModelValidator,
+                              @Assisted EditorState<State> state,
+                              @Assisted SelectionManager selectionManager) {
         super(view);
 
         this.state = state;
+        this.metaModelValidator = metaModelValidator;
         this.selectionManager = selectionManager;
         this.mainElement = new RootElement();
         this.nodeElement = mainElement;
@@ -104,114 +110,139 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
     /** {@inheritDoc} */
     @Override
     public void onLeftMouseButtonClicked(int x, int y) {
-        selectElement(null);
+        Shape newElement;
+        String elementName;
 
         switch (getState()) {
             case CREATING_LOG:
-                Log log = new Log();
-
-                ((WorkspaceView)view).addLog(x, y, log);
-                addShape(log, x, y);
-
-                setState(CREATING_NOTHING);
+                newElement = new Log();
+                elementName = Log.ELEMENT_NAME;
                 break;
+
             case CREATING_PROPERTY:
-                Property property = new Property();
-
-                ((WorkspaceView)view).addProperty(x, y, property);
-                addShape(property, x, y);
-
-                setState(CREATING_NOTHING);
+                newElement = new Property();
+                elementName = Property.ELEMENT_NAME;
                 break;
+
             case CREATING_PAYLOADFACTORY:
-                PayloadFactory payloadFactory = new PayloadFactory();
-
-                ((WorkspaceView)view).addPayloadFactory(x, y, payloadFactory);
-                addShape(payloadFactory, x, y);
-
-                setState(CREATING_NOTHING);
+                newElement = new PayloadFactory();
+                elementName = PayloadFactory.ELEMENT_NAME;
                 break;
+
             case CREATING_SEND:
-                Send send = new Send();
-
-                ((WorkspaceView)view).addSend(x, y, send);
-                addShape(send, x, y);
-
-                setState(CREATING_NOTHING);
+                newElement = new Send();
+                elementName = Send.ELEMENT_NAME;
                 break;
+
             case CREATING_HEADER:
-                Header header = new Header();
-
-                ((WorkspaceView)view).addHeader(x, y, header);
-                addShape(header, x, y);
-
-                setState(CREATING_NOTHING);
+                newElement = new Header();
+                elementName = Header.ELEMENT_NAME;
                 break;
+
             case CREATING_RESPOND:
-                Respond respond = new Respond();
-
-                ((WorkspaceView)view).addRespond(x, y, respond);
-                addShape(respond, x, y);
-
-                setState(CREATING_NOTHING);
+                newElement = new Respond();
+                elementName = Respond.ELEMENT_NAME;
                 break;
+
             case CREATING_FILTER:
-                Filter filter = new Filter();
-
-                ((WorkspaceView)view).addFilter(x, y, filter);
-                addShape(filter, x, y);
-
-                setState(CREATING_NOTHING);
+                newElement = new Filter();
+                elementName = Filter.ELEMENT_NAME;
                 break;
+
             case CREATING_SWITCH_MEDIATOR:
-                Switch_mediator switch_mediator = new Switch_mediator();
-
-                ((WorkspaceView)view).addSwitch_mediator(x, y, switch_mediator);
-                addShape(switch_mediator, x, y);
-
-                setState(CREATING_NOTHING);
+                newElement = new Switch_mediator();
+                elementName = Switch_mediator.ELEMENT_NAME;
                 break;
+
             case CREATING_SEQUENCE:
-                Sequence sequence = new Sequence();
-
-                ((WorkspaceView)view).addSequence(x, y, sequence);
-                addShape(sequence, x, y);
-
-                setState(CREATING_NOTHING);
+                newElement = new Sequence();
+                elementName = Sequence.ELEMENT_NAME;
                 break;
+
             case CREATING_ENRICH:
-                Enrich enrich = new Enrich();
-
-                ((WorkspaceView)view).addEnrich(x, y, enrich);
-                addShape(enrich, x, y);
-
-                setState(CREATING_NOTHING);
+                newElement = new Enrich();
+                elementName = Enrich.ELEMENT_NAME;
                 break;
+
             case CREATING_LOOPBACK:
-                LoopBack loopBack = new LoopBack();
-
-                ((WorkspaceView)view).addLoopBack(x, y, loopBack);
-                addShape(loopBack, x, y);
-
-                setState(CREATING_NOTHING);
+                newElement = new LoopBack();
+                elementName = LoopBack.ELEMENT_NAME;
                 break;
+
             case CREATING_CALLTEMPLATE:
-                CallTemplate callTemplate = new CallTemplate();
-
-                ((WorkspaceView)view).addCallTemplate(x, y, callTemplate);
-                addShape(callTemplate, x, y);
-
-                setState(CREATING_NOTHING);
+                newElement = new CallTemplate();
+                elementName = CallTemplate.ELEMENT_NAME;
                 break;
+
             case CREATING_CALL:
-                Call call = new Call();
-
-                ((WorkspaceView)view).addCall(x, y, call);
-                addShape(call, x, y);
-
-                setState(CREATING_NOTHING);
+                newElement = new Call();
+                elementName = Call.ELEMENT_NAME;
                 break;
+
+            default:
+                selectElement(null);
+                return;
         }
+
+        if (!metaModelValidator.canInsertElement(nodeElement, Connection.CONNECTION_NAME, elementName, x, y)) {
+            return;
+        }
+
+        // TODO It will be simplified with merging with changes about new diagram element widget
+        if (newElement instanceof Log) {
+            ((WorkspaceView)view).addLog(x, y, (Log)newElement);
+        }
+
+        if (newElement instanceof Property) {
+            ((WorkspaceView)view).addProperty(x, y, (Property)newElement);
+        }
+
+        if (newElement instanceof PayloadFactory) {
+            ((WorkspaceView)view).addPayloadFactory(x, y, (PayloadFactory)newElement);
+        }
+
+        if (newElement instanceof Send) {
+            ((WorkspaceView)view).addSend(x, y, (Send)newElement);
+        }
+
+        if (newElement instanceof Header) {
+            ((WorkspaceView)view).addHeader(x, y, (Header)newElement);
+        }
+
+        if (newElement instanceof Respond) {
+            ((WorkspaceView)view).addRespond(x, y, (Respond)newElement);
+        }
+
+        if (newElement instanceof Filter) {
+            ((WorkspaceView)view).addFilter(x, y, (Filter)newElement);
+        }
+
+        if (newElement instanceof Switch_mediator) {
+            ((WorkspaceView)view).addSwitch_mediator(x, y, (Switch_mediator)newElement);
+        }
+
+        if (newElement instanceof Sequence) {
+            ((WorkspaceView)view).addSequence(x, y, (Sequence)newElement);
+        }
+
+        if (newElement instanceof Enrich) {
+            ((WorkspaceView)view).addEnrich(x, y, (Enrich)newElement);
+        }
+
+        if (newElement instanceof LoopBack) {
+            ((WorkspaceView)view).addLoopBack(x, y, (LoopBack)newElement);
+        }
+
+        if (newElement instanceof CallTemplate) {
+            ((WorkspaceView)view).addCallTemplate(x, y, (CallTemplate)newElement);
+        }
+
+        if (newElement instanceof Call) {
+            ((WorkspaceView)view).addCall(x, y, (Call)newElement);
+        }
+
+        addShape(newElement, x, y);
+        setState(CREATING_NOTHING);
     }
 
     /** {@inheritDoc} */
@@ -232,7 +263,9 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
                 setState(CREATING_CONNECTION_TARGET);
                 break;
             case CREATING_CONNECTION_TARGET:
-                if (selectedElement.canCreateConnection("Connection", element.getElementName())) {
+                if (metaModelValidator.canCreateConnection(selectedElement.getElementName(),
+                                                           Connection.CONNECTION_NAME,
+                                                           element.getElementName())) {
                     ((WorkspaceView)view).addConnection(prevSelectedElement, selectedElementId);
                     Connection connection = new Connection(selectedElement.getId(), element.getId());
                     elements.put(element.getId(), element);
@@ -265,17 +298,16 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
         switch (getState()) {
             case CREATING_CONNECTION_TARGET:
                 Shape selectedElement = (Shape)elements.get(selectedElementId);
-                if (!selectedElement.canCreateConnection("Connection", element.getElementName())) {
-                    ((WorkspaceView)view).selectElementBelowCursor(elementId, isErrorElement = true);
-                } else {
-                    ((WorkspaceView)view).selectElementBelowCursor(elementId, isErrorElement = false);
-                }
+                isErrorElement = !metaModelValidator.canCreateConnection(selectedElement.getElementName(),
+                                                                         Connection.CONNECTION_NAME,
+                                                                         element.getElementName());
+                ((WorkspaceView)view).selectElementBelowCursor(elementId, isErrorElement);
                 break;
             default:
         }
     }
 
-    protected void showElements(@Nonnull Shape element) {
+    private void showElements(@Nonnull Shape element) {
         ((WorkspaceView)view).clearDiagram();
 
         nodeElement = element;
@@ -286,6 +318,8 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
 
         int defaultX = 100;
         int defaultY = 100;
+
+        Shape prevShape = null;
 
         for (Shape shape : nodeElement.getShapes()) {
             int x = shape.getX();
@@ -348,15 +382,15 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
             }
 
             elements.put(shape.getId(), shape);
+
+            if (prevShape != null) {
+                ((WorkspaceView)view).addConnection(prevShape.getId(), shape.getId());
+            }
+
+            prevShape = shape;
         }
 
         selectElement(selectedElement);
-
-        for (Link link : mainElement.getLinks()) {
-            if (link instanceof Connection) {
-                ((WorkspaceView)view).addConnection(link.getSource(), link.getTarget());
-            }
-        }
 
         notifyMainElementChangeListeners();
     }
@@ -431,7 +465,66 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
     /** {@inheritDoc} */
     @Override
     public void onMouseMoved(int x, int y) {
-        // TODO add implementation
+        String elementName;
+
+        switch (getState()) {
+            case CREATING_CALL:
+                elementName = Call.ELEMENT_NAME;
+                break;
+
+            case CREATING_CALLTEMPLATE:
+                elementName = CallTemplate.ELEMENT_NAME;
+                break;
+
+            case CREATING_ENRICH:
+                elementName = Enrich.ELEMENT_NAME;
+                break;
+
+            case CREATING_FILTER:
+                elementName = Filter.ELEMENT_NAME;
+                break;
+
+            case CREATING_HEADER:
+                elementName = Header.ELEMENT_NAME;
+                break;
+
+            case CREATING_LOG:
+                elementName = Log.ELEMENT_NAME;
+                break;
+
+            case CREATING_LOOPBACK:
+                elementName = LoopBack.ELEMENT_NAME;
+                break;
+
+            case CREATING_PAYLOADFACTORY:
+                elementName = PayloadFactory.ELEMENT_NAME;
+                break;
+
+            case CREATING_PROPERTY:
+                elementName = Property.ELEMENT_NAME;
+                break;
+
+            case CREATING_RESPOND:
+                elementName = Respond.ELEMENT_NAME;
+                break;
+
+            case CREATING_SEND:
+                elementName = Send.ELEMENT_NAME;
+                break;
+
+            case CREATING_SWITCH_MEDIATOR:
+                elementName = Switch_mediator.ELEMENT_NAME;
+                break;
+
+            default:
+                return;
+        }
+
+        if (metaModelValidator.canInsertElement(nodeElement, Connection.CONNECTION_NAME, elementName, x, y)) {
+            ((WorkspaceView)view).setApplyCursor();
+        } else {
+            ((WorkspaceView)view).setErrorCursor();
+        }
     }
 
     /** {@inheritDoc} */
@@ -443,7 +536,7 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
     private void deleteSelectedElement() {
         Shape element = (Shape)elements.remove(selectedElementId);
 
-        if (element != null) {
+        if (element != null && metaModelValidator.canRemoveElement(nodeElement, selectedElementId, Connection.CONNECTION_NAME)) {
             nodeElement.removeShape(element);
             ((WorkspaceView)view).removeElement(selectedElementId);
 
@@ -495,8 +588,16 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
     @Override
     public void onDiagramElementMoved(@Nonnull String elementId, int x, int y) {
         Shape shape = (Shape)elements.get(elementId);
-        shape.setX(x);
-        shape.setY(y);
+
+        if (!metaModelValidator.canRemoveElement(nodeElement, elementId, Connection.CONNECTION_NAME) ||
+            !metaModelValidator.canInsertElement(nodeElement, Connection.CONNECTION_NAME, shape.getElementName(), x, y)) {
+            ((WorkspaceView)view).setErrorCursor();
+        } else {
+            ((WorkspaceView)view).setApplyCursor();
+
+            shape.setX(x);
+            shape.setY(y);
+        }
 
         if (nodeElement.isAutoAligned()) {
             showElements(nodeElement);
@@ -544,6 +645,7 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
 
         selectionManager.setElement(shape);
 
+        ((WorkspaceView)view).setDefaultCursor();
         ((WorkspaceView)view).selectElement(elementId);
         ((WorkspaceView)view).setZoomInButtonEnable(shape != null && shape.isContainer());
     }

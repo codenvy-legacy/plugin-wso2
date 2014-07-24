@@ -35,33 +35,20 @@ public class Log extends RootElement {
     private static final String LOG_PROPERTIES_PROPERTY_NAME = "LogProperties";
     private static final String DESCRIPTION_PROPERTY_NAME    = "Description";
 
-    private static final List<String> PROPERTIES                        = Arrays.asList(LOG_CATEGORY_PROPERTY_NAME,
-                                                                                        LOG_LEVEL_PROPERTY_NAME,
-                                                                                        LOG_SEPARATOR_PROPERTY_NAME,
-                                                                                        LOG_PROPERTIES_PROPERTY_NAME,
-                                                                                        DESCRIPTION_PROPERTY_NAME);
-    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList(X_PROPERTY_NAME,
-                                                                                        Y_PROPERTY_NAME,
-                                                                                        UUID_PROPERTY_NAME,
-                                                                                        AUTO_ALIGN_PROPERTY_NAME,
-                                                                                        LOG_CATEGORY_PROPERTY_NAME,
-                                                                                        LOG_LEVEL_PROPERTY_NAME,
-                                                                                        LOG_SEPARATOR_PROPERTY_NAME,
-                                                                                        LOG_PROPERTIES_PROPERTY_NAME,
-                                                                                        DESCRIPTION_PROPERTY_NAME);
-    private static final List<String> AVAILABLE_FOR_CONNECTION_ELEMENTS = Arrays.asList(Log.ELEMENT_NAME,
-                                                                                        Property.ELEMENT_NAME,
-                                                                                        PayloadFactory.ELEMENT_NAME,
-                                                                                        Send.ELEMENT_NAME,
-                                                                                        Header.ELEMENT_NAME,
-                                                                                        Respond.ELEMENT_NAME,
-                                                                                        Filter.ELEMENT_NAME,
-                                                                                        Switch_mediator.ELEMENT_NAME,
-                                                                                        Sequence.ELEMENT_NAME,
-                                                                                        Enrich.ELEMENT_NAME,
-                                                                                        LoopBack.ELEMENT_NAME,
-                                                                                        CallTemplate.ELEMENT_NAME,
-                                                                                        Call.ELEMENT_NAME);
+    private static final List<String> PROPERTIES          = Arrays.asList(LOG_CATEGORY_PROPERTY_NAME,
+                                                                          LOG_LEVEL_PROPERTY_NAME,
+                                                                          LOG_SEPARATOR_PROPERTY_NAME,
+                                                                          LOG_PROPERTIES_PROPERTY_NAME,
+                                                                          DESCRIPTION_PROPERTY_NAME);
+    private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
+                                                                          Y_PROPERTY_NAME,
+                                                                          UUID_PROPERTY_NAME,
+                                                                          AUTO_ALIGN_PROPERTY_NAME,
+                                                                          LOG_CATEGORY_PROPERTY_NAME,
+                                                                          LOG_LEVEL_PROPERTY_NAME,
+                                                                          LOG_SEPARATOR_PROPERTY_NAME,
+                                                                          LOG_PROPERTIES_PROPERTY_NAME,
+                                                                          DESCRIPTION_PROPERTY_NAME);
 
     private String logCategory;
     private String logLevel;
@@ -77,8 +64,6 @@ public class Log extends RootElement {
         logSeparator = "enter_text";
         logProperties = "enter_properties";
         description = "enter_description";
-
-        targetElements.put(Connection.CONNECTION_NAME, AVAILABLE_FOR_CONNECTION_ELEMENTS);
     }
 
     @Nullable

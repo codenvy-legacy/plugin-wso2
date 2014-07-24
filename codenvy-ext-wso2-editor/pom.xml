@@ -57,10 +57,24 @@
             <version>${com.google.gwt.version}</version>
             <scope>runtime</scope>
         </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${org.mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
 
         <resources>
             <resource>
@@ -70,6 +84,12 @@
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
+
+        <testResources>
+            <testResource>
+                <directory>src/test/java</directory>
+            </testResource>
+        </testResources>
     </build>
 
 </project>

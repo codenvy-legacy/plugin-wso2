@@ -27,25 +27,24 @@ public class RootElement extends AbstractShape {
     public static final String ELEMENT_NAME       = "RootElement";
     public static final String SERIALIZATION_NAME = "sequence";
 
-    private static final List<String> PROPERTIES                        = Collections.emptyList();
-    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList(X_PROPERTY_NAME,
-                                                                                        Y_PROPERTY_NAME,
-                                                                                        UUID_PROPERTY_NAME,
-                                                                                        AUTO_ALIGN_PROPERTY_NAME);
-    private static final List<String> AVAILABLE_FOR_CONNECTION_ELEMENTS = Collections.emptyList();
-    private static final List<String> COMPONENTS                        = Arrays.asList(Log.ELEMENT_NAME,
-                                                                                        Property.ELEMENT_NAME,
-                                                                                        PayloadFactory.ELEMENT_NAME,
-                                                                                        Send.ELEMENT_NAME,
-                                                                                        Header.ELEMENT_NAME,
-                                                                                        Respond.ELEMENT_NAME,
-                                                                                        Filter.ELEMENT_NAME,
-                                                                                        Switch_mediator.ELEMENT_NAME,
-                                                                                        Sequence.ELEMENT_NAME,
-                                                                                        Enrich.ELEMENT_NAME,
-                                                                                        LoopBack.ELEMENT_NAME,
-                                                                                        CallTemplate.ELEMENT_NAME,
-                                                                                        Call.ELEMENT_NAME);
+    private static final List<String> PROPERTIES          = Collections.emptyList();
+    private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
+                                                                          Y_PROPERTY_NAME,
+                                                                          UUID_PROPERTY_NAME,
+                                                                          AUTO_ALIGN_PROPERTY_NAME);
+    private static final List<String> COMPONENTS          = Arrays.asList(Log.ELEMENT_NAME,
+                                                                          Property.ELEMENT_NAME,
+                                                                          PayloadFactory.ELEMENT_NAME,
+                                                                          Send.ELEMENT_NAME,
+                                                                          Header.ELEMENT_NAME,
+                                                                          Respond.ELEMENT_NAME,
+                                                                          Filter.ELEMENT_NAME,
+                                                                          Switch_mediator.ELEMENT_NAME,
+                                                                          Sequence.ELEMENT_NAME,
+                                                                          Enrich.ELEMENT_NAME,
+                                                                          LoopBack.ELEMENT_NAME,
+                                                                          CallTemplate.ELEMENT_NAME,
+                                                                          Call.ELEMENT_NAME);
 
     public RootElement(@Nonnull String elementName,
                        @Nonnull String title,
@@ -59,7 +58,6 @@ public class RootElement extends AbstractShape {
         this(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
         components.addAll(COMPONENTS);
-        targetElements.put(Connection.CONNECTION_NAME, AVAILABLE_FOR_CONNECTION_ELEMENTS);
     }
 
     /** {@inheritDoc} */

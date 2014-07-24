@@ -34,31 +34,18 @@ public class CallTemplate extends RootElement {
     private static final String PARAMETERS_PROPERTY_NAME          = "Parameters";
     private static final String DESCRIPTION_PROPERTY_NAME         = "Description";
 
-    private static final List<String> PROPERTIES                        = Arrays.asList(AVAILABLE_TEMPLATES_PROPERTY_NAME,
-                                                                                        TARGET_TEMPLATE_PROPERTY_NAME,
-                                                                                        PARAMETERS_PROPERTY_NAME,
-                                                                                        DESCRIPTION_PROPERTY_NAME);
-    private static final List<String> INTERNAL_PROPERTIES               = Arrays.asList(X_PROPERTY_NAME,
-                                                                                        Y_PROPERTY_NAME,
-                                                                                        UUID_PROPERTY_NAME,
-                                                                                        AUTO_ALIGN_PROPERTY_NAME,
-                                                                                        AVAILABLE_TEMPLATES_PROPERTY_NAME,
-                                                                                        TARGET_TEMPLATE_PROPERTY_NAME,
-                                                                                        PARAMETERS_PROPERTY_NAME,
-                                                                                        DESCRIPTION_PROPERTY_NAME);
-    private static final List<String> AVAILABLE_FOR_CONNECTION_ELEMENTS = Arrays.asList(Log.ELEMENT_NAME,
-                                                                                        Property.ELEMENT_NAME,
-                                                                                        PayloadFactory.ELEMENT_NAME,
-                                                                                        Send.ELEMENT_NAME,
-                                                                                        Header.ELEMENT_NAME,
-                                                                                        Respond.ELEMENT_NAME,
-                                                                                        Filter.ELEMENT_NAME,
-                                                                                        Switch_mediator.ELEMENT_NAME,
-                                                                                        Sequence.ELEMENT_NAME,
-                                                                                        Enrich.ELEMENT_NAME,
-                                                                                        LoopBack.ELEMENT_NAME,
-                                                                                        CallTemplate.ELEMENT_NAME,
-                                                                                        Call.ELEMENT_NAME);
+    private static final List<String> PROPERTIES          = Arrays.asList(AVAILABLE_TEMPLATES_PROPERTY_NAME,
+                                                                          TARGET_TEMPLATE_PROPERTY_NAME,
+                                                                          PARAMETERS_PROPERTY_NAME,
+                                                                          DESCRIPTION_PROPERTY_NAME);
+    private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
+                                                                          Y_PROPERTY_NAME,
+                                                                          UUID_PROPERTY_NAME,
+                                                                          AUTO_ALIGN_PROPERTY_NAME,
+                                                                          AVAILABLE_TEMPLATES_PROPERTY_NAME,
+                                                                          TARGET_TEMPLATE_PROPERTY_NAME,
+                                                                          PARAMETERS_PROPERTY_NAME,
+                                                                          DESCRIPTION_PROPERTY_NAME);
 
     private String availableTemplates;
     private String targetTemplate;
@@ -72,8 +59,6 @@ public class CallTemplate extends RootElement {
         targetTemplate = "enter_target_template";
         parameters = "enter_parameters";
         description = "enter_description";
-
-        targetElements.put(Connection.CONNECTION_NAME, AVAILABLE_FOR_CONNECTION_ELEMENTS);
     }
 
     @Nullable

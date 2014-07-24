@@ -109,6 +109,12 @@ public abstract class WorkspaceView extends AbstractView<WorkspaceView.ActionDel
      */
     public abstract void unselectElementBelowCursor(@Nullable String elementId, boolean isError);
 
+    public abstract void setDefaultCursor();
+
+    public abstract void setApplyCursor();
+
+    public abstract void setErrorCursor();
+
     public abstract void addLog(int x, int y, @Nonnull Log element);
 
     public abstract void addProperty(int x, int y, @Nonnull Property element);
