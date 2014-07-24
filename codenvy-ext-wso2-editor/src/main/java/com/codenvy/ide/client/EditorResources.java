@@ -21,6 +21,7 @@ import com.google.gwt.resources.client.ImageResource;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public interface EditorResources extends ClientBundle {
 
@@ -30,8 +31,9 @@ public interface EditorResources extends ClientBundle {
 
         String selectedElement();
 
-        String errorElement();
+        String selectErrorElementBelowCursor();
 
+        String selectElementBelowCursor();
     }
 
     @Source("editor.css")

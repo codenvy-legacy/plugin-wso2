@@ -8,6 +8,10 @@
     border: 2px solid #6DAF6D !important;
 }
 
-.errorElement {
+.selectErrorElementBelowCursor {
     border: 2px solid #FF0000 !important;
+}
+
+.selectElementBelowCursor {
+    border: 2px solid #6DAF6D !important;
 }

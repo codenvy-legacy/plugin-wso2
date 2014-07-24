@@ -36,6 +36,7 @@ import javax.annotation.Nullable;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 @ImplementedBy(WorkspaceViewImpl.class)
 public abstract class WorkspaceView extends AbstractView<WorkspaceView.ActionDelegate> {
@@ -87,20 +88,26 @@ public abstract class WorkspaceView extends AbstractView<WorkspaceView.ActionDel
     public abstract void selectElement(@Nullable String elementId);
 
     /**
-     * Select a diagram element as error element (Which has some problems. For example: it is impossible to create a connection or etc).
+     * Select a diagram element.
      *
      * @param elementId
      *         id of element which needs to be selected
+     * @param isError
+     *         <code>true</code> to select element as error element (Which has some problems. For example: it is impossible to create a
+     *         connection or etc).
      */
-    public abstract void selectErrorElement(@Nullable String elementId);
+    public abstract void selectElementBelowCursor(@Nullable String elementId, boolean isError);
 
     /**
-     * Unselect a diagram element as error element (Which has some problems. For example: it is impossible to create a connection or etc).
+     * Unselect a diagram element.
      *
      * @param elementId
      *         id of element which needs to be selected
+     * @param isError
+     *         <code>true</code> to unselect element as error element (Which has some problems. For example: it is impossible to create a
+     *         connection or etc).
      */
-    public abstract void unselectErrorElement(@Nullable String elementId);
+    public abstract void unselectElementBelowCursor(@Nullable String elementId, boolean isError);
 
     public abstract void addLog(int x, int y, @Nonnull Log element);
 

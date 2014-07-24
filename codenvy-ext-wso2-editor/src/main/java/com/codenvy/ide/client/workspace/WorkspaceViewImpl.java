@@ -205,19 +205,27 @@ public class WorkspaceViewImpl extends WorkspaceView {
 
     /** {@inheritDoc} */
     @Override
-    public void selectErrorElement(@Nullable String elementId) {
+    public void selectElementBelowCursor(@Nullable String elementId, boolean isError) {
         Widget element = elements.get(elementId);
         if (element != null) {
-            element.addStyleName(resources.editorCSS().errorElement());
+            if (isError) {
+                element.addStyleName(resources.editorCSS().selectErrorElementBelowCursor());
+            } else {
+                element.addStyleName(resources.editorCSS().selectElementBelowCursor());
+            }
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void unselectErrorElement(@Nullable String elementId) {
+    public void unselectElementBelowCursor(@Nullable String elementId, boolean isError) {
         Widget element = elements.get(elementId);
         if (element != null) {
-            element.removeStyleName(resources.editorCSS().errorElement());
+            if (isError) {
+                element.removeStyleName(resources.editorCSS().selectErrorElementBelowCursor());
+            } else {
+                element.removeStyleName(resources.editorCSS().selectElementBelowCursor());
+            }
         }
     }
 

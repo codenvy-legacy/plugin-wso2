@@ -57,18 +57,20 @@ import static com.codenvy.ide.client.State.CREATING_NOTHING;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class WorkspacePresenter extends AbstractPresenter implements WorkspaceView.ActionDelegate, HasState<State> {
 
-    private       EditorState<State>              state;
-    private       String                          selectedElementId;
     private final Shape                           mainElement;
-    private       SelectionManager                selectionManager;
     private final Map<String, Element>            elements;
     private final List<DiagramChangeListener>     diagramChangeListeners;
     private final List<MainElementChangeListener> mainElementChangeListeners;
-    private       Shape                           nodeElement;
     private final ContextMenu                     contextMenu;
+    private       EditorState<State>              state;
+    private       String                          selectedElementId;
+    private       Shape                           nodeElement;
+    private       SelectionManager                selectionManager;
+    private       boolean                         isErrorElement;
 
     @Inject
     public WorkspacePresenter(WorkspaceView view, @Assisted EditorState<State> state, @Assisted SelectionManager selectionManager) {
@@ -95,6 +97,8 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
                 contextMenu.hide();
             }
         });
+
+        isErrorElement = false;
     }
 
     /** {@inheritDoc} */
@@ -219,7 +223,7 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
         Shape selectedElement = (Shape)elements.get(prevSelectedElement);
         Shape element = (Shape)elements.get(elementId);
 
-        ((WorkspaceView)view).unselectErrorElement(elementId);
+        ((WorkspaceView)view).unselectElementBelowCursor(elementId, isErrorElement);
 
         Shape parent;
 
@@ -245,6 +249,8 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
                 selectElement(elementId);
 
                 break;
+            default:
+                setState(CREATING_NOTHING);
         }
     }
 
@@ -260,7 +266,9 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
             case CREATING_CONNECTION_TARGET:
                 Shape selectedElement = (Shape)elements.get(selectedElementId);
                 if (!selectedElement.canCreateConnection("Connection", element.getElementName())) {
-                    ((WorkspaceView)view).selectErrorElement(elementId);
+                    ((WorkspaceView)view).selectElementBelowCursor(elementId, isErrorElement = true);
+                } else {
+                    ((WorkspaceView)view).selectElementBelowCursor(elementId, isErrorElement = false);
                 }
                 break;
             default:
@@ -459,7 +467,7 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
     /** {@inheritDoc} */
     @Override
     public void onMouseOutDiagramElement(@Nonnull String elementId) {
-        ((WorkspaceView)view).unselectErrorElement(elementId);
+        ((WorkspaceView)view).unselectElementBelowCursor(elementId, isErrorElement);
     }
 
     /** {@inheritDoc} */
