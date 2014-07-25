@@ -239,12 +239,14 @@ public class WorkspaceViewImpl extends WorkspaceView {
     /** {@inheritDoc} */
     @Override
     public void setApplyCursor() {
+        focusPanel.removeStyleName(resources.editorCSS().errorCursor());
         focusPanel.addStyleName(resources.editorCSS().applyCursor());
     }
 
     /** {@inheritDoc} */
     @Override
     public void setErrorCursor() {
+        focusPanel.removeStyleName(resources.editorCSS().applyCursor());
         focusPanel.addStyleName(resources.editorCSS().errorCursor());
     }
 

@@ -35,7 +35,7 @@ public interface EditorResources extends ClientBundle {
         String selectErrorElementBelowCursor();
 
         String selectElementBelowCursor();
-        
+
         String errorCursor();
 
         String applyCursor();
@@ -372,13 +372,10 @@ public interface EditorResources extends ClientBundle {
     @Source("icons/Rmsequence.gif")
     ImageResource rmsequence();
 
-    //TODO fix problem with cursor
-    @Source("icons/cursors/CrystalClearno.cur")
-    @DataResource.MimeType("image/vnd.microsoft.icon")
+    @Source("icons/cursors/AddElementCursor.png")
     DataResource applyCursor();
 
-    @Source("icons/cursors/CrystalClearno.cur")
-    @DataResource.MimeType("image/vnd.microsoft.icon")
+    @Source("icons/cursors/NotAllowedCursor.png")
     DataResource errorCursor();
 
 }

@@ -20,9 +20,9 @@
 }
 
 .applyCursor {
-    cursor: applyCursorURL !important;
+    cursor: applyCursorURL, auto !important;
 }
 
 .errorCursor {
-    cursor: errorCursorURL !important;
+    cursor: errorCursorURL, auto !important;
 }

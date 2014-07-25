@@ -185,6 +185,9 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
         }
 
         if (!metaModelValidator.canInsertElement(nodeElement, Connection.CONNECTION_NAME, elementName, x, y)) {
+            selectElement(null);
+            setState(CREATING_NOTHING);
+
             return;
         }
 
@@ -315,6 +318,7 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
 
         ((WorkspaceView)view).setZoomOutButtonEnable(nodeElement.getParent() != null);
         ((WorkspaceView)view).setAutoAlignmentParam(nodeElement.isAutoAligned());
+        ((WorkspaceView)view).setDefaultCursor();
 
         int defaultX = 100;
         int defaultY = 100;
@@ -589,12 +593,8 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
     public void onDiagramElementMoved(@Nonnull String elementId, int x, int y) {
         Shape shape = (Shape)elements.get(elementId);
 
-        if (!metaModelValidator.canRemoveElement(nodeElement, elementId, Connection.CONNECTION_NAME) ||
-            !metaModelValidator.canInsertElement(nodeElement, Connection.CONNECTION_NAME, shape.getElementName(), x, y)) {
-            ((WorkspaceView)view).setErrorCursor();
-        } else {
-            ((WorkspaceView)view).setApplyCursor();
-
+        if (metaModelValidator.canRemoveElement(nodeElement, elementId, Connection.CONNECTION_NAME) &&
+            metaModelValidator.canInsertElement(nodeElement, Connection.CONNECTION_NAME, shape.getElementName(), x, y)) {
             shape.setX(x);
             shape.setY(y);
         }
