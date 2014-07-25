@@ -16,10 +16,12 @@
 package com.codenvy.ide.client.propertiespanel.log;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -45,6 +47,8 @@ public class LogPropertiesPanelViewImpl extends LogPropertiesPanelView {
     TextBox logProperties;
     @UiField
     TextBox description;
+    @UiField
+    Button  propertiesButton;
 
     @Inject
     public LogPropertiesPanelViewImpl(LogPropertiesPanelViewImplUiBinder ourUiBinder) {
@@ -170,6 +174,11 @@ public class LogPropertiesPanelViewImpl extends LogPropertiesPanelView {
     @UiHandler("description")
     public void onDescriptionChanged(KeyUpEvent event) {
         delegate.onDescriptionChanged();
+    }
+
+    @UiHandler("propertiesButton")
+    public void onEditPropertyButtonClicked(ClickEvent event){
+        delegate.showEditPropertyConfigurationWindow();
     }
 
 }

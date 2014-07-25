@@ -193,6 +193,11 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
     }
 
     @Nonnull
+    protected String serializePropertiesChildrenNodes() {
+        return "";
+    }
+
+    @Nonnull
     protected String serializeProperties() {
         return "";
     }

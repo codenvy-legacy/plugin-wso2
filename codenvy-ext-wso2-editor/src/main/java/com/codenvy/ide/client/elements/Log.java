@@ -15,10 +15,13 @@
  */
 package com.codenvy.ide.client.elements;
 
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.google.gwt.xml.client.Node;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +29,101 @@ import java.util.List;
  * @author Andrey Plotnikov
  */
 public class Log extends RootElement {
+
+    public static class Property {
+
+        private String          name;
+        private String          type;
+        private String          expression;
+        private List<NameSpace> nameSpaces;
+
+        public Property(String name, String type, String expression) {
+            this.name = name;
+            this.type = type;
+            this.expression = expression;
+            this.nameSpaces = new ArrayList<>();
+        }
+
+        public void addNameSpace(NameSpace nameSpace) {
+            nameSpaces.add(nameSpace);
+        }
+
+        public List<NameSpace> getNameSpaces() {
+            return nameSpaces;
+        }
+
+        public void setNameSpaces(List<NameSpace> nameSpaces) {
+            this.nameSpaces = nameSpaces;
+        }
+
+        public void clearListOfNamespaces() {
+            nameSpaces.clear();
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getExpression() {
+            return expression;
+        }
+
+        public void setExpression(String expression) {
+            this.expression = expression;
+        }
+
+        public Property clone() {
+            return new Property(name, type, expression);
+        }
+
+        public static class NameSpace {
+
+            private String prefix;
+            private String uri;
+
+            public NameSpace(String prefix, String uri) {
+                this.prefix = prefix;
+                this.uri = uri;
+            }
+
+            public String getPrefix() {
+                return prefix;
+            }
+
+            public void setPrefix(String prefix) {
+                this.prefix = prefix;
+            }
+
+            public String getUri() {
+                return uri;
+            }
+
+            public void setUri(String uri) {
+                this.uri = uri;
+            }
+
+            public NameSpace clone() {
+                return new NameSpace(prefix, uri);
+            }
+
+            public String toString() {
+                return "xmlns:" + prefix + "=" + "\"" + uri + "\"";
+            }
+        }
+    }
+
     public static final String ELEMENT_NAME       = "Log";
     public static final String SERIALIZATION_NAME = "log";
 
@@ -49,11 +147,11 @@ public class Log extends RootElement {
                                                                           LOG_PROPERTIES_PROPERTY_NAME,
                                                                           DESCRIPTION_PROPERTY_NAME);
 
-    private String logCategory;
-    private String logLevel;
-    private String logSeparator;
-    private String logProperties;
-    private String description;
+    private String          logCategory;
+    private String          logLevel;
+    private String          logSeparator;
+    private String          description;
+    private Array<Property> propertyList;
 
     public Log() {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
@@ -61,8 +159,16 @@ public class Log extends RootElement {
         logCategory = "INFO";
         logLevel = "SIMPLE";
         logSeparator = "enter_text";
-        logProperties = "enter_properties";
         description = "enter_description";
+        propertyList = Collections.createArray();
+    }
+
+    public void addProperty(Property property) {
+        propertyList.add(property);
+    }
+
+    public void clearPropertyList() {
+        propertyList.clear();
     }
 
     @Nullable
@@ -93,12 +199,12 @@ public class Log extends RootElement {
     }
 
     @Nullable
-    public String getLogProperties() {
-        return logProperties;
+    public Array<Property> getLogProperties() {
+        return propertyList;
     }
 
-    public void setLogProperties(@Nullable String logProperties) {
-        this.logProperties = logProperties;
+    public void setLogProperties(@Nullable Array<Property> propertyList) {
+        this.propertyList = propertyList;
     }
 
     @Nullable
@@ -114,11 +220,23 @@ public class Log extends RootElement {
     @Override
     @Nonnull
     protected String serializeProperties() {
-        return "logCategory=\"" + logCategory + "\" " +
-               "logLevel=\"" + logLevel + "\" " +
-               "logSeparator=\"" + logSeparator + "\" " +
-               "logProperties=\"" + logProperties + "\" " +
+        return "category=\"" + logCategory + "\" " +
+               "level=\"" + logLevel + "\" " +
+               "separate=\"" + logSeparator + "\" " +
                "description=\"" + description + "\" ";
+    }
+
+    /** {@inheritDoc} */
+    @Nonnull
+    @Override
+    protected String serializePropertiesChildrenNodes() {
+        String result = "";
+        /*for (Property property : propertyList) {
+            result += "\n  <property name=" + "\"" + property.getName() + "\"" +
+                      " type=" + "\"" + property.getType() + "\"" +
+                      " expression=" + "\"" + property.getExpression() + "\"" + "/>";
+        }*/
+        return result;
     }
 
     /** {@inheritDoc} */
@@ -147,7 +265,7 @@ public class Log extends RootElement {
                 logSeparator = String.valueOf(nodeValue);
                 break;
             case LOG_PROPERTIES_PROPERTY_NAME:
-                logProperties = String.valueOf(nodeValue);
+// TODO
                 break;
             case DESCRIPTION_PROPERTY_NAME:
                 description = String.valueOf(nodeValue);

@@ -17,6 +17,7 @@ package com.codenvy.ide.client.propertiespanel.log;
 
 import com.codenvy.ide.client.elements.Log;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
+import com.codenvy.ide.client.propertiespanel.log.logPropertiesConfigurationDialogWindow.LogPropertiesConfigurationPresenter;
 import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -28,9 +29,14 @@ import javax.annotation.Nonnull;
  */
 public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> implements LogPropertiesPanelView.ActionDelegate {
 
+    private final LogPropertiesConfigurationPresenter logPropertiesConfigurationPresenter;
+
     @Inject
-    public LogPropertiesPanelPresenter(LogPropertiesPanelView view, PropertyTypeManager propertyTypeManager) {
+    public LogPropertiesPanelPresenter(LogPropertiesPanelView view,
+                                       PropertyTypeManager propertyTypeManager,
+                                       LogPropertiesConfigurationPresenter logPropertiesConfigurationPresenter) {
         super(view, propertyTypeManager);
+        this.logPropertiesConfigurationPresenter = logPropertiesConfigurationPresenter;
     }
 
     /** {@inheritDoc} */
@@ -57,8 +63,8 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> im
     /** {@inheritDoc} */
     @Override
     public void onLogPropertiesChanged() {
-        element.setLogProperties(((LogPropertiesPanelView)view).getLogProperties());
-        notifyListeners();
+       /* element.setLogProperties(((LogPropertiesPanelView)view).getLogProperties());
+        notifyListeners();*/
     }
 
     /** {@inheritDoc} */
@@ -66,6 +72,11 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> im
     public void onDescriptionChanged() {
         element.setDescription(((LogPropertiesPanelView)view).getDescription());
         notifyListeners();
+    }
+
+    @Override
+    public void showEditPropertyConfigurationWindow() {
+        logPropertiesConfigurationPresenter.showPropertyConfigurationWindow();
     }
 
     /** {@inheritDoc} */
@@ -78,7 +89,7 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> im
         ((LogPropertiesPanelView)view).setLogLevel(propertyTypeManager.getValuesOfTypeByName("LogLevel"));
         ((LogPropertiesPanelView)view).selectLogLevel(element.getLogLevel());
         ((LogPropertiesPanelView)view).setLogSeparator(element.getLogSeparator());
-        ((LogPropertiesPanelView)view).setLogProperties(element.getLogProperties());
+        //((LogPropertiesPanelView)view).setLogProperties(element.getLogProperties());
         ((LogPropertiesPanelView)view).setDescription(element.getDescription());
     }
 

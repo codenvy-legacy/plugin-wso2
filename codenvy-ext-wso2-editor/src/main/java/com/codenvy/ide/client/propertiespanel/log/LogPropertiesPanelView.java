@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.log;
 
+import com.codenvy.ide.client.elements.Log;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.inject.ImplementedBy;
 
@@ -37,6 +38,8 @@ public abstract class LogPropertiesPanelView extends AbstractView<LogPropertiesP
         void onLogPropertiesChanged();
 
         void onDescriptionChanged();
+
+        void showEditPropertyConfigurationWindow();
 
     }
 
