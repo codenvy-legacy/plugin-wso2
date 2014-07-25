@@ -39,7 +39,6 @@ public class Filter extends RootElement {
     private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
                                                                           Y_PROPERTY_NAME,
                                                                           UUID_PROPERTY_NAME,
-                                                                          AUTO_ALIGN_PROPERTY_NAME,
                                                                           CONDITION_TYPE_PROPERTY_NAME,
                                                                           SOURCE_PROPERTY_NAME,
                                                                           REGULAR_EXPRESSION_PROPERTY_NAME);
@@ -122,9 +121,6 @@ public class Filter extends RootElement {
                 break;
             case AbstractElement.UUID_PROPERTY_NAME:
                 id = nodeValue;
-                break;
-            case AbstractShape.AUTO_ALIGN_PROPERTY_NAME:
-                setAutoAlignmentParam(Boolean.valueOf(nodeValue));
                 break;
             case CONDITION_TYPE_PROPERTY_NAME:
                 conditionType = String.valueOf(nodeValue);

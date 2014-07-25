@@ -30,8 +30,7 @@ public class RootElement extends AbstractShape {
     private static final List<String> PROPERTIES          = Collections.emptyList();
     private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
                                                                           Y_PROPERTY_NAME,
-                                                                          UUID_PROPERTY_NAME,
-                                                                          AUTO_ALIGN_PROPERTY_NAME);
+                                                                          UUID_PROPERTY_NAME);
     private static final List<String> COMPONENTS          = Arrays.asList(Log.ELEMENT_NAME,
                                                                           Property.ELEMENT_NAME,
                                                                           PayloadFactory.ELEMENT_NAME,

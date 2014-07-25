@@ -34,7 +34,6 @@ public class Respond extends RootElement {
     private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
                                                                           Y_PROPERTY_NAME,
                                                                           UUID_PROPERTY_NAME,
-                                                                          AUTO_ALIGN_PROPERTY_NAME,
                                                                           DESCRIPTION_PROPERTY_NAME);
 
     private String description;
@@ -75,9 +74,6 @@ public class Respond extends RootElement {
                 break;
             case AbstractElement.UUID_PROPERTY_NAME:
                 id = nodeValue;
-                break;
-            case AbstractShape.AUTO_ALIGN_PROPERTY_NAME:
-                setAutoAlignmentParam(Boolean.valueOf(nodeValue));
                 break;
             case DESCRIPTION_PROPERTY_NAME:
                 description = String.valueOf(nodeValue);

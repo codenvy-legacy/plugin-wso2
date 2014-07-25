@@ -47,7 +47,6 @@ public class Enrich extends RootElement {
     private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
                                                                           Y_PROPERTY_NAME,
                                                                           UUID_PROPERTY_NAME,
-                                                                          AUTO_ALIGN_PROPERTY_NAME,
                                                                           CLONE_SOURCE_PROPERTY_NAME,
                                                                           SOURCE_TYPE_PROPERTY_NAME,
                                                                           SOURCE_XPATH_PROPERTY_NAME,
@@ -167,9 +166,6 @@ public class Enrich extends RootElement {
                 break;
             case AbstractElement.UUID_PROPERTY_NAME:
                 id = nodeValue;
-                break;
-            case AbstractShape.AUTO_ALIGN_PROPERTY_NAME:
-                setAutoAlignmentParam(Boolean.valueOf(nodeValue));
                 break;
             case CLONE_SOURCE_PROPERTY_NAME:
                 cloneSource = String.valueOf(nodeValue);

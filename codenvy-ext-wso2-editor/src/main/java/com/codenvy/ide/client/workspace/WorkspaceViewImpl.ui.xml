@@ -15,32 +15,30 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<ui:UiBinder 
-             xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+<ui:UiBinder
+        xmlns:ui='urn:ui:com.google.gwt.uibinder'
+        xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
     <ui:style>
-        .button{
+        .button {
             float: left;
             margin-left: 6px;
         }
-        .rightFixedPosition{
+
+        .rightFixedPosition {
             position: fixed;
             z-index: 3;
             right: 30px;
         }
-        .focusPanel:focus{
+
+        .focusPanel:focus {
             outline: none !important;
-        }
-        .checkBox{
-            float: right;
         }
     </ui:style>
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
         <g:FocusPanel ui:field="focusPanel" addStyleNames="{style.focusPanel} {res.editorCSS.fullSize}">
             <g:FlowPanel ui:field="mainPanel" addStyleNames="{res.editorCSS.fullSize}">
                 <g:FlowPanel ui:field="controlPanel" addStyleNames="{style.rightFixedPosition}">
-                    <g:CheckBox ui:field="autoAlignment" text="auto-layout" addStyleNames="{style.checkBox}"/>
                     <g:Button ui:field="zoomIn" text="Zoom In" width="90px" addStyleNames="{style.button}"/>
                     <g:Button ui:field="zoomOut" text="Zoom Out" width="90px" addStyleNames="{style.button}"/>
                 </g:FlowPanel>

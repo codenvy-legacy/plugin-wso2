@@ -51,7 +51,6 @@ public class Property extends RootElement {
     private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
                                                                           Y_PROPERTY_NAME,
                                                                           UUID_PROPERTY_NAME,
-                                                                          AUTO_ALIGN_PROPERTY_NAME,
                                                                           PROPERTY_NAME_PROPERTY_NAME,
                                                                           PROPERTY_ACTION_PROPERTY_NAME,
                                                                           VALUE_TYPE_PROPERTY_NAME,
@@ -197,9 +196,6 @@ public class Property extends RootElement {
                 break;
             case AbstractElement.UUID_PROPERTY_NAME:
                 id = nodeValue;
-                break;
-            case AbstractShape.AUTO_ALIGN_PROPERTY_NAME:
-                setAutoAlignmentParam(Boolean.valueOf(nodeValue));
                 break;
             case PROPERTY_NAME_PROPERTY_NAME:
                 propertyName = String.valueOf(nodeValue);

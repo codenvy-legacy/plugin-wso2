@@ -37,7 +37,6 @@ public class Switch_mediator extends RootElement {
     private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
                                                                           Y_PROPERTY_NAME,
                                                                           UUID_PROPERTY_NAME,
-                                                                          AUTO_ALIGN_PROPERTY_NAME,
                                                                           SOURCE_XPATH_PROPERTY_NAME,
                                                                           CASE_BRANCHES_TYPE_PROPERTY_NAME);
     private static final List<String> COMPONENTS          = Arrays.asList(Log.ELEMENT_NAME,
@@ -107,9 +106,6 @@ public class Switch_mediator extends RootElement {
                 break;
             case AbstractElement.UUID_PROPERTY_NAME:
                 id = nodeValue;
-                break;
-            case AbstractShape.AUTO_ALIGN_PROPERTY_NAME:
-                setAutoAlignmentParam(Boolean.valueOf(nodeValue));
                 break;
             case SOURCE_XPATH_PROPERTY_NAME:
                 sourceXpath = String.valueOf(nodeValue);

@@ -41,7 +41,6 @@ public class CallTemplate extends RootElement {
     private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
                                                                           Y_PROPERTY_NAME,
                                                                           UUID_PROPERTY_NAME,
-                                                                          AUTO_ALIGN_PROPERTY_NAME,
                                                                           AVAILABLE_TEMPLATES_PROPERTY_NAME,
                                                                           TARGET_TEMPLATE_PROPERTY_NAME,
                                                                           PARAMETERS_PROPERTY_NAME,
@@ -122,9 +121,6 @@ public class CallTemplate extends RootElement {
                 break;
             case AbstractElement.UUID_PROPERTY_NAME:
                 id = nodeValue;
-                break;
-            case AbstractShape.AUTO_ALIGN_PROPERTY_NAME:
-                setAutoAlignmentParam(Boolean.valueOf(nodeValue));
                 break;
             case AVAILABLE_TEMPLATES_PROPERTY_NAME:
                 availableTemplates = String.valueOf(nodeValue);

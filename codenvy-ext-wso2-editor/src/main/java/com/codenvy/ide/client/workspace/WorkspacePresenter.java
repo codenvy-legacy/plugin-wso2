@@ -310,6 +310,12 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
         }
     }
 
+    /**
+     * Redraw a given level of diagram.
+     *
+     * @param element
+     *         the parent element which children need to be redrawn
+     */
     private void showElements(@Nonnull Shape element) {
         ((WorkspaceView)view).clearDiagram();
 
@@ -317,7 +323,6 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
         String selectedElement = null;
 
         ((WorkspaceView)view).setZoomOutButtonEnable(nodeElement.getParent() != null);
-        ((WorkspaceView)view).setAutoAlignmentParam(nodeElement.isAutoAligned());
         ((WorkspaceView)view).setDefaultCursor();
 
         int defaultX = 100;
@@ -326,60 +331,51 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
         Shape prevShape = null;
 
         for (Shape shape : nodeElement.getShapes()) {
-            int x = shape.getX();
-            int y = shape.getY();
-
-            if (x == Shape.UNDEFINED_POSITION || nodeElement.isAutoAligned()) {
-                x = defaultX;
-                defaultX += 100;
-            }
-
-            if (y == Shape.UNDEFINED_POSITION || nodeElement.isAutoAligned()) {
-                y = defaultY;
-            }
+            int x = defaultX;
+            defaultX += 100;
 
             if (shape instanceof Log) {
-                ((WorkspaceView)view).addLog(x, y, (Log)shape);
+                ((WorkspaceView)view).addLog(x, defaultY, (Log)shape);
             }
             if (shape instanceof Property) {
-                ((WorkspaceView)view).addProperty(x, y, (Property)shape);
+                ((WorkspaceView)view).addProperty(x, defaultY, (Property)shape);
             }
             if (shape instanceof PayloadFactory) {
-                ((WorkspaceView)view).addPayloadFactory(x, y, (PayloadFactory)shape);
+                ((WorkspaceView)view).addPayloadFactory(x, defaultY, (PayloadFactory)shape);
             }
             if (shape instanceof Send) {
-                ((WorkspaceView)view).addSend(x, y, (Send)shape);
+                ((WorkspaceView)view).addSend(x, defaultY, (Send)shape);
             }
             if (shape instanceof Header) {
-                ((WorkspaceView)view).addHeader(x, y, (Header)shape);
+                ((WorkspaceView)view).addHeader(x, defaultY, (Header)shape);
             }
             if (shape instanceof Respond) {
-                ((WorkspaceView)view).addRespond(x, y, (Respond)shape);
+                ((WorkspaceView)view).addRespond(x, defaultY, (Respond)shape);
             }
             if (shape instanceof Filter) {
-                ((WorkspaceView)view).addFilter(x, y, (Filter)shape);
+                ((WorkspaceView)view).addFilter(x, defaultY, (Filter)shape);
             }
             if (shape instanceof Switch_mediator) {
-                ((WorkspaceView)view).addSwitch_mediator(x, y, (Switch_mediator)shape);
+                ((WorkspaceView)view).addSwitch_mediator(x, defaultY, (Switch_mediator)shape);
             }
             if (shape instanceof Sequence) {
-                ((WorkspaceView)view).addSequence(x, y, (Sequence)shape);
+                ((WorkspaceView)view).addSequence(x, defaultY, (Sequence)shape);
             }
             if (shape instanceof Enrich) {
-                ((WorkspaceView)view).addEnrich(x, y, (Enrich)shape);
+                ((WorkspaceView)view).addEnrich(x, defaultY, (Enrich)shape);
             }
             if (shape instanceof LoopBack) {
-                ((WorkspaceView)view).addLoopBack(x, y, (LoopBack)shape);
+                ((WorkspaceView)view).addLoopBack(x, defaultY, (LoopBack)shape);
             }
             if (shape instanceof CallTemplate) {
-                ((WorkspaceView)view).addCallTemplate(x, y, (CallTemplate)shape);
+                ((WorkspaceView)view).addCallTemplate(x, defaultY, (CallTemplate)shape);
             }
             if (shape instanceof Call) {
-                ((WorkspaceView)view).addCall(x, y, (Call)shape);
+                ((WorkspaceView)view).addCall(x, defaultY, (Call)shape);
             }
 
             shape.setX(x);
-            shape.setY(y);
+            shape.setY(defaultY);
 
             if (shape.getId().equals(selectedElementId)) {
                 selectedElement = shape.getId();
@@ -412,49 +408,89 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
         this.state.setState(state);
     }
 
+    /**
+     * Adds a listener that needs to be informed about some changes with diagram element.
+     *
+     * @param listener
+     *         the listener that need to be informed
+     */
     public void addDiagramChangeListener(@Nonnull DiagramChangeListener listener) {
         diagramChangeListeners.add(listener);
     }
 
+    /**
+     * Removes a listener that listen to some changes with diagram element.
+     *
+     * @param listener
+     *         the listener that needs to be removed
+     */
     public void removeDiagramChangeListener(@Nonnull DiagramChangeListener listener) {
         diagramChangeListeners.remove(listener);
     }
 
+    /** Notify listeners about changes with diagram elements. */
     public void notifyDiagramChangeListeners() {
         for (DiagramChangeListener listener : diagramChangeListeners) {
             listener.onChanged();
         }
     }
 
+    /**
+     * Adds a listener that needs to be informed about some changes with level of the diagram.
+     *
+     * @param listener
+     *         the listener that need to be informed
+     */
     public void addMainElementChangeListener(@Nonnull MainElementChangeListener listener) {
         mainElementChangeListeners.add(listener);
     }
 
+    /**
+     * Removes a listener that listen to some changes with level of the diagram.
+     *
+     * @param listener
+     *         the listener that needs to be removed
+     */
     public void removeMainElementChangeListener(@Nonnull MainElementChangeListener listener) {
         mainElementChangeListeners.remove(listener);
     }
 
+    /** Notify listeners about changes with level of the diagram. */
     public void notifyMainElementChangeListeners() {
         for (MainElementChangeListener listener : mainElementChangeListeners) {
             listener.onMainElementChanged(nodeElement);
         }
     }
 
+    /** @return serialized representation of diagram. */
     @Nonnull
     public String serialize() {
         return ContentFormatter.formatXML(ContentFormatter.trimXML(mainElement.serialize()));
     }
 
+    /** @return internal serialized representation of diagram. */
     @Nonnull
     public String serializeInternalFormat() {
         return ContentFormatter.trimXML(mainElement.serializeInternalFormat());
     }
 
+    /**
+     * Deserialize text representation of diagram. It means all element will be added.
+     *
+     * @param content
+     *         content that needs to be deserialized
+     */
     public void deserialize(@Nonnull String content) {
         mainElement.deserialize(ContentFormatter.trimXML(content));
         showElements(mainElement);
     }
 
+    /**
+     * Deserialize internal text representation of diagram. It means all element will be added.
+     *
+     * @param content
+     *         content that needs to be deserialized
+     */
     public void deserializeInternalFormat(@Nonnull String content) {
         mainElement.deserializeInternalFormat(ContentFormatter.trimXML(content));
         showElements(mainElement);
@@ -544,9 +580,7 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
             nodeElement.removeShape(element);
             ((WorkspaceView)view).removeElement(selectedElementId);
 
-            if (nodeElement.isAutoAligned()) {
-                showElements(nodeElement);
-            }
+            showElements(nodeElement);
 
             notifyDiagramChangeListeners();
         }
@@ -599,18 +633,9 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
             shape.setY(y);
         }
 
-        if (nodeElement.isAutoAligned()) {
-            showElements(nodeElement);
-        }
+        showElements(nodeElement);
 
         notifyDiagramChangeListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onAutoAlignmentParamChanged() {
-        nodeElement.setAutoAlignmentParam(((WorkspaceView)view).isAutoAligned());
-        showElements(nodeElement);
     }
 
     /** {@inheritDoc} */
@@ -621,7 +646,7 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
         showElements(mainElement);
     }
 
-    protected void addShape(@Nonnull Shape shape, int x, int y) {
+    private void addShape(@Nonnull Shape shape, int x, int y) {
         String shapeId = shape.getId();
 
         elements.put(shapeId, shape);
@@ -632,14 +657,12 @@ public class WorkspacePresenter extends AbstractPresenter implements WorkspaceVi
 
         selectElement(shapeId);
 
-        if (nodeElement.isAutoAligned()) {
-            showElements(nodeElement);
-        }
+        showElements(nodeElement);
 
         notifyDiagramChangeListeners();
     }
 
-    protected void selectElement(@Nullable String elementId) {
+    private void selectElement(@Nullable String elementId) {
         selectedElementId = elementId;
         Shape shape = (Shape)elements.get(elementId);
 

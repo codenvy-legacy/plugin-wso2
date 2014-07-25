@@ -33,18 +33,16 @@ import java.util.Set;
  * @author Andrey Plotnikov
  */
 public abstract class AbstractShape extends AbstractElement implements Shape, Comparable<AbstractShape> {
-    public static final String X_PROPERTY_NAME          = "x";
-    public static final String Y_PROPERTY_NAME          = "y";
-    public static final String AUTO_ALIGN_PROPERTY_NAME = "autoAlign";
+    public static final String X_PROPERTY_NAME = "x";
+    public static final String Y_PROPERTY_NAME = "y";
 
     private final List<AbstractShape> shapes;
     private final List<Link>          links;
 
     protected final Set<String> components;
 
-    private int     x;
-    private boolean isAutoAligned;
-    private int     y;
+    private int x;
+    private int y;
 
     protected AbstractShape(@Nonnull String elementName,
                             @Nonnull String title,
@@ -59,8 +57,6 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
 
         this.x = UNDEFINED_POSITION;
         this.y = UNDEFINED_POSITION;
-
-        this.isAutoAligned = true;
     }
 
     /** {@inheritDoc} */
@@ -206,8 +202,7 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
         return serializeProperties() +
                "<x>\n" + getX() + "\n</x>\n" +
                "<y>\n" + getY() + "\n</y>\n" +
-               "<uuid>\n" + id + "\n</uuid>\n" +
-               "<autoAlign>\n" + isAutoAligned + "\n</autoAlign>\n";
+               "<uuid>\n" + id + "\n</uuid>\n";
     }
 
     /** {@inheritDoc} */
@@ -297,18 +292,6 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
     @Override
     public Set<String> getComponents() {
         return components;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setAutoAlignmentParam(boolean isAutoAligned) {
-        this.isAutoAligned = isAutoAligned;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean isAutoAligned() {
-        return isAutoAligned;
     }
 
 }
