@@ -18,10 +18,17 @@ package com.codenvy.ide.client.elements;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 
+import static java.util.Map.Entry;
+
 /**
+ * The main element of the diagram.
+ *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class RootElement extends AbstractShape {
     public static final String ELEMENT_NAME       = "RootElement";
@@ -95,4 +102,31 @@ public class RootElement extends AbstractShape {
         }
     }
 
+    /**
+     * Prepare all properties for the serialization.
+     *
+     * @param properties
+     *         element's properties
+     * @return string with serialized properties
+     */
+    protected String prepareSerialization(LinkedHashMap<String, String> properties) {
+        StringBuilder serializedProperties = new StringBuilder();
+
+        for (Iterator iterator = properties.entrySet().iterator(); iterator.hasNext(); ) {
+            Entry entry = (Entry)iterator.next();
+            String value = (String)entry.getValue();
+
+            if (value != null && !value.isEmpty()) {
+                serializedProperties.append(entry.getKey()).append("=\"").append(value).append('"');
+            }
+
+            iterator.remove();
+
+            if (iterator.hasNext()) {
+                serializedProperties.append(' ');
+            }
+        }
+
+        return serializedProperties.toString();
+    }
 }
