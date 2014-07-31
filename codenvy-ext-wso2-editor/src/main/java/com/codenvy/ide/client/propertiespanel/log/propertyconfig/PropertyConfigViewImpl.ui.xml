@@ -15,10 +15,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<ui:UiBinder
-        xmlns:ui='urn:ui:com.google.gwt.uibinder'
-        xmlns:g='urn:import:com.google.gwt.user.client.ui'
-        xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
+
+    <ui:with field="locale" type="com.codenvy.ide.client.WSO2EditorLocalizationConstant"/>
+
     <ui:style>
         .addPropertyButtonStyle {
             margin-left: 20px;
@@ -35,7 +37,7 @@
 
         .okButtonStyle {
             margin-left: 20px;
-            margin-top: 166px;
+            margin-top: 164px;
             width: 80px;
             text-align: center;
         }
@@ -61,52 +63,62 @@
         .northPanel {
             margin-left: 20px;
         }
-
     </ui:style>
 
     <g:DockLayoutPanel unit="PX" width="700px" height="450px">
+
         <g:north size="140">
             <g:DockLayoutPanel>
                 <g:west size="300">
                     <g:FlowPanel addStyleNames="{style.northPanel}">
-                        <g:Label text="Log Category:"/>
+                        <g:Label text="{locale.logCategory}"/>
                         <g:ListBox ui:field="logCategoryListBox"/>
-                        <g:Label text="Log Level:"/>
+
+                        <g:Label text="{locale.logLevel}"/>
                         <g:ListBox ui:field="logLevelListBox"/>
-                        <g:Label text="Log Separator:"/>
+
+                        <g:Label text="{locale.logSeparator}"/>
                         <g:TextBox ui:field="logSeparatorTextBox"/>
-                        <g:Label text="Properties: "/>
+
+                        <g:Label text="{locale.properties}"/>
                     </g:FlowPanel>
                 </g:west>
+
                 <g:east size="400">
                     <g:FlowPanel>
-                        <g:Label text="Name:"/>
+                        <g:Label text="{locale.logName}"/>
                         <g:TextBox ui:field="nameTextBox"/>
-                        <g:Label text="Value/Expression:"/>
+
+                        <g:Label text="{locale.valueExpression}"/>
                         <g:TextBox ui:field="valueExpressionTextBox"/>
                     </g:FlowPanel>
                 </g:east>
             </g:DockLayoutPanel>
         </g:north>
+
         <g:center>
-            <!--<g:ScrollPanel width="100%">-->
             <g:FlowPanel addStyleNames="{style.centerPanel}">
-                <c:CellTable ui:field="tableOfProperties" addStyleNames="{style.tableStyle}"/>
+                <g:ScrollPanel width="100%" height="100%">
+                    <c:CellTable ui:field="tableOfProperties" addStyleNames="{style.tableStyle}"/>
+                </g:ScrollPanel>
             </g:FlowPanel>
-            <!--</g:ScrollPanel>--><!--TODO all names to local-->
         </g:center>
+
         <g:east size="120">
             <g:FlowPanel>
-                <g:Button ui:field="addPropertyToTable" text="Add..." addStyleNames="{style.addPropertyButtonStyle}"/>
-                <g:Button ui:field="editPropertyButton" text="Edit" addStyleNames="{style.removePropertyButtonStyle}"/>
-                <g:Button ui:field="removeProperty" text="Remove" addStyleNames="{style.removePropertyButtonStyle}"/>
-                <g:Button ui:field="addPropertyToElement" text="OK" width="100" addStyleNames="{style.okButtonStyle}"/>
+                <g:Button ui:field="btnAdd" text="{locale.buttonAdd}" addStyleNames="{style.addPropertyButtonStyle}"/>
+                <g:Button ui:field="btnEdit" text="{locale.buttonEdit}" addStyleNames="{style.removePropertyButtonStyle}"/>
+                <g:Button ui:field="btnRemove" text="{locale.buttonRemove}" addStyleNames="{style.removePropertyButtonStyle}"/>
+                <g:Button ui:field="btnSaveChanges" text="{locale.buttonOk}" width="100" addStyleNames="{style.okButtonStyle}"/>
             </g:FlowPanel>
         </g:east>
+
         <g:south size="60">
             <g:FlowPanel>
-                <g:Button ui:field="cancelWindow" text="Cancel" width="100" addStyleNames="{style.cancelButtonStyle}"/>
+                <g:Button ui:field="btnCancel" text="{locale.buttonCancel}" width="100" addStyleNames="{style.cancelButtonStyle}"/>
             </g:FlowPanel>
         </g:south>
+
     </g:DockLayoutPanel>
+
 </ui:UiBinder>

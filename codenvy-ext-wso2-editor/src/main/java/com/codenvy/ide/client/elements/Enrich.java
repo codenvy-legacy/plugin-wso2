@@ -141,7 +141,7 @@ public class Enrich extends RootElement {
     /** {@inheritDoc} */
     @Override
     @Nonnull
-    protected String serializeProperties() {
+    protected String serializeAttributes() {
         return "cloneSource=" + "\"" + cloneSource + "\" " +
                "sourceType=" + "\"" + sourceType + "\" " +
                "sourceXpath=" + "\"" + sourceXpath + "\" " +

@@ -13,10 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.propertiespanel.log.logPropertiesConfigurationDialogWindow.nameSpaceEditorDialogWindow.xpathNavigatorDialogWindow;
+package com.codenvy.ide.client.propertiespanel.log;
+
+import com.codenvy.ide.client.elements.log.Property;
+import com.codenvy.ide.collections.Array;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Shnurenko
  */
-public class XPathNavigatorViewImpl {
+public interface AddPropertyCallback {
+    /**
+     * Performs some actions when properties was changed.
+     *
+     * @param property
+     *         changed list of properties
+     */
+    void onPropertiesChanged(@Nonnull Array<Property> property);
 }

@@ -25,7 +25,7 @@ import com.codenvy.ide.client.elements.Connection;
 import com.codenvy.ide.client.elements.Enrich;
 import com.codenvy.ide.client.elements.Filter;
 import com.codenvy.ide.client.elements.Header;
-import com.codenvy.ide.client.elements.Log;
+import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.LoopBack;
 import com.codenvy.ide.client.elements.PayloadFactory;
 import com.codenvy.ide.client.elements.Property;
@@ -149,8 +149,8 @@ public class WSO2Editor extends AbstractPresenter implements WorkspacePresenter.
         emptyPropertiesPanelPresenter.addListener(this);
 
         propertyTypeManager.register("CallMediatorEndpointType", Arrays.asList("INLINE", "NONE", "REGISTRYKEY", "XPATH"));
-        propertyTypeManager.register("LogCategory", Arrays.asList("TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"));
-        propertyTypeManager.register("LogLevel", Arrays.asList("SIMPLE", "HEADERS", "FULL", "CUSTOM"));
+        propertyTypeManager.register("logCategory", Arrays.asList("TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"));
+        propertyTypeManager.register("logLevel", Arrays.asList("SIMPLE", "HEADERS", "FULL", "CUSTOM"));
         propertyTypeManager.register("PropertyValueType", Arrays.asList("LITERAL", "EXPRESSION"));
         propertyTypeManager.register("PropertyScope", Arrays.asList("Synapse", "transport", "axis2", "axis2-client", "operation"));
         propertyTypeManager.register("PropertyAction", Arrays.asList("set", "remove"));

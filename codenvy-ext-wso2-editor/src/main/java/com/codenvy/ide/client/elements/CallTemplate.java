@@ -99,7 +99,7 @@ public class CallTemplate extends RootElement {
     /** {@inheritDoc} */
     @Override
     @Nonnull
-    protected String serializeProperties() {
+    protected String serializeAttributes() {
         return "availableTemplates=\"" + availableTemplates + "\" " +
                "targetTemplate=\"" + targetTemplate + "\" " +
                "parameters=\"" + parameters + "\" " +

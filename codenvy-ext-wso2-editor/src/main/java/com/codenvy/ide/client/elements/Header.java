@@ -113,7 +113,7 @@ public class Header extends RootElement {
     /** {@inheritDoc} */
     @Override
     @Nonnull
-    protected String serializeProperties() {
+    protected String serializeAttributes() {
         return "headerAction=\"" + headerAction + "\" " +
                "scope=\"" + scope + "\" " +
                "valueType=\"" + valueType + "\" " +

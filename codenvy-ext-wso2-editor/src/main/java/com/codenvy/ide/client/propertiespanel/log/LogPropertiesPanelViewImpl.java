@@ -27,6 +27,8 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -57,6 +59,7 @@ public class LogPropertiesPanelViewImpl extends LogPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
+    @Nonnull
     public String getLogCategory() {
         int index = logCategory.getSelectedIndex();
         return index != -1 ? logCategory.getValue(logCategory.getSelectedIndex()) : "";
@@ -64,11 +67,13 @@ public class LogPropertiesPanelViewImpl extends LogPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void setLogCategory(List<String> logCategory) {
+    public void setLogCategory(@Nullable List<String> logCategory) {
         if (logCategory == null) {
             return;
         }
+
         this.logCategory.clear();
+
         for (String value : logCategory) {
             this.logCategory.addItem(value);
         }
@@ -76,7 +81,7 @@ public class LogPropertiesPanelViewImpl extends LogPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void selectLogCategory(String logCategory) {
+    public void selectLogCategory(@Nullable String logCategory) {
         for (int i = 0; i < this.logCategory.getItemCount(); i++) {
             if (this.logCategory.getValue(i).equals(logCategory)) {
                 this.logCategory.setItemSelected(i, true);
@@ -92,6 +97,7 @@ public class LogPropertiesPanelViewImpl extends LogPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
+    @Nonnull
     public String getLogLevel() {
         int index = logLevel.getSelectedIndex();
         return index != -1 ? logLevel.getValue(logLevel.getSelectedIndex()) : "";
@@ -99,11 +105,13 @@ public class LogPropertiesPanelViewImpl extends LogPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void setLogLevel(List<String> logLevel) {
+    public void setLogLevel(@Nullable List<String> logLevel) {
         if (logLevel == null) {
             return;
         }
+
         this.logLevel.clear();
+
         for (String value : logLevel) {
             this.logLevel.addItem(value);
         }
@@ -111,7 +119,7 @@ public class LogPropertiesPanelViewImpl extends LogPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void selectLogLevel(String logLevel) {
+    public void selectLogLevel(@Nullable String logLevel) {
         for (int i = 0; i < this.logLevel.getItemCount(); i++) {
             if (this.logLevel.getValue(i).equals(logLevel)) {
                 this.logLevel.setItemSelected(i, true);
@@ -127,13 +135,14 @@ public class LogPropertiesPanelViewImpl extends LogPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
+    @Nonnull
     public String getLogSeparator() {
         return String.valueOf(logSeparator.getText());
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setLogSeparator(String logSeparator) {
+    public void setLogSeparator(@Nullable String logSeparator) {
         this.logSeparator.setText(logSeparator);
     }
 
@@ -144,30 +153,14 @@ public class LogPropertiesPanelViewImpl extends LogPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public String getLogProperties() {
-        return String.valueOf(logProperties.getText());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setLogProperties(String logProperties) {
-        this.logProperties.setText(logProperties);
-    }
-
-    @UiHandler("logProperties")
-    public void onLogPropertiesChanged(KeyUpEvent event) {
-        delegate.onLogPropertiesChanged();
-    }
-
-    /** {@inheritDoc} */
-    @Override
+    @Nonnull
     public String getDescription() {
         return String.valueOf(description.getText());
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setDescription(String description) {
+    public void setDescription(@Nullable String description) {
         this.description.setText(description);
     }
 
@@ -177,8 +170,8 @@ public class LogPropertiesPanelViewImpl extends LogPropertiesPanelView {
     }
 
     @UiHandler("propertiesButton")
-    public void onEditPropertyButtonClicked(ClickEvent event){
-        delegate.showEditPropertyConfigurationWindow();
+    public void onEditPropertyButtonClicked(ClickEvent event) {
+        delegate.onEditButtonClicked();
     }
 
 }

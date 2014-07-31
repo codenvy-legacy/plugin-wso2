@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.elements;
 
+import com.codenvy.ide.client.elements.log.Log;
 import com.google.gwt.xml.client.Node;
 
 import javax.annotation.Nonnull;
@@ -86,7 +87,7 @@ public class Switch_mediator extends RootElement {
     /** {@inheritDoc} */
     @Override
     @Nonnull
-    protected String serializeProperties() {
+    protected String serializeAttributes() {
         return "sourceXpath=\"" + sourceXpath + "\" " +
                "caseBranches=\"" + caseBranches + "\" ";
     }

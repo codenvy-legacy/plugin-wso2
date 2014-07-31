@@ -169,7 +169,7 @@ public class Property extends RootElement {
     /** {@inheritDoc} */
     @Override
     @Nonnull
-    protected String serializeProperties() {
+    protected String serializeAttributes() {
         return "propertyName=\"" + propertyName + "\" " +
                "propertyAction=\"" + propertyAction + "\" " +
                "valueType=\"" + valueType + "\" " +

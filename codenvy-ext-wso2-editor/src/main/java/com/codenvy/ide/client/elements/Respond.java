@@ -55,7 +55,7 @@ public class Respond extends RootElement {
     /** {@inheritDoc} */
     @Override
     @Nonnull
-    protected String serializeProperties() {
+    protected String serializeAttributes() {
         return "description=\"" + description + "\" ";
     }
 

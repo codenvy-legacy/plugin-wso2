@@ -71,7 +71,7 @@ public class Sequence extends RootElement {
     /** {@inheritDoc} */
     @Override
     @Nonnull
-    protected String serializeProperties() {
+    protected String serializeAttributes() {
         return "referringSequenceType=\"" + referringSequenceType + "\" " +
                "staticReferenceKey=\"" + staticReferenceKey + "\" ";
     }

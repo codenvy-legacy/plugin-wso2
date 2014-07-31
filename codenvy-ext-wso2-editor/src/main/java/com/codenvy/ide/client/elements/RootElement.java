@@ -15,6 +15,8 @@
  */
 package com.codenvy.ide.client.elements;
 
+import com.codenvy.ide.client.elements.log.Log;
+
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collections;

@@ -13,10 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.propertiespanel.log.logPropertiesConfigurationDialogWindow.nameSpaceEditorDialogWindow.xpathNavigatorDialogWindow;
+package com.codenvy.ide.client.propertiespanel.log.propertyconfig;
+
+import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.collections.Array;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Shnurenko
  */
-public interface XPathNavigatorView {
+public interface AddNameSpacesCallBack {
+
+    /**
+     * Performs some actions when namespaces was changed.
+     *
+     * @param nameSpaces
+     *         changed list of namespaces
+     */
+    void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces);
 }

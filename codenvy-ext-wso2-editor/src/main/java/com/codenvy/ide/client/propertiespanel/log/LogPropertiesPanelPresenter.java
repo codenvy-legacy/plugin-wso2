@@ -15,10 +15,12 @@
  */
 package com.codenvy.ide.client.propertiespanel.log;
 
-import com.codenvy.ide.client.elements.Log;
+import com.codenvy.ide.client.elements.log.Log;
+import com.codenvy.ide.client.elements.log.Property;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
-import com.codenvy.ide.client.propertiespanel.log.logPropertiesConfigurationDialogWindow.LogPropertiesConfigurationPresenter;
+import com.codenvy.ide.client.propertiespanel.log.propertyconfig.PropertyConfigPresenter;
 import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
+import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
@@ -26,17 +28,30 @@ import javax.annotation.Nonnull;
 
 /**
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> implements LogPropertiesPanelView.ActionDelegate {
 
-    private final LogPropertiesConfigurationPresenter logPropertiesConfigurationPresenter;
+    private final PropertyConfigPresenter propertyConfigPresenter;
+    private final AddPropertyCallback     addPropertyCallback;
 
     @Inject
     public LogPropertiesPanelPresenter(LogPropertiesPanelView view,
                                        PropertyTypeManager propertyTypeManager,
-                                       LogPropertiesConfigurationPresenter logPropertiesConfigurationPresenter) {
+                                       PropertyConfigPresenter propertyConfigPresenter) {
         super(view, propertyTypeManager);
-        this.logPropertiesConfigurationPresenter = logPropertiesConfigurationPresenter;
+
+        this.propertyConfigPresenter = propertyConfigPresenter;
+
+        this.addPropertyCallback = new AddPropertyCallback() {
+
+            @Override
+            public void onPropertiesChanged(@Nonnull Array<Property> properties) {
+                element.setLogProperties(properties);
+
+                notifyListeners();
+            }
+        };
     }
 
     /** {@inheritDoc} */
@@ -62,21 +77,15 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> im
 
     /** {@inheritDoc} */
     @Override
-    public void onLogPropertiesChanged() {
-       /* element.setLogProperties(((LogPropertiesPanelView)view).getLogProperties());
-        notifyListeners();*/
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void onDescriptionChanged() {
         element.setDescription(((LogPropertiesPanelView)view).getDescription());
         notifyListeners();
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void showEditPropertyConfigurationWindow() {
-        logPropertiesConfigurationPresenter.showPropertyConfigurationWindow();
+    public void onEditButtonClicked() {
+        propertyConfigPresenter.showConfigWindow(element.getLogProperties(), addPropertyCallback);
     }
 
     /** {@inheritDoc} */
@@ -84,12 +93,11 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> im
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        ((LogPropertiesPanelView)view).setLogCategory(propertyTypeManager.getValuesOfTypeByName("LogCategory"));
+        ((LogPropertiesPanelView)view).setLogCategory(propertyTypeManager.getValuesOfTypeByName("logCategory"));
         ((LogPropertiesPanelView)view).selectLogCategory(element.getLogCategory());
-        ((LogPropertiesPanelView)view).setLogLevel(propertyTypeManager.getValuesOfTypeByName("LogLevel"));
+        ((LogPropertiesPanelView)view).setLogLevel(propertyTypeManager.getValuesOfTypeByName("logLevel"));
         ((LogPropertiesPanelView)view).selectLogLevel(element.getLogLevel());
         ((LogPropertiesPanelView)view).setLogSeparator(element.getLogSeparator());
-        //((LogPropertiesPanelView)view).setLogProperties(element.getLogProperties());
         ((LogPropertiesPanelView)view).setDescription(element.getDescription());
     }
 

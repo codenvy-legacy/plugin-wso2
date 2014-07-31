@@ -19,6 +19,7 @@ import com.google.gwt.i18n.client.Messages;
 
 /**
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public interface WSO2EditorLocalizationConstant extends Messages {
 
@@ -63,4 +64,67 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("toolbar.connection.tooltip")
     String toolbarConnectionTooltip();
+
+    @Key("propertiespanel.logconfig.logcategory")
+    String logCategory();
+
+    @Key("propertiespanel.logconfig.loglevel")
+    String logLevel();
+
+    @Key("propertiespanel.logconfig.logseparator")
+    String logSeparator();
+
+    @Key("propertiespanel.logconfig.properties")
+    String properties();
+
+    @Key("propertiespanel.logconfig.name")
+    String logName();
+
+    @Key("propertiespanel.logconfig.valueexpression")
+    String valueExpression();
+
+    @Key("propertiespanel.table.name")
+    String columnName();
+
+    @Key("propertiespanel.table.type")
+    String columnType();
+
+    @Key("propertiespanel.table.Expression")
+    String columnExpression();
+
+    @Key("propertiespanel.namespace.property")
+    String namespacedProperty();
+
+    @Key("propertiespanel.namespace.namespaces")
+    String namespaces();
+
+    @Key("propertiespanel.namespace.prefix")
+    String namespacePrefix();
+
+    @Key("propertiespanel.namespace.uri")
+    String namespaceUri();
+
+    @Key("propertiespanel.configwindow.button.add")
+    String buttonAdd();
+
+    @Key("propertiespanel.configwindow.button.edit")
+    String buttonEdit();
+
+    @Key("propertiespanel.configwindow.button.remove")
+    String buttonRemove();
+
+    @Key("propertiespanel.configwindow.button.ok")
+    String buttonOk();
+
+    @Key("propertiespanel.configwindow.button.cancel")
+    String buttonCancel();
+
+    @Key("propertiespanel.configwindow.button.selectxpath")
+    String buttonSelectxpath();
+
+    @Key("propertiespanel.configwindow.button.editConfig")
+    String buttonEditConfig();
+
+    @Key("propertiespanel.namespace.defaultexpression")
+    String defaultExpression();
 }

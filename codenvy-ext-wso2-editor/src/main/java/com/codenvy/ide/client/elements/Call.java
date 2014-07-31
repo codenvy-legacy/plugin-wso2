@@ -71,7 +71,7 @@ public class Call extends RootElement {
     /** {@inheritDoc} */
     @Override
     @Nonnull
-    protected String serializeProperties() {
+    protected String serializeAttributes() {
         return "endpointType=" + "\"" + endpointType + "\"" + " " +
                "description=" + "\"" + description + "\"" + " ";
     }

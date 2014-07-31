@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.propertiespanel.log.logPropertiesConfigurationDialogWindow.nameSpaceEditorDialogWindow;
+package com.codenvy.ide.client.propertiespanel.namespace;
 
-import com.codenvy.ide.client.elements.Log;
+import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.collections.Array;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -33,12 +34,14 @@ import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Dmitry Shnurenko
  */
 public class NameSpaceEditorViewImpl extends DialogBox implements NameSpaceEditorView {
+
     interface NameSpaceEditorViewImplUiBinder extends UiBinder<Widget, NameSpaceEditorViewImpl> {
     }
 
@@ -53,73 +56,74 @@ public class NameSpaceEditorViewImpl extends DialogBox implements NameSpaceEdito
     @UiField
     TextBox   uriTextBox;
     @UiField
-    Button    addNamespaceButton;
+    Button    btnAdd;
     @UiField
-    Button    editNamespaceButton;
+    Button    btnEdit;
     @UiField
-    Button    removeNamespaceButton;
+    Button    btnRemove;
     @UiField
-    Button    cancelButton;
+    Button    btnCancel;
     @UiField
-    Button    okButton;
-
+    Button    btnSaveChanges;
 
     private ActionDelegate delegate;
 
     @Inject
     public NameSpaceEditorViewImpl(NameSpaceEditorViewImplUiBinder uiBinder) {
         this.nameSpacesTable = createTable();
+
         add(uiBinder.createAndBindUi(this));
     }
 
-    private CellTable<Log.Property.NameSpace> createTable() {
-        CellTable<Log.Property.NameSpace> table = new CellTable<>();
+    private CellTable<NameSpace> createTable() {
+        CellTable<NameSpace> table = new CellTable<>();
 
-        Column<Log.Property.NameSpace, String> nameSpace = new Column<Log.Property.NameSpace, String>(new TextCell()) {
+        Column<NameSpace, String> nameSpace = new Column<NameSpace, String>(new TextCell()) {
             @Override
-            public String getValue(Log.Property.NameSpace object) {
+            public String getValue(NameSpace object) {
                 return object.toString();
             }
         };
+
         table.setLoadingIndicator(null);
 
         table.addColumn(nameSpace);
         table.setColumnWidth(nameSpace, 570, Style.Unit.PX);
 
-        final SingleSelectionModel<Log.Property.NameSpace> selectionModel = new SingleSelectionModel<>();
+        final SingleSelectionModel<NameSpace> selectionModel = new SingleSelectionModel<>();
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
             public void onSelectionChange(SelectionChangeEvent event) {
-                final Log.Property.NameSpace selectedObject = selectionModel.getSelectedObject();
-                delegate.onSelectedNameSpace(selectedObject);
+                delegate.onSelectedNameSpace(selectionModel.getSelectedObject());
             }
         });
         table.setSelectionModel(selectionModel);
+
         return table;
     }
 
-    @UiHandler("addNamespaceButton")
+    @UiHandler("btnAdd")
     public void onAddNameSpaceButtonClicked(ClickEvent event) {
         delegate.onAddNameSpaceButtonClicked();
     }
 
-    @UiHandler("cancelButton")
+    @UiHandler("btnCancel")
     public void onCancelButtonClicked(ClickEvent event) {
         delegate.onCancelButtonClicked();
     }
 
-    @UiHandler("addNamespaceButton")
+    @UiHandler("btnSaveChanges")
     public void onOkButtonClicked(ClickEvent event) {
         delegate.onOkButtonClicked();
     }
 
-    @UiHandler("editNamespaceButton")
+    @UiHandler("btnEdit")
     public void onEditButtonClicked(ClickEvent event) {
         delegate.onEditButtonClicked();
     }
 
-    @UiHandler("removeNamespaceButton")
-    public void onRemoveButtonClicked(ClickEvent event){
+    @UiHandler("btnRemove")
+    public void onRemoveButtonClicked(ClickEvent event) {
         delegate.onRemoveButtonClicked();
     }
 
@@ -128,43 +132,60 @@ public class NameSpaceEditorViewImpl extends DialogBox implements NameSpaceEdito
         delegate.onSelectXPathButtonClicked();
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void showNameSpaceEditorDialogWindow() {
+    public void showWindow() {
+        center();
         show();
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void hideNameSpaceEditorDialogWindow() {
+    public void hideWindow() {
         hide();
     }
 
+    /** {@inheritDoc} */
     @Override
-    public String getPrefixText() {
+    @Nonnull
+    public String getPrefix() {
         return prefixTextBox.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
-    public String getUriText() {
+    @Nonnull
+    public String getUri() {
         return uriTextBox.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void setPrefixText(String text) {
+    public void setPrefix(@Nonnull String text) {
         prefixTextBox.setText(text);
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void setUriText(String text) {
+    public void setUri(@Nonnull String text) {
         uriTextBox.setText(text);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(@Nonnull ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void setNameSpacesList(List<Log.Property.NameSpace> nameSpacesList) {
-        nameSpacesTable.setRowData(nameSpacesList);
+    public void setNameSpaces(@Nonnull Array<NameSpace> nameSpacesList) {
+        List<NameSpace> list = new ArrayList<>();
+
+        for (NameSpace property : nameSpacesList.asIterable()) {
+            list.add(property);
+        }
+
+        nameSpacesTable.setRowData(list);
     }
 }

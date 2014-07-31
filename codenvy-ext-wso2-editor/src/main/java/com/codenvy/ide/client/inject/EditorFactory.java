@@ -17,11 +17,11 @@ package com.codenvy.ide.client.inject;
 
 import com.codenvy.ide.client.EditorState;
 import com.codenvy.ide.client.SelectionManager;
-import com.codenvy.ide.client.propertiespanel.PropertiesPanelManager;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.codenvy.ide.client.State;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelManager;
 import com.codenvy.ide.client.toolbar.ToolbarPresenter;
 import com.codenvy.ide.client.workspace.WorkspacePresenter;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import javax.annotation.Nonnull;
 

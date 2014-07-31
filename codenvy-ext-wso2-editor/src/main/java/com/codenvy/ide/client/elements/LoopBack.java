@@ -57,7 +57,7 @@ public class LoopBack extends RootElement {
     /** {@inheritDoc} */
     @Override
     @Nonnull
-    protected String serializeProperties() {
+    protected String serializeAttributes() {
         return "description=\"" + description + "\" ";
     }
 

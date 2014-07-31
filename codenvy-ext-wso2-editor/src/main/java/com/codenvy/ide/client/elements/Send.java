@@ -99,7 +99,7 @@ public class Send extends RootElement {
     /** {@inheritDoc} */
     @Override
     @Nonnull
-    protected String serializeProperties() {
+    protected String serializeAttributes() {
         return "skipSerialization=\"" + skipSerialization + "\" " +
                "receivingSequencerType=\"" + receivingSequencerType + "\" " +
                "buildMessageBeforeSending=\"" + buildMessageBeforeSending + "\" " +

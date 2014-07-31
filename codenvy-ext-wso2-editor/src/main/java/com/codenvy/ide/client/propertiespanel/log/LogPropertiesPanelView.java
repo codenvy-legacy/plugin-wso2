@@ -15,10 +15,11 @@
  */
 package com.codenvy.ide.client.propertiespanel.log;
 
-import com.codenvy.ide.client.elements.Log;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.inject.ImplementedBy;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -29,42 +30,50 @@ public abstract class LogPropertiesPanelView extends AbstractView<LogPropertiesP
 
     public interface ActionDelegate extends AbstractView.ActionDelegate {
 
+        /** Performs any actions appropriate in response to the user having changed category on properties panel. */
         void onLogCategoryChanged();
 
+        /** Performs any actions appropriate in response to the user having changed level on properties panel. */
         void onLogLevelChanged();
 
+        /** Performs any actions appropriate in response to the user having changed separator on properties panel. */
         void onLogSeparatorChanged();
 
-        void onLogPropertiesChanged();
-
+        /** Performs any actions appropriate in response to the user having changed description on properties panel. */
         void onDescriptionChanged();
 
-        void showEditPropertyConfigurationWindow();
-
+        /** Performs any actions appropriate in response to the user click edit property button. */
+        void onEditButtonClicked();
     }
 
+    /** @return category value from the special place on the view which uses for showing category parameter */
     public abstract String getLogCategory();
 
-    public abstract void selectLogCategory(String logCategory);
+    /** Sets selected log category in special place on the view which corresponds to the transferred value */
+    public abstract void selectLogCategory(@Nullable String logCategory);
 
-    public abstract void setLogCategory(List<String> logCategory);
+    /** Sets category value to the special place on the view which uses for showing category parameter. */
+    public abstract void setLogCategory(@Nullable List<String> logCategory);
 
+    /** @return category value from the special place on the view which uses for showing category parameter */
     public abstract String getLogLevel();
 
-    public abstract void selectLogLevel(String logLevel);
+    /** Sets selected log level in special place on the view which corresponds to the transferred value */
+    public abstract void selectLogLevel(@Nullable String logLevel);
 
-    public abstract void setLogLevel(List<String> logLevel);
+    /** Sets level value to the special place on the view which uses for showing level parameter. */
+    public abstract void setLogLevel(@Nullable List<String> logLevel);
 
+    /** @return separator value from the special place on the view which uses for showing separator parameter */
     public abstract String getLogSeparator();
 
-    public abstract void setLogSeparator(String logSeparator);
+    /** Sets separator value to the special place on the view which uses for showing separator parameter. */
+    public abstract void setLogSeparator(@Nullable String logSeparator);
 
-    public abstract String getLogProperties();
-
-    public abstract void setLogProperties(String logProperties);
-
+    /** @return description value from the special place on the view which uses for showing description parameter */
     public abstract String getDescription();
 
-    public abstract void setDescription(String description);
+    /** Sets description value to the special place on the view which uses for showing description parameter. */
+    public abstract void setDescription(@Nullable String description);
 
 }

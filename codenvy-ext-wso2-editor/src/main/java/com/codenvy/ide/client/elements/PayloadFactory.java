@@ -113,7 +113,7 @@ public class PayloadFactory extends RootElement {
     /** {@inheritDoc} */
     @Override
     @Nonnull
-    protected String serializeProperties() {
+    protected String serializeAttributes() {
         return "payloadFormat=\"" + payloadFormat + "\" " +
                "format=\"" + format + "\" " +
                "args=\"" + args + "\" " +

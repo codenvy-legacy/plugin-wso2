@@ -158,8 +158,10 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
     @Nonnull
     @Override
     public String serialize() {
-        StringBuilder content = new StringBuilder("<" + getSerializationName() + ' ' + serializeProperties() + ">\n");
+        StringBuilder content = new StringBuilder('<' + getSerializationName() + ' ' + serializeAttributes() + ">\n");
 
+        content.append(serializeProperty());
+        //TODO check needed sort
         Collections.sort(shapes);
 
         for (Shape shape : shapes) {
@@ -177,6 +179,8 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
     public String serializeInternalFormat() {
         StringBuilder content = new StringBuilder("<" + getElementName() + ' ' + serializeInternalProperties() + ">\n");
 
+        content.append(serializeInternalProperties());
+        //TODO check needed sort
         Collections.sort(shapes);
 
         for (Shape shape : shapes) {
@@ -192,19 +196,21 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
         return content.toString();
     }
 
+    /** @return serialization representation of element properties */
     @Nonnull
-    protected String serializePropertiesChildrenNodes() {
+    protected String serializeProperty() {
         return "";
     }
 
+    /** @return serialization representation of element attributes */
     @Nonnull
-    protected String serializeProperties() {
+    protected String serializeAttributes() {
         return "";
     }
 
     @Nonnull
     protected String serializeInternalProperties() {
-        return serializeProperties() +
+        return serializeProperty() +
                "<x>\n" + getX() + "\n</x>\n" +
                "<y>\n" + getY() + "\n</y>\n" +
                "<uuid>\n" + id + "\n</uuid>\n";
@@ -235,6 +241,8 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
     /** {@inheritDoc} */
     @Override
     public void deserialize(@Nonnull Node node) {
+        applyAttributes(node);
+
         NodeList childNodes = node.getChildNodes();
 
         for (int i = 0; i < childNodes.getLength(); i++) {
@@ -285,6 +293,15 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
     /** {@inheritDoc} */
     @Override
     public void applyProperty(@Nonnull Node node) {
+    }
+
+    /**
+     * Apply attributes from XML node to the diagram element
+     *
+     * @param node
+     *         XML node that need to be analyzed
+     */
+    protected void applyAttributes(@Nonnull Node node) {
     }
 
     /** {@inheritDoc} */
