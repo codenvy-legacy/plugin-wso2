@@ -15,42 +15,54 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<ui:UiBinder 
-             xmlns:ui='urn:ui:com.google.gwt.uibinder'
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
+    <ui:with field="locale" type="com.codenvy.ide.client.WSO2EditorLocalizationConstant"/>
+
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
-        <g:DockLayoutPanel>
-            <g:north size="60.00">
-                <g:FlowPanel>
-                    <g:Label text="Header Action"/>
-                    <g:ListBox ui:field="headerAction" width="206px"/>
-                </g:FlowPanel>
-            </g:north>
-            <g:north size="60.00">
-                <g:FlowPanel>
-                    <g:Label text="Scope"/>
-                    <g:ListBox ui:field="scope" width="206px"/>
-                </g:FlowPanel>
-            </g:north>
-            <g:north size="60.00">
-                <g:FlowPanel>
-                    <g:Label text="Value Type"/>
-                    <g:ListBox ui:field="valueType" width="206px"/>
-                </g:FlowPanel>
-            </g:north>
-            <g:north size="60.00">
-                <g:FlowPanel>
-                    <g:Label text="Value Literal"/>
-                    <g:TextBox ui:field="valueLiteral" width="200px"/>
-                </g:FlowPanel>
-            </g:north>
-            <g:north size="60.00">
-                <g:FlowPanel>
-                    <g:Label text="Header Name"/>
-                    <g:TextBox ui:field="headerName" width="200px"/>
-                </g:FlowPanel>
-            </g:north>
-        </g:DockLayoutPanel>
+
+        <g:FlowPanel>
+            <g:FlowPanel height="60px">
+                <g:Label text="Header Action"/>
+                <g:ListBox ui:field="action" width="206px"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel height="60px">
+                <g:Label text="Scope"/>
+                <g:ListBox ui:field="scope" width="206px"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel height="60px" ui:field="valueTypePanel">
+                <g:Label text="Value Type"/>
+                <g:ListBox ui:field="valueType" width="206px"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel height="60px" ui:field="valueLiteralPanel">
+                <g:Label text="Value Literal"/>
+                <g:TextBox ui:field="value" width="200px"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel height="60px" ui:field="valueExpressionPanel" visible="false">
+                <g:Label text="Value Expression"/>
+                <g:TextBox text="{locale.defaultExpression}" ui:field="expression" enabled="false" width="170px"/>
+                <g:Button ui:field="btnAddExpression" width="30px" text="{locale.buttonEditConfig}"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel height="60px" ui:field="valueInlinePanel" visible="false">
+                <g:Label text="Value Inline"/>
+                <g:TextBox enabled="false" ui:field="inline" width="170px"/>
+                <g:Button ui:field="btnAddInline" width="30px" text="{locale.buttonEditConfig}"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel height="60px" ui:field="headerNamePanel">
+                <g:Label text="Header Name"/>
+                <g:TextBox ui:field="headerName" width="170px" enabled="false"/>
+                <g:Button ui:field="btnAddNameSpace" width="30px" text="{locale.buttonEditConfig}"/>
+            </g:FlowPanel>
+        </g:FlowPanel>
+
     </g:ScrollPanel>
+
 </ui:UiBinder>

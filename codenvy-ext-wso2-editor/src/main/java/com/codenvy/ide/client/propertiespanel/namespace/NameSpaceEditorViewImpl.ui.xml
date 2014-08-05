@@ -102,8 +102,8 @@
     <g:DockLayoutPanel unit="PX" width="700px" height="450px">
         <g:north size="60">
             <g:FlowPanel>
-                <g:Label text="{locale.namespacedProperty}" addStyleNames="{style.nameSpacePropertyLabelStyle}"/>
-                <g:TextBox ui:field="logSeparatorTextBox" text="{locale.defaultExpression}"
+                <g:Label ui:field="title" text="{locale.namespacedProperty}" addStyleNames="{style.nameSpacePropertyLabelStyle}"/>
+                <g:TextBox ui:field="expression" text="{locale.defaultExpression}"
                            addStyleNames="{style.namespacePropertyTextBoxStyle}"/>
                 <g:Button ui:field="selectPathButton" text="{locale.buttonSelectxpath}"
                           addStyleNames="{style.selectXpathButtonStyle}"/>

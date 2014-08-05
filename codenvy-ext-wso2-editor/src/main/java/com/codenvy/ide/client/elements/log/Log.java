@@ -31,6 +31,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
+ * Class describes entity which presented as Log mediator.
+ *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */

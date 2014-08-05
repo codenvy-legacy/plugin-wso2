@@ -15,97 +15,189 @@
  */
 package com.codenvy.ide.client.elements;
 
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.util.StringUtils;
+import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 
+import static com.codenvy.ide.client.elements.Header.ValueType.LITERAL;
+
 /**
+ * Class describes entity which presented as Header mediator.
+ *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class Header extends RootElement {
     public static final String ELEMENT_NAME       = "Header";
     public static final String SERIALIZATION_NAME = "header";
 
-    private static final String HEADER_ACTION_PROPERTY_NAME = "HeaderAction";
-    private static final String SCOPE_PROPERTY_NAME         = "Scope";
-    private static final String VALUE_TYPE_PROPERTY_NAME    = "ValueType";
-    private static final String VALUE_LITERAL_PROPERTY_NAME = "ValueLiteral";
-    private static final String HEADER_NAME_PROPERTY_NAME   = "HeaderName";
+    private static final String NAME       = "name";
+    private static final String VALUE      = "value";
+    private static final String EXPRESSION = "expression";
 
-    private static final List<String> PROPERTIES          = Arrays.asList(HEADER_ACTION_PROPERTY_NAME,
-                                                                          SCOPE_PROPERTY_NAME,
-                                                                          VALUE_TYPE_PROPERTY_NAME,
-                                                                          VALUE_LITERAL_PROPERTY_NAME,
-                                                                          HEADER_NAME_PROPERTY_NAME);
+    private static final String PREFIX = "xmlns:";
+
+    private static final List<String> PROPERTIES          = java.util.Collections.emptyList();
     private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
                                                                           Y_PROPERTY_NAME,
-                                                                          UUID_PROPERTY_NAME,
-                                                                          HEADER_ACTION_PROPERTY_NAME,
-                                                                          SCOPE_PROPERTY_NAME,
-                                                                          VALUE_TYPE_PROPERTY_NAME,
-                                                                          VALUE_LITERAL_PROPERTY_NAME,
-                                                                          HEADER_NAME_PROPERTY_NAME);
+                                                                          UUID_PROPERTY_NAME);
 
-    private String headerAction;
+    private String action;
     private String scope;
     private String valueType;
-    private String valueLiteral;
     private String headerName;
+    private String value;
+    private String expression;
+
+    private Array<NameSpace> headerNamespaces;
+    private Array<NameSpace> expressionNamespaces;
 
     public Header() {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
-        headerAction = "set";
-        scope = "Synapse";
-        valueType = "LITERAL";
-        valueLiteral = "header_Value";
-        headerName = "header_name";
+        headerNamespaces = Collections.createArray();
+        expressionNamespaces = Collections.createArray();
+
+        action = HeaderAction.SET.name();
+        scope = "default";
+        valueType = LITERAL.name();
+        value = "header_value";
+        headerName = "To";
+        expression = "/default/expression";
     }
 
+    /** @return list of header namespaces of element */
+    @Nonnull
+    public Array<NameSpace> getHeaderNamespaces() {
+        return headerNamespaces;
+    }
+
+    /**
+     * Sets list of header namespaces to element
+     *
+     * @param headerNamespaces
+     *         list of header namespaces which need to set to element
+     */
+    public void setHeaderNamespaces(@Nonnull Array<NameSpace> headerNamespaces) {
+        this.headerNamespaces = headerNamespaces;
+    }
+
+    /** @return list of expression namespaces of element */
+    @Nonnull
+    public Array<NameSpace> getExpressionNamespaces() {
+        return expressionNamespaces;
+    }
+
+    /**
+     * Sets list of expression namespaces to element
+     *
+     * @param expressionNamespaces
+     *         list of expression namespaces which need to set to element
+     */
+    public void setExpressionNamespaces(@Nonnull Array<NameSpace> expressionNamespaces) {
+        this.expressionNamespaces = expressionNamespaces;
+    }
+
+    /** @return value of header */
     @Nullable
-    public String getHeaderAction() {
-        return headerAction;
+    public String getValue() {
+        return value;
     }
 
-    public void setHeaderAction(@Nullable String headerAction) {
-        this.headerAction = headerAction;
+    /**
+     * Sets value to header
+     *
+     * @param value
+     *         value which need to set to element
+     */
+    public void setValue(@Nullable String value) {
+        this.value = value;
     }
 
+    /** @return expression of header */
+    @Nullable
+    public String getExpression() {
+        return expression;
+    }
+
+    /**
+     * Sets expression to header
+     *
+     * @param expression
+     *         value of expression which need to set to element
+     */
+    public void setExpression(@Nullable String expression) {
+        this.expression = expression;
+    }
+
+    /** @return action of header */
+    @Nullable
+    public String getAction() {
+        return action;
+    }
+
+    /**
+     * Sets action to header
+     *
+     * @param action
+     *         value of action which need to set to element
+     */
+    public void setAction(@Nullable String action) {
+        this.action = action;
+    }
+
+    /** @return scope of header */
     @Nullable
     public String getScope() {
         return scope;
     }
 
+    /**
+     * Sets scope to header
+     *
+     * @param scope
+     *         value fo scope which need to set to element
+     */
     public void setScope(@Nullable String scope) {
         this.scope = scope;
     }
 
+    /** @return type of header */
     @Nullable
     public String getValueType() {
         return valueType;
     }
 
+    /**
+     * Sets type to header
+     *
+     * @param valueType
+     *         value of type which need to set to element
+     */
     public void setValueType(@Nullable String valueType) {
         this.valueType = valueType;
     }
 
-    @Nullable
-    public String getValueLiteral() {
-        return valueLiteral;
-    }
-
-    public void setValueLiteral(@Nullable String valueLiteral) {
-        this.valueLiteral = valueLiteral;
-    }
-
+    /** @return name of header */
     @Nullable
     public String getHeaderName() {
         return headerName;
     }
 
+    /**
+     * Sets name to header
+     *
+     * @param headerName
+     *         value of name which need to set to element
+     */
     public void setHeaderName(@Nullable String headerName) {
         this.headerName = headerName;
     }
@@ -114,11 +206,62 @@ public class Header extends RootElement {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        return "headerAction=\"" + headerAction + "\" " +
-               "scope=\"" + scope + "\" " +
-               "valueType=\"" + valueType + "\" " +
-               "valueLiteral=\"" + valueLiteral + "\" " +
-               "headerName=\"" + headerName + "\" ";
+        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+
+        StringBuilder nameSpaces = new StringBuilder();
+
+        if (!headerNamespaces.isEmpty()) {
+            NameSpace nameSpace = headerNamespaces.get(headerNamespaces.size() - 1);
+
+            nameSpaces.append(nameSpace.toString()).append(' ');
+        }
+
+        for (NameSpace nameSpace : expressionNamespaces.asIterable()) {
+            nameSpaces.append(nameSpace.toString()).append(' ');
+        }
+
+        setDefaultAttributes(attributes);
+
+        if (action.equalsIgnoreCase(HeaderAction.REMOVE.name())) {
+            attributes.remove("expression");
+            attributes.remove("value");
+        }
+
+        switch (ValueType.valueOf(valueType)) {
+            case EXPRESSION:
+                attributes.remove("value");
+                attributes.remove("action");
+                break;
+
+            case INLINE:
+                attributes.remove("name");
+                attributes.remove("expression");
+                attributes.remove("value");
+                attributes.remove("action");
+
+                return prepareSerialization(attributes);
+
+            case LITERAL:
+                attributes.remove("expression");
+                attributes.remove(action.equalsIgnoreCase(HeaderAction.SET.name()) ? "action" : "value");
+                break;
+        }
+
+        return nameSpaces.toString() + prepareSerialization(attributes);
+    }
+
+    /**
+     * Sets default value of attributes of element
+     *
+     * @param attributes
+     *         list of attributes which need to set to element by default
+     */
+    private void setDefaultAttributes(@Nonnull LinkedHashMap<String, String> attributes) {
+        attributes.put("name", headerName);
+        attributes.put("scope", scope);
+        attributes.put("value", value);
+        attributes.put("expression", expression);
+        attributes.put("action", action);
     }
 
     /** {@inheritDoc} */
@@ -137,22 +280,72 @@ public class Header extends RootElement {
             case AbstractElement.UUID_PROPERTY_NAME:
                 id = nodeValue;
                 break;
-            case HEADER_ACTION_PROPERTY_NAME:
-                headerAction = String.valueOf(nodeValue);
-                break;
-            case SCOPE_PROPERTY_NAME:
-                scope = String.valueOf(nodeValue);
-                break;
-            case VALUE_TYPE_PROPERTY_NAME:
-                valueType = String.valueOf(nodeValue);
-                break;
-            case VALUE_LITERAL_PROPERTY_NAME:
-                valueLiteral = String.valueOf(nodeValue);
-                break;
-            case HEADER_NAME_PROPERTY_NAME:
-                headerName = String.valueOf(nodeValue);
-                break;
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void applyAttributes(@Nonnull Node node) {
+        NamedNodeMap attributeMap = node.getAttributes();
+        String uriName = "";
+
+        for (int i = 0; i < attributeMap.getLength(); i++) {
+            Node attributeNode = attributeMap.item(i);
+
+            switch (attributeNode.getNodeName()) {
+                case HeaderAction.ACTION:
+                    action = attributeNode.getNodeValue();
+                    break;
+
+                case Scope.SCOPE:
+                    scope = attributeNode.getNodeValue();
+                    break;
+
+                case VALUE:
+                    value = attributeNode.getNodeValue();
+                    break;
+
+                case EXPRESSION:
+                    expression = attributeNode.getNodeValue();
+                    break;
+
+                case NAME:
+                    headerName = attributeNode.getNodeValue();
+                    Array<String> attrName = StringUtils.split(attributeNode.getNodeName(), ":");
+                    uriName = attrName.get(0);
+                    break;
+
+                case PREFIX:
+                    String uri = attributeNode.getNodeValue();
+
+                    //TODO create entity using edit factory
+                    NameSpace nameSpace = new NameSpace(null, null);
+                    nameSpace.applyAttributes(node);
+
+                    if (uri.equals(uriName)) {
+                        headerNamespaces.add(nameSpace);
+                    } else {
+                        expressionNamespaces.add(nameSpace);
+                    }
+                    break;
+            }
+        }
+    }
+
+    public enum HeaderAction {
+        SET, REMOVE;
+
+        public static final String ACTION = "action";
+    }
+
+    public enum Scope {
+        SYNAPSE, TRANSPORT;
+
+        public static final String SCOPE = "scope";
+    }
+
+    public enum ValueType {
+        LITERAL, EXPRESSION, INLINE
     }
 
 }

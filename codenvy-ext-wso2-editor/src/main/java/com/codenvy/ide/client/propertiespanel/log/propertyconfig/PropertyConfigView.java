@@ -43,15 +43,27 @@ public interface PropertyConfigView extends View<PropertyConfigView.ActionDelega
     void hideWindow();
 
     /** @return name value from the special place on the view which uses for showing name parameter */
+    @Nonnull
     String getName();
 
-    /** Sets name value to the special place on the view which uses for showing name parameter. */
+    /**
+     * Sets name value to the special place on the view which uses for showing name parameter.
+     *
+     * @param text
+     *         value which need to set to special place of view
+     */
     void setName(@Nonnull String text);
 
     /** @return expression value from the special place on the view which uses for showing expression parameter */
+    @Nonnull
     String getValueExpression();
 
-    /** Sets expression value to the special place on the view which uses for showing expression parameter. */
+    /**
+     * Sets expression value to the special place on the view which uses for showing expression parameter.
+     *
+     * @param text
+     *         value which need to set to special place of view
+     */
     void setValueExpression(@Nonnull String text);
 
     enum Type {

@@ -19,17 +19,19 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.collections.Array;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Shnurenko
  */
 public interface AddNameSpacesCallBack {
-
     /**
      * Performs some actions when namespaces was changed.
      *
      * @param nameSpaces
      *         changed list of namespaces
+     * @param expression
+     *         value of expression from special place of view
      */
-    void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces);
+    void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression);
 }

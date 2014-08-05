@@ -22,6 +22,7 @@ import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Shnurenko
@@ -31,7 +32,7 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
     private final NameSpaceEditorView   nameSpaceEditorView;
     private       NameSpace             selectedNameSpace;
     private       Array<NameSpace>      nameSpacesTemporary;
-    private       AddNameSpacesCallBack addNameSpacesCallBack;
+    private       AddNameSpacesCallBack callBack;
     private       int                   index;
 
     @Inject
@@ -50,9 +51,9 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
      * @param callBack
      *         callback that needs to be handled when namespace editing is successful
      */
-    public void showNameSpaceEditorWindow(@Nonnull Array<NameSpace> nameSpaces, @Nonnull AddNameSpacesCallBack callBack) {
+    private void showWindow(@Nonnull Array<NameSpace> nameSpaces, @Nonnull AddNameSpacesCallBack callBack) {
         nameSpacesTemporary = Collections.createArray();
-        addNameSpacesCallBack = callBack;
+        this.callBack = callBack;
 
         for (NameSpace nameSpace : nameSpaces.asIterable()) {
             nameSpacesTemporary.add(nameSpace.clone());
@@ -65,12 +66,48 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
         nameSpaceEditorView.showWindow();
     }
 
+    /**
+     * Shows dialog window with default parameters for editing namespaces.
+     *
+     * @param nameSpaces
+     *         namespaces which need to be edited
+     * @param callBack
+     *         callback that needs to be handled when namespace editing is successful
+     */
+    public void showDefaultWindow(@Nonnull Array<NameSpace> nameSpaces, @Nonnull AddNameSpacesCallBack callBack) {
+        showWindow(nameSpaces, callBack);
+    }
+
+    /**
+     * Shows dialog window with label and expression parameters for editing namespaces.
+     *
+     * @param nameSpaces
+     *         namespaces which need to be edited
+     * @param callBack
+     *         callback that needs to be handled when namespace editing is successful
+     * @param labelName
+     *         name of expression for current element
+     * @param expression
+     *         expression value for current element
+     */
+    public void showWindowWithParameters(@Nonnull Array<NameSpace> nameSpaces,
+                                         @Nonnull AddNameSpacesCallBack callBack,
+                                         @Nonnull String labelName,
+                                         @Nullable String expression) {
+
+        showWindow(nameSpaces, callBack);
+
+        nameSpaceEditorView.setTitle(labelName);
+        nameSpaceEditorView.setExpression(expression);
+    }
+
     /** {@inheritDoc} */
     @Override
     public void onAddNameSpaceButtonClicked() {
         String prefix = nameSpaceEditorView.getPrefix();
         String uri = nameSpaceEditorView.getUri();
 
+        //TODO create using edit factory
         NameSpace nameSpace = new NameSpace(prefix, uri);
 
         nameSpaceEditorView.setPrefix("");
@@ -108,7 +145,7 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
     /** {@inheritDoc} */
     @Override
     public void onOkButtonClicked() {
-        addNameSpacesCallBack.onNameSpacesChanged(nameSpacesTemporary);
+        callBack.onNameSpacesChanged(nameSpacesTemporary, nameSpaceEditorView.getExpression());
 
         nameSpaceEditorView.hideWindow();
     }

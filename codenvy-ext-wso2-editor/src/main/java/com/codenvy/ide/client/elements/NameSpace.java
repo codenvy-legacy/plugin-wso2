@@ -24,6 +24,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
+ * Class describes entity which presented name space.
+ *
  * @author Dmitry Shnurenko
  */
 public class NameSpace {

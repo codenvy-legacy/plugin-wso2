@@ -27,6 +27,7 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
@@ -34,6 +35,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,14 +43,13 @@ import java.util.List;
  * @author Dmitry Shnurenko
  */
 public class NameSpaceEditorViewImpl extends DialogBox implements NameSpaceEditorView {
-
     interface NameSpaceEditorViewImplUiBinder extends UiBinder<Widget, NameSpaceEditorViewImpl> {
     }
 
     @UiField(provided = true)
     CellTable nameSpacesTable;
     @UiField
-    TextBox   logSeparatorTextBox;
+    TextBox   expression;
     @UiField
     Button    selectPathButton;
     @UiField
@@ -65,6 +66,8 @@ public class NameSpaceEditorViewImpl extends DialogBox implements NameSpaceEdito
     Button    btnCancel;
     @UiField
     Button    btnSaveChanges;
+    @UiField
+    Label     title;
 
     private ActionDelegate delegate;
 
@@ -173,6 +176,24 @@ public class NameSpaceEditorViewImpl extends DialogBox implements NameSpaceEdito
 
     /** {@inheritDoc} */
     @Override
+    public void setTitle(@Nonnull String title){
+        this.title.setText(title);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getExpression() {
+        return expression.getText();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setExpression(@Nullable String expression) {
+        this.expression.setText(expression);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void setDelegate(@Nonnull ActionDelegate delegate) {
         this.delegate = delegate;
     }
@@ -188,4 +209,5 @@ public class NameSpaceEditorViewImpl extends DialogBox implements NameSpaceEdito
 
         nameSpacesTable.setRowData(list);
     }
+
 }

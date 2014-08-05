@@ -16,19 +16,25 @@
 package com.codenvy.ide.client.propertiespanel.header;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
 
@@ -36,57 +42,96 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
     }
 
     @UiField
-    ListBox headerAction;
+    ListBox   action;
     @UiField
-    ListBox scope;
+    ListBox   scope;
     @UiField
-    ListBox valueType;
+    ListBox   valueType;
     @UiField
-    TextBox valueLiteral;
+    TextBox   value;
     @UiField
-    TextBox headerName;
+    TextBox   headerName;
+    @UiField
+    TextBox   expression;
+    @UiField
+    TextBox   inline;
+    @UiField
+    Button    btnAddNameSpace;
+    @UiField
+    Button    btnAddInline;
+    @UiField
+    Button    btnAddExpression;
+    @UiField
+    FlowPanel valueTypePanel;
+    @UiField
+    FlowPanel valueLiteralPanel;
+    @UiField
+    FlowPanel valueExpressionPanel;
+    @UiField
+    FlowPanel valueInlinePanel;
+    @UiField
+    FlowPanel headerNamePanel;
 
     @Inject
     public HeaderPropertiesPanelViewImpl(HeaderPropertiesPanelViewImplUiBinder ourUiBinder) {
         widget = ourUiBinder.createAndBindUi(this);
     }
 
+    @UiHandler("btnAddNameSpace")
+    public void onEditNameSpaceButtonClicked(ClickEvent event) {
+        delegate.onAddHeaderNameSpaceBtnClicked();
+    }
+
+    @UiHandler("btnAddExpression")
+    public void onAddExpressionBtnClicked(ClickEvent event) {
+        delegate.onAddExpressionBtnClicked();
+    }
+
+    @UiHandler("btnAddInline")
+    public void onAddInlineBtnClicked(ClickEvent event) {
+        delegate.onAddInlineBtnClicked();
+    }
+
     /** {@inheritDoc} */
+    @Nonnull
     @Override
-    public String getHeaderAction() {
-        int index = headerAction.getSelectedIndex();
-        return index != -1 ? headerAction.getValue(headerAction.getSelectedIndex()) : "";
+    public String getAction() {
+        int index = action.getSelectedIndex();
+        return index != -1 ? action.getValue(action.getSelectedIndex()) : "";
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setHeaderAction(List<String> headerAction) {
-        if (headerAction == null) {
+    public void setAction(@Nullable List<String> actions) {
+        if (actions == null) {
             return;
         }
-        this.headerAction.clear();
-        for (String value : headerAction) {
-            this.headerAction.addItem(value);
+
+        action.clear();
+
+        for (String value : actions) {
+            action.addItem(value);
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void selectHeaderAction(String headerAction) {
-        for (int i = 0; i < this.headerAction.getItemCount(); i++) {
-            if (this.headerAction.getValue(i).equals(headerAction)) {
-                this.headerAction.setItemSelected(i, true);
+    public void selectHeaderAction(@Nullable String headerAction) {
+        for (int i = 0; i < action.getItemCount(); i++) {
+            if (action.getValue(i).equals(headerAction)) {
+                action.setItemSelected(i, true);
                 return;
             }
         }
     }
 
-    @UiHandler("headerAction")
+    @UiHandler("action")
     public void onHeaderActionChanged(ChangeEvent event) {
         delegate.onHeaderActionChanged();
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getScope() {
         int index = scope.getSelectedIndex();
@@ -95,22 +140,24 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void setScope(List<String> scope) {
-        if (scope == null) {
+    public void setScope(@Nullable List<String> scopes) {
+        if (scopes == null) {
             return;
         }
-        this.scope.clear();
-        for (String value : scope) {
-            this.scope.addItem(value);
+
+        scope.clear();
+
+        for (String value : scopes) {
+            scope.addItem(value);
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void selectScope(String scope) {
-        for (int i = 0; i < this.scope.getItemCount(); i++) {
-            if (this.scope.getValue(i).equals(scope)) {
-                this.scope.setItemSelected(i, true);
+    public void selectScope(@Nullable String selectedScope) {
+        for (int i = 0; i < scope.getItemCount(); i++) {
+            if (scope.getValue(i).equals(selectedScope)) {
+                scope.setItemSelected(i, true);
                 return;
             }
         }
@@ -122,6 +169,7 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getValueType() {
         int index = valueType.getSelectedIndex();
@@ -130,22 +178,24 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void setValueType(List<String> valueType) {
-        if (valueType == null) {
+    public void setValueType(@Nullable List<String> valueTypes) {
+        if (valueTypes == null) {
             return;
         }
-        this.valueType.clear();
-        for (String value : valueType) {
-            this.valueType.addItem(value);
+
+        valueType.clear();
+
+        for (String value : valueTypes) {
+            valueType.addItem(value);
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void selectValueType(String valueType) {
-        for (int i = 0; i < this.valueType.getItemCount(); i++) {
-            if (this.valueType.getValue(i).equals(valueType)) {
-                this.valueType.setItemSelected(i, true);
+    public void selectValueType(@Nullable String selectedType) {
+        for (int i = 0; i < valueType.getItemCount(); i++) {
+            if (valueType.getValue(i).equals(selectedType)) {
+                valueType.setItemSelected(i, true);
                 return;
             }
         }
@@ -157,23 +207,25 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
-    public String getValueLiteral() {
-        return String.valueOf(valueLiteral.getText());
+    public String getValue() {
+        return String.valueOf(value.getText());
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setValueLiteral(String valueLiteral) {
-        this.valueLiteral.setText(valueLiteral);
+    public void setValue(@Nullable String valueLiteral) {
+        this.value.setText(valueLiteral);
     }
 
-    @UiHandler("valueLiteral")
-    public void onValueLiteralChanged(KeyUpEvent event) {
-        delegate.onValueLiteralChanged();
+    @UiHandler("value")
+    public void onValueLiteralChanged(ChangeEvent event) {
+        delegate.onValueChanged();
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getHeaderName() {
         return String.valueOf(headerName.getText());
@@ -181,13 +233,66 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void setHeaderName(String headerName) {
+    public void setHeaderName(@Nullable String headerName) {
         this.headerName.setText(headerName);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setExpression(@Nullable String expression) {
+        this.expression.setText(expression);
+    }
+
+    /** {@inheritDoc} */
+    @Nullable
+    @Override
+    public String getExpression() {
+        return expression.getText();
     }
 
     @UiHandler("headerName")
     public void onHeaderNameChanged(KeyUpEvent event) {
         delegate.onHeaderNameChanged();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleValueTypePanel(boolean isVisible) {
+        valueTypePanel.setVisible(isVisible);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleValueLiteralPanel(boolean isVisible) {
+        valueLiteralPanel.setVisible(isVisible);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleValueExpressionPanel(boolean isVisible) {
+        valueExpressionPanel.setVisible(isVisible);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleValueInlinePanel(boolean isVisible) {
+        valueInlinePanel.setVisible(isVisible);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleHeaderNamePanel(boolean isVisible) {
+        headerNamePanel.setVisible(isVisible);
+    }
+
+    @UiHandler("action")
+    public void onActionChanged(ChangeEvent event) {
+        delegate.onActionChanged();
+    }
+
+    @UiHandler("valueType")
+    public void onTypeChanged(ChangeEvent event) {
+        delegate.onTypeChanged();
     }
 
 }

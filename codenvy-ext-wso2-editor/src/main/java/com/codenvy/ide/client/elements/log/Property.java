@@ -25,6 +25,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
+ * Class describes entity which presented property of mediator.
+ *
  * @author Dmitry Shnurenko
  */
 public class Property {
@@ -88,7 +90,7 @@ public class Property {
     }
 
     /** @return name of namespace */
-    @Nullable
+    @Nonnull
     public String getName() {
         return name;
     }
@@ -99,7 +101,7 @@ public class Property {
     }
 
     /** @return expression of namespace */
-    @Nullable
+    @Nonnull
     public String getExpression() {
         return expression;
     }

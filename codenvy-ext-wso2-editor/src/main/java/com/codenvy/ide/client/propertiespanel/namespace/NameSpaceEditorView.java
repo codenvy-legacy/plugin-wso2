@@ -21,6 +21,7 @@ import com.codenvy.ide.collections.Array;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Shnurenko
@@ -64,16 +65,48 @@ public interface NameSpaceEditorView extends View<NameSpaceEditorView.ActionDele
     void hideWindow();
 
     /** @return prefix value from the special place on the view which uses for showing prefix */
+    @Nonnull
     public String getPrefix();
 
-    /** @return uri value from the special place on the view which uses for showing prefix */
-    public String getUri();
-
-    /** Set prefix value to the special place on the view which uses for showing prefix. */
+    /**
+     * Set prefix value to the special place on the view which uses for showing prefix.
+     *
+     * @param text
+     *         value of prefix which need set to element
+     */
     public void setPrefix(@Nonnull String text);
 
-    /** Set uri value to the special place on the view which uses for showing prefix. */
+    /** @return uri value from the special place on the view which uses for showing uri */
+    @Nonnull
+    public String getUri();
+
+    /**
+     * Set uri value to the special place on the view which uses for showing uri.
+     *
+     * @param text
+     *         value of uri which need set to element
+     */
     public void setUri(@Nonnull String text);
+
+    /**
+     * Set title value to the special place on the view which uses for showing title.
+     *
+     * @param title
+     *         value which need to set to special place of view
+     */
+    public void setTitle(@Nonnull String title);
+
+    /** @return expression value from the special place on the view which uses for showing expression */
+    @Nullable
+    public String getExpression();
+
+    /**
+     * Set expression value to the special place on the view which uses for showing expression.
+     *
+     * @param expression
+     *         value of expression which need set to element
+     */
+    public void setExpression(@Nullable String expression);
 
     /**
      * Sets the list to table on view.

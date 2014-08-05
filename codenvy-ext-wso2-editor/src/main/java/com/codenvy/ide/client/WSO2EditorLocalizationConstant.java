@@ -127,4 +127,10 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.namespace.defaultexpression")
     String defaultExpression();
+
+    @Key("propertiespanel.header.headername")
+    String labelHeader();
+
+    @Key("propertiespanel.header.headerexpression.label")
+    String labelExpression();
 }

@@ -24,6 +24,7 @@ import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Shnurenko
@@ -48,7 +49,7 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
 
         this.addNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces) {
+            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
                 selectedProperty.setNameSpaces(nameSpaces);
             }
         };
@@ -106,7 +107,7 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
     /** {@inheritDoc} */
     @Override
     public void onEditPropertiesButtonClicked() {
-        nameSpacePresenter.showNameSpaceEditorWindow(selectedProperty.getNameSpaces(), addNameSpacesCallBack);
+        nameSpacePresenter.showDefaultWindow(selectedProperty.getNameSpaces(), addNameSpacesCallBack);
     }
 
     /** {@inheritDoc} */
