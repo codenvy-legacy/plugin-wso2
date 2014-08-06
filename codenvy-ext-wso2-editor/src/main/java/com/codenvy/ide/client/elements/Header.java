@@ -27,12 +27,15 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.Header.ValueType.LITERAL;
+import static com.codenvy.ide.client.elements.Header.HeaderAction.remove;
+import static com.codenvy.ide.client.elements.Header.HeaderAction.set;
+import static com.codenvy.ide.client.elements.Property.ValueType.LITERAL;
 
 /**
  * Class describes entity which presented as Header mediator.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
 public class Header extends RootElement {
@@ -66,10 +69,10 @@ public class Header extends RootElement {
         headerNamespaces = Collections.createArray();
         expressionNamespaces = Collections.createArray();
 
-        action = HeaderAction.SET.name();
+        action = set.name();
         scope = "default";
         valueType = LITERAL.name();
-        value = "header_value";
+        value = "header_Value";
         headerName = "To";
         expression = "/default/expression";
     }
@@ -222,12 +225,12 @@ public class Header extends RootElement {
 
         setDefaultAttributes(attributes);
 
-        if (action.equalsIgnoreCase(HeaderAction.REMOVE.name())) {
+        if (action.equalsIgnoreCase(remove.name())) {
             attributes.remove("expression");
             attributes.remove("value");
         }
 
-        switch (ValueType.valueOf(valueType)) {
+        switch (HeaderValueType.valueOf(valueType)) {
             case EXPRESSION:
                 attributes.remove("value");
                 attributes.remove("action");
@@ -243,7 +246,7 @@ public class Header extends RootElement {
 
             case LITERAL:
                 attributes.remove("expression");
-                attributes.remove(action.equalsIgnoreCase(HeaderAction.SET.name()) ? "action" : "value");
+                attributes.remove(action.equalsIgnoreCase(set.name()) ? "action" : "value");
                 break;
         }
 
@@ -266,25 +269,6 @@ public class Header extends RootElement {
 
     /** {@inheritDoc} */
     @Override
-    public void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
-        String nodeValue = node.getChildNodes().item(0).getNodeValue();
-
-        switch (nodeName) {
-            case AbstractShape.X_PROPERTY_NAME:
-                setX(Integer.valueOf(nodeValue));
-                break;
-            case AbstractShape.Y_PROPERTY_NAME:
-                setY(Integer.valueOf(nodeValue));
-                break;
-            case AbstractElement.UUID_PROPERTY_NAME:
-                id = nodeValue;
-                break;
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
     protected void applyAttributes(@Nonnull Node node) {
         NamedNodeMap attributeMap = node.getAttributes();
         String uriName = "";
@@ -297,7 +281,7 @@ public class Header extends RootElement {
                     action = attributeNode.getNodeValue();
                     break;
 
-                case Scope.SCOPE:
+                case ScopeType.SCOPE:
                     scope = attributeNode.getNodeValue();
                     break;
 
@@ -333,19 +317,23 @@ public class Header extends RootElement {
     }
 
     public enum HeaderAction {
-        SET, REMOVE;
+        set, remove;
 
-        public static final String ACTION = "action";
+        public static final String TYPE_NAME = "HeaderAction";
+        public static final String ACTION    = "action";
     }
 
-    public enum Scope {
-        SYNAPSE, TRANSPORT;
+    public enum HeaderValueType {
+        LITERAL, EXPRESSION, INLINE;
 
-        public static final String SCOPE = "scope";
+        public static final String TYPE_NAME = "HeaderValueType";
     }
 
-    public enum ValueType {
-        LITERAL, EXPRESSION, INLINE
+    public enum ScopeType {
+        Synapse, transport;
+
+        public static final String TYPE_NAME = "ScopeType";
+        public static final String SCOPE     = "scope";
     }
 
 }

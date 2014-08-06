@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDelegate {
 
@@ -44,14 +45,14 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
     }
 
     /**
-     * Shows dialog window for editing namespaces.
+     * Shows dialog window with default parameters for editing namespaces.
      *
      * @param nameSpaces
      *         namespaces which need to be edited
      * @param callBack
      *         callback that needs to be handled when namespace editing is successful
      */
-    private void showWindow(@Nonnull Array<NameSpace> nameSpaces, @Nonnull AddNameSpacesCallBack callBack) {
+    public void showDefaultWindow(@Nonnull Array<NameSpace> nameSpaces, @Nonnull AddNameSpacesCallBack callBack) {
         nameSpacesTemporary = Collections.createArray();
         this.callBack = callBack;
 
@@ -64,18 +65,6 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
         nameSpaceEditorView.setPrefix("");
 
         nameSpaceEditorView.showWindow();
-    }
-
-    /**
-     * Shows dialog window with default parameters for editing namespaces.
-     *
-     * @param nameSpaces
-     *         namespaces which need to be edited
-     * @param callBack
-     *         callback that needs to be handled when namespace editing is successful
-     */
-    public void showDefaultWindow(@Nonnull Array<NameSpace> nameSpaces, @Nonnull AddNameSpacesCallBack callBack) {
-        showWindow(nameSpaces, callBack);
     }
 
     /**
@@ -95,9 +84,9 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
                                          @Nonnull String labelName,
                                          @Nullable String expression) {
 
-        showWindow(nameSpaces, callBack);
+        showDefaultWindow(nameSpaces, callBack);
 
-        nameSpaceEditorView.setTitle(labelName);
+        nameSpaceEditorView.setNameSpaceLabelName(labelName);
         nameSpaceEditorView.setExpression(expression);
     }
 

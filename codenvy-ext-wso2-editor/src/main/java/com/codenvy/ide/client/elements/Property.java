@@ -15,15 +15,26 @@
  */
 package com.codenvy.ide.client.elements;
 
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.google.gwt.xml.client.Node;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+
+import static com.codenvy.ide.client.elements.Property.DataType.STRING;
+import static com.codenvy.ide.client.elements.Property.PropertyAction.set;
+import static com.codenvy.ide.client.elements.Property.PropertyScope.SYNAPSE;
+import static com.codenvy.ide.client.elements.Property.ValueType.EXPRESSION;
+import static com.codenvy.ide.client.elements.Property.ValueType.LITERAL;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class Property extends RootElement {
     public static final String ELEMENT_NAME       = "Property";
@@ -34,6 +45,7 @@ public class Property extends RootElement {
     private static final String VALUE_TYPE_PROPERTY_NAME                 = "ValueType";
     private static final String PROPERTY_DATA_TYPE_PROPERTY_NAME         = "PropertyDataType";
     private static final String VALUE_LITERAL_PROPERTY_NAME              = "ValueLiteral";
+    private static final String VALUE_EXPRESSION_PROPERTY_NAME           = "ValueExpression";
     private static final String VALUE_STRING_PATTERN_PROPERTY_NAME       = "ValueStringPattern";
     private static final String VALUE_STRING_CAPTURE_GROUP_PROPERTY_NAME = "ValueStringCaptureGroup";
     private static final String PROPERTY_SCOPE_PROPERTY_NAME             = "PropertyScope";
@@ -44,6 +56,7 @@ public class Property extends RootElement {
                                                                           VALUE_TYPE_PROPERTY_NAME,
                                                                           PROPERTY_DATA_TYPE_PROPERTY_NAME,
                                                                           VALUE_LITERAL_PROPERTY_NAME,
+                                                                          VALUE_EXPRESSION_PROPERTY_NAME,
                                                                           VALUE_STRING_PATTERN_PROPERTY_NAME,
                                                                           VALUE_STRING_CAPTURE_GROUP_PROPERTY_NAME,
                                                                           PROPERTY_SCOPE_PROPERTY_NAME,
@@ -56,33 +69,47 @@ public class Property extends RootElement {
                                                                           VALUE_TYPE_PROPERTY_NAME,
                                                                           PROPERTY_DATA_TYPE_PROPERTY_NAME,
                                                                           VALUE_LITERAL_PROPERTY_NAME,
+                                                                          VALUE_EXPRESSION_PROPERTY_NAME,
                                                                           VALUE_STRING_PATTERN_PROPERTY_NAME,
                                                                           VALUE_STRING_CAPTURE_GROUP_PROPERTY_NAME,
                                                                           PROPERTY_SCOPE_PROPERTY_NAME,
                                                                           DESCRIPTION_PROPERTY_NAME);
 
-    private String  propertyName;
-    private String  propertyAction;
-    private String  valueType;
-    private String  propertyDataType;
-    private String  valueLiteral;
-    private String  valueStringPattern;
-    private Integer valueStringCaptureGroup;
-    private String  propertyScope;
-    private String  description;
+    private String           propertyName;
+    private String           propertyAction;
+    private String           valueType;
+    private String           propertyDataType;
+    private String           valueLiteral;
+    private String           valueExpression;
+    private String           valueStringPattern;
+    private Integer          valueStringCaptureGroup;
+    private String           propertyScope;
+    private String           description;
+    private Array<NameSpace> nameSpaces;
 
     public Property() {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
-        propertyName = "propertyName";
-        propertyAction = "set";
-        valueType = "LITERAL";
-        propertyDataType = "$STRING";
-        valueLiteral = "some_Value";
-        valueStringPattern = "enter_value_string_pattern";
+        nameSpaces = Collections.createArray();
+        propertyName = "property_name";
+        propertyAction = set.name();
+        valueType = LITERAL.name();
+        propertyDataType = STRING.name();
+        valueLiteral = "value";
+        valueExpression = "/default/expression";
         valueStringCaptureGroup = 0;
-        propertyScope = "Synapse";
-        description = "enter_description";
+        propertyScope = SYNAPSE.getValue();
+    }
+
+    /** @return namespaces which contain in property */
+    @Nonnull
+    public Array<NameSpace> getNameSpaces() {
+        return nameSpaces;
+    }
+
+    /** Sets namespaces to property */
+    public void setNameSpaces(@Nonnull Array<NameSpace> nameSpaces) {
+        this.nameSpaces = nameSpaces;
     }
 
     @Nullable
@@ -131,6 +158,15 @@ public class Property extends RootElement {
     }
 
     @Nullable
+    public String getValueExpression() {
+        return valueExpression;
+    }
+
+    public void setValueExpression(@Nullable String valueExpression) {
+        this.valueExpression = valueExpression;
+    }
+
+    @Nullable
     public String getValueStringPattern() {
         return valueStringPattern;
     }
@@ -170,15 +206,33 @@ public class Property extends RootElement {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        return "propertyName=\"" + propertyName + "\" " +
-               "propertyAction=\"" + propertyAction + "\" " +
-               "valueType=\"" + valueType + "\" " +
-               "propertyDataType=\"" + propertyDataType + "\" " +
-               "valueLiteral=\"" + valueLiteral + "\" " +
-               "valueStringPattern=\"" + valueStringPattern + "\" " +
-               "valueStringCaptureGroup=\"" + valueStringCaptureGroup + "\" " +
-               "propertyScope=\"" + propertyScope + "\" " +
-               "description=\"" + description + "\" ";
+        LinkedHashMap<String, String> prop = new LinkedHashMap<>();
+
+        prop.put("name", propertyName);
+
+        if (set.name().equals(propertyAction)) {
+            prop.put("type", propertyDataType);
+
+            if (EXPRESSION.name().equals(valueType)) {
+                prop.put("expression", valueExpression);
+
+                for (NameSpace nameSpace : nameSpaces.asIterable()) {
+                    prop.put("xmlns:" + nameSpace.getPrefix(), nameSpace.getUri());
+                }
+            } else {
+                prop.put("value", valueLiteral);
+            }
+
+            prop.put("pattern", valueStringPattern);
+            prop.put("group", valueStringCaptureGroup.toString());
+        } else {
+            prop.put("action", propertyAction);
+        }
+
+        prop.put("scope", propertyScope);
+        prop.put("description", description);
+
+        return prepareSerialization(prop);
     }
 
     /** {@inheritDoc} */
@@ -212,6 +266,9 @@ public class Property extends RootElement {
             case VALUE_LITERAL_PROPERTY_NAME:
                 valueLiteral = String.valueOf(nodeValue);
                 break;
+            case VALUE_EXPRESSION_PROPERTY_NAME:
+                valueExpression = String.valueOf(nodeValue);
+                break;
             case VALUE_STRING_PATTERN_PROPERTY_NAME:
                 valueStringPattern = String.valueOf(nodeValue);
                 break;
@@ -224,6 +281,41 @@ public class Property extends RootElement {
             case DESCRIPTION_PROPERTY_NAME:
                 description = String.valueOf(nodeValue);
                 break;
+        }
+    }
+
+    public enum PropertyAction {
+        set, remove;
+
+        public static final String TYPE_NAME = "PropertyAction";
+    }
+
+    public enum ValueType {
+        LITERAL, EXPRESSION;
+
+        public static final String TYPE_NAME = "PropertyValueType";
+    }
+
+    public enum DataType {
+        STRING, INTEGER, BOOLEAN, DOUBLE, FLOAT, LONG, SHORT, OM;
+
+        public static final String TYPE_NAME = "PropertyDataType";
+    }
+
+    public enum PropertyScope {
+        SYNAPSE("Synapse"), TRANSPORT("transport"), AXIS2("axis2"), AXIS2_CLIENT("axis2_client"), OPERATION("operation");
+
+        public static final String TYPE_NAME = "PropertyDataType";
+
+        private String value;
+
+        PropertyScope(String value) {
+            this.value = value;
+        }
+
+        @NotNull
+        public String getValue() {
+            return value;
         }
     }
 

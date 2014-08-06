@@ -13,17 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.elements;
+package com.codenvy.ide.client.elements.payload;
 
+import com.codenvy.ide.client.elements.AbstractElement;
+import com.codenvy.ide.client.elements.AbstractShape;
+import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.client.elements.RootElement;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
+import com.google.gwt.xml.client.XMLParser;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+
+import static com.codenvy.ide.client.elements.payload.PayloadFactory.FormatType.Inline;
+import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType.json;
+import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType.xml;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class PayloadFactory extends RootElement {
     public static final String ELEMENT_NAME       = "PayloadFactory";
@@ -31,7 +45,7 @@ public class PayloadFactory extends RootElement {
 
     private static final String PAYLOAD_FORMAT_PROPERTY_NAME = "PayloadFormat";
     private static final String FORMAT_PROPERTY_NAME         = "Format";
-    private static final String ARGS_PROPERTY_NAME           = "Args";
+    private static final String ARGS_PROPERTY_NAME           = "args";
     private static final String MEDIA_TYPE_PROPERTY_NAME     = "MediaType";
     private static final String DESCRIPTION_PROPERTY_NAME    = "Description";
 
@@ -49,20 +63,21 @@ public class PayloadFactory extends RootElement {
                                                                           MEDIA_TYPE_PROPERTY_NAME,
                                                                           DESCRIPTION_PROPERTY_NAME);
 
-    private String payloadFormat;
-    private String format;
-    private String args;
-    private String mediaType;
-    private String description;
+    private String     payloadFormat;
+    private String     format;
+    private String     formatKey;
+    private String     mediaType;
+    private String     description;
+    private Array<Arg> args;
 
     public PayloadFactory() {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
-        payloadFormat = "inline";
-        format = "inline";
-        args = "enter_arguments";
-        mediaType = "xml";
-        description = "enter_description";
+        payloadFormat = Inline.name();
+        format = "<inline/>";
+        mediaType = xml.name();
+        formatKey = "/default/key";
+        args = Collections.createArray();
     }
 
     @Nullable
@@ -84,11 +99,20 @@ public class PayloadFactory extends RootElement {
     }
 
     @Nullable
-    public String getArgs() {
+    public String getFormatKey() {
+        return formatKey;
+    }
+
+    public void setFormatKey(@Nullable String formatKey) {
+        this.formatKey = formatKey;
+    }
+
+    @Nullable
+    public Array<Arg> getArgs() {
         return args;
     }
 
-    public void setArgs(@Nullable String args) {
+    public void setArgs(@Nullable Array<Arg> args) {
         this.args = args;
     }
 
@@ -114,11 +138,57 @@ public class PayloadFactory extends RootElement {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        return "payloadFormat=\"" + payloadFormat + "\" " +
-               "format=\"" + format + "\" " +
-               "args=\"" + args + "\" " +
-               "mediaType=\"" + mediaType + "\" " +
-               "description=\"" + description + "\" ";
+        LinkedHashMap<String, String> prop = new LinkedHashMap<>();
+
+        prop.put("media-type", mediaType);
+        prop.put("description", description);
+
+        return prepareSerialization(prop);
+    }
+
+    /** {@inheritDoc} */
+    @Nonnull
+    @Override
+    protected String serializeProperty() {
+        StringBuilder result = new StringBuilder();
+        result.append("<format");
+        if (payloadFormat.equals(FormatType.Inline.name())) {
+            result.append(">");
+            if (json.name().equals(mediaType)) {
+                String jsonFormat;
+                jsonFormat = format.replace("<", "&lt;");
+                jsonFormat = jsonFormat.replace(">", "&gt;");
+                result.append(jsonFormat);
+            } else {
+                Document document = XMLParser.parse(format);
+                document.getDocumentElement().setAttribute("xmlns", "");
+                result.append(document);
+            }
+            result.append("</format>");
+        } else {
+            result.append(" key=\"").append(formatKey).append("\"/>");
+        }
+
+        if (args.isEmpty()) {
+            result.append("<args/>");
+        } else {
+            result.append("<args>");
+
+            for (Arg arg : args.asIterable()) {
+                StringBuilder nameSpaces = new StringBuilder();
+
+                for (NameSpace nameSpace : arg.getNameSpaces().asIterable()) {
+                    nameSpaces.append(nameSpace.toString()).append(' ');
+                }
+
+                result.append("    <arg ").append(nameSpaces).append("evaluator=\"").append(arg.getEvaluator()).append("\" expression=\"")
+                      .append(arg.getValue()).append("\"/>\n");
+
+            }
+            result.append("</args>");
+        }
+
+        return result.toString();
     }
 
     /** {@inheritDoc} */
@@ -144,7 +214,11 @@ public class PayloadFactory extends RootElement {
                 format = String.valueOf(nodeValue);
                 break;
             case ARGS_PROPERTY_NAME:
-                args = String.valueOf(nodeValue);
+                //TODO create property using editor factory
+                Arg arg = new Arg(null, null);
+                arg.applyAttributes(node);
+
+                args.add(arg);
                 break;
             case MEDIA_TYPE_PROPERTY_NAME:
                 mediaType = String.valueOf(nodeValue);
@@ -153,6 +227,18 @@ public class PayloadFactory extends RootElement {
                 description = String.valueOf(nodeValue);
                 break;
         }
+    }
+
+    public enum MediaType {
+        xml, json;
+
+        public static final String TYPE_NAME = "MediaType";
+    }
+
+    public enum FormatType {
+        Inline, Registry;
+
+        public static final String TYPE_NAME = "PayloadFormatType";
     }
 
 }

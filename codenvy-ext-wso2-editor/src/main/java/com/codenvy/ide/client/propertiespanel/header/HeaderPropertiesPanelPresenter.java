@@ -31,7 +31,9 @@ import com.google.inject.Inject;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.codenvy.ide.client.elements.Header.HeaderAction.REMOVE;
+import static com.codenvy.ide.client.elements.Header.HeaderAction.remove;
+import static com.codenvy.ide.client.elements.Header.HeaderValueType.EXPRESSION;
+import static com.codenvy.ide.client.elements.Header.HeaderValueType.INLINE;
 
 /**
  * @author Andrey Plotnikov
@@ -122,7 +124,7 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
         ((HeaderPropertiesPanelView)view).setVisibleValueExpressionPanel(false);
         ((HeaderPropertiesPanelView)view).setVisibleValueInlinePanel(false);
 
-        if (REMOVE.name().equalsIgnoreCase(action)) {
+        if (remove.name().equals(action)) {
             ((HeaderPropertiesPanelView)view).setVisibleValueExpressionPanel(false);
             ((HeaderPropertiesPanelView)view).setVisibleValueInlinePanel(false);
             ((HeaderPropertiesPanelView)view).setVisibleValueTypePanel(false);
@@ -138,10 +140,10 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
 
         setDefaultPanelView();
 
-        if (type.equals(Header.ValueType.EXPRESSION.name())) {
+        if (type.equals(EXPRESSION.name())) {
             ((HeaderPropertiesPanelView)view).setVisibleValueLiteralPanel(false);
             ((HeaderPropertiesPanelView)view).setVisibleValueInlinePanel(false);
-        } else if (type.equals(Header.ValueType.INLINE.name())) {
+        } else if (type.equals(INLINE.name())) {
             ((HeaderPropertiesPanelView)view).setVisibleValueLiteralPanel(false);
             ((HeaderPropertiesPanelView)view).setVisibleValueExpressionPanel(false);
             ((HeaderPropertiesPanelView)view).setVisibleHeaderNamePanel(false);

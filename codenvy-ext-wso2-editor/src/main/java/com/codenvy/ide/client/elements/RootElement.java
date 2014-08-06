@@ -16,8 +16,10 @@
 package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.elements.log.Log;
+import com.codenvy.ide.client.elements.payload.PayloadFactory;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
@@ -111,7 +113,7 @@ public class RootElement extends AbstractShape {
      *         element's properties
      * @return string with serialized properties
      */
-    protected String prepareSerialization(LinkedHashMap<String, String> properties) {
+    protected String prepareSerialization(@NotNull LinkedHashMap<String, String> properties) {
         StringBuilder serializedProperties = new StringBuilder();
 
         for (Iterator iterator = properties.entrySet().iterator(); iterator.hasNext(); ) {
@@ -121,8 +123,6 @@ public class RootElement extends AbstractShape {
             if (value != null && !value.isEmpty()) {
                 serializedProperties.append(entry.getKey()).append("=\"").append(value).append('"');
             }
-
-            iterator.remove();
 
             if (iterator.hasNext()) {
                 serializedProperties.append(' ');

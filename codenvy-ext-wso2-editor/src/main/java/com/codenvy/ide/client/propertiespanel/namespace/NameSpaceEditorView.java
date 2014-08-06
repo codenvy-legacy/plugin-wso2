@@ -88,14 +88,6 @@ public interface NameSpaceEditorView extends View<NameSpaceEditorView.ActionDele
      */
     public void setUri(@Nonnull String text);
 
-    /**
-     * Set title value to the special place on the view which uses for showing title.
-     *
-     * @param title
-     *         value which need to set to special place of view
-     */
-    public void setTitle(@Nonnull String title);
-
     /** @return expression value from the special place on the view which uses for showing expression */
     @Nullable
     public String getExpression();
@@ -116,4 +108,6 @@ public interface NameSpaceEditorView extends View<NameSpaceEditorView.ActionDele
      */
     public void setNameSpaces(@Nonnull Array<NameSpace> nameSpaces);
 
+    /** Set name NameSpace dialog window. */
+    public void setNameSpaceLabelName(@Nonnull String nameSpace);
 }

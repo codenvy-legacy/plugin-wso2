@@ -22,6 +22,8 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.codenvy.ide.client.elements.Call.EndpointType.INLINE;
+
 /**
  * @author Andrey Plotnikov
  */
@@ -46,7 +48,7 @@ public class Call extends RootElement {
     public Call() {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
-        endpointType = "INLINE";
+        endpointType = INLINE.name();
         description = "enter_description";
     }
 
@@ -99,6 +101,12 @@ public class Call extends RootElement {
                 description = String.valueOf(nodeValue);
                 break;
         }
+    }
+
+    public enum EndpointType {
+        INLINE, NONE, REGISTRYKEY, XPATH;
+
+        public static final String TYPE_NAME = "CallMediatorEndpointType";
     }
 
 }

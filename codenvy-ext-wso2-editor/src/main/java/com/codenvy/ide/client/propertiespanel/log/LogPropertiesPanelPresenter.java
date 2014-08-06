@@ -26,9 +26,12 @@ import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 
+import static com.codenvy.ide.client.elements.log.Log.LogCategory;
+
 /**
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> implements LogPropertiesPanelView.ActionDelegate {
 
@@ -93,9 +96,9 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> im
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        ((LogPropertiesPanelView)view).setLogCategory(propertyTypeManager.getValuesOfTypeByName("logCategory"));
+        ((LogPropertiesPanelView)view).setLogCategory(propertyTypeManager.getValuesOfTypeByName(LogCategory.TYPE_NAME));
         ((LogPropertiesPanelView)view).selectLogCategory(element.getLogCategory());
-        ((LogPropertiesPanelView)view).setLogLevel(propertyTypeManager.getValuesOfTypeByName("logLevel"));
+        ((LogPropertiesPanelView)view).setLogLevel(propertyTypeManager.getValuesOfTypeByName(Log.LogLevel.TYPE_NAME));
         ((LogPropertiesPanelView)view).selectLogLevel(element.getLogLevel());
         ((LogPropertiesPanelView)view).setLogSeparator(element.getLogSeparator());
         ((LogPropertiesPanelView)view).setDescription(element.getDescription());

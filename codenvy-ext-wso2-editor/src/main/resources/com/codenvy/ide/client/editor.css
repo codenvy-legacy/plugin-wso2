@@ -6,6 +6,10 @@
     height: 100%;
 }
 
+.property {
+    margin-bottom: 20px;
+}
+
 .selectedElement {
     background: #6DAF6D !important;
     border: 2px solid #6DAF6D !important;
@@ -17,6 +21,12 @@
 
 .selectElementBelowCursor {
     border: 2px solid #6DAF6D !important;
+}
+
+.propertyButton {
+    margin-left: 2px;
+    text-align: center;
+    width: 30px;
 }
 
 .applyCursor {

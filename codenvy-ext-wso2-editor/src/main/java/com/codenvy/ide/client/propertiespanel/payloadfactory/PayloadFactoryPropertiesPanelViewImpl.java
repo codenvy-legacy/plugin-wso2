@@ -15,11 +15,15 @@
  */
 package com.codenvy.ide.client.propertiespanel.payloadfactory;
 
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -29,25 +33,43 @@ import java.util.List;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropertiesPanelView {
 
     interface PayloadFactoryPropertiesPanelViewImplUiBinder extends UiBinder<Widget, PayloadFactoryPropertiesPanelViewImpl> {
     }
 
+    private final WSO2EditorLocalizationConstant local;
+
     @UiField
-    ListBox payloadFormat;
+    ListBox   payloadFormat;
     @UiField
-    TextBox format;
+    TextBox   format;
     @UiField
-    TextBox args;
+    TextBox   args;
     @UiField
-    ListBox mediaType;
+    ListBox   mediaType;
     @UiField
-    TextBox description;
+    TextBox   description;
+    @UiField
+    Button    formatButton;
+    @UiField
+    Button    argsButton;
+    @UiField
+    Button    formatKeyButton;
+    @UiField
+    TextBox   formatKey;
+    @UiField
+    FlowPanel formatPanel;
+    @UiField
+    FlowPanel formatKeyPanel;
 
     @Inject
-    public PayloadFactoryPropertiesPanelViewImpl(PayloadFactoryPropertiesPanelViewImplUiBinder ourUiBinder) {
+    public PayloadFactoryPropertiesPanelViewImpl(PayloadFactoryPropertiesPanelViewImplUiBinder ourUiBinder,
+                                                 WSO2EditorLocalizationConstant local) {
+        this.local = local;
+
         widget = ourUiBinder.createAndBindUi(this);
     }
 
@@ -98,6 +120,18 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
         this.format.setText(format);
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String getFormatKey() {
+        return String.valueOf(formatKey.getText());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setFormatKey(String formatKey) {
+        this.formatKey.setText(formatKey);
+    }
+
     @UiHandler("format")
     public void onFormatChanged(KeyUpEvent event) {
         delegate.onFormatChanged();
@@ -115,9 +149,19 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
         this.args.setText(args);
     }
 
-    @UiHandler("args")
-    public void onArgsChanged(KeyUpEvent event) {
-        delegate.onArgsChanged();
+    @UiHandler("formatButton")
+    public void onFormatButtonClicked(ClickEvent event) {
+        delegate.showFormatConfigurationWindow(format.getText(), local.propertiespanelPayloadFormat());
+    }
+
+    @UiHandler("formatKeyButton")
+    public void onFormatKeyButtonClicked(ClickEvent event) {
+        delegate.showKeyEditorWindow(formatKey.getText());
+    }
+
+    @UiHandler("argsButton")
+    public void onArgsButtonClicked(ClickEvent event) {
+        delegate.showArgsConfigurationWindow();
     }
 
     /** {@inheritDoc} */
@@ -133,7 +177,9 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
         if (mediaType == null) {
             return;
         }
+
         this.mediaType.clear();
+
         for (String value : mediaType) {
             this.mediaType.addItem(value);
         }
@@ -165,6 +211,18 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
     @Override
     public void setDescription(String description) {
         this.description.setText(description);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleFormatPanel(boolean isVisible) {
+        formatPanel.setVisible(isVisible);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleFormatKeyPanel(boolean isVisible) {
+        formatKeyPanel.setVisible(isVisible);
     }
 
     @UiHandler("description")

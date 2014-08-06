@@ -15,29 +15,118 @@
  */
 package com.codenvy.ide.client.propertiespanel.payloadfactory;
 
-import com.codenvy.ide.client.elements.PayloadFactory;
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
+import com.codenvy.ide.client.elements.payload.Arg;
+import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
+import com.codenvy.ide.client.propertiespanel.arguments.AddArgumentCallBack;
+import com.codenvy.ide.client.propertiespanel.arguments.ArgumentsConfigPresenter;
+import com.codenvy.ide.client.propertiespanel.inline.ChangeInlineFormatCallBack;
+import com.codenvy.ide.client.propertiespanel.inline.InlineConfigurationPresenter;
+import com.codenvy.ide.client.propertiespanel.inline.InlineConfigurationView;
+import com.codenvy.ide.client.propertiespanel.resourcekeyeditor.ChangeResourceKeyCallBack;
+import com.codenvy.ide.client.propertiespanel.resourcekeyeditor.ResourceKeyEditorPresenter;
 import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.ui.dialogs.info.Info;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.Element;
+import com.google.gwt.xml.client.XMLParser;
+import com.google.gwt.xml.client.impl.DOMParseException;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
+
+import static com.codenvy.ide.client.elements.payload.PayloadFactory.FormatType;
+import static com.codenvy.ide.client.elements.payload.PayloadFactory.FormatType.Inline;
+import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType;
 
 /**
+ * The property panel of PayloadFactory mediator.
+ *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPanel<PayloadFactory>
         implements PayloadFactoryPropertiesPanelView.ActionDelegate {
 
+    private final ChangeInlineFormatCallBack   changeInlineFormatCallBack;
+    private final ChangeResourceKeyCallBack    changeResourceKeyCallBack;
+    private final AddArgumentCallBack          argumentCallBack;
+    private final InlineConfigurationPresenter inlineConfigurationPresenter;
+    private final ResourceKeyEditorPresenter   resourceKeyEditorPresenter;
+    private final ArgumentsConfigPresenter     argumentsConfigPresenter;
+
     @Inject
-    public PayloadFactoryPropertiesPanelPresenter(PayloadFactoryPropertiesPanelView view, PropertyTypeManager propertyTypeManager) {
+    public PayloadFactoryPropertiesPanelPresenter(final PayloadFactoryPropertiesPanelView view,
+                                                  PropertyTypeManager propertyTypeManager,
+                                                  InlineConfigurationPresenter inlineConfigurationPresenter,
+                                                  ResourceKeyEditorPresenter resourceKeyEditorPresenter,
+                                                  ArgumentsConfigPresenter argumentsConfigPresenter,
+                                                  WSO2EditorLocalizationConstant local) {
         super(view, propertyTypeManager);
+
+        this.inlineConfigurationPresenter = inlineConfigurationPresenter;
+        this.resourceKeyEditorPresenter = resourceKeyEditorPresenter;
+        this.argumentsConfigPresenter = argumentsConfigPresenter;
+
+        this.changeInlineFormatCallBack = new ChangeInlineFormatCallBack() {
+            @Override
+            public void onInlineChanged(@Nonnull String inline, @Nonnull InlineConfigurationView inlineView) {
+                try {
+                    Document document = XMLParser.parse(inline);
+                    inlineView.closeDialog();
+
+                    Element rootElement = document.getDocumentElement();
+
+                    element.setFormat(rootElement.toString());
+                    view.setFormat(rootElement.toString());
+
+                    notifyListeners();
+                } catch (DOMParseException e) {
+                    Info info = new Info("Malformed xml");
+                    info.show();
+                }
+            }
+        };
+
+        this.changeResourceKeyCallBack = new ChangeResourceKeyCallBack() {
+            @Override
+            public void onFormatKeyChanged(@Nonnull String key) {
+                element.setFormatKey(key);
+                view.setFormatKey(key);
+
+                notifyListeners();
+            }
+        };
+
+        this.argumentCallBack = new AddArgumentCallBack() {
+            @Override
+            public void onArgumentsChanged(@Nonnull Array<Arg> arg) {
+                element.setArgs(arg);
+
+                view.setArgs("Payload Factory Arguments");
+
+                notifyListeners();
+            }
+        };
+
     }
 
     /** {@inheritDoc} */
     @Override
     public void onPayloadFormatChanged() {
-        element.setPayloadFormat(((PayloadFactoryPropertiesPanelView)view).getPayloadFormat());
+        String payloadFormat = ((PayloadFactoryPropertiesPanelView)view).getPayloadFormat();
+
+        element.setPayloadFormat(payloadFormat);
+
+        boolean isInline = Inline.name().equals(payloadFormat);
+
+        ((PayloadFactoryPropertiesPanelView)view).setVisibleFormatPanel(isInline);
+        ((PayloadFactoryPropertiesPanelView)view).setVisibleFormatKeyPanel(!isInline);
+
         notifyListeners();
     }
 
@@ -45,13 +134,6 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
     @Override
     public void onFormatChanged() {
         element.setFormat(((PayloadFactoryPropertiesPanelView)view).getFormat());
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onArgsChanged() {
-        element.setArgs(((PayloadFactoryPropertiesPanelView)view).getArgs());
         notifyListeners();
     }
 
@@ -71,16 +153,39 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
 
     /** {@inheritDoc} */
     @Override
+    public void showFormatConfigurationWindow(@Nonnull String content, @Nonnull String title) {
+        inlineConfigurationPresenter.showDialog(content, title, changeInlineFormatCallBack);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void showArgsConfigurationWindow() {
+        argumentsConfigPresenter.showConfigWindow(element.getArgs(), argumentCallBack);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void showKeyEditorWindow(@NotNull String key) {
+        resourceKeyEditorPresenter.showDialog(key, changeResourceKeyCallBack);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        ((PayloadFactoryPropertiesPanelView)view).setPayloadFormat(propertyTypeManager.getValuesOfTypeByName("PayloadFormatType"));
+        ((PayloadFactoryPropertiesPanelView)view).setPayloadFormat(propertyTypeManager.getValuesOfTypeByName(FormatType.TYPE_NAME));
         ((PayloadFactoryPropertiesPanelView)view).selectPayloadFormat(element.getPayloadFormat());
         ((PayloadFactoryPropertiesPanelView)view).setFormat(element.getFormat());
-        ((PayloadFactoryPropertiesPanelView)view).setArgs(element.getArgs());
-        ((PayloadFactoryPropertiesPanelView)view).setMediaType(propertyTypeManager.getValuesOfTypeByName("MediaType"));
+        ((PayloadFactoryPropertiesPanelView)view).setFormatKey(element.getFormatKey());
+        ((PayloadFactoryPropertiesPanelView)view).setMediaType(propertyTypeManager.getValuesOfTypeByName(MediaType.TYPE_NAME));
         ((PayloadFactoryPropertiesPanelView)view).selectMediaType(element.getMediaType());
         ((PayloadFactoryPropertiesPanelView)view).setDescription(element.getDescription());
+
+        boolean isInline = Inline.name().equals(((PayloadFactoryPropertiesPanelView)view).getPayloadFormat());
+
+        ((PayloadFactoryPropertiesPanelView)view).setVisibleFormatPanel(isInline);
+        ((PayloadFactoryPropertiesPanelView)view).setVisibleFormatKeyPanel(!isInline);
     }
 
 }

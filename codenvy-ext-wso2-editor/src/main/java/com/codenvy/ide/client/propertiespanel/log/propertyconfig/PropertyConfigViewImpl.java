@@ -19,11 +19,13 @@ import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.log.Property;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SelectionCell;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -31,7 +33,6 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -45,8 +46,9 @@ import java.util.List;
 
 /**
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
-public class PropertyConfigViewImpl extends DialogBox implements PropertyConfigView {
+public class PropertyConfigViewImpl extends Window implements PropertyConfigView {
 
     interface LogPropertiesConfigurationViewImplUiBinder extends UiBinder<Widget, PropertyConfigViewImpl> {
     }
@@ -64,37 +66,57 @@ public class PropertyConfigViewImpl extends DialogBox implements PropertyConfigV
     @UiField
     Button    btnRemove;
     @UiField
-    Button    btnCancel;
-    @UiField
-    Button    btnSaveChanges;
-    @UiField
     Button    btnEdit;
     @UiField
     TextBox   nameTextBox;
     @UiField
     TextBox   valueExpressionTextBox;
 
+    Button btnOk;
+    Button btnCancel;
+
     private ActionDelegate delegate;
 
     @Inject
-    public PropertyConfigViewImpl(LogPropertiesConfigurationViewImplUiBinder ourUiBinder,
-                                  WSO2EditorLocalizationConstant localizationConstant) {
-        this.tableOfProperties = createTable(localizationConstant);
+    public PropertyConfigViewImpl(WSO2EditorLocalizationConstant localizationConstant,
+                                  LogPropertiesConfigurationViewImplUiBinder uiBinder,
+                                  com.codenvy.ide.Resources res) {
+        this.tableOfProperties = createTable(localizationConstant, res);
         this.logLevelListBox = createLogLevelListBox();
         this.logCategoryListBox = createLogCategoryListBox();
 
-        this.add(ourUiBinder.createAndBindUi(this));
+        Widget widget = uiBinder.createAndBindUi(this);
+
+        this.setTitle(localizationConstant.propertiespanelLogConfigurationTitle());
+        this.setWidget(widget);
+
+        btnCancel = createButton(localizationConstant.buttonCancel(), "log-configuration-cancel", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCancelButtonClicked();
+            }
+        });
+        getFooter().add(btnCancel);
+
+        btnOk = createButton(localizationConstant.buttonOk(), "log-configuration-ok", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onOkButtonClicked();
+            }
+        });
+        getFooter().add(btnOk);
     }
 
-    private CellTable<Property> createTable(final WSO2EditorLocalizationConstant localizationConstant) {
-        final CellTable<Property> table = new CellTable<>();
+    private CellTable<Property> createTable(final WSO2EditorLocalizationConstant localizationConstant, CellTable.Resources res) {
+        final CellTable<Property> table = new CellTable<>(15, res);
 
         final SingleSelectionModel<Property> selectionModel = new SingleSelectionModel<>();
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
             public void onSelectionChange(SelectionChangeEvent event) {
-                final Property selectedObject = selectionModel.getSelectedObject();
-                delegate.onSelectedProperty(selectedObject);
+                delegate.onSelectedProperty(selectionModel.getSelectedObject());
             }
         });
         table.setSelectionModel(selectionModel);
@@ -180,11 +202,6 @@ public class PropertyConfigViewImpl extends DialogBox implements PropertyConfigV
         return listBox;
     }
 
-    @UiHandler("btnCancel")
-    public void onCancelButtonClicked(ClickEvent event) {
-        delegate.onCancelButtonClicked();
-    }
-
     @UiHandler("btnAdd")
     public void onAddNewPropertyButtonClicked(ClickEvent event) {
         delegate.onAddPropertyButtonClicked();
@@ -195,11 +212,6 @@ public class PropertyConfigViewImpl extends DialogBox implements PropertyConfigV
         delegate.onRemovePropertyButtonClicked();
     }
 
-    @UiHandler("btnSaveChanges")
-    public void onOkButtonClicked(ClickEvent event) {
-        delegate.onOkButtonClicked();
-    }
-
     @UiHandler("btnEdit")
     public void onEditPropertyButtonClicked(ClickEvent event) {
         delegate.onEditButtonClicked();
@@ -208,7 +220,6 @@ public class PropertyConfigViewImpl extends DialogBox implements PropertyConfigV
     /** {@inheritDoc} */
     @Override
     public void showWindow() {
-        center();
         show();
     }
 
@@ -260,6 +271,12 @@ public class PropertyConfigViewImpl extends DialogBox implements PropertyConfigV
     @Override
     public void setValueExpression(@Nonnull String text) {
         this.valueExpressionTextBox.setText(text);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {
+        hide();
     }
 
 }

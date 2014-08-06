@@ -113,12 +113,6 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("propertiespanel.configwindow.button.remove")
     String buttonRemove();
 
-    @Key("propertiespanel.configwindow.button.ok")
-    String buttonOk();
-
-    @Key("propertiespanel.configwindow.button.cancel")
-    String buttonCancel();
-
     @Key("propertiespanel.configwindow.button.selectxpath")
     String buttonSelectxpath();
 
@@ -133,4 +127,49 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.header.headerexpression.label")
     String labelExpression();
+
+    @Key("propertiespanel.namespace.property.expression")
+    String propertiespanelNamespacePropertyExpression();
+
+    @Key("propertiespanel.property.editor.title")
+    String propertiespanelPropertyEditorTitle();
+
+    @Key("propertiespanel.payload.format")
+    String propertiespanelPayloadFormat();
+
+    @Key("propertiespanel.log.configuration.title")
+    String propertiespanelLogConfigurationTitle();
+
+    @Key("button.cancel")
+    String buttonCancel();
+
+    @Key("button.ok")
+    String buttonOk();
+
+    @Key("propertiespanel.resource.key.editor")
+    String propertiespanelResourceKeyEditor();
+
+    @Key("propertiespanel.key.from.specify")
+    String propertiespanelKeyFromSpecify();
+
+    @Key("propertiespanel.new.resource")
+    String propertiespanelNewResource();
+
+    @Key("propertiespanel.resource.key")
+    String propertiespanelResourceKey();
+
+    @Key("propertiespanel.resource.key.editor.title")
+    String propertiespanelResourceKeyEditorTitle();
+
+    @Key("propertiespanel.payload.args.configuration.title")
+    String propertiespanelPayloadArgsConfigurationTitle();
+
+    @Key("propertiespanel.table.value")
+    String propertiespanelTableValue();
+
+    @Key("propertiespanel.table.Evaluator")
+    String propertiespanelTableEvaluator();
+
+    @Key("propertiespanel.payload.args.label")
+    String propertiespanelPayloadArgsLabel();
 }

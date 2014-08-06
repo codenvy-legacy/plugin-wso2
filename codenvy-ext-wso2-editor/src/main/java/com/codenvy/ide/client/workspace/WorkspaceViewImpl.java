@@ -24,7 +24,7 @@ import com.codenvy.ide.client.elements.Filter;
 import com.codenvy.ide.client.elements.Header;
 import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.LoopBack;
-import com.codenvy.ide.client.elements.PayloadFactory;
+import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.codenvy.ide.client.elements.Property;
 import com.codenvy.ide.client.elements.Respond;
 import com.codenvy.ide.client.elements.Send;
@@ -69,6 +69,7 @@ import java.util.Map;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class WorkspaceViewImpl extends WorkspaceView {
 

@@ -16,10 +16,13 @@
 package com.codenvy.ide.client.propertiespanel.property;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -28,7 +31,10 @@ import com.google.inject.Inject;
 import java.util.List;
 
 /**
+ * The implementation of {@link PropertyPropertiesPanelView}
+ *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView {
 
@@ -36,23 +42,41 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     }
 
     @UiField
-    TextBox propertyName;
+    TextBox   propertyName;
     @UiField
-    ListBox propertyAction;
+    ListBox   propertyAction;
     @UiField
-    ListBox valueType;
+    ListBox   valueType;
     @UiField
-    TextBox propertyDataType;
+    ListBox   propertyDataType;
     @UiField
-    TextBox valueLiteral;
+    TextBox   valueLiteral;
     @UiField
-    TextBox valueStringPattern;
+    TextBox   valueStringPattern;
     @UiField
-    TextBox valueStringCaptureGroup;
+    TextBox   valueStringCaptureGroup;
     @UiField
-    ListBox propertyScope;
+    ListBox   propertyScope;
     @UiField
-    TextBox description;
+    TextBox   description;
+    @UiField
+    FlowPanel dataTypePanel;
+    @UiField
+    FlowPanel valueLiteralPanel;
+    @UiField
+    FlowPanel valueStringCaptureGroupPanel;
+    @UiField
+    FlowPanel valueTypePanel;
+    @UiField
+    FlowPanel valueStringPatternPanel;
+    @UiField
+    FlowPanel propertiesContainer;
+    @UiField
+    Button    expressionButton;
+    @UiField
+    TextBox   valueExpression;
+    @UiField
+    FlowPanel valueExpressionPanel;
 
     @Inject
     public PropertyPropertiesPanelViewImpl(PropertyPropertiesPanelViewImplUiBinder ourUiBinder) {
@@ -124,7 +148,9 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
         if (valueType == null) {
             return;
         }
+
         this.valueType.clear();
+
         for (String value : valueType) {
             this.valueType.addItem(value);
         }
@@ -149,13 +175,33 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     /** {@inheritDoc} */
     @Override
     public String getPropertyDataType() {
-        return String.valueOf(propertyDataType.getText());
+        int index = propertyDataType.getSelectedIndex();
+        return index != -1 ? propertyDataType.getValue(propertyDataType.getSelectedIndex()) : "";
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setPropertyDataType(String propertyDataType) {
-        this.propertyDataType.setText(propertyDataType);
+    public void setPropertyDataType(List<String> propertyDataType) {
+        if (propertyDataType == null) {
+            return;
+        }
+
+        this.propertyDataType.clear();
+
+        for (String value : propertyDataType) {
+            this.propertyDataType.addItem(value);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void selectPropertyDataType(String propertyDataType) {
+        for (int i = 0; i < this.propertyDataType.getItemCount(); i++) {
+            if (this.propertyDataType.getValue(i).equals(propertyDataType)) {
+                this.propertyDataType.setItemSelected(i, true);
+                return;
+            }
+        }
     }
 
     @UiHandler("propertyDataType")
@@ -175,9 +221,26 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
         this.valueLiteral.setText(valueLiteral);
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String getValueExpression() {
+        return String.valueOf(valueExpression.getText());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setValueExpression(String valueExpression) {
+        this.valueExpression.setText(valueExpression);
+    }
+
     @UiHandler("valueLiteral")
     public void onValueLiteralChanged(KeyUpEvent event) {
         delegate.onValueLiteralChanged();
+    }
+
+    @UiHandler("valueExpression")
+    public void onValueExpressionChanged(KeyUpEvent event) {
+        delegate.onValueExpressionChanged();
     }
 
     /** {@inheritDoc} */
@@ -264,6 +327,34 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     @UiHandler("description")
     public void onDescriptionChanged(KeyUpEvent event) {
         delegate.onDescriptionChanged();
+    }
+
+    @UiHandler("expressionButton")
+    public void onEditExpressionButtonClicked(ClickEvent event) {
+        delegate.showEditValueExpressionWindow();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void updatePropertyPanel(boolean isSet) {
+        valueTypePanel.setVisible(isSet);
+        dataTypePanel.setVisible(isSet);
+        valueStringPatternPanel.setVisible(isSet);
+        valueLiteralPanel.setVisible(isSet);
+        valueExpressionPanel.setVisible(isSet);
+        valueStringCaptureGroupPanel.setVisible(isSet);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleExpressionPanel(boolean isVisible) {
+        valueExpressionPanel.setVisible(isVisible);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleLiteralPanel(boolean isVisible) {
+        valueLiteralPanel.setVisible(isVisible);
     }
 
 }

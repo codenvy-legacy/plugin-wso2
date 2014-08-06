@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.elements.log.Log;
+import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.google.gwt.xml.client.Node;
 
 import javax.annotation.Nonnull;
@@ -23,8 +24,11 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.codenvy.ide.client.elements.Filter.FilterConditionType.SOURCE_AND_REGEX;
+
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class Filter extends RootElement {
     public static final String ELEMENT_NAME       = "Filter";
@@ -64,7 +68,7 @@ public class Filter extends RootElement {
     public Filter() {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
-        conditionType = "SOURCE_AND_REGEX";
+        conditionType = SOURCE_AND_REGEX.name();
         source = "get-property";
         regularExpression = "default/regex";
 
@@ -133,6 +137,12 @@ public class Filter extends RootElement {
                 regularExpression = String.valueOf(nodeValue);
                 break;
         }
+    }
+
+    public enum FilterConditionType {
+        SOURCE_AND_REGEX, XPATH;
+
+        public static final String TYPE_NAME = "FilterConditionType";
     }
 
 }

@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.elements.log.Log;
+import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.google.gwt.xml.client.Node;
 
 import javax.annotation.Nonnull;
@@ -25,6 +26,7 @@ import java.util.List;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class Switch_mediator extends RootElement {
     public static final String ELEMENT_NAME       = "Switch";

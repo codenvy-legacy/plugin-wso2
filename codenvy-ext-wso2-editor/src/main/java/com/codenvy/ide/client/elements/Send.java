@@ -19,11 +19,16 @@ import com.google.gwt.xml.client.Node;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.codenvy.ide.client.elements.Send.EBoolean.FALSE;
+import static com.codenvy.ide.client.elements.Send.ReceivingSequenceType.Default;
+
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class Send extends RootElement {
     public static final String ELEMENT_NAME       = "Send";
@@ -54,8 +59,8 @@ public class Send extends RootElement {
     public Send() {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
-        skipSerialization = "false";
-        receivingSequencerType = "Default";
+        skipSerialization = FALSE.getValue();
+        receivingSequencerType = Default.name();
         buildMessageBeforeSending = "false";
         description = "enter_description";
     }
@@ -134,6 +139,29 @@ public class Send extends RootElement {
             case DESCRIPTION_PROPERTY_NAME:
                 description = String.valueOf(nodeValue);
                 break;
+        }
+    }
+
+    public enum ReceivingSequenceType {
+        Default, Static;
+
+        public static final String TYPE_NAME = "ReceivingSequenceType";
+    }
+
+    public enum EBoolean {
+        TRUE("true"), FALSE("false");
+
+        public static final String TYPE_NAME = "EBoolean";
+
+        private String value;
+
+        EBoolean(String s) {
+            this.value = s;
+        }
+
+        @NotNull
+        public String getValue() {
+            return value;
         }
     }
 

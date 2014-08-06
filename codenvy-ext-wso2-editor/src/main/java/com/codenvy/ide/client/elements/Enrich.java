@@ -22,8 +22,13 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.codenvy.ide.client.elements.Enrich.SourceType.custom;
+import static com.codenvy.ide.client.elements.Enrich.TargetAction.replace;
+import static com.codenvy.ide.client.elements.Send.EBoolean.FALSE;
+
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class Enrich extends RootElement {
     public static final String ELEMENT_NAME       = "Enrich";
@@ -66,11 +71,11 @@ public class Enrich extends RootElement {
     public Enrich() {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
-        cloneSource = "false";
-        sourceType = "custom";
+        cloneSource = FALSE.name();
+        sourceType = custom.name();
         sourceXpath = "default/xpath";
-        targetAction = "replace";
-        targetType = "custom";
+        targetAction = replace.name();
+        targetType = TargetType.custom.name();
         targetXpath = "default/xpath";
         description = "enter_description";
     }
@@ -189,6 +194,24 @@ public class Enrich extends RootElement {
                 description = String.valueOf(nodeValue);
                 break;
         }
+    }
+
+    public enum SourceType {
+        custom, envelope, body, property, inline;
+
+        public static final String TYPE_NAME = "EnrichSourceType";
+    }
+
+    public enum TargetAction {
+        replace, child, sibling;
+
+        public static final String TYPE_NAME = "EnrichTargetAction";
+    }
+
+    public enum TargetType {
+        custom, envelope, body, property;
+
+        public static final String TYPE_NAME = "EnrichTargetType";
     }
 
 }

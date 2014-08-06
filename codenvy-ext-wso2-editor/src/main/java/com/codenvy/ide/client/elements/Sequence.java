@@ -22,8 +22,11 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.codenvy.ide.client.elements.Sequence.ReferringSequenceType.Static;
+
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class Sequence extends RootElement {
     public static final String ELEMENT_NAME       = "Sequence";
@@ -46,7 +49,7 @@ public class Sequence extends RootElement {
     public Sequence() {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
-        referringSequenceType = "Static";
+        referringSequenceType = Static.name();
         staticReferenceKey = "Sequence";
     }
 
@@ -99,6 +102,12 @@ public class Sequence extends RootElement {
                 staticReferenceKey = String.valueOf(nodeValue);
                 break;
         }
+    }
+
+    public enum ReferringSequenceType {
+        Dynamic, Static;
+
+        public static final String TYPE_NAME = "ReferringSequenceType";
     }
 
 }

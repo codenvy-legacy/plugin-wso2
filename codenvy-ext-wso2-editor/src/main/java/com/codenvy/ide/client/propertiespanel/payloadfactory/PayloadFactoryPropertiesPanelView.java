@@ -17,50 +17,153 @@ package com.codenvy.ide.client.propertiespanel.payloadfactory;
 
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.inject.ImplementedBy;
+
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
+ * The view of {@link PayloadFactoryPropertiesPanelPresenter}
+ *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 @ImplementedBy(PayloadFactoryPropertiesPanelViewImpl.class)
 public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<PayloadFactoryPropertiesPanelView.ActionDelegate> {
 
     public interface ActionDelegate extends AbstractView.ActionDelegate {
 
+        /** Performs any actions appropriate in response to the user having changed payload format field. */
         void onPayloadFormatChanged();
 
+        /** Performs any actions appropriate in response to the user having changed format field. */
         void onFormatChanged();
 
-        void onArgsChanged();
-
+        /** Performs any actions appropriate in response to the user having changed media type field. */
         void onMediaTypeChanged();
 
+        /** Performs any actions appropriate in response to the user having changed description field. */
         void onDescriptionChanged();
 
+        /**
+         * Performs any actions appropriate in response to the user having clicked format button.
+         *
+         * @param content
+         *         text into Format place on the view
+         */
+        void showFormatConfigurationWindow(@NotNull String content, @NotNull String tile);
+
+        /** Performs any actions appropriate in response to the user having clicked format button. */
+        void showArgsConfigurationWindow();
+
+        /**
+         * Performs any actions appropriate in response to the user having clicked format key button.
+         *
+         * @param key
+         *         text into Key Format place on the view
+         */
+        void showKeyEditorWindow(@NotNull String key);
     }
 
+    /** return payload format value */
+    @NotNull
     public abstract String getPayloadFormat();
 
-    public abstract void selectPayloadFormat(String payloadFormat);
+    /**
+     * Select payload format in place on view.
+     *
+     * @param payloadFormat
+     *         payload format value
+     */
+    public abstract void selectPayloadFormat(@NotNull String payloadFormat);
 
-    public abstract void setPayloadFormat(List<String> payloadFormat);
+    /**
+     * Set payload format value.
+     *
+     * @param payloadFormat
+     *         values of payload format field.
+     */
+    public abstract void setPayloadFormat(@NotNull List<String> payloadFormat);
 
+    /** @return format value */
+    @NotNull
     public abstract String getFormat();
 
-    public abstract void setFormat(String format);
+    /**
+     * Set format value.
+     *
+     * @param format
+     *         value of format
+     */
+    public abstract void setFormat(@NotNull String format);
 
+    /** @return format key */
+    @NotNull
+    public abstract String getFormatKey();
+
+    /**
+     * Set format key.
+     *
+     * @param formatKey
+     *         value of format key
+     */
+    public abstract void setFormatKey(@NotNull String formatKey);
+
+    /** @return args value */
+    @NotNull
     public abstract String getArgs();
 
-    public abstract void setArgs(String args);
+    /**
+     * Set args value.
+     *
+     * @param args
+     */
+    public abstract void setArgs(@NotNull String args);
 
+    /** @return media type of PayLoad mediator. */
+    @NotNull
     public abstract String getMediaType();
 
-    public abstract void selectMediaType(String mediaType);
+    /**
+     * Select value of media type.
+     *
+     * @param mediaType
+     *         selected value of media type
+     */
+    public abstract void selectMediaType(@NotNull String mediaType);
 
-    public abstract void setMediaType(List<String> mediaType);
+    /**
+     * Set media type values.
+     *
+     * @param mediaType
+     */
+    public abstract void setMediaType(@NotNull List<String> mediaType);
 
+    /** @return description */
+    @NotNull
     public abstract String getDescription();
 
-    public abstract void setDescription(String description);
+    /**
+     * Set description.
+     *
+     * @param description
+     */
+    public abstract void setDescription(@NotNull String description);
+
+
+    /**
+     * Set visible format panel on view.
+     *
+     * @param isVisible
+     *         <code>true</code> to show format panel, <code>false</code> not to show
+     */
+    public abstract void setVisibleFormatPanel(boolean isVisible);
+
+    /**
+     * Set visible format key panel on view.
+     *
+     * @param isVisible
+     *         <code>true</code> to show format key panel, <code>false</code> not to show
+     */
+    public abstract void setVisibleFormatKeyPanel(boolean isVisible);
 
 }

@@ -35,6 +35,7 @@ import java.util.List;
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class Log extends RootElement {
 
@@ -222,11 +223,15 @@ public class Log extends RootElement {
     }
 
     public enum LogCategory {
-        TRACE, DEBUG, INFO, WARN, ERROR, FATAL
+        TRACE, DEBUG, INFO, WARN, ERROR, FATAL;
+
+        public static final String TYPE_NAME = "LogCategory";
     }
 
     public enum LogLevel {
-        SIMPLE, HEADERS, FULL, CUSTOM
+        SIMPLE, HEADERS, FULL, CUSTOM;
+
+        public static final String TYPE_NAME = "LogLevel";
     }
 
 }

@@ -70,7 +70,7 @@
 
         .tablePanelStyle {
             margin-left: 10px;
-            background: lightgray;
+            border: 2px solid gray;
             width: 570px;
             height: 230px;
         }
@@ -86,20 +86,9 @@
             width: 80px;
         }
 
-        .cancelButtonStyle {
-            margin-top: 20px;
-            margin-left: 500px;
-            width: 80px;
-        }
-
-        .okButtonStyle {
-            margin-top: 20px;
-            margin-left: 20px;
-            width: 80px;
-        }
     </ui:style>
 
-    <g:DockLayoutPanel unit="PX" width="700px" height="450px">
+    <g:DockLayoutPanel unit="PX" width="700px" height="400px">
         <g:north size="60">
             <g:FlowPanel>
                 <g:Label ui:field="title" text="{locale.namespacedProperty}" addStyleNames="{style.nameSpacePropertyLabelStyle}"/>
@@ -132,7 +121,7 @@
                     </g:FlowPanel>
                 </g:center>
 
-                <g:east size="120">
+                <g:east size="110">
                     <g:FlowPanel>
                         <g:Button ui:field="btnAdd" text="{locale.buttonAdd}" addStyleNames="{style.addButtonStyle}"/>
                         <g:Button ui:field="btnEdit" text="{locale.buttonEdit}" addStyleNames="{style.editRemoveButtonStyle}"/>
@@ -143,12 +132,6 @@
             </g:DockLayoutPanel>
         </g:center>
 
-        <g:south size="60">
-            <g:FlowPanel>
-                <g:Button ui:field="btnCancel" text="{locale.buttonCancel}" addStyleNames="{style.cancelButtonStyle}"/>
-                <g:Button ui:field="btnSaveChanges" text="{locale.buttonOk}" addStyleNames="{style.okButtonStyle}"/>
-            </g:FlowPanel>
-        </g:south>
     </g:DockLayoutPanel>
 
 </ui:UiBinder>

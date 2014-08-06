@@ -24,6 +24,7 @@
     <ui:style>
         .addPropertyButtonStyle {
             margin-left: 20px;
+            margin-top: 30px;
             width: 80px;
             text-align: center;
         }
@@ -42,49 +43,38 @@
 
         .centerPanel {
             margin-left: 10px;
-            border: 2px solid gray;
         }
 
-        .northPanel {
-            margin-left: 20px;
+        .descriptionLabel {
+            margin: 10px 10px;
         }
+
+        .alignLeft {
+            float: left;
+            margin-left: 10px;
+        }
+
     </ui:style>
 
-    <g:DockLayoutPanel unit="PX" width="700px" height="450px">
-
-        <g:north size="140">
-            <g:DockLayoutPanel>
-                <g:west size="300">
-                    <g:FlowPanel addStyleNames="{style.northPanel}">
-                        <g:Label text="{locale.logCategory}"/>
-                        <g:ListBox ui:field="logCategoryListBox"/>
-
-                        <g:Label text="{locale.logLevel}"/>
-                        <g:ListBox ui:field="logLevelListBox"/>
-
-                        <g:Label text="{locale.logSeparator}"/>
-                        <g:TextBox ui:field="logSeparatorTextBox"/>
-
-                        <g:Label text="{locale.properties}"/>
-                    </g:FlowPanel>
-                </g:west>
-
-                <g:east size="400">
-                    <g:FlowPanel>
-                        <g:Label text="{locale.logName}"/>
-                        <g:TextBox ui:field="nameTextBox"/>
-
-                        <g:Label text="{locale.valueExpression}"/>
-                        <g:TextBox ui:field="valueExpressionTextBox"/>
-                    </g:FlowPanel>
-                </g:east>
-            </g:DockLayoutPanel>
-        </g:north>
+    <g:DockLayoutPanel unit="PX" width="650px" height="300px">
 
         <g:center>
             <g:FlowPanel addStyleNames="{style.centerPanel}">
+                <g:Label text="Arguments" addStyleNames="{style.descriptionLabel}"/>
+
+                <g:FlowPanel addStyleNames="{style.alignLeft}">
+                    <g:Label text="{locale.valueExpression}"/>
+                    <g:TextBox ui:field="valueExpressionTextBox" height="17px"/>
+                </g:FlowPanel>
+
+                <g:FlowPanel addStyleNames="{style.alignLeft}">
+                    <g:Label text="{locale.propertiespanelTableEvaluator}"/>
+                    <g:ListBox ui:field="valueEvaluator" height="24px" width="156px"/>
+                </g:FlowPanel>
+
+
                 <g:ScrollPanel width="100%" height="100%">
-                    <c:CellTable ui:field="tableOfProperties" addStyleNames="{style.tableStyle}"/>
+                    <c:CellTable ui:field="args" addStyleNames="{style.tableStyle}"/>
                 </g:ScrollPanel>
             </g:FlowPanel>
         </g:center>

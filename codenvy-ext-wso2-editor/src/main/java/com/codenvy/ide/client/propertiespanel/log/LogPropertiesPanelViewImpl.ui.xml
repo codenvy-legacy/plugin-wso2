@@ -42,8 +42,8 @@
             <g:north size="60.00">
                 <g:FlowPanel>
                     <g:Label text="Properties"/>
-                    <g:TextBox ui:field="logProperties" width="170px"/>
-                    <g:Button ui:field="propertiesButton" width="30px" text="..."/>
+                    <g:TextBox ui:field="logProperties" width="200px"/>
+                    <g:Button ui:field="propertiesButton" addStyleNames="{res.editorCSS.propertyButton}" text="..."/>
                 </g:FlowPanel>
             </g:north>
             <g:north size="60.00">

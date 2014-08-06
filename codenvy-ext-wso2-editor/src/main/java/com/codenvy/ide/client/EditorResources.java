@@ -40,6 +40,9 @@ public interface EditorResources extends ClientBundle {
 
         String applyCursor();
 
+        String property();
+
+        String propertyButton();
     }
 
     @Source("editor.css")
