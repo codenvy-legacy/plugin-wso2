@@ -49,7 +49,6 @@ public class Call extends RootElement {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
         endpointType = INLINE.name();
-        description = "enter_description";
     }
 
     @Nullable

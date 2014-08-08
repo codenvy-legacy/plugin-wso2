@@ -20,16 +20,20 @@ import com.google.gwt.xml.client.Node;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
+ * Class describes LoopBack mediator.
+ *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class LoopBack extends RootElement {
     public static final String ELEMENT_NAME       = "LoopBack";
     public static final String SERIALIZATION_NAME = "loopBack";
 
-    private static final String DESCRIPTION_PROPERTY_NAME = "Description";
+    private static final String DESCRIPTION_PROPERTY_NAME = "description";
 
     private static final List<String> PROPERTIES          = Arrays.asList(DESCRIPTION_PROPERTY_NAME);
     private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
@@ -41,8 +45,6 @@ public class LoopBack extends RootElement {
 
     public LoopBack() {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
-
-        description = "enter_description";
     }
 
     @Nullable
@@ -58,7 +60,11 @@ public class LoopBack extends RootElement {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        return "description=\"" + description + "\" ";
+        LinkedHashMap<String, String> prop = new LinkedHashMap<>();
+
+        prop.put(DESCRIPTION_PROPERTY_NAME, description);
+
+        return prepareSerialization(prop);
     }
 
     /** {@inheritDoc} */

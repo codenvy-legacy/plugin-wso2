@@ -66,7 +66,12 @@ public class CallTemplate extends RootElement {
         return availableTemplates;
     }
 
-    /** Set available template */
+    /**
+     * Set available template.
+     *
+     * @param availableTemplates
+     *         values of available template
+     */
     public void setAvailableTemplates(@Nullable String availableTemplates) {
         this.availableTemplates = availableTemplates;
     }
@@ -77,7 +82,12 @@ public class CallTemplate extends RootElement {
         return targetTemplate;
     }
 
-    /** Set target template */
+    /**
+     * Set target template.
+     *
+     * @param targetTemplate
+     *         values of target template
+     */
     public void setTargetTemplate(@Nullable String targetTemplate) {
         this.targetTemplate = targetTemplate;
     }
@@ -88,7 +98,12 @@ public class CallTemplate extends RootElement {
         return parameters;
     }
 
-    /** Set list of parameters to element */
+    /**
+     * Set list of parameters to element.
+     *
+     * @param parameters
+     *         parameters of CallTemplate mediator
+     */
     public void setParameters(@Nonnull Array<Property> parameters) {
         this.parameters = parameters;
     }
@@ -99,7 +114,12 @@ public class CallTemplate extends RootElement {
         return description;
     }
 
-    /** Set description */
+    /**
+     * Set description.
+     *
+     * @param description
+     *         description of CallTemplate mediator
+     */
     public void setDescription(@Nullable String description) {
         this.description = description;
     }
