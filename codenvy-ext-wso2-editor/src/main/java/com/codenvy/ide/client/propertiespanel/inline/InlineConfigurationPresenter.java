@@ -15,6 +15,10 @@
  */
 package com.codenvy.ide.client.propertiespanel.inline;
 
+import com.codenvy.ide.ui.dialogs.info.Info;
+import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.XMLParser;
+import com.google.gwt.xml.client.impl.DOMParseException;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -23,6 +27,7 @@ import javax.annotation.Nonnull;
  * Presenter for Payload Format window.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class InlineConfigurationPresenter implements InlineConfigurationView.ActionDelegate {
 
@@ -38,7 +43,14 @@ public class InlineConfigurationPresenter implements InlineConfigurationView.Act
     /** {@inheritDoc} */
     @Override
     public void onOkClicked(@Nonnull String value) {
-        changeInlineFormatCallBack.onInlineChanged(value, view);
+        try {
+            Document document = XMLParser.parse(value);
+            view.closeDialog();
+            changeInlineFormatCallBack.onInlineChanged(document.toString());
+        } catch (DOMParseException e) {
+            Info info = new Info("Malformed xml");
+            info.show();
+        }
     }
 
     /** {@inheritDoc} */

@@ -10,6 +10,7 @@
     <inherits name='com.google.gwt.widgetideas.WidgetIdeas'/>
     <inherits name='com.google.gwt.libideas.LibIdeas'/>
     <inherits name="com.codenvy.ide.collections.Collections"/>
+    <inherits name="com.codenvy.ide.ui.CodenvyUI"/>
 
     <source path='client'/>
 

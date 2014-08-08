@@ -27,7 +27,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 
@@ -37,7 +36,6 @@ import javax.annotation.Nonnull;
  *
  * @author Valeriy Svydenko
  */
-@Singleton
 public class InlineConfigurationViewImpl extends Window implements InlineConfigurationView {
 
     interface FormatConfigurationUiBinder extends UiBinder<Widget, InlineConfigurationViewImpl> {
@@ -45,6 +43,7 @@ public class InlineConfigurationViewImpl extends Window implements InlineConfigu
 
     @UiField
     TextArea format;
+
     Button btnOk;
     Button btnCancel;
 
@@ -57,7 +56,6 @@ public class InlineConfigurationViewImpl extends Window implements InlineConfigu
         this.setWidget(widget);
 
         btnCancel = createButton(local.buttonCancel(), "format-cancel", new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onCancelClicked();
@@ -66,7 +64,6 @@ public class InlineConfigurationViewImpl extends Window implements InlineConfigu
         getFooter().add(btnCancel);
 
         btnOk = createButton(local.buttonOk(), "format-ok", new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onOkClicked(format.getText());

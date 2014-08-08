@@ -19,7 +19,7 @@ import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.Call;
 import com.codenvy.ide.client.elements.CallTemplate;
-import com.codenvy.ide.client.elements.Enrich;
+import com.codenvy.ide.client.elements.enrich.Enrich;
 import com.codenvy.ide.client.elements.Filter;
 import com.codenvy.ide.client.elements.Header;
 import com.codenvy.ide.client.elements.log.Log;

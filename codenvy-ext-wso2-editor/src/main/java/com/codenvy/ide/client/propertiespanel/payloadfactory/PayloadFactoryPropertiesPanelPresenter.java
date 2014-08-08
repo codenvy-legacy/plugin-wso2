@@ -22,17 +22,11 @@ import com.codenvy.ide.client.propertiespanel.arguments.AddArgumentCallBack;
 import com.codenvy.ide.client.propertiespanel.arguments.ArgumentsConfigPresenter;
 import com.codenvy.ide.client.propertiespanel.inline.ChangeInlineFormatCallBack;
 import com.codenvy.ide.client.propertiespanel.inline.InlineConfigurationPresenter;
-import com.codenvy.ide.client.propertiespanel.inline.InlineConfigurationView;
 import com.codenvy.ide.client.propertiespanel.resourcekeyeditor.ChangeResourceKeyCallBack;
 import com.codenvy.ide.client.propertiespanel.resourcekeyeditor.ResourceKeyEditorPresenter;
 import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.ui.dialogs.info.Info;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.xml.client.Document;
-import com.google.gwt.xml.client.Element;
-import com.google.gwt.xml.client.XMLParser;
-import com.google.gwt.xml.client.impl.DOMParseException;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -72,22 +66,12 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
 
         this.changeInlineFormatCallBack = new ChangeInlineFormatCallBack() {
             @Override
-            public void onInlineChanged(@Nonnull String inline, @Nonnull InlineConfigurationView inlineView) {
-                try {
-                    Document document = XMLParser.parse(inline);
-                    inlineView.closeDialog();
+            public void onInlineChanged(@Nonnull String inline) {
+                element.setFormat(inline);
 
-                    Element rootElement = document.getDocumentElement();
+                ((PayloadFactoryPropertiesPanelView)PayloadFactoryPropertiesPanelPresenter.this.view).setFormat(inline);
 
-                    element.setFormat(rootElement.toString());
-                    ((PayloadFactoryPropertiesPanelView)PayloadFactoryPropertiesPanelPresenter.this.view)
-                            .setFormat(rootElement.toString());
-
-                    notifyListeners();
-                } catch (DOMParseException e) {
-                    Info info = new Info("Malformed xml");
-                    info.show();
-                }
+                notifyListeners();
             }
         };
 
@@ -95,8 +79,8 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
             @Override
             public void onFormatKeyChanged(@Nonnull String key) {
                 element.setFormatKey(key);
-                ((PayloadFactoryPropertiesPanelView)PayloadFactoryPropertiesPanelPresenter.this.view)
-                        .setFormatKey(key);
+
+                ((PayloadFactoryPropertiesPanelView)PayloadFactoryPropertiesPanelPresenter.this.view).setFormatKey(key);
 
                 notifyListeners();
             }
@@ -107,8 +91,7 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
             public void onArgumentsChanged(@Nonnull Array<Arg> arg) {
                 element.setArgs(arg);
 
-                ((PayloadFactoryPropertiesPanelView)PayloadFactoryPropertiesPanelPresenter.this.view)
-                        .setArgs(arg.isEmpty() ? "" : "Payload Factory Arguments");
+                ((PayloadFactoryPropertiesPanelView)PayloadFactoryPropertiesPanelPresenter.this.view).setArgs("Payload Factory Arguments");
 
                 notifyListeners();
             }

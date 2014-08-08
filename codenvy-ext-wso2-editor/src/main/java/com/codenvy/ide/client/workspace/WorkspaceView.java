@@ -17,7 +17,7 @@ package com.codenvy.ide.client.workspace;
 
 import com.codenvy.ide.client.elements.Call;
 import com.codenvy.ide.client.elements.CallTemplate;
-import com.codenvy.ide.client.elements.Enrich;
+import com.codenvy.ide.client.elements.enrich.Enrich;
 import com.codenvy.ide.client.elements.Filter;
 import com.codenvy.ide.client.elements.Header;
 import com.codenvy.ide.client.elements.log.Log;

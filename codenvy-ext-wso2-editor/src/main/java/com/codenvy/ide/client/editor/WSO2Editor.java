@@ -22,7 +22,6 @@ import com.codenvy.ide.client.State;
 import com.codenvy.ide.client.elements.Call;
 import com.codenvy.ide.client.elements.CallTemplate;
 import com.codenvy.ide.client.elements.Connection;
-import com.codenvy.ide.client.elements.Enrich;
 import com.codenvy.ide.client.elements.Filter;
 import com.codenvy.ide.client.elements.Header;
 import com.codenvy.ide.client.elements.LoopBack;
@@ -31,6 +30,7 @@ import com.codenvy.ide.client.elements.Respond;
 import com.codenvy.ide.client.elements.Send;
 import com.codenvy.ide.client.elements.Sequence;
 import com.codenvy.ide.client.elements.Switch_mediator;
+import com.codenvy.ide.client.elements.enrich.Enrich;
 import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.codenvy.ide.client.inject.EditorFactory;
@@ -72,17 +72,6 @@ import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates;
 import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates.EMPTY;
 import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates.SDF;
 import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates.SELECT_FROM_TEMPLATE;
-import static com.codenvy.ide.client.elements.Enrich.SourceType;
-import static com.codenvy.ide.client.elements.Enrich.SourceType.body;
-import static com.codenvy.ide.client.elements.Enrich.SourceType.custom;
-import static com.codenvy.ide.client.elements.Enrich.SourceType.envelope;
-import static com.codenvy.ide.client.elements.Enrich.SourceType.inline;
-import static com.codenvy.ide.client.elements.Enrich.SourceType.property;
-import static com.codenvy.ide.client.elements.Enrich.TargetAction;
-import static com.codenvy.ide.client.elements.Enrich.TargetAction.child;
-import static com.codenvy.ide.client.elements.Enrich.TargetAction.replace;
-import static com.codenvy.ide.client.elements.Enrich.TargetAction.sibling;
-import static com.codenvy.ide.client.elements.Enrich.TargetType;
 import static com.codenvy.ide.client.elements.Filter.FilterConditionType;
 import static com.codenvy.ide.client.elements.Filter.FilterConditionType.SOURCE_AND_REGEX;
 import static com.codenvy.ide.client.elements.Header.HeaderAction;
@@ -119,6 +108,17 @@ import static com.codenvy.ide.client.elements.Send.ReceivingSequenceType.Default
 import static com.codenvy.ide.client.elements.Send.ReceivingSequenceType.Static;
 import static com.codenvy.ide.client.elements.Sequence.ReferringSequenceType;
 import static com.codenvy.ide.client.elements.Sequence.ReferringSequenceType.Dynamic;
+import static com.codenvy.ide.client.elements.enrich.Enrich.SourceType;
+import static com.codenvy.ide.client.elements.enrich.Enrich.SourceType.body;
+import static com.codenvy.ide.client.elements.enrich.Enrich.SourceType.custom;
+import static com.codenvy.ide.client.elements.enrich.Enrich.SourceType.envelope;
+import static com.codenvy.ide.client.elements.enrich.Enrich.SourceType.inline;
+import static com.codenvy.ide.client.elements.enrich.Enrich.SourceType.property;
+import static com.codenvy.ide.client.elements.enrich.Enrich.TargetAction;
+import static com.codenvy.ide.client.elements.enrich.Enrich.TargetAction.child;
+import static com.codenvy.ide.client.elements.enrich.Enrich.TargetAction.replace;
+import static com.codenvy.ide.client.elements.enrich.Enrich.TargetAction.sibling;
+import static com.codenvy.ide.client.elements.enrich.Enrich.TargetType;
 import static com.codenvy.ide.client.elements.log.Log.LogCategory;
 import static com.codenvy.ide.client.elements.log.Log.LogCategory.DEBUG;
 import static com.codenvy.ide.client.elements.log.Log.LogCategory.ERROR;
@@ -141,6 +141,7 @@ import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType.x
 /**
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class WSO2Editor extends AbstractPresenter implements WorkspacePresenter.DiagramChangeListener,
                                                              AbstractPropertiesPanel.PropertyChangedListener,
@@ -223,7 +224,6 @@ public class WSO2Editor extends AbstractPresenter implements WorkspacePresenter.
         propertiesPanelManager.register(null, emptyPropertiesPanelPresenter);
         emptyPropertiesPanelPresenter.addListener(this);
 
-
         propertyTypeManager.register(EndpointType.TYPE_NAME,
                                      Arrays.asList(INLINE.name(), NONE.name(), REGISTRYKEY.name(), XPATH.name()));
         propertyTypeManager.register(LogCategory.TYPE_NAME,
@@ -234,10 +234,12 @@ public class WSO2Editor extends AbstractPresenter implements WorkspacePresenter.
                                      Arrays.asList(LITERAL.name(), EXPRESSION.name()));
         propertyTypeManager.register(DataType.TYPE_NAME,
                                      Arrays.asList(STRING.name(), INTEGER.name(), BOOLEAN.name(), DOUBLE.name(), FLOAT.name(), LONG.name(),
-                                                   SHORT.name(), OM.name()));
+                                                   SHORT.name(), OM.name())
+                                    );
         propertyTypeManager.register(PropertyScope.TYPE_NAME,
                                      Arrays.asList(SYNAPSE.getValue(), TRANSPORT.getValue(), AXIS2.getValue(), AXIS2_CLIENT.getValue(),
-                                                   OPERATION.getValue()));
+                                                   OPERATION.getValue())
+                                    );
         propertyTypeManager.register(PropertyAction.TYPE_NAME,
                                      Arrays.asList(set.name(), remove.name()));
         propertyTypeManager.register(MediaType.TYPE_NAME,
@@ -252,7 +254,8 @@ public class WSO2Editor extends AbstractPresenter implements WorkspacePresenter.
                                      Arrays.asList(HeaderAction.set.name(), HeaderAction.remove.name()));
         propertyTypeManager.register(HeaderValueType.TYPE_NAME,
                                      Arrays.asList(HeaderValueType.LITERAL.name(), HeaderValueType.EXPRESSION.name(),
-                                                   HeaderValueType.INLINE.name()));
+                                                   HeaderValueType.INLINE.name())
+                                    );
         propertyTypeManager.register(ScopeType.TYPE_NAME,
                                      Arrays.asList(Synapse.name(), transport.name()));
         propertyTypeManager.register(FilterConditionType.TYPE_NAME,
@@ -268,6 +271,8 @@ public class WSO2Editor extends AbstractPresenter implements WorkspacePresenter.
                                                    TargetType.property.name()));
         propertyTypeManager.register(AvailableTemplates.TYPE_NAME,
                                      Arrays.asList(EMPTY.getValue(), SELECT_FROM_TEMPLATE.getValue(), SDF.getValue()));
+        propertyTypeManager.register(Enrich.InlineType.INLINE_TYPE,
+                                     Arrays.asList(Enrich.InlineType.RegistryKey.name(), Enrich.InlineType.SourceXML.name()));
 
         metaModelValidator.register(Switch_mediator.ELEMENT_NAME, Connection.CONNECTION_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                                                             Property.ELEMENT_NAME,

@@ -173,6 +173,15 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("propertiespanel.payload.args.label")
     String propertiespanelPayloadArgsLabel();
 
+    @Key("propertiespanel.enrich.source.namespace.label")
+    String enrichSrcLabel();
+
+    @Key("propertiespanel.enrich.source.inline.titleEnrichInline")
+    String titleEnrichInline();
+
+    @Key("propertiespanel.header.inlinewindow.title")
+    String inlineTitle();
+
     @Key("propertiespanel.call.template.configuration.title")
     String propertiespanelCallTemplateConfigurationTitle();
 }

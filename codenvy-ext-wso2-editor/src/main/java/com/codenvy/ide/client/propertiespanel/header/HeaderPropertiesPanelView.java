@@ -64,6 +64,14 @@ public abstract class HeaderPropertiesPanelView extends AbstractView<HeaderPrope
     }
 
     /**
+     * Select inline xml in place on view.
+     *
+     * @param inlineXML
+     *         inline xml value
+     */
+    public abstract void setInlineXML(@Nullable String inlineXML);
+
+    /**
      * Set visible value type panel on view.
      *
      * @param isVisible

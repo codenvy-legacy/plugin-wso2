@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.Header.HeaderAction.remove;
 import static com.codenvy.ide.client.elements.Header.HeaderAction.set;
 import static com.codenvy.ide.client.elements.Property.ValueType.LITERAL;
 
@@ -45,6 +44,8 @@ public class Header extends RootElement {
     private static final String NAME       = "name";
     private static final String VALUE      = "value";
     private static final String EXPRESSION = "expression";
+    private static final String ACTION     = "action";
+    private static final String SCOPE      = "scope";
 
     private static final String PREFIX = "xmlns:";
 
@@ -59,6 +60,7 @@ public class Header extends RootElement {
     private String headerName;
     private String value;
     private String expression;
+    private String inlineXml;
 
     private Array<NameSpace> headerNamespaces;
     private Array<NameSpace> expressionNamespaces;
@@ -75,6 +77,23 @@ public class Header extends RootElement {
         value = "header_Value";
         headerName = "To";
         expression = "/default/expression";
+        inlineXml = "";
+    }
+
+    /** @return inline xml of header element */
+    @Nonnull
+    public String getInlineXml() {
+        return inlineXml;
+    }
+
+    /**
+     * Sets inline xml to header
+     *
+     * @param inlineXml
+     *         value which need to set to element
+     */
+    public void setInlineXml(@Nullable String inlineXml) {
+        this.inlineXml = inlineXml;
     }
 
     /** @return list of header namespaces of element */
@@ -206,6 +225,23 @@ public class Header extends RootElement {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
+    @Override
+    protected String serializeProperty() {
+        if (!valueType.equals(HeaderValueType.INLINE.name()) || inlineXml.isEmpty()) {
+            return "";
+        }
+
+        int index = inlineXml.indexOf(">");
+        String tag = inlineXml.substring(0, index);
+
+        String tagName = inlineXml.substring(0, tag.contains("/") ? index - 1 : index);
+        String restString = inlineXml.substring(tag.contains("/") ? index - 1 : index);
+
+        return tagName + " xmlns=\"\"" + restString;
+    }
+
+    /** {@inheritDoc} */
     @Override
     @Nonnull
     protected String serializeAttributes() {
@@ -225,29 +261,16 @@ public class Header extends RootElement {
 
         setDefaultAttributes(attributes);
 
-        if (action.equalsIgnoreCase(remove.name())) {
-            attributes.remove("expression");
-            attributes.remove("value");
-        }
+        attributes.remove(action.equals(set.name()) ? ACTION : VALUE);
+        attributes.remove(valueType.equals(HeaderValueType.EXPRESSION.name()) ? VALUE : EXPRESSION);
 
         switch (HeaderValueType.valueOf(valueType)) {
-            case EXPRESSION:
-                attributes.remove("value");
-                attributes.remove("action");
-                break;
-
             case INLINE:
-                attributes.remove("name");
-                attributes.remove("expression");
-                attributes.remove("value");
-                attributes.remove("action");
+                attributes.remove(VALUE);
+                attributes.remove(NAME);
+                attributes.remove(EXPRESSION);
 
                 return prepareSerialization(attributes);
-
-            case LITERAL:
-                attributes.remove("expression");
-                attributes.remove(action.equalsIgnoreCase(set.name()) ? "action" : "value");
-                break;
         }
 
         return nameSpaces.toString() + prepareSerialization(attributes);
@@ -259,12 +282,13 @@ public class Header extends RootElement {
      * @param attributes
      *         list of attributes which need to set to element by default
      */
+
     private void setDefaultAttributes(@Nonnull LinkedHashMap<String, String> attributes) {
-        attributes.put("name", headerName);
-        attributes.put("scope", scope);
-        attributes.put("value", value);
-        attributes.put("expression", expression);
-        attributes.put("action", action);
+        attributes.put(NAME, headerName);
+        attributes.put(SCOPE, scope);
+        attributes.put(VALUE, value);
+        attributes.put(EXPRESSION, expression);
+        attributes.put(ACTION, action);
     }
 
     /** {@inheritDoc} */
@@ -313,6 +337,21 @@ public class Header extends RootElement {
                     }
                     break;
             }
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void applyProperty(@Nonnull Node node) {
+        if (node.hasChildNodes()) {
+            String document = node.getOwnerDocument().toString();
+
+            node.getFirstChild().getOwnerDocument().getDocumentElement().removeAttribute("xmlns");
+
+            int indexFirst = document.indexOf(">");
+            int indexLast = document.lastIndexOf("<");
+
+            inlineXml = document.substring(indexFirst + 1, indexLast);
         }
     }
 

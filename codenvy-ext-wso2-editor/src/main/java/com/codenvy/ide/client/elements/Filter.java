@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.elements;
 
+import com.codenvy.ide.client.elements.enrich.Enrich;
 import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.google.gwt.xml.client.Node;

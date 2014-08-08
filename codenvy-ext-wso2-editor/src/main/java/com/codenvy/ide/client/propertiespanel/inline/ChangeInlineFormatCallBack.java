@@ -27,5 +27,5 @@ public interface ChangeInlineFormatCallBack {
      * @param inline
      *         changed content of inline
      */
-    void onInlineChanged(@Nonnull String inline, @Nonnull InlineConfigurationView view);
+    void onInlineChanged(@Nonnull String inline);
 }

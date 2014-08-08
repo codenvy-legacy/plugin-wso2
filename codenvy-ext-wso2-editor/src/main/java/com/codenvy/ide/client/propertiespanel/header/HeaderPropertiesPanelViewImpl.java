@@ -47,6 +47,7 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
     ListBox   scope;
     @UiField
     ListBox   valueType;
+
     @UiField
     TextBox   value;
     @UiField
@@ -55,12 +56,14 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
     TextBox   expression;
     @UiField
     TextBox   inline;
+
     @UiField
     Button    btnAddNameSpace;
     @UiField
     Button    btnAddInline;
     @UiField
     Button    btnAddExpression;
+
     @UiField
     FlowPanel valueTypePanel;
     @UiField
@@ -220,7 +223,7 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
     }
 
     @UiHandler("value")
-    public void onValueLiteralChanged(ChangeEvent event) {
+    public void onValueLiteralChanged(KeyUpEvent event) {
         delegate.onValueChanged();
     }
 
@@ -253,6 +256,12 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
     @UiHandler("headerName")
     public void onHeaderNameChanged(KeyUpEvent event) {
         delegate.onHeaderNameChanged();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setInlineXML(@Nullable String inlineXML) {
+        inline.setText(inlineXML);
     }
 
     /** {@inheritDoc} */
