@@ -22,11 +22,6 @@
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
 
     <ui:style>
-        .panelStyle {
-            margin-left: 30px;
-            height: 60px;
-        }
-
         .labelStyle {
             margin-left: 5px;
             margin-top: 5px;
@@ -41,71 +36,71 @@
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
 
         <g:FlowPanel>
-            <g:FlowPanel height="70px">
+            <g:FlowPanel addStyleNames="{res.editorCSS.property}">
                 <g:Label text="Misc" addStyleNames="{style.labelStyle}"/>
                 <g:Label text="Description" addStyleNames="{style.fieldStyle}"/>
                 <g:TextBox ui:field="description" width="200px" addStyleNames="{style.fieldStyle}"/>
             </g:FlowPanel>
 
-            <g:FlowPanel height="70px">
+            <g:FlowPanel addStyleNames="{res.editorCSS.property}">
                 <g:Label text="Source" addStyleNames="{style.labelStyle}"/>
                 <g:Label text="Clone Source" addStyleNames="{style.fieldStyle}"/>
                 <g:ListBox ui:field="cloneSource" width="206px" addStyleNames="{style.fieldStyle}"/>
             </g:FlowPanel>
 
-            <g:FlowPanel height="60px" addStyleNames="{style.panelStyle}">
-                <g:Label text="Source Type"/>
-                <g:ListBox ui:field="sourceType" width="206px"/>
+            <g:FlowPanel addStyleNames="{res.editorCSS.property}">
+                <g:Label text="Source Type" addStyleNames="{style.labelStyle}"/>
+                <g:ListBox ui:field="sourceType" width="206px" addStyleNames="{style.fieldStyle}"/>
             </g:FlowPanel>
 
-            <g:FlowPanel height="60px" ui:field="srcXpathPanel" addStyleNames="{style.panelStyle}">
-                <g:Label text="Source Xpath"/>
-                <g:TextBox ui:field="sourceXpath" width="170px" enabled="false"/>
-                <g:Button ui:field="btnSrcXPath" text="{loc.buttonEditConfig}" width="30px"/>
+            <g:FlowPanel ui:field="srcXpathPanel" addStyleNames="{res.editorCSS.property}">
+                <g:Label text="Source Xpath" addStyleNames="{style.labelStyle}"/>
+                <g:TextBox ui:field="sourceXpath" width="206px" enabled="false" addStyleNames="{style.fieldStyle}"/>
+                <g:Button ui:field="btnSrcXPath" text="{loc.buttonEditConfig}" addStyleNames="{res.editorCSS.propertyButton}"/>
             </g:FlowPanel>
 
-            <g:FlowPanel height="60px" ui:field="srcPropPanel" visible="false" addStyleNames="{style.panelStyle}">
-                <g:Label text="Source Property"/>
-                <g:TextBox ui:field="srcProperty" width="200px"/>
+            <g:FlowPanel ui:field="srcPropPanel" visible="false" addStyleNames="{res.editorCSS.property}">
+                <g:Label text="Source Property" addStyleNames="{style.labelStyle}"/>
+                <g:TextBox ui:field="srcProperty" width="200px" addStyleNames="{style.fieldStyle}"/>
             </g:FlowPanel>
 
-            <g:FlowPanel height="60px" ui:field="srcInlTypePanel" visible="false" addStyleNames="{style.panelStyle}">
-                <g:Label text="Inline Type"/>
-                <g:ListBox ui:field="inlineType" width="206px"/>
+            <g:FlowPanel ui:field="srcInlTypePanel" visible="false" addStyleNames="{res.editorCSS.property}">
+                <g:Label text="Inline Type" addStyleNames="{style.fieldStyle}"/>
+                <g:ListBox ui:field="inlineType" width="206px" addStyleNames="{style.fieldStyle}"/>
             </g:FlowPanel>
 
-            <g:FlowPanel height="60px" ui:field="srcInlRegPanel" visible="false" addStyleNames="{style.panelStyle}">
-                <g:Label text="Inline Registry Key"/>
-                <g:TextBox ui:field="srcInlineKey" width="170px" enabled="false"/>
-                <g:Button ui:field="btnInlRegKey" text="{loc.buttonEditConfig}" width="30px"/>
+            <g:FlowPanel ui:field="srcInlRegPanel" visible="false" addStyleNames="{res.editorCSS.property}">
+                <g:Label text="Inline Registry Key" addStyleNames="{style.fieldStyle}"/>
+                <g:TextBox ui:field="srcInlineKey" width="206px" enabled="false" addStyleNames="{style.fieldStyle}"/>
+                <g:Button ui:field="btnInlRegKey" text="{loc.buttonEditConfig}" addStyleNames="{res.editorCSS.propertyButton}"/>
             </g:FlowPanel>
 
-            <g:FlowPanel height="60px" ui:field="srcXMLPanel" visible="false" addStyleNames="{style.panelStyle}">
-                <g:Label text="Source XML"/>
-                <g:TextBox ui:field="srcXML" width="170px" enabled="false"/>
-                <g:Button ui:field="btnSrcXML" text="{loc.buttonEditConfig}" width="30px"/>
+            <g:FlowPanel ui:field="srcXMLPanel" visible="false" addStyleNames="{res.editorCSS.property}">
+                <g:Label text="Source XML" addStyleNames="{style.fieldStyle}"/>
+                <g:TextBox ui:field="srcXML" width="206px" enabled="false" addStyleNames="{style.fieldStyle}"/>
+                <g:Button ui:field="btnSrcXML" text="{loc.buttonEditConfig}" addStyleNames="{res.editorCSS.propertyButton}"/>
             </g:FlowPanel>
 
-            <g:FlowPanel height="70px">
+            <g:FlowPanel addStyleNames="{res.editorCSS.property}">
                 <g:Label text="Target" addStyleNames="{style.labelStyle}"/>
                 <g:Label text="Target Action" addStyleNames="{style.fieldStyle}"/>
                 <g:ListBox ui:field="targetAction" width="206px" addStyleNames="{style.fieldStyle}"/>
             </g:FlowPanel>
 
-            <g:FlowPanel height="60px" addStyleNames="{style.panelStyle}">
-                <g:Label text="Target Type"/>
-                <g:ListBox ui:field="targetType" width="206px"/>
+            <g:FlowPanel addStyleNames="{res.editorCSS.property}">
+                <g:Label text="Target Type" addStyleNames="{style.labelStyle}"/>
+                <g:ListBox ui:field="targetType" width="206px" addStyleNames="{style.fieldStyle}"/>
             </g:FlowPanel>
 
-            <g:FlowPanel height="60px" ui:field="targetXpathPanel" addStyleNames="{style.panelStyle}">
-                <g:Label text="Target Xpath"/>
-                <g:TextBox ui:field="targetXpath" width="170px" enabled="false"/>
-                <g:Button ui:field="btnTargetXpath" text="{loc.buttonEditConfig}" width="30px"/>
+            <g:FlowPanel ui:field="targetXpathPanel" addStyleNames="{res.editorCSS.property}">
+                <g:Label text="Target Xpath" addStyleNames="{style.labelStyle}"/>
+                <g:TextBox ui:field="targetXpath" width="206px" enabled="false" addStyleNames="{style.fieldStyle}"/>
+                <g:Button ui:field="btnTargetXpath" text="{loc.buttonEditConfig}" addStyleNames="{res.editorCSS.propertyButton}"/>
             </g:FlowPanel>
 
-            <g:FlowPanel height="60px" ui:field="targetPropPanel" visible="false" addStyleNames="{style.panelStyle}">
-                <g:Label text="Target Property"/>
-                <g:TextBox ui:field="targetProperty" width="200px"/>
+            <g:FlowPanel ui:field="targetPropPanel" visible="false" addStyleNames="{res.editorCSS.property}">
+                <g:Label text="Target Property" addStyleNames="{style.labelStyle}"/>
+                <g:TextBox ui:field="targetProperty" width="200px" addStyleNames="{style.fieldStyle}"/>
             </g:FlowPanel>
 
         </g:FlowPanel>
