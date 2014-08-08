@@ -78,8 +78,8 @@ public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorVi
     private ActionDelegate delegate;
 
     @Inject
-    public NameSpaceEditorViewImpl(WSO2EditorLocalizationConstant local, com.codenvy.ide.Resources res) {
-        this.nameSpacesTable = createTable(res);
+    public NameSpaceEditorViewImpl(WSO2EditorLocalizationConstant local) {
+        this.nameSpacesTable = createTable();
 
         Widget widget = uiBinder.createAndBindUi(this);
 
@@ -103,8 +103,8 @@ public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorVi
         getFooter().add(btnOk);
     }
 
-    private CellTable<NameSpace> createTable(CellTable.Resources res) {
-        CellTable<NameSpace> table = new CellTable<>(15, res);
+    private CellTable<NameSpace> createTable() {
+        CellTable<NameSpace> table = new CellTable<>();
 
         Column<NameSpace, String> nameSpace = new Column<NameSpace, String>(new TextCell()) {
             @Override

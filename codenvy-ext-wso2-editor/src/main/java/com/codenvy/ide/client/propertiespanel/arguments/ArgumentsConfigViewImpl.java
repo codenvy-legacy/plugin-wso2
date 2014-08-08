@@ -77,10 +77,8 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
     private ActionDelegate delegate;
 
     @Inject
-    public ArgumentsConfigViewImpl(WSO2EditorLocalizationConstant localizationConstant,
-                                   ArgumentsConfigViewImplUiBinder uiBinder,
-                                   com.codenvy.ide.Resources res) {
-        this.args = createTable(localizationConstant, res);
+    public ArgumentsConfigViewImpl(WSO2EditorLocalizationConstant localizationConstant, ArgumentsConfigViewImplUiBinder uiBinder) {
+        this.args = createTable(localizationConstant);
 
         Widget widget = uiBinder.createAndBindUi(this);
 
@@ -105,9 +103,8 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
 
     }
 
-    private CellTable<Arg> createTable(@Nonnull final WSO2EditorLocalizationConstant localizationConstant,
-                                       @Nonnull CellTable.Resources res) {
-        final CellTable<Arg> table = new CellTable<>(15, res);
+    private CellTable<Arg> createTable(@Nonnull final WSO2EditorLocalizationConstant localizationConstant) {
+        final CellTable<Arg> table = new CellTable<>();
 
         final SingleSelectionModel<Arg> selectionModel = new SingleSelectionModel<>();
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {

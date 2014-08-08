@@ -70,10 +70,8 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
     private ActionDelegate delegate;
 
     @Inject
-    public PropertyConfigViewImpl(WSO2EditorLocalizationConstant localizationConstant,
-                                  LogPropertiesConfigurationViewImplUiBinder uiBinder,
-                                  com.codenvy.ide.Resources res) {
-        this.tableOfProperties = createTable(localizationConstant, res);
+    public PropertyConfigViewImpl(WSO2EditorLocalizationConstant localizationConstant, LogPropertiesConfigurationViewImplUiBinder uiBinder) {
+        this.tableOfProperties = createTable(localizationConstant);
 
         Widget widget = uiBinder.createAndBindUi(this);
 
@@ -98,8 +96,8 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
         getFooter().add(btnOk);
     }
 
-    private CellTable<Property> createTable(final WSO2EditorLocalizationConstant localizationConstant, CellTable.Resources res) {
-        final CellTable<Property> table = new CellTable<>(15, res);
+    private CellTable<Property> createTable(final WSO2EditorLocalizationConstant localizationConstant) {
+        final CellTable<Property> table = new CellTable<>();
 
         final SingleSelectionModel<Property> selectionModel = new SingleSelectionModel<>();
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
