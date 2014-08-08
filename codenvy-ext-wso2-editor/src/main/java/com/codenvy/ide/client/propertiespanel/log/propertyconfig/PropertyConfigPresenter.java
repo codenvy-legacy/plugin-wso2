@@ -129,7 +129,7 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
      * @param callback
      *         callback that need to be handled when properties editing is successful
      */
-    public void showConfigWindow(@Nonnull Array<Property> properties, @Nonnull AddPropertyCallback callback) {
+    public void showConfigWindow(@Nonnull Array<Property> properties, @Nonnull String title, @Nonnull AddPropertyCallback callback) {
         arrayTemporary = Collections.createArray();
         addPropertyCallback = callback;
 
@@ -139,6 +139,6 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
 
         propertiesView.setProperties(arrayTemporary);
 
-        propertiesView.showWindow();
+        propertiesView.showWindow(title);
     }
 }

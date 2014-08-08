@@ -36,8 +36,12 @@ public interface PropertyConfigView extends View<PropertyConfigView.ActionDelega
      */
     void setProperties(@Nonnull Array<Property> propertyList);
 
-    /** Shows dialog window for editing property of element. */
-    void showWindow();
+    /**
+     * Shows dialog window for editing property of element.
+     *
+     * @param title
+     */
+    void showWindow(@Nonnull String title);
 
     /** Hides dialog window. */
     void hideWindow();

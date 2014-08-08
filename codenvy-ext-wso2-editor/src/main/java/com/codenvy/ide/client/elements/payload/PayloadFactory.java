@@ -36,6 +36,8 @@ import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType.j
 import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType.xml;
 
 /**
+ * Class describes PayloadFactory mediator.
+ *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
@@ -46,8 +48,8 @@ public class PayloadFactory extends RootElement {
     private static final String PAYLOAD_FORMAT_PROPERTY_NAME = "PayloadFormat";
     private static final String FORMAT_PROPERTY_NAME         = "Format";
     private static final String ARGS_PROPERTY_NAME           = "args";
-    private static final String MEDIA_TYPE_PROPERTY_NAME     = "MediaType";
-    private static final String DESCRIPTION_PROPERTY_NAME    = "Description";
+    private static final String MEDIA_TYPE_PROPERTY_NAME     = "media-type";
+    private static final String DESCRIPTION_PROPERTY_NAME    = "description";
 
     private static final List<String> PROPERTIES          = Arrays.asList(PAYLOAD_FORMAT_PROPERTY_NAME,
                                                                           FORMAT_PROPERTY_NAME,
@@ -57,10 +59,6 @@ public class PayloadFactory extends RootElement {
     private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
                                                                           Y_PROPERTY_NAME,
                                                                           UUID_PROPERTY_NAME,
-                                                                          PAYLOAD_FORMAT_PROPERTY_NAME,
-                                                                          FORMAT_PROPERTY_NAME,
-                                                                          ARGS_PROPERTY_NAME,
-                                                                          MEDIA_TYPE_PROPERTY_NAME,
                                                                           DESCRIPTION_PROPERTY_NAME);
 
     private String     payloadFormat;
@@ -80,56 +78,98 @@ public class PayloadFactory extends RootElement {
         args = Collections.createArray();
     }
 
+    /** @return value of payload format */
     @Nullable
     public String getPayloadFormat() {
         return payloadFormat;
     }
 
+    /**
+     * Set payload format.
+     *
+     * @param payloadFormat
+     *         value of payload format
+     */
     public void setPayloadFormat(@Nullable String payloadFormat) {
         this.payloadFormat = payloadFormat;
     }
 
+    /** @return value of format */
     @Nullable
     public String getFormat() {
         return format;
     }
 
+    /**
+     * Set format.
+     *
+     * @param format
+     *         value of format
+     */
     public void setFormat(@Nullable String format) {
         this.format = format;
     }
 
+    /** @return value of payload format key */
     @Nullable
     public String getFormatKey() {
         return formatKey;
     }
 
+    /**
+     * Set format key.
+     *
+     * @param formatKey
+     *         value of format key
+     */
     public void setFormatKey(@Nullable String formatKey) {
         this.formatKey = formatKey;
     }
 
-    @Nullable
+    /** @return value of args */
+    @Nonnull
     public Array<Arg> getArgs() {
         return args;
     }
 
+    /**
+     * Set args.
+     *
+     * @param args
+     *         property arguments
+     */
     public void setArgs(@Nullable Array<Arg> args) {
         this.args = args;
     }
 
+    /** @return value of media type */
     @Nullable
     public String getMediaType() {
         return mediaType;
     }
 
+    /**
+     * Set media type.
+     *
+     * @param mediaType
+     *         value of media type property
+     */
     public void setMediaType(@Nullable String mediaType) {
         this.mediaType = mediaType;
     }
 
+    /** @return value of description */
     @Nullable
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Set description.
+     *
+     * @param description
+     *         description of PayloadFactory
+     */
     public void setDescription(@Nullable String description) {
         this.description = description;
     }
@@ -140,8 +180,8 @@ public class PayloadFactory extends RootElement {
     protected String serializeAttributes() {
         LinkedHashMap<String, String> prop = new LinkedHashMap<>();
 
-        prop.put("media-type", mediaType);
-        prop.put("description", description);
+        prop.put(MEDIA_TYPE_PROPERTY_NAME, mediaType);
+        prop.put(DESCRIPTION_PROPERTY_NAME, description);
 
         return prepareSerialization(prop);
     }
@@ -181,8 +221,8 @@ public class PayloadFactory extends RootElement {
                     nameSpaces.append(nameSpace.toString()).append(' ');
                 }
 
-                result.append("    <arg ").append(nameSpaces).append("evaluator=\"").append(arg.getEvaluator()).append("\" expression=\"")
-                      .append(arg.getValue()).append("\"/>\n");
+                result.append("<arg ").append(nameSpaces).append("evaluator=\"").append(arg.getEvaluator()).append("\" expression=\"")
+                      .append(arg.getValue()).append("\"/>");
 
             }
             result.append("</args>");

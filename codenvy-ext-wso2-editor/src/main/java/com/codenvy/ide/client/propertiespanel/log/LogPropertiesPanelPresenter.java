@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.log;
 
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.log.Property;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
@@ -35,19 +36,21 @@ import static com.codenvy.ide.client.elements.log.Log.LogCategory;
  */
 public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> implements LogPropertiesPanelView.ActionDelegate {
 
-    private final PropertyConfigPresenter propertyConfigPresenter;
-    private final AddPropertyCallback     addPropertyCallback;
+    private final PropertyConfigPresenter        propertyConfigPresenter;
+    private final AddPropertyCallback            addPropertyCallback;
+    private final WSO2EditorLocalizationConstant local;
 
     @Inject
     public LogPropertiesPanelPresenter(LogPropertiesPanelView view,
                                        PropertyTypeManager propertyTypeManager,
-                                       PropertyConfigPresenter propertyConfigPresenter) {
+                                       PropertyConfigPresenter propertyConfigPresenter,
+                                       WSO2EditorLocalizationConstant local) {
         super(view, propertyTypeManager);
 
         this.propertyConfigPresenter = propertyConfigPresenter;
+        this.local = local;
 
         this.addPropertyCallback = new AddPropertyCallback() {
-
             @Override
             public void onPropertiesChanged(@Nonnull Array<Property> properties) {
                 element.setLogProperties(properties);
@@ -88,7 +91,9 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> im
     /** {@inheritDoc} */
     @Override
     public void onEditButtonClicked() {
-        propertyConfigPresenter.showConfigWindow(element.getLogProperties(), addPropertyCallback);
+        propertyConfigPresenter.showConfigWindow(element.getLogProperties(),
+                                                 local.propertiespanelLogConfigurationTitle(),
+                                                 addPropertyCallback);
     }
 
     /** {@inheritDoc} */

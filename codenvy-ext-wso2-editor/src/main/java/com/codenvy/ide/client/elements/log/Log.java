@@ -132,15 +132,15 @@ public class Log extends RootElement {
         LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
 
         if (!logCategory.equals(LogCategory.INFO.name())) {
-            attributes.put("category", logCategory);
+            attributes.put(CATEGORY_NAME, logCategory);
         }
 
         if (!logLevel.equals(LogLevel.SIMPLE.name())) {
-            attributes.put("level", logLevel);
+            attributes.put(LEVEL_NAME, logLevel);
         }
 
-        attributes.put("separator", logSeparator);
-        attributes.put("description", description);
+        attributes.put(SEPARATOR_NAME, logSeparator);
+        attributes.put(DESCRIPTION_NAME, description);
 
         return prepareSerialization(attributes);
     }

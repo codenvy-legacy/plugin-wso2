@@ -15,16 +15,25 @@
  */
 package com.codenvy.ide.client.propertiespanel.calltemplate;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import javax.validation.constraints.NotNull;
+import java.util.List;
+
 /**
+ * The implementation of {CallTemplatePropertiesPanelView}
+ *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesPanelView {
 
@@ -32,13 +41,15 @@ public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesP
     }
 
     @UiField
-    TextBox availableTemplates;
+    ListBox availableTemplates;
     @UiField
     TextBox targetTemplate;
     @UiField
     TextBox parameters;
     @UiField
     TextBox description;
+    @UiField
+    Button  btnParameter;
 
     @Inject
     public CallTemplatePropertiesPanelViewImpl(CallTemplatePropertiesPanelViewImplUiBinder ourUiBinder) {
@@ -46,15 +57,34 @@ public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesP
     }
 
     /** {@inheritDoc} */
+    @NotNull
     @Override
     public String getAvailableTemplates() {
-        return String.valueOf(availableTemplates.getText());
+        int index = availableTemplates.getSelectedIndex();
+        return index != -1 ? availableTemplates.getValue(availableTemplates.getSelectedIndex()) : "";
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setAvailableTemplates(String availableTemplates) {
-        this.availableTemplates.setText(availableTemplates);
+    public void setAvailableTemplates(@NotNull List<String> payloadFormat) {
+        if (payloadFormat == null) {
+            return;
+        }
+        this.availableTemplates.clear();
+        for (String value : payloadFormat) {
+            this.availableTemplates.addItem(value);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void selectAvailableTemplate(@NotNull String availableTemplate) {
+        for (int i = 0; i < this.availableTemplates.getItemCount(); i++) {
+            if (this.availableTemplates.getValue(i).equals(availableTemplate)) {
+                this.availableTemplates.setItemSelected(i, true);
+                return;
+            }
+        }
     }
 
     @UiHandler("availableTemplates")
@@ -63,6 +93,7 @@ public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesP
     }
 
     /** {@inheritDoc} */
+    @NotNull
     @Override
     public String getTargetTemplate() {
         return String.valueOf(targetTemplate.getText());
@@ -70,7 +101,7 @@ public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesP
 
     /** {@inheritDoc} */
     @Override
-    public void setTargetTemplate(String targetTemplate) {
+    public void setTargetTemplate(@NotNull String targetTemplate) {
         this.targetTemplate.setText(targetTemplate);
     }
 
@@ -80,31 +111,20 @@ public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesP
     }
 
     /** {@inheritDoc} */
-    @Override
-    public String getParameters() {
-        return String.valueOf(parameters.getText());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setParameters(String parameters) {
-        this.parameters.setText(parameters);
-    }
-
-    @UiHandler("parameters")
-    public void onParametersChanged(KeyUpEvent event) {
-        delegate.onParametersChanged();
-    }
-
-    /** {@inheritDoc} */
+    @NotNull
     @Override
     public String getDescription() {
         return String.valueOf(description.getText());
     }
 
+    @Override
+    public void setParameters(@NotNull String parameter) {
+        parameters.setText(parameter);
+    }
+
     /** {@inheritDoc} */
     @Override
-    public void setDescription(String description) {
+    public void setDescription(@NotNull String description) {
         this.description.setText(description);
     }
 
@@ -113,4 +133,8 @@ public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesP
         delegate.onDescriptionChanged();
     }
 
+    @UiHandler("btnParameter")
+    public void onEditPropertyButtonClicked(ClickEvent event) {
+        delegate.onParameterButtonClicked();
+    }
 }

@@ -26,13 +26,13 @@ import com.codenvy.ide.client.elements.Enrich;
 import com.codenvy.ide.client.elements.Filter;
 import com.codenvy.ide.client.elements.Header;
 import com.codenvy.ide.client.elements.LoopBack;
-import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.codenvy.ide.client.elements.Property;
 import com.codenvy.ide.client.elements.Respond;
 import com.codenvy.ide.client.elements.Send;
 import com.codenvy.ide.client.elements.Sequence;
 import com.codenvy.ide.client.elements.Switch_mediator;
 import com.codenvy.ide.client.elements.log.Log;
+import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.codenvy.ide.client.inject.EditorFactory;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
@@ -68,6 +68,10 @@ import static com.codenvy.ide.client.elements.Call.EndpointType.INLINE;
 import static com.codenvy.ide.client.elements.Call.EndpointType.NONE;
 import static com.codenvy.ide.client.elements.Call.EndpointType.REGISTRYKEY;
 import static com.codenvy.ide.client.elements.Call.EndpointType.XPATH;
+import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates;
+import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates.EMPTY;
+import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates.SDF;
+import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates.SELECT_FROM_TEMPLATE;
 import static com.codenvy.ide.client.elements.Enrich.SourceType;
 import static com.codenvy.ide.client.elements.Enrich.SourceType.body;
 import static com.codenvy.ide.client.elements.Enrich.SourceType.custom;
@@ -86,12 +90,6 @@ import static com.codenvy.ide.client.elements.Header.HeaderValueType;
 import static com.codenvy.ide.client.elements.Header.ScopeType;
 import static com.codenvy.ide.client.elements.Header.ScopeType.Synapse;
 import static com.codenvy.ide.client.elements.Header.ScopeType.transport;
-import static com.codenvy.ide.client.elements.payload.PayloadFactory.FormatType;
-import static com.codenvy.ide.client.elements.payload.PayloadFactory.FormatType.Inline;
-import static com.codenvy.ide.client.elements.payload.PayloadFactory.FormatType.Registry;
-import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType;
-import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType.json;
-import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType.xml;
 import static com.codenvy.ide.client.elements.Property.DataType;
 import static com.codenvy.ide.client.elements.Property.DataType.BOOLEAN;
 import static com.codenvy.ide.client.elements.Property.DataType.DOUBLE;
@@ -133,6 +131,12 @@ import static com.codenvy.ide.client.elements.log.Log.LogLevel.CUSTOM;
 import static com.codenvy.ide.client.elements.log.Log.LogLevel.FULL;
 import static com.codenvy.ide.client.elements.log.Log.LogLevel.HEADERS;
 import static com.codenvy.ide.client.elements.log.Log.LogLevel.SIMPLE;
+import static com.codenvy.ide.client.elements.payload.PayloadFactory.FormatType;
+import static com.codenvy.ide.client.elements.payload.PayloadFactory.FormatType.Inline;
+import static com.codenvy.ide.client.elements.payload.PayloadFactory.FormatType.Registry;
+import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType;
+import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType.json;
+import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType.xml;
 
 /**
  * @author Andrey Plotnikov
@@ -262,6 +266,8 @@ public class WSO2Editor extends AbstractPresenter implements WorkspacePresenter.
         propertyTypeManager.register(TargetType.TYPE_NAME,
                                      Arrays.asList(TargetType.custom.name(), TargetType.envelope.name(), TargetType.body.name(),
                                                    TargetType.property.name()));
+        propertyTypeManager.register(AvailableTemplates.TYPE_NAME,
+                                     Arrays.asList(EMPTY.getValue(), SELECT_FROM_TEMPLATE.getValue(), SDF.getValue()));
 
         metaModelValidator.register(Switch_mediator.ELEMENT_NAME, Connection.CONNECTION_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                                                             Property.ELEMENT_NAME,

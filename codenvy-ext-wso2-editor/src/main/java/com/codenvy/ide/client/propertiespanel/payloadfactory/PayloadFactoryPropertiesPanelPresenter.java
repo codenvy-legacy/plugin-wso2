@@ -15,7 +15,6 @@
  */
 package com.codenvy.ide.client.propertiespanel.payloadfactory;
 
-import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.payload.Arg;
 import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
@@ -60,12 +59,11 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
     private final ArgumentsConfigPresenter     argumentsConfigPresenter;
 
     @Inject
-    public PayloadFactoryPropertiesPanelPresenter(final PayloadFactoryPropertiesPanelView view,
+    public PayloadFactoryPropertiesPanelPresenter(PayloadFactoryPropertiesPanelView view,
                                                   PropertyTypeManager propertyTypeManager,
                                                   InlineConfigurationPresenter inlineConfigurationPresenter,
                                                   ResourceKeyEditorPresenter resourceKeyEditorPresenter,
-                                                  ArgumentsConfigPresenter argumentsConfigPresenter,
-                                                  WSO2EditorLocalizationConstant local) {
+                                                  ArgumentsConfigPresenter argumentsConfigPresenter) {
         super(view, propertyTypeManager);
 
         this.inlineConfigurationPresenter = inlineConfigurationPresenter;
@@ -82,7 +80,8 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
                     Element rootElement = document.getDocumentElement();
 
                     element.setFormat(rootElement.toString());
-                    view.setFormat(rootElement.toString());
+                    ((PayloadFactoryPropertiesPanelView)PayloadFactoryPropertiesPanelPresenter.this.view)
+                            .setFormat(rootElement.toString());
 
                     notifyListeners();
                 } catch (DOMParseException e) {
@@ -96,7 +95,8 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
             @Override
             public void onFormatKeyChanged(@Nonnull String key) {
                 element.setFormatKey(key);
-                view.setFormatKey(key);
+                ((PayloadFactoryPropertiesPanelView)PayloadFactoryPropertiesPanelPresenter.this.view)
+                        .setFormatKey(key);
 
                 notifyListeners();
             }
@@ -107,7 +107,8 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
             public void onArgumentsChanged(@Nonnull Array<Arg> arg) {
                 element.setArgs(arg);
 
-                view.setArgs("Payload Factory Arguments");
+                ((PayloadFactoryPropertiesPanelView)PayloadFactoryPropertiesPanelPresenter.this.view)
+                        .setArgs(arg.isEmpty() ? "" : "Payload Factory Arguments");
 
                 notifyListeners();
             }
@@ -186,6 +187,7 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
 
         ((PayloadFactoryPropertiesPanelView)view).setVisibleFormatPanel(isInline);
         ((PayloadFactoryPropertiesPanelView)view).setVisibleFormatKeyPanel(!isInline);
+        ((PayloadFactoryPropertiesPanelView)view).setArgs(element.getArgs().isEmpty() ? "" : "Payload Factory Arguments");
     }
 
 }

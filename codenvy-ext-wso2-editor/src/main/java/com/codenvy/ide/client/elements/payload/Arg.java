@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Presenter for view which support editing argument property of the Payload mediator.
+ * Class describes entity which presented argument property of mediator.
  *
  * @author Valeriy Svydenko
  */

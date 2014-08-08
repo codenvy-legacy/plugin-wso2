@@ -15,83 +15,91 @@
  */
 package com.codenvy.ide.client.elements;
 
+import com.codenvy.ide.client.elements.log.Property;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
+ * Class describes CallTemplate mediator.
+ *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class CallTemplate extends RootElement {
     public static final String ELEMENT_NAME       = "CallTemplate";
     public static final String SERIALIZATION_NAME = "callTemplate";
 
     private static final String AVAILABLE_TEMPLATES_PROPERTY_NAME = "AvailableTemplates";
-    private static final String TARGET_TEMPLATE_PROPERTY_NAME     = "TargetTemplate";
-    private static final String PARAMETERS_PROPERTY_NAME          = "Parameters";
-    private static final String DESCRIPTION_PROPERTY_NAME         = "Description";
+    private static final String TARGET_TEMPLATE_PROPERTY_NAME     = "target";
+    private static final String PARAMETERS_PROPERTY_NAME          = "parameters";
+    private static final String DESCRIPTION_PROPERTY_NAME         = "description";
 
-    private static final List<String> PROPERTIES          = Arrays.asList(AVAILABLE_TEMPLATES_PROPERTY_NAME,
-                                                                          TARGET_TEMPLATE_PROPERTY_NAME,
-                                                                          PARAMETERS_PROPERTY_NAME,
-                                                                          DESCRIPTION_PROPERTY_NAME);
+    private static final List<String> PROPERTIES          = Arrays.asList(PARAMETERS_PROPERTY_NAME);
     private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
                                                                           Y_PROPERTY_NAME,
                                                                           UUID_PROPERTY_NAME,
-                                                                          AVAILABLE_TEMPLATES_PROPERTY_NAME,
-                                                                          TARGET_TEMPLATE_PROPERTY_NAME,
-                                                                          PARAMETERS_PROPERTY_NAME,
-                                                                          DESCRIPTION_PROPERTY_NAME);
+                                                                          PARAMETERS_PROPERTY_NAME);
 
-    private String availableTemplates;
-    private String targetTemplate;
-    private String parameters;
-    private String description;
+    private String          availableTemplates;
+    private String          targetTemplate;
+    private String          description;
+    private Array<Property> parameters;
 
     public CallTemplate() {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
 
-        availableTemplates = "enter_templates";
-        targetTemplate = "enter_target_template";
-        parameters = "enter_parameters";
-        description = "enter_description";
+        parameters = Collections.createArray();
     }
 
+    /** @return value of available template */
     @Nullable
     public String getAvailableTemplates() {
         return availableTemplates;
     }
 
+    /** Set available template */
     public void setAvailableTemplates(@Nullable String availableTemplates) {
         this.availableTemplates = availableTemplates;
     }
 
+    /** @return value of target template */
     @Nullable
     public String getTargetTemplate() {
         return targetTemplate;
     }
 
+    /** Set target template */
     public void setTargetTemplate(@Nullable String targetTemplate) {
         this.targetTemplate = targetTemplate;
     }
 
-    @Nullable
-    public String getParameters() {
+    /** @return list of parameters of element */
+    @Nonnull
+    public Array<Property> getParameters() {
         return parameters;
     }
 
-    public void setParameters(@Nullable String parameters) {
+    /** Set list of parameters to element */
+    public void setParameters(@Nonnull Array<Property> parameters) {
         this.parameters = parameters;
     }
 
+    /** @return value of description */
     @Nullable
     public String getDescription() {
         return description;
     }
 
+    /** Set description */
     public void setDescription(@Nullable String description) {
         this.description = description;
     }
@@ -100,10 +108,32 @@ public class CallTemplate extends RootElement {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        return "availableTemplates=\"" + availableTemplates + "\" " +
-               "targetTemplate=\"" + targetTemplate + "\" " +
-               "parameters=\"" + parameters + "\" " +
-               "description=\"" + description + "\" ";
+        LinkedHashMap<String, String> prop = new LinkedHashMap<>();
+
+        prop.put(TARGET_TEMPLATE_PROPERTY_NAME, targetTemplate);
+        prop.put(DESCRIPTION_PROPERTY_NAME, description);
+
+        return prepareSerialization(prop);
+    }
+
+    /** {@inheritDoc} */
+    @Nonnull
+    @Override
+    protected String serializeProperty() {
+        StringBuilder result = new StringBuilder();
+
+        for (Property property : parameters.asIterable()) {
+            StringBuilder nameSpaces = new StringBuilder();
+
+            for (NameSpace nameSpace : property.getNameSpaces().asIterable()) {
+                nameSpaces.append(nameSpace.toString()).append(' ');
+            }
+
+            result.append("<with-param ").append(nameSpaces).append("name=\"").append(property.getName()).append("\" value=\"")
+                  .append(property.getExpression()).append("\"/>");
+        }
+
+        return result.toString();
     }
 
     /** {@inheritDoc} */
@@ -129,11 +159,56 @@ public class CallTemplate extends RootElement {
                 targetTemplate = String.valueOf(nodeValue);
                 break;
             case PARAMETERS_PROPERTY_NAME:
-                parameters = String.valueOf(nodeValue);
+                //TODO create property using editor factory
+                Property property = new Property(null, null);
+                property.applyAttributes(node);
+
+                parameters.add(property);
                 break;
             case DESCRIPTION_PROPERTY_NAME:
                 description = String.valueOf(nodeValue);
                 break;
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void applyAttributes(@Nonnull Node node) {
+        NamedNodeMap attributeMap = node.getAttributes();
+
+        for (int i = 0; i < attributeMap.getLength(); i++) {
+            Node attributeNode = attributeMap.item(i);
+
+            switch (attributeNode.getNodeName()) {
+                case AVAILABLE_TEMPLATES_PROPERTY_NAME:
+                    availableTemplates = attributeNode.getNodeValue();
+                    break;
+
+                case TARGET_TEMPLATE_PROPERTY_NAME:
+                    targetTemplate = attributeNode.getNodeValue();
+                    break;
+
+                case DESCRIPTION_PROPERTY_NAME:
+                    description = attributeNode.getNodeValue();
+                    break;
+            }
+        }
+    }
+
+    public enum AvailableTemplates {
+        SELECT_FROM_TEMPLATE("Select From Templates"), SDF("sdf"), EMPTY("");
+
+        public static final String TYPE_NAME = "AvailableTemplatesType";
+
+        private String value;
+
+        AvailableTemplates(String value) {
+            this.value = value;
+        }
+
+        @NotNull
+        public String getValue() {
+            return value;
         }
     }
 

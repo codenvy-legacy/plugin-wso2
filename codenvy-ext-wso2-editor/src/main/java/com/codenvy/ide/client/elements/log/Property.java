@@ -110,7 +110,7 @@ public class Property {
     public Property clone() {
         //TODO create property using editor factory
         Property property = new Property(name, expression);
-        property.setNameSpaces(nameSpaces.copy());
+        property.setNameSpaces(nameSpaces);
 
         return property;
     }

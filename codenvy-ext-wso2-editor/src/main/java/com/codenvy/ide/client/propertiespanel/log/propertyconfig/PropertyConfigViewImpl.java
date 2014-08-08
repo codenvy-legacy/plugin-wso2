@@ -16,7 +16,6 @@
 package com.codenvy.ide.client.propertiespanel.log.propertyconfig;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.log.Property;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.window.Window;
@@ -33,7 +32,6 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
@@ -55,12 +53,6 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
 
     @UiField(provided = true)
     CellTable tableOfProperties;
-    @UiField(provided = true)
-    ListBox   logLevelListBox;
-    @UiField(provided = true)
-    ListBox   logCategoryListBox;
-    @UiField
-    TextBox   logSeparatorTextBox;
     @UiField
     Button    btnAdd;
     @UiField
@@ -82,15 +74,12 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
                                   LogPropertiesConfigurationViewImplUiBinder uiBinder,
                                   com.codenvy.ide.Resources res) {
         this.tableOfProperties = createTable(localizationConstant, res);
-        this.logLevelListBox = createLogLevelListBox();
-        this.logCategoryListBox = createLogCategoryListBox();
 
         Widget widget = uiBinder.createAndBindUi(this);
 
-        this.setTitle(localizationConstant.propertiespanelLogConfigurationTitle());
         this.setWidget(widget);
 
-        btnCancel = createButton(localizationConstant.buttonCancel(), "log-configuration-cancel", new ClickHandler() {
+        btnCancel = createButton(localizationConstant.buttonCancel(), "property-configuration-cancel", new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
@@ -99,7 +88,7 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
         });
         getFooter().add(btnCancel);
 
-        btnOk = createButton(localizationConstant.buttonOk(), "log-configuration-ok", new ClickHandler() {
+        btnOk = createButton(localizationConstant.buttonOk(), "property-configuration-ok", new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
@@ -178,30 +167,6 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
         return table;
     }
 
-    private ListBox createLogCategoryListBox() {
-        ListBox listBox = new ListBox();
-
-        listBox.addItem(Log.LogCategory.TRACE.name());
-        listBox.addItem(Log.LogCategory.DEBUG.name());
-        listBox.addItem(Log.LogCategory.INFO.name());
-        listBox.addItem(Log.LogCategory.WARN.name());
-        listBox.addItem(Log.LogCategory.ERROR.name());
-        listBox.addItem(Log.LogCategory.FATAL.name());
-
-        return listBox;
-    }
-
-    private ListBox createLogLevelListBox() {
-        ListBox listBox = new ListBox();
-
-        listBox.addItem(Log.LogLevel.SIMPLE.name());
-        listBox.addItem(Log.LogLevel.HEADERS.name());
-        listBox.addItem(Log.LogLevel.FULL.name());
-        listBox.addItem(Log.LogLevel.CUSTOM.name());
-
-        return listBox;
-    }
-
     @UiHandler("btnAdd")
     public void onAddNewPropertyButtonClicked(ClickEvent event) {
         delegate.onAddPropertyButtonClicked();
@@ -219,7 +184,8 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
 
     /** {@inheritDoc} */
     @Override
-    public void showWindow() {
+    public void showWindow(@Nonnull String title) {
+        setTitle(title);
         show();
     }
 
