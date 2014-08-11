@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.payloadfactory;
 
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.payload.Arg;
 import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
@@ -52,13 +53,18 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
     private final ResourceKeyEditorPresenter   resourceKeyEditorPresenter;
     private final ArgumentsConfigPresenter     argumentsConfigPresenter;
 
+    private final WSO2EditorLocalizationConstant locale;
+
     @Inject
     public PayloadFactoryPropertiesPanelPresenter(PayloadFactoryPropertiesPanelView view,
                                                   PropertyTypeManager propertyTypeManager,
                                                   InlineConfigurationPresenter inlineConfigurationPresenter,
                                                   ResourceKeyEditorPresenter resourceKeyEditorPresenter,
-                                                  ArgumentsConfigPresenter argumentsConfigPresenter) {
+                                                  ArgumentsConfigPresenter argumentsConfigPresenter,
+                                                  WSO2EditorLocalizationConstant locale) {
         super(view, propertyTypeManager);
+
+        this.locale = locale;
 
         this.inlineConfigurationPresenter = inlineConfigurationPresenter;
         this.resourceKeyEditorPresenter = resourceKeyEditorPresenter;
@@ -137,8 +143,8 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
 
     /** {@inheritDoc} */
     @Override
-    public void showFormatConfigurationWindow(@Nonnull String content, @Nonnull String title) {
-        inlineConfigurationPresenter.showDialog(content, title, changeInlineFormatCallBack);
+    public void showFormatConfigurationWindow() {
+        inlineConfigurationPresenter.showDialog(element.getFormat(), locale.propertiespanelPayloadFormat(), changeInlineFormatCallBack);
     }
 
     /** {@inheritDoc} */

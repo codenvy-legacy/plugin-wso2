@@ -193,7 +193,7 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
      * @return value of capture group.
      */
     @NotNull
-    public abstract Integer getValueStringCaptureGroup();
+    public abstract String getValueStringCaptureGroup();
 
     /**
      * Set value of capture group into place on view.
@@ -201,7 +201,7 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
      * @param valueStringCaptureGroup
      *         value of capture group.
      */
-    public abstract void setValueStringCaptureGroup(@NotNull Integer valueStringCaptureGroup);
+    public abstract void setValueStringCaptureGroup(@NotNull String valueStringCaptureGroup);
 
     /**
      * @return property scope.

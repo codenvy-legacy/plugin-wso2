@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.cell.client.TextCell;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -51,8 +50,6 @@ public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorVi
     interface NameSpaceEditorViewImplUiBinder extends UiBinder<Widget, NameSpaceEditorViewImpl> {
     }
 
-    private static NameSpaceEditorViewImplUiBinder uiBinder = GWT.create(NameSpaceEditorViewImplUiBinder.class);
-
     @UiField(provided = true)
     CellTable nameSpacesTable;
     @UiField
@@ -78,7 +75,7 @@ public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorVi
     private ActionDelegate delegate;
 
     @Inject
-    public NameSpaceEditorViewImpl(WSO2EditorLocalizationConstant local) {
+    public NameSpaceEditorViewImpl(NameSpaceEditorViewImplUiBinder uiBinder, WSO2EditorLocalizationConstant local) {
         this.nameSpacesTable = createTable();
 
         Widget widget = uiBinder.createAndBindUi(this);

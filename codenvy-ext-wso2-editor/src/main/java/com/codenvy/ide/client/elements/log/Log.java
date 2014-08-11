@@ -158,7 +158,7 @@ public class Log extends RootElement {
                 nameSpaces.append(nameSpace.toString()).append(' ');
             }
 
-            result.append("    <property ").append(nameSpaces).append("name=\"").append(property.getName()).append("\" value=\"")
+            result.append("<property ").append(nameSpaces).append("name=\"").append(property.getName()).append("\" value=\"")
                   .append(property.getExpression()).append("\"/>\n");
         }
 

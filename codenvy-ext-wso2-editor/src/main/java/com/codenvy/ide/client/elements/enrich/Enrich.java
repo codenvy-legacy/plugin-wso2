@@ -19,6 +19,7 @@ import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.AbstractShape;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.RootElement;
+import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 
 import javax.annotation.Nonnull;
@@ -188,8 +189,13 @@ public class Enrich extends RootElement {
         return prepareSerialization(attributes);
     }
 
-    /** Sets default visualization of source element attributes. */
-    private void setDefaultSourceAttributes(LinkedHashMap<String, String> attributes) {
+    /**
+     * Sets default visualization of source element attributes.
+     *
+     * @param attributes
+     *         list of default attributes
+     */
+    private void setDefaultSourceAttributes(@Nonnull LinkedHashMap<String, String> attributes) {
         attributes.put(Source.CLONE_SOURCE, source.getClone());
         attributes.put(Source.XPATH, source.getXpath());
         attributes.put(Source.SOURCE_TYPE, source.getType());
@@ -197,8 +203,13 @@ public class Enrich extends RootElement {
         attributes.put(Source.INLINE_REGISTRY_KEY, source.getInlRegisterKey());
     }
 
-    /** Sets default visualization of target element attributes. */
-    private void setDefaultTargetAttributes(LinkedHashMap<String, String> attributes) {
+    /**
+     * Sets default visualization of target element attributes.
+     *
+     * @param attributes
+     *         list of default attributes
+     */
+    private void setDefaultTargetAttributes(@Nonnull LinkedHashMap<String, String> attributes) {
         attributes.put(Target.TYPE, target.getType());
         attributes.put(Target.ACTION, target.getAction());
         attributes.put(Target.PROPERTY, target.getProperty());
@@ -287,6 +298,22 @@ public class Enrich extends RootElement {
                     source.setSourceXML(result);
                 }
                 break;
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void applyAttributes(@Nonnull Node node) {
+        NamedNodeMap attributeMap = node.getAttributes();
+
+        for (int i = 0; i < attributeMap.getLength(); i++) {
+            Node attributeNode = attributeMap.item(i);
+
+            switch (attributeNode.getNodeName()) {
+                case DESCRIPTION:
+                    description = String.valueOf(node);
+                    break;
+            }
         }
     }
 

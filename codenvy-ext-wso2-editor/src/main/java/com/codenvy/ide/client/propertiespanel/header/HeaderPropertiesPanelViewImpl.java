@@ -42,27 +42,27 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
     }
 
     @UiField
-    ListBox   action;
+    ListBox action;
     @UiField
-    ListBox   scope;
+    ListBox scope;
     @UiField
-    ListBox   valueType;
+    ListBox valueType;
 
     @UiField
-    TextBox   value;
+    TextBox value;
     @UiField
-    TextBox   headerName;
+    TextBox headerName;
     @UiField
-    TextBox   expression;
+    TextBox expression;
     @UiField
-    TextBox   inline;
+    TextBox inline;
 
     @UiField
-    Button    btnAddNameSpace;
+    Button btnAddNameSpace;
     @UiField
-    Button    btnAddInline;
+    Button btnAddInline;
     @UiField
-    Button    btnAddExpression;
+    Button btnAddExpression;
 
     @UiField
     FlowPanel valueTypePanel;

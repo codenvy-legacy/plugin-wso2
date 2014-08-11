@@ -71,9 +71,6 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
     @UiField
     ListBox   valueEvaluator;
 
-    Button btnOk;
-    Button btnCancel;
-
     private ActionDelegate delegate;
 
     @Inject
@@ -85,7 +82,7 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
         this.setTitle(localizationConstant.propertiespanelPayloadArgsConfigurationTitle());
         this.setWidget(widget);
 
-        btnCancel = createButton(localizationConstant.buttonCancel(), "args-configuration-cancel", new ClickHandler() {
+        Button btnCancel = createButton(localizationConstant.buttonCancel(), "args-configuration-cancel", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onCancelButtonClicked();
@@ -93,7 +90,7 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
         });
         getFooter().add(btnCancel);
 
-        btnOk = createButton(localizationConstant.buttonOk(), "args-configuration-ok", new ClickHandler() {
+        Button btnOk = createButton(localizationConstant.buttonOk(), "args-configuration-ok", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onOkButtonClicked();

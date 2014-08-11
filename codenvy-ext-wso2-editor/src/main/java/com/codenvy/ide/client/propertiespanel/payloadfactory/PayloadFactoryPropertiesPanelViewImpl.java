@@ -15,7 +15,6 @@
  */
 package com.codenvy.ide.client.propertiespanel.payloadfactory;
 
-import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -39,8 +38,6 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
 
     interface PayloadFactoryPropertiesPanelViewImplUiBinder extends UiBinder<Widget, PayloadFactoryPropertiesPanelViewImpl> {
     }
-
-    private final WSO2EditorLocalizationConstant local;
 
     @UiField
     ListBox   payloadFormat;
@@ -66,9 +63,7 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
     FlowPanel formatKeyPanel;
 
     @Inject
-    public PayloadFactoryPropertiesPanelViewImpl(PayloadFactoryPropertiesPanelViewImplUiBinder ourUiBinder,
-                                                 WSO2EditorLocalizationConstant local) {
-        this.local = local;
+    public PayloadFactoryPropertiesPanelViewImpl(PayloadFactoryPropertiesPanelViewImplUiBinder ourUiBinder) {
 
         widget = ourUiBinder.createAndBindUi(this);
     }
@@ -151,7 +146,7 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
 
     @UiHandler("formatButton")
     public void onFormatButtonClicked(ClickEvent event) {
-        delegate.showFormatConfigurationWindow(format.getText(), local.propertiespanelPayloadFormat());
+        delegate.showFormatConfigurationWindow();
     }
 
     @UiHandler("formatKeyButton")

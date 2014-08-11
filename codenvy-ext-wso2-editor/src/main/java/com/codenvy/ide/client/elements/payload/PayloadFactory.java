@@ -95,7 +95,7 @@ public class PayloadFactory extends RootElement {
     }
 
     /** @return value of format */
-    @Nullable
+    @Nonnull
     public String getFormat() {
         return format;
     }

@@ -17,7 +17,6 @@ package com.codenvy.ide.client.propertiespanel.resourcekeyeditor;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.ui.window.Window;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -41,23 +40,19 @@ public class ResourceKeyEditorViewImpl extends Window implements ResourceKeyEdit
     interface ResourceKeyEditorViewUiBinder extends UiBinder<Widget, ResourceKeyEditorViewImpl> {
     }
 
-    private static ResourceKeyEditorViewUiBinder uiBinder = GWT.create(ResourceKeyEditorViewUiBinder.class);
-
     @UiField
     TextBox keyTextBox;
-    Button btnOk;
-    Button btnCancel;
 
     private ActionDelegate delegate;
 
     @Inject
-    public ResourceKeyEditorViewImpl(WSO2EditorLocalizationConstant local) {
+    public ResourceKeyEditorViewImpl(ResourceKeyEditorViewUiBinder uiBinder, WSO2EditorLocalizationConstant local) {
         Widget widget = uiBinder.createAndBindUi(this);
 
         this.setWidget(widget);
         this.setTitle(local.propertiespanelResourceKeyEditorTitle());
 
-        btnCancel = createButton(local.buttonCancel(), "resource-key--cancel", new ClickHandler() {
+        Button btnCancel = createButton(local.buttonCancel(), "resource-key--cancel", new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
@@ -66,7 +61,7 @@ public class ResourceKeyEditorViewImpl extends Window implements ResourceKeyEdit
         });
         getFooter().add(btnCancel);
 
-        btnOk = createButton(local.buttonOk(), "resource-key-ok", new ClickHandler() {
+        Button btnOk = createButton(local.buttonOk(), "resource-key-ok", new ClickHandler() {
 
             /** {@inheritDoc} */
             @Override

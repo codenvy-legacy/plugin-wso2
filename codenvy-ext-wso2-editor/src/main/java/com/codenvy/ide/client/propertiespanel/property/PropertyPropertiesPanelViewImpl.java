@@ -205,7 +205,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     }
 
     @UiHandler("propertyDataType")
-    public void onPropertyDataTypeChanged(KeyUpEvent event) {
+    public void onPropertyDataTypeChanged(ChangeEvent event) {
         delegate.onPropertyDataTypeChanged();
     }
 
@@ -262,14 +262,14 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
 
     /** {@inheritDoc} */
     @Override
-    public Integer getValueStringCaptureGroup() {
-        return Integer.valueOf(valueStringCaptureGroup.getText());
+    public String getValueStringCaptureGroup() {
+        return valueStringCaptureGroup.getText();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setValueStringCaptureGroup(Integer valueStringCaptureGroup) {
-        this.valueStringCaptureGroup.setText(valueStringCaptureGroup.toString());
+    public void setValueStringCaptureGroup(String valueStringCaptureGroup) {
+        this.valueStringCaptureGroup.setText(valueStringCaptureGroup);
     }
 
     @UiHandler("valueStringCaptureGroup")

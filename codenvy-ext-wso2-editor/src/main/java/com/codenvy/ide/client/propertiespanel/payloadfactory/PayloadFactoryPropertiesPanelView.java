@@ -44,13 +44,8 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
         /** Performs any actions appropriate in response to the user having changed description field. */
         void onDescriptionChanged();
 
-        /**
-         * Performs any actions appropriate in response to the user having clicked format button.
-         *
-         * @param content
-         *         text into Format place on the view
-         */
-        void showFormatConfigurationWindow(@NotNull String content, @NotNull String tile);
+        /** Performs any actions appropriate in response to the user having clicked format button. */
+        void showFormatConfigurationWindow();
 
         /** Performs any actions appropriate in response to the user having clicked format button. */
         void showArgsConfigurationWindow();

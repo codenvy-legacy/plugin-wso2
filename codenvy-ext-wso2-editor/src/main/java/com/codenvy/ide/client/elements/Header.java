@@ -282,7 +282,6 @@ public class Header extends RootElement {
      * @param attributes
      *         list of attributes which need to set to element by default
      */
-
     private void setDefaultAttributes(@Nonnull LinkedHashMap<String, String> attributes) {
         attributes.put(NAME, headerName);
         attributes.put(SCOPE, scope);

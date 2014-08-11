@@ -25,6 +25,8 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -50,6 +52,7 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getSkipSerialization() {
         int index = skipSerialization.getSelectedIndex();
@@ -58,7 +61,7 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void setSkipSerialization(List<String> skipSerialization) {
+    public void setSkipSerialization(@Nullable List<String> skipSerialization) {
         if (skipSerialization == null) {
             return;
         }
@@ -70,7 +73,7 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void selectSkipSerialization(String skipSerialization) {
+    public void selectSkipSerialization(@Nullable String skipSerialization) {
         for (int i = 0; i < this.skipSerialization.getItemCount(); i++) {
             if (this.skipSerialization.getValue(i).equals(skipSerialization)) {
                 this.skipSerialization.setItemSelected(i, true);
@@ -85,6 +88,7 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getReceivingSequencerType() {
         int index = receivingSequencerType.getSelectedIndex();
@@ -93,7 +97,7 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void setReceivingSequencerType(List<String> receivingSequencerType) {
+    public void setReceivingSequencerType(@Nullable List<String> receivingSequencerType) {
         if (receivingSequencerType == null) {
             return;
         }
@@ -105,7 +109,7 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void selectReceivingSequencerType(String receivingSequencerType) {
+    public void selectReceivingSequencerType(@Nonnull String receivingSequencerType) {
         for (int i = 0; i < this.receivingSequencerType.getItemCount(); i++) {
             if (this.receivingSequencerType.getValue(i).equals(receivingSequencerType)) {
                 this.receivingSequencerType.setItemSelected(i, true);
@@ -120,6 +124,7 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getBuildMessageBeforeSending() {
         int index = buildMessageBeforeSending.getSelectedIndex();
@@ -128,11 +133,9 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void setBuildMessageBeforeSending(List<String> buildMessageBeforeSending) {
-        if (buildMessageBeforeSending == null) {
-            return;
-        }
+    public void setBuildMessageBeforeSending(@Nonnull List<String> buildMessageBeforeSending) {
         this.buildMessageBeforeSending.clear();
+
         for (String value : buildMessageBeforeSending) {
             this.buildMessageBeforeSending.addItem(value);
         }
@@ -140,7 +143,7 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void selectBuildMessageBeforeSending(String buildMessageBeforeSending) {
+    public void selectBuildMessageBeforeSending(@Nonnull String buildMessageBeforeSending) {
         for (int i = 0; i < this.buildMessageBeforeSending.getItemCount(); i++) {
             if (this.buildMessageBeforeSending.getValue(i).equals(buildMessageBeforeSending)) {
                 this.buildMessageBeforeSending.setItemSelected(i, true);
@@ -155,6 +158,7 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getDescription() {
         return String.valueOf(description.getText());
@@ -162,7 +166,7 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void setDescription(String description) {
+    public void setDescription(@Nonnull String description) {
         this.description.setText(description);
     }
 
