@@ -93,7 +93,7 @@ public class EnrichPropertiesPanelViewImpl extends EnrichPropertiesPanelView {
 
     @Inject
     public EnrichPropertiesPanelViewImpl(EnrichPropertiesPanelViewImplUiBinder ourUiBinder) {
-        widget = ourUiBinder.createAndBindUi(this);
+        initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     @UiHandler("btnTargetXpath")

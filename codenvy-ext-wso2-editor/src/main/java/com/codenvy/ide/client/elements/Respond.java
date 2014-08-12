@@ -15,9 +15,17 @@
  */
 package com.codenvy.ide.client.elements;
 
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.elements.enrich.Enrich;
+import com.codenvy.ide.client.elements.log.Log;
+import com.codenvy.ide.client.elements.payload.PayloadFactory;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Node;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -34,23 +42,55 @@ public class Respond extends RootElement {
 
     private static final String DESCRIPTION_PROPERTY_NAME = "description";
 
-    private static final List<String> PROPERTIES          = Arrays.asList(DESCRIPTION_PROPERTY_NAME);
-    private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
-                                                                          Y_PROPERTY_NAME,
-                                                                          UUID_PROPERTY_NAME,
-                                                                          DESCRIPTION_PROPERTY_NAME);
+    private static final List<String> PROPERTIES = Arrays.asList(DESCRIPTION_PROPERTY_NAME);
 
     private String description;
 
-    public Respond() {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+    @Inject
+    public Respond(EditorResources resources,
+                   Provider<Branch> branchProvider,
+                   Provider<Log> logProvider,
+                   Provider<Enrich> enrichProvider,
+                   Provider<Filter> filterProvider,
+                   Provider<Header> headerProvider,
+                   Provider<Call> callProvider,
+                   Provider<CallTemplate> callTemplateProvider,
+                   Provider<LoopBack> loopBackProvider,
+                   Provider<PayloadFactory> payloadFactoryProvider,
+                   Provider<Property> propertyProvider,
+                   Provider<Respond> respondProvider,
+                   Provider<Send> sendProvider,
+                   Provider<Sequence> sequenceProvider,
+                   Provider<Switch> switchProvider) {
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              resources,
+              branchProvider,
+              false,
+              true,
+              logProvider,
+              enrichProvider,
+              filterProvider,
+              headerProvider,
+              callProvider,
+              callTemplateProvider,
+              loopBackProvider,
+              payloadFactoryProvider,
+              propertyProvider,
+              respondProvider,
+              sendProvider,
+              sequenceProvider,
+              switchProvider);
     }
 
+    @Nullable
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(@Nullable String description) {
         this.description = description;
     }
 
@@ -72,19 +112,19 @@ public class Respond extends RootElement {
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
         switch (nodeName) {
-            case AbstractShape.X_PROPERTY_NAME:
-                setX(Integer.valueOf(nodeValue));
-                break;
-            case AbstractShape.Y_PROPERTY_NAME:
-                setY(Integer.valueOf(nodeValue));
-                break;
-            case AbstractElement.UUID_PROPERTY_NAME:
-                id = nodeValue;
-                break;
             case DESCRIPTION_PROPERTY_NAME:
                 description = String.valueOf(nodeValue);
                 break;
+
+            default:
         }
+    }
+
+    /** {@inheritDoc} */
+    @Nullable
+    @Override
+    public ImageResource getIcon() {
+        return resources.respond();
     }
 
 }

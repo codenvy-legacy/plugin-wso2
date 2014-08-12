@@ -43,7 +43,7 @@ import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType;
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
-public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPanel<PayloadFactory>
+public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPanel<PayloadFactory, PayloadFactoryPropertiesPanelView>
         implements PayloadFactoryPropertiesPanelView.ActionDelegate {
 
     private final ChangeInlineFormatCallBack   changeInlineFormatCallBack;
@@ -75,7 +75,7 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
             public void onInlineChanged(@Nonnull String inline) {
                 element.setFormat(inline);
 
-                ((PayloadFactoryPropertiesPanelView)PayloadFactoryPropertiesPanelPresenter.this.view).setFormat(inline);
+                PayloadFactoryPropertiesPanelPresenter.this.view.setFormat(inline);
 
                 notifyListeners();
             }
@@ -86,7 +86,7 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
             public void onFormatKeyChanged(@Nonnull String key) {
                 element.setFormatKey(key);
 
-                ((PayloadFactoryPropertiesPanelView)PayloadFactoryPropertiesPanelPresenter.this.view).setFormatKey(key);
+                PayloadFactoryPropertiesPanelPresenter.this.view.setFormatKey(key);
 
                 notifyListeners();
             }
@@ -97,7 +97,7 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
             public void onArgumentsChanged(@Nonnull Array<Arg> arg) {
                 element.setArgs(arg);
 
-                ((PayloadFactoryPropertiesPanelView)PayloadFactoryPropertiesPanelPresenter.this.view).setArgs("Payload Factory Arguments");
+                PayloadFactoryPropertiesPanelPresenter.this.view.setArgs("Payload Factory Arguments");
 
                 notifyListeners();
             }
@@ -108,14 +108,14 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
     /** {@inheritDoc} */
     @Override
     public void onPayloadFormatChanged() {
-        String payloadFormat = ((PayloadFactoryPropertiesPanelView)view).getPayloadFormat();
+        String payloadFormat = view.getPayloadFormat();
 
         element.setPayloadFormat(payloadFormat);
 
         boolean isInline = Inline.name().equals(payloadFormat);
 
-        ((PayloadFactoryPropertiesPanelView)view).setVisibleFormatPanel(isInline);
-        ((PayloadFactoryPropertiesPanelView)view).setVisibleFormatKeyPanel(!isInline);
+        view.setVisibleFormatPanel(isInline);
+        view.setVisibleFormatKeyPanel(!isInline);
 
         notifyListeners();
     }
@@ -123,21 +123,24 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
     /** {@inheritDoc} */
     @Override
     public void onFormatChanged() {
-        element.setFormat(((PayloadFactoryPropertiesPanelView)view).getFormat());
+        element.setFormat(view.getFormat());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onMediaTypeChanged() {
-        element.setMediaType(((PayloadFactoryPropertiesPanelView)view).getMediaType());
+        element.setMediaType(view.getMediaType());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onDescriptionChanged() {
-        element.setDescription(((PayloadFactoryPropertiesPanelView)view).getDescription());
+        element.setDescription(view.getDescription());
+
         notifyListeners();
     }
 
@@ -164,19 +167,19 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        ((PayloadFactoryPropertiesPanelView)view).setPayloadFormat(propertyTypeManager.getValuesOfTypeByName(FormatType.TYPE_NAME));
-        ((PayloadFactoryPropertiesPanelView)view).selectPayloadFormat(element.getPayloadFormat());
-        ((PayloadFactoryPropertiesPanelView)view).setFormat(element.getFormat());
-        ((PayloadFactoryPropertiesPanelView)view).setFormatKey(element.getFormatKey());
-        ((PayloadFactoryPropertiesPanelView)view).setMediaType(propertyTypeManager.getValuesOfTypeByName(MediaType.TYPE_NAME));
-        ((PayloadFactoryPropertiesPanelView)view).selectMediaType(element.getMediaType());
-        ((PayloadFactoryPropertiesPanelView)view).setDescription(element.getDescription());
+        view.setPayloadFormat(propertyTypeManager.getValuesOfTypeByName(FormatType.TYPE_NAME));
+        view.selectPayloadFormat(element.getPayloadFormat());
+        view.setFormat(element.getFormat());
+        view.setFormatKey(element.getFormatKey());
+        view.setMediaType(propertyTypeManager.getValuesOfTypeByName(MediaType.TYPE_NAME));
+        view.selectMediaType(element.getMediaType());
+        view.setDescription(element.getDescription());
 
-        boolean isInline = Inline.name().equals(((PayloadFactoryPropertiesPanelView)view).getPayloadFormat());
+        boolean isInline = Inline.name().equals(view.getPayloadFormat());
 
-        ((PayloadFactoryPropertiesPanelView)view).setVisibleFormatPanel(isInline);
-        ((PayloadFactoryPropertiesPanelView)view).setVisibleFormatKeyPanel(!isInline);
-        ((PayloadFactoryPropertiesPanelView)view).setArgs(element.getArgs().isEmpty() ? "" : "Payload Factory Arguments");
+        view.setVisibleFormatPanel(isInline);
+        view.setVisibleFormatKeyPanel(!isInline);
+        view.setArgs(element.getArgs().isEmpty() ? "" : "Payload Factory Arguments");
     }
 
 }

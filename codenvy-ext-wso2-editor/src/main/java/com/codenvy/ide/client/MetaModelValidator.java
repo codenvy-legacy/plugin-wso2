@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client;
 
+import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Shape;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -36,7 +37,7 @@ import java.util.Map;
 @Singleton
 public class MetaModelValidator {
 
-    private final Map<String, Map<String, List<String>>> rules;
+    private final Map<String, List<String>> rules;
 
     @Inject
     public MetaModelValidator() {
@@ -48,23 +49,11 @@ public class MetaModelValidator {
      *
      * @param sourceElement
      *         element that is a start point of connection
-     * @param connection
-     *         connection type
      * @param targetElements
      *         elements which is able to be connected with start point element
      */
-    public void register(@Nonnull String sourceElement, @Nonnull String connection, @Nonnull List<String> targetElements) {
-        Map<String, List<String>> connections;
-
-        if (rules.containsKey(sourceElement)) {
-            connections = rules.get(sourceElement);
-        } else {
-            connections = new HashMap<>();
-        }
-
-        connections.put(connection, targetElements);
-
-        rules.put(sourceElement, connections);
+    public void register(@Nonnull String sourceElement, @Nonnull List<String> targetElements) {
+        rules.put(sourceElement, targetElements);
     }
 
     /**
@@ -72,19 +61,16 @@ public class MetaModelValidator {
      *
      * @param sourceElement
      *         element that is a start point of connection
-     * @param connection
-     *         connection that needs to be created
      * @param targetElement
      *         element that is an end point of connection
      * @return <code>true</code> if it is possible to create a connection, <code>false</code> it isn't
      */
-    public boolean canCreateConnection(@Nonnull String sourceElement, @Nonnull String connection, @Nonnull String targetElement) {
+    public boolean canCreateConnection(@Nonnull String sourceElement, @Nonnull String targetElement) {
         if (!rules.containsKey(sourceElement)) {
             return false;
         }
 
-        Map<String, List<String>> connections = rules.get(sourceElement);
-        List<String> targetElements = connections.get(connection);
+        List<String> targetElements = rules.get(sourceElement);
 
         return targetElements != null && targetElements.contains(targetElement);
     }
@@ -92,10 +78,8 @@ public class MetaModelValidator {
     /**
      * Analyze an possibility to insert diagram element in some place.
      *
-     * @param parentElement
-     *         parent element that needs to be a container of a new element
-     * @param connection
-     *         connection that need to be created
+     * @param branch
+     *         branch that needs to be a container of a new element
      * @param newElement
      *         type of element that needs to be inserted
      * @param x
@@ -105,31 +89,31 @@ public class MetaModelValidator {
      * @return <code>true</code> if it is possible to insert a diagram element in position with x and y coordinates, <code>false</code> it
      * isn't
      */
-    public boolean canInsertElement(@Nonnull Shape parentElement, @Nonnull String connection, @Nonnull String newElement, int x, int y) {
-        Shape prevElement = findPrevElementByPosition(parentElement, x, y);
-        Shape nextElement = findNextElementByPosition(parentElement, x, y);
+    public boolean canInsertElement(@Nonnull Branch branch, @Nonnull String newElement, int x, int y) {
+        Shape prevElement = findPrevElementByPosition(branch, x, y);
+        Shape nextElement = findNextElementByPosition(branch, x, y);
 
         if (prevElement == null && nextElement == null) {
             return true;
         }
 
         if (prevElement != null && nextElement == null) {
-            return canCreateConnection(prevElement.getElementName(), connection, newElement);
+            return canCreateConnection(prevElement.getElementName(), newElement);
         }
 
         if (prevElement == null) {
-            return canCreateConnection(newElement, connection, nextElement.getElementName());
+            return canCreateConnection(newElement, nextElement.getElementName());
         }
 
-        return canCreateConnection(prevElement.getElementName(), connection, newElement) &&
-               canCreateConnection(newElement, connection, nextElement.getElementName());
+        return canCreateConnection(prevElement.getElementName(), newElement) &&
+               canCreateConnection(newElement, nextElement.getElementName());
     }
 
     /**
      * Return previous element of a given position.
      *
-     * @param parentElement
-     *         parent element that needs to be analyzed
+     * @param branch
+     *         branch that needs to be analyzed
      * @param x
      *         x-position
      * @param y
@@ -137,8 +121,8 @@ public class MetaModelValidator {
      * @return the previous diagram element of a given position
      */
     @Nullable
-    private Shape findPrevElementByPosition(@Nonnull Shape parentElement, int x, int y) {
-        List<Shape> shapes = parentElement.getShapes();
+    private Shape findPrevElementByPosition(@Nonnull Branch branch, int x, int y) {
+        List<Shape> shapes = branch.getShapes();
 
         for (int i = 0; i < shapes.size(); i++) {
             Shape shape = shapes.get(i);
@@ -155,8 +139,8 @@ public class MetaModelValidator {
     /**
      * Return previous element of a given position.
      *
-     * @param parentElement
-     *         parent element that needs to be analyzed
+     * @param branch
+     *         branch that needs to be analyzed
      * @param x
      *         x-position
      * @param y
@@ -164,8 +148,8 @@ public class MetaModelValidator {
      * @return the next diagram element of a given position
      */
     @Nullable
-    private Shape findNextElementByPosition(@Nonnull Shape parentElement, int x, int y) {
-        for (Shape shape : parentElement.getShapes()) {
+    private Shape findNextElementByPosition(@Nonnull Branch branch, int x, int y) {
+        for (Shape shape : branch.getShapes()) {
             int shapeX = shape.getX();
             if (shapeX > x || (shapeX == x && shape.getY() > y)) {
                 return shape;
@@ -178,22 +162,20 @@ public class MetaModelValidator {
     /**
      * Analyze an possibility to remove a =diagram element.
      *
-     * @param parentElement
-     *         parent element that needs to be analyzed
+     * @param branch
+     *         branch that needs to be analyzed
      * @param elementId
      *         id of element that needs to be removed
-     * @param connection
-     *         connection that needs to be created
      * @return <code>true</code> if it is possible to remove a diagram element, <code>false</code> it isn't
      */
-    public boolean canRemoveElement(@Nonnull Shape parentElement, @Nonnull String elementId, @Nonnull String connection) {
-        Shape shape = findElementById(parentElement, elementId);
+    public boolean canRemoveElement(@Nonnull Branch branch, @Nonnull String elementId) {
+        Shape shape = findElementById(branch, elementId);
 
         if (shape == null) {
             return true;
         }
 
-        List<Shape> shapes = parentElement.getShapes();
+        List<Shape> shapes = branch.getShapes();
         int index = shapes.indexOf(shape);
 
         if (index == 0 || index == shapes.size() - 1) {
@@ -203,21 +185,21 @@ public class MetaModelValidator {
         Shape prevShape = shapes.get(index - 1);
         Shape nextShape = shapes.get(index + 1);
 
-        return canCreateConnection(prevShape.getElementName(), connection, nextShape.getElementName());
+        return canCreateConnection(prevShape.getElementName(), nextShape.getElementName());
     }
 
     /**
      * Return element by id.
      *
-     * @param parentElement
-     *         parent element that needs to be analyzed
+     * @param branch
+     *         branch that needs to be analyzed
      * @param elementId
      *         element that needs to be found
      * @return a diagram element
      */
     @Nullable
-    private Shape findElementById(@Nonnull Shape parentElement, @Nonnull String elementId) {
-        for (Shape shape : parentElement.getShapes()) {
+    private Shape findElementById(@Nonnull Branch branch, @Nonnull String elementId) {
+        for (Shape shape : branch.getShapes()) {
             if (elementId.equals(shape.getId())) {
                 return shape;
             }

@@ -36,7 +36,7 @@ public class RespondPropertiesPanelViewImpl extends RespondPropertiesPanelView {
 
     @Inject
     public RespondPropertiesPanelViewImpl(RespondPropertiesPanelViewImplUiBinder ourUiBinder) {
-        widget = ourUiBinder.createAndBindUi(this);
+        initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     /** {@inheritDoc} */

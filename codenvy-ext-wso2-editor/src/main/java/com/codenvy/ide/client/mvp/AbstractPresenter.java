@@ -24,12 +24,12 @@ import javax.annotation.Nonnull;
  *
  * @author Andrey Plotnikov
  */
-public abstract class AbstractPresenter implements Presenter, AbstractView.ActionDelegate {
+public abstract class AbstractPresenter<T extends AbstractView> implements Presenter, AbstractView.ActionDelegate {
 
-    protected final AbstractView view;
+    protected final T view;
 
     @SuppressWarnings("unchecked")
-    protected AbstractPresenter(AbstractView view) {
+    protected AbstractPresenter(T view) {
         this.view = view;
         this.view.setDelegate(this);
     }

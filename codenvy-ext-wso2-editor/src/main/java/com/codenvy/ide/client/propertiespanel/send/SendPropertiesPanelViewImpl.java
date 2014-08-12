@@ -48,7 +48,7 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
 
     @Inject
     public SendPropertiesPanelViewImpl(SendPropertiesPanelViewImplUiBinder ourUiBinder) {
-        widget = ourUiBinder.createAndBindUi(this);
+        initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     /** {@inheritDoc} */

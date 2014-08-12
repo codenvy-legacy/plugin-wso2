@@ -40,6 +40,10 @@ public interface EditorResources extends ClientBundle {
 
         String applyCursor();
 
+        String containerElement();
+
+        String leftPanelOfContainer();
+        
         String property();
 
         String propertyButton();

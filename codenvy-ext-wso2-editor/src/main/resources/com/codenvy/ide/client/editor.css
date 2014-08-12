@@ -11,7 +11,10 @@
 }
 
 .selectedElement {
-    background: #6DAF6D !important;
+    border: 2px solid #6DAF6D !important;
+}
+
+.selectElementBelowCursor {
     border: 2px solid #6DAF6D !important;
 }
 
@@ -19,8 +22,19 @@
     border: 2px solid #FF0000 !important;
 }
 
-.selectElementBelowCursor {
-    border: 2px solid #6DAF6D !important;
+.leftPanelOfContainer {
+    position: relative;
+    float: left;
+    top: 50%;
+    margin-top: -47px;
+    padding-left: 12px;
+}
+
+.containerElement {
+    width: 300px;
+    height: 160px;
+    border: 1px dashed lightgrey;
+    background-color: #5a5c5c;
 }
 
 .propertyButton {

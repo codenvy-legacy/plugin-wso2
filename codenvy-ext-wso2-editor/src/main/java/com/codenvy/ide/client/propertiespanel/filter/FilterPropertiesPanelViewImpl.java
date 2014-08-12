@@ -44,7 +44,7 @@ public class FilterPropertiesPanelViewImpl extends FilterPropertiesPanelView {
 
     @Inject
     public FilterPropertiesPanelViewImpl(FilterPropertiesPanelViewImplUiBinder ourUiBinder) {
-        widget = ourUiBinder.createAndBindUi(this);
+        initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     /** {@inheritDoc} */

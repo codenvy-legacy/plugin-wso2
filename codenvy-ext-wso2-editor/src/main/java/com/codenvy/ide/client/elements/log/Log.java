@@ -15,14 +15,28 @@
  */
 package com.codenvy.ide.client.elements.log;
 
-import com.codenvy.ide.client.elements.AbstractElement;
-import com.codenvy.ide.client.elements.AbstractShape;
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.elements.Branch;
+import com.codenvy.ide.client.elements.Call;
+import com.codenvy.ide.client.elements.CallTemplate;
+import com.codenvy.ide.client.elements.Filter;
+import com.codenvy.ide.client.elements.Header;
+import com.codenvy.ide.client.elements.LoopBack;
 import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.client.elements.Respond;
 import com.codenvy.ide.client.elements.RootElement;
+import com.codenvy.ide.client.elements.Send;
+import com.codenvy.ide.client.elements.Sequence;
+import com.codenvy.ide.client.elements.Switch;
+import com.codenvy.ide.client.elements.enrich.Enrich;
+import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,11 +62,7 @@ public class Log extends RootElement {
     private static final String PROPERTIES_NAME  = "property";
     private static final String DESCRIPTION_NAME = "description";
 
-    private static final List<String> PROPERTIES          = Arrays.asList(PROPERTIES_NAME);
-    private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
-                                                                          Y_PROPERTY_NAME,
-                                                                          UUID_PROPERTY_NAME,
-                                                                          PROPERTIES_NAME);
+    private static final List<String> PROPERTIES = Arrays.asList(PROPERTIES_NAME);
 
     private String          logCategory;
     private String          logLevel;
@@ -60,8 +70,43 @@ public class Log extends RootElement {
     private String          description;
     private Array<Property> properties;
 
-    public Log() {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+    @Inject
+    public Log(EditorResources resources,
+               Provider<Branch> branchProvider,
+               Provider<Log> logProvider,
+               Provider<Enrich> enrichProvider,
+               Provider<Filter> filterProvider,
+               Provider<Header> headerProvider,
+               Provider<Call> callProvider,
+               Provider<CallTemplate> callTemplateProvider,
+               Provider<LoopBack> loopBackProvider,
+               Provider<PayloadFactory> payloadFactoryProvider,
+               Provider<com.codenvy.ide.client.elements.Property> propertyProvider,
+               Provider<Respond> respondProvider,
+               Provider<Send> sendProvider,
+               Provider<Sequence> sequenceProvider,
+               Provider<Switch> switchProvider) {
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              resources,
+              branchProvider,
+              false,
+              true,
+              logProvider,
+              enrichProvider,
+              filterProvider,
+              headerProvider,
+              callProvider,
+              callTemplateProvider,
+              loopBackProvider,
+              payloadFactoryProvider,
+              propertyProvider,
+              respondProvider,
+              sendProvider,
+              sequenceProvider,
+              switchProvider);
 
         logCategory = LogCategory.INFO.name();
         logLevel = LogLevel.SIMPLE.name();
@@ -148,7 +193,7 @@ public class Log extends RootElement {
     /** {@inheritDoc} */
     @Nonnull
     @Override
-    protected String serializeProperty() {
+    protected String serializeProperties() {
         StringBuilder result = new StringBuilder();
 
         for (Property property : properties.asIterable()) {
@@ -169,21 +214,8 @@ public class Log extends RootElement {
     @Override
     public void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
-        String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
         switch (nodeName) {
-            case AbstractShape.X_PROPERTY_NAME:
-                setX(Integer.valueOf(nodeValue));
-                break;
-
-            case AbstractShape.Y_PROPERTY_NAME:
-                setY(Integer.valueOf(nodeValue));
-                break;
-
-            case AbstractElement.UUID_PROPERTY_NAME:
-                id = nodeValue;
-                break;
-
             case PROPERTIES_NAME:
                 //TODO create property using editor factory
                 Property property = new Property(null, null);
@@ -220,6 +252,13 @@ public class Log extends RootElement {
                     break;
             }
         }
+    }
+
+    /** {@inheritDoc} */
+    @Nonnull
+    @Override
+    public ImageResource getIcon() {
+        return resources.log();
     }
 
     public enum LogCategory {

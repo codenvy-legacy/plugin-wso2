@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.switch_mediator;
 
-import com.codenvy.ide.client.elements.Switch_mediator;
+import com.codenvy.ide.client.elements.Switch;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Andrey Plotnikov
  */
-public class Switch_mediatorPropertiesPanelPresenter extends AbstractPropertiesPanel<Switch_mediator>
+public class Switch_mediatorPropertiesPanelPresenter extends AbstractPropertiesPanel<Switch, Switch_mediatorPropertiesPanelView>
         implements Switch_mediatorPropertiesPanelView.ActionDelegate {
 
     @Inject
@@ -37,14 +37,14 @@ public class Switch_mediatorPropertiesPanelPresenter extends AbstractPropertiesP
     /** {@inheritDoc} */
     @Override
     public void onSourceXpathChanged() {
-        element.setSourceXpath(((Switch_mediatorPropertiesPanelView)view).getSourceXpath());
+        element.setSourceXpath(view.getSourceXpath());
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onCaseBranchesChanged() {
-        element.setCaseBranches(((Switch_mediatorPropertiesPanelView)view).getCaseBranches());
+        element.setCaseBranches(view.getCaseBranches());
         notifyListeners();
     }
 
@@ -53,8 +53,8 @@ public class Switch_mediatorPropertiesPanelPresenter extends AbstractPropertiesP
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        ((Switch_mediatorPropertiesPanelView)view).setSourceXpath(element.getSourceXpath());
-        ((Switch_mediatorPropertiesPanelView)view).setCaseBranches(element.getCaseBranches());
+        view.setSourceXpath(element.getSourceXpath());
+        view.setCaseBranches(element.getCaseBranches());
     }
 
 }

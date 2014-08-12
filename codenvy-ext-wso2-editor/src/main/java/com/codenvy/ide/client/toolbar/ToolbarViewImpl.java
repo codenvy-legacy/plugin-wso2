@@ -17,19 +17,6 @@ package com.codenvy.ide.client.toolbar;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.Call;
-import com.codenvy.ide.client.elements.CallTemplate;
-import com.codenvy.ide.client.elements.enrich.Enrich;
-import com.codenvy.ide.client.elements.Filter;
-import com.codenvy.ide.client.elements.Header;
-import com.codenvy.ide.client.elements.log.Log;
-import com.codenvy.ide.client.elements.LoopBack;
-import com.codenvy.ide.client.elements.payload.PayloadFactory;
-import com.codenvy.ide.client.elements.Property;
-import com.codenvy.ide.client.elements.Respond;
-import com.codenvy.ide.client.elements.Send;
-import com.codenvy.ide.client.elements.Sequence;
-import com.codenvy.ide.client.elements.Switch_mediator;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -40,11 +27,6 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-import javax.annotation.Nonnull;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-
 /**
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
@@ -53,8 +35,6 @@ public class ToolbarViewImpl extends ToolbarView {
 
     interface ToolbarViewImplUiBinder extends UiBinder<Widget, ToolbarViewImpl> {
     }
-
-    private static final int ITEM_HEIGHT = 37;
 
     @UiField(provided = true)
     PushButton      log;
@@ -78,23 +58,18 @@ public class ToolbarViewImpl extends ToolbarView {
     PushButton      enrich;
     @UiField(provided = true)
     PushButton      loopBack;
-    @UiField(provided = true)
+    // TODO
+    @UiField
     PushButton      callTemplate;
     @UiField(provided = true)
     PushButton      call;
-    @UiField(provided = true)
-    PushButton      connection;
     @UiField
     DockLayoutPanel mainPanel;
-
-    private final Map<String, PushButton> buttons;
 
     @Inject
     public ToolbarViewImpl(ToolbarViewImplUiBinder ourUiBinder,
                            EditorResources resources,
                            WSO2EditorLocalizationConstant localizationConstant) {
-        buttons = new LinkedHashMap<>();
-
         log = new PushButton(new Image(resources.logToolbar()));
         log.setTitle(localizationConstant.toolbarLogTooltip());
 
@@ -128,47 +103,13 @@ public class ToolbarViewImpl extends ToolbarView {
         loopBack = new PushButton(new Image(resources.loopBackToolbar()));
         loopBack.setTitle(localizationConstant.toolbarLoopBackTooltip());
 
-        callTemplate = new PushButton(new Image(resources.callTemplateToolbar()));
-        callTemplate.setTitle(localizationConstant.toolbarCallTemplateTooltip());
+//        callTemplate = new PushButton(new Image(resources.callTemplateToolbar()));
+//        callTemplate.setTitle(localizationConstant.toolbarCallTemplateTooltip());
 
         call = new PushButton(new Image(resources.callToolbar()));
         call.setTitle(localizationConstant.toolbarCallTooltip());
 
-        connection = new PushButton(new Image(resources.connection()));
-        connection.setTitle(localizationConstant.toolbarConnectionTooltip());
-
-        buttons.put(Log.ELEMENT_NAME, log);
-        buttons.put(Property.ELEMENT_NAME, property);
-        buttons.put(PayloadFactory.ELEMENT_NAME, payloadFactory);
-        buttons.put(Send.ELEMENT_NAME, send);
-        buttons.put(Header.ELEMENT_NAME, header);
-        buttons.put(Respond.ELEMENT_NAME, respond);
-        buttons.put(Filter.ELEMENT_NAME, filter);
-        buttons.put(Switch_mediator.ELEMENT_NAME, switch_mediator);
-        buttons.put(Sequence.ELEMENT_NAME, sequence);
-        buttons.put(Enrich.ELEMENT_NAME, enrich);
-        buttons.put(LoopBack.ELEMENT_NAME, loopBack);
-        buttons.put(CallTemplate.ELEMENT_NAME, callTemplate);
-        buttons.put(Call.ELEMENT_NAME, call);
-
-        widget = ourUiBinder.createAndBindUi(this);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void showButtons(@Nonnull Set<String> components) {
-        mainPanel.clear();
-
-        for (Map.Entry<String, PushButton> entry : buttons.entrySet()) {
-            String elementName = entry.getKey();
-            PushButton button = entry.getValue();
-
-            if (components.contains(elementName)) {
-                mainPanel.addNorth(button, ITEM_HEIGHT);
-            }
-        }
-
-        mainPanel.addNorth(connection, ITEM_HEIGHT);
+        initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     @UiHandler("log")
@@ -234,11 +175,6 @@ public class ToolbarViewImpl extends ToolbarView {
     @UiHandler("call")
     public void onCallButtonClicked(ClickEvent event) {
         delegate.onCallButtonClicked();
-    }
-
-    @UiHandler("connection")
-    public void onConnectionButtonClicked(ClickEvent event) {
-        delegate.onConnectionButtonClicked();
     }
 
 }

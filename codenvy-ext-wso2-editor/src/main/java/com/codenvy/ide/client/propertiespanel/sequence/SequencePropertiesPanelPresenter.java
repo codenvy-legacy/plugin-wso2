@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Andrey Plotnikov
  */
-public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Sequence>
+public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Sequence, SequencePropertiesPanelView>
         implements SequencePropertiesPanelView.ActionDelegate {
 
     @Inject
@@ -37,14 +37,16 @@ public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Se
     /** {@inheritDoc} */
     @Override
     public void onReferringSequenceTypeChanged() {
-        element.setReferringSequenceType(((SequencePropertiesPanelView)view).getReferringSequenceType());
+        element.setReferringSequenceType(view.getReferringSequenceType());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onStaticReferenceKeyChanged() {
-        element.setStaticReferenceKey(((SequencePropertiesPanelView)view).getStaticReferenceKey());
+        element.setStaticReferenceKey(view.getStaticReferenceKey());
+
         notifyListeners();
     }
 
@@ -53,9 +55,9 @@ public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Se
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        ((SequencePropertiesPanelView)view).setReferringSequenceType(propertyTypeManager.getValuesOfTypeByName("ReceivingSequenceType"));
-        ((SequencePropertiesPanelView)view).selectReferringSequenceType(element.getReferringSequenceType());
-        ((SequencePropertiesPanelView)view).setStaticReferenceKey(element.getStaticReferenceKey());
+        view.setReferringSequenceType(propertyTypeManager.getValuesOfTypeByName("ReceivingSequenceType"));
+        view.selectReferringSequenceType(element.getReferringSequenceType());
+        view.setStaticReferenceKey(element.getStaticReferenceKey());
     }
 
 }

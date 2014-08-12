@@ -15,12 +15,17 @@
  */
 package com.codenvy.ide.client.elements;
 
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.common.ContentFormatter;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,15 +36,17 @@ import java.util.Set;
  * The abstract implementation of {@link Shape}. It contains the implementation of general methods which might not be changed.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public abstract class AbstractShape extends AbstractElement implements Shape, Comparable<AbstractShape> {
-    public static final String X_PROPERTY_NAME = "x";
-    public static final String Y_PROPERTY_NAME = "y";
 
-    private final List<AbstractShape> shapes;
-    private final List<Link>          links;
+    private final boolean isPossibleToAddBranches;
+    private final boolean needsToShowIconAndTitle;
 
-    protected final Set<String> components;
+    protected final EditorResources  resources;
+    protected final Provider<Branch> branchProvider;
+    protected final List<Branch>     branches;
+    protected final Set<String>      components;
 
     private int x;
     private int y;
@@ -48,12 +55,18 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
                             @Nonnull String title,
                             @Nonnull String serializationName,
                             @Nonnull List<String> properties,
-                            @Nonnull List<String> internalProperties) {
-        super(elementName, title, serializationName, properties, internalProperties);
+                            @Nonnull EditorResources resources,
+                            @Nonnull Provider<Branch> branchProvider,
+                            boolean isPossibleToAddBranches,
+                            boolean needsToShowIconAndTitle) {
+        super(elementName, title, serializationName, properties);
 
-        this.shapes = new ArrayList<>();
-        this.links = new ArrayList<>();
+        this.branchProvider = branchProvider;
+        this.resources = resources;
+        this.isPossibleToAddBranches = isPossibleToAddBranches;
+        this.needsToShowIconAndTitle = needsToShowIconAndTitle;
         this.components = new HashSet<>();
+        this.branches = new ArrayList<>();
 
         this.x = UNDEFINED_POSITION;
         this.y = UNDEFINED_POSITION;
@@ -61,61 +74,44 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
 
     /** {@inheritDoc} */
     @Override
-    public void addShape(@Nonnull Shape shape) {
-        shape.setParent(this);
-        shapes.add((AbstractShape)shape);
+    public void setBranchesAmount(int amount) {
+        if (!isPossibleToAddBranches || amount < 0) {
+            return;
+        }
+
+        int size = branches.size();
+
+        if (size > amount) {
+            for (int i = size; i > amount; i--) {
+                branches.remove(i - 1);
+            }
+        } else if (size < amount) {
+            for (int i = size; i < amount; i++) {
+                Branch branch = branchProvider.get();
+                branch.setParent(this);
+
+                branches.add(branch);
+            }
+        }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void removeShape(@Nonnull Shape shape) {
-        shape.setParent(null);
-        shapes.remove(shape);
-    }
-
-    /** {@inheritDoc} */
-    @Nonnull
-    @Override
-    public List<Shape> getShapes() {
-        Collections.sort(shapes);
-
-        ArrayList<Shape> list = new ArrayList<>();
-        list.addAll(shapes);
-
-        return list;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean hasShapes() {
-        return !shapes.isEmpty();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void addLink(@Nonnull Link link) {
-        link.setParent(this);
-        links.add(link);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void removeLink(@Nonnull Link link) {
-        link.setParent(null);
-        links.remove(link);
+    public int getBranchesAmount() {
+        return branches.size();
     }
 
     /** {@inheritDoc} */
     @Nonnull
     @Override
-    public List<Link> getLinks() {
-        return links;
+    public List<Branch> getBranches() {
+        return Collections.unmodifiableList(branches);
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean hasLinks() {
-        return !links.isEmpty();
+    public boolean isPossibleToAddBranches() {
+        return isPossibleToAddBranches;
     }
 
     /** {@inheritDoc} */
@@ -143,6 +139,13 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
     }
 
     /** {@inheritDoc} */
+    @Nullable
+    @Override
+    public ImageResource getIcon() {
+        return null;
+    }
+
+    /** {@inheritDoc} */
     @Override
     public int compareTo(AbstractShape shape) {
         if (x < shape.getX() || (x == shape.getX() && y < shape.getY())) {
@@ -158,47 +161,25 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
     @Nonnull
     @Override
     public String serialize() {
-        StringBuilder content = new StringBuilder('<' + getSerializationName() + ' ' + serializeAttributes() + ">\n");
+        String serializeAttributes = serializeAttributes();
 
-        content.append(serializeProperty());
-        //TODO check needed sort
-        Collections.sort(shapes);
+        StringBuilder content = new StringBuilder('<' + getSerializationName()
+                                                  + (serializeAttributes.isEmpty() ? "" : ' ' + serializeAttributes) + ">\n");
 
-        for (Shape shape : shapes) {
-            content.append(shape.serialize());
+        content.append(serializeProperties());
+
+        for (Branch branch : getBranches()) {
+            content.append(branch.serialize());
         }
 
         content.append("</").append(getSerializationName()).append(">\n");
 
-        return content.toString();
+        return ContentFormatter.formatXML(ContentFormatter.trimXML(content.toString()));
     }
 
-    /** {@inheritDoc} */
+    /** @return diagram element properties in text format */
     @Nonnull
-    @Override
-    public String serializeInternalFormat() {
-        StringBuilder content = new StringBuilder("<" + getElementName() + ' ' + serializeInternalProperties() + ">\n");
-
-        content.append(serializeInternalProperties());
-        //TODO check needed sort
-        Collections.sort(shapes);
-
-        for (Shape shape : shapes) {
-            content.append(shape.serializeInternalFormat());
-        }
-
-        for (Link link : links) {
-            content.append(link.serializeInternalFormat());
-        }
-
-        content.append("</").append(getElementName()).append(">\n");
-
-        return content.toString();
-    }
-
-    /** @return serialization representation of element properties */
-    @Nonnull
-    protected String serializeProperty() {
+    protected String serializeProperties() {
         return "";
     }
 
@@ -208,40 +189,19 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
         return "";
     }
 
-    @Nonnull
-    protected String serializeInternalProperties() {
-        return serializeProperty() +
-               "<x>\n" + getX() + "\n</x>\n" +
-               "<y>\n" + getY() + "\n</y>\n" +
-               "<uuid>\n" + id + "\n</uuid>\n";
-    }
-
     /** {@inheritDoc} */
     @Override
     public void deserialize(@Nonnull String content) {
-        shapes.clear();
-        links.clear();
-
-        Document xml = XMLParser.parse(content);
+        Document xml = XMLParser.parse(ContentFormatter.trimXML(content));
 
         deserialize(xml.getFirstChild());
     }
 
     /** {@inheritDoc} */
     @Override
-    public void deserializeInternalFormat(@Nonnull String content) {
-        shapes.clear();
-        links.clear();
-
-        Document xml = XMLParser.parse(content);
-
-        deserializeInternalFormat(xml.getFirstChild());
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void deserialize(@Nonnull Node node) {
-        applyAttributes(node);
+        branches.clear();
+        Branch generalBranch = null;
 
         NodeList childNodes = node.getChildNodes();
 
@@ -251,44 +211,40 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
 
             if (isProperty(name)) {
                 applyProperty(item);
-            } else {
-                Element element = findElement(name);
-                element.deserialize(item);
+                continue;
+            }
 
-                if (element instanceof Shape) {
-                    addShape((Shape)element);
-                } else {
-                    addLink((Link)element);
+            Shape shape = findElement(name);
+
+            if (shape == null)
+
+            {
+                Branch branch = branchProvider.get();
+                branch.setParent(this);
+                branch.deserialize(item);
+
+                branches.add(branch);
+            } else
+
+            {
+                if (generalBranch == null) {
+                    generalBranch = branchProvider.get();
+                    generalBranch.setParent(this);
                 }
+
+                shape.deserialize(item);
+
+                generalBranch.addShape(shape);
             }
         }
-    }
 
-    /** {@inheritDoc} */
-    @Override
-    public void deserializeInternalFormat(@Nonnull Node node) {
-        NodeList childNodes = node.getChildNodes();
+        if (generalBranch != null)
 
-        for (int i = 0; i < childNodes.getLength(); i++) {
-            Node item = childNodes.item(i);
-            String name = item.getNodeName();
-
-            if (isInternalProperty(name)) {
-                applyProperty(item);
-            } else {
-                Element element = findElement(name);
-                element.deserializeInternalFormat(item);
-
-                if (element instanceof Shape) {
-                    addShape((Shape)element);
-                } else {
-                    addLink((Link)element);
-                }
-            }
+        {
+            branches.add(generalBranch);
         }
-    }
 
-    protected abstract Element findElement(@Nonnull String elementName);
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -312,8 +268,14 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
 
     /** {@inheritDoc} */
     @Override
-    public Set<String> getComponents() {
-        return components;
+    public boolean needsToShowIconAndTitle() {
+        return needsToShowIconAndTitle;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean hasComponent(@Nonnull String component) {
+        return components.contains(component);
     }
 
 }

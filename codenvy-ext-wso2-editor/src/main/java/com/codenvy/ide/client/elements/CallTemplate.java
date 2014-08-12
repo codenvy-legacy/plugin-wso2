@@ -15,11 +15,18 @@
  */
 package com.codenvy.ide.client.elements;
 
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.elements.enrich.Enrich;
+import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.log.Property;
+import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,22 +47,53 @@ public class CallTemplate extends RootElement {
 
     private static final String AVAILABLE_TEMPLATES_PROPERTY_NAME = "AvailableTemplates";
     private static final String TARGET_TEMPLATE_PROPERTY_NAME     = "target";
-    private static final String PARAMETERS_PROPERTY_NAME          = "parameters";
+    private static final String PARAMETERS_PROPERTY_NAME          = "with-param";
     private static final String DESCRIPTION_PROPERTY_NAME         = "description";
 
-    private static final List<String> PROPERTIES          = Arrays.asList(PARAMETERS_PROPERTY_NAME);
-    private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
-                                                                          Y_PROPERTY_NAME,
-                                                                          UUID_PROPERTY_NAME,
-                                                                          PARAMETERS_PROPERTY_NAME);
+    private static final List<String> PROPERTIES = Arrays.asList(PARAMETERS_PROPERTY_NAME);
 
     private String          availableTemplates;
     private String          targetTemplate;
     private String          description;
     private Array<Property> parameters;
 
-    public CallTemplate() {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+    @Inject
+    public CallTemplate(EditorResources resources,
+                        Provider<Branch> branchProvider,
+                        Provider<Log> logProvider,
+                        Provider<Enrich> enrichProvider,
+                        Provider<Filter> filterProvider,
+                        Provider<Header> headerProvider,
+                        Provider<Call> callProvider,
+                        Provider<CallTemplate> callTemplateProvider,
+                        Provider<LoopBack> loopBackProvider,
+                        Provider<PayloadFactory> payloadFactoryProvider,
+                        Provider<com.codenvy.ide.client.elements.Property> propertyProvider,
+                        Provider<Respond> respondProvider,
+                        Provider<Send> sendProvider,
+                        Provider<Sequence> sequenceProvider,
+                        Provider<Switch> switchProvider) {
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              resources,
+              branchProvider,
+              false,
+              true,
+              logProvider,
+              enrichProvider,
+              filterProvider,
+              headerProvider,
+              callProvider,
+              callTemplateProvider,
+              loopBackProvider,
+              payloadFactoryProvider,
+              propertyProvider,
+              respondProvider,
+              sendProvider,
+              sequenceProvider,
+              switchProvider);
 
         parameters = Collections.createArray();
     }
@@ -139,7 +177,7 @@ public class CallTemplate extends RootElement {
     /** {@inheritDoc} */
     @Nonnull
     @Override
-    protected String serializeProperty() {
+    protected String serializeProperties() {
         StringBuilder result = new StringBuilder();
 
         for (Property property : parameters.asIterable()) {
@@ -160,24 +198,22 @@ public class CallTemplate extends RootElement {
     @Override
     public void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
-        String nodeValue = node.getChildNodes().item(0).getNodeValue();
+
+        Node item = node.getChildNodes().item(0);
+        String nodeValue = "";
+        if (item != null) {
+            nodeValue = item.getNodeValue();
+        }
 
         switch (nodeName) {
-            case AbstractShape.X_PROPERTY_NAME:
-                setX(Integer.valueOf(nodeValue));
-                break;
-            case AbstractShape.Y_PROPERTY_NAME:
-                setY(Integer.valueOf(nodeValue));
-                break;
-            case AbstractElement.UUID_PROPERTY_NAME:
-                id = nodeValue;
-                break;
             case AVAILABLE_TEMPLATES_PROPERTY_NAME:
                 availableTemplates = String.valueOf(nodeValue);
                 break;
+
             case TARGET_TEMPLATE_PROPERTY_NAME:
                 targetTemplate = String.valueOf(nodeValue);
                 break;
+
             case PARAMETERS_PROPERTY_NAME:
                 //TODO create property using editor factory
                 Property property = new Property(null, null);
@@ -185,9 +221,12 @@ public class CallTemplate extends RootElement {
 
                 parameters.add(property);
                 break;
+
             case DESCRIPTION_PROPERTY_NAME:
                 description = String.valueOf(nodeValue);
                 break;
+
+            default:
         }
     }
 
@@ -232,4 +271,10 @@ public class CallTemplate extends RootElement {
         }
     }
 
+    /** {@inheritDoc} */
+    @Nullable
+    @Override
+    public ImageResource getIcon() {
+        return resources.callTemplate();
+    }
 }

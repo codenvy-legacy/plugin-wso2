@@ -53,7 +53,7 @@ public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesP
 
     @Inject
     public CallTemplatePropertiesPanelViewImpl(CallTemplatePropertiesPanelViewImplUiBinder ourUiBinder) {
-        widget = ourUiBinder.createAndBindUi(this);
+        initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     /** {@inheritDoc} */

@@ -16,7 +16,6 @@
 package com.codenvy.ide.client.elements;
 
 import com.google.gwt.xml.client.Node;
-import com.google.gwt.xml.client.NodeList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,9 +40,8 @@ public abstract class AbstractLink extends AbstractElement implements Link {
                            @Nonnull String elementName,
                            @Nonnull String title,
                            @Nonnull String serializationName,
-                           @Nonnull List<String> properties,
-                           @Nonnull List<String> internalProperties) {
-        super(elementName, title, serializationName, properties, internalProperties);
+                           @Nonnull List<String> properties) {
+        super(elementName, title, serializationName, properties);
 
         this.source = source;
         this.target = target;
@@ -84,31 +82,9 @@ public abstract class AbstractLink extends AbstractElement implements Link {
     }
 
     /** {@inheritDoc} */
-    @Nonnull
-    @Override
-    public String serializeInternalFormat() {
-        return '<' + getSerializationName() + ">\n" +
-               "<source>\n" + source + "</source>\n" +
-               "<target>\n" + target + "</target>\n" +
-               "<uuid>\n" + id + "\n</uuid>\n" +
-               "</" + getSerializationName() + ">\n";
-    }
-
-    /** {@inheritDoc} */
     @Override
     public void deserialize(@Nonnull Node node) {
         // TODO It is not implemented for now.
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void deserializeInternalFormat(@Nonnull Node node) {
-        NodeList childNodes = node.getChildNodes();
-
-        for (int i = 0; i < childNodes.getLength(); i++) {
-            Node item = childNodes.item(i);
-            applyProperty(item);
-        }
     }
 
     /** {@inheritDoc} */
@@ -123,9 +99,6 @@ public abstract class AbstractLink extends AbstractElement implements Link {
                 break;
             case TARGET_PROPERTY_NAME:
                 target = nodeValue;
-                break;
-            case AbstractElement.UUID_PROPERTY_NAME:
-                id = nodeValue;
                 break;
         }
     }

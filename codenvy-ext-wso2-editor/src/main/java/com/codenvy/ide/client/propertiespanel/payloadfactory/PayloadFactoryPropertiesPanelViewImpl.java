@@ -64,8 +64,7 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
 
     @Inject
     public PayloadFactoryPropertiesPanelViewImpl(PayloadFactoryPropertiesPanelViewImplUiBinder ourUiBinder) {
-
-        widget = ourUiBinder.createAndBindUi(this);
+        initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     /** {@inheritDoc} */

@@ -26,7 +26,8 @@ import javax.annotation.Nonnull;
 /**
  * @author Andrey Plotnikov
  */
-public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call> implements CallPropertiesPanelView.ActionDelegate {
+public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, CallPropertiesPanelView>
+        implements CallPropertiesPanelView.ActionDelegate {
 
     @Inject
     public CallPropertiesPanelPresenter(CallPropertiesPanelView view, PropertyTypeManager propertyTypeManager) {
@@ -36,14 +37,15 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call> 
     /** {@inheritDoc} */
     @Override
     public void onEndpointTypeChanged() {
-        element.setEndpointType(((CallPropertiesPanelView)view).getEndpointType());
+        element.setEndpointType(view.getEndpointType());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onDescriptionChanged() {
-        element.setDescription(((CallPropertiesPanelView)view).getDescription());
+        element.setDescription(view.getDescription());
         notifyListeners();
     }
 
@@ -52,9 +54,9 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call> 
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        ((CallPropertiesPanelView)view).setEndpointType(propertyTypeManager.getValuesOfTypeByName("CallMediatorEndpointType"));
-        ((CallPropertiesPanelView)view).selectEndpointType(element.getEndpointType());
-        ((CallPropertiesPanelView)view).setDescription(element.getDescription());
+        view.setEndpointType(propertyTypeManager.getValuesOfTypeByName("CallMediatorEndpointType"));
+        view.selectEndpointType(element.getEndpointType());
+        view.setDescription(element.getDescription());
     }
 
 }

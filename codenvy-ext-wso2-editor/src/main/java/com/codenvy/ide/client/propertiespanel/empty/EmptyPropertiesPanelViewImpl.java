@@ -29,7 +29,7 @@ public class EmptyPropertiesPanelViewImpl extends EmptyPropertiesPanelView {
 
     @Inject
     public EmptyPropertiesPanelViewImpl(EmptyPropertiesPanelViewImplUiBinder ourUiBinder) {
-        widget = ourUiBinder.createAndBindUi(this);
+        initWidget(ourUiBinder.createAndBindUi(this));
     }
 
 }

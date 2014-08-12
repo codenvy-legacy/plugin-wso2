@@ -42,7 +42,7 @@ public class CallPropertiesPanelViewImpl extends CallPropertiesPanelView {
 
     @Inject
     public CallPropertiesPanelViewImpl(CallPropertiesPanelViewImplUiBinder ourUiBinder) {
-        widget = ourUiBinder.createAndBindUi(this);
+        initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     /** {@inheritDoc} */

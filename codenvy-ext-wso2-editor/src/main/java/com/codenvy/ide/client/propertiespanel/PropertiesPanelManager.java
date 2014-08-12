@@ -16,7 +16,8 @@
 package com.codenvy.ide.client.propertiespanel;
 
 import com.codenvy.ide.client.SelectionManager;
-import com.codenvy.ide.client.elements.Element;
+import com.codenvy.ide.client.elements.Shape;
+import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -53,28 +54,30 @@ public class PropertiesPanelManager implements SelectionManager.SelectionStateLi
      * @param <T>
      *         type of diagram element
      */
-    @SuppressWarnings("unchecked")
-    public <T extends Element> void register(@Nullable Class<T> diagramElement, @Nonnull AbstractPropertiesPanel<T> panel) {
+    public <T extends Shape, V extends AbstractView> void register(@Nullable Class<T> diagramElement,
+                                                                   @Nonnull AbstractPropertiesPanel<T, V> panel) {
         panels.put(diagramElement, panel);
     }
 
     /**
      * Show properties panel for a given diagram element.
      *
-     * @param element
+     * @param shape
      *         diagram element that need to be shown in a special properties panel
      * @param <T>
      *         type of diagram element
+     * @param <V>
+     *         type of properties panel view
      */
     @SuppressWarnings("unchecked")
-    public <T extends Element> void show(@Nullable T element) {
-        Object value = panels.get(element == null ? null : element.getClass());
+    public <T extends Shape, V extends AbstractView> void show(@Nullable T shape) {
+        Object value = panels.get(shape == null ? null : shape.getClass());
 
         if (value != null && value instanceof AbstractPropertiesPanel) {
-            AbstractPropertiesPanel<T> panel = (AbstractPropertiesPanel<T>)value;
+            AbstractPropertiesPanel<T, V> panel = (AbstractPropertiesPanel<T, V>)value;
 
-            if (element != null) {
-                panel.setElement(element);
+            if (shape != null) {
+                panel.setElement(shape);
             }
 
             panel.go(container);
@@ -83,8 +86,8 @@ public class PropertiesPanelManager implements SelectionManager.SelectionStateLi
 
     /** {@inheritDoc} */
     @Override
-    public void onStateChanged(@Nullable Element element) {
-        show(element);
+    public void onStateChanged(@Nullable Shape shape) {
+        show(shape);
     }
 
 }

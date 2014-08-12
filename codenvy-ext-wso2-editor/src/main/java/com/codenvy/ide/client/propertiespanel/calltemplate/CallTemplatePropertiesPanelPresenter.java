@@ -36,7 +36,7 @@ import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates.TY
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
-public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPanel<CallTemplate>
+public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPanel<CallTemplate, CallTemplatePropertiesPanelView>
         implements CallTemplatePropertiesPanelView.ActionDelegate {
 
     private final PropertyConfigPresenter        propertyConfigPresenter;
@@ -59,8 +59,7 @@ public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPane
             public void onPropertiesChanged(@Nonnull Array<Property> properties) {
                 element.setParameters(properties);
 
-                ((CallTemplatePropertiesPanelView)CallTemplatePropertiesPanelPresenter.this.view)
-                        .setParameters(properties.isEmpty() ? "" : "Call Template Parameters");
+                CallTemplatePropertiesPanelPresenter.this.view.setParameters(properties.isEmpty() ? "" : "Call Template Parameters");
 
                 notifyListeners();
             }
@@ -70,21 +69,24 @@ public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPane
     /** {@inheritDoc} */
     @Override
     public void onAvailableTemplatesChanged() {
-        element.setAvailableTemplates(((CallTemplatePropertiesPanelView)view).getAvailableTemplates());
+        element.setAvailableTemplates(view.getAvailableTemplates());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onTargetTemplateChanged() {
-        element.setTargetTemplate(((CallTemplatePropertiesPanelView)view).getTargetTemplate());
+        element.setTargetTemplate(view.getTargetTemplate());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onDescriptionChanged() {
-        element.setDescription(((CallTemplatePropertiesPanelView)view).getDescription());
+        element.setDescription(view.getDescription());
+
         notifyListeners();
     }
 
@@ -101,11 +103,11 @@ public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPane
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        ((CallTemplatePropertiesPanelView)view).selectAvailableTemplate(element.getAvailableTemplates());
-        ((CallTemplatePropertiesPanelView)view).setAvailableTemplates(propertyTypeManager.getValuesOfTypeByName(TYPE_NAME));
-        ((CallTemplatePropertiesPanelView)view).setTargetTemplate(element.getTargetTemplate());
-        ((CallTemplatePropertiesPanelView)view).setDescription(element.getDescription());
-        ((CallTemplatePropertiesPanelView)view).setParameters(element.getParameters().isEmpty() ? "" : "Call Template Parameters");
+        view.selectAvailableTemplate(element.getAvailableTemplates());
+        view.setAvailableTemplates(propertyTypeManager.getValuesOfTypeByName(TYPE_NAME));
+        view.setTargetTemplate(element.getTargetTemplate());
+        view.setDescription(element.getDescription());
+        view.setParameters(element.getParameters().isEmpty() ? "" : "Call Template Parameters");
     }
 
 }

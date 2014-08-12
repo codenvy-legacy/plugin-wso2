@@ -38,7 +38,7 @@ public class Switch_mediatorPropertiesPanelViewImpl extends Switch_mediatorPrope
 
     @Inject
     public Switch_mediatorPropertiesPanelViewImpl(Switch_mediatorPropertiesPanelViewImplUiBinder ourUiBinder) {
-        widget = ourUiBinder.createAndBindUi(this);
+        initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     /** {@inheritDoc} */

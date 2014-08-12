@@ -26,27 +26,22 @@ import java.util.List;
  */
 public abstract class AbstractElement implements Element {
 
-    public static final String UUID_PROPERTY_NAME = "uuid";
-
-    protected String id;
-
+    private       String       id;
     private       Shape        parent;
     private       String       title;
     private final String       elementName;
     private final List<String> properties;
-    private final List<String> internalProperties;
     private final String       serializationName;
 
     protected AbstractElement(@Nonnull String elementName,
                               @Nonnull String title,
                               @Nonnull String serializationName,
-                              @Nonnull List<String> properties,
-                              @Nonnull List<String> internalProperties) {
+                              @Nonnull List<String> properties) {
         this.elementName = elementName;
         this.title = title;
         this.serializationName = serializationName;
         this.properties = properties;
-        this.internalProperties = internalProperties;
+
         id = UUID.get();
     }
 
@@ -106,17 +101,6 @@ public abstract class AbstractElement implements Element {
      */
     protected boolean isProperty(@Nonnull String name) {
         return properties.contains(name);
-    }
-
-    /**
-     * Returns <code>true</code> if a given XML tag name is internal property name.
-     *
-     * @param name
-     *         XML tag name
-     * @return <code>true</code> if a given XML tag name is internal property name, <code>false</code> if it is not
-     */
-    protected boolean isInternalProperty(@Nonnull String name) {
-        return internalProperties.contains(name);
     }
 
 }

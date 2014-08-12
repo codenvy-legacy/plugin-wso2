@@ -39,7 +39,7 @@
                 </g:south>
 
                 <g:center>
-                    <g:SimpleLayoutPanel ui:field="workspace" addStyleNames="{style.fullSize}"/>
+                    <g:ScrollPanel ui:field="workspace" addStyleNames="{style.fullSize}"/>
                 </g:center>
 
             </g:SplitLayoutPanel>

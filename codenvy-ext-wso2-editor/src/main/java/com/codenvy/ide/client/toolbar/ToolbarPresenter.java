@@ -18,9 +18,7 @@ package com.codenvy.ide.client.toolbar;
 import com.codenvy.ide.client.EditorState;
 import com.codenvy.ide.client.HasState;
 import com.codenvy.ide.client.State;
-import com.codenvy.ide.client.elements.Shape;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
-import com.codenvy.ide.client.workspace.WorkspacePresenter;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -28,7 +26,6 @@ import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.client.State.CREATING_CALL;
 import static com.codenvy.ide.client.State.CREATING_CALLTEMPLATE;
-import static com.codenvy.ide.client.State.CREATING_CONNECTION_SOURCE;
 import static com.codenvy.ide.client.State.CREATING_ENRICH;
 import static com.codenvy.ide.client.State.CREATING_FILTER;
 import static com.codenvy.ide.client.State.CREATING_HEADER;
@@ -44,8 +41,7 @@ import static com.codenvy.ide.client.State.CREATING_SWITCH_MEDIATOR;
 /**
  * @author Andrey Plotnikov
  */
-public class ToolbarPresenter extends AbstractPresenter
-        implements HasState<State>, WorkspacePresenter.MainElementChangeListener, ToolbarView.ActionDelegate {
+public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements HasState<State>, ToolbarView.ActionDelegate {
 
     private EditorState<State> state;
 
@@ -54,12 +50,6 @@ public class ToolbarPresenter extends AbstractPresenter
         super(view);
 
         this.state = editorState;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onMainElementChanged(@Nonnull Shape element) {
-        ((ToolbarView)view).showButtons(element.getComponents());
     }
 
     /** {@inheritDoc} */
@@ -151,12 +141,6 @@ public class ToolbarPresenter extends AbstractPresenter
     @Override
     public void onCallButtonClicked() {
         setState(CREATING_CALL);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onConnectionButtonClicked() {
-        setState(CREATING_CONNECTION_SOURCE);
     }
 
 }

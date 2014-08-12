@@ -15,9 +15,11 @@
  */
 package com.codenvy.ide.client.elements;
 
+import com.google.gwt.resources.client.ImageResource;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Set;
 
 /**
  * The main presentation of shape diagram element. It can contain and manage inner diagram elements. Inner diagram elements mean that this
@@ -28,52 +30,6 @@ import java.util.Set;
 public interface Shape extends Element {
 
     int UNDEFINED_POSITION = -1;
-
-    /**
-     * Add an inner shape into this one shape.
-     *
-     * @param shape
-     *         shape that need to be added
-     */
-    void addShape(@Nonnull Shape shape);
-
-    /**
-     * Remove a inner shape from this one shape.
-     *
-     * @param shape
-     *         shape that need to be removed
-     */
-    void removeShape(@Nonnull Shape shape);
-
-    /** @return a list of inner shapes */
-    @Nonnull
-    List<Shape> getShapes();
-
-    /** @return <code>true</code> if this shape has inner shapes, <code>false</code> it doesn't */
-    boolean hasShapes();
-
-    /**
-     * Add an inner link into this one shape.
-     *
-     * @param link
-     *         link that need to be added
-     */
-    void addLink(@Nonnull Link link);
-
-    /**
-     * Remove a inner link from this one shape.
-     *
-     * @param link
-     *         link that need to be removed
-     */
-    void removeLink(@Nonnull Link link);
-
-    /** @return a list of inner links */
-    @Nonnull
-    List<Link> getLinks();
-
-    /** @return <code>true</code> if this shape has inner links, <code>false</code> it doesn't */
-    boolean hasLinks();
 
     /** @return the x-position of shape in workspace */
     int getX();
@@ -97,11 +53,27 @@ public interface Shape extends Element {
      */
     void setY(int y);
 
-    /** @return the list of available inner components */
-    Set<String> getComponents();
+    int getBranchesAmount();
+
+    void setBranchesAmount(int amount);
+
+    @Nonnull
+    List<Branch> getBranches();
+
+    /**
+     * @param component
+     *         current component
+     * @return <code>true</code> if components include current component, <code>false</code> it doesn't
+     */
+    boolean hasComponent(@Nonnull String component);
 
     /** @return <code>true</code> if this shape has an ability to have inner components, <code>false</code> it doesn't */
     boolean isContainer();
+
+    /** @return <code>true</code> if this shape has an ability to add new branches, <code>false</code> it doesn't */
+    boolean isPossibleToAddBranches();
+
+    boolean needsToShowIconAndTitle();
 
     /**
      * Deserialize diagram element with all inner elements.
@@ -111,12 +83,11 @@ public interface Shape extends Element {
      */
     void deserialize(@Nonnull String content);
 
-    /**
-     * Deserialize diagram element with all inner elements and all properties(include internal properties).
-     *
-     * @param content
-     *         a serialized content
-     */
-    void deserializeInternalFormat(@Nonnull String content);
+    /** @return the icon of shape */
+    @Nullable
+    ImageResource getIcon();
+
+    @Nullable
+    Shape findElement(@Nonnull String elementName);
 
 }

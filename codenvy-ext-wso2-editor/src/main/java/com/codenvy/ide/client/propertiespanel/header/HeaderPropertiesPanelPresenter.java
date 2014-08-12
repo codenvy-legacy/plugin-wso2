@@ -38,7 +38,8 @@ import static com.codenvy.ide.client.elements.Header.HeaderAction.remove;
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
-public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Header> implements HeaderPropertiesPanelView.ActionDelegate {
+public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Header, HeaderPropertiesPanelView>
+        implements HeaderPropertiesPanelView.ActionDelegate {
 
     private final NameSpaceEditorPresenter     nameSpacePresenter;
     private final InlineConfigurationPresenter inlinePresenter;
@@ -71,7 +72,7 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
 
                 element.setHeaderNamespaces(nameSpaces);
 
-                ((HeaderPropertiesPanelView)HeaderPropertiesPanelPresenter.this.view).setHeaderName(expression);
+                HeaderPropertiesPanelPresenter.this.view.setHeaderName(expression);
 
                 notifyListeners();
             }
@@ -83,7 +84,7 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
                 element.setExpression(expression);
                 element.setExpressionNamespaces(nameSpaces);
 
-                ((HeaderPropertiesPanelView)HeaderPropertiesPanelPresenter.this.view).setExpression(expression);
+                HeaderPropertiesPanelPresenter.this.view.setExpression(expression);
 
                 notifyListeners();
             }
@@ -94,7 +95,7 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
             public void onInlineChanged(@Nonnull String inline) {
                 element.setInlineXml(inline);
 
-                ((HeaderPropertiesPanelView)HeaderPropertiesPanelPresenter.this.view).setInlineXML(inline);
+                HeaderPropertiesPanelPresenter.this.view.setInlineXML(inline);
 
                 notifyListeners();
             }
@@ -104,54 +105,58 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
     /** {@inheritDoc} */
     @Override
     public void onHeaderActionChanged() {
-        element.setAction(((HeaderPropertiesPanelView)view).getAction());
+        element.setAction(view.getAction());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onScopeChanged() {
-        element.setScope(((HeaderPropertiesPanelView)view).getScope());
+        element.setScope(view.getScope());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onValueTypeChanged() {
-        element.setValueType(((HeaderPropertiesPanelView)view).getValueType());
+        element.setValueType(view.getValueType());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onValueChanged() {
-        element.setValue(((HeaderPropertiesPanelView)view).getValue());
+        element.setValue(view.getValue());
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onHeaderNameChanged() {
-        element.setHeaderName(((HeaderPropertiesPanelView)view).getHeaderName());
+        element.setHeaderName(view.getHeaderName());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onActionChanged() {
-        String action = ((HeaderPropertiesPanelView)view).getAction();
+        String action = view.getAction();
         element.setAction(action);
 
         setDefaultPanelView();
 
-        ((HeaderPropertiesPanelView)view).setVisibleValueExpressionPanel(false);
-        ((HeaderPropertiesPanelView)view).setVisibleValueInlinePanel(false);
+        view.setVisibleValueExpressionPanel(false);
+        view.setVisibleValueInlinePanel(false);
 
         if (remove.name().equals(action)) {
-            ((HeaderPropertiesPanelView)view).setVisibleValueExpressionPanel(false);
-            ((HeaderPropertiesPanelView)view).setVisibleValueInlinePanel(false);
-            ((HeaderPropertiesPanelView)view).setVisibleValueTypePanel(false);
-            ((HeaderPropertiesPanelView)view).setVisibleValueLiteralPanel(false);
+            view.setVisibleValueExpressionPanel(false);
+            view.setVisibleValueInlinePanel(false);
+            view.setVisibleValueTypePanel(false);
+            view.setVisibleValueLiteralPanel(false);
         }
 
         notifyListeners();
@@ -160,26 +165,26 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
     /** {@inheritDoc} */
     @Override
     public void onTypeChanged() {
-        String type = ((HeaderPropertiesPanelView)view).getValueType();
+        String type = view.getValueType();
         element.setValueType(type);
 
         setDefaultPanelView();
 
         switch (Header.HeaderValueType.valueOf(type)) {
             case EXPRESSION:
-                ((HeaderPropertiesPanelView)view).setVisibleValueLiteralPanel(false);
-                ((HeaderPropertiesPanelView)view).setVisibleValueInlinePanel(false);
+                view.setVisibleValueLiteralPanel(false);
+                view.setVisibleValueInlinePanel(false);
                 break;
 
             case INLINE:
-                ((HeaderPropertiesPanelView)view).setVisibleValueLiteralPanel(false);
-                ((HeaderPropertiesPanelView)view).setVisibleValueExpressionPanel(false);
-                ((HeaderPropertiesPanelView)view).setVisibleHeaderNamePanel(false);
+                view.setVisibleValueLiteralPanel(false);
+                view.setVisibleValueExpressionPanel(false);
+                view.setVisibleHeaderNamePanel(false);
                 break;
 
             default:
-                ((HeaderPropertiesPanelView)view).setVisibleValueExpressionPanel(false);
-                ((HeaderPropertiesPanelView)view).setVisibleValueInlinePanel(false);
+                view.setVisibleValueExpressionPanel(false);
+                view.setVisibleValueInlinePanel(false);
                 break;
         }
 
@@ -188,17 +193,17 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
 
     /** Sets default value of panel visibility */
     private void setDefaultPanelView() {
-        ((HeaderPropertiesPanelView)view).setVisibleHeaderNamePanel(true);
-        ((HeaderPropertiesPanelView)view).setVisibleValueExpressionPanel(true);
-        ((HeaderPropertiesPanelView)view).setVisibleValueInlinePanel(true);
-        ((HeaderPropertiesPanelView)view).setVisibleValueLiteralPanel(true);
-        ((HeaderPropertiesPanelView)view).setVisibleValueTypePanel(true);
+        view.setVisibleHeaderNamePanel(true);
+        view.setVisibleValueExpressionPanel(true);
+        view.setVisibleValueInlinePanel(true);
+        view.setVisibleValueLiteralPanel(true);
+        view.setVisibleValueTypePanel(true);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onAddHeaderNameSpaceBtnClicked() {
-        String expression = ((HeaderPropertiesPanelView)view).getHeaderName();
+        String expression = view.getHeaderName();
 
         if (expression.contains(":")) {
             expression = StringUtils.split(expression, ":").get(1);
@@ -230,16 +235,16 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        ((HeaderPropertiesPanelView)view).setAction(propertyTypeManager.getValuesOfTypeByName("HeaderAction"));
-        ((HeaderPropertiesPanelView)view).selectHeaderAction(element.getAction());
-        ((HeaderPropertiesPanelView)view).setScope(propertyTypeManager.getValuesOfTypeByName("ScopeType"));
-        ((HeaderPropertiesPanelView)view).selectScope(element.getScope());
-        ((HeaderPropertiesPanelView)view).setValueType(propertyTypeManager.getValuesOfTypeByName("HeaderValueType"));
-        ((HeaderPropertiesPanelView)view).selectValueType(element.getValueType());
-        ((HeaderPropertiesPanelView)view).setValue(element.getValue());
-        ((HeaderPropertiesPanelView)view).setHeaderName(element.getHeaderName());
-        ((HeaderPropertiesPanelView)view).setExpression(element.getExpression());
-        ((HeaderPropertiesPanelView)view).setInlineXML(element.getInlineXml());
+        view.setAction(propertyTypeManager.getValuesOfTypeByName("HeaderAction"));
+        view.selectHeaderAction(element.getAction());
+        view.setScope(propertyTypeManager.getValuesOfTypeByName("ScopeType"));
+        view.selectScope(element.getScope());
+        view.setValueType(propertyTypeManager.getValuesOfTypeByName("HeaderValueType"));
+        view.selectValueType(element.getValueType());
+        view.setValue(element.getValue());
+        view.setHeaderName(element.getHeaderName());
+        view.setExpression(element.getExpression());
+        view.setInlineXML(element.getInlineXml());
     }
 
 }

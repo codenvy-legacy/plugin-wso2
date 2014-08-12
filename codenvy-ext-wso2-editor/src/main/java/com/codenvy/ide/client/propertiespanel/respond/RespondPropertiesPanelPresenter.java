@@ -26,7 +26,8 @@ import javax.annotation.Nonnull;
 /**
  * @author Andrey Plotnikov
  */
-public class RespondPropertiesPanelPresenter extends AbstractPropertiesPanel<Respond> implements RespondPropertiesPanelView.ActionDelegate {
+public class RespondPropertiesPanelPresenter extends AbstractPropertiesPanel<Respond, RespondPropertiesPanelView>
+        implements RespondPropertiesPanelView.ActionDelegate {
 
     @Inject
     public RespondPropertiesPanelPresenter(RespondPropertiesPanelView view, PropertyTypeManager propertyTypeManager) {
@@ -36,7 +37,8 @@ public class RespondPropertiesPanelPresenter extends AbstractPropertiesPanel<Res
     /** {@inheritDoc} */
     @Override
     public void onDescriptionChanged() {
-        element.setDescription(((RespondPropertiesPanelView)view).getDescription());
+        element.setDescription(view.getDescription());
+
         notifyListeners();
     }
 
@@ -45,7 +47,7 @@ public class RespondPropertiesPanelPresenter extends AbstractPropertiesPanel<Res
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        ((RespondPropertiesPanelView)view).setDescription(element.getDescription());
+        view.setDescription(element.getDescription());
     }
 
 }

@@ -15,7 +15,14 @@
  */
 package com.codenvy.ide.client.elements;
 
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.elements.enrich.Enrich;
+import com.codenvy.ide.client.elements.log.Log;
+import com.codenvy.ide.client.elements.payload.PayloadFactory;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Node;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,19 +42,49 @@ public class Sequence extends RootElement {
     private static final String REFERRING_SEQUENCE_PROPERTY_NAME   = "ReferringSequenceType";
     private static final String STATIC_REFERENCE_KEY_PROPERTY_NAME = "StaticReferenceKey";
 
-    private static final List<String> PROPERTIES          = Arrays.asList(REFERRING_SEQUENCE_PROPERTY_NAME,
-                                                                          STATIC_REFERENCE_KEY_PROPERTY_NAME);
-    private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
-                                                                          Y_PROPERTY_NAME,
-                                                                          UUID_PROPERTY_NAME,
-                                                                          REFERRING_SEQUENCE_PROPERTY_NAME,
-                                                                          STATIC_REFERENCE_KEY_PROPERTY_NAME);
+    private static final List<String> PROPERTIES = Arrays.asList(REFERRING_SEQUENCE_PROPERTY_NAME,
+                                                                 STATIC_REFERENCE_KEY_PROPERTY_NAME);
 
     private String referringSequenceType;
     private String staticReferenceKey;
 
-    public Sequence() {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+    @Inject
+    public Sequence(EditorResources resources,
+                    Provider<Branch> branchProvider,
+                    Provider<Log> logProvider,
+                    Provider<Enrich> enrichProvider,
+                    Provider<Filter> filterProvider,
+                    Provider<Header> headerProvider,
+                    Provider<Call> callProvider,
+                    Provider<CallTemplate> callTemplateProvider,
+                    Provider<LoopBack> loopBackProvider,
+                    Provider<PayloadFactory> payloadFactoryProvider,
+                    Provider<Property> propertyProvider,
+                    Provider<Respond> respondProvider,
+                    Provider<Send> sendProvider,
+                    Provider<Sequence> sequenceProvider,
+                    Provider<Switch> switchProvider) {
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              resources,
+              branchProvider,
+              false,
+              true,
+              logProvider,
+              enrichProvider,
+              filterProvider,
+              headerProvider,
+              callProvider,
+              callTemplateProvider,
+              loopBackProvider,
+              payloadFactoryProvider,
+              propertyProvider,
+              respondProvider,
+              sendProvider,
+              sequenceProvider,
+              switchProvider);
 
         referringSequenceType = Static.name();
         staticReferenceKey = "Sequence";
@@ -86,22 +123,23 @@ public class Sequence extends RootElement {
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
         switch (nodeName) {
-            case AbstractShape.X_PROPERTY_NAME:
-                setX(Integer.valueOf(nodeValue));
-                break;
-            case AbstractShape.Y_PROPERTY_NAME:
-                setY(Integer.valueOf(nodeValue));
-                break;
-            case AbstractElement.UUID_PROPERTY_NAME:
-                id = nodeValue;
-                break;
             case REFERRING_SEQUENCE_PROPERTY_NAME:
                 referringSequenceType = String.valueOf(nodeValue);
                 break;
+
             case STATIC_REFERENCE_KEY_PROPERTY_NAME:
                 staticReferenceKey = String.valueOf(nodeValue);
                 break;
+
+            default:
         }
+    }
+
+    /** {@inheritDoc} */
+    @Nullable
+    @Override
+    public ImageResource getIcon() {
+        return resources.sequence();
     }
 
     public enum ReferringSequenceType {

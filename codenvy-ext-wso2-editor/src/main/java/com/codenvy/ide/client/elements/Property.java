@@ -15,15 +15,21 @@
  */
 package com.codenvy.ide.client.elements;
 
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.elements.enrich.Enrich;
+import com.codenvy.ide.client.elements.log.Log;
+import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -35,6 +41,7 @@ import static com.codenvy.ide.client.elements.Property.ValueType.LITERAL;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
@@ -52,10 +59,7 @@ public class Property extends RootElement {
     private static final String SCOPE                = "scope";
     private static final String DESCRIPTION          = "description";
 
-    private static final List<String> PROPERTIES          = java.util.Collections.emptyList();
-    private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
-                                                                          Y_PROPERTY_NAME,
-                                                                          UUID_PROPERTY_NAME);
+    private static final List<String> PROPERTIES = java.util.Collections.emptyList();
 
     private String           propertyName;
     private String           propertyAction;
@@ -69,8 +73,43 @@ public class Property extends RootElement {
     private String           description;
     private Array<NameSpace> nameSpaces;
 
-    public Property() {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+    @Inject
+    public Property(EditorResources resources,
+                    Provider<Branch> branchProvider,
+                    Provider<Log> logProvider,
+                    Provider<Enrich> enrichProvider,
+                    Provider<Filter> filterProvider,
+                    Provider<Header> headerProvider,
+                    Provider<Call> callProvider,
+                    Provider<CallTemplate> callTemplateProvider,
+                    Provider<LoopBack> loopBackProvider,
+                    Provider<PayloadFactory> payloadFactoryProvider,
+                    Provider<Property> propertyProvider,
+                    Provider<Respond> respondProvider,
+                    Provider<Send> sendProvider,
+                    Provider<Sequence> sequenceProvider,
+                    Provider<Switch> switchProvider) {
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              resources,
+              branchProvider,
+              false,
+              true,
+              logProvider,
+              enrichProvider,
+              filterProvider,
+              headerProvider,
+              callProvider,
+              callTemplateProvider,
+              loopBackProvider,
+              payloadFactoryProvider,
+              propertyProvider,
+              respondProvider,
+              sendProvider,
+              sequenceProvider,
+              switchProvider);
 
         nameSpaces = Collections.createArray();
         propertyName = "property_name";
@@ -306,25 +345,6 @@ public class Property extends RootElement {
 
     /** {@inheritDoc} */
     @Override
-    public void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
-        String nodeValue = node.getChildNodes().item(0).getNodeValue();
-
-        switch (nodeName) {
-            case AbstractShape.X_PROPERTY_NAME:
-                setX(Integer.valueOf(nodeValue));
-                break;
-            case AbstractShape.Y_PROPERTY_NAME:
-                setY(Integer.valueOf(nodeValue));
-                break;
-            case AbstractElement.UUID_PROPERTY_NAME:
-                id = nodeValue;
-                break;
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
     protected void applyAttributes(@Nonnull Node node) {
         NamedNodeMap attributeMap = node.getAttributes();
 
@@ -335,32 +355,47 @@ public class Property extends RootElement {
                 case NAME:
                     propertyName = String.valueOf(node);
                     break;
+
                 case ACTION:
                     propertyAction = String.valueOf(node);
                     break;
+
                 case DATA_TYPE:
                     propertyDataType = String.valueOf(node);
                     break;
+
                 case VALUE_LITERAL:
                     valueLiteral = String.valueOf(node);
                     break;
+
                 case VALUE_EXPRESSION:
                     valueExpression = String.valueOf(node);
                     break;
+
                 case STRING_PATTERN:
                     valueStringPattern = String.valueOf(node);
                     break;
+
                 case STRING_CAPTURE_GROUP:
                     valueStringCaptureGroup = String.valueOf(node);
                     break;
+
                 case SCOPE:
                     propertyScope = String.valueOf(node);
                     break;
+
                 case DESCRIPTION:
                     description = String.valueOf(node);
                     break;
             }
         }
+    }
+
+    /** {@inheritDoc} */
+    @Nullable
+    @Override
+    public ImageResource getIcon() {
+        return resources.property();
     }
 
     public enum PropertyAction {

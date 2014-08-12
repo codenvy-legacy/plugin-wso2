@@ -54,7 +54,7 @@ public class LogPropertiesPanelViewImpl extends LogPropertiesPanelView {
 
     @Inject
     public LogPropertiesPanelViewImpl(LogPropertiesPanelViewImplUiBinder ourUiBinder) {
-        widget = ourUiBinder.createAndBindUi(this);
+        initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     /** {@inheritDoc} */

@@ -15,15 +15,21 @@
  */
 package com.codenvy.ide.client.elements;
 
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.elements.enrich.Enrich;
+import com.codenvy.ide.client.elements.log.Log;
+import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -35,7 +41,6 @@ import static com.codenvy.ide.client.elements.Property.ValueType.LITERAL;
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
- * @author Dmitry Shnurenko
  */
 public class Header extends RootElement {
     public static final String ELEMENT_NAME       = "Header";
@@ -49,10 +54,7 @@ public class Header extends RootElement {
 
     private static final String PREFIX = "xmlns:";
 
-    private static final List<String> PROPERTIES          = java.util.Collections.emptyList();
-    private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
-                                                                          Y_PROPERTY_NAME,
-                                                                          UUID_PROPERTY_NAME);
+    private static final List<String> PROPERTIES = java.util.Collections.emptyList();
 
     private String action;
     private String scope;
@@ -65,8 +67,43 @@ public class Header extends RootElement {
     private Array<NameSpace> headerNamespaces;
     private Array<NameSpace> expressionNamespaces;
 
-    public Header() {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+    @Inject
+    public Header(EditorResources resources,
+                  Provider<Branch> branchProvider,
+                  Provider<Log> logProvider,
+                  Provider<Enrich> enrichProvider,
+                  Provider<Filter> filterProvider,
+                  Provider<Header> headerProvider,
+                  Provider<Call> callProvider,
+                  Provider<CallTemplate> callTemplateProvider,
+                  Provider<LoopBack> loopBackProvider,
+                  Provider<PayloadFactory> payloadFactoryProvider,
+                  Provider<Property> propertyProvider,
+                  Provider<Respond> respondProvider,
+                  Provider<Send> sendProvider,
+                  Provider<Sequence> sequenceProvider,
+                  Provider<Switch> switchProvider) {
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              resources,
+              branchProvider,
+              false,
+              true,
+              logProvider,
+              enrichProvider,
+              filterProvider,
+              headerProvider,
+              callProvider,
+              callTemplateProvider,
+              loopBackProvider,
+              payloadFactoryProvider,
+              propertyProvider,
+              respondProvider,
+              sendProvider,
+              sequenceProvider,
+              switchProvider);
 
         headerNamespaces = Collections.createArray();
         expressionNamespaces = Collections.createArray();
@@ -227,7 +264,7 @@ public class Header extends RootElement {
     /** {@inheritDoc} */
     @Nonnull
     @Override
-    protected String serializeProperty() {
+    protected String serializeProperties() {
         if (!valueType.equals(HeaderValueType.INLINE.name()) || inlineXml.isEmpty()) {
             return "";
         }
@@ -352,6 +389,13 @@ public class Header extends RootElement {
 
             inlineXml = document.substring(indexFirst + 1, indexLast);
         }
+    }
+
+    /** {@inheritDoc} */
+    @Nullable
+    @Override
+    public ImageResource getIcon() {
+        return resources.header();
     }
 
     public enum HeaderAction {

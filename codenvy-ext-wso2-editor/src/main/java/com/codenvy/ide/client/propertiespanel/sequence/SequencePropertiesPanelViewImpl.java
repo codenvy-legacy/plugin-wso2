@@ -42,7 +42,7 @@ public class SequencePropertiesPanelViewImpl extends SequencePropertiesPanelView
 
     @Inject
     public SequencePropertiesPanelViewImpl(SequencePropertiesPanelViewImplUiBinder ourUiBinder) {
-        widget = ourUiBinder.createAndBindUi(this);
+        initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     /** {@inheritDoc} */

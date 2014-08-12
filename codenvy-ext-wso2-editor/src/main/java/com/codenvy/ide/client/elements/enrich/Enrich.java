@@ -15,15 +15,30 @@
  */
 package com.codenvy.ide.client.elements.enrich;
 
-import com.codenvy.ide.client.elements.AbstractElement;
-import com.codenvy.ide.client.elements.AbstractShape;
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.elements.Branch;
+import com.codenvy.ide.client.elements.Call;
+import com.codenvy.ide.client.elements.CallTemplate;
+import com.codenvy.ide.client.elements.Filter;
+import com.codenvy.ide.client.elements.Header;
+import com.codenvy.ide.client.elements.LoopBack;
 import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.client.elements.Property;
+import com.codenvy.ide.client.elements.Respond;
 import com.codenvy.ide.client.elements.RootElement;
+import com.codenvy.ide.client.elements.Send;
+import com.codenvy.ide.client.elements.Sequence;
+import com.codenvy.ide.client.elements.Switch;
+import com.codenvy.ide.client.elements.log.Log;
+import com.codenvy.ide.client.elements.payload.PayloadFactory;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -41,21 +56,52 @@ public class Enrich extends RootElement {
 
     private static final String DESCRIPTION = "description";
 
-    private static final List<String> PROPERTIES          = Arrays.asList(TARGET_ELEMENT, SOURCE_ELEMENT);
-    private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
-                                                                          Y_PROPERTY_NAME,
-                                                                          UUID_PROPERTY_NAME,
-                                                                          TARGET_ELEMENT,
-                                                                          SOURCE_ELEMENT);
+    private static final List<String> PROPERTIES = Arrays.asList(TARGET_ELEMENT, SOURCE_ELEMENT);
 
     private String description;
     private Source source;
     private Target target;
 
-    public Enrich() {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+    @Inject
+    public Enrich(EditorResources resources,
+                  Provider<Branch> branchProvider,
+                  Provider<Log> logProvider,
+                  Provider<Enrich> enrichProvider,
+                  Provider<Filter> filterProvider,
+                  Provider<Header> headerProvider,
+                  Provider<Call> callProvider,
+                  Provider<CallTemplate> callTemplateProvider,
+                  Provider<LoopBack> loopBackProvider,
+                  Provider<PayloadFactory> payloadFactoryProvider,
+                  Provider<Property> propertyProvider,
+                  Provider<Respond> respondProvider,
+                  Provider<Send> sendProvider,
+                  Provider<Sequence> sequenceProvider,
+                  Provider<Switch> switchProvider) {
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              resources,
+              branchProvider,
+              false,
+              true,
+              logProvider,
+              enrichProvider,
+              filterProvider,
+              headerProvider,
+              callProvider,
+              callTemplateProvider,
+              loopBackProvider,
+              payloadFactoryProvider,
+              propertyProvider,
+              respondProvider,
+              sendProvider,
+              sequenceProvider,
+              switchProvider);
 
         this.description = "";
+
         //TODO use edit factory to create entity
         this.source = new Source();
         this.target = new Target();
@@ -112,7 +158,7 @@ public class Enrich extends RootElement {
     /** {@inheritDoc} */
     @Nonnull
     @Override
-    protected String serializeProperty() {
+    protected String serializeProperties() {
         StringBuilder result = new StringBuilder();
 
         StringBuilder targetNameSpaces = new StringBuilder();
@@ -231,9 +277,11 @@ public class Enrich extends RootElement {
                 attributes.remove(Target.TYPE);
                 attributes.remove(Target.PROPERTY);
                 break;
+
             case property:
                 attributes.remove(Target.XPATH);
                 break;
+
             default:
                 attributes.remove(Target.PROPERTY);
                 attributes.remove(Target.XPATH);
@@ -258,21 +306,8 @@ public class Enrich extends RootElement {
     @Override
     public void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
-        String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
         switch (nodeName) {
-            case AbstractShape.X_PROPERTY_NAME:
-                setX(Integer.valueOf(nodeValue));
-                break;
-
-            case AbstractShape.Y_PROPERTY_NAME:
-                setY(Integer.valueOf(nodeValue));
-                break;
-
-            case AbstractElement.UUID_PROPERTY_NAME:
-                id = nodeValue;
-                break;
-
             case TARGET_ELEMENT:
                 //TODO create entity using editor factory
                 Target target = new Target();
@@ -315,6 +350,13 @@ public class Enrich extends RootElement {
                     break;
             }
         }
+    }
+
+    /** {@inheritDoc} */
+    @Nullable
+    @Override
+    public ImageResource getIcon() {
+        return resources.enrich();
     }
 
     public enum SourceType {

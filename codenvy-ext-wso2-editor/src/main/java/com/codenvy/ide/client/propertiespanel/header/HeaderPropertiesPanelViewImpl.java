@@ -77,7 +77,7 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
 
     @Inject
     public HeaderPropertiesPanelViewImpl(HeaderPropertiesPanelViewImplUiBinder ourUiBinder) {
-        widget = ourUiBinder.createAndBindUi(this);
+        initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     @UiHandler("btnAddNameSpace")

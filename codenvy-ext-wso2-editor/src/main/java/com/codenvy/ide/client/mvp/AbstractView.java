@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.mvp;
 
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.Composite;
 
 import javax.annotation.Nonnull;
 
@@ -26,25 +26,18 @@ import javax.annotation.Nonnull;
  *         type of action delegate
  * @author Andrey Plotnikov
  */
-public abstract class AbstractView<T extends AbstractView.ActionDelegate> implements View<T> {
+public abstract class AbstractView<T extends AbstractView.ActionDelegate> extends Composite implements View<T> {
 
     /** Required for delegating functions in the view. */
     public interface ActionDelegate {
     }
 
-    protected T      delegate;
-    protected Widget widget;
+    protected T delegate;
 
     /** {@inheritDoc} */
     @Override
     public void setDelegate(@Nonnull T delegate) {
         this.delegate = delegate;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Widget asWidget() {
-        return widget;
     }
 
 }

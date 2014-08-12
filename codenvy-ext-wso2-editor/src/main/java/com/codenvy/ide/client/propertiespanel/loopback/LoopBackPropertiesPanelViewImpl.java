@@ -36,7 +36,7 @@ public class LoopBackPropertiesPanelViewImpl extends LoopBackPropertiesPanelView
 
     @Inject
     public LoopBackPropertiesPanelViewImpl(LoopBackPropertiesPanelViewImplUiBinder ourUiBinder) {
-        widget = ourUiBinder.createAndBindUi(this);
+        initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     /** {@inheritDoc} */

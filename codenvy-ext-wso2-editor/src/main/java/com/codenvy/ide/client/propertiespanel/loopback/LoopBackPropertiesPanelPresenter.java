@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Andrey Plotnikov
  */
-public class LoopBackPropertiesPanelPresenter extends AbstractPropertiesPanel<LoopBack>
+public class LoopBackPropertiesPanelPresenter extends AbstractPropertiesPanel<LoopBack, LoopBackPropertiesPanelView>
         implements LoopBackPropertiesPanelView.ActionDelegate {
 
     @Inject
@@ -37,7 +37,8 @@ public class LoopBackPropertiesPanelPresenter extends AbstractPropertiesPanel<Lo
     /** {@inheritDoc} */
     @Override
     public void onDescriptionChanged() {
-        element.setDescription(((LoopBackPropertiesPanelView)view).getDescription());
+        element.setDescription(view.getDescription());
+
         notifyListeners();
     }
 
@@ -46,7 +47,7 @@ public class LoopBackPropertiesPanelPresenter extends AbstractPropertiesPanel<Lo
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        ((LoopBackPropertiesPanelView)view).setDescription(element.getDescription());
+        view.setDescription(element.getDescription());
     }
 
 }

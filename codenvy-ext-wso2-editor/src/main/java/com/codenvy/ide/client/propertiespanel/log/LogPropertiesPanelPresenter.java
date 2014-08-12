@@ -34,7 +34,8 @@ import static com.codenvy.ide.client.elements.log.Log.LogCategory;
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
  */
-public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> implements LogPropertiesPanelView.ActionDelegate {
+public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log, LogPropertiesPanelView>
+        implements LogPropertiesPanelView.ActionDelegate {
 
     private final PropertyConfigPresenter        propertyConfigPresenter;
     private final AddPropertyCallback            addPropertyCallback;
@@ -63,28 +64,29 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> im
     /** {@inheritDoc} */
     @Override
     public void onLogCategoryChanged() {
-        element.setLogCategory(((LogPropertiesPanelView)view).getLogCategory());
+        element.setLogCategory(view.getLogCategory());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onLogLevelChanged() {
-        element.setLogLevel(((LogPropertiesPanelView)view).getLogLevel());
+        element.setLogLevel(view.getLogLevel());
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onLogSeparatorChanged() {
-        element.setLogSeparator(((LogPropertiesPanelView)view).getLogSeparator());
+        element.setLogSeparator(view.getLogSeparator());
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onDescriptionChanged() {
-        element.setDescription(((LogPropertiesPanelView)view).getDescription());
+        element.setDescription(view.getDescription());
         notifyListeners();
     }
 
@@ -101,12 +103,12 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> im
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        ((LogPropertiesPanelView)view).setLogCategory(propertyTypeManager.getValuesOfTypeByName(LogCategory.TYPE_NAME));
-        ((LogPropertiesPanelView)view).selectLogCategory(element.getLogCategory());
-        ((LogPropertiesPanelView)view).setLogLevel(propertyTypeManager.getValuesOfTypeByName(Log.LogLevel.TYPE_NAME));
-        ((LogPropertiesPanelView)view).selectLogLevel(element.getLogLevel());
-        ((LogPropertiesPanelView)view).setLogSeparator(element.getLogSeparator());
-        ((LogPropertiesPanelView)view).setDescription(element.getDescription());
+        view.setLogCategory(propertyTypeManager.getValuesOfTypeByName(LogCategory.TYPE_NAME));
+        view.selectLogCategory(element.getLogCategory());
+        view.setLogLevel(propertyTypeManager.getValuesOfTypeByName(Log.LogLevel.TYPE_NAME));
+        view.selectLogLevel(element.getLogLevel());
+        view.setLogSeparator(element.getLogSeparator());
+        view.setDescription(element.getDescription());
     }
 
 }

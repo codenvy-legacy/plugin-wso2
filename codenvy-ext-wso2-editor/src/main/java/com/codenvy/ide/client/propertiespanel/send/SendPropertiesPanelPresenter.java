@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Andrey Plotnikov
  */
-public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send>
+public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send, SendPropertiesPanelView>
         implements SendPropertiesPanelView.ActionDelegate {
 
     @Inject
@@ -37,28 +37,32 @@ public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send>
     /** {@inheritDoc} */
     @Override
     public void onSkipSerializationChanged() {
-        element.setSkipSerialization(((SendPropertiesPanelView)view).getSkipSerialization());
+        element.setSkipSerialization(view.getSkipSerialization());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onReceivingSequencerTypeChanged() {
-        element.setReceivingSequencerType(((SendPropertiesPanelView)view).getReceivingSequencerType());
+        element.setReceivingSequencerType(view.getReceivingSequencerType());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onBuildMessageBeforeSendingChanged() {
-        element.setBuildMessageBeforeSending(((SendPropertiesPanelView)view).getBuildMessageBeforeSending());
+        element.setBuildMessageBeforeSending(view.getBuildMessageBeforeSending());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onDescriptionChanged() {
-        element.setDescription(((SendPropertiesPanelView)view).getDescription());
+        element.setDescription(view.getDescription());
+
         notifyListeners();
     }
 
@@ -67,13 +71,13 @@ public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send>
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        ((SendPropertiesPanelView)view).setSkipSerialization(propertyTypeManager.getValuesOfTypeByName("EBoolean"));
-        ((SendPropertiesPanelView)view).selectSkipSerialization(element.getSkipSerialization());
-        ((SendPropertiesPanelView)view).setReceivingSequencerType(propertyTypeManager.getValuesOfTypeByName("ReceivingSequenceType"));
-        ((SendPropertiesPanelView)view).selectReceivingSequencerType(element.getReceivingSequencerType());
-        ((SendPropertiesPanelView)view).setBuildMessageBeforeSending(propertyTypeManager.getValuesOfTypeByName("EBoolean"));
-        ((SendPropertiesPanelView)view).selectBuildMessageBeforeSending(element.getBuildMessageBeforeSending());
-        ((SendPropertiesPanelView)view).setDescription(element.getDescription());
+        view.setSkipSerialization(propertyTypeManager.getValuesOfTypeByName("EBoolean"));
+        view.selectSkipSerialization(element.getSkipSerialization());
+        view.setReceivingSequencerType(propertyTypeManager.getValuesOfTypeByName("ReceivingSequenceType"));
+        view.selectReceivingSequencerType(element.getReceivingSequencerType());
+        view.setBuildMessageBeforeSending(propertyTypeManager.getValuesOfTypeByName("EBoolean"));
+        view.selectBuildMessageBeforeSending(element.getBuildMessageBeforeSending());
+        view.setDescription(element.getDescription());
     }
 
 }

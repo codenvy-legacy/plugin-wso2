@@ -15,7 +15,14 @@
  */
 package com.codenvy.ide.client.elements;
 
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.elements.enrich.Enrich;
+import com.codenvy.ide.client.elements.log.Log;
+import com.codenvy.ide.client.elements.payload.PayloadFactory;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Node;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,30 +46,60 @@ public class Send extends RootElement {
     private static final String BUILD_MESSAGE_BEFORE_SENDING_PROPERTY_NAME = "BuildMessageBeforeSending";
     private static final String DESCRIPTION_PROPERTY_NAME                  = "Description";
 
-    private static final List<String> PROPERTIES          = Arrays.asList(SKIP_SERIALIZATION_PROPERTY_NAME,
-                                                                          RECEIVING_SEQUENCER_TYPE_PROPERTY_NAME,
-                                                                          BUILD_MESSAGE_BEFORE_SENDING_PROPERTY_NAME,
-                                                                          DESCRIPTION_PROPERTY_NAME);
-    private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
-                                                                          Y_PROPERTY_NAME,
-                                                                          UUID_PROPERTY_NAME,
-                                                                          SKIP_SERIALIZATION_PROPERTY_NAME,
-                                                                          RECEIVING_SEQUENCER_TYPE_PROPERTY_NAME,
-                                                                          BUILD_MESSAGE_BEFORE_SENDING_PROPERTY_NAME,
-                                                                          DESCRIPTION_PROPERTY_NAME);
+    private static final List<String> PROPERTIES = Arrays.asList(SKIP_SERIALIZATION_PROPERTY_NAME,
+                                                                 RECEIVING_SEQUENCER_TYPE_PROPERTY_NAME,
+                                                                 BUILD_MESSAGE_BEFORE_SENDING_PROPERTY_NAME,
+                                                                 DESCRIPTION_PROPERTY_NAME);
 
     private String skipSerialization;
     private String receivingSequencerType;
     private String buildMessageBeforeSending;
     private String description;
 
-    public Send() {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+    @Inject
+    public Send(EditorResources resources,
+                Provider<Branch> branchProvider,
+                Provider<Log> logProvider,
+                Provider<Enrich> enrichProvider,
+                Provider<Filter> filterProvider,
+                Provider<Header> headerProvider,
+                Provider<Call> callProvider,
+                Provider<CallTemplate> callTemplateProvider,
+                Provider<LoopBack> loopBackProvider,
+                Provider<PayloadFactory> payloadFactoryProvider,
+                Provider<Property> propertyProvider,
+                Provider<Respond> respondProvider,
+                Provider<Send> sendProvider,
+                Provider<Sequence> sequenceProvider,
+                Provider<Switch> switchProvider) {
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              resources,
+              branchProvider,
+              false,
+              true,
+              logProvider,
+              enrichProvider,
+              filterProvider,
+              headerProvider,
+              callProvider,
+              callTemplateProvider,
+              loopBackProvider,
+              payloadFactoryProvider,
+              propertyProvider,
+              respondProvider,
+              sendProvider,
+              sequenceProvider,
+              switchProvider);
 
         skipSerialization = FALSE.getValue();
         receivingSequencerType = Default.name();
         buildMessageBeforeSending = "false";
         description = "enter_description";
+
+        branches.add(branchProvider.get());
     }
 
     @Nullable
@@ -118,28 +155,41 @@ public class Send extends RootElement {
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
         switch (nodeName) {
-            case AbstractShape.X_PROPERTY_NAME:
-                setX(Integer.valueOf(nodeValue));
-                break;
-            case AbstractShape.Y_PROPERTY_NAME:
-                setY(Integer.valueOf(nodeValue));
-                break;
-            case AbstractElement.UUID_PROPERTY_NAME:
-                id = nodeValue;
-                break;
             case SKIP_SERIALIZATION_PROPERTY_NAME:
                 skipSerialization = String.valueOf(nodeValue);
                 break;
+
             case RECEIVING_SEQUENCER_TYPE_PROPERTY_NAME:
                 receivingSequencerType = String.valueOf(nodeValue);
                 break;
+
             case BUILD_MESSAGE_BEFORE_SENDING_PROPERTY_NAME:
                 buildMessageBeforeSending = String.valueOf(nodeValue);
                 break;
+
             case DESCRIPTION_PROPERTY_NAME:
                 description = String.valueOf(nodeValue);
                 break;
+
+            default:
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void deserialize(@Nonnull Node node) {
+        super.deserialize(node);
+
+        if (branches.isEmpty()) {
+            branches.add(branchProvider.get());
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Nullable
+    @Override
+    public ImageResource getIcon() {
+        return resources.send();
     }
 
     public enum ReceivingSequenceType {

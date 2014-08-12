@@ -26,7 +26,8 @@ import javax.annotation.Nonnull;
 /**
  * @author Andrey Plotnikov
  */
-public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filter> implements FilterPropertiesPanelView.ActionDelegate {
+public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filter, FilterPropertiesPanelView>
+        implements FilterPropertiesPanelView.ActionDelegate {
 
     @Inject
     public FilterPropertiesPanelPresenter(FilterPropertiesPanelView view, PropertyTypeManager propertyTypeManager) {
@@ -36,21 +37,24 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
     /** {@inheritDoc} */
     @Override
     public void onConditionTypeChanged() {
-        element.setConditionType(((FilterPropertiesPanelView)view).getConditionType());
+        element.setConditionType(view.getConditionType());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onSourceChanged() {
-        element.setSource(((FilterPropertiesPanelView)view).getSource());
+        element.setSource(view.getSource());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onRegularExpressionChanged() {
-        element.setRegularExpression(((FilterPropertiesPanelView)view).getRegularExpression());
+        element.setRegularExpression(view.getRegularExpression());
+
         notifyListeners();
     }
 
@@ -59,10 +63,10 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        ((FilterPropertiesPanelView)view).setConditionType(propertyTypeManager.getValuesOfTypeByName("FilterConditionType"));
-        ((FilterPropertiesPanelView)view).selectConditionType(element.getConditionType());
-        ((FilterPropertiesPanelView)view).setSource(element.getSource());
-        ((FilterPropertiesPanelView)view).setRegularExpression(element.getRegularExpression());
+        view.setConditionType(propertyTypeManager.getValuesOfTypeByName("FilterConditionType"));
+        view.selectConditionType(element.getConditionType());
+        view.setSource(element.getSource());
+        view.setRegularExpression(element.getRegularExpression());
     }
 
 }

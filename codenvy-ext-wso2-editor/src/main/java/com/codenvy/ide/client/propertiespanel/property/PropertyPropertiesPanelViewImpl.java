@@ -80,7 +80,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
 
     @Inject
     public PropertyPropertiesPanelViewImpl(PropertyPropertiesPanelViewImplUiBinder ourUiBinder) {
-        widget = ourUiBinder.createAndBindUi(this);
+        initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     /** {@inheritDoc} */

@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client;
 
+import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Shape;
 
 import org.junit.Before;
@@ -34,18 +35,19 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class MetaModelValidatorTest {
-    private static final String ELEMENT1   = "Element1";
-    private static final String ELEMENT2   = "Element2";
-    private static final String CONNECTION = "Connection";
+    private static final String ELEMENT1 = "Element1";
+    private static final String ELEMENT2 = "Element2";
 
     @Mock
-    private Shape shape;
+    private Branch branch;
     @Mock
-    private Shape firstShape;
+    private Shape  shape;
     @Mock
-    private Shape secondShape;
+    private Shape  firstShape;
     @Mock
-    private Shape thirdShape;
+    private Shape  secondShape;
+    @Mock
+    private Shape  thirdShape;
 
     private MetaModelValidator validator;
 
@@ -53,22 +55,22 @@ public class MetaModelValidatorTest {
     public void setUp() throws Exception {
         validator = new MetaModelValidator();
 
-        validator.register(ELEMENT1, CONNECTION, Arrays.asList(ELEMENT1));
+        validator.register(ELEMENT1, Arrays.asList(ELEMENT1));
     }
 
     @Test
     public void connectionShouldBeAbleToCreate() throws Exception {
-        assertTrue(validator.canCreateConnection(ELEMENT1, CONNECTION, ELEMENT1));
+        assertTrue(validator.canCreateConnection(ELEMENT1, ELEMENT1));
     }
 
     @Test
     public void connectionShouldNotBeAbleToCreateWhenRuleIsAbsent() throws Exception {
-        assertFalse(validator.canCreateConnection(ELEMENT1, CONNECTION, ELEMENT2));
+        assertFalse(validator.canCreateConnection(ELEMENT1, ELEMENT2));
     }
 
     @Test
     public void connectionShouldNotBeAbleToCreateWhenRuleIsAbsent2() throws Exception {
-        assertFalse(validator.canCreateConnection(ELEMENT2, CONNECTION, ELEMENT1));
+        assertFalse(validator.canCreateConnection(ELEMENT2, ELEMENT1));
     }
 
     @Test
@@ -80,9 +82,9 @@ public class MetaModelValidatorTest {
         when(secondShape.getX()).thenReturn(200);
         when(secondShape.getY()).thenReturn(100);
 
-        when(shape.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
+        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
 
-        assertTrue(validator.canInsertElement(shape, CONNECTION, ELEMENT1, 0, 100));
+        assertTrue(validator.canInsertElement(branch, ELEMENT1, 0, 100));
     }
 
     @Test
@@ -94,17 +96,16 @@ public class MetaModelValidatorTest {
         when(secondShape.getY()).thenReturn(100);
         when(secondShape.getElementName()).thenReturn(ELEMENT1);
 
-        when(shape.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
-        when(shape.getElementName()).thenReturn(ELEMENT1);
+        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
 
-        assertTrue(validator.canInsertElement(shape, CONNECTION, ELEMENT1, 300, 100));
+        assertTrue(validator.canInsertElement(branch, ELEMENT1, 300, 100));
     }
 
     @Test
     public void elementShouldBeAbleToInsertWhenContainerHaveNoElement() throws Exception {
-        when(shape.getShapes()).thenReturn(Arrays.<Shape>asList());
+        when(branch.getShapes()).thenReturn(Arrays.<Shape>asList());
 
-        assertTrue(validator.canInsertElement(shape, CONNECTION, ELEMENT1, 100, 100));
+        assertTrue(validator.canInsertElement(branch, ELEMENT1, 100, 100));
     }
 
     @Test
@@ -117,9 +118,9 @@ public class MetaModelValidatorTest {
         when(secondShape.getY()).thenReturn(100);
         when(secondShape.getElementName()).thenReturn(ELEMENT1);
 
-        when(shape.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
+        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
 
-        assertTrue(validator.canInsertElement(shape, CONNECTION, ELEMENT1, 150, 100));
+        assertTrue(validator.canInsertElement(branch, ELEMENT1, 150, 100));
     }
 
     @Test
@@ -129,9 +130,9 @@ public class MetaModelValidatorTest {
         when(firstShape.getY()).thenReturn(100);
         when(firstShape.getElementName()).thenReturn(ELEMENT1);
 
-        when(shape.getShapes()).thenReturn(Arrays.asList(firstShape));
+        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape));
 
-        assertFalse(validator.canInsertElement(shape, CONNECTION, ELEMENT2, 0, 100));
+        assertFalse(validator.canInsertElement(branch, ELEMENT2, 0, 100));
     }
 
     @Test
@@ -141,9 +142,9 @@ public class MetaModelValidatorTest {
         when(firstShape.getY()).thenReturn(100);
         when(firstShape.getElementName()).thenReturn(ELEMENT1);
 
-        when(shape.getShapes()).thenReturn(Arrays.asList(firstShape));
+        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape));
 
-        assertFalse(validator.canInsertElement(shape, CONNECTION, ELEMENT2, 100, 50));
+        assertFalse(validator.canInsertElement(branch, ELEMENT2, 100, 50));
     }
 
     @Test
@@ -152,9 +153,9 @@ public class MetaModelValidatorTest {
         when(firstShape.getY()).thenReturn(100);
         when(firstShape.getElementName()).thenReturn(ELEMENT2);
 
-        when(shape.getShapes()).thenReturn(Arrays.asList(firstShape));
+        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape));
 
-        assertFalse(validator.canInsertElement(shape, CONNECTION, ELEMENT1, 200, 100));
+        assertFalse(validator.canInsertElement(branch, ELEMENT1, 200, 100));
     }
 
     @Test
@@ -163,9 +164,9 @@ public class MetaModelValidatorTest {
         when(firstShape.getY()).thenReturn(100);
         when(firstShape.getElementName()).thenReturn(ELEMENT2);
 
-        when(shape.getShapes()).thenReturn(Arrays.asList(firstShape));
+        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape));
 
-        assertFalse(validator.canInsertElement(shape, CONNECTION, ELEMENT1, 100, 150));
+        assertFalse(validator.canInsertElement(branch, ELEMENT1, 100, 150));
     }
 
     @Test
@@ -178,9 +179,9 @@ public class MetaModelValidatorTest {
         when(secondShape.getY()).thenReturn(100);
         when(secondShape.getElementName()).thenReturn(ELEMENT1);
 
-        when(shape.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
+        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
 
-        assertFalse(validator.canInsertElement(shape, CONNECTION, ELEMENT2, 150, 100));
+        assertFalse(validator.canInsertElement(branch, ELEMENT2, 150, 100));
     }
 
     @Test
@@ -193,9 +194,9 @@ public class MetaModelValidatorTest {
         when(secondShape.getY()).thenReturn(100);
         when(secondShape.getElementName()).thenReturn(ELEMENT2);
 
-        when(shape.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
+        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
 
-        assertFalse(validator.canInsertElement(shape, CONNECTION, ELEMENT1, 150, 100));
+        assertFalse(validator.canInsertElement(branch, ELEMENT1, 150, 100));
     }
 
 
@@ -209,9 +210,9 @@ public class MetaModelValidatorTest {
         when(secondShape.getY()).thenReturn(100);
         when(secondShape.getId()).thenReturn(ELEMENT2);
 
-        when(shape.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
+        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
 
-        assertTrue(validator.canRemoveElement(shape, ELEMENT1, CONNECTION));
+        assertTrue(validator.canRemoveElement(branch, ELEMENT1));
     }
 
     @Test
@@ -224,14 +225,14 @@ public class MetaModelValidatorTest {
         when(secondShape.getY()).thenReturn(100);
         when(secondShape.getId()).thenReturn(ELEMENT2);
 
-        when(shape.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
+        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
 
-        assertTrue(validator.canRemoveElement(shape, ELEMENT2, CONNECTION));
+        assertTrue(validator.canRemoveElement(branch, ELEMENT2));
     }
 
     @Test
     public void elementShouldBeAbleToRemoveWhenElementIsAbsent() throws Exception {
-        assertTrue(validator.canRemoveElement(shape, ELEMENT1, CONNECTION));
+        assertTrue(validator.canRemoveElement(branch, ELEMENT1));
     }
 
     @Test
@@ -250,9 +251,9 @@ public class MetaModelValidatorTest {
         when(thirdShape.getY()).thenReturn(100);
         when(thirdShape.getElementName()).thenReturn(ELEMENT1);
 
-        when(shape.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape, thirdShape));
+        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape, thirdShape));
 
-        assertTrue(validator.canRemoveElement(shape, ELEMENT2, CONNECTION));
+        assertTrue(validator.canRemoveElement(branch, ELEMENT2));
     }
 
     @Test
@@ -271,9 +272,9 @@ public class MetaModelValidatorTest {
         when(thirdShape.getY()).thenReturn(100);
         when(thirdShape.getElementName()).thenReturn(ELEMENT2);
 
-        when(shape.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape, thirdShape));
+        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape, thirdShape));
 
-        assertFalse(validator.canRemoveElement(shape, ELEMENT2, CONNECTION));
+        assertFalse(validator.canRemoveElement(branch, ELEMENT2));
     }
 
 }

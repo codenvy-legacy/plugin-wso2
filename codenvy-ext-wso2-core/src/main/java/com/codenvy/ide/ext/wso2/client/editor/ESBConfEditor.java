@@ -22,17 +22,10 @@ import com.codenvy.ide.api.editor.EditorInitException;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.File;
-import com.codenvy.ide.api.resources.model.Folder;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PropertyListener;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncCallback;
 import com.codenvy.ide.ext.wso2.client.editor.graphical.GraphicEditor;
 import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorConfiguration;
-import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -40,8 +33,6 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-
-import static com.codenvy.ide.MimeType.APPLICATION_XML;
 
 /**
  * The editor for WSO2 ESB configuration.
@@ -51,17 +42,11 @@ import static com.codenvy.ide.MimeType.APPLICATION_XML;
  */
 public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEditorView.ActionDelegate, PropertyListener {
 
-    private static final String CODENVY_INTERNAL_FORMAT_EXTENSION = ".c5yd";
-
-    private final ESBConfEditorView   view;
-    private final NotificationManager notificationManager;
-    private final ResourceProvider    resourceProvider;
-    private final GraphicEditor       graphicEditor;
-    private final CodenvyTextEditor   textEditor;
+    private final ESBConfEditorView view;
+    private final GraphicEditor     graphicEditor;
+    private final CodenvyTextEditor textEditor;
 
     private boolean isGraphicalEditorChanged;
-    private File    internalFile;
-    private Project activeProject;
 
     @Inject
     public ESBConfEditor(ESBConfEditorView view,
@@ -69,11 +54,8 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
                          Provider<CodenvyTextEditor> editorProvider,
                          Provider<XmlEditorConfiguration> xmlEditorConfigurationProvider,
                          NotificationManager notificationManager,
-                         GraphicEditor graphicEditor,
-                         ResourceProvider resourceProvider) {
+                         GraphicEditor graphicEditor) {
         this.view = view;
-        this.notificationManager = notificationManager;
-        this.resourceProvider = resourceProvider;
         this.view.setDelegate(this);
         this.graphicEditor = graphicEditor;
         textEditor = editorProvider.get();
@@ -103,15 +85,8 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         if (isDirty()) {
             isGraphicalEditorChanged = true;
 
-            activeProject.updateContent(internalFile, new WSO2AsyncCallback<File>(notificationManager) {
-                @Override
-                public void onSuccess(File result) {
-                    ESBConfEditor.this.internalFile = result;
-
-                    textEditor.doSave();
-                    graphicEditor.doSave();
-                }
-            });
+            textEditor.doSave();
+            graphicEditor.doSave();
         }
     }
 
@@ -165,7 +140,6 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         container.setWidget(view);
 
         isGraphicalEditorChanged = false;
-        activeProject = resourceProvider.getActiveProject();
     }
 
     /** {@inheritDoc} */
@@ -206,11 +180,9 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
 
     /** {@inheritDoc} */
     @Override
-    public void propertyChanged(PartPresenter source, final int propId) {
+    public void propertyChanged(PartPresenter source, int propId) {
         if (propId == EditorPartPresenter.PROP_DIRTY && source instanceof GraphicEditor) {
             textEditor.getDocument().set(graphicEditor.serialize());
-
-            serializeToInternalFormat();
 
             isGraphicalEditorChanged = true;
             updateDirtyState(true);
@@ -219,60 +191,11 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
             if (isGraphicalEditorChanged) {
                 isGraphicalEditorChanged = false;
             } else {
-                deserializeDiagram();
+                graphicEditor.deserialize(textEditor.getDocument().get());
             }
         } else {
             firePropertyChange(propId);
         }
-    }
-
-    private void serializeToInternalFormat() {
-        File diagramFile = textEditor.getEditorInput().getFile();
-
-        Folder parentFolder = diagramFile.getParent();
-        String internalFileName = getFileName(diagramFile);
-        File internalFile = (File)parentFolder.findChildByName(internalFileName);
-
-        if (this.internalFile == null && internalFile == null) {
-            activeProject.createFile(parentFolder,
-                                     internalFileName,
-                                     graphicEditor.serializeInternalFormat(),
-                                     APPLICATION_XML,
-                                     new WSO2AsyncCallback<File>(notificationManager) {
-                                         @Override
-                                         public void onSuccess(File result) {
-                                             ESBConfEditor.this.internalFile = result;
-                                         }
-                                     });
-            return;
-        }
-
-        if (this.internalFile == null) {
-            this.internalFile = internalFile;
-        }
-
-        this.internalFile.setContent(graphicEditor.serializeInternalFormat());
-    }
-
-    private void deserializeDiagram() {
-        File diagramFile = textEditor.getEditorInput().getFile();
-
-        Folder parentFolder = diagramFile.getParent();
-        String internalFileName = getFileName(diagramFile);
-
-        File internalFile = (File)parentFolder.findChildByName(internalFileName);
-
-        if (internalFile == null) {
-            graphicEditor.deserialize(textEditor.getDocument().get());
-        } else {
-            graphicEditor.deserializeInternalFormat(internalFile.getContent());
-        }
-    }
-
-    @NotNull
-    private String getFileName(@NotNull File file) {
-        Array<String> nameParts = StringUtils.split(file.getName(), ".");
-        return nameParts.get(0) + CODENVY_INTERNAL_FORMAT_EXTENSION;
     }
 
 }

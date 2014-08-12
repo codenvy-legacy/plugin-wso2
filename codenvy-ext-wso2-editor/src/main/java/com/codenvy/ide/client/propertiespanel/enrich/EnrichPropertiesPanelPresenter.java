@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
-public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enrich>
+public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enrich, EnrichPropertiesPanelView>
         implements EnrichPropertiesPanelView.ActionDelegate {
 
     private final NameSpaceEditorPresenter     nameSpacePresenter;
@@ -73,7 +73,7 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
                 element.getSource().setXpath(expression);
                 element.getSource().setNameSpaces(nameSpaces);
 
-                ((EnrichPropertiesPanelView)EnrichPropertiesPanelPresenter.this.view).setSourceXpath(expression);
+                EnrichPropertiesPanelPresenter.this.view.setSourceXpath(expression);
 
                 notifyListeners();
             }
@@ -85,7 +85,7 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
                 element.getTarget().setXpath(expression);
                 element.getTarget().setNameSpaces(nameSpaces);
 
-                ((EnrichPropertiesPanelView)EnrichPropertiesPanelPresenter.this.view).setTargetXpath(expression);
+                EnrichPropertiesPanelPresenter.this.view.setTargetXpath(expression);
 
                 notifyListeners();
             }
@@ -96,7 +96,7 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
             public void onInlineChanged(@Nonnull String inline) {
                 element.getSource().setSourceXML(inline);
 
-                ((EnrichPropertiesPanelView)EnrichPropertiesPanelPresenter.this.view).setInlineXml(inline);
+                EnrichPropertiesPanelPresenter.this.view.setInlineXml(inline);
 
                 notifyListeners();
             }
@@ -107,7 +107,7 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
             public void onFormatKeyChanged(@Nonnull String key) {
                 element.getSource().setInlRegisterKey(key);
 
-                ((EnrichPropertiesPanelView)EnrichPropertiesPanelPresenter.this.view).setInlineRegisterKey(key);
+                EnrichPropertiesPanelPresenter.this.view.setInlineRegisterKey(key);
 
                 notifyListeners();
             }
@@ -117,92 +117,93 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
     /** {@inheritDoc} */
     @Override
     public void onCloneSourceChanged() {
-        element.getSource().setClone(((EnrichPropertiesPanelView)view).getCloneSource());
+        element.getSource().setClone(view.getCloneSource());
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onSourceTypeChanged() {
-        element.getSource().setType(((EnrichPropertiesPanelView)view).getSourceType());
+        element.getSource().setType(view.getSourceType());
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onSrcPropertyChanged() {
-        element.getSource().setProperty(((EnrichPropertiesPanelView)view).getSrcProperty());
+        element.getSource().setProperty(view.getSrcProperty());
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onSourceXpathChanged() {
-        element.getSource().setXpath(((EnrichPropertiesPanelView)view).getSourceXpath());
+        element.getSource().setXpath(view.getSourceXpath());
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onTargetActionChanged() {
-        element.getTarget().setAction(((EnrichPropertiesPanelView)view).getTargetAction());
+        element.getTarget().setAction(view.getTargetAction());
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onTargetTypeChanged() {
-        element.getTarget().setType(((EnrichPropertiesPanelView)view).getTargetType());
+        element.getTarget().setType(view.getTargetType());
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onTargetXpathChanged() {
-        element.getTarget().setXpath(((EnrichPropertiesPanelView)view).getTargetXpath());
+        element.getTarget().setXpath(view.getTargetXpath());
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onDescriptionChanged() {
-        element.setDescription(((EnrichPropertiesPanelView)view).getDescription());
+        element.setDescription(view.getDescription());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onSrcTypeChanged() {
-        String type = ((EnrichPropertiesPanelView)view).getSourceType();
+        String type = view.getSourceType();
         element.getSource().setType(type);
 
         setDefaultSourcePanelView();
 
-        ((EnrichPropertiesPanelView)view).setVisibleSrcInlineRegisterPanel(false);
+        view.setVisibleSrcInlineRegisterPanel(false);
 
         switch (Enrich.SourceType.valueOf(type)) {
             case custom:
-                ((EnrichPropertiesPanelView)view).setVisibleSrcPropertyPanel(false);
-                ((EnrichPropertiesPanelView)view).setVisibleSrcInlineTypePanel(false);
-                ((EnrichPropertiesPanelView)view).setVisibleSrcXMLPanel(false);
+                view.setVisibleSrcPropertyPanel(false);
+                view.setVisibleSrcInlineTypePanel(false);
+                view.setVisibleSrcXMLPanel(false);
                 break;
 
             case property:
-                ((EnrichPropertiesPanelView)view).setVisibleSrcXPathPanel(false);
-                ((EnrichPropertiesPanelView)view).setVisibleSrcInlineTypePanel(false);
-                ((EnrichPropertiesPanelView)view).setVisibleSrcXMLPanel(false);
+                view.setVisibleSrcXPathPanel(false);
+                view.setVisibleSrcInlineTypePanel(false);
+                view.setVisibleSrcXMLPanel(false);
                 break;
 
             case inline:
-                ((EnrichPropertiesPanelView)view).setVisibleSrcXPathPanel(false);
-                ((EnrichPropertiesPanelView)view).setVisibleSrcPropertyPanel(false);
+                view.setVisibleSrcXPathPanel(false);
+                view.setVisibleSrcPropertyPanel(false);
                 break;
 
             default:
-                ((EnrichPropertiesPanelView)view).setVisibleSrcXPathPanel(false);
-                ((EnrichPropertiesPanelView)view).setVisibleSrcPropertyPanel(false);
-                ((EnrichPropertiesPanelView)view).setVisibleSrcInlineTypePanel(false);
-                ((EnrichPropertiesPanelView)view).setVisibleSrcXMLPanel(false);
+                view.setVisibleSrcXPathPanel(false);
+                view.setVisibleSrcPropertyPanel(false);
+                view.setVisibleSrcInlineTypePanel(false);
+                view.setVisibleSrcXMLPanel(false);
                 break;
         }
 
@@ -212,20 +213,20 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
     /** {@inheritDoc} */
     @Override
     public void onSrcInlineTypeChanged() {
-        String inlineType = ((EnrichPropertiesPanelView)view).getInlineType();
+        String inlineType = view.getInlineType();
         element.getSource().setInlineType(inlineType);
 
         setDefaultSourcePanelView();
 
-        ((EnrichPropertiesPanelView)view).setVisibleSrcXPathPanel(false);
-        ((EnrichPropertiesPanelView)view).setVisibleSrcPropertyPanel(false);
+        view.setVisibleSrcXPathPanel(false);
+        view.setVisibleSrcPropertyPanel(false);
 
         if (inlineType.equals(Enrich.InlineType.SourceXML.name())) {
-            ((EnrichPropertiesPanelView)view).setVisibleSrcXMLPanel(true);
-            ((EnrichPropertiesPanelView)view).setVisibleSrcInlineRegisterPanel(false);
+            view.setVisibleSrcXMLPanel(true);
+            view.setVisibleSrcInlineRegisterPanel(false);
         } else {
-            ((EnrichPropertiesPanelView)view).setVisibleSrcXMLPanel(false);
-            ((EnrichPropertiesPanelView)view).setVisibleSrcInlineRegisterPanel(true);
+            view.setVisibleSrcXMLPanel(false);
+            view.setVisibleSrcInlineRegisterPanel(true);
         }
 
         notifyListeners();
@@ -234,25 +235,25 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
     /** {@inheritDoc} */
     @Override
     public void onTgtTypeChanged() {
-        String targetType = ((EnrichPropertiesPanelView)view).getTargetType();
+        String targetType = view.getTargetType();
         element.getTarget().setType(targetType);
 
         setDefaultTargetPanelView();
 
         switch (Enrich.TargetType.valueOf(targetType)) {
             case custom:
-                ((EnrichPropertiesPanelView)view).setVisibleTargetPropertyPanel(false);
-                ((EnrichPropertiesPanelView)view).setVisibleTargetXPathPanel(true);
+                view.setVisibleTargetPropertyPanel(false);
+                view.setVisibleTargetXPathPanel(true);
                 break;
 
             case property:
-                ((EnrichPropertiesPanelView)view).setVisibleTargetPropertyPanel(true);
-                ((EnrichPropertiesPanelView)view).setVisibleTargetXPathPanel(false);
+                view.setVisibleTargetPropertyPanel(true);
+                view.setVisibleTargetXPathPanel(false);
                 break;
 
             default:
-                ((EnrichPropertiesPanelView)view).setVisibleTargetPropertyPanel(false);
-                ((EnrichPropertiesPanelView)view).setVisibleTargetXPathPanel(false);
+                view.setVisibleTargetPropertyPanel(false);
+                view.setVisibleTargetXPathPanel(false);
                 break;
         }
 
@@ -261,17 +262,17 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
 
     /** Sets default value of source panel visibility */
     private void setDefaultSourcePanelView() {
-        ((EnrichPropertiesPanelView)view).setVisibleSrcInlineRegisterPanel(true);
-        ((EnrichPropertiesPanelView)view).setVisibleSrcInlineTypePanel(true);
-        ((EnrichPropertiesPanelView)view).setVisibleSrcPropertyPanel(true);
-        ((EnrichPropertiesPanelView)view).setVisibleSrcXMLPanel(true);
-        ((EnrichPropertiesPanelView)view).setVisibleSrcXPathPanel(true);
+        view.setVisibleSrcInlineRegisterPanel(true);
+        view.setVisibleSrcInlineTypePanel(true);
+        view.setVisibleSrcPropertyPanel(true);
+        view.setVisibleSrcXMLPanel(true);
+        view.setVisibleSrcXPathPanel(true);
     }
 
     /** Sets default value of target panel visibility */
     private void setDefaultTargetPanelView() {
-        ((EnrichPropertiesPanelView)view).setVisibleTargetPropertyPanel(true);
-        ((EnrichPropertiesPanelView)view).setVisibleTargetXPathPanel(true);
+        view.setVisibleTargetPropertyPanel(true);
+        view.setVisibleTargetXPathPanel(true);
     }
 
     /** {@inheritDoc} */
@@ -307,7 +308,7 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
     /** {@inheritDoc} */
     @Override
     public void onTargetPropertyChanged() {
-        element.getTarget().setProperty(((EnrichPropertiesPanelView)view).getTargetProperty());
+        element.getTarget().setProperty(view.getTargetProperty());
         notifyListeners();
     }
 
@@ -316,32 +317,32 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        ((EnrichPropertiesPanelView)view).setCloneSource(propertyTypeManager.getValuesOfTypeByName(Send.EBoolean.TYPE_NAME));
-        ((EnrichPropertiesPanelView)view).selectCloneSource(element.getSource().getClone());
+        view.setCloneSource(propertyTypeManager.getValuesOfTypeByName(Send.EBoolean.TYPE_NAME));
+        view.selectCloneSource(element.getSource().getClone());
 
-        ((EnrichPropertiesPanelView)view).setSourceType(propertyTypeManager.getValuesOfTypeByName(Enrich.SourceType.TYPE_NAME));
-        ((EnrichPropertiesPanelView)view).selectSourceType(element.getSource().getType());
+        view.setSourceType(propertyTypeManager.getValuesOfTypeByName(Enrich.SourceType.TYPE_NAME));
+        view.selectSourceType(element.getSource().getType());
 
-        ((EnrichPropertiesPanelView)view).setInlineRegisterKey(element.getSource().getInlRegisterKey());
+        view.setInlineRegisterKey(element.getSource().getInlRegisterKey());
 
-        ((EnrichPropertiesPanelView)view).setSourceXpath(element.getSource().getXpath());
+        view.setSourceXpath(element.getSource().getXpath());
 
-        ((EnrichPropertiesPanelView)view).setTargetAction(propertyTypeManager.getValuesOfTypeByName(Enrich.TargetAction.TYPE_NAME));
-        ((EnrichPropertiesPanelView)view).selectTargetAction(element.getTarget().getAction());
+        view.setTargetAction(propertyTypeManager.getValuesOfTypeByName(Enrich.TargetAction.TYPE_NAME));
+        view.selectTargetAction(element.getTarget().getAction());
 
-        ((EnrichPropertiesPanelView)view).setTargetType(propertyTypeManager.getValuesOfTypeByName(Enrich.TargetType.TYPE_NAME));
+        view.setTargetType(propertyTypeManager.getValuesOfTypeByName(Enrich.TargetType.TYPE_NAME));
 
-        ((EnrichPropertiesPanelView)view).setInlineType(propertyTypeManager.getValuesOfTypeByName(Enrich.InlineType.INLINE_TYPE));
-        ((EnrichPropertiesPanelView)view).selectInlineType(element.getSource().getInlineType());
+        view.setInlineType(propertyTypeManager.getValuesOfTypeByName(Enrich.InlineType.INLINE_TYPE));
+        view.selectInlineType(element.getSource().getInlineType());
 
-        ((EnrichPropertiesPanelView)view).selectTargetType(element.getTarget().getType());
+        view.selectTargetType(element.getTarget().getType());
 
-        ((EnrichPropertiesPanelView)view).setTargetXpath(element.getTarget().getXpath());
+        view.setTargetXpath(element.getTarget().getXpath());
 
-        ((EnrichPropertiesPanelView)view).setDescription(element.getDescription());
-        ((EnrichPropertiesPanelView)view).setProperty(element.getSource().getProperty());
-        ((EnrichPropertiesPanelView)view).setSrcXml(element.getSource().getSourceXML());
-        ((EnrichPropertiesPanelView)view).setTargetProperty(element.getTarget().getProperty());
+        view.setDescription(element.getDescription());
+        view.setProperty(element.getSource().getProperty());
+        view.setSrcXml(element.getSource().getSourceXML());
+        view.setTargetProperty(element.getTarget().getProperty());
     }
 
 }

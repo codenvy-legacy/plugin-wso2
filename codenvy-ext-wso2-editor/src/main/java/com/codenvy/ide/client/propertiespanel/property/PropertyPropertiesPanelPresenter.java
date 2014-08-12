@@ -42,7 +42,7 @@ import static com.codenvy.ide.client.elements.Property.ValueType.EXPRESSION;
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
-public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Property>
+public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Property, PropertyPropertiesPanelView>
         implements PropertyPropertiesPanelView.ActionDelegate {
 
     private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
@@ -71,21 +71,24 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
     /** {@inheritDoc} */
     @Override
     public void onPropertyNameChanged() {
-        element.setPropertyName(((PropertyPropertiesPanelView)view).getPropertyName());
+        element.setPropertyName(view.getPropertyName());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onPropertyActionChanged() {
-        String propertyValue = ((PropertyPropertiesPanelView)view).getPropertyAction();
+        element.setPropertyAction(view.getPropertyAction());
+
+        String propertyValue = view.getPropertyAction();
         element.setPropertyAction(propertyValue);
 
         if (set.name().equals(propertyValue)) {
-            ((PropertyPropertiesPanelView)view).updatePropertyPanel(true);
-            updateValueTypes(((PropertyPropertiesPanelView)view).getValueType());
+            view.updatePropertyPanel(true);
+            updateValueTypes(view.getValueType());
         } else {
-            ((PropertyPropertiesPanelView)view).updatePropertyPanel(false);
+            view.updatePropertyPanel(false);
         }
 
         notifyListeners();
@@ -94,7 +97,9 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
     /** {@inheritDoc} */
     @Override
     public void onValueTypeChanged() {
-        String propertyValue = ((PropertyPropertiesPanelView)view).getValueType();
+        element.setValueType(view.getValueType());
+
+        String propertyValue = view.getValueType();
         element.setValueType(propertyValue);
 
         updateValueTypes(propertyValue);
@@ -106,57 +111,62 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
         if (set.name().equals(element.getPropertyAction())) {
             boolean isExpression = EXPRESSION.name().equals(propertyValue);
 
-            ((PropertyPropertiesPanelView)view).setVisibleExpressionPanel(isExpression);
-            ((PropertyPropertiesPanelView)view).setVisibleLiteralPanel(!isExpression);
+            view.setVisibleExpressionPanel(isExpression);
+            view.setVisibleLiteralPanel(!isExpression);
         }
     }
 
     /** {@inheritDoc} */
     @Override
     public void onPropertyDataTypeChanged() {
-        element.setPropertyDataType(((PropertyPropertiesPanelView)view).getPropertyDataType());
+        element.setPropertyDataType(view.getPropertyDataType());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onValueLiteralChanged() {
-        element.setValueLiteral(((PropertyPropertiesPanelView)view).getValueLiteral());
+        element.setValueLiteral(view.getValueLiteral());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onValueExpressionChanged() {
-        element.setValueExpression(((PropertyPropertiesPanelView)view).getValueExpression());
+        element.setValueExpression(view.getValueExpression());
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onValueStringPatternChanged() {
-        element.setValueStringPattern(((PropertyPropertiesPanelView)view).getValueStringPattern());
+        element.setValueStringPattern(view.getValueStringPattern());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onValueStringCaptureGroupChanged() {
-        element.setValueStringCaptureGroup(((PropertyPropertiesPanelView)view).getValueStringCaptureGroup());
+        element.setValueStringCaptureGroup(view.getValueStringCaptureGroup());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onPropertyScopeChanged() {
-        element.setPropertyScope(((PropertyPropertiesPanelView)view).getPropertyScope());
+        element.setPropertyScope(view.getPropertyScope());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onDescriptionChanged() {
-        element.setDescription(((PropertyPropertiesPanelView)view).getDescription());
+        element.setDescription(view.getDescription());
         notifyListeners();
     }
 
@@ -172,22 +182,22 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        ((PropertyPropertiesPanelView)view).setPropertyName(element.getPropertyName());
-        ((PropertyPropertiesPanelView)view).setValueType(propertyTypeManager.getValuesOfTypeByName(ValueType.TYPE_NAME));
-        ((PropertyPropertiesPanelView)view).setPropertyAction(propertyTypeManager.getValuesOfTypeByName(PropertyAction.TYPE_NAME));
-        ((PropertyPropertiesPanelView)view).selectPropertyAction(element.getPropertyAction());
-        ((PropertyPropertiesPanelView)view).selectValueType(element.getValueType());
-        ((PropertyPropertiesPanelView)view).setPropertyDataType(propertyTypeManager.getValuesOfTypeByName(DataType.TYPE_NAME));
-        ((PropertyPropertiesPanelView)view).selectPropertyDataType(element.getPropertyDataType());
-        ((PropertyPropertiesPanelView)view).setValueLiteral(element.getValueLiteral());
-        ((PropertyPropertiesPanelView)view).setValueExpression(element.getValueExpression());
-        ((PropertyPropertiesPanelView)view).setValueStringPattern(element.getValueStringPattern());
-        ((PropertyPropertiesPanelView)view).setValueStringCaptureGroup(element.getValueStringCaptureGroup());
-        ((PropertyPropertiesPanelView)view).setPropertyScope(propertyTypeManager.getValuesOfTypeByName(PropertyScope.TYPE_NAME));
-        ((PropertyPropertiesPanelView)view).selectPropertyScope(element.getPropertyScope());
-        ((PropertyPropertiesPanelView)view).setDescription(element.getDescription());
+        view.setPropertyName(element.getPropertyName());
+        view.setValueType(propertyTypeManager.getValuesOfTypeByName(ValueType.TYPE_NAME));
+        view.setPropertyAction(propertyTypeManager.getValuesOfTypeByName(PropertyAction.TYPE_NAME));
+        view.selectPropertyAction(element.getPropertyAction());
+        view.selectValueType(element.getValueType());
+        view.setPropertyDataType(propertyTypeManager.getValuesOfTypeByName(DataType.TYPE_NAME));
+        view.selectPropertyDataType(element.getPropertyDataType());
+        view.setValueLiteral(element.getValueLiteral());
+        view.setValueExpression(element.getValueExpression());
+        view.setValueStringPattern(element.getValueStringPattern());
+        view.setValueStringCaptureGroup(element.getValueStringCaptureGroup());
+        view.setPropertyScope(propertyTypeManager.getValuesOfTypeByName(PropertyScope.TYPE_NAME));
+        view.selectPropertyScope(element.getPropertyScope());
+        view.setDescription(element.getDescription());
 
-        ((PropertyPropertiesPanelView)view).updatePropertyPanel(set.name().equals(element.getPropertyAction()));
+        view.updatePropertyPanel(set.name().equals(element.getPropertyAction()));
 
         updateValueTypes(element.getValueType());
     }

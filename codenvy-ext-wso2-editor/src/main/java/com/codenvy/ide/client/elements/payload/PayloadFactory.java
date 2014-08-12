@@ -15,18 +15,33 @@
  */
 package com.codenvy.ide.client.elements.payload;
 
-import com.codenvy.ide.client.elements.AbstractElement;
-import com.codenvy.ide.client.elements.AbstractShape;
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.elements.Branch;
+import com.codenvy.ide.client.elements.Call;
+import com.codenvy.ide.client.elements.CallTemplate;
+import com.codenvy.ide.client.elements.Filter;
+import com.codenvy.ide.client.elements.Header;
+import com.codenvy.ide.client.elements.LoopBack;
 import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.client.elements.Property;
+import com.codenvy.ide.client.elements.Respond;
 import com.codenvy.ide.client.elements.RootElement;
+import com.codenvy.ide.client.elements.Send;
+import com.codenvy.ide.client.elements.Sequence;
+import com.codenvy.ide.client.elements.Switch;
+import com.codenvy.ide.client.elements.enrich.Enrich;
+import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.XMLParser;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -46,20 +61,16 @@ public class PayloadFactory extends RootElement {
     public static final String SERIALIZATION_NAME = "payloadFactory";
 
     private static final String PAYLOAD_FORMAT_PROPERTY_NAME = "PayloadFormat";
-    private static final String FORMAT_PROPERTY_NAME         = "Format";
+    private static final String FORMAT_PROPERTY_NAME         = "format";
     private static final String ARGS_PROPERTY_NAME           = "args";
     private static final String MEDIA_TYPE_PROPERTY_NAME     = "media-type";
     private static final String DESCRIPTION_PROPERTY_NAME    = "description";
 
-    private static final List<String> PROPERTIES          = Arrays.asList(PAYLOAD_FORMAT_PROPERTY_NAME,
-                                                                          FORMAT_PROPERTY_NAME,
-                                                                          ARGS_PROPERTY_NAME,
-                                                                          MEDIA_TYPE_PROPERTY_NAME,
-                                                                          DESCRIPTION_PROPERTY_NAME);
-    private static final List<String> INTERNAL_PROPERTIES = Arrays.asList(X_PROPERTY_NAME,
-                                                                          Y_PROPERTY_NAME,
-                                                                          UUID_PROPERTY_NAME,
-                                                                          DESCRIPTION_PROPERTY_NAME);
+    private static final List<String> PROPERTIES = Arrays.asList(PAYLOAD_FORMAT_PROPERTY_NAME,
+                                                                 FORMAT_PROPERTY_NAME,
+                                                                 ARGS_PROPERTY_NAME,
+                                                                 MEDIA_TYPE_PROPERTY_NAME,
+                                                                 DESCRIPTION_PROPERTY_NAME);
 
     private String     payloadFormat;
     private String     format;
@@ -68,8 +79,43 @@ public class PayloadFactory extends RootElement {
     private String     description;
     private Array<Arg> args;
 
-    public PayloadFactory() {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, INTERNAL_PROPERTIES);
+    @Inject
+    public PayloadFactory(EditorResources resources,
+                          Provider<Branch> branchProvider,
+                          Provider<Log> logProvider,
+                          Provider<Enrich> enrichProvider,
+                          Provider<Filter> filterProvider,
+                          Provider<Header> headerProvider,
+                          Provider<Call> callProvider,
+                          Provider<CallTemplate> callTemplateProvider,
+                          Provider<LoopBack> loopBackProvider,
+                          Provider<PayloadFactory> payloadFactoryProvider,
+                          Provider<Property> propertyProvider,
+                          Provider<Respond> respondProvider,
+                          Provider<Send> sendProvider,
+                          Provider<Sequence> sequenceProvider,
+                          Provider<Switch> switchProvider) {
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              resources,
+              branchProvider,
+              false,
+              true,
+              logProvider,
+              enrichProvider,
+              filterProvider,
+              headerProvider,
+              callProvider,
+              callTemplateProvider,
+              loopBackProvider,
+              payloadFactoryProvider,
+              propertyProvider,
+              respondProvider,
+              sendProvider,
+              sequenceProvider,
+              switchProvider);
 
         payloadFormat = Inline.name();
         format = "<inline/>";
@@ -189,11 +235,13 @@ public class PayloadFactory extends RootElement {
     /** {@inheritDoc} */
     @Nonnull
     @Override
-    protected String serializeProperty() {
+    protected String serializeProperties() {
         StringBuilder result = new StringBuilder();
         result.append("<format");
+
         if (payloadFormat.equals(FormatType.Inline.name())) {
             result.append(">");
+
             if (json.name().equals(mediaType)) {
                 String jsonFormat;
                 jsonFormat = format.replace("<", "&lt;");
@@ -204,6 +252,7 @@ public class PayloadFactory extends RootElement {
                 document.getDocumentElement().setAttribute("xmlns", "");
                 result.append(document);
             }
+
             result.append("</format>");
         } else {
             result.append(" key=\"").append(formatKey).append("\"/>");
@@ -235,24 +284,22 @@ public class PayloadFactory extends RootElement {
     @Override
     public void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
-        String nodeValue = node.getChildNodes().item(0).getNodeValue();
+
+        Node item = node.getChildNodes().item(0);
+        String nodeValue = "";
+        if (item != null) {
+            nodeValue = item.getNodeValue();
+        }
 
         switch (nodeName) {
-            case AbstractShape.X_PROPERTY_NAME:
-                setX(Integer.valueOf(nodeValue));
-                break;
-            case AbstractShape.Y_PROPERTY_NAME:
-                setY(Integer.valueOf(nodeValue));
-                break;
-            case AbstractElement.UUID_PROPERTY_NAME:
-                id = nodeValue;
-                break;
             case PAYLOAD_FORMAT_PROPERTY_NAME:
                 payloadFormat = String.valueOf(nodeValue);
                 break;
+
             case FORMAT_PROPERTY_NAME:
                 format = String.valueOf(nodeValue);
                 break;
+
             case ARGS_PROPERTY_NAME:
                 //TODO create property using editor factory
                 Arg arg = new Arg(null, null);
@@ -260,13 +307,22 @@ public class PayloadFactory extends RootElement {
 
                 args.add(arg);
                 break;
+
             case MEDIA_TYPE_PROPERTY_NAME:
                 mediaType = String.valueOf(nodeValue);
                 break;
+
             case DESCRIPTION_PROPERTY_NAME:
                 description = String.valueOf(nodeValue);
                 break;
         }
+    }
+
+    /** {@inheritDoc} */
+    @Nullable
+    @Override
+    public ImageResource getIcon() {
+        return resources.payloadFactory();
     }
 
     public enum MediaType {

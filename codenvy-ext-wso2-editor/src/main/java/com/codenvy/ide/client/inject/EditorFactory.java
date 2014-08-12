@@ -18,9 +18,13 @@ package com.codenvy.ide.client.inject;
 import com.codenvy.ide.client.EditorState;
 import com.codenvy.ide.client.SelectionManager;
 import com.codenvy.ide.client.State;
+import com.codenvy.ide.client.elements.Branch;
+import com.codenvy.ide.client.elements.Shape;
+import com.codenvy.ide.client.elements.shape.ShapePresenter;
+import com.codenvy.ide.client.elements.shape.ShapeView;
+import com.codenvy.ide.client.elements.shape.branch.BranchPresenter;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelManager;
 import com.codenvy.ide.client.toolbar.ToolbarPresenter;
-import com.codenvy.ide.client.workspace.WorkspacePresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import javax.annotation.Nonnull;
@@ -30,10 +34,22 @@ import javax.annotation.Nonnull;
  */
 public interface EditorFactory {
 
+    @Nonnull
     ToolbarPresenter createToolbar(@Nonnull EditorState<State> editorState);
 
-    WorkspacePresenter createWorkspace(@Nonnull EditorState<State> editorState, @Nonnull SelectionManager selectionManager);
-
+    @Nonnull
     PropertiesPanelManager createPropertiesPanelManager(@Nonnull AcceptsOneWidget container);
+
+    @Nonnull
+    BranchPresenter createContainer(@Nonnull EditorState<State> editorState,
+                                    @Nonnull SelectionManager selectionManager,
+                                    @Nonnull Branch branch);
+
+    @Nonnull
+    ShapePresenter createShapePresenter(@Nonnull EditorState<State> editorState,
+                                        @Nonnull Shape shape);
+
+    @Nonnull
+    ShapeView createShapeView(boolean isPossibleChangeCases);
 
 }

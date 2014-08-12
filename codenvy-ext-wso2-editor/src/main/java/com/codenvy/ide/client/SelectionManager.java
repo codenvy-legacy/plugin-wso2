@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client;
 
-import com.codenvy.ide.client.elements.Element;
+import com.codenvy.ide.client.elements.Shape;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -37,13 +37,13 @@ public class SelectionManager {
         /**
          * Performs any actions appropriate in response to the user having  selected a diagram element.
          *
-         * @param element
+         * @param shape
          *         diagram element that was selected
          */
-        void onStateChanged(@Nullable Element element);
+        void onStateChanged(@Nullable Shape shape);
     }
 
-    private       Element                      element;
+    private       Shape                        shape;
     private final List<SelectionStateListener> listeners;
 
     @Inject
@@ -53,18 +53,18 @@ public class SelectionManager {
 
     /** @return selected diagram element. The method can return <code>null</code> in case no diagram element is selected. */
     @Nullable
-    public Element getElement() {
-        return element;
+    public Shape getElement() {
+        return shape;
     }
 
     /**
      * Change selected diagram element.
      *
-     * @param element
+     * @param shape
      *         a new selected diagram element
      */
-    public void setElement(@Nullable Element element) {
-        this.element = element;
+    public void setElement(@Nullable Shape shape) {
+        this.shape = shape;
 
         notifyListeners();
     }
@@ -79,10 +79,20 @@ public class SelectionManager {
         listeners.add(listener);
     }
 
+    /**
+     * Remove a listener for detecting a moment of changing selected diagram element.
+     *
+     * @param listener
+     *         listener that need to be removed
+     */
+    public void removeListener(@Nonnull SelectionStateListener listener) {
+        listeners.remove(listener);
+    }
+
     /** Notify all listeners about changing selected diagram element. */
     public void notifyListeners() {
         for (SelectionStateListener listener : listeners) {
-            listener.onStateChanged(element);
+            listener.onStateChanged(shape);
         }
     }
 

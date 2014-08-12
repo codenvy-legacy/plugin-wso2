@@ -44,63 +44,47 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
         this.view.setDelegate(this);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     protected void initializeEditor() {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void doSave() {
         dirtyState = false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void doSaveAs() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void activate() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String getTitle() {
         return "ESB Editor: " + input.getFile().getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
         return input.getImageResource();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String getTitleToolTip() {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
@@ -111,22 +95,11 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
         return editor.serialize();
     }
 
-    @Nonnull
-    public String serializeInternalFormat() {
-        return editor.serializeInternalFormat();
-    }
-
     public void deserialize(@Nonnull String content) {
         editor.deserialize(content);
     }
 
-    public void deserializeInternalFormat(@Nonnull String content) {
-        editor.deserializeInternalFormat(content);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void onChanged() {
         updateDirtyState(true);

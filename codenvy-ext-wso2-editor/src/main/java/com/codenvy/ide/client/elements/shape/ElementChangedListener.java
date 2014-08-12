@@ -13,22 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.inject;
-
-import com.codenvy.ide.client.elements.shape.ShapeView;
-import com.codenvy.ide.client.elements.shape.ShapeViewImpl;
-import com.google.gwt.inject.client.AbstractGinModule;
-import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
+package com.codenvy.ide.client.elements.shape;
 
 /**
  * @author Andrey Plotnikov
  */
-public class GinModule extends AbstractGinModule {
+public interface ElementChangedListener {
 
-    /** {@inheritDoc} */
-    @Override
-    protected void configure() {
-        install(new GinFactoryModuleBuilder().implement(ShapeView.class, ShapeViewImpl.class).build(EditorFactory.class));
-    }
+    void onElementChanged();
 
 }
