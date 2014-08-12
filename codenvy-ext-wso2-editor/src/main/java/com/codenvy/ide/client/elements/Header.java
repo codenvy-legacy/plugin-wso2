@@ -33,6 +33,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import static com.codenvy.ide.client.elements.Header.HeaderAction.remove;
 import static com.codenvy.ide.client.elements.Header.HeaderAction.set;
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 import static com.codenvy.ide.client.elements.Property.ValueType.LITERAL;
@@ -41,7 +42,7 @@ import static com.codenvy.ide.client.elements.Property.ValueType.LITERAL;
  * Class describes entity which presented as Header mediator.
  *
  * @author Andrey Plotnikov
- * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class Header extends RootElement {
     public static final String ELEMENT_NAME       = "Header";
@@ -82,6 +83,7 @@ public class Header extends RootElement {
                   Provider<Send> sendProvider,
                   Provider<Sequence> sequenceProvider,
                   Provider<Switch> switchProvider) {
+
         super(ELEMENT_NAME,
               ELEMENT_NAME,
               SERIALIZATION_NAME,
@@ -197,7 +199,7 @@ public class Header extends RootElement {
     }
 
     /** @return action of header */
-    @Nullable
+    @Nonnull
     public String getAction() {
         return action;
     }
@@ -229,7 +231,7 @@ public class Header extends RootElement {
     }
 
     /** @return type of header */
-    @Nullable
+    @Nonnull
     public String getValueType() {
         return valueType;
     }
@@ -297,7 +299,13 @@ public class Header extends RootElement {
 
         setDefaultAttributes(attributes);
 
-        attributes.remove(action.equals(set.name()) ? ACTION : VALUE);
+        if (action.equals(remove.name())) {
+            attributes.remove(VALUE);
+            attributes.remove(EXPRESSION);
+        } else {
+            attributes.remove(ACTION);
+        }
+
         attributes.remove(valueType.equals(HeaderValueType.EXPRESSION.name()) ? VALUE : EXPRESSION);
 
         switch (HeaderValueType.valueOf(valueType)) {
@@ -330,7 +338,7 @@ public class Header extends RootElement {
     @Override
     protected void applyAttributes(@Nonnull Node node) {
         NamedNodeMap attributeMap = node.getAttributes();
-        String uriName = "";
+        boolean isFirst = true;
 
         for (int i = 0; i < attributeMap.getLength(); i++) {
             Node attributeNode = attributeMap.item(i);
@@ -353,23 +361,25 @@ public class Header extends RootElement {
 
                 case EXPRESSION:
                     expression = nodeValue;
+                    valueType = HeaderValueType.EXPRESSION.name();
                     break;
 
                 case NAME:
                     headerName = nodeValue;
-                    Array<String> attrName = StringUtils.split(nodeName, ":");
-                    uriName = attrName.get(0);
                     break;
 
-                case PREFIX:
-                    String name = StringUtils.trimStart(nodeName, PREFIX);
-                    //TODO create entity using edit factory
-                    NameSpace nameSpace = new NameSpace(name, nodeValue);
+                default:
+                    if (StringUtils.startsWith(PREFIX, nodeName, true)) {
+                        String name = StringUtils.trimStart(nodeName, PREFIX + ':');
+                        //TODO create entity using edit factory
+                        NameSpace nameSpace = new NameSpace(name, nodeValue);
 
-                    if (nodeValue.equals(uriName)) {
-                        headerNamespaces.add(nameSpace);
-                    } else {
-                        expressionNamespaces.add(nameSpace);
+                        if (isFirst) {
+                            headerNamespaces.add(nameSpace);
+                            isFirst = false;
+                        } else {
+                            expressionNamespaces.add(nameSpace);
+                        }
                     }
                     break;
             }
@@ -378,16 +388,22 @@ public class Header extends RootElement {
 
     /** {@inheritDoc} */
     @Override
-    public void applyProperty(@Nonnull Node node) {
+    public void deserialize(@Nonnull Node node) {
+        applyAttributes(node);
+
         if (node.hasChildNodes()) {
-            String document = node.getOwnerDocument().toString();
+            String item = node.getChildNodes().item(0).toString();
 
-            node.getFirstChild().getOwnerDocument().getDocumentElement().removeAttribute("xmlns");
+            int indexFirst = item.indexOf(" ");
+            int indexLast = item.indexOf(">");
 
-            int indexFirst = document.indexOf(">");
-            int indexLast = document.lastIndexOf("<");
+            String tagName = item.substring(0, indexLast);
 
-            inlineXml = document.substring(indexFirst + 1, indexLast);
+            String xmlns = tagName.substring(indexFirst, tagName.contains("/") ? indexLast - 1 : indexLast);
+
+            inlineXml = item.replace(xmlns, "");
+
+            valueType = HeaderValueType.INLINE.name();
         }
     }
 

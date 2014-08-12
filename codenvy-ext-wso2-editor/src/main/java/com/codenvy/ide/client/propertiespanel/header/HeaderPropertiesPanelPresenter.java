@@ -21,8 +21,8 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.inline.ChangeInlineFormatCallBack;
 import com.codenvy.ide.client.propertiespanel.inline.InlineConfigurationPresenter;
-import com.codenvy.ide.client.propertiespanel.log.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
+import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.util.StringUtils;
@@ -104,24 +104,8 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
 
     /** {@inheritDoc} */
     @Override
-    public void onHeaderActionChanged() {
-        element.setAction(view.getAction());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void onScopeChanged() {
         element.setScope(view.getScope());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onValueTypeChanged() {
-        element.setValueType(view.getValueType());
 
         notifyListeners();
     }
@@ -235,16 +219,27 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setAction(propertyTypeManager.getValuesOfTypeByName("HeaderAction"));
+        view.setAction(propertyTypeManager.getValuesOfTypeByName(Header.HeaderAction.TYPE_NAME));
         view.selectHeaderAction(element.getAction());
-        view.setScope(propertyTypeManager.getValuesOfTypeByName("ScopeType"));
+
+        view.setScope(propertyTypeManager.getValuesOfTypeByName(Header.ScopeType.TYPE_NAME));
         view.selectScope(element.getScope());
-        view.setValueType(propertyTypeManager.getValuesOfTypeByName("HeaderValueType"));
+
+        view.setValueType(propertyTypeManager.getValuesOfTypeByName(Header.HeaderValueType.TYPE_NAME));
         view.selectValueType(element.getValueType());
+
         view.setValue(element.getValue());
         view.setHeaderName(element.getHeaderName());
         view.setExpression(element.getExpression());
         view.setInlineXML(element.getInlineXml());
+
+        if (!element.getValueType().equals(Header.HeaderValueType.LITERAL.name())) {
+            onTypeChanged();
+        }
+
+        if (!element.getAction().equals(Header.HeaderAction.set.name())) {
+            onActionChanged();
+        }
     }
 
 }

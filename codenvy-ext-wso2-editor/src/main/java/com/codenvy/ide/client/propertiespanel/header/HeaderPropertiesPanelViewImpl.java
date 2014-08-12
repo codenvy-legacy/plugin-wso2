@@ -130,7 +130,7 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
 
     @UiHandler("action")
     public void onHeaderActionChanged(ChangeEvent event) {
-        delegate.onHeaderActionChanged();
+        delegate.onActionChanged();
     }
 
     /** {@inheritDoc} */
@@ -206,7 +206,7 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
 
     @UiHandler("valueType")
     public void onValueTypeChanged(ChangeEvent event) {
-        delegate.onValueTypeChanged();
+        delegate.onTypeChanged();
     }
 
     /** {@inheritDoc} */
@@ -293,15 +293,4 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
     public void setVisibleHeaderNamePanel(boolean isVisible) {
         headerNamePanel.setVisible(isVisible);
     }
-
-    @UiHandler("action")
-    public void onActionChanged(ChangeEvent event) {
-        delegate.onActionChanged();
-    }
-
-    @UiHandler("valueType")
-    public void onTypeChanged(ChangeEvent event) {
-        delegate.onTypeChanged();
-    }
-
 }

@@ -31,14 +31,8 @@ public abstract class HeaderPropertiesPanelView extends AbstractView<HeaderPrope
 
     public interface ActionDelegate extends AbstractView.ActionDelegate {
 
-        /** Performs any actions appropriate in response to the user having changed header action. */
-        void onHeaderActionChanged();
-
         /** Performs any actions appropriate in response to the user having changed scope. */
         void onScopeChanged();
-
-        /** Performs any actions appropriate in response to the user having changed value type. */
-        void onValueTypeChanged();
 
         /** Performs any actions appropriate in response to the user having changed value literal. */
         void onValueChanged();
