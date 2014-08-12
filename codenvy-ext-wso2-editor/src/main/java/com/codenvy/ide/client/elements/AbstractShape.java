@@ -203,6 +203,8 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
         branches.clear();
         Branch generalBranch = null;
 
+        applyAttributes(node);
+
         NodeList childNodes = node.getChildNodes();
 
         for (int i = 0; i < childNodes.getLength(); i++) {
@@ -216,17 +218,13 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
 
             Shape shape = findElement(name);
 
-            if (shape == null)
-
-            {
+            if (shape == null) {
                 Branch branch = branchProvider.get();
                 branch.setParent(this);
                 branch.deserialize(item);
 
                 branches.add(branch);
-            } else
-
-            {
+            } else {
                 if (generalBranch == null) {
                     generalBranch = branchProvider.get();
                     generalBranch.setParent(this);
@@ -238,12 +236,9 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
             }
         }
 
-        if (generalBranch != null)
-
-        {
+        if (generalBranch != null) {
             branches.add(generalBranch);
         }
-
     }
 
     /** {@inheritDoc} */

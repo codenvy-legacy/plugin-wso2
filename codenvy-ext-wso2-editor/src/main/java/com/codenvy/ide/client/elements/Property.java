@@ -42,7 +42,6 @@ import static com.codenvy.ide.client.elements.Property.ValueType.LITERAL;
 /**
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
- * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
 public class Property extends RootElement {
@@ -350,42 +349,43 @@ public class Property extends RootElement {
 
         for (int i = 0; i < attributeMap.getLength(); i++) {
             Node attributeNode = attributeMap.item(i);
+            String nodeValue = attributeNode.getNodeValue();
 
             switch (attributeNode.getNodeName()) {
                 case NAME:
-                    propertyName = String.valueOf(node);
+                    propertyName = String.valueOf(nodeValue);
                     break;
 
                 case ACTION:
-                    propertyAction = String.valueOf(node);
+                    propertyAction = String.valueOf(nodeValue);
                     break;
 
                 case DATA_TYPE:
-                    propertyDataType = String.valueOf(node);
+                    propertyDataType = String.valueOf(nodeValue);
                     break;
 
                 case VALUE_LITERAL:
-                    valueLiteral = String.valueOf(node);
+                    valueLiteral = String.valueOf(nodeValue);
                     break;
 
                 case VALUE_EXPRESSION:
-                    valueExpression = String.valueOf(node);
+                    valueExpression = String.valueOf(nodeValue);
                     break;
 
                 case STRING_PATTERN:
-                    valueStringPattern = String.valueOf(node);
+                    valueStringPattern = String.valueOf(nodeValue);
                     break;
 
                 case STRING_CAPTURE_GROUP:
-                    valueStringCaptureGroup = String.valueOf(node);
+                    valueStringCaptureGroup = String.valueOf(nodeValue);
                     break;
 
                 case SCOPE:
-                    propertyScope = String.valueOf(node);
+                    propertyScope = String.valueOf(nodeValue);
                     break;
 
                 case DESCRIPTION:
-                    description = String.valueOf(node);
+                    description = String.valueOf(nodeValue);
                     break;
             }
         }
