@@ -18,11 +18,14 @@ package com.codenvy.ide.client.elements.log;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 
 /**
  * Class describes entity which presented property of mediator.
@@ -33,8 +36,6 @@ public class Property {
 
     private static final String PROPERTY_ELEMENT_NAME  = "name";
     private static final String PROPERTY_ELEMENT_VALUE = "value";
-
-    private static final String PROPERTY_NAMESPACE_PREFIX = "xmlns:";
 
     private String           name;
     private String           expression;
@@ -58,19 +59,22 @@ public class Property {
         for (int i = 0; i < attributeMap.getLength(); i++) {
             Node attributeNode = attributeMap.item(i);
 
-            switch (attributeNode.getNodeName()) {
+            String nodeName = attributeNode.getNodeName();
+            String nodeValue = attributeNode.getNodeValue();
+
+            switch (nodeName) {
                 case PROPERTY_ELEMENT_NAME:
-                    name = attributeNode.getNodeValue();
+                    name = nodeValue;
                     break;
 
                 case PROPERTY_ELEMENT_VALUE:
-                    expression = attributeNode.getNodeValue();
+                    expression = nodeValue;
                     break;
 
-                case PROPERTY_NAMESPACE_PREFIX:
-                    //TODO create nameSpace using editor factory
-                    NameSpace nameSpace = new NameSpace(null, null);
-                    nameSpace.applyAttributes(node);
+                case PREFIX:
+                    String name = StringUtils.trimStart(nodeName, PREFIX);
+                    //TODO create entity using edit factory
+                    NameSpace nameSpace = new NameSpace(name, nodeValue);
 
                     nameSpaces.add(nameSpace);
                     break;

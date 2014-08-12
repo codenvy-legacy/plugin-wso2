@@ -18,11 +18,14 @@ package com.codenvy.ide.client.elements.enrich;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 
 /**
  * Class describes entity which presented target element of Enrich mediator.
@@ -35,8 +38,6 @@ public class Target {
     public static final String TYPE     = "type";
     public static final String XPATH    = "xpath";
     public static final String PROPERTY = "property";
-
-    private static final String PREFIX = "xmlns=";
 
     private String           action;
     private String           type;
@@ -66,27 +67,30 @@ public class Target {
         for (int i = 0; i < attributeMap.getLength(); i++) {
             Node attributeNode = attributeMap.item(i);
 
-            switch (attributeNode.getNodeName()) {
+            String nodeName = attributeNode.getNodeName();
+            String nodeValue = attributeNode.getNodeValue();
+
+            switch (nodeName) {
                 case ACTION:
-                    action = attributeNode.getNodeValue();
+                    action = nodeValue;
                     break;
 
                 case TYPE:
-                    type = attributeNode.getNodeValue();
+                    type = nodeValue;
                     break;
 
                 case XPATH:
-                    xpath = attributeNode.getNodeValue();
+                    xpath = nodeValue;
                     break;
 
                 case PROPERTY:
-                    property = attributeNode.getNodeValue();
+                    property = nodeValue;
                     break;
 
                 case PREFIX:
-                    //TODO create entity using editor factory
-                    NameSpace nameSpace = new NameSpace(null, null);
-                    nameSpace.applyAttributes(node);
+                    String name = StringUtils.trimStart(nodeName, PREFIX + '=');
+                    //TODO create entity using edit factory
+                    NameSpace nameSpace = new NameSpace(name, nodeValue);
 
                     nameSpaces.add(nameSpace);
                     break;

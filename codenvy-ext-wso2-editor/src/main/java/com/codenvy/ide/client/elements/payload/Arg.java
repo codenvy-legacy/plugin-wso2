@@ -18,11 +18,14 @@ package com.codenvy.ide.client.elements.payload;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 
 /**
  * Class describes entity which presented argument property of mediator.
@@ -32,8 +35,6 @@ import javax.annotation.Nullable;
 public class Arg {
     private static final String ARG_ELEMENT_EVALUATOR = "evaluator";
     private static final String ARG_ELEMENT_VALUE     = "expression";
-
-    private static final String PROPERTY_NAMESPACE_PREFIX = "xmlns:";
 
     private String           type;
     private String           value;
@@ -97,19 +98,22 @@ public class Arg {
         for (int i = 0; i < attributeMap.getLength(); i++) {
             Node attributeNode = attributeMap.item(i);
 
-            switch (attributeNode.getNodeName()) {
+            String nodeName = attributeNode.getNodeName();
+            String nodeValue = attributeNode.getNodeValue();
+
+            switch (nodeName) {
                 case ARG_ELEMENT_EVALUATOR:
-                    evaluator = attributeNode.getNodeValue();
+                    evaluator = nodeValue;
                     break;
 
                 case ARG_ELEMENT_VALUE:
-                    value = attributeNode.getNodeValue();
+                    value = nodeValue;
                     break;
 
-                case PROPERTY_NAMESPACE_PREFIX:
-                    //TODO create nameSpace using editor factory
-                    NameSpace nameSpace = new NameSpace(null, null);
-                    nameSpace.applyAttributes(node);
+                case PREFIX:
+                    String name = StringUtils.trimStart(nodeName, PREFIX + ':');
+                    //TODO create entity using edit factory
+                    NameSpace nameSpace = new NameSpace(name, nodeValue);
 
                     nameSpaces.add(nameSpace);
                     break;

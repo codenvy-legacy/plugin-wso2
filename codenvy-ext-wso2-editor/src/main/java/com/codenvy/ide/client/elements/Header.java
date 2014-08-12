@@ -34,6 +34,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.Header.HeaderAction.set;
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 import static com.codenvy.ide.client.elements.Property.ValueType.LITERAL;
 
 /**
@@ -51,8 +52,6 @@ public class Header extends RootElement {
     private static final String EXPRESSION = "expression";
     private static final String ACTION     = "action";
     private static final String SCOPE      = "scope";
-
-    private static final String PREFIX = "xmlns:";
 
     private static final List<String> PROPERTIES = java.util.Collections.emptyList();
 
@@ -336,37 +335,38 @@ public class Header extends RootElement {
         for (int i = 0; i < attributeMap.getLength(); i++) {
             Node attributeNode = attributeMap.item(i);
 
-            switch (attributeNode.getNodeName()) {
+            String nodeName = attributeNode.getNodeName();
+            String nodeValue = attributeNode.getNodeValue();
+
+            switch (nodeName) {
                 case HeaderAction.ACTION:
-                    action = attributeNode.getNodeValue();
+                    action = nodeValue;
                     break;
 
                 case ScopeType.SCOPE:
-                    scope = attributeNode.getNodeValue();
+                    scope = nodeValue;
                     break;
 
                 case VALUE:
-                    value = attributeNode.getNodeValue();
+                    value = nodeValue;
                     break;
 
                 case EXPRESSION:
-                    expression = attributeNode.getNodeValue();
+                    expression = nodeValue;
                     break;
 
                 case NAME:
-                    headerName = attributeNode.getNodeValue();
-                    Array<String> attrName = StringUtils.split(attributeNode.getNodeName(), ":");
+                    headerName = nodeValue;
+                    Array<String> attrName = StringUtils.split(nodeName, ":");
                     uriName = attrName.get(0);
                     break;
 
                 case PREFIX:
-                    String uri = attributeNode.getNodeValue();
-
+                    String name = StringUtils.trimStart(nodeName, PREFIX);
                     //TODO create entity using edit factory
-                    NameSpace nameSpace = new NameSpace(null, null);
-                    nameSpace.applyAttributes(node);
+                    NameSpace nameSpace = new NameSpace(name, nodeValue);
 
-                    if (uri.equals(uriName)) {
+                    if (nodeValue.equals(uriName)) {
                         headerNamespaces.add(nameSpace);
                     } else {
                         expressionNamespaces.add(nameSpace);

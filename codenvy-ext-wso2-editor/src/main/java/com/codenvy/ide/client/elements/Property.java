@@ -21,6 +21,7 @@ import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
@@ -33,6 +34,7 @@ import javax.validation.constraints.NotNull;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 import static com.codenvy.ide.client.elements.Property.DataType.STRING;
 import static com.codenvy.ide.client.elements.Property.PropertyAction.set;
 import static com.codenvy.ide.client.elements.Property.PropertyScope.SYNAPSE;
@@ -349,9 +351,11 @@ public class Property extends RootElement {
 
         for (int i = 0; i < attributeMap.getLength(); i++) {
             Node attributeNode = attributeMap.item(i);
-            String nodeValue = attributeNode.getNodeValue();
 
-            switch (attributeNode.getNodeName()) {
+            String nodeValue = attributeNode.getNodeValue();
+            String nodeName = attributeNode.getNodeName();
+
+            switch (nodeName) {
                 case NAME:
                     propertyName = String.valueOf(nodeValue);
                     break;
@@ -370,6 +374,7 @@ public class Property extends RootElement {
 
                 case VALUE_EXPRESSION:
                     valueExpression = String.valueOf(nodeValue);
+                    valueType = EXPRESSION.name();
                     break;
 
                 case STRING_PATTERN:
@@ -386,6 +391,16 @@ public class Property extends RootElement {
 
                 case DESCRIPTION:
                     description = String.valueOf(nodeValue);
+                    break;
+
+                default:
+                    if (StringUtils.startsWith(PREFIX, nodeName, true)) {
+                        String name = StringUtils.trimStart(nodeName, PREFIX + ':');
+                        //TODO create entity using edit factory
+                        NameSpace nameSpace = new NameSpace(name, nodeValue);
+
+                        nameSpaces.add(nameSpace);
+                    }
                     break;
             }
         }

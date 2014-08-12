@@ -15,13 +15,7 @@
  */
 package com.codenvy.ide.client.elements;
 
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.util.StringUtils;
-import com.google.gwt.xml.client.NamedNodeMap;
-import com.google.gwt.xml.client.Node;
-
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Class describes entity which presented name space.
@@ -30,51 +24,38 @@ import javax.annotation.Nullable;
  */
 public class NameSpace {
 
-    private String prefix;
-    private String uri;
+    public static final String PREFIX = "xmlns";
 
-    public NameSpace(@Nullable String prefix, @Nullable String uri) {
+    private final String prefix;
+    private final String uri;
+
+    public NameSpace(@Nonnull String prefix, @Nonnull String uri) {
         this.prefix = prefix;
         this.uri = uri;
     }
 
-    /**
-     * Apply attributes from XML node to current namespace
-     *
-     * @param node
-     *         XML node that need to be analyzed
-     */
-    public void applyAttributes(@Nonnull Node node) {
-        NamedNodeMap attributeMap = node.getAttributes();
-
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
-
-            String nodeName = attributeNode.getNodeName();
-            Array<String> attrName = StringUtils.split(nodeName, ":");
-            prefix = attrName.get(1);
-            uri = attributeNode.getNodeValue();
-        }
-    }
-
     /** @return prefix of namespace */
+    @Nonnull
     public String getPrefix() {
         return prefix;
     }
 
     /** @return uri of namespace */
+    @Nonnull
     public String getUri() {
         return uri;
     }
 
     /** @return copy of namespace */
+    @Nonnull
     public NameSpace clone() {
         //TODO create nameSpace using editor factory
         return new NameSpace(prefix, uri);
     }
 
     /** @return string representation of the namespace */
+    @Nonnull
     public String toString() {
-        return "xmlns:" + prefix + "=\"" + uri + '"';
+        return PREFIX + ':' + prefix + "=\"" + uri + '"';
     }
 }
