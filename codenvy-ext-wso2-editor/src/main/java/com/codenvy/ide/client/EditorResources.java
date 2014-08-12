@@ -115,8 +115,8 @@ public interface EditorResources extends ClientBundle {
     @Source("icons/DropToolbar.gif")
     ImageResource dropToolbar();
 
-    @Source("icons/Switch_mediatorToolbar.gif")
-    ImageResource switch_mediatorToolbar();
+    @Source("icons/SwitchToolbar.gif")
+    ImageResource switchToolbar();
 
     @Source("icons/Throttle.gif")
     ImageResource throttle();

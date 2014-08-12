@@ -51,6 +51,8 @@ import static com.codenvy.ide.client.elements.shape.ShapeView.DEFAULT_HEIGHT;
 import static com.codenvy.ide.client.elements.shape.ShapeView.DEFAULT_WIDTH;
 
 /**
+ * The class that provides business logic of the diagram element widget.
+ *
  * @author Andrey Plotnikov
  */
 public class ShapePresenter extends AbstractPresenter<ShapeView> implements ShapeView.ActionDelegate,
@@ -98,39 +100,62 @@ public class ShapePresenter extends AbstractPresenter<ShapeView> implements Shap
         redrawBranches();
     }
 
+    /** @return the GWT widget that is controlled by the presenter */
     @Nonnull
     public ShapeView getView() {
         return view;
     }
 
+    /** @return the width of the widget */
     @Nonnegative
     public int getWidth() {
         return view.getWidth();
     }
 
+    /**
+     * Changes the width of the widget.
+     *
+     * @param width
+     *         new width of the widget
+     */
     public void setWidth(@Nonnegative int width) {
         view.setWidth(width);
     }
 
+    /** @return the height of the widget */
     @Nonnegative
     public int getHeight() {
         return view.getHeight();
     }
 
+    /**
+     * Changes the height of the widget.
+     *
+     * @param height
+     *         new height of the widget
+     */
     public void setHeight(@Nonnegative int height) {
         view.setHeight(height);
     }
 
+    /** @return x-position of the widget */
     @Nonnegative
     public int getX() {
         return shape.getX();
     }
 
+    /** @return y-position of the widget */
     @Nonnegative
     public int getY() {
         return shape.getY();
     }
 
+    /**
+     * Changes y-position of the widget.
+     *
+     * @param y
+     *         new y-position of the widget
+     */
     public void setY(@Nonnegative int y) {
         shape.setY(y);
         view.setY(y);
@@ -299,42 +324,81 @@ public class ShapePresenter extends AbstractPresenter<ShapeView> implements Shap
         notifyElementChangedListeners();
     }
 
+    /**
+     * Adds listener that listens to moving of the current element.
+     *
+     * @param listener
+     *         listener that needs to be added
+     */
     public void addElementMoveListener(@Nonnull ElementMoveListener listener) {
         elementMoveListeners.add(listener);
     }
 
+    /**
+     * Removes listener that listens to moving of the current element.
+     *
+     * @param listener
+     *         listener that needs to be removed
+     */
     public void removeElementMoveListener(@Nonnull ElementMoveListener listener) {
         elementMoveListeners.remove(listener);
     }
 
+    /** Notify all listeners about moving element. */
     public void notifyElementMoveListeners() {
         for (ElementMoveListener listener : elementMoveListeners) {
             listener.onElementMoved(shape, x, y);
         }
     }
 
+    /**
+     * Adds listener that listens to deleting of the current element.
+     *
+     * @param listener
+     *         listener that needs to be added
+     */
     public void addElementDeleteListener(@Nonnull ElementDeleteListener listener) {
         elementDeleteListeners.add(listener);
     }
 
+    /**
+     * Removes listener that listens to deleting of the current element.
+     *
+     * @param listener
+     *         listener that needs to be removed
+     */
     public void removeElementDeleteListener(@Nonnull ElementDeleteListener listener) {
         elementDeleteListeners.remove(listener);
     }
 
+    /** Notify all listeners about deleting element. */
     public void notifyElementDeleteListeners() {
         for (ElementDeleteListener listener : elementDeleteListeners) {
             listener.onElementDeleted(shape);
         }
     }
 
+    /**
+     * Adds listener that listens to changing of the current element.
+     *
+     * @param listener
+     *         listener that needs to be added
+     */
     public void addElementChangedListener(@Nonnull ElementChangedListener listener) {
         elementChangedListeners.add(listener);
     }
 
+    /**
+     * Removes listener that listens to changing of the current element.
+     *
+     * @param listener
+     *         listener that needs to be removed
+     */
     public void removeElementChangedListener(@Nonnull ElementChangedListener listener) {
         elementChangedListeners.remove(listener);
     }
 
+    /** Notify all listeners about changing element. */
     public void notifyElementChangedListeners() {
         for (ElementChangedListener listener : elementChangedListeners) {
             listener.onElementChanged();

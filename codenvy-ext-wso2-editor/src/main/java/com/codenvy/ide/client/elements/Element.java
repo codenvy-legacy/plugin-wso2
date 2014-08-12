@@ -67,11 +67,7 @@ public interface Element {
     @Nonnull
     String getSerializationName();
 
-    /**
-     * Serialize diagram element with all inner elements.
-     *
-     * @return serialized view of diagram element
-     */
+    /** @return serialized representation of the diagram element */
     @Nonnull
     String serialize();
 

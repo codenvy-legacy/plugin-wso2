@@ -162,7 +162,7 @@ public class RootElement extends AbstractShape {
 
     /** {@inheritDoc} */
     @Override
-    public Shape findElement(@Nonnull String elementName) {
+    public Shape createElement(@Nonnull String elementName) {
         switch (elementName) {
             case Log.SERIALIZATION_NAME:
                 return logProvider.get();

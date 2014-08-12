@@ -67,9 +67,6 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
         this.needsToShowIconAndTitle = needsToShowIconAndTitle;
         this.components = new HashSet<>();
         this.branches = new ArrayList<>();
-
-        this.x = UNDEFINED_POSITION;
-        this.y = UNDEFINED_POSITION;
     }
 
     /** {@inheritDoc} */
@@ -216,7 +213,7 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
                 continue;
             }
 
-            Shape shape = findElement(name);
+            Shape shape = createElement(name);
 
             if (shape == null) {
                 Branch branch = branchProvider.get();

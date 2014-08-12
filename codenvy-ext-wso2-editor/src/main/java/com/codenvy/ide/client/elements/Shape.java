@@ -17,6 +17,7 @@ package com.codenvy.ide.client.elements;
 
 import com.google.gwt.resources.client.ImageResource;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
@@ -29,9 +30,8 @@ import java.util.List;
  */
 public interface Shape extends Element {
 
-    int UNDEFINED_POSITION = -1;
-
     /** @return the x-position of shape in workspace */
+    @Nonnegative
     int getX();
 
     /**
@@ -40,9 +40,10 @@ public interface Shape extends Element {
      * @param x
      *         x-position
      */
-    void setX(int x);
+    void setX(@Nonnegative int x);
 
     /** @return the y-position of shape in workspace */
+    @Nonnegative
     int getY();
 
     /**
@@ -51,12 +52,21 @@ public interface Shape extends Element {
      * @param y
      *         y-position
      */
-    void setY(int y);
+    void setY(@Nonnegative int y);
 
+    /** @return amount of branches for the current diagram element */
+    @Nonnegative
     int getBranchesAmount();
 
-    void setBranchesAmount(int amount);
+    /**
+     * Change amount of branches for the current diagram element.
+     *
+     * @param amount
+     *         new amount of branches for the current diagram element
+     */
+    void setBranchesAmount(@Nonnegative int amount);
 
+    /** @return list of available branches for the current diagram element */
     @Nonnull
     List<Branch> getBranches();
 
@@ -73,6 +83,7 @@ public interface Shape extends Element {
     /** @return <code>true</code> if this shape has an ability to add new branches, <code>false</code> it doesn't */
     boolean isPossibleToAddBranches();
 
+    /** @return <code>true</code> if this shape needs to show title and icon in the widget, <code>false</code> it doesn't */
     boolean needsToShowIconAndTitle();
 
     /**
@@ -87,7 +98,14 @@ public interface Shape extends Element {
     @Nullable
     ImageResource getIcon();
 
+    /**
+     * Return instance of found element if it is possible or <code>null</code>.
+     *
+     * @param elementName
+     *         name of element that needs to be created
+     * @return ans instance of diagram element or <code>null</code>
+     */
     @Nullable
-    Shape findElement(@Nonnull String elementName);
+    Shape createElement(@Nonnull String elementName);
 
 }

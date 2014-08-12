@@ -57,6 +57,8 @@ import static com.codenvy.ide.client.elements.shape.branch.BranchView.ELEMENTS_P
 import static com.codenvy.ide.client.elements.shape.branch.BranchView.TITLE_HEIGHT;
 
 /**
+ * The class that provides business logic of the element's branch widget.
+ *
  * @author Andrey Plotnikov
  */
 public class BranchPresenter extends AbstractPresenter<BranchView> implements BranchView.ActionDelegate,
@@ -152,25 +154,40 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         editorState.setState(state);
     }
 
+    /** @return the GWT widget that is controlled by the presenter */
     @Nonnull
     public BranchView getView() {
         return view;
     }
 
+    /** @return the width of the widget */
     @Nonnegative
     public int getWidth() {
         return view.getWidth();
     }
 
+    /**
+     * Changes the width of the widget.
+     *
+     * @param width
+     *         new width of the widget
+     */
     public void setWidth(@Nonnegative int width) {
         view.setWidth(width);
     }
 
+    /** @return the height of the widget */
     @Nonnegative
     public int getHeight() {
         return view.getHeight();
     }
 
+    /**
+     * Changes the height of the widget.
+     *
+     * @param height
+     *         new height of the widget
+     */
     public void setHeight(@Nonnegative int height) {
         view.setHeight(height);
     }
@@ -306,6 +323,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         }
     }
 
+    /** @return an instance of creating element if new element is creating or <code>null<code/> if it isn't */
     @Nullable
     private Shape getCreatingElement() {
         switch (getState()) {
@@ -439,14 +457,27 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         }
     }
 
+    /**
+     * Adds listener that listens to changing of the current element.
+     *
+     * @param listener
+     *         listener that needs to be added
+     */
     public void addElementChangedListener(@Nonnull ElementChangedListener listener) {
         elementChangedListeners.add(listener);
     }
 
+    /**
+     * Removes listener that listens to changing of the current element.
+     *
+     * @param listener
+     *         listener that needs to be removed
+     */
     public void removeElementChangedListener(@Nonnull ElementChangedListener listener) {
         elementChangedListeners.remove(listener);
     }
 
+    /** Notify all listeners about changing element. */
     public void notifyElementChangedListeners() {
         for (ElementChangedListener listener : elementChangedListeners) {
             listener.onElementChanged();

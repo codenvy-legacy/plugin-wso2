@@ -142,7 +142,7 @@ public class BranchImpl implements Branch {
             Node item = childNodes.item(i);
             String nodeName = item.getNodeName();
 
-            Shape shape = parent.findElement(nodeName);
+            Shape shape = parent.createElement(nodeName);
 
             if (shape == null) {
                 continue;

@@ -19,6 +19,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:with field="res" type="com.codenvy.ide.client.EditorResources"/>
+    <ui:with field="local" type="com.codenvy.ide.client.WSO2EditorLocalizationConstant"/>
 
     <ui:style>
         .fullSize {
@@ -34,61 +35,86 @@
         }
     </ui:style>
 
-    <g:DockLayoutPanel ui:field="mainPanel" addStyleNames="{style.fullSize}">
+    <g:DockLayoutPanel addStyleNames="{style.fullSize}">
+
         <g:north size="37.00">
-            <g:PushButton ui:field="log" addStyleNames="{style.buttonStyle}"/>
+            <g:PushButton ui:field="log" addStyleNames="{style.buttonStyle}" title="{local.toolbarLogTooltip}">
+                <g:upFace image="{res.logToolbar}"/>
+            </g:PushButton>
         </g:north>
 
         <g:north size="37.00">
-            <g:PushButton ui:field="property" addStyleNames="{style.buttonStyle}"/>
+            <g:PushButton ui:field="property" addStyleNames="{style.buttonStyle}" title="{local.toolbarPropertyTooltip}">
+                <g:upFace image="{res.propertyToolbar}"/>
+            </g:PushButton>
         </g:north>
 
         <g:north size="37.00">
-            <g:PushButton ui:field="payloadFactory" addStyleNames="{style.buttonStyle}"/>
+            <g:PushButton ui:field="payloadFactory" addStyleNames="{style.buttonStyle}" title="{local.toolbarPayloadFactoryTooltip}">
+                <g:upFace image="{res.payloadFactoryToolbar}"/>
+            </g:PushButton>
         </g:north>
 
         <g:north size="37.00">
-            <g:PushButton ui:field="send" addStyleNames="{style.buttonStyle}"/>
+            <g:PushButton ui:field="send" addStyleNames="{style.buttonStyle}" title="{local.toolbarSendTooltip}">
+                <g:upFace image="{res.sendToolbar}"/>
+            </g:PushButton>
         </g:north>
 
         <g:north size="37.00">
-            <g:PushButton ui:field="header" addStyleNames="{style.buttonStyle}"/>
+            <g:PushButton ui:field="header" addStyleNames="{style.buttonStyle}" title="{local.toolbarHeaderTooltip}">
+                <g:upFace image="{res.headerToolbar}"/>
+            </g:PushButton>
         </g:north>
 
         <g:north size="37.00">
-            <g:PushButton ui:field="respond" addStyleNames="{style.buttonStyle}"/>
+            <g:PushButton ui:field="respond" addStyleNames="{style.buttonStyle}" title="{local.toolbarRespondTooltip}">
+                <g:upFace image="{res.respondToolbar}"/>
+            </g:PushButton>
         </g:north>
 
         <g:north size="37.00">
-            <g:PushButton ui:field="filter" addStyleNames="{style.buttonStyle}"/>
+            <g:PushButton ui:field="filter" addStyleNames="{style.buttonStyle}" title="{local.toolbarFilterTooltip}">
+                <g:upFace image="{res.filterToolbar}"/>
+            </g:PushButton>
         </g:north>
 
         <g:north size="37.00">
-            <g:PushButton ui:field="switch_mediator" addStyleNames="{style.buttonStyle}"/>
+            <g:PushButton ui:field="switchMediator" addStyleNames="{style.buttonStyle}" title="{local.toolbarSwitchTooltip}">
+                <g:upFace image="{res.switchToolbar}"/>
+            </g:PushButton>
         </g:north>
 
         <g:north size="37.00">
-            <g:PushButton ui:field="sequence" addStyleNames="{style.buttonStyle}"/>
+            <g:PushButton ui:field="sequence" addStyleNames="{style.buttonStyle}" title="{local.toolbarSequenceTooltip}">
+                <g:upFace image="{res.sequenceToolbar}"/>
+            </g:PushButton>
         </g:north>
 
         <g:north size="37.00">
-            <g:PushButton ui:field="enrich" addStyleNames="{style.buttonStyle}"/>
+            <g:PushButton ui:field="enrich" addStyleNames="{style.buttonStyle}" title="{local.toolbarEnrichTooltip}">
+                <g:upFace image="{res.enrichToolbar}"/>
+            </g:PushButton>
         </g:north>
 
         <g:north size="37.00">
-            <g:PushButton ui:field="loopBack" addStyleNames="{style.buttonStyle}"/>
+            <g:PushButton ui:field="loopBack" addStyleNames="{style.buttonStyle}" title="{local.toolbarLoopBackTooltip}">
+                <g:upFace image="{res.loopBackToolbar}"/>
+            </g:PushButton>
         </g:north>
 
         <g:north size="37.00">
-            <g:PushButton ui:field="callTemplate" addStyleNames="{style.buttonStyle}" title="title">
-                <g:downFace image="{res.callTemplateToolbar}"/>
+            <g:PushButton ui:field="callTemplate" addStyleNames="{style.buttonStyle}" title="{local.toolbarCallTemplateTooltip}">
                 <g:upFace image="{res.callTemplateToolbar}"/>
             </g:PushButton>
         </g:north>
 
         <g:north size="37.00">
-            <g:PushButton ui:field="call" addStyleNames="{style.buttonStyle}"/>
+            <g:PushButton ui:field="call" addStyleNames="{style.buttonStyle}" title="{local.toolbarCallTooltip}">
+                <g:upFace image="{res.callToolbar}"/>
+            </g:PushButton>
         </g:north>
+
     </g:DockLayoutPanel>
 
 </ui:UiBinder>

@@ -24,6 +24,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
+ * The abstract view that represents the branch of a diagram element visual part of the widget.
+ *
  * @author Andrey Plotnikov
  */
 @ImplementedBy(BranchViewImpl.class)
@@ -35,6 +37,12 @@ public abstract class BranchView extends AbstractView<BranchView.ActionDelegate>
     public static final int DEFAULT_WIDTH    = 90;
     public static final int TITLE_HEIGHT     = 20;
 
+    /**
+     * Changes title on the view.
+     *
+     * @param title
+     *         title that needs to be set
+     */
     public abstract void setTitle(@Nullable String title);
 
     /**
@@ -49,26 +57,40 @@ public abstract class BranchView extends AbstractView<BranchView.ActionDelegate>
      */
     public abstract void addElement(int x, int y, @Nonnull ShapePresenter shape);
 
-    /** Clear container's content. */
+    /** Clear container's content. Removes all inner diagram elements. */
     public abstract void clear();
 
-    /** Set default cursor for workspace. */
+    /** Set default cursor for branch. */
     public abstract void setDefaultCursor();
 
-    /** Set apply cursor for workspace. */
+    /** Set apply cursor for branch. */
     public abstract void setApplyCursor();
 
-    /** Set error cursor for workspace. */
+    /** Set error cursor for branch. */
     public abstract void setErrorCursor();
 
+    /** @return the width of the view */
     @Nonnegative
     public abstract int getWidth();
 
+    /**
+     * Changes width of the view.
+     *
+     * @param width
+     *         new width of the view
+     */
     public abstract void setWidth(@Nonnegative int width);
 
+    /** @return the height of the view */
     @Nonnegative
     public abstract int getHeight();
 
+    /**
+     * Changes height of the view.
+     *
+     * @param height
+     *         new height of the view
+     */
     public abstract void setHeight(@Nonnegative int height);
 
     public interface ActionDelegate extends AbstractView.ActionDelegate {
@@ -83,10 +105,20 @@ public abstract class BranchView extends AbstractView<BranchView.ActionDelegate>
          */
         void onMouseLeftButtonClicked(int x, int y);
 
+        /**
+         * Performs some actions in response to a user's moving mouse .
+         *
+         * @param x
+         *         the mouse x-position
+         * @param y
+         *         the mouse y-position
+         */
         void onMouseMoved(int x, int y);
 
+        /** Performs some actions in response to a user's moving mouse out. */
         void onMouseOut();
 
+        /** Performs some actions in response to a user's typing 'Delete' button on the keyboard. */
         void onDeleteButtonPressed();
 
     }

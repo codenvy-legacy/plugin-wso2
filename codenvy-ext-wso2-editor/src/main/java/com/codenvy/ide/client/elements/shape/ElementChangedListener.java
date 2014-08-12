@@ -16,6 +16,8 @@
 package com.codenvy.ide.client.elements.shape;
 
 /**
+ * The interface that needs to be implemented in case when one wants to detect a situation when diagram element is changed.
+ *
  * @author Andrey Plotnikov
  */
 public interface ElementChangedListener {

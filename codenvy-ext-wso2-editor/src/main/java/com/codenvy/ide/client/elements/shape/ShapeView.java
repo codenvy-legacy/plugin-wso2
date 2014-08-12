@@ -24,6 +24,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
+ * The abstract view that represents the diagram element visual part of the widget.
+ *
  * @author Andrey Plotnikov
  */
 public abstract class ShapeView extends AbstractView<ShapeView.ActionDelegate> {
@@ -48,16 +50,27 @@ public abstract class ShapeView extends AbstractView<ShapeView.ActionDelegate> {
      */
     public abstract void setIcon(@Nullable ImageResource icon);
 
+    /**
+     * Adds a new branch on the view.
+     *
+     * @param branchPresenter
+     *         branch that needs to be added
+     */
     public abstract void addBranch(@Nonnull BranchPresenter branchPresenter);
 
+    /**
+     * Removes all branches for the view.
+     */
     public abstract void removeBranches();
 
+    /** Changes the visual style of element that makes understandable that the element is selected. */
     public abstract void select();
 
+    /** Changes the visual style of element that makes understandable that the element is unselected. */
     public abstract void unselect();
 
     /**
-     * Select widget when mouse cursor is over.
+     * Changes the visual style of element that makes understandable that the element is selected by the mouse cursor over.
      *
      * @param isError
      *         <code>true</code> if it is possible to select element as error element (which has some problems. For example: it is
@@ -69,22 +82,57 @@ public abstract class ShapeView extends AbstractView<ShapeView.ActionDelegate> {
     /** Unselect widget when mouse cursor is moved out. */
     public abstract void unselectBelowCursor();
 
-    public abstract void showContextMenu(int x, int y);
+    /**
+     * Shows context menu that is needed for the current element.
+     *
+     * @param x
+     *         the x-position where the menu should be opened
+     * @param y
+     *         the y-position where the menu should be opened
+     */
+    public abstract void showContextMenu(@Nonnegative int x, @Nonnegative int y);
 
+    /** Hides context menu. */
     public abstract void hideContextMenu();
 
+    /**
+     * Changes visible state of title and icon panel of the view.
+     *
+     * @param visible
+     *         <code>true</code> the panel will be shown, <code>false</code> it will not
+     */
     public abstract void setVisibleTitleAndIcon(boolean visible);
 
+    /** @return the width of the view */
     @Nonnegative
     public abstract int getWidth();
 
+    /**
+     * Changes width of the view.
+     *
+     * @param width
+     *         new width of the view
+     */
     public abstract void setWidth(@Nonnegative int width);
 
+    /** @return the height of the view */
     @Nonnegative
     public abstract int getHeight();
 
+    /**
+     * Changes height of the view.
+     *
+     * @param height
+     *         new height of the view
+     */
     public abstract void setHeight(@Nonnegative int height);
 
+    /**
+     * Changes y-position of the view on the parent container.
+     *
+     * @param y
+     *         new y-position of the view
+     */
     public abstract void setY(@Nonnegative int y);
 
     public interface ActionDelegate extends AbstractView.ActionDelegate {
@@ -118,10 +166,13 @@ public abstract class ShapeView extends AbstractView<ShapeView.ActionDelegate> {
         /** Performs some actions in response to a user's moving mouse out diagram element. */
         void onMouseOut();
 
+        /** Performs some actions in response to a user's clicking on 'Delete' action in the context menu. */
         void onDeleteActionClicked();
 
+        /** Performs some actions in response to a user's clicking on 'Number of branches' action in the context menu. */
         void onChangeNumberBranchesActionClicked();
 
+        /** Performs some actions in response to a widget is being removed from DOM. */
         void onRemovedWidget();
 
     }
