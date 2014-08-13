@@ -177,10 +177,10 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
 
     /** {@inheritDoc} */
     @Override
-    public void showEditValueExpressionWindow() {
+    public void onEditValueExpressionButtonClicked() {
         nameSpaceEditorPresenter.showWindowWithParameters(element.getNameSpaces(),
                                                           addNameSpacesCallBack,
-                                                          local.propertiespanelNamespacePropertyExpression(),
+                                                          local.propertyExpression(),
                                                           element.getValueExpression());
     }
 

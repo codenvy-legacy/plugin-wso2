@@ -331,7 +331,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
 
     @UiHandler("expressionButton")
     public void onEditExpressionButtonClicked(ClickEvent event) {
-        delegate.showEditValueExpressionWindow();
+        delegate.onEditValueExpressionButtonClicked();
     }
 
     /** {@inheritDoc} */

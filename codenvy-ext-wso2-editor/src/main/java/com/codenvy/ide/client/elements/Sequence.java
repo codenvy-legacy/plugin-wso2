@@ -19,19 +19,26 @@ import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.enrich.Enrich;
 import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.payload.PayloadFactory;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.Sequence.ReferringSequenceType.Static;
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
+import static com.codenvy.ide.client.elements.Sequence.ReferringType.Dynamic;
+import static com.codenvy.ide.client.elements.Sequence.ReferringType.Static;
 
 /**
+ * The entity that represents 'Sequence' mediator from ESB configuration.
+ *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
@@ -39,14 +46,14 @@ public class Sequence extends RootElement {
     public static final String ELEMENT_NAME       = "Sequence";
     public static final String SERIALIZATION_NAME = "sequence";
 
-    private static final String REFERRING_SEQUENCE_PROPERTY_NAME   = "ReferringSequenceType";
-    private static final String STATIC_REFERENCE_KEY_PROPERTY_NAME = "StaticReferenceKey";
+    private static final String KEY_ATTRIBUTE_NAME = "key";
 
-    private static final List<String> PROPERTIES = Arrays.asList(REFERRING_SEQUENCE_PROPERTY_NAME,
-                                                                 STATIC_REFERENCE_KEY_PROPERTY_NAME);
+    private static final List<String> PROPERTIES = java.util.Collections.emptyList();
 
-    private String referringSequenceType;
-    private String staticReferenceKey;
+    private ReferringType    referringType;
+    private String           staticReferenceKey;
+    private String           dynamicReferenceKey;
+    private Array<NameSpace> nameSpaces;
 
     @Inject
     public Sequence(EditorResources resources,
@@ -86,52 +93,129 @@ public class Sequence extends RootElement {
               sequenceProvider,
               switchProvider);
 
-        referringSequenceType = Static.name();
-        staticReferenceKey = "Sequence";
+        referringType = Static;
+        staticReferenceKey = "";
+        dynamicReferenceKey = "/default/expression";
+        nameSpaces = Collections.createArray();
     }
 
-    @Nullable
-    public String getReferringSequenceType() {
-        return referringSequenceType;
+    /** @return referring type of sequence */
+    @Nonnull
+    public ReferringType getReferringType() {
+        return referringType;
     }
 
-    public void setReferringSequenceType(@Nullable String referringSequenceType) {
-        this.referringSequenceType = referringSequenceType;
+    /**
+     * Changes referring type of sequence.
+     *
+     * @param referringType
+     *         new referring type of sequence
+     */
+    public void setReferringType(@Nonnull ReferringType referringType) {
+        this.referringType = referringType;
     }
 
+    /** @return static reference key of sequence */
     @Nullable
     public String getStaticReferenceKey() {
         return staticReferenceKey;
     }
 
+    /**
+     * Changes static reference key of sequence.
+     *
+     * @param staticReferenceKey
+     *         new static reference key of sequence
+     */
     public void setStaticReferenceKey(@Nullable String staticReferenceKey) {
         this.staticReferenceKey = staticReferenceKey;
+    }
+
+    /** @return dynamic reference key of sequence */
+    @Nullable
+    public String getDynamicReferenceKey() {
+        return dynamicReferenceKey;
+    }
+
+    /**
+     * Changes dynamic reference key of sequence.
+     *
+     * @param dynamicReferenceKey
+     *         new dynamic reference key of sequence
+     */
+    public void setDynamicReferenceKey(@Nullable String dynamicReferenceKey) {
+        this.dynamicReferenceKey = dynamicReferenceKey;
+    }
+
+    /** @return namespaces which contain in sequence */
+    @Nonnull
+    public Array<NameSpace> getNameSpaces() {
+        return nameSpaces;
+    }
+
+    /**
+     * Changes list of name spaces.
+     *
+     * @param nameSpaces
+     *         list of name spaces which needs to set in element
+     */
+    public void setNameSpaces(@Nonnull Array<NameSpace> nameSpaces) {
+        this.nameSpaces = nameSpaces;
     }
 
     /** {@inheritDoc} */
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        return "referringSequenceType=\"" + referringSequenceType + "\" " +
-               "staticReferenceKey=\"" + staticReferenceKey + "\" ";
+        if (referringType.equals(Static)) {
+            return KEY_ATTRIBUTE_NAME + "=\"" + staticReferenceKey + '"';
+        }
+
+        StringBuilder spaces = new StringBuilder();
+
+        for (NameSpace nameSpace : nameSpaces.asIterable()) {
+            spaces.append(nameSpace.toString()).append(' ');
+        }
+
+        return spaces + KEY_ATTRIBUTE_NAME + "=\"{" + dynamicReferenceKey + "}\"";
     }
 
     /** {@inheritDoc} */
     @Override
-    public void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
-        String nodeValue = node.getChildNodes().item(0).getNodeValue();
+    protected void applyAttributes(@Nonnull Node node) {
+        NamedNodeMap attributeMap = node.getAttributes();
 
-        switch (nodeName) {
-            case REFERRING_SEQUENCE_PROPERTY_NAME:
-                referringSequenceType = String.valueOf(nodeValue);
-                break;
+        for (int i = 0; i < attributeMap.getLength(); i++) {
+            Node attributeNode = attributeMap.item(i);
 
-            case STATIC_REFERENCE_KEY_PROPERTY_NAME:
-                staticReferenceKey = String.valueOf(nodeValue);
-                break;
+            String nodeValue = attributeNode.getNodeValue();
+            String nodeName = attributeNode.getNodeName();
 
-            default:
+            switch (nodeName) {
+                case KEY_ATTRIBUTE_NAME:
+                    if (StringUtils.startsWith("{", nodeValue, true)) {
+                        referringType = Dynamic;
+
+                        int startPosition = nodeValue.indexOf("{") + 1;
+                        int endPosition = nodeValue.lastIndexOf("}");
+
+                        dynamicReferenceKey = nodeValue.substring(startPosition, endPosition);
+                    } else {
+                        referringType = Static;
+                        staticReferenceKey = nodeValue;
+                    }
+                    break;
+
+                default:
+                    if (StringUtils.startsWith(PREFIX, nodeName, true)) {
+                        String name = StringUtils.trimStart(nodeName, PREFIX + ':');
+                        //TODO create entity using edit factory
+                        NameSpace nameSpace = new NameSpace(name, nodeValue);
+
+                        nameSpaces.add(nameSpace);
+                    }
+                    break;
+            }
         }
     }
 
@@ -142,10 +226,10 @@ public class Sequence extends RootElement {
         return resources.sequence();
     }
 
-    public enum ReferringSequenceType {
+    public enum ReferringType {
         Dynamic, Static;
 
-        public static final String TYPE_NAME = "ReferringSequenceType";
+        public static final String TYPE_NAME = "ReferringType";
     }
 
 }

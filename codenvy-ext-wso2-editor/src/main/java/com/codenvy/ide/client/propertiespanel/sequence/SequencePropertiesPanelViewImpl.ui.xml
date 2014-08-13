@@ -15,24 +15,32 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<ui:UiBinder 
-             xmlns:ui='urn:ui:com.google.gwt.uibinder'
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
+    <ui:with field='local' type='com.codenvy.ide.client.WSO2EditorLocalizationConstant'/>
+
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
-        <g:DockLayoutPanel>
-            <g:north size="60.00">
-                <g:FlowPanel>
-                    <g:Label text="Referring Sequence Type"/>
-                    <g:ListBox ui:field="referringSequenceType" width="206px"/>
-                </g:FlowPanel>
-            </g:north>
-            <g:north size="60.00">
-                <g:FlowPanel>
-                    <g:Label text="Static Reference Key"/>
-                    <g:TextBox ui:field="staticReferenceKey" width="200px"/>
-                </g:FlowPanel>
-            </g:north>
-        </g:DockLayoutPanel>
+        <g:FlowPanel>
+
+            <g:FlowPanel addStyleNames="{res.editorCSS.property}">
+                <g:Label text="{local.referringType}"/>
+                <g:ListBox ui:field="referringType" width="206px"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="staticReferenceKeyPanel" addStyleNames="{res.editorCSS.property}">
+                <g:Label text="{local.staticReferenceKey}"/>
+                <g:TextBox ui:field="staticReferenceKey" width="200px"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="dynamicReferenceKeyPanel" addStyleNames="{res.editorCSS.property}">
+                <g:Label text="{local.dynamicReferenceKey}"/>
+                <g:TextBox enabled="false" ui:field="dynamicReferenceKey" width="200px"/>
+                <g:Button ui:field="expressionButton" addStyleNames="{res.editorCSS.propertyButton}" text="..."/>
+            </g:FlowPanel>
+
+        </g:FlowPanel>
     </g:ScrollPanel>
+
 </ui:UiBinder>

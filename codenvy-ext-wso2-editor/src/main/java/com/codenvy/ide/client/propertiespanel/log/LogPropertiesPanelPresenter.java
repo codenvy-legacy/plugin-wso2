@@ -94,7 +94,7 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log, Lo
     @Override
     public void onEditButtonClicked() {
         propertyConfigPresenter.showConfigWindow(element.getLogProperties(),
-                                                 local.propertiespanelLogConfigurationTitle(),
+                                                 local.configurationTitle(),
                                                  addPropertyCallback);
     }
 

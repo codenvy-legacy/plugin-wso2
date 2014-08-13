@@ -107,8 +107,7 @@ import static com.codenvy.ide.client.elements.Send.EBoolean.TRUE;
 import static com.codenvy.ide.client.elements.Send.ReceivingSequenceType;
 import static com.codenvy.ide.client.elements.Send.ReceivingSequenceType.Default;
 import static com.codenvy.ide.client.elements.Send.ReceivingSequenceType.Static;
-import static com.codenvy.ide.client.elements.Sequence.ReferringSequenceType;
-import static com.codenvy.ide.client.elements.Sequence.ReferringSequenceType.Dynamic;
+import static com.codenvy.ide.client.elements.Sequence.ReferringType.Dynamic;
 import static com.codenvy.ide.client.elements.enrich.Enrich.SourceType;
 import static com.codenvy.ide.client.elements.enrich.Enrich.SourceType.body;
 import static com.codenvy.ide.client.elements.enrich.Enrich.SourceType.custom;
@@ -265,8 +264,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                      Arrays.asList(Synapse.name(), transport.name()));
         propertyTypeManager.register(FilterConditionType.TYPE_NAME,
                                      Arrays.asList(SOURCE_AND_REGEX.name(), XPATH.name()));
-        propertyTypeManager.register(ReferringSequenceType.TYPE_NAME,
-                                     Arrays.asList(ReferringSequenceType.Static.name(), Dynamic.name()));
+        propertyTypeManager.register(Sequence.ReferringType.TYPE_NAME,
+                                     Arrays.asList(Sequence.ReferringType.Static.name(), Dynamic.name()));
         propertyTypeManager.register(SourceType.TYPE_NAME,
                                      Arrays.asList(custom.name(), envelope.name(), body.name(), property.name(), inline.name()));
         propertyTypeManager.register(TargetAction.TYPE_NAME,

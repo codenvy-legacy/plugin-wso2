@@ -314,10 +314,10 @@ public class Header extends RootElement {
                 attributes.remove(NAME);
                 attributes.remove(EXPRESSION);
 
-                return prepareSerialization(attributes);
+                return convertPropertiesToXMLFormat(attributes);
         }
 
-        return nameSpaces.toString() + prepareSerialization(attributes);
+        return nameSpaces + convertPropertiesToXMLFormat(attributes);
     }
 
     /**

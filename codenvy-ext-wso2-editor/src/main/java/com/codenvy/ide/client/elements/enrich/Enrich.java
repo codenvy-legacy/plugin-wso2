@@ -232,7 +232,7 @@ public class Enrich extends RootElement {
                 break;
         }
 
-        return prepareSerialization(attributes);
+        return convertPropertiesToXMLFormat(attributes);
     }
 
     /**
@@ -288,7 +288,7 @@ public class Enrich extends RootElement {
                 break;
         }
 
-        return prepareSerialization(attributes);
+        return convertPropertiesToXMLFormat(attributes);
     }
 
     /** {@inheritDoc} */
@@ -299,7 +299,7 @@ public class Enrich extends RootElement {
 
         attributes.put(DESCRIPTION, description);
 
-        return prepareSerialization(attributes);
+        return convertPropertiesToXMLFormat(attributes);
     }
 
     /** {@inheritDoc} */

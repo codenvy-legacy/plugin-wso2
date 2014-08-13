@@ -79,7 +79,7 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
 
         Widget widget = uiBinder.createAndBindUi(this);
 
-        this.setTitle(localizationConstant.propertiespanelPayloadArgsConfigurationTitle());
+        this.setTitle(localizationConstant.argsConfigurationTitle());
         this.setWidget(widget);
 
         Button btnCancel = createButton(localizationConstant.buttonCancel(), "args-configuration-cancel", new ClickHandler() {
@@ -156,9 +156,9 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
         };
 
         table.addColumn(type, localizationConstant.columnType());
-        table.addColumn(value, localizationConstant.propertiespanelTableValue());
+        table.addColumn(value, localizationConstant.tableValue());
         table.addColumn(namespaceEditorButton);
-        table.addColumn(evaluator, localizationConstant.propertiespanelTableEvaluator());
+        table.addColumn(evaluator, localizationConstant.tableEvaluator());
 
         table.setColumnWidth(type, 120, PX);
         table.setColumnWidth(value, 210, PX);

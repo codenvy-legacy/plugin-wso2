@@ -63,13 +63,11 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
         void onDescriptionChanged();
 
         /** Performs some actions in response to a user uses value expression. */
-        void showEditValueExpressionWindow();
+        void onEditValueExpressionButtonClicked();
 
     }
 
-    /**
-     * @return property name.
-     */
+    /** @return property name. */
     @NotNull
     public abstract String getPropertyName();
 
@@ -81,9 +79,7 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
      */
     public abstract void setPropertyName(@NotNull String propertyName);
 
-    /**
-     * @return property action.
-     */
+    /** @return property action. */
     @NotNull
     public abstract String getPropertyAction();
 
@@ -125,9 +121,7 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
      */
     public abstract void setValueType(@NotNull List<String> valueType);
 
-    /**
-     * @return property data type.
-     */
+    /** @return property data type. */
     @NotNull
     public abstract String getPropertyDataType();
 
@@ -147,9 +141,7 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
      */
     public abstract void selectPropertyDataType(@NotNull String propertyDataType);
 
-    /**
-     * @return value of literal.
-     */
+    /** @return value of literal. */
     @NotNull
     public abstract String getValueLiteral();
 
@@ -175,9 +167,7 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
      */
     public abstract void setValueExpression(@NotNull String valueExpression);
 
-    /**
-     * @return value of string pattern.
-     */
+    /** @return value of string pattern. */
     @NotNull
     public abstract String getValueStringPattern();
 
@@ -189,9 +179,7 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
      */
     public abstract void setValueStringPattern(@NotNull String valueStringPattern);
 
-    /**
-     * @return value of capture group.
-     */
+    /** @return value of capture group. */
     @NotNull
     public abstract String getValueStringCaptureGroup();
 
@@ -203,9 +191,7 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
      */
     public abstract void setValueStringCaptureGroup(@NotNull String valueStringCaptureGroup);
 
-    /**
-     * @return property scope.
-     */
+    /** @return property scope. */
     @NotNull
     public abstract String getPropertyScope();
 
@@ -225,9 +211,7 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
      */
     public abstract void setPropertyScope(@NotNull List<String> propertyScope);
 
-    /**
-     * @return description.
-     */
+    /** @return description. */
     @NotNull
     public abstract String getDescription();
 

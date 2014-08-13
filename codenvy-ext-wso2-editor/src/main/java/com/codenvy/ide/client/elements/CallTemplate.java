@@ -171,7 +171,7 @@ public class CallTemplate extends RootElement {
         prop.put(TARGET_TEMPLATE_PROPERTY_NAME, targetTemplate);
         prop.put(DESCRIPTION_PROPERTY_NAME, description);
 
-        return prepareSerialization(prop);
+        return convertPropertiesToXMLFormat(prop);
     }
 
     /** {@inheritDoc} */

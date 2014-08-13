@@ -107,7 +107,7 @@ public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDeleg
     public void onEditArgsButtonClicked() {
         nameSpacePresenter.showWindowWithParameters(selectedArg.getNameSpaces(),
                                                     addNameSpacesCallBack,
-                                                    local.propertiespanelPayloadArgsLabel(),
+                                                    local.argsLabel(),
                                                     null);
     }
 

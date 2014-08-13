@@ -147,7 +147,7 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
     /** {@inheritDoc} */
     @Override
     public void showFormatConfigurationWindow() {
-        inlineConfigurationPresenter.showDialog(element.getFormat(), locale.propertiespanelPayloadFormat(), changeInlineFormatCallBack);
+        inlineConfigurationPresenter.showDialog(element.getFormat(), locale.payloadFormat(), changeInlineFormatCallBack);
     }
 
     /** {@inheritDoc} */

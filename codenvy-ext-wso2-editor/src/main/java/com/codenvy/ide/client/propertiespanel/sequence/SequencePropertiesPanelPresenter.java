@@ -15,29 +15,74 @@
  */
 package com.codenvy.ide.client.propertiespanel.sequence;
 
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
+import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.Sequence;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
+import com.codenvy.ide.client.propertiespanel.log.propertyconfig.AddNameSpacesCallBack;
+import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
+import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import static com.codenvy.ide.client.elements.Sequence.ReferringType.Static;
 
 /**
+ * The presenter that provides a business logic of 'Sequence' mediator properties panel. It provides an ability to work with all properties
+ * of 'Sequence' mediator.
+ *
  * @author Andrey Plotnikov
  */
 public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Sequence, SequencePropertiesPanelView>
         implements SequencePropertiesPanelView.ActionDelegate {
 
+    private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
+    private final WSO2EditorLocalizationConstant localizationConstant;
+    private final AddNameSpacesCallBack          addNameSpacesCallBack;
+
     @Inject
-    public SequencePropertiesPanelPresenter(SequencePropertiesPanelView view, PropertyTypeManager propertyTypeManager) {
+    public SequencePropertiesPanelPresenter(SequencePropertiesPanelView view,
+                                            PropertyTypeManager propertyTypeManager,
+                                            NameSpaceEditorPresenter nameSpaceEditorPresenter,
+                                            WSO2EditorLocalizationConstant localizationConstant) {
         super(view, propertyTypeManager);
+
+        this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
+        this.localizationConstant = localizationConstant;
+
+        this.addNameSpacesCallBack = new AddNameSpacesCallBack() {
+            @Override
+            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
+                element.setNameSpaces(nameSpaces);
+                element.setDynamicReferenceKey(expression);
+
+                SequencePropertiesPanelPresenter.this.view.setDynamicReferenceKey(expression);
+
+                notifyListeners();
+            }
+        };
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onReferringSequenceTypeChanged() {
-        element.setReferringSequenceType(view.getReferringSequenceType());
+    public void onReferringTypeChanged() {
+        element.setReferringType(Sequence.ReferringType.valueOf(view.getReferringType()));
+
+        if (Static.equals(element.getReferringType())) {
+            view.setStaticReferenceKey(element.getStaticReferenceKey());
+
+            view.setVisibleStaticReferenceKeyPanel(true);
+            view.setVisibleDynamicReferenceKeyPanel(false);
+        } else {
+            view.setDynamicReferenceKey(element.getDynamicReferenceKey());
+
+            view.setVisibleStaticReferenceKeyPanel(false);
+            view.setVisibleDynamicReferenceKeyPanel(true);
+        }
 
         notifyListeners();
     }
@@ -52,12 +97,22 @@ public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Se
 
     /** {@inheritDoc} */
     @Override
+    public void onEditExpressionButtonClicked() {
+        nameSpaceEditorPresenter.showWindowWithParameters(element.getNameSpaces(),
+                                                          addNameSpacesCallBack,
+                                                          localizationConstant.sequenceExpressionTitle(),
+                                                          element.getDynamicReferenceKey());
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setReferringSequenceType(propertyTypeManager.getValuesOfTypeByName("ReceivingSequenceType"));
-        view.selectReferringSequenceType(element.getReferringSequenceType());
-        view.setStaticReferenceKey(element.getStaticReferenceKey());
+        view.setReferringTypes(propertyTypeManager.getValuesOfTypeByName(Sequence.ReferringType.TYPE_NAME));
+        view.selectReferringType(element.getReferringType().name());
+
+        onReferringTypeChanged();
     }
 
 }

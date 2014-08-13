@@ -229,7 +229,7 @@ public class PayloadFactory extends RootElement {
         prop.put(MEDIA_TYPE_PROPERTY_NAME, mediaType);
         prop.put(DESCRIPTION_PROPERTY_NAME, description);
 
-        return prepareSerialization(prop);
+        return convertPropertiesToXMLFormat(prop);
     }
 
     /** {@inheritDoc} */

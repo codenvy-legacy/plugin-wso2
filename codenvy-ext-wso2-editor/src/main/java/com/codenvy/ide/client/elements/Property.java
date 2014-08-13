@@ -323,7 +323,7 @@ public class Property extends RootElement {
             attributes.remove(DATA_TYPE);
         }
 
-        return spaces + prepareSerialization(attributes);
+        return spaces + convertPropertiesToXMLFormat(attributes);
     }
 
     /**

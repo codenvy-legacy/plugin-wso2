@@ -102,7 +102,7 @@ public class LoopBack extends RootElement {
 
         prop.put(DESCRIPTION_PROPERTY_NAME, description);
 
-        return prepareSerialization(prop);
+        return convertPropertiesToXMLFormat(prop);
     }
 
     /** {@inheritDoc} */

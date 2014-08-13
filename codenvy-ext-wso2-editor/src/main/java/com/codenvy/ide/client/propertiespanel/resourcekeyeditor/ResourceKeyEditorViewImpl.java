@@ -50,9 +50,9 @@ public class ResourceKeyEditorViewImpl extends Window implements ResourceKeyEdit
         Widget widget = uiBinder.createAndBindUi(this);
 
         this.setWidget(widget);
-        this.setTitle(local.propertiespanelResourceKeyEditorTitle());
+        this.setTitle(local.resourceKeyEditorTitle());
 
-        Button btnCancel = createButton(local.buttonCancel(), "resource-key--cancel", new ClickHandler() {
+        Button btnCancel = createButton(local.buttonCancel(), "resource-key-cancel", new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {

@@ -20,6 +20,7 @@ import com.google.gwt.i18n.client.Messages;
 /**
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public interface WSO2EditorLocalizationConstant extends Messages {
 
@@ -61,9 +62,6 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("toolbar.call.tooltip")
     String toolbarCallTooltip();
-
-    @Key("toolbar.connection.tooltip")
-    String toolbarConnectionTooltip();
 
     @Key("propertiespanel.logconfig.logcategory")
     String logCategory();
@@ -129,16 +127,16 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     String labelExpression();
 
     @Key("propertiespanel.namespace.property.expression")
-    String propertiespanelNamespacePropertyExpression();
+    String propertyExpression();
 
     @Key("propertiespanel.property.editor.title")
-    String propertiespanelPropertyEditorTitle();
+    String editorTitle();
 
     @Key("propertiespanel.payload.format")
-    String propertiespanelPayloadFormat();
+    String payloadFormat();
 
     @Key("propertiespanel.log.configuration.title")
-    String propertiespanelLogConfigurationTitle();
+    String configurationTitle();
 
     @Key("button.cancel")
     String buttonCancel();
@@ -147,31 +145,31 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     String buttonOk();
 
     @Key("propertiespanel.resource.key.editor")
-    String propertiespanelResourceKeyEditor();
+    String resourceKeyEditor();
 
     @Key("propertiespanel.key.from.specify")
-    String propertiespanelKeyFromSpecify();
+    String keyFromSpecify();
 
     @Key("propertiespanel.new.resource")
-    String propertiespanelNewResource();
+    String newResource();
 
     @Key("propertiespanel.resource.key")
-    String propertiespanelResourceKey();
+    String resourceKey();
 
     @Key("propertiespanel.resource.key.editor.title")
-    String propertiespanelResourceKeyEditorTitle();
+    String resourceKeyEditorTitle();
 
     @Key("propertiespanel.payload.args.configuration.title")
-    String propertiespanelPayloadArgsConfigurationTitle();
+    String argsConfigurationTitle();
 
     @Key("propertiespanel.table.value")
-    String propertiespanelTableValue();
+    String tableValue();
 
     @Key("propertiespanel.table.Evaluator")
-    String propertiespanelTableEvaluator();
+    String tableEvaluator();
 
     @Key("propertiespanel.payload.args.label")
-    String propertiespanelPayloadArgsLabel();
+    String argsLabel();
 
     @Key("propertiespanel.enrich.source.namespace.label")
     String enrichSrcLabel();
@@ -184,4 +182,16 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.call.template.configuration.title")
     String propertiespanelCallTemplateConfigurationTitle();
+
+    @Key("propertiespanel.sequence.referringType")
+    String referringType();
+
+    @Key("propertiespanel.sequence.dynamicReferenceKey")
+    String dynamicReferenceKey();
+
+    @Key("propertiespanel.sequence.staticReferenceKey")
+    String staticReferenceKey();
+
+    @Key("propertiespanel.sequence.expression.title")
+    String sequenceExpressionTitle();
 }

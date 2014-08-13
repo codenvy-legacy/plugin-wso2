@@ -187,7 +187,7 @@ public class Log extends RootElement {
         attributes.put(SEPARATOR_NAME, logSeparator);
         attributes.put(DESCRIPTION_NAME, description);
 
-        return prepareSerialization(attributes);
+        return convertPropertiesToXMLFormat(attributes);
     }
 
     /** {@inheritDoc} */

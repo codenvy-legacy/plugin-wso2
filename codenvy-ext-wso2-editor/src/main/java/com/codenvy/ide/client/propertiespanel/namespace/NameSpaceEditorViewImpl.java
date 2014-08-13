@@ -80,7 +80,7 @@ public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorVi
 
         Widget widget = uiBinder.createAndBindUi(this);
 
-        this.setTitle(local.propertiespanelPropertyEditorTitle());
+        this.setTitle(local.editorTitle());
         this.setWidget(widget);
 
         btnCancel = createButton(local.buttonCancel(), "namespace-button-cancel", new ClickHandler() {

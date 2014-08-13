@@ -46,11 +46,11 @@
         <g:center>
 
             <g:FlowPanel>
-                <g:Label text="{locale.propertiespanelResourceKey}" addStyleNames="{style.formatKeyLabel}"/>
-                <g:Label text="{locale.propertiespanelKeyFromSpecify}" addStyleNames="{style.leftSpace}"/>
-                <g:TextBox ui:field="keyTextBox" width="410px" text="{locale.propertiespanelResourceKeyEditor}"
+                <g:Label text="{locale.resourceKey}" addStyleNames="{style.formatKeyLabel}"/>
+                <g:Label text="{locale.keyFromSpecify}" addStyleNames="{style.leftSpace}"/>
+                <g:TextBox ui:field="keyTextBox" width="410px" text="{locale.resourceKeyEditor}"
                            addStyleNames="{style.leftSpace}"/>
-                <g:Label text="{locale.propertiespanelNewResource}" addStyleNames="{style.newResources}"/>
+                <g:Label text="{locale.newResource}" addStyleNames="{style.newResources}"/>
             </g:FlowPanel>
 
         </g:center>

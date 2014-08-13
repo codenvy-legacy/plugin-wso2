@@ -16,12 +16,11 @@
 package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.EditorResources;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-
 import com.codenvy.ide.client.elements.enrich.Enrich;
 import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.payload.PayloadFactory;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
@@ -219,28 +218,28 @@ public class RootElement extends AbstractShape {
     }
 
     /**
-     * Prepare all properties for the serialization.
+     * Convert properties of diagram element to XML attribute format.
      *
-     * @param properties
+     * @param attributes
      *         element's properties
-     * @return string with serialized properties
+     * @return XML format of element's attributes
      */
-    protected String prepareSerialization(@NotNull LinkedHashMap<String, String> properties) {
-        StringBuilder serializedProperties = new StringBuilder();
+    protected String convertPropertiesToXMLFormat(@NotNull LinkedHashMap<String, String> attributes) {
+        StringBuilder content = new StringBuilder();
 
-        for (Iterator iterator = properties.entrySet().iterator(); iterator.hasNext(); ) {
+        for (Iterator iterator = attributes.entrySet().iterator(); iterator.hasNext(); ) {
             Entry entry = (Entry)iterator.next();
             String value = (String)entry.getValue();
 
             if (value != null && !value.isEmpty()) {
-                serializedProperties.append(entry.getKey()).append("=\"").append(value).append('"');
+                content.append(entry.getKey()).append("=\"").append(value).append('"');
             }
 
             if (iterator.hasNext()) {
-                serializedProperties.append(' ');
+                content.append(' ');
             }
         }
 
-        return serializedProperties.toString();
+        return content.toString();
     }
 }

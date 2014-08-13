@@ -22,21 +22,6 @@
     border: 2px solid #FF0000 !important;
 }
 
-.leftPanelOfContainer {
-    position: relative;
-    float: left;
-    top: 50%;
-    margin-top: -47px;
-    padding-left: 12px;
-}
-
-.containerElement {
-    width: 300px;
-    height: 160px;
-    border: 1px dashed lightgrey;
-    background-color: #5a5c5c;
-}
-
 .propertyButton {
     margin-left: 2px;
     text-align: center;

@@ -68,7 +68,7 @@
                 </g:FlowPanel>
 
                 <g:FlowPanel addStyleNames="{style.alignLeft}">
-                    <g:Label text="{locale.propertiespanelTableEvaluator}"/>
+                    <g:Label text="{locale.tableEvaluator}"/>
                     <g:ListBox ui:field="valueEvaluator" height="24px" width="156px"/>
                 </g:FlowPanel>
 
