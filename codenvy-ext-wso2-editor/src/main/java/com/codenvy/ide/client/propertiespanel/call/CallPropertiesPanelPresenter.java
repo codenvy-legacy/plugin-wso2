@@ -63,7 +63,6 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, 
                 notifyListeners();
             }
         };
-
     }
 
     /** {@inheritDoc} */

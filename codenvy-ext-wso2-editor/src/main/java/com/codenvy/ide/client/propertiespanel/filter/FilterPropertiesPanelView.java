@@ -18,6 +18,8 @@ package com.codenvy.ide.client.propertiespanel.filter;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.inject.ImplementedBy;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -28,26 +30,91 @@ public abstract class FilterPropertiesPanelView extends AbstractView<FilterPrope
 
     public interface ActionDelegate extends AbstractView.ActionDelegate {
 
+        /** Performs some actions in response to user's changing condition type field. */
         void onConditionTypeChanged();
 
-        void onSourceChanged();
-
+        /** Performs some actions in response to user's changing regular expression field. */
         void onRegularExpressionChanged();
+
+        /** Performs some actions in response to user's editing source. */
+        void onEditSourceButtonClicked();
+
+        /** Performs some actions in response to user's editing xpath. */
+        void onEditXPathButtonClicked();
 
     }
 
+    /** @return content of the condition type field */
+    @Nonnull
     public abstract String getConditionType();
 
-    public abstract void selectConditionType(String conditionType);
+    /**
+     * Selects an item from list of condition types in the condition type field.
+     *
+     * @param conditionType
+     *         new selected type
+     */
+    public abstract void selectConditionType(@Nonnull String conditionType);
 
-    public abstract void setConditionType(List<String> conditionType);
+    /**
+     * Changes content of the condition type field.
+     *
+     * @param conditionTypes
+     *         new content of the field
+     */
+    public abstract void setConditionTypes(@Nullable List<String> conditionTypes);
 
-    public abstract String getSource();
+    /**
+     * Changes content of the source field.
+     *
+     * @param source
+     *         new content of the field
+     */
+    public abstract void setSource(@Nullable String source);
 
-    public abstract void setSource(String source);
-
+    /** @return content of the regular expression field */
+    @Nonnull
     public abstract String getRegularExpression();
 
-    public abstract void setRegularExpression(String regularExpression);
+    /**
+     * Changes content of the regular expression field.
+     *
+     * @param regularExpression
+     *         new content of the field
+     */
+
+    public abstract void setRegularExpression(@Nonnull String regularExpression);
+
+    /**
+     * Changes content of the xpath field.
+     *
+     * @param xPath
+     *         new content of the field
+     */
+    public abstract void setXPath(@Nullable String xPath);
+
+    /**
+     * Changes visible state of the source panel.
+     *
+     * @param visible
+     *         <code>true</code> the panel will be shown, <code>false</code> it will not
+     */
+    public abstract void setVisibleSourcePanel(boolean visible);
+
+    /**
+     * Changes visible state of the regular expression panel.
+     *
+     * @param visible
+     *         <code>true</code> the panel will be shown, <code>false</code> it will not
+     */
+    public abstract void setVisibleRegularExpressionPanel(boolean visible);
+
+    /**
+     * Changes visible state of the xpath panel.
+     *
+     * @param visible
+     *         <code>true</code> the panel will be shown, <code>false</code> it will not
+     */
+    public abstract void setVisibleXpathPanel(boolean visible);
 
 }

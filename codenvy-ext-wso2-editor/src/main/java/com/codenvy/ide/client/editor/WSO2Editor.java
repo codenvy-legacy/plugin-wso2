@@ -73,8 +73,7 @@ import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates;
 import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates.EMPTY;
 import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates.SDF;
 import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates.SELECT_FROM_TEMPLATE;
-import static com.codenvy.ide.client.elements.Filter.FilterConditionType;
-import static com.codenvy.ide.client.elements.Filter.FilterConditionType.SOURCE_AND_REGEX;
+import static com.codenvy.ide.client.elements.Filter.ConditionType.SOURCE_AND_REGEX;
 import static com.codenvy.ide.client.elements.Header.HeaderAction;
 import static com.codenvy.ide.client.elements.Header.HeaderValueType;
 import static com.codenvy.ide.client.elements.Header.ScopeType;
@@ -262,7 +261,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                     );
         propertyTypeManager.register(ScopeType.TYPE_NAME,
                                      Arrays.asList(Synapse.name(), transport.name()));
-        propertyTypeManager.register(FilterConditionType.TYPE_NAME,
+        propertyTypeManager.register(Filter.ConditionType.TYPE_NAME,
                                      Arrays.asList(SOURCE_AND_REGEX.name(), XPATH.name()));
         propertyTypeManager.register(Sequence.ReferringType.TYPE_NAME,
                                      Arrays.asList(Sequence.ReferringType.Static.name(), Dynamic.name()));

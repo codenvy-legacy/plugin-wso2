@@ -12,7 +12,7 @@
     </parent>
 
     <artifactId>wso2-editor</artifactId>
-    <name>WSO2 Editor</name>
+    <name>↳ WSO2 Editor</name>
 
     <dependencies>
         <dependency>

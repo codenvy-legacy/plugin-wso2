@@ -209,4 +209,22 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.call.expression.title")
     String callExpressionTitle();
+
+    @Key("propertiespanel.filter.conditionType")
+    String conditionType();
+
+    @Key("propertiespanel.filter.source")
+    String filterSource();
+
+    @Key("propertiespanel.filter.regularExpression")
+    String regularExpression();
+
+    @Key("propertiespanel.filter.xpath")
+    String filterXpath();
+
+    @Key("propertiespanel.filter.xpath.title")
+    String filterXpathTitle();
+
+    @Key("propertiespanel.filter.source.title")
+    String filterSourceTitle();
 }

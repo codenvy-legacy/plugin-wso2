@@ -15,37 +15,94 @@
  */
 package com.codenvy.ide.client.propertiespanel.filter;
 
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.Filter;
+import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
+import com.codenvy.ide.client.propertiespanel.log.propertyconfig.AddNameSpacesCallBack;
+import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
+import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
+ * The presenter that provides a business logic of 'Filter' mediator properties panel. It provides an ability to work with all properties
+ * of 'Filter' mediator.
+ *
  * @author Andrey Plotnikov
  */
 public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filter, FilterPropertiesPanelView>
         implements FilterPropertiesPanelView.ActionDelegate {
 
+    private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
+    private final WSO2EditorLocalizationConstant localizationConstant;
+    private final AddNameSpacesCallBack          addSourceNameSpacesCallBack;
+    private final AddNameSpacesCallBack          addXPathNameSpacesCallBack;
+
     @Inject
-    public FilterPropertiesPanelPresenter(FilterPropertiesPanelView view, PropertyTypeManager propertyTypeManager) {
+    public FilterPropertiesPanelPresenter(FilterPropertiesPanelView view,
+                                          PropertyTypeManager propertyTypeManager,
+                                          NameSpaceEditorPresenter nameSpaceEditorPresenter,
+                                          WSO2EditorLocalizationConstant localizationConstant) {
         super(view, propertyTypeManager);
+
+        this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
+        this.localizationConstant = localizationConstant;
+
+        this.addSourceNameSpacesCallBack = new AddNameSpacesCallBack() {
+            @Override
+            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
+                element.setSourceNameSpaces(nameSpaces);
+                element.setSource(expression);
+
+                FilterPropertiesPanelPresenter.this.view.setSource(expression);
+
+                notifyListeners();
+            }
+        };
+
+        this.addXPathNameSpacesCallBack = new AddNameSpacesCallBack() {
+            @Override
+            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
+                element.setXPathNameSpaces(nameSpaces);
+                element.setXPath(expression);
+
+                FilterPropertiesPanelPresenter.this.view.setXPath(expression);
+
+                notifyListeners();
+            }
+        };
     }
 
     /** {@inheritDoc} */
     @Override
     public void onConditionTypeChanged() {
-        element.setConditionType(view.getConditionType());
+        Filter.ConditionType conditionType = Filter.ConditionType.valueOf(view.getConditionType());
 
-        notifyListeners();
-    }
+        element.setConditionType(conditionType);
 
-    /** {@inheritDoc} */
-    @Override
-    public void onSourceChanged() {
-        element.setSource(view.getSource());
+        switch (conditionType) {
+            case XPATH:
+                view.setXPath(element.getXPath());
+
+                view.setVisibleSourcePanel(false);
+                view.setVisibleRegularExpressionPanel(false);
+                view.setVisibleXpathPanel(true);
+                break;
+
+            case SOURCE_AND_REGEX:
+            default:
+                view.setSource(element.getSource());
+                view.setRegularExpression(element.getRegularExpression());
+
+                view.setVisibleSourcePanel(true);
+                view.setVisibleRegularExpressionPanel(true);
+                view.setVisibleXpathPanel(false);
+        }
 
         notifyListeners();
     }
@@ -60,13 +117,31 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
 
     /** {@inheritDoc} */
     @Override
+    public void onEditSourceButtonClicked() {
+        nameSpaceEditorPresenter.showWindowWithParameters(element.getSourceNameSpaces(),
+                                                          addSourceNameSpacesCallBack,
+                                                          localizationConstant.filterSourceTitle(),
+                                                          element.getSource());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onEditXPathButtonClicked() {
+        nameSpaceEditorPresenter.showWindowWithParameters(element.getXPathNameSpaces(),
+                                                          addXPathNameSpacesCallBack,
+                                                          localizationConstant.filterXpathTitle(),
+                                                          element.getXPath());
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setConditionType(propertyTypeManager.getValuesOfTypeByName("FilterConditionType"));
-        view.selectConditionType(element.getConditionType());
-        view.setSource(element.getSource());
-        view.setRegularExpression(element.getRegularExpression());
+        view.setConditionTypes(propertyTypeManager.getValuesOfTypeByName(Filter.ConditionType.TYPE_NAME));
+        view.selectConditionType(element.getConditionType().name());
+
+        onConditionTypeChanged();
     }
 
 }
