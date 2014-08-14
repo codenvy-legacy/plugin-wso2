@@ -196,14 +196,18 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     @Override
     public void onMouseLeftButtonClicked(int x, int y) {
         Shape newElement = getCreatingElement();
+        Shape branchParent = branch.getParent();
 
-        selectionManager.setElement(newElement);
         setState(CREATING_NOTHING);
         view.setDefaultCursor();
 
-        if (newElement == null || !metaModelValidator.canInsertElement(branch, newElement.getElementName(), x, y)) {
+        if (newElement == null || !metaModelValidator.canInsertElement(branch, newElement.getElementName(), x, y)
+            || (branchParent != null && !branchParent.hasComponent(newElement.getElementName()))) {
+            selectionManager.setElement(null);
             return;
         }
+
+        selectionManager.setElement(newElement);
 
         newElement.setX(x);
         newElement.setY(y);
@@ -377,6 +381,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         }
 
         branch.removeShape(shape);
+        selectionManager.setElement(null);
 
         onElementChanged();
     }

@@ -194,4 +194,19 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.sequence.expression.title")
     String sequenceExpressionTitle();
+
+    @Key("propertiespanel.call.endpointType")
+    String endpointType();
+
+    @Key("propertiespanel.call.endpointRegistryKey")
+    String endpointRegistryKey();
+
+    @Key("propertiespanel.call.endpointXpath")
+    String endpointXpath();
+
+    @Key("propertiespanel.call.description")
+    String description();
+
+    @Key("propertiespanel.call.expression.title")
+    String callExpressionTitle();
 }

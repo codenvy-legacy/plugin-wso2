@@ -181,7 +181,10 @@ public class Send extends RootElement {
         super.deserialize(node);
 
         if (branches.isEmpty()) {
-            branches.add(branchProvider.get());
+            Branch branch = branchProvider.get();
+            branch.setParent(this);
+
+            branches.add(branch);
         }
     }
 

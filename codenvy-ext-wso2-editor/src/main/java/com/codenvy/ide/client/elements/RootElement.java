@@ -213,7 +213,10 @@ public class RootElement extends AbstractShape {
         super.deserialize(content);
 
         if (branches.isEmpty()) {
-            branches.add(branchProvider.get());
+            Branch branch = branchProvider.get();
+            branch.setParent(this);
+
+            branches.add(branch);
         }
     }
 

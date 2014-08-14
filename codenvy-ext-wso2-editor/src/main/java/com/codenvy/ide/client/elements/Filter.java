@@ -114,10 +114,12 @@ public class Filter extends RootElement {
         components.addAll(COMPONENTS);
 
         Branch thenBranch = branchProvider.get();
+        thenBranch.setParent(this);
         thenBranch.setTitle(IF_BRANCH_TITLE);
         thenBranch.setName(IF_BRANCH_SERIALIZATION_NAME);
 
         Branch elseBranch = branchProvider.get();
+        elseBranch.setParent(this);
         elseBranch.setTitle(ELSE_BRANCH_TITLE);
         elseBranch.setName(ELSE_BRANCH_SERIALIZATION_NAME);
 

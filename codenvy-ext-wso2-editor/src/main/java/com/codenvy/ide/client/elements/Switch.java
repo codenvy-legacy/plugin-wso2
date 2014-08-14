@@ -113,10 +113,12 @@ public class Switch extends RootElement {
         components.addAll(COMPONENTS);
 
         firstBranch = branchProvider.get();
+        firstBranch.setParent(this);
         firstBranch.setTitle(CASE_TITLE);
         firstBranch.setName(CASE_SERIALIZATION_NAME);
 
         defaultBranch = branchProvider.get();
+        defaultBranch.setParent(this);
         defaultBranch.setTitle(DEFAULT_CASE_TITLE);
         defaultBranch.setName(DEFAULT_SERIALIZATION_NAME);
     }

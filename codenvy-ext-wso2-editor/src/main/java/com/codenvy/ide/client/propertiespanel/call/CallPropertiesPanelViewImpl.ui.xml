@@ -15,24 +15,37 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<ui:UiBinder
-        xmlns:ui='urn:ui:com.google.gwt.uibinder'
-        xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
+    <ui:with field='local' type='com.codenvy.ide.client.WSO2EditorLocalizationConstant'/>
+
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
-        <g:DockLayoutPanel>
-            <g:north size="60.00">
-                <g:FlowPanel>
-                    <g:Label text="Endpoint Type"/>
-                    <g:ListBox ui:field="endpointType" width="206px"/>
-                </g:FlowPanel>
-            </g:north>
-            <g:north size="60.00">
-                <g:FlowPanel>
-                    <g:Label text="Description"/>
-                    <g:TextBox ui:field="description" width="200px"/>
-                </g:FlowPanel>
-            </g:north>
-        </g:DockLayoutPanel>
+        <g:FlowPanel>
+
+            <g:FlowPanel addStyleNames="{res.editorCSS.property}">
+                <g:Label text="{local.endpointType}"/>
+                <g:ListBox ui:field="endpointType" width="206px"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="endpointRegistryKeyPanel" addStyleNames="{res.editorCSS.property}">
+                <g:Label text="{local.endpointRegistryKey}"/>
+                <g:TextBox ui:field="endpointRegistryKey" width="200px"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="endpointXpathPanel" addStyleNames="{res.editorCSS.property}">
+                <g:Label text="{local.endpointXpath}"/>
+                <g:TextBox enabled="false" ui:field="endpointXpath" width="200px"/>
+                <g:Button ui:field="registryXpathButton" addStyleNames="{res.editorCSS.propertyButton}" text="..."/>
+            </g:FlowPanel>
+
+            <g:FlowPanel addStyleNames="{res.editorCSS.property}">
+                <g:Label text="Description"/>
+                <g:TextBox ui:field="description" width="200px"/>
+            </g:FlowPanel>
+
+        </g:FlowPanel>
     </g:ScrollPanel>
+
 </ui:UiBinder>

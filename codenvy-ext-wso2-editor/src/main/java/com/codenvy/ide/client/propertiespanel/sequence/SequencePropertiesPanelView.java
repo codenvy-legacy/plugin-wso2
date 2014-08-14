@@ -49,7 +49,7 @@ public abstract class SequencePropertiesPanelView extends AbstractView<SequenceP
     public abstract String getReferringType();
 
     /**
-     * Change content of the referring type field.
+     * Changes content of the referring type field.
      *
      * @param referringTypes
      *         new content of the field

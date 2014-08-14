@@ -15,29 +15,93 @@
  */
 package com.codenvy.ide.client.propertiespanel.call;
 
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.Call;
+import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
+import com.codenvy.ide.client.propertiespanel.log.propertyconfig.AddNameSpacesCallBack;
+import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
+import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
+ * The presenter that provides a business logic of 'Call' mediator properties panel. It provides an ability to work with all properties
+ * of 'Call' mediator.
+ *
  * @author Andrey Plotnikov
  */
 public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, CallPropertiesPanelView>
         implements CallPropertiesPanelView.ActionDelegate {
 
+    private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
+    private final WSO2EditorLocalizationConstant localizationConstant;
+    private final AddNameSpacesCallBack          addNameSpacesCallBack;
+
     @Inject
-    public CallPropertiesPanelPresenter(CallPropertiesPanelView view, PropertyTypeManager propertyTypeManager) {
+    public CallPropertiesPanelPresenter(CallPropertiesPanelView view,
+                                        PropertyTypeManager propertyTypeManager,
+                                        NameSpaceEditorPresenter nameSpaceEditorPresenter,
+                                        WSO2EditorLocalizationConstant localizationConstant) {
         super(view, propertyTypeManager);
+
+        this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
+        this.localizationConstant = localizationConstant;
+
+        this.addNameSpacesCallBack = new AddNameSpacesCallBack() {
+            @Override
+            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
+                element.setNameSpaces(nameSpaces);
+                element.setXpath(expression);
+
+                CallPropertiesPanelPresenter.this.view.setEndpointXpath(expression);
+
+                notifyListeners();
+            }
+        };
+
     }
 
     /** {@inheritDoc} */
     @Override
     public void onEndpointTypeChanged() {
-        element.setEndpointType(view.getEndpointType());
+        Call.EndpointType endpointType = Call.EndpointType.valueOf(view.getEndpointType());
+        element.setEndpointType(endpointType);
+
+        switch (endpointType) {
+            case REGISTRYKEY:
+                view.setVisibleEndpointXpathPanel(false);
+                view.setVisibleEndpointRegistryKeyPanel(true);
+
+                view.setEndpointRegistryKey(element.getRegistryKey());
+                break;
+
+            case XPATH:
+                view.setVisibleEndpointXpathPanel(true);
+                view.setVisibleEndpointRegistryKeyPanel(false);
+
+                view.setEndpointXpath(element.getXpath());
+                break;
+
+            case NONE:
+            case INLINE:
+            default:
+                view.setVisibleEndpointXpathPanel(false);
+                view.setVisibleEndpointRegistryKeyPanel(false);
+                break;
+        }
+
+        notifyListeners();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onEndpointRegisterKeyChanged() {
+        element.setRegistryKey(view.getEndpointRegistryKey());
 
         notifyListeners();
     }
@@ -51,11 +115,23 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, 
 
     /** {@inheritDoc} */
     @Override
+    public void onEditRegistryXpathButtonClicked() {
+        nameSpaceEditorPresenter.showWindowWithParameters(element.getNameSpaces(),
+                                                          addNameSpacesCallBack,
+                                                          localizationConstant.callExpressionTitle(),
+                                                          element.getXpath());
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setEndpointType(propertyTypeManager.getValuesOfTypeByName("CallMediatorEndpointType"));
-        view.selectEndpointType(element.getEndpointType());
+        view.setEndpointTypes(propertyTypeManager.getValuesOfTypeByName(Call.EndpointType.TYPE_NAME));
+        view.selectEndpointType(element.getEndpointType().name());
+
+        onEndpointTypeChanged();
+
         view.setDescription(element.getDescription());
     }
 
