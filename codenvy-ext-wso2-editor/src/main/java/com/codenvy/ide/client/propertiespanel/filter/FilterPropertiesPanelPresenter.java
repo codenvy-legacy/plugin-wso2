@@ -81,6 +81,12 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
     /** {@inheritDoc} */
     @Override
     public void onConditionTypeChanged() {
+        redesignViewToConditionType();
+
+        notifyListeners();
+    }
+
+    private void redesignViewToConditionType() {
         Filter.ConditionType conditionType = Filter.ConditionType.valueOf(view.getConditionType());
 
         element.setConditionType(conditionType);
@@ -103,8 +109,6 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
                 view.setVisibleRegularExpressionPanel(true);
                 view.setVisibleXpathPanel(false);
         }
-
-        notifyListeners();
     }
 
     /** {@inheritDoc} */
@@ -141,7 +145,7 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
         view.setConditionTypes(propertyTypeManager.getValuesOfTypeByName(Filter.ConditionType.TYPE_NAME));
         view.selectConditionType(element.getConditionType().name());
 
-        onConditionTypeChanged();
+        redesignViewToConditionType();
     }
 
 }

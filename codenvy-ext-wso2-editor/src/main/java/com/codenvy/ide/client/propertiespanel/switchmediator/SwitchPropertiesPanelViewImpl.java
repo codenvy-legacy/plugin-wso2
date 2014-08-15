@@ -13,66 +13,65 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.propertiespanel.switch_mediator;
+package com.codenvy.ide.client.propertiespanel.switchmediator;
 
-import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.codenvy.ide.client.propertiespanel.switchmediator.branch.BranchFiledPresenter;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * @author Andrey Plotnikov
  */
-public class Switch_mediatorPropertiesPanelViewImpl extends Switch_mediatorPropertiesPanelView {
-
-    interface Switch_mediatorPropertiesPanelViewImplUiBinder extends UiBinder<Widget, Switch_mediatorPropertiesPanelViewImpl> {
+public class SwitchPropertiesPanelViewImpl extends SwitchPropertiesPanelView {
+    interface Switch_mediatorPropertiesPanelViewImplUiBinder extends UiBinder<Widget, SwitchPropertiesPanelViewImpl> {
     }
 
     @UiField
-    TextBox sourceXpath;
+    TextBox   sourceXpath;
     @UiField
-    TextBox caseBranches;
+    FlowPanel regexpPanel;
 
     @Inject
-    public Switch_mediatorPropertiesPanelViewImpl(Switch_mediatorPropertiesPanelViewImplUiBinder ourUiBinder) {
+    public SwitchPropertiesPanelViewImpl(Switch_mediatorPropertiesPanelViewImplUiBinder ourUiBinder) {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     /** {@inheritDoc} */
     @Override
-    public String getSourceXpath() {
-        return String.valueOf(sourceXpath.getText());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setSourceXpath(String sourceXpath) {
+    public void setSourceXpath(@Nullable String sourceXpath) {
         this.sourceXpath.setText(sourceXpath);
     }
 
-    @UiHandler("sourceXpath")
-    public void onSourceXpathChanged(KeyUpEvent event) {
-        delegate.onSourceXpathChanged();
+    /** {@inheritDoc} */
+    @Override
+    public void addBranchField(@Nonnull BranchFiledPresenter branchFiled) {
+        regexpPanel.add(branchFiled.getView());
     }
 
     /** {@inheritDoc} */
     @Override
-    public String getCaseBranches() {
-        return String.valueOf(caseBranches.getText());
+    public void removeBranchFields() {
+        regexpPanel.clear();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setCaseBranches(String caseBranches) {
-        this.caseBranches.setText(caseBranches);
+    protected void onDetach() {
+        delegate.onWidgetDetached();
     }
 
-    @UiHandler("caseBranches")
-    public void onCaseBranchesChanged(KeyUpEvent event) {
-        delegate.onCaseBranchesChanged();
+    @UiHandler("btnSourceXpath")
+    public void onEditXpathButtonClicked(ClickEvent event) {
+        delegate.onEditXpathButtonClicked();
     }
 
 }

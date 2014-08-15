@@ -52,7 +52,7 @@ import com.codenvy.ide.client.propertiespanel.property.PropertyPropertiesPanelPr
 import com.codenvy.ide.client.propertiespanel.respond.RespondPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.send.SendPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.sequence.SequencePropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.switch_mediator.Switch_mediatorPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.switchmediator.SwitchPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
 import com.codenvy.ide.client.toolbar.ToolbarPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -165,7 +165,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                       HeaderPropertiesPanelPresenter headerPropertiesPanelPresenter,
                       RespondPropertiesPanelPresenter respondPropertiesPanelPresenter,
                       FilterPropertiesPanelPresenter filterPropertiesPanelPresenter,
-                      Switch_mediatorPropertiesPanelPresenter switch_mediatorPropertiesPanelPresenter,
+                      SwitchPropertiesPanelPresenter switchPropertiesPanelPresenter,
                       SequencePropertiesPanelPresenter sequencePropertiesPanelPresenter,
                       EnrichPropertiesPanelPresenter enrichPropertiesPanelPresenter,
                       LoopBackPropertiesPanelPresenter loopBackPropertiesPanelPresenter,
@@ -206,8 +206,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
         propertiesPanelManager.register(Filter.class, filterPropertiesPanelPresenter);
         filterPropertiesPanelPresenter.addListener(this);
 
-        propertiesPanelManager.register(Switch.class, switch_mediatorPropertiesPanelPresenter);
-        switch_mediatorPropertiesPanelPresenter.addListener(this);
+        propertiesPanelManager.register(Switch.class, switchPropertiesPanelPresenter);
+        switchPropertiesPanelPresenter.addListener(this);
 
         propertiesPanelManager.register(Sequence.class, sequencePropertiesPanelPresenter);
         sequencePropertiesPanelPresenter.addListener(this);

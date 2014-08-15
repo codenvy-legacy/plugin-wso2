@@ -68,6 +68,12 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, 
     /** {@inheritDoc} */
     @Override
     public void onEndpointTypeChanged() {
+        redesignViewToEndpointType();
+
+        notifyListeners();
+    }
+
+    private void redesignViewToEndpointType() {
         Call.EndpointType endpointType = Call.EndpointType.valueOf(view.getEndpointType());
         element.setEndpointType(endpointType);
 
@@ -93,8 +99,6 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, 
                 view.setVisibleEndpointRegistryKeyPanel(false);
                 break;
         }
-
-        notifyListeners();
     }
 
     /** {@inheritDoc} */
@@ -129,7 +133,7 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, 
         view.setEndpointTypes(propertyTypeManager.getValuesOfTypeByName(Call.EndpointType.TYPE_NAME));
         view.selectEndpointType(element.getEndpointType().name());
 
-        onEndpointTypeChanged();
+        redesignViewToEndpointType();
 
         view.setDescription(element.getDescription());
     }

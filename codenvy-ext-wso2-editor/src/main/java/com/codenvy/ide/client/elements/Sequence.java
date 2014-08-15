@@ -183,6 +183,8 @@ public class Sequence extends RootElement {
     /** {@inheritDoc} */
     @Override
     protected void applyAttributes(@Nonnull Node node) {
+        nameSpaces.clear();
+
         NamedNodeMap attributeMap = node.getAttributes();
 
         for (int i = 0; i < attributeMap.getLength(); i++) {

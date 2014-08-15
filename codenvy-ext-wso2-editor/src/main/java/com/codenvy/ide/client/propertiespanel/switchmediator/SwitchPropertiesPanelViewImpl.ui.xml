@@ -15,24 +15,24 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<ui:UiBinder 
-             xmlns:ui='urn:ui:com.google.gwt.uibinder'
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
+    <ui:with field='local' type='com.codenvy.ide.client.WSO2EditorLocalizationConstant'/>
+
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
-        <g:DockLayoutPanel>
-            <g:north size="60.00">
-                <g:FlowPanel>
-                    <g:Label text="Source Xpath"/>
-                    <g:TextBox ui:field="sourceXpath" width="200px"/>
-                </g:FlowPanel>
-            </g:north>
-            <g:north size="60.00">
-                <g:FlowPanel>
-                    <g:Label text="Case Branches"/>
-                    <g:TextBox ui:field="caseBranches" width="200px"/>
-                </g:FlowPanel>
-            </g:north>
-        </g:DockLayoutPanel>
+        <g:FlowPanel>
+
+            <g:FlowPanel addStyleNames="{res.editorCSS.property}">
+                <g:Label text="{local.switchSourceXPath}"/>
+                <g:TextBox enabled="false" ui:field="sourceXpath" width="200px"/>
+                <g:Button ui:field="btnSourceXpath" addStyleNames="{res.editorCSS.propertyButton}" text="..."/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="regexpPanel"/>
+
+        </g:FlowPanel>
     </g:ScrollPanel>
+
 </ui:UiBinder>

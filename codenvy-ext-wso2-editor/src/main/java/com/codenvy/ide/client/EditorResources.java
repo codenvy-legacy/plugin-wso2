@@ -255,8 +255,8 @@ public interface EditorResources extends ClientBundle {
     @Source("icons/Dbreport.gif")
     ImageResource dbreport();
 
-    @Source("icons/Switch_mediator.gif")
-    ImageResource switch_mediator();
+    @Source("icons/Switch.gif")
+    ImageResource switchMediator();
 
     @Source("icons/DBReportToolbar.gif")
     ImageResource dBReportToolbar();

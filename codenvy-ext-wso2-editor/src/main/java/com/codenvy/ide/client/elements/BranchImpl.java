@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.util.StringUtils;
+import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.inject.Inject;
@@ -24,7 +25,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Andrey Plotnikov
@@ -36,12 +39,14 @@ public class BranchImpl implements Branch {
     private       String              name;
     private final List<AbstractShape> shapes;
     private       Shape               parent;
+    private final Map<String, String> attributes;
 
     @Inject
     public BranchImpl() {
         id = UUID.get();
 
         shapes = new ArrayList<>();
+        attributes = new LinkedHashMap<>();
     }
 
     /** {@inheritDoc} */
@@ -115,7 +120,7 @@ public class BranchImpl implements Branch {
         StringBuilder content = new StringBuilder();
 
         if (name != null) {
-            content.append('<').append(name).append('>');
+            content.append('<').append(name).append(' ').append(convertAttributesToXML()).append('>');
         }
 
         for (Shape shape : getShapes()) {
@@ -129,6 +134,17 @@ public class BranchImpl implements Branch {
         return content.toString();
     }
 
+    @Nonnull
+    private String convertAttributesToXML() {
+        StringBuilder result = new StringBuilder();
+
+        for (Map.Entry<String, String> attribute : attributes.entrySet()) {
+            result.append(attribute.getKey()).append("=\"").append(attribute.getValue()).append("\" ");
+        }
+
+        return result.toString();
+    }
+
     /** {@inheritDoc} */
     @Override
     public void deserialize(@Nonnull Node node) {
@@ -137,6 +153,8 @@ public class BranchImpl implements Branch {
 
         this.name = name;
         this.title = StringUtils.capitalizeFirstLetter(name);
+
+        deserializeAttributes(node);
 
         for (int i = 0; i < childNodes.getLength(); i++) {
             Node item = childNodes.item(i);
@@ -151,6 +169,31 @@ public class BranchImpl implements Branch {
             shape.deserialize(item);
             shapes.add((AbstractShape)shape);
         }
+    }
+
+    private void deserializeAttributes(@Nonnull Node node) {
+        attributes.clear();
+
+        NamedNodeMap attributeMap = node.getAttributes();
+
+        for (int i = 0; i < attributeMap.getLength(); i++) {
+            Node attributeNode = attributeMap.item(i);
+
+            attributes.put(attributeNode.getNodeName(), attributeNode.getNodeValue());
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void addAttribute(@Nonnull String name, @Nonnull String value) {
+        attributes.put(name, value);
+    }
+
+    /** {@inheritDoc} */
+    @Nullable
+    @Override
+    public String getAttributeByName(@Nonnull String name) {
+        return attributes.get(name);
     }
 
 }

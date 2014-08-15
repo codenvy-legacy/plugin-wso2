@@ -19,7 +19,11 @@ import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.enrich.Enrich;
 import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.payload.PayloadFactory;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -28,9 +32,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
+
 /**
+ * The entity that represents 'Switch' mediator from ESB configuration.
+ *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
@@ -38,17 +47,18 @@ public class Switch extends RootElement {
     public static final String ELEMENT_NAME       = "Switch";
     public static final String SERIALIZATION_NAME = "switch";
 
-    private static final String SOURCE_XPATH_PROPERTY_NAME       = "SourceXpath";
-    private static final String CASE_BRANCHES_TYPE_PROPERTY_NAME = "CaseBranches";
+    public static final String REGEXP_ATTRIBUTE_NAME          = "regex";
+    public static final String REGEXP_ATTRIBUTE_DEFAULT_VALUE = ".*+";
+
+    private static final String SOURCE_ATTRIBUTE_NAME = "source";
 
     private static final String CASE_TITLE         = "Case";
-    private static final String DEFAULT_CASE_TITLE = "Default";
+    public static final  String DEFAULT_CASE_TITLE = "Default";
 
     private static final String CASE_SERIALIZATION_NAME    = "case";
     private static final String DEFAULT_SERIALIZATION_NAME = "default";
 
-    private static final List<String> PROPERTIES = Arrays.asList(SOURCE_XPATH_PROPERTY_NAME,
-                                                                 CASE_BRANCHES_TYPE_PROPERTY_NAME);
+    private static final List<String> PROPERTIES = java.util.Collections.emptyList();
     private static final List<String> COMPONENTS = Arrays.asList(Log.ELEMENT_NAME,
                                                                  Property.ELEMENT_NAME,
                                                                  PayloadFactory.ELEMENT_NAME,
@@ -63,8 +73,8 @@ public class Switch extends RootElement {
                                                                  CallTemplate.ELEMENT_NAME,
                                                                  Call.ELEMENT_NAME);
 
-    private String sourceXpath;
-    private String caseBranches;
+    private String           sourceXpath;
+    private Array<NameSpace> nameSpaces;
 
     private Branch firstBranch;
     private Branch defaultBranch;
@@ -108,7 +118,7 @@ public class Switch extends RootElement {
               switchProvider);
 
         sourceXpath = "default/xpath";
-        caseBranches = "enter_case_branches";
+        nameSpaces = Collections.createArray();
 
         components.addAll(COMPONENTS);
 
@@ -116,6 +126,7 @@ public class Switch extends RootElement {
         firstBranch.setParent(this);
         firstBranch.setTitle(CASE_TITLE);
         firstBranch.setName(CASE_SERIALIZATION_NAME);
+        firstBranch.addAttribute(REGEXP_ATTRIBUTE_NAME, REGEXP_ATTRIBUTE_DEFAULT_VALUE);
 
         defaultBranch = branchProvider.get();
         defaultBranch.setParent(this);
@@ -135,6 +146,7 @@ public class Switch extends RootElement {
         for (Branch branch : branches) {
             branch.setTitle(CASE_TITLE);
             branch.setName(CASE_SERIALIZATION_NAME);
+            branch.addAttribute(REGEXP_ATTRIBUTE_NAME, REGEXP_ATTRIBUTE_DEFAULT_VALUE);
         }
     }
 
@@ -166,21 +178,36 @@ public class Switch extends RootElement {
         this.sourceXpath = sourceXpath;
     }
 
-    @Nullable
-    public String getCaseBranches() {
-        return caseBranches;
+    /** @return namespaces which contain in switch */
+    @Nonnull
+    public Array<NameSpace> getNameSpaces() {
+        return nameSpaces;
     }
 
-    public void setCaseBranches(@Nullable String caseBranches) {
-        this.caseBranches = caseBranches;
+    /**
+     * Changes list of name spaces.
+     *
+     * @param nameSpaces
+     *         list of name spaces which needs to set in element
+     */
+    public void setNameSpaces(@Nonnull Array<NameSpace> nameSpaces) {
+        this.nameSpaces = nameSpaces;
     }
 
     /** {@inheritDoc} */
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        return "sourceXpath=\"" + sourceXpath + "\" " +
-               "caseBranches=\"" + caseBranches + "\" ";
+        StringBuilder spaces = new StringBuilder();
+
+        for (NameSpace nameSpace : nameSpaces.asIterable()) {
+            spaces.append(nameSpace.toString()).append(' ');
+        }
+
+        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        attributes.put(SOURCE_ATTRIBUTE_NAME, sourceXpath);
+
+        return spaces + convertPropertiesToXMLFormat(attributes);
     }
 
     /** {@inheritDoc} */
@@ -194,20 +221,32 @@ public class Switch extends RootElement {
 
     /** {@inheritDoc} */
     @Override
-    public void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
-        String nodeValue = node.getChildNodes().item(0).getNodeValue();
+    protected void applyAttributes(@Nonnull Node node) {
+        nameSpaces.clear();
 
-        switch (nodeName) {
-            case SOURCE_XPATH_PROPERTY_NAME:
-                sourceXpath = String.valueOf(nodeValue);
-                break;
+        NamedNodeMap attributeMap = node.getAttributes();
 
-            case CASE_BRANCHES_TYPE_PROPERTY_NAME:
-                caseBranches = String.valueOf(nodeValue);
-                break;
+        for (int i = 0; i < attributeMap.getLength(); i++) {
+            Node attributeNode = attributeMap.item(i);
 
-            default:
+            String nodeValue = attributeNode.getNodeValue();
+            String nodeName = attributeNode.getNodeName();
+
+            switch (nodeName) {
+                case SOURCE_ATTRIBUTE_NAME:
+                    sourceXpath = String.valueOf(nodeValue);
+                    break;
+
+                default:
+                    if (StringUtils.startsWith(PREFIX, nodeName, true)) {
+                        String name = StringUtils.trimStart(nodeName, PREFIX + ':');
+                        //TODO create entity using edit factory
+                        NameSpace nameSpace = new NameSpace(name, nodeValue);
+
+                        nameSpaces.add(nameSpace);
+                    }
+                    break;
+            }
         }
     }
 
@@ -215,7 +254,7 @@ public class Switch extends RootElement {
     @Nullable
     @Override
     public ImageResource getIcon() {
-        return resources.switch_mediator();
+        return resources.switchMediator();
     }
 
 }

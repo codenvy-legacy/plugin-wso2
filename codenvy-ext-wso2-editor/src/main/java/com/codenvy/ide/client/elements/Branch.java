@@ -102,4 +102,24 @@ public interface Branch {
      */
     void deserialize(@Nonnull Node node);
 
+    /**
+     * Adds XML attribute.
+     *
+     * @param name
+     *         attribute name
+     * @param value
+     *         attribute value
+     */
+    void addAttribute(@Nonnull String name, @Nonnull String value);
+
+    /**
+     * Returns attribute value by attribute name or <code>null</code> when attribute with a given name is absent.
+     *
+     * @param name
+     *         attribute name that needs to be found
+     * @return attribute value
+     */
+    @Nullable
+    String getAttributeByName(@Nonnull String name);
+
 }
