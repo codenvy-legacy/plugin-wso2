@@ -35,11 +35,12 @@ import java.util.Map;
 public class BranchImpl implements Branch {
 
     private final String              id;
-    private       String              title;
-    private       String              name;
     private final List<AbstractShape> shapes;
-    private       Shape               parent;
     private final Map<String, String> attributes;
+
+    private String title;
+    private String name;
+    private Shape  parent;
 
     @Inject
     public BranchImpl() {

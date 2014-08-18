@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Collections.emptyList;
 
@@ -38,7 +39,7 @@ import static java.util.Collections.emptyList;
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
-public class Respond extends RootElement {
+public class Respond extends AbstractShape {
     public static final String ELEMENT_NAME       = "Respond";
     public static final String SERIALIZATION_NAME = "respond";
 
@@ -107,7 +108,7 @@ public class Respond extends RootElement {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        LinkedHashMap<String, String> prop = new LinkedHashMap<>();
+        Map<String, String> prop = new LinkedHashMap<>();
 
         prop.put(DESCRIPTION_ATTRIBUTE, description);
 
@@ -132,21 +133,6 @@ public class Respond extends RootElement {
 
                 default:
             }
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
-        String nodeValue = node.getChildNodes().item(0).getNodeValue();
-
-        switch (nodeName) {
-            case DESCRIPTION_ATTRIBUTE:
-                description = String.valueOf(nodeValue);
-                break;
-
-            default:
         }
     }
 

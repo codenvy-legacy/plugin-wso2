@@ -34,6 +34,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class describes CallTemplate mediator.
@@ -41,7 +42,7 @@ import java.util.List;
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
-public class CallTemplate extends RootElement {
+public class CallTemplate extends AbstractShape {
     public static final String ELEMENT_NAME       = "CallTemplate";
     public static final String SERIALIZATION_NAME = "callTemplate";
 
@@ -166,7 +167,7 @@ public class CallTemplate extends RootElement {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        LinkedHashMap<String, String> prop = new LinkedHashMap<>();
+        Map<String, String> prop = new LinkedHashMap<>();
 
         prop.put(TARGET_TEMPLATE_PROPERTY_NAME, targetTemplate);
         prop.put(DESCRIPTION_PROPERTY_NAME, description);

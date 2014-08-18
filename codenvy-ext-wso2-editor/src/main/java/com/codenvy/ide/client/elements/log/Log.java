@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.elements.log;
 
 import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.elements.AbstractShape;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Call;
 import com.codenvy.ide.client.elements.CallTemplate;
@@ -24,7 +25,6 @@ import com.codenvy.ide.client.elements.Header;
 import com.codenvy.ide.client.elements.LoopBack;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.Respond;
-import com.codenvy.ide.client.elements.RootElement;
 import com.codenvy.ide.client.elements.Send;
 import com.codenvy.ide.client.elements.Sequence;
 import com.codenvy.ide.client.elements.Switch;
@@ -43,6 +43,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class describes entity which presented as Log mediator.
@@ -51,7 +52,7 @@ import java.util.List;
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
  */
-public class Log extends RootElement {
+public class Log extends AbstractShape {
 
     public static final String ELEMENT_NAME       = "Log";
     public static final String SERIALIZATION_NAME = "log";
@@ -174,7 +175,7 @@ public class Log extends RootElement {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        Map<String, String> attributes = new LinkedHashMap<>();
 
         if (!logCategory.equals(LogCategory.INFO.name())) {
             attributes.put(CATEGORY_NAME, logCategory);

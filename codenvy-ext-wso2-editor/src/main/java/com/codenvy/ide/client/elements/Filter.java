@@ -33,6 +33,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.Filter.ConditionType.SOURCE_AND_REGEX;
 import static com.codenvy.ide.client.elements.Filter.ConditionType.XPATH;
@@ -44,7 +45,7 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
-public class Filter extends RootElement {
+public class Filter extends AbstractShape {
     public static final String ELEMENT_NAME       = "Filter";
     public static final String SERIALIZATION_NAME = "filter";
 
@@ -198,7 +199,7 @@ public class Filter extends RootElement {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        Map<String, String> attributes = new LinkedHashMap<>();
 
         switch (conditionType) {
             case XPATH:
@@ -262,7 +263,6 @@ public class Filter extends RootElement {
 
                         nameSpaces.add(nameSpace);
                     }
-                    break;
             }
         }
 

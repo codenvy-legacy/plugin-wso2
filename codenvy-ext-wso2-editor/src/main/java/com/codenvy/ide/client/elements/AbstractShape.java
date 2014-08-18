@@ -17,6 +17,9 @@ package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.common.ContentFormatter;
+import com.codenvy.ide.client.elements.enrich.Enrich;
+import com.codenvy.ide.client.elements.log.Log;
+import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
@@ -26,10 +29,13 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -42,6 +48,20 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
 
     private final boolean isPossibleToAddBranches;
     private final boolean needsToShowIconAndTitle;
+
+    private final Provider<Log>            logProvider;
+    private final Provider<Enrich>         enrichProvider;
+    private final Provider<Filter>         filterProvider;
+    private final Provider<Header>         headerProvider;
+    private final Provider<Call>           callProvider;
+    private final Provider<CallTemplate>   callTemplateProvider;
+    private final Provider<LoopBack>       loopBackProvider;
+    private final Provider<PayloadFactory> payloadFactoryProvider;
+    private final Provider<Property>       propertyProvider;
+    private final Provider<Respond>        respondProvider;
+    private final Provider<Send>           sendProvider;
+    private final Provider<Sequence>       sequenceProvider;
+    private final Provider<Switch>         switchProvider;
 
     protected final EditorResources  resources;
     protected final Provider<Branch> branchProvider;
@@ -58,7 +78,20 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
                             @Nonnull EditorResources resources,
                             @Nonnull Provider<Branch> branchProvider,
                             boolean isPossibleToAddBranches,
-                            boolean needsToShowIconAndTitle) {
+                            boolean needsToShowIconAndTitle,
+                            @Nonnull Provider<Log> logProvider,
+                            @Nonnull Provider<Enrich> enrichProvider,
+                            @Nonnull Provider<Filter> filterProvider,
+                            @Nonnull Provider<Header> headerProvider,
+                            @Nonnull Provider<Call> callProvider,
+                            @Nonnull Provider<CallTemplate> callTemplateProvider,
+                            @Nonnull Provider<LoopBack> loopBackProvider,
+                            @Nonnull Provider<PayloadFactory> payloadFactoryProvider,
+                            @Nonnull Provider<Property> propertyProvider,
+                            @Nonnull Provider<Respond> respondProvider,
+                            @Nonnull Provider<Send> sendProvider,
+                            @Nonnull Provider<Sequence> sequenceProvider,
+                            @Nonnull Provider<Switch> switchProvider) {
         super(elementName, title, serializationName, properties);
 
         this.branchProvider = branchProvider;
@@ -67,6 +100,20 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
         this.needsToShowIconAndTitle = needsToShowIconAndTitle;
         this.components = new HashSet<>();
         this.branches = new ArrayList<>();
+
+        this.logProvider = logProvider;
+        this.enrichProvider = enrichProvider;
+        this.filterProvider = filterProvider;
+        this.headerProvider = headerProvider;
+        this.callProvider = callProvider;
+        this.callTemplateProvider = callTemplateProvider;
+        this.loopBackProvider = loopBackProvider;
+        this.payloadFactoryProvider = payloadFactoryProvider;
+        this.propertyProvider = propertyProvider;
+        this.respondProvider = respondProvider;
+        this.sendProvider = sendProvider;
+        this.sequenceProvider = sequenceProvider;
+        this.switchProvider = switchProvider;
     }
 
     /** {@inheritDoc} */
@@ -144,7 +191,7 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
 
     /** {@inheritDoc} */
     @Override
-    public int compareTo(AbstractShape shape) {
+    public int compareTo(@Nonnull AbstractShape shape) {
         if (x < shape.getX() || (x == shape.getX() && y < shape.getY())) {
             return -1;
         } else if (x > shape.getX() || (x == shape.getX() && y > shape.getY())) {
@@ -171,7 +218,7 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
 
         content.append("</").append(getSerializationName()).append(">\n");
 
-        return ContentFormatter.formatXML(ContentFormatter.trimXML(content.toString()));
+        return content.toString();
     }
 
     /** @return diagram element properties in text format */
@@ -236,6 +283,80 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
         if (generalBranch != null) {
             branches.add(generalBranch);
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Shape createElement(@Nonnull String elementName) {
+        switch (elementName) {
+            case Log.SERIALIZATION_NAME:
+                return logProvider.get();
+
+            case Property.SERIALIZATION_NAME:
+                return propertyProvider.get();
+
+            case PayloadFactory.SERIALIZATION_NAME:
+                return payloadFactoryProvider.get();
+
+            case Send.SERIALIZATION_NAME:
+                return sendProvider.get();
+
+            case Header.SERIALIZATION_NAME:
+                return headerProvider.get();
+
+            case Respond.SERIALIZATION_NAME:
+                return respondProvider.get();
+
+            case Filter.SERIALIZATION_NAME:
+                return filterProvider.get();
+
+            case Switch.SERIALIZATION_NAME:
+                return switchProvider.get();
+
+            case Sequence.SERIALIZATION_NAME:
+                return sequenceProvider.get();
+
+            case Enrich.SERIALIZATION_NAME:
+                return enrichProvider.get();
+
+            case LoopBack.SERIALIZATION_NAME:
+                return loopBackProvider.get();
+
+            case CallTemplate.SERIALIZATION_NAME:
+                return callTemplateProvider.get();
+
+            case Call.SERIALIZATION_NAME:
+                return callProvider.get();
+
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Convert properties of diagram element to XML attribute format.
+     *
+     * @param attributes
+     *         element's properties
+     * @return XML format of element's attributes
+     */
+    protected String convertPropertiesToXMLFormat(@NotNull Map<String, String> attributes) {
+        StringBuilder content = new StringBuilder();
+
+        for (Iterator iterator = attributes.entrySet().iterator(); iterator.hasNext(); ) {
+            Map.Entry entry = (Map.Entry)iterator.next();
+            String value = (String)entry.getValue();
+
+            if (value != null && !value.isEmpty()) {
+                content.append(entry.getKey()).append("=\"").append(value).append('"');
+            }
+
+            if (iterator.hasNext()) {
+                content.append(' ');
+            }
+        }
+
+        return content.toString();
     }
 
     /** {@inheritDoc} */

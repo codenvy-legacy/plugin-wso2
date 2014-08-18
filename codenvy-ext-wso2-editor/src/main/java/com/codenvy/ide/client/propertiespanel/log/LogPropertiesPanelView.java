@@ -56,6 +56,7 @@ public abstract class LogPropertiesPanelView extends AbstractView<LogPropertiesP
     public abstract void setLogCategory(@Nullable List<String> logCategory);
 
     /** @return category value from the special place on the view which uses for showing category parameter */
+    @Nonnull
     public abstract String getLogLevel();
 
     /** Sets selected log level in special place on the view which corresponds to the transferred value */
@@ -65,12 +66,14 @@ public abstract class LogPropertiesPanelView extends AbstractView<LogPropertiesP
     public abstract void setLogLevel(@Nullable List<String> logLevel);
 
     /** @return separator value from the special place on the view which uses for showing separator parameter */
+    @Nonnull
     public abstract String getLogSeparator();
 
     /** Sets separator value to the special place on the view which uses for showing separator parameter. */
     public abstract void setLogSeparator(@Nullable String logSeparator);
 
     /** @return description value from the special place on the view which uses for showing description parameter */
+    @Nonnull
     public abstract String getDescription();
 
     /** Sets description value to the special place on the view which uses for showing description parameter. */

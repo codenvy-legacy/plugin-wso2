@@ -42,7 +42,7 @@ import static com.codenvy.ide.client.elements.Sequence.ReferringType.Static;
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
-public class Sequence extends RootElement {
+public class Sequence extends AbstractShape {
     public static final String ELEMENT_NAME       = "Sequence";
     public static final String SERIALIZATION_NAME = "sequence";
 
@@ -216,7 +216,6 @@ public class Sequence extends RootElement {
 
                         nameSpaces.add(nameSpace);
                     }
-                    break;
             }
         }
     }

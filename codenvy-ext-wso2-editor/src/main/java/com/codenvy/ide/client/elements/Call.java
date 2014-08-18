@@ -45,7 +45,7 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
-public class Call extends RootElement {
+public class Call extends AbstractShape {
     public static final String ELEMENT_NAME       = "Call";
     public static final String SERIALIZATION_NAME = "call";
 
@@ -111,7 +111,7 @@ public class Call extends RootElement {
 
         branches.add(branchProvider.get());
     }
-    
+
     @Nonnull
     public EndpointType getEndpointType() {
         return endpointType;
@@ -285,7 +285,6 @@ public class Call extends RootElement {
 
                         nameSpaces.add(nameSpace);
                     }
-                    break;
             }
         }
     }

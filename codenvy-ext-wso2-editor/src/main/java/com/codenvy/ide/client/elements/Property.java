@@ -33,6 +33,7 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 import static com.codenvy.ide.client.elements.Property.DataType.STRING;
@@ -46,7 +47,7 @@ import static com.codenvy.ide.client.elements.Property.ValueType.LITERAL;
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
-public class Property extends RootElement {
+public class Property extends AbstractShape {
     public static final String ELEMENT_NAME       = "Property";
     public static final String SERIALIZATION_NAME = "property";
 
@@ -304,7 +305,7 @@ public class Property extends RootElement {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        Map<String, String> attributes = new LinkedHashMap<>();
         StringBuilder spaces = new StringBuilder();
 
         for (NameSpace nameSpace : nameSpaces.asIterable()) {
@@ -332,7 +333,7 @@ public class Property extends RootElement {
      * @param attributes
      *         list of default attributes
      */
-    private void setDefaultAttributes(@Nonnull LinkedHashMap<String, String> attributes) {
+    private void setDefaultAttributes(@Nonnull Map<String, String> attributes) {
         attributes.put(NAME, propertyName);
         attributes.put(VALUE_EXPRESSION, valueExpression);
         attributes.put(VALUE_LITERAL, valueLiteral);
@@ -401,7 +402,6 @@ public class Property extends RootElement {
 
                         nameSpaces.add(nameSpace);
                     }
-                    break;
             }
         }
     }

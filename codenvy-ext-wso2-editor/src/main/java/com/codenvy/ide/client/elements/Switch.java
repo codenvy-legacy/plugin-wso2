@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 
@@ -43,7 +44,7 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
-public class Switch extends RootElement {
+public class Switch extends AbstractShape {
     public static final String ELEMENT_NAME       = "Switch";
     public static final String SERIALIZATION_NAME = "switch";
 
@@ -204,7 +205,7 @@ public class Switch extends RootElement {
             spaces.append(nameSpace.toString()).append(' ');
         }
 
-        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        Map<String, String> attributes = new LinkedHashMap<>();
         attributes.put(SOURCE_ATTRIBUTE_NAME, sourceXpath);
 
         return spaces + convertPropertiesToXMLFormat(attributes);
@@ -245,7 +246,6 @@ public class Switch extends RootElement {
 
                         nameSpaces.add(nameSpace);
                     }
-                    break;
             }
         }
     }

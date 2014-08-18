@@ -32,6 +32,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.Header.HeaderAction.remove;
 import static com.codenvy.ide.client.elements.Header.HeaderAction.set;
@@ -44,7 +45,7 @@ import static com.codenvy.ide.client.elements.Property.ValueType.LITERAL;
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
-public class Header extends RootElement {
+public class Header extends AbstractShape {
     public static final String ELEMENT_NAME       = "Header";
     public static final String SERIALIZATION_NAME = "header";
 
@@ -283,7 +284,7 @@ public class Header extends RootElement {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        Map<String, String> attributes = new LinkedHashMap<>();
 
         StringBuilder nameSpaces = new StringBuilder();
 
@@ -326,7 +327,7 @@ public class Header extends RootElement {
      * @param attributes
      *         list of attributes which need to set to element by default
      */
-    private void setDefaultAttributes(@Nonnull LinkedHashMap<String, String> attributes) {
+    private void setDefaultAttributes(@Nonnull Map<String, String> attributes) {
         attributes.put(NAME, headerName);
         attributes.put(SCOPE, scope);
         attributes.put(VALUE, value);
@@ -381,7 +382,6 @@ public class Header extends RootElement {
                             expressionNamespaces.add(nameSpace);
                         }
                     }
-                    break;
             }
         }
     }

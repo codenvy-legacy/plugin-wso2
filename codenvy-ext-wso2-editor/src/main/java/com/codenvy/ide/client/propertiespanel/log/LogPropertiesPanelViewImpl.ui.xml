@@ -15,30 +15,35 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<ui:UiBinder
-        xmlns:ui='urn:ui:com.google.gwt.uibinder'
-        xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
+
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
         <g:DockLayoutPanel>
+
             <g:north size="60.00">
                 <g:FlowPanel>
                     <g:Label text="Log Category"/>
                     <g:ListBox ui:field="logCategory" width="206px"/>
                 </g:FlowPanel>
             </g:north>
+
             <g:north size="60.00">
                 <g:FlowPanel>
                     <g:Label text="Log Level"/>
                     <g:ListBox ui:field="logLevel" width="206px"/>
                 </g:FlowPanel>
             </g:north>
+
             <g:north size="60.00">
                 <g:FlowPanel>
                     <g:Label text="Log Separator"/>
                     <g:TextBox ui:field="logSeparator" width="200px"/>
                 </g:FlowPanel>
             </g:north>
+
             <g:north size="60.00">
                 <g:FlowPanel>
                     <g:Label text="Properties"/>
@@ -46,12 +51,15 @@
                     <g:Button ui:field="propertiesButton" addStyleNames="{res.editorCSS.propertyButton}" text="..."/>
                 </g:FlowPanel>
             </g:north>
+
             <g:north size="60.00">
                 <g:FlowPanel>
                     <g:Label text="Description"/>
                     <g:TextBox ui:field="description" width="200px"/>
                 </g:FlowPanel>
             </g:north>
+
         </g:DockLayoutPanel>
     </g:ScrollPanel>
+
 </ui:UiBinder>

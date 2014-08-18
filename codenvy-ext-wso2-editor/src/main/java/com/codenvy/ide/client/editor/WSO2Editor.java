@@ -50,6 +50,7 @@ import com.codenvy.ide.client.propertiespanel.loopback.LoopBackPropertiesPanelPr
 import com.codenvy.ide.client.propertiespanel.payloadfactory.PayloadFactoryPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.property.PropertyPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.respond.RespondPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.root.RootPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.send.SendPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.sequence.SequencePropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.switchmediator.SwitchPropertiesPanelPresenter;
@@ -152,26 +153,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
     private final List<EditorChangeListener> listeners;
 
     @Inject
-    public WSO2Editor(WSO2EditorView view,
-                      EditorFactory editorFactory,
-                      SelectionManager selectionManager,
-                      MetaModelValidator metaModelValidator,
-                      RootElement rootElement,
-                      EmptyPropertiesPanelPresenter emptyPropertiesPanelPresenter,
-                      LogPropertiesPanelPresenter logPropertiesPanelPresenter,
-                      PropertyPropertiesPanelPresenter propertyPropertiesPanelPresenter,
-                      PayloadFactoryPropertiesPanelPresenter payloadFactoryPropertiesPanelPresenter,
-                      SendPropertiesPanelPresenter sendPropertiesPanelPresenter,
-                      HeaderPropertiesPanelPresenter headerPropertiesPanelPresenter,
-                      RespondPropertiesPanelPresenter respondPropertiesPanelPresenter,
-                      FilterPropertiesPanelPresenter filterPropertiesPanelPresenter,
-                      SwitchPropertiesPanelPresenter switchPropertiesPanelPresenter,
-                      SequencePropertiesPanelPresenter sequencePropertiesPanelPresenter,
-                      EnrichPropertiesPanelPresenter enrichPropertiesPanelPresenter,
-                      LoopBackPropertiesPanelPresenter loopBackPropertiesPanelPresenter,
-                      CallTemplatePropertiesPanelPresenter callTemplatePropertiesPanelPresenter,
-                      CallPropertiesPanelPresenter callPropertiesPanelPresenter,
-                      PropertyTypeManager propertyTypeManager) {
+    public WSO2Editor(WSO2EditorView view, EditorFactory editorFactory, RootElement rootElement) {
         super(view);
 
         this.listeners = new ArrayList<>();
@@ -179,9 +161,31 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
         EditorState<State> state = new EditorState<>(CREATING_NOTHING);
 
         this.rootElement = rootElement;
+
         this.rootElementPresenter = editorFactory.createShapePresenter(state, rootElement);
         this.rootElementPresenter.addElementChangedListener(this);
+
         this.toolbar = editorFactory.createToolbar(state);
+    }
+
+    @Inject
+    private void configurePropertiesPanelManager(EditorFactory editorFactory,
+                                                 SelectionManager selectionManager,
+                                                 EmptyPropertiesPanelPresenter emptyPropertiesPanelPresenter,
+                                                 RootPropertiesPanelPresenter rootPropertiesPanelPresenter,
+                                                 LogPropertiesPanelPresenter logPropertiesPanelPresenter,
+                                                 PropertyPropertiesPanelPresenter propertyPropertiesPanelPresenter,
+                                                 PayloadFactoryPropertiesPanelPresenter payloadFactoryPropertiesPanelPresenter,
+                                                 SendPropertiesPanelPresenter sendPropertiesPanelPresenter,
+                                                 HeaderPropertiesPanelPresenter headerPropertiesPanelPresenter,
+                                                 RespondPropertiesPanelPresenter respondPropertiesPanelPresenter,
+                                                 FilterPropertiesPanelPresenter filterPropertiesPanelPresenter,
+                                                 SwitchPropertiesPanelPresenter switchPropertiesPanelPresenter,
+                                                 SequencePropertiesPanelPresenter sequencePropertiesPanelPresenter,
+                                                 EnrichPropertiesPanelPresenter enrichPropertiesPanelPresenter,
+                                                 LoopBackPropertiesPanelPresenter loopBackPropertiesPanelPresenter,
+                                                 CallTemplatePropertiesPanelPresenter callTemplatePropertiesPanelPresenter,
+                                                 CallPropertiesPanelPresenter callPropertiesPanelPresenter) {
 
         PropertiesPanelManager propertiesPanelManager = editorFactory.createPropertiesPanelManager(view.getPropertiesPanel());
 
@@ -224,59 +228,90 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
         propertiesPanelManager.register(Call.class, callPropertiesPanelPresenter);
         callPropertiesPanelPresenter.addListener(this);
 
+        propertiesPanelManager.register(RootElement.class, rootPropertiesPanelPresenter);
+        rootPropertiesPanelPresenter.addListener(this);
+
         propertiesPanelManager.register(null, emptyPropertiesPanelPresenter);
         emptyPropertiesPanelPresenter.addListener(this);
 
-        propertyTypeManager.register(EndpointType.TYPE_NAME,
-                                     Arrays.asList(INLINE.name(), NONE.name(), REGISTRYKEY.name(), XPATH.name()));
-        propertyTypeManager.register(LogCategory.TYPE_NAME,
-                                     Arrays.asList(TRACE.name(), DEBUG.name(), INFO.name(), WARN.name(), ERROR.name(), FATAL.name()));
-        propertyTypeManager.register(LogLevel.TYPE_NAME,
-                                     Arrays.asList(SIMPLE.name(), HEADERS.name(), FULL.name(), CUSTOM.name()));
-        propertyTypeManager.register(ValueType.TYPE_NAME,
-                                     Arrays.asList(LITERAL.name(), EXPRESSION.name()));
-        propertyTypeManager.register(DataType.TYPE_NAME,
-                                     Arrays.asList(STRING.name(), INTEGER.name(), BOOLEAN.name(), DOUBLE.name(), FLOAT.name(), LONG.name(),
-                                                   SHORT.name(), OM.name())
-                                    );
-        propertyTypeManager.register(PropertyScope.TYPE_NAME,
-                                     Arrays.asList(SYNAPSE.getValue(), TRANSPORT.getValue(), AXIS2.getValue(), AXIS2_CLIENT.getValue(),
-                                                   OPERATION.getValue())
-                                    );
-        propertyTypeManager.register(PropertyAction.TYPE_NAME,
-                                     Arrays.asList(set.name(), remove.name()));
-        propertyTypeManager.register(MediaType.TYPE_NAME,
-                                     Arrays.asList(xml.name(), json.name()));
-        propertyTypeManager.register(FormatType.TYPE_NAME,
-                                     Arrays.asList(Inline.name(), Registry.name()));
-        propertyTypeManager.register(EBoolean.TYPE_NAME,
-                                     Arrays.asList(TRUE.getValue(), FALSE.getValue()));
-        propertyTypeManager.register(ReceivingSequenceType.TYPE_NAME,
-                                     Arrays.asList(Default.name(), Static.name()));
-        propertyTypeManager.register(HeaderAction.TYPE_NAME,
-                                     Arrays.asList(HeaderAction.set.name(), HeaderAction.remove.name()));
-        propertyTypeManager.register(HeaderValueType.TYPE_NAME,
-                                     Arrays.asList(HeaderValueType.LITERAL.name(), HeaderValueType.EXPRESSION.name(),
-                                                   HeaderValueType.INLINE.name())
-                                    );
-        propertyTypeManager.register(ScopeType.TYPE_NAME,
-                                     Arrays.asList(Synapse.name(), transport.name()));
-        propertyTypeManager.register(Filter.ConditionType.TYPE_NAME,
-                                     Arrays.asList(SOURCE_AND_REGEX.name(), XPATH.name()));
-        propertyTypeManager.register(Sequence.ReferringType.TYPE_NAME,
-                                     Arrays.asList(Sequence.ReferringType.Static.name(), Dynamic.name()));
-        propertyTypeManager.register(SourceType.TYPE_NAME,
-                                     Arrays.asList(custom.name(), envelope.name(), body.name(), property.name(), inline.name()));
-        propertyTypeManager.register(TargetAction.TYPE_NAME,
-                                     Arrays.asList(replace.name(), child.name(), sibling.name()));
-        propertyTypeManager.register(TargetType.TYPE_NAME,
-                                     Arrays.asList(TargetType.custom.name(), TargetType.envelope.name(), TargetType.body.name(),
-                                                   TargetType.property.name()));
-        propertyTypeManager.register(AvailableTemplates.TYPE_NAME,
-                                     Arrays.asList(EMPTY.getValue(), SELECT_FROM_TEMPLATE.getValue(), SDF.getValue()));
-        propertyTypeManager.register(Enrich.InlineType.INLINE_TYPE,
-                                     Arrays.asList(Enrich.InlineType.RegistryKey.name(), Enrich.InlineType.SourceXML.name()));
+        selectionManager.addListener(propertiesPanelManager);
+    }
 
+    @Inject
+    private void configurePropertyTypeManager(PropertyTypeManager propertyTypeManager) {
+        propertyTypeManager.register(EndpointType.TYPE_NAME, Arrays.asList(INLINE.name(), NONE.name(), REGISTRYKEY.name(), XPATH.name()));
+
+        propertyTypeManager.register(LogCategory.TYPE_NAME, Arrays.asList(TRACE.name(),
+                                                                          DEBUG.name(),
+                                                                          INFO.name(),
+                                                                          WARN.name(),
+                                                                          ERROR.name(),
+                                                                          FATAL.name()));
+
+        propertyTypeManager.register(LogLevel.TYPE_NAME, Arrays.asList(SIMPLE.name(), HEADERS.name(), FULL.name(), CUSTOM.name()));
+
+        propertyTypeManager.register(ValueType.TYPE_NAME, Arrays.asList(LITERAL.name(), EXPRESSION.name()));
+
+        propertyTypeManager.register(DataType.TYPE_NAME, Arrays.asList(STRING.name(),
+                                                                       INTEGER.name(),
+                                                                       BOOLEAN.name(),
+                                                                       DOUBLE.name(),
+                                                                       FLOAT.name(),
+                                                                       LONG.name(),
+                                                                       SHORT.name(),
+                                                                       OM.name()));
+
+        propertyTypeManager.register(PropertyScope.TYPE_NAME, Arrays.asList(SYNAPSE.getValue(),
+                                                                            TRANSPORT.getValue(),
+                                                                            AXIS2.getValue(),
+                                                                            AXIS2_CLIENT.getValue(),
+                                                                            OPERATION.getValue()));
+
+        propertyTypeManager.register(PropertyAction.TYPE_NAME, Arrays.asList(set.name(), remove.name()));
+
+        propertyTypeManager.register(MediaType.TYPE_NAME, Arrays.asList(xml.name(), json.name()));
+
+        propertyTypeManager.register(FormatType.TYPE_NAME, Arrays.asList(Inline.name(), Registry.name()));
+
+        propertyTypeManager.register(EBoolean.TYPE_NAME, Arrays.asList(TRUE.getValue(), FALSE.getValue()));
+
+        propertyTypeManager.register(ReceivingSequenceType.TYPE_NAME, Arrays.asList(Default.name(), Static.name()));
+
+        propertyTypeManager.register(HeaderAction.TYPE_NAME, Arrays.asList(HeaderAction.set.name(), HeaderAction.remove.name()));
+
+        propertyTypeManager.register(HeaderValueType.TYPE_NAME, Arrays.asList(HeaderValueType.LITERAL.name(),
+                                                                              HeaderValueType.EXPRESSION.name(),
+                                                                              HeaderValueType.INLINE.name()));
+
+        propertyTypeManager.register(ScopeType.TYPE_NAME, Arrays.asList(Synapse.name(), transport.name()));
+
+        propertyTypeManager.register(Filter.ConditionType.TYPE_NAME, Arrays.asList(SOURCE_AND_REGEX.name(), XPATH.name()));
+
+        propertyTypeManager.register(Sequence.ReferringType.TYPE_NAME, Arrays.asList(Sequence.ReferringType.Static.name(), Dynamic.name()));
+
+        propertyTypeManager.register(SourceType.TYPE_NAME, Arrays.asList(custom.name(),
+                                                                         envelope.name(),
+                                                                         body.name(),
+                                                                         property.name(),
+                                                                         inline.name()));
+
+        propertyTypeManager.register(TargetAction.TYPE_NAME, Arrays.asList(replace.name(), child.name(), sibling.name()));
+
+        propertyTypeManager.register(TargetType.TYPE_NAME, Arrays.asList(TargetType.custom.name(),
+                                                                         TargetType.envelope.name(),
+                                                                         TargetType.body.name(),
+                                                                         TargetType.property.name()));
+
+        propertyTypeManager.register(AvailableTemplates.TYPE_NAME, Arrays.asList(EMPTY.getValue(),
+                                                                                 SELECT_FROM_TEMPLATE.getValue(),
+                                                                                 SDF.getValue()));
+
+        propertyTypeManager.register(Enrich.InlineType.INLINE_TYPE, Arrays.asList(Enrich.InlineType.RegistryKey.name(),
+                                                                                  Enrich.InlineType.SourceXML.name()));
+    }
+
+    @Inject
+    private void configureMetaModelValidator(MetaModelValidator metaModelValidator) {
         metaModelValidator.register(Switch.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                        Property.ELEMENT_NAME,
                                                                        PayloadFactory.ELEMENT_NAME,
@@ -290,6 +325,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        LoopBack.ELEMENT_NAME,
                                                                        CallTemplate.ELEMENT_NAME,
                                                                        Call.ELEMENT_NAME));
+
         metaModelValidator.register(Log.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                     Property.ELEMENT_NAME,
                                                                     PayloadFactory.ELEMENT_NAME,
@@ -303,6 +339,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                     LoopBack.ELEMENT_NAME,
                                                                     CallTemplate.ELEMENT_NAME,
                                                                     Call.ELEMENT_NAME));
+
         metaModelValidator.register(Call.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                      Property.ELEMENT_NAME,
                                                                      PayloadFactory.ELEMENT_NAME,
@@ -316,6 +353,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                      LoopBack.ELEMENT_NAME,
                                                                      CallTemplate.ELEMENT_NAME,
                                                                      Call.ELEMENT_NAME));
+
         metaModelValidator.register(Property.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                          Property.ELEMENT_NAME,
                                                                          PayloadFactory.ELEMENT_NAME,
@@ -329,6 +367,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                          LoopBack.ELEMENT_NAME,
                                                                          CallTemplate.ELEMENT_NAME,
                                                                          Call.ELEMENT_NAME));
+
         metaModelValidator.register(Enrich.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                        Property.ELEMENT_NAME,
                                                                        PayloadFactory.ELEMENT_NAME,
@@ -342,6 +381,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        LoopBack.ELEMENT_NAME,
                                                                        CallTemplate.ELEMENT_NAME,
                                                                        Call.ELEMENT_NAME));
+
         metaModelValidator.register(Sequence.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                          Property.ELEMENT_NAME,
                                                                          PayloadFactory.ELEMENT_NAME,
@@ -355,6 +395,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                          LoopBack.ELEMENT_NAME,
                                                                          CallTemplate.ELEMENT_NAME,
                                                                          Call.ELEMENT_NAME));
+
         metaModelValidator.register(Send.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                      Property.ELEMENT_NAME,
                                                                      PayloadFactory.ELEMENT_NAME,
@@ -368,6 +409,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                      LoopBack.ELEMENT_NAME,
                                                                      CallTemplate.ELEMENT_NAME,
                                                                      Call.ELEMENT_NAME));
+
         metaModelValidator.register(PayloadFactory.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                                Property.ELEMENT_NAME,
                                                                                PayloadFactory.ELEMENT_NAME,
@@ -381,6 +423,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                LoopBack.ELEMENT_NAME,
                                                                                CallTemplate.ELEMENT_NAME,
                                                                                Call.ELEMENT_NAME));
+
         metaModelValidator.register(Header.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                        Property.ELEMENT_NAME,
                                                                        PayloadFactory.ELEMENT_NAME,
@@ -394,6 +437,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        LoopBack.ELEMENT_NAME,
                                                                        CallTemplate.ELEMENT_NAME,
                                                                        Call.ELEMENT_NAME));
+
         metaModelValidator.register(CallTemplate.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                              Property.ELEMENT_NAME,
                                                                              PayloadFactory.ELEMENT_NAME,
@@ -407,6 +451,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                              LoopBack.ELEMENT_NAME,
                                                                              CallTemplate.ELEMENT_NAME,
                                                                              Call.ELEMENT_NAME));
+
         metaModelValidator.register(Filter.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                        Property.ELEMENT_NAME,
                                                                        PayloadFactory.ELEMENT_NAME,
@@ -420,9 +465,6 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        LoopBack.ELEMENT_NAME,
                                                                        CallTemplate.ELEMENT_NAME,
                                                                        Call.ELEMENT_NAME));
-
-
-        selectionManager.addListener(propertiesPanelManager);
     }
 
     /** {@inheritDoc} */

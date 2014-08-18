@@ -233,4 +233,10 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.switch.xpath.title")
     String switchXpathTitle();
+
+    @Key("propertiespanel.root.name")
+    String rootName();
+
+    @Key("propertiespanel.root.onError")
+    String rootOnError();
 }

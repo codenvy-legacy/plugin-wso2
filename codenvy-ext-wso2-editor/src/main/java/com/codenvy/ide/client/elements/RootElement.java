@@ -16,21 +16,21 @@
 package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.common.ContentFormatter;
 import com.codenvy.ide.client.elements.enrich.Enrich;
 import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.payload.PayloadFactory;
+import com.google.gwt.xml.client.NamedNodeMap;
+import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-
-import static java.util.Map.Entry;
+import java.util.Map;
 
 /**
  * The main element of the diagram.
@@ -41,6 +41,12 @@ import static java.util.Map.Entry;
 public class RootElement extends AbstractShape {
     public static final String ELEMENT_NAME       = "RootElement";
     public static final String SERIALIZATION_NAME = "sequence";
+
+    private static final String NAME_SPACE_ATTRIBUTE = " xmlns=\"http://ws.apache.org/ns/synapse\" ";
+    private static final String XML_HEADER           = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+
+    private static final String NAME_ATTRIBUTE_NAME     = "name";
+    private static final String ON_ERROR_ATTRIBUTE_NAME = "onError";
 
     private static final List<String> PROPERTIES = Collections.emptyList();
     private static final List<String> COMPONENTS = Arrays.asList(Log.ELEMENT_NAME,
@@ -57,64 +63,8 @@ public class RootElement extends AbstractShape {
                                                                  CallTemplate.ELEMENT_NAME,
                                                                  Call.ELEMENT_NAME);
 
-    private final Provider<Log>            logProvider;
-    private final Provider<Enrich>         enrichProvider;
-    private final Provider<Filter>         filterProvider;
-    private final Provider<Header>         headerProvider;
-    private final Provider<Call>           callProvider;
-    private final Provider<CallTemplate>   callTemplateProvider;
-    private final Provider<LoopBack>       loopBackProvider;
-    private final Provider<PayloadFactory> payloadFactoryProvider;
-    private final Provider<Property>       propertyProvider;
-    private final Provider<Respond>        respondProvider;
-    private final Provider<Send>           sendProvider;
-    private final Provider<Sequence>       sequenceProvider;
-    private final Provider<Switch>         switchProvider;
-
-    public RootElement(@Nonnull String elementName,
-                       @Nonnull String title,
-                       @Nonnull String serializationName,
-                       @Nonnull List<String> properties,
-                       @Nonnull EditorResources resources,
-                       @Nonnull Provider<Branch> branchProvider,
-                       boolean isPossibleToAddBranches,
-                       boolean needsToShowIconAndTitle,
-                       @Nonnull Provider<Log> logProvider,
-                       @Nonnull Provider<Enrich> enrichProvider,
-                       @Nonnull Provider<Filter> filterProvider,
-                       @Nonnull Provider<Header> headerProvider,
-                       @Nonnull Provider<Call> callProvider,
-                       @Nonnull Provider<CallTemplate> callTemplateProvider,
-                       @Nonnull Provider<LoopBack> loopBackProvider,
-                       @Nonnull Provider<PayloadFactory> payloadFactoryProvider,
-                       @Nonnull Provider<Property> propertyProvider,
-                       @Nonnull Provider<Respond> respondProvider,
-                       @Nonnull Provider<Send> sendProvider,
-                       @Nonnull Provider<Sequence> sequenceProvider,
-                       @Nonnull Provider<Switch> switchProvider) {
-        super(elementName,
-              title,
-              serializationName,
-              properties,
-              resources,
-              branchProvider,
-              isPossibleToAddBranches,
-              needsToShowIconAndTitle);
-
-        this.logProvider = logProvider;
-        this.enrichProvider = enrichProvider;
-        this.filterProvider = filterProvider;
-        this.headerProvider = headerProvider;
-        this.callProvider = callProvider;
-        this.callTemplateProvider = callTemplateProvider;
-        this.loopBackProvider = loopBackProvider;
-        this.payloadFactoryProvider = payloadFactoryProvider;
-        this.propertyProvider = propertyProvider;
-        this.respondProvider = respondProvider;
-        this.sendProvider = sendProvider;
-        this.sequenceProvider = sequenceProvider;
-        this.switchProvider = switchProvider;
-    }
+    private String name;
+    private String onError;
 
     @Inject
     public RootElement(EditorResources resources,
@@ -132,78 +82,100 @@ public class RootElement extends AbstractShape {
                        Provider<Send> sendProvider,
                        Provider<Sequence> sequenceProvider,
                        Provider<Switch> switchProvider) {
-        this(ELEMENT_NAME,
-             ELEMENT_NAME,
-             SERIALIZATION_NAME,
-             PROPERTIES,
-             resources,
-             branchProvider,
-             false,
-             false,
-             logProvider,
-             enrichProvider,
-             filterProvider,
-             headerProvider,
-             callProvider,
-             callTemplateProvider,
-             loopBackProvider,
-             payloadFactoryProvider,
-             propertyProvider,
-             respondProvider,
-             sendProvider,
-             sequenceProvider,
-             switchProvider);
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              resources,
+              branchProvider,
+              false,
+              false,
+              logProvider,
+              enrichProvider,
+              filterProvider,
+              headerProvider,
+              callProvider,
+              callTemplateProvider,
+              loopBackProvider,
+              payloadFactoryProvider,
+              propertyProvider,
+              respondProvider,
+              sendProvider,
+              sequenceProvider,
+              switchProvider);
+
+        this.name = "";
+        this.onError = "";
 
         components.addAll(COMPONENTS);
 
         branches.add(branchProvider.get());
     }
 
+    @Nonnull
+    public String getName() {
+        return name;
+    }
+
+    public void setName(@Nonnull String name) {
+        this.name = name;
+    }
+
+    @Nonnull
+    public String getOnError() {
+        return onError;
+    }
+
+    public void setOnError(@Nonnull String onError) {
+        this.onError = onError;
+    }
+
+    /** {@inheritDoc} */
+    @Nonnull
+    @Override
+    public String serialize() {
+        String xml = ContentFormatter.formatXML(ContentFormatter.trimXML(super.serialize()));
+
+        /*
+         * Adds XML file header and name space for root element. We have problem with formatting XML content with name space
+         * in the root node so we add the name space of root element after formatting operation.
+         */
+        int index = xml.indexOf(SERIALIZATION_NAME) + SERIALIZATION_NAME.length();
+        return XML_HEADER + xml.subSequence(0, index) + NAME_SPACE_ATTRIBUTE + xml.subSequence(index + 1, xml.length());
+    }
+
+    /** {@inheritDoc} */
+    @Nonnull
+    @Override
+    protected String serializeAttributes() {
+        Map<String, String> attributes = new LinkedHashMap<>();
+        attributes.put(ON_ERROR_ATTRIBUTE_NAME, onError);
+
+        String onErrorAttribute = convertPropertiesToXMLFormat(attributes);
+
+        return NAME_ATTRIBUTE_NAME + "=\"" + name + "\"" + (onErrorAttribute.isEmpty() ? "" : ' ' + onErrorAttribute);
+    }
+
     /** {@inheritDoc} */
     @Override
-    public Shape createElement(@Nonnull String elementName) {
-        switch (elementName) {
-            case Log.SERIALIZATION_NAME:
-                return logProvider.get();
+    protected void applyAttributes(@Nonnull Node node) {
+        NamedNodeMap attributeMap = node.getAttributes();
 
-            case Property.SERIALIZATION_NAME:
-                return propertyProvider.get();
+        for (int i = 0; i < attributeMap.getLength(); i++) {
+            Node attributeNode = attributeMap.item(i);
 
-            case PayloadFactory.SERIALIZATION_NAME:
-                return payloadFactoryProvider.get();
+            String nodeValue = attributeNode.getNodeValue();
+            String nodeName = attributeNode.getNodeName();
 
-            case Send.SERIALIZATION_NAME:
-                return sendProvider.get();
+            switch (nodeName) {
+                case NAME_ATTRIBUTE_NAME:
+                    name = nodeValue;
+                    break;
 
-            case Header.SERIALIZATION_NAME:
-                return headerProvider.get();
-
-            case Respond.SERIALIZATION_NAME:
-                return respondProvider.get();
-
-            case Filter.SERIALIZATION_NAME:
-                return filterProvider.get();
-
-            case Switch.SERIALIZATION_NAME:
-                return switchProvider.get();
-
-            case Sequence.SERIALIZATION_NAME:
-                return sequenceProvider.get();
-
-            case Enrich.SERIALIZATION_NAME:
-                return enrichProvider.get();
-
-            case LoopBack.SERIALIZATION_NAME:
-                return loopBackProvider.get();
-
-            case CallTemplate.SERIALIZATION_NAME:
-                return callTemplateProvider.get();
-
-            case Call.SERIALIZATION_NAME:
-                return callProvider.get();
-
-            default:
-                return null;
+                case ON_ERROR_ATTRIBUTE_NAME:
+                    onError = nodeValue;
+                    break;
+            }
         }
     }
 
@@ -220,29 +192,4 @@ public class RootElement extends AbstractShape {
         }
     }
 
-    /**
-     * Convert properties of diagram element to XML attribute format.
-     *
-     * @param attributes
-     *         element's properties
-     * @return XML format of element's attributes
-     */
-    protected String convertPropertiesToXMLFormat(@NotNull LinkedHashMap<String, String> attributes) {
-        StringBuilder content = new StringBuilder();
-
-        for (Iterator iterator = attributes.entrySet().iterator(); iterator.hasNext(); ) {
-            Entry entry = (Entry)iterator.next();
-            String value = (String)entry.getValue();
-
-            if (value != null && !value.isEmpty()) {
-                content.append(entry.getKey()).append("=\"").append(value).append('"');
-            }
-
-            if (iterator.hasNext()) {
-                content.append(' ');
-            }
-        }
-
-        return content.toString();
-    }
 }

@@ -37,7 +37,7 @@ import static com.codenvy.ide.client.elements.Send.ReceivingSequenceType.Default
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
-public class Send extends RootElement {
+public class Send extends AbstractShape {
     public static final String ELEMENT_NAME       = "Send";
     public static final String SERIALIZATION_NAME = "send";
 

@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.elements.enrich;
 
 import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.elements.AbstractShape;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Call;
 import com.codenvy.ide.client.elements.CallTemplate;
@@ -25,7 +26,6 @@ import com.codenvy.ide.client.elements.LoopBack;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.Property;
 import com.codenvy.ide.client.elements.Respond;
-import com.codenvy.ide.client.elements.RootElement;
 import com.codenvy.ide.client.elements.Send;
 import com.codenvy.ide.client.elements.Sequence;
 import com.codenvy.ide.client.elements.Switch;
@@ -42,12 +42,13 @@ import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
-public class Enrich extends RootElement {
+public class Enrich extends AbstractShape {
     public static final String ELEMENT_NAME       = "Enrich";
     public static final String SERIALIZATION_NAME = "enrich";
 
@@ -196,7 +197,7 @@ public class Enrich extends RootElement {
 
     /** Serialization representation attributes of source property of element. */
     private String serializeSourceAttributes() {
-        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        Map<String, String> attributes = new LinkedHashMap<>();
 
         setDefaultSourceAttributes(attributes);
 
@@ -241,7 +242,7 @@ public class Enrich extends RootElement {
      * @param attributes
      *         list of default attributes
      */
-    private void setDefaultSourceAttributes(@Nonnull LinkedHashMap<String, String> attributes) {
+    private void setDefaultSourceAttributes(@Nonnull Map<String, String> attributes) {
         attributes.put(Source.CLONE_SOURCE, source.getClone());
         attributes.put(Source.XPATH, source.getXpath());
         attributes.put(Source.SOURCE_TYPE, source.getType());
@@ -255,7 +256,7 @@ public class Enrich extends RootElement {
      * @param attributes
      *         list of default attributes
      */
-    private void setDefaultTargetAttributes(@Nonnull LinkedHashMap<String, String> attributes) {
+    private void setDefaultTargetAttributes(@Nonnull Map<String, String> attributes) {
         attributes.put(Target.TYPE, target.getType());
         attributes.put(Target.ACTION, target.getAction());
         attributes.put(Target.PROPERTY, target.getProperty());
@@ -264,7 +265,7 @@ public class Enrich extends RootElement {
 
     /** Serialization representation attributes of target property of element. */
     private String serializeTargetAttributes() {
-        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        Map<String, String> attributes = new LinkedHashMap<>();
 
         setDefaultTargetAttributes(attributes);
 
@@ -295,7 +296,7 @@ public class Enrich extends RootElement {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        Map<String, String> attributes = new LinkedHashMap<>();
 
         attributes.put(DESCRIPTION, description);
 

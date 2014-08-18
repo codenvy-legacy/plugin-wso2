@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
  * @author Andrey Plotnikov
  */
 public class SwitchPropertiesPanelViewImpl extends SwitchPropertiesPanelView {
-    interface Switch_mediatorPropertiesPanelViewImplUiBinder extends UiBinder<Widget, SwitchPropertiesPanelViewImpl> {
+    interface SwitchPropertiesPanelViewImplUiBinder extends UiBinder<Widget, SwitchPropertiesPanelViewImpl> {
     }
 
     @UiField
@@ -41,7 +41,7 @@ public class SwitchPropertiesPanelViewImpl extends SwitchPropertiesPanelView {
     FlowPanel regexpPanel;
 
     @Inject
-    public SwitchPropertiesPanelViewImpl(Switch_mediatorPropertiesPanelViewImplUiBinder ourUiBinder) {
+    public SwitchPropertiesPanelViewImpl(SwitchPropertiesPanelViewImplUiBinder ourUiBinder) {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -67,6 +67,8 @@ public class SwitchPropertiesPanelViewImpl extends SwitchPropertiesPanelView {
     @Override
     protected void onDetach() {
         delegate.onWidgetDetached();
+
+        super.onDetach();
     }
 
     @UiHandler("btnSourceXpath")

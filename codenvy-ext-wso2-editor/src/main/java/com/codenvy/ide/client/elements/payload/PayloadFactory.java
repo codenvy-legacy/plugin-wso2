@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.elements.payload;
 
 import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.elements.AbstractShape;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Call;
 import com.codenvy.ide.client.elements.CallTemplate;
@@ -25,7 +26,6 @@ import com.codenvy.ide.client.elements.LoopBack;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.Property;
 import com.codenvy.ide.client.elements.Respond;
-import com.codenvy.ide.client.elements.RootElement;
 import com.codenvy.ide.client.elements.Send;
 import com.codenvy.ide.client.elements.Sequence;
 import com.codenvy.ide.client.elements.Switch;
@@ -45,6 +45,7 @@ import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.payload.PayloadFactory.FormatType.Inline;
 import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType.json;
@@ -56,7 +57,7 @@ import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType.x
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
-public class PayloadFactory extends RootElement {
+public class PayloadFactory extends AbstractShape {
     public static final String ELEMENT_NAME       = "PayloadFactory";
     public static final String SERIALIZATION_NAME = "payloadFactory";
 
@@ -224,7 +225,7 @@ public class PayloadFactory extends RootElement {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        LinkedHashMap<String, String> prop = new LinkedHashMap<>();
+        Map<String, String> prop = new LinkedHashMap<>();
 
         prop.put(MEDIA_TYPE_PROPERTY_NAME, mediaType);
         prop.put(DESCRIPTION_PROPERTY_NAME, description);
