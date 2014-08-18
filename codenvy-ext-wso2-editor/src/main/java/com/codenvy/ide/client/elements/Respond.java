@@ -20,18 +20,20 @@ import com.codenvy.ide.client.elements.enrich.Enrich;
 import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
+
 /**
- * Class describes Respond mediator.
+ * The entity that represents 'Respond' mediator from ESB configuration.
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
@@ -40,9 +42,9 @@ public class Respond extends RootElement {
     public static final String ELEMENT_NAME       = "Respond";
     public static final String SERIALIZATION_NAME = "respond";
 
-    private static final String DESCRIPTION_PROPERTY_NAME = "description";
+    private static final String DESCRIPTION_ATTRIBUTE = "description";
 
-    private static final List<String> PROPERTIES = Arrays.asList(DESCRIPTION_PROPERTY_NAME);
+    private static final List<String> PROPERTIES = emptyList();
 
     private String description;
 
@@ -85,11 +87,18 @@ public class Respond extends RootElement {
               switchProvider);
     }
 
+    /** @return description value */
     @Nullable
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Changes description field.
+     *
+     * @param description
+     *         new description value
+     */
     public void setDescription(@Nullable String description) {
         this.description = description;
     }
@@ -100,9 +109,30 @@ public class Respond extends RootElement {
     protected String serializeAttributes() {
         LinkedHashMap<String, String> prop = new LinkedHashMap<>();
 
-        prop.put(DESCRIPTION_PROPERTY_NAME, description);
+        prop.put(DESCRIPTION_ATTRIBUTE, description);
 
         return convertPropertiesToXMLFormat(prop);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void applyAttributes(@Nonnull Node node) {
+        NamedNodeMap attributeMap = node.getAttributes();
+
+        for (int i = 0; i < attributeMap.getLength(); i++) {
+            Node attributeNode = attributeMap.item(i);
+
+            String nodeValue = attributeNode.getNodeValue();
+            String nodeName = attributeNode.getNodeName();
+
+            switch (nodeName) {
+                case DESCRIPTION_ATTRIBUTE:
+                    description = String.valueOf(nodeValue);
+                    break;
+
+                default:
+            }
+        }
     }
 
     /** {@inheritDoc} */
@@ -112,7 +142,7 @@ public class Respond extends RootElement {
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
         switch (nodeName) {
-            case DESCRIPTION_PROPERTY_NAME:
+            case DESCRIPTION_ATTRIBUTE:
                 description = String.valueOf(nodeValue);
                 break;
 
