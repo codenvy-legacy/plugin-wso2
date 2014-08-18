@@ -70,7 +70,7 @@ public class Property extends AbstractShape {
     private String           valueExpression;
     private String           valueStringPattern;
     private String           valueStringCaptureGroup;
-    private Scope            propertyScope;
+    private String           propertyScope;
     private String           description;
     private Array<NameSpace> nameSpaces;
 
@@ -115,7 +115,7 @@ public class Property extends AbstractShape {
         propertyAction = set;
         valueType = LITERAL;
         propertyDataType = STRING;
-        propertyScope = SYNAPSE;
+        propertyScope = SYNAPSE.getValue();
         propertyName = "property_name";
         valueLiteral = "value";
         valueExpression = "/default/expression";
@@ -270,7 +270,7 @@ public class Property extends AbstractShape {
 
     /** @return scope of property */
     @Nonnull
-    public Scope getPropertyScope() {
+    public String getPropertyScope() {
         return propertyScope;
     }
 
@@ -280,7 +280,7 @@ public class Property extends AbstractShape {
      * @param propertyScope
      *         value which need to set to element
      */
-    public void setPropertyScope(@Nullable Scope propertyScope) {
+    public void setPropertyScope(@Nullable String propertyScope) {
         this.propertyScope = propertyScope;
     }
 
@@ -336,7 +336,7 @@ public class Property extends AbstractShape {
         attributes.put(NAME_ATTRIBUTE, propertyName);
         attributes.put(VALUE_EXPRESSION_ATTRIBUTE, valueExpression);
         attributes.put(VALUE_LITERAL_ATTRIBUTE, valueLiteral);
-        attributes.put(SCOPE_ATTRIBUTE, propertyScope.name());
+        attributes.put(SCOPE_ATTRIBUTE, propertyScope);
         attributes.put(ACTION_ATTRIBUTE, propertyAction.name());
         attributes.put(DATA_TYPE_ATTRIBUTE, propertyDataType.name());
         attributes.put(STRING_CAPTURE_GROUP_ATTRIBUTE, valueStringCaptureGroup);
@@ -357,7 +357,7 @@ public class Property extends AbstractShape {
 
             switch (nodeName) {
                 case NAME_ATTRIBUTE:
-                    propertyName = String.valueOf(nodeValue);
+                    propertyName = nodeValue;
                     break;
 
                 case ACTION_ATTRIBUTE:
@@ -369,28 +369,28 @@ public class Property extends AbstractShape {
                     break;
 
                 case VALUE_LITERAL_ATTRIBUTE:
-                    valueLiteral = String.valueOf(nodeValue);
+                    valueLiteral = nodeValue;
                     break;
 
                 case VALUE_EXPRESSION_ATTRIBUTE:
-                    valueExpression = String.valueOf(nodeValue);
+                    valueExpression = nodeValue;
                     valueType = EXPRESSION;
                     break;
 
                 case STRING_PATTERN_ATTRIBUTE:
-                    valueStringPattern = String.valueOf(nodeValue);
+                    valueStringPattern = nodeValue;
                     break;
 
                 case STRING_CAPTURE_GROUP_ATTRIBUTE:
-                    valueStringCaptureGroup = String.valueOf(nodeValue);
+                    valueStringCaptureGroup = nodeValue;
                     break;
 
                 case SCOPE_ATTRIBUTE:
-                    propertyScope = Scope.valueOf(nodeValue);
+                    propertyScope = nodeValue;
                     break;
 
                 case DESCRIPTION_ATTRIBUTE:
-                    description = String.valueOf(nodeValue);
+                    description = nodeValue;
                     break;
 
                 default:

@@ -106,8 +106,6 @@ public class Send extends AbstractShape {
         staticExpression = "/default/sequence";
         nameSpaces = Collections.createArray();
 
-        components.add(Log.ELEMENT_NAME);
-
         branches.add(branchProvider.get());
     }
 

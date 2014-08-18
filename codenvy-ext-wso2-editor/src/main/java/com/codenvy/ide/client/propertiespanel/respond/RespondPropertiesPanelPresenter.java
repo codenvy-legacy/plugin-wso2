@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 
 /**
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class RespondPropertiesPanelPresenter extends AbstractPropertiesPanel<Respond, RespondPropertiesPanelView>
         implements RespondPropertiesPanelView.ActionDelegate {
@@ -48,6 +49,7 @@ public class RespondPropertiesPanelPresenter extends AbstractPropertiesPanel<Res
         super.go(container);
 
         view.setDescription(element.getDescription());
+        onDescriptionChanged();
     }
 
 }

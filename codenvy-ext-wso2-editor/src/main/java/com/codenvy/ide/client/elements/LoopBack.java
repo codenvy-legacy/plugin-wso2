@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.enrich.Enrich;
 import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -38,6 +37,7 @@ import static java.util.Collections.emptyList;
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class LoopBack extends AbstractShape {
     public static final String ELEMENT_NAME       = "LoopBack";
@@ -86,6 +86,8 @@ public class LoopBack extends AbstractShape {
               sendProvider,
               sequenceProvider,
               switchProvider);
+
+        description = "";
     }
 
     /** @return description value */
@@ -118,21 +120,8 @@ public class LoopBack extends AbstractShape {
     /** {@inheritDoc} */
     @Override
     protected void applyAttributes(@Nonnull Node node) {
-        NamedNodeMap attributeMap = node.getAttributes();
-
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
-
-            String nodeValue = attributeNode.getNodeValue();
-            String nodeName = attributeNode.getNodeName();
-
-            switch (nodeName) {
-                case DESCRIPTION_ATTRIBUTE:
-                    description = String.valueOf(nodeValue);
-                    break;
-
-                default:
-            }
+        if (node.hasAttributes()) {
+            description = node.getAttributes().item(0).getNodeValue();
         }
     }
 

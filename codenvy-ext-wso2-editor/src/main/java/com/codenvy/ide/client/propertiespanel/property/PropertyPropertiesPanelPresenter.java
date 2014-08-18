@@ -31,6 +31,7 @@ import javax.annotation.Nullable;
 
 import static com.codenvy.ide.client.elements.Property.Action;
 import static com.codenvy.ide.client.elements.Property.DataType;
+import static com.codenvy.ide.client.elements.Property.Scope;
 import static com.codenvy.ide.client.elements.Property.ValueType;
 import static com.codenvy.ide.client.elements.Property.ValueType.EXPRESSION;
 
@@ -157,7 +158,7 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
     /** {@inheritDoc} */
     @Override
     public void onPropertyScopeChanged() {
-        element.setPropertyScope(Property.Scope.valueOf(view.getPropertyScope()));
+        element.setPropertyScope(view.getPropertyScope());
 
         notifyListeners();
     }
@@ -194,8 +195,8 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
         view.setPropertyDataType(propertyTypeManager.getValuesByName(DataType.TYPE_NAME));
         view.selectPropertyDataType(element.getPropertyDataType().name());
 
-        view.setPropertyScope(propertyTypeManager.getValuesByName(Property.Scope.TYPE_NAME));
-        view.selectPropertyScope(element.getPropertyScope().name());
+        view.setPropertyScope(propertyTypeManager.getValuesByName(Scope.TYPE_NAME));
+        view.selectPropertyScope(element.getPropertyScope());
 
         view.setPropertyName(element.getPropertyName());
         view.setValueLiteral(element.getValueLiteral());

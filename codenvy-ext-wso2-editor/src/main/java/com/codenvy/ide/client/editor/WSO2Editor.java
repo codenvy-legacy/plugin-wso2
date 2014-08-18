@@ -106,6 +106,7 @@ import static com.codenvy.ide.client.elements.Send.EBoolean.TRUE;
 import static com.codenvy.ide.client.elements.Send.SequenceType.Default;
 import static com.codenvy.ide.client.elements.Send.SequenceType.Static;
 import static com.codenvy.ide.client.elements.Sequence.ReferringType.Dynamic;
+import static com.codenvy.ide.client.elements.enrich.Source.CloneSource;
 import static com.codenvy.ide.client.elements.enrich.Source.InlineType;
 import static com.codenvy.ide.client.elements.enrich.Source.SourceType;
 import static com.codenvy.ide.client.elements.enrich.Source.SourceType.body;
@@ -275,6 +276,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
         propertyTypeManager.register(Send.EBoolean.TYPE_NAME, Arrays.asList(FALSE.name().toLowerCase(), TRUE.name().toLowerCase()));
 
         propertyTypeManager.register(Send.SequenceType.TYPE_NAME, Arrays.asList(Default.name(), Static.name(), Dynamic.name()));
+
+        propertyTypeManager.register(CloneSource.TYPE_NAME, Arrays.asList(TRUE.name().toLowerCase(), FALSE.name().toLowerCase()));
 
         propertyTypeManager.register(HeaderAction.TYPE_NAME, Arrays.asList(HeaderAction.set.name(), HeaderAction.remove.name()));
 
