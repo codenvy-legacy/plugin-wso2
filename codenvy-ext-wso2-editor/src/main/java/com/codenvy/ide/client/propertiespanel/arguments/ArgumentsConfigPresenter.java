@@ -18,8 +18,8 @@ package com.codenvy.ide.client.propertiespanel.arguments;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.payload.Arg;
-import com.codenvy.ide.client.propertiespanel.log.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
+import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;
@@ -27,10 +27,13 @@ import com.google.inject.Inject;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static com.codenvy.ide.client.elements.payload.Arg.ArgType;
+
 /**
  * The argument of mediator.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDelegate {
 
@@ -56,6 +59,7 @@ public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDeleg
         this.addNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
             public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
+                selectedArg.setExpression(expression);
                 selectedArg.setNameSpaces(nameSpaces);
             }
         };
@@ -78,8 +82,12 @@ public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDeleg
     public void onAddArgButtonClicked() {
         String value = argView.getValueExpression().isEmpty() ? "default" : argView.getValueExpression();
         String evaluator = argView.getEvaluator().isEmpty() ? "xml" : argView.getEvaluator();
+        String type = argView.getTypeValue().isEmpty() ? "Value" : argView.getTypeValue();
 
-        Arg arg = new Arg(value, evaluator);
+        Arg arg = new Arg();
+        arg.setType(ArgType.valueOf(type));
+        arg.setEvaluator(Arg.Evaluator.valueOf(evaluator));
+        arg.setValue(value);
 
         argView.setValueExpression("");
         argView.clearEvaluator();
@@ -108,15 +116,19 @@ public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDeleg
         nameSpacePresenter.showWindowWithParameters(selectedArg.getNameSpaces(),
                                                     addNameSpacesCallBack,
                                                     local.argsLabel(),
-                                                    null);
+                                                    selectedArg.getExpression());
     }
 
     /** {@inheritDoc} */
     @Override
     public void onEditButtonClicked() {
         argView.setValueExpression(selectedArg.getValue());
+
         argView.setEvaluator();
-        argView.selectEvaluator(selectedArg.getEvaluator());
+        argView.selectEvaluator(String.valueOf(selectedArg.getEvaluator()));
+
+        argView.setTypeValue();
+        argView.selectType(String.valueOf(selectedArg.getType()));
 
         index = arrayTemporary.indexOf(selectedArg);
 

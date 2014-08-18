@@ -19,7 +19,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,10 +26,11 @@ import java.util.List;
  * The manager of a property type. It provides an ability to contain registered property types.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 @Singleton
 public class PropertyTypeManager {
-    private HashMap<String, List<String>> propertyTypes;
+    private final HashMap<String, List<String>> propertyTypes;
 
     @Inject
     public PropertyTypeManager() {
@@ -45,16 +45,19 @@ public class PropertyTypeManager {
      * @param values
      *         values of a new property type
      */
-    public void register(@Nonnull String name, List<String> values) {
+    public void register(@Nonnull String name, @Nonnull List<String> values) {
         propertyTypes.put(name, values);
     }
 
     /**
+     * Returns values of property type by name.
+     *
      * @param name
-     * @return values of property type by name. The method can return <code>null</code> in case no property type has this name.
+     *         value of property type
+     * @return list of parameters.
      */
-    @Nullable
-    public List<String> getValuesOfTypeByName(@Nonnull String name) {
+    @Nonnull
+    public List<String> getValuesByName(@Nonnull String name) {
         return propertyTypes.get(name);
     }
 }

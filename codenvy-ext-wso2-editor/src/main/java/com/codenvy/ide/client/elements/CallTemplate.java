@@ -32,31 +32,29 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Class describes CallTemplate mediator.
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class CallTemplate extends AbstractShape {
     public static final String ELEMENT_NAME       = "CallTemplate";
     public static final String SERIALIZATION_NAME = "callTemplate";
 
-    private static final String AVAILABLE_TEMPLATES_PROPERTY_NAME = "AvailableTemplates";
-    private static final String TARGET_TEMPLATE_PROPERTY_NAME     = "target";
-    private static final String PARAMETERS_PROPERTY_NAME          = "with-param";
-    private static final String DESCRIPTION_PROPERTY_NAME         = "description";
+    private static final String TARGET_ATTRIBUTE_NAME      = "target";
+    private static final String DESCRIPTION_ATTRIBUTE_NAME = "description";
+    private static final String PARAMETERS_PROPERTY_NAME   = "with-param";
 
     private static final List<String> PROPERTIES = Arrays.asList(PARAMETERS_PROPERTY_NAME);
 
-    private String          availableTemplates;
-    private String          targetTemplate;
-    private String          description;
-    private Array<Property> parameters;
+    private AvailableTemplates availableTemplates;
+    private String             targetTemplate;
+    private String             description;
+    private Array<Property>    parameters;
 
     @Inject
     public CallTemplate(EditorResources resources,
@@ -96,33 +94,36 @@ public class CallTemplate extends AbstractShape {
               sequenceProvider,
               switchProvider);
 
+        availableTemplates = AvailableTemplates.EMPTY;
+        targetTemplate = "";
+        description = "";
         parameters = Collections.createArray();
     }
 
     /** @return value of available template */
-    @Nullable
-    public String getAvailableTemplates() {
+    @Nonnull
+    public AvailableTemplates getAvailableTemplates() {
         return availableTemplates;
     }
 
     /**
-     * Set available template.
+     * Set available template parameter to element.
      *
      * @param availableTemplates
      *         values of available template
      */
-    public void setAvailableTemplates(@Nullable String availableTemplates) {
+    public void setAvailableTemplates(@Nullable AvailableTemplates availableTemplates) {
         this.availableTemplates = availableTemplates;
     }
 
     /** @return value of target template */
-    @Nullable
+    @Nonnull
     public String getTargetTemplate() {
         return targetTemplate;
     }
 
     /**
-     * Set target template.
+     * Sets target template to element.
      *
      * @param targetTemplate
      *         values of target template
@@ -154,7 +155,7 @@ public class CallTemplate extends AbstractShape {
     }
 
     /**
-     * Set description.
+     * Sets value of description to element.
      *
      * @param description
      *         description of CallTemplate mediator
@@ -167,12 +168,13 @@ public class CallTemplate extends AbstractShape {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        Map<String, String> prop = new LinkedHashMap<>();
+        StringBuilder result = new StringBuilder();
 
-        prop.put(TARGET_TEMPLATE_PROPERTY_NAME, targetTemplate);
-        prop.put(DESCRIPTION_PROPERTY_NAME, description);
+        result.append(TARGET_ATTRIBUTE_NAME).append("=\"").append(targetTemplate).append("\" ");
 
-        return convertPropertiesToXMLFormat(prop);
+        result.append(description.isEmpty() ? "" : DESCRIPTION_ATTRIBUTE_NAME + "=\"" + description + "\"");
+
+        return result.toString();
     }
 
     /** {@inheritDoc} */
@@ -198,37 +200,11 @@ public class CallTemplate extends AbstractShape {
     /** {@inheritDoc} */
     @Override
     public void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
+        Property property = new Property(null, null);
 
-        Node item = node.getChildNodes().item(0);
-        String nodeValue = "";
-        if (item != null) {
-            nodeValue = item.getNodeValue();
-        }
+        property.applyAttributes(node);
 
-        switch (nodeName) {
-            case AVAILABLE_TEMPLATES_PROPERTY_NAME:
-                availableTemplates = String.valueOf(nodeValue);
-                break;
-
-            case TARGET_TEMPLATE_PROPERTY_NAME:
-                targetTemplate = String.valueOf(nodeValue);
-                break;
-
-            case PARAMETERS_PROPERTY_NAME:
-                //TODO create property using editor factory
-                Property property = new Property(null, null);
-                property.applyAttributes(node);
-
-                parameters.add(property);
-                break;
-
-            case DESCRIPTION_PROPERTY_NAME:
-                description = String.valueOf(nodeValue);
-                break;
-
-            default:
-        }
+        parameters.add(property);
     }
 
     /** {@inheritDoc} */
@@ -239,20 +215,25 @@ public class CallTemplate extends AbstractShape {
         for (int i = 0; i < attributeMap.getLength(); i++) {
             Node attributeNode = attributeMap.item(i);
 
+            String attributeValue = attributeNode.getNodeValue();
+
             switch (attributeNode.getNodeName()) {
-                case AVAILABLE_TEMPLATES_PROPERTY_NAME:
-                    availableTemplates = attributeNode.getNodeValue();
+                case TARGET_ATTRIBUTE_NAME:
+                    targetTemplate = attributeValue;
                     break;
 
-                case TARGET_TEMPLATE_PROPERTY_NAME:
-                    targetTemplate = attributeNode.getNodeValue();
-                    break;
-
-                case DESCRIPTION_PROPERTY_NAME:
-                    description = attributeNode.getNodeValue();
+                case DESCRIPTION_ATTRIBUTE_NAME:
+                    description = attributeValue;
                     break;
             }
         }
+    }
+
+    /** {@inheritDoc} */
+    @Nullable
+    @Override
+    public ImageResource getIcon() {
+        return resources.callTemplate();
     }
 
     public enum AvailableTemplates {
@@ -270,12 +251,6 @@ public class CallTemplate extends AbstractShape {
         public String getValue() {
             return value;
         }
-    }
 
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.callTemplate();
     }
 }

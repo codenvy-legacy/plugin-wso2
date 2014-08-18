@@ -19,28 +19,30 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
+    <ui:with field="locale" type="com.codenvy.ide.client.WSO2EditorLocalizationConstant"/>
+
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
 
         <g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Available Templates"/>
+                <g:Label text="{locale.availableTemplate}"/>
                 <g:ListBox ui:field="availableTemplates" width="206px"/>
             </g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Target Template"/>
+                <g:Label text="{locale.targetTemplate}"/>
                 <g:TextBox ui:field="targetTemplate" width="200px"/>
             </g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Parameters"/>
+                <g:Label text="{locale.calltemplateParameters}"/>
                 <g:TextBox enabled="false" ui:field="parameters" width="200px"/>
-                <g:Button ui:field="btnParameter" addStyleNames="{res.editorCSS.propertyButton}" text="..."/>
+                <g:Button ui:field="btnParameter" addStyleNames="{res.editorCSS.propertyButton}" text="{locale.buttonEditConfig}"/>
             </g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Description"/>
+                <g:Label text="{locale.description}"/>
                 <g:TextBox ui:field="description" width="200px"/>
             </g:FlowPanel>
 

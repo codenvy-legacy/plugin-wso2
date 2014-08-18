@@ -43,19 +43,33 @@ public abstract class SendPropertiesPanelView extends AbstractView<SendPropertie
         /** Performs any actions appropriate in response to the user having changed description. */
         void onDescriptionChanged();
 
+        /** Shows the dialog window which needed to be for editing static receiving sequence of element. */
+        void onStaticReceivingBtnClicked();
+
+        /** Shows the dialog window which needed to be for editing dynamic receiving sequence of element. */
+        void onDynamicReceivingBtnClicked();
+
     }
+
+    /**
+     * Sets static sequence to the special place on the view which uses for showing static sequence parameter.
+     *
+     * @param sequence
+     *         value which need to set to special place of view
+     */
+    public abstract void setStaticSequence(@Nullable String sequence);
+
+    /**
+     * Sets dynamic sequence to the special place on the view which uses for showing dynamic sequence parameter.
+     *
+     * @param sequence
+     *         value which need to set to special place of view
+     */
+    public abstract void setDynamicSequence(@Nullable String sequence);
 
     /** @return skip serialization value from the special place on the view which uses for showing skip serialization parameter */
     @Nonnull
     public abstract String getSkipSerialization();
-
-    /**
-     * Select skip serialization value in place on view.
-     *
-     * @param skipSerialization
-     *         skip serialization value
-     */
-    public abstract void selectSkipSerialization(@Nullable String skipSerialization);
 
     /**
      * Sets skip serialization value to the special place on the view which uses for showing skip serialization parameter.
@@ -90,7 +104,7 @@ public abstract class SendPropertiesPanelView extends AbstractView<SendPropertie
      * sending parameter
      */
     @Nonnull
-    public abstract String getBuildMessageBeforeSending();
+    public abstract String getBuildMessage();
 
     /**
      * Select build message before sending parameter in place on view.
@@ -107,7 +121,7 @@ public abstract class SendPropertiesPanelView extends AbstractView<SendPropertie
      * @param buildMessageBeforeSending
      *         list build message before sending types which need to set to special list box
      */
-    public abstract void setBuildMessageBeforeSending(@Nullable List<String> buildMessageBeforeSending);
+    public abstract void setBuildMessageBeforeSending(@Nonnull List<String> buildMessageBeforeSending);
 
     /** @return description value from the special place on the view which uses for showing description parameter */
     @Nonnull
@@ -120,5 +134,45 @@ public abstract class SendPropertiesPanelView extends AbstractView<SendPropertie
      *         description value
      */
     public abstract void setDescription(@Nullable String description);
+
+    /**
+     * Set receiving sequence type panel on view.
+     *
+     * @param isVisible
+     *         <code>true</code> to show panel, <code>false</code> not to show
+     */
+    public abstract void setVisibleRecSeqTypePanel(boolean isVisible);
+
+    /**
+     * Set build message before sending panel on view.
+     *
+     * @param isVisible
+     *         <code>true</code> to show panel, <code>false</code> not to show
+     */
+    public abstract void setVisibleBuildMessagePanel(boolean isVisible);
+
+    /**
+     * Set dynamic receiving sequence panel on view.
+     *
+     * @param isVisible
+     *         <code>true</code> to show panel, <code>false</code> not to show
+     */
+    public abstract void setVisibleDynamicPanel(boolean isVisible);
+
+    /**
+     * Set static receiving sequence panel on view.
+     *
+     * @param isVisible
+     *         <code>true</code> to show panel, <code>false</code> not to show
+     */
+    public abstract void setVisibleStaticPanel(boolean isVisible);
+
+    /**
+     * Set description panel on view.
+     *
+     * @param isVisible
+     *         <code>true</code> to show panel, <code>false</code> not to show
+     */
+    public abstract void setVisibleDescriptionPanel(boolean isVisible);
 
 }

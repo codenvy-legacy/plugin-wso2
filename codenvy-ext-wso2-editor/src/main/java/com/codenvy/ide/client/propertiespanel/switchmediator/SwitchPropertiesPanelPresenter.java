@@ -21,7 +21,7 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.Switch;
 import com.codenvy.ide.client.inject.EditorFactory;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
-import com.codenvy.ide.client.propertiespanel.log.propertyconfig.AddNameSpacesCallBack;
+import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.switchmediator.branch.BranchFiledPresenter;
 import com.codenvy.ide.client.propertytypes.PropertyTypeManager;

@@ -34,20 +34,14 @@ public abstract class EnrichPropertiesPanelView extends AbstractView<EnrichPrope
         /** Performs any actions appropriate in response to the user having changed clone source. */
         void onCloneSourceChanged();
 
-        /** Performs any actions appropriate in response to the user having changed source type. */
-        void onSourceTypeChanged();
-
         /** Performs any actions appropriate in response to the user having changed property. */
-        void onSrcPropertyChanged();
+        void onSourcePropertyChanged();
 
         /** Performs any actions appropriate in response to the user having changed XPath. */
         void onSourceXpathChanged();
 
         /** Performs any actions appropriate in response to the user having changed target action. */
         void onTargetActionChanged();
-
-        /** Performs any actions appropriate in response to the user having changed target type. */
-        void onTargetTypeChanged();
 
         /** Performs any actions appropriate in response to the user having changed target XPath. */
         void onTargetXpathChanged();
@@ -56,13 +50,13 @@ public abstract class EnrichPropertiesPanelView extends AbstractView<EnrichPrope
         void onDescriptionChanged();
 
         /** Performs any actions appropriate in response to the user having changed source type. */
-        void onSrcTypeChanged();
+        void onSourceTypeChanged();
 
         /** Performs any actions appropriate in response to the user having changed source inline type. */
-        void onSrcInlineTypeChanged();
+        void onSourceInlineTypeChanged();
 
         /** Performs any actions appropriate in response to the user having changed target type. */
-        void onTgtTypeChanged();
+        void onTargetTypeChanged();
 
         /** Shows the dialog window which needed to be for editing source xml of source element. */
         void onSrcXMLBtnClicked();

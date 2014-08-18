@@ -19,57 +19,58 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
+    <ui:with field="loc" type="com.codenvy.ide.client.WSO2EditorLocalizationConstant"/>
 
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
         <g:FlowPanel ui:field="propertiesContainer">
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Property Name"/>
+                <g:Label text="{loc.propertyName}"/>
                 <g:TextBox ui:field="propertyName" width="200px"/>
             </g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Property Action"/>
+                <g:Label text="{loc.propertyAction}"/>
                 <g:ListBox ui:field="propertyAction" width="206px"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="valueTypePanel" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Value Type"/>
+                <g:Label text="{loc.propertyValueType}"/>
                 <g:ListBox ui:field="valueType" width="206px"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="dataTypePanel" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Property Data Type"/>
+                <g:Label text="{loc.propertyDataType}"/>
                 <g:ListBox ui:field="propertyDataType" width="206px"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="valueLiteralPanel" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Value Literal"/>
+                <g:Label text="{loc.propertyValueLiteral}"/>
                 <g:TextBox ui:field="valueLiteral" width="200px"/>
             </g:FlowPanel>
 
-            <g:FlowPanel ui:field="valueExpressionPanel" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Value Expression"/>
+            <g:FlowPanel ui:field="valueExpressionPanel" addStyleNames="{res.editorCSS.property}" visible="false">
+                <g:Label text="{loc.propertyValueExpression}"/>
                 <g:TextBox enabled="false" ui:field="valueExpression" width="200px"/>
                 <g:Button ui:field="expressionButton" addStyleNames="{res.editorCSS.propertyButton}" text="..."/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="valueStringPatternPanel" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Value String Pattern"/>
+                <g:Label text="{loc.valueStringPattern}"/>
                 <g:TextBox ui:field="valueStringPattern" width="200px"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="valueStringCaptureGroupPanel" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Value String Capturing Group"/>
+                <g:Label text="{loc.capturingGroup}"/>
                 <g:TextBox ui:field="valueStringCaptureGroup" width="200px"/>
             </g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Property Scope"/>
+                <g:Label text="{loc.propertyScope}"/>
                 <g:ListBox ui:field="propertyScope" width="206px"/>
             </g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Description"/>
+                <g:Label text="{loc.description}"/>
                 <g:TextBox ui:field="description" width="200px"/>
             </g:FlowPanel>
         </g:FlowPanel>

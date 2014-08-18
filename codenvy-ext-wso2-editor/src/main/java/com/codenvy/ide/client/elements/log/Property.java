@@ -34,8 +34,8 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
  */
 public class Property {
 
-    private static final String PROPERTY_ELEMENT_NAME  = "name";
-    private static final String PROPERTY_ELEMENT_VALUE = "value";
+    private static final String NAME_ATTRIBUTE  = "name";
+    private static final String VALUE_ATTRIBUTE = "value";
 
     private String           name;
     private String           expression;
@@ -63,21 +63,22 @@ public class Property {
             String nodeValue = attributeNode.getNodeValue();
 
             switch (nodeName) {
-                case PROPERTY_ELEMENT_NAME:
+                case NAME_ATTRIBUTE:
                     name = nodeValue;
                     break;
 
-                case PROPERTY_ELEMENT_VALUE:
+                case VALUE_ATTRIBUTE:
                     expression = nodeValue;
                     break;
 
-                case PREFIX:
-                    String name = StringUtils.trimStart(nodeName, PREFIX);
-                    //TODO create entity using edit factory
-                    NameSpace nameSpace = new NameSpace(name, nodeValue);
+                default:
+                    if (StringUtils.startsWith(PREFIX, nodeName, true)) {
+                        String name = StringUtils.trimStart(nodeName, PREFIX + ':');
+                        //TODO create entity using edit factory
+                        NameSpace nameSpace = new NameSpace(name, nodeValue);
 
-                    nameSpaces.add(nameSpace);
-                    break;
+                        nameSpaces.add(nameSpace);
+                    }
             }
         }
     }

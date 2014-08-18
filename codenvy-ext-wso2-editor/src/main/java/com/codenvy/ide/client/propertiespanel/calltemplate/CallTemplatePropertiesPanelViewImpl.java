@@ -20,13 +20,13 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -34,6 +34,7 @@ import java.util.List;
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesPanelView {
 
@@ -48,8 +49,6 @@ public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesP
     TextBox parameters;
     @UiField
     TextBox description;
-    @UiField
-    Button  btnParameter;
 
     @Inject
     public CallTemplatePropertiesPanelViewImpl(CallTemplatePropertiesPanelViewImplUiBinder ourUiBinder) {
@@ -57,7 +56,7 @@ public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesP
     }
 
     /** {@inheritDoc} */
-    @NotNull
+    @Nonnull
     @Override
     public String getAvailableTemplates() {
         int index = availableTemplates.getSelectedIndex();
@@ -66,7 +65,7 @@ public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesP
 
     /** {@inheritDoc} */
     @Override
-    public void setAvailableTemplates(@NotNull List<String> payloadFormat) {
+    public void setAvailableTemplates(@Nullable List<String> payloadFormat) {
         if (payloadFormat == null) {
             return;
         }
@@ -78,7 +77,7 @@ public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesP
 
     /** {@inheritDoc} */
     @Override
-    public void selectAvailableTemplate(@NotNull String availableTemplate) {
+    public void selectAvailableTemplate(@Nonnull String availableTemplate) {
         for (int i = 0; i < this.availableTemplates.getItemCount(); i++) {
             if (this.availableTemplates.getValue(i).equals(availableTemplate)) {
                 this.availableTemplates.setItemSelected(i, true);
@@ -93,7 +92,7 @@ public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesP
     }
 
     /** {@inheritDoc} */
-    @NotNull
+    @Nonnull
     @Override
     public String getTargetTemplate() {
         return String.valueOf(targetTemplate.getText());
@@ -101,7 +100,7 @@ public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesP
 
     /** {@inheritDoc} */
     @Override
-    public void setTargetTemplate(@NotNull String targetTemplate) {
+    public void setTargetTemplate(@Nonnull String targetTemplate) {
         this.targetTemplate.setText(targetTemplate);
     }
 
@@ -111,20 +110,20 @@ public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesP
     }
 
     /** {@inheritDoc} */
-    @NotNull
+    @Nonnull
     @Override
     public String getDescription() {
         return String.valueOf(description.getText());
     }
 
     @Override
-    public void setParameters(@NotNull String parameter) {
+    public void setParameters(@Nonnull String parameter) {
         parameters.setText(parameter);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setDescription(@NotNull String description) {
+    public void setDescription(@Nullable String description) {
         this.description.setText(description);
     }
 

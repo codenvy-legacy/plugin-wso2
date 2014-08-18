@@ -19,8 +19,8 @@ import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.Property;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
-import com.codenvy.ide.client.propertiespanel.log.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
+import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -29,10 +29,8 @@ import com.google.inject.Inject;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static com.codenvy.ide.client.elements.Property.Action;
 import static com.codenvy.ide.client.elements.Property.DataType;
-import static com.codenvy.ide.client.elements.Property.PropertyAction;
-import static com.codenvy.ide.client.elements.Property.PropertyAction.set;
-import static com.codenvy.ide.client.elements.Property.PropertyScope;
 import static com.codenvy.ide.client.elements.Property.ValueType;
 import static com.codenvy.ide.client.elements.Property.ValueType.EXPRESSION;
 
@@ -41,6 +39,7 @@ import static com.codenvy.ide.client.elements.Property.ValueType.EXPRESSION;
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Property, PropertyPropertiesPanelView>
         implements PropertyPropertiesPanelView.ActionDelegate {
@@ -82,17 +81,10 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
     /** {@inheritDoc} */
     @Override
     public void onPropertyActionChanged() {
-        element.setPropertyAction(view.getPropertyAction());
+        Action propertyAction = Action.valueOf(view.getPropertyAction());
+        element.setPropertyAction(propertyAction);
 
-        String propertyValue = view.getPropertyAction();
-        element.setPropertyAction(propertyValue);
-
-        if (set.name().equals(propertyValue)) {
-            view.updatePropertyPanel(true);
-            updateValueTypes(view.getValueType());
-        } else {
-            view.updatePropertyPanel(false);
-        }
+        applyValueTypes();
 
         notifyListeners();
     }
@@ -100,29 +92,32 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
     /** {@inheritDoc} */
     @Override
     public void onValueTypeChanged() {
-        element.setValueType(view.getValueType());
-
-        String propertyValue = view.getValueType();
+        ValueType propertyValue = ValueType.valueOf(view.getValueType());
         element.setValueType(propertyValue);
 
-        updateValueTypes(propertyValue);
+        applyValueTypes();
 
         notifyListeners();
     }
 
-    private void updateValueTypes(String propertyValue) {
-        if (set.name().equals(element.getPropertyAction())) {
-            boolean isExpression = EXPRESSION.name().equals(propertyValue);
+    /** Sets value type to element from special place of view and displaying properties panel to a certain value of value type */
+    private void applyValueTypes() {
+        ValueType valueType = ValueType.valueOf(view.getValueType());
 
-            view.setVisibleExpressionPanel(isExpression);
-            view.setVisibleLiteralPanel(!isExpression);
+        if (Action.set.equals(element.getPropertyAction())) {
+            view.setDefaultVisible(true);
+
+            view.setVisibleExpressionPanel(valueType.equals(EXPRESSION));
+            view.setVisibleLiteralPanel(!valueType.equals(EXPRESSION));
+        } else {
+            view.setDefaultVisible(false);
         }
     }
 
     /** {@inheritDoc} */
     @Override
     public void onPropertyDataTypeChanged() {
-        element.setPropertyDataType(view.getPropertyDataType());
+        element.setPropertyDataType(DataType.valueOf(view.getPropertyDataType()));
 
         notifyListeners();
     }
@@ -162,7 +157,7 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
     /** {@inheritDoc} */
     @Override
     public void onPropertyScopeChanged() {
-        element.setPropertyScope(view.getPropertyScope());
+        element.setPropertyScope(Property.Scope.valueOf(view.getPropertyScope()));
 
         notifyListeners();
     }
@@ -189,17 +184,18 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setValueType(propertyTypeManager.getValuesOfTypeByName(ValueType.TYPE_NAME));
-        view.selectValueType(element.getValueType());
+        view.setValueType(propertyTypeManager.getValuesByName(ValueType.TYPE_NAME));
+        view.selectValueType(element.getValueType().name());
+        applyValueTypes();
 
-        view.setPropertyAction(propertyTypeManager.getValuesOfTypeByName(PropertyAction.TYPE_NAME));
-        view.selectPropertyAction(element.getPropertyAction());
+        view.setPropertyAction(propertyTypeManager.getValuesByName(Action.TYPE_NAME));
+        view.selectPropertyAction(element.getPropertyAction().name());
 
-        view.setPropertyDataType(propertyTypeManager.getValuesOfTypeByName(DataType.TYPE_NAME));
-        view.selectPropertyDataType(element.getPropertyDataType());
+        view.setPropertyDataType(propertyTypeManager.getValuesByName(DataType.TYPE_NAME));
+        view.selectPropertyDataType(element.getPropertyDataType().name());
 
-        view.setPropertyScope(propertyTypeManager.getValuesOfTypeByName(PropertyScope.TYPE_NAME));
-        view.selectPropertyScope(element.getPropertyScope());
+        view.setPropertyScope(propertyTypeManager.getValuesByName(Property.Scope.TYPE_NAME));
+        view.selectPropertyScope(element.getPropertyScope().name());
 
         view.setPropertyName(element.getPropertyName());
         view.setValueLiteral(element.getValueLiteral());
@@ -207,10 +203,5 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
         view.setValueStringPattern(element.getValueStringPattern());
         view.setValueStringCaptureGroup(element.getValueStringCaptureGroup());
         view.setDescription(element.getDescription());
-
-        view.updatePropertyPanel(set.name().equals(element.getPropertyAction()));
-
-        updateValueTypes(element.getValueType());
     }
-
 }

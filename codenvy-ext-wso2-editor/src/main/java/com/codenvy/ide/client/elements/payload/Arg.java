@@ -33,28 +33,49 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
  * @author Valeriy Svydenko
  */
 public class Arg {
-    private static final String ARG_ELEMENT_EVALUATOR = "evaluator";
-    private static final String ARG_ELEMENT_VALUE     = "expression";
+    private static final String EVALUATOR_ATTRIBUTE_NAME  = "evaluator";
+    private static final String EXPRESSION_ATTRIBUTE_NAME = "expression";
+    private static final String VALUE_ATTRIBUTE_NAME      = "value";
 
-    private String           type;
-    private String           value;
-    private String           evaluator;
+    private ArgType type;
+    private String  value;
+
+    private String           expression;
+    private Evaluator        evaluator;
     private Array<NameSpace> nameSpaces;
 
-    public Arg(@Nullable String value, @Nullable String evaluator) {
-        this.value = value;
-        this.evaluator = evaluator;
+    public Arg() {
+        this.expression = "/default/expression";
+        this.type = ArgType.Value;
+        this.value = "default";
+        this.evaluator = Evaluator.xml;
         this.nameSpaces = Collections.createArray();
+    }
+
+    /** @return expression value of element */
+    @Nonnull
+    public String getExpression() {
+        return expression;
+    }
+
+    /**
+     * Set expression value to element
+     *
+     * @param expression
+     *         value which need to set
+     */
+    public void setExpression(@Nullable String expression) {
+        this.expression = expression;
     }
 
     /** @return type of arg */
     @Nonnull
-    public String getType() {
+    public ArgType getType() {
         return type;
     }
 
     /** Set type of arg */
-    public void setType(@Nonnull String type) {
+    public void setType(@Nonnull ArgType type) {
         this.type = type;
     }
 
@@ -65,7 +86,7 @@ public class Arg {
     }
 
     /** Set value of arg */
-    public void setValue(@Nonnull String value) {
+    public void setValue(@Nullable String value) {
         this.value = value;
     }
 
@@ -82,8 +103,43 @@ public class Arg {
 
     /** @return evaluator value of arg */
     @Nonnull
-    public String getEvaluator() {
+    public Evaluator getEvaluator() {
         return evaluator;
+    }
+
+    /**
+     * Sets evaluator value for element.
+     *
+     * @param evaluator
+     *         value which need to set to element
+     */
+    public void setEvaluator(@Nullable Evaluator evaluator) {
+        this.evaluator = evaluator;
+    }
+
+    /** @return serialization representation of element attributes */
+    @Nonnull
+    private String serializeAttributes() {
+        StringBuilder result = new StringBuilder();
+
+        for (NameSpace nameSpace : nameSpaces.asIterable()) {
+            result.append(' ').append(nameSpace.toString());
+        }
+
+        if (ArgType.Expression.equals(type)) {
+            result.append(EVALUATOR_ATTRIBUTE_NAME).append("=\"").append(evaluator).append("\" ");
+            result.append(EXPRESSION_ATTRIBUTE_NAME).append("=\"").append(expression).append("\" ");
+        } else {
+            result.append(VALUE_ATTRIBUTE_NAME).append("=\"").append(value).append("\" ");
+        }
+
+        return result.toString();
+    }
+
+    /** @return serialization representation of element */
+    @Nonnull
+    public String serialize() {
+        return "<arg " + serializeAttributes() + "/>\n";
     }
 
     /**
@@ -98,25 +154,32 @@ public class Arg {
         for (int i = 0; i < attributeMap.getLength(); i++) {
             Node attributeNode = attributeMap.item(i);
 
-            String nodeName = attributeNode.getNodeName();
-            String nodeValue = attributeNode.getNodeValue();
+            String attributeName = attributeNode.getNodeName();
+            String attributeValue = attributeNode.getNodeValue();
 
-            switch (nodeName) {
-                case ARG_ELEMENT_EVALUATOR:
-                    evaluator = nodeValue;
+            switch (attributeName) {
+                case EVALUATOR_ATTRIBUTE_NAME:
+                    evaluator = Evaluator.valueOf(attributeValue);
                     break;
 
-                case ARG_ELEMENT_VALUE:
-                    value = nodeValue;
+                case EXPRESSION_ATTRIBUTE_NAME:
+                    expression = attributeValue;
+
+                    type = ArgType.Expression;
                     break;
 
-                case PREFIX:
-                    String name = StringUtils.trimStart(nodeName, PREFIX + ':');
-                    //TODO create entity using edit factory
-                    NameSpace nameSpace = new NameSpace(name, nodeValue);
-
-                    nameSpaces.add(nameSpace);
+                case VALUE_ATTRIBUTE_NAME:
+                    value = attributeValue;
                     break;
+
+                default:
+                    if (StringUtils.startsWith(PREFIX, attributeName, true)) {
+                        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
+                        //TODO create entity using edit factory
+                        NameSpace nameSpace = new NameSpace(name, attributeValue);
+
+                        nameSpaces.add(nameSpace);
+                    }
             }
         }
     }
@@ -125,10 +188,14 @@ public class Arg {
     @Nonnull
     public Arg clone() {
         //TODO create arg using editor factory
-        Arg arg = new Arg(value, evaluator);
+        Arg arg = new Arg();
         arg.setNameSpaces(nameSpaces);
 
         return arg;
+    }
+
+    public enum ArgType {
+        Value, Expression
     }
 
     public enum Evaluator {

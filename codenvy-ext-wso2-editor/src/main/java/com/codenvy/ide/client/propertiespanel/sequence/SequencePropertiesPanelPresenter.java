@@ -19,7 +19,7 @@ import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.Sequence;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
-import com.codenvy.ide.client.propertiespanel.log.propertyconfig.AddNameSpacesCallBack;
+import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
@@ -109,7 +109,7 @@ public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Se
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setReferringTypes(propertyTypeManager.getValuesOfTypeByName(Sequence.ReferringType.TYPE_NAME));
+        view.setReferringTypes(propertyTypeManager.getValuesByName(Sequence.ReferringType.TYPE_NAME));
         view.selectReferringType(element.getReferringType().name());
 
         onReferringTypeChanged();

@@ -19,8 +19,8 @@ import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.Filter;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
-import com.codenvy.ide.client.propertiespanel.log.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
+import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -142,7 +142,7 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setConditionTypes(propertyTypeManager.getValuesOfTypeByName(Filter.ConditionType.TYPE_NAME));
+        view.setConditionTypes(propertyTypeManager.getValuesByName(Filter.ConditionType.TYPE_NAME));
         view.selectConditionType(element.getConditionType().name());
 
         redesignViewToConditionType();

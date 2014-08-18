@@ -19,7 +19,7 @@ import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.Call;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
-import com.codenvy.ide.client.propertiespanel.log.propertyconfig.AddNameSpacesCallBack;
+import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
@@ -130,7 +130,7 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, 
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setEndpointTypes(propertyTypeManager.getValuesOfTypeByName(Call.EndpointType.TYPE_NAME));
+        view.setEndpointTypes(propertyTypeManager.getValuesByName(Call.EndpointType.TYPE_NAME));
         view.selectEndpointType(element.getEndpointType().name());
 
         redesignViewToEndpointType();

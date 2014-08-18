@@ -18,7 +18,8 @@ package com.codenvy.ide.client.propertiespanel.calltemplate;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.inject.ImplementedBy;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -46,7 +47,7 @@ public abstract class CallTemplatePropertiesPanelView extends AbstractView<CallT
     }
 
     /** @return available template value from the special place on the view */
-    @NotNull
+    @Nonnull
     public abstract String getAvailableTemplates();
 
     /**
@@ -55,7 +56,7 @@ public abstract class CallTemplatePropertiesPanelView extends AbstractView<CallT
      * @param availableTemplates
      *         values of available template
      */
-    public abstract void setAvailableTemplates(@NotNull List<String> availableTemplates);
+    public abstract void setAvailableTemplates(@Nonnull List<String> availableTemplates);
 
     /**
      * Select available template in place on view.
@@ -63,10 +64,10 @@ public abstract class CallTemplatePropertiesPanelView extends AbstractView<CallT
      * @param availableTemplate
      *         available template value
      */
-    public abstract void selectAvailableTemplate(@NotNull String availableTemplate);
+    public abstract void selectAvailableTemplate(@Nonnull String availableTemplate);
 
     /** @return target template value from the special place on the view */
-    @NotNull
+    @Nonnull
     public abstract String getTargetTemplate();
 
     /**
@@ -75,10 +76,10 @@ public abstract class CallTemplatePropertiesPanelView extends AbstractView<CallT
      * @param targetTemplate
      *         values of target template
      */
-    public abstract void setTargetTemplate(String targetTemplate);
+    public abstract void setTargetTemplate(@Nonnull String targetTemplate);
 
     /** @return description value from the special place on the view */
-    @NotNull
+    @Nonnull
     public abstract String getDescription();
 
     /**
@@ -87,7 +88,7 @@ public abstract class CallTemplatePropertiesPanelView extends AbstractView<CallT
      * @param parameter
      *         value of parameter property
      */
-    public abstract void setParameters(@NotNull String parameter);
+    public abstract void setParameters(@Nonnull String parameter);
 
     /**
      * Sets description value to the special place on the view.
@@ -95,6 +96,6 @@ public abstract class CallTemplatePropertiesPanelView extends AbstractView<CallT
      * @param description
      *         description of CallTemplate mediator.
      */
-    public abstract void setDescription(@NotNull String description);
+    public abstract void setDescription(@Nullable String description);
 
 }

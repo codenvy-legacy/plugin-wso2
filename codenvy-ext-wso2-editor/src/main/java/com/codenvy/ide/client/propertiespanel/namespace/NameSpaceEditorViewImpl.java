@@ -51,23 +51,23 @@ public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorVi
     }
 
     @UiField(provided = true)
-    CellTable nameSpacesTable;
+    CellTable<NameSpace> nameSpacesTable;
     @UiField
-    TextBox   expression;
+    TextBox              expression;
     @UiField
-    Button    selectPathButton;
+    Button               selectPathButton;
     @UiField
-    TextBox   prefixTextBox;
+    TextBox              prefixTextBox;
     @UiField
-    TextBox   uriTextBox;
+    TextBox              uriTextBox;
     @UiField
-    Button    btnAdd;
+    Button               btnAdd;
     @UiField
-    Button    btnEdit;
+    Button               btnEdit;
     @UiField
-    Button    btnRemove;
+    Button               btnRemove;
     @UiField
-    Label     title;
+    Label                title;
 
     Button btnOk;
     Button btnCancel;
@@ -186,6 +186,7 @@ public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorVi
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getExpression() {
         return expression.getText();

@@ -25,41 +25,41 @@
 
         <g:FlowPanel>
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Header Action"/>
+                <g:Label text="{locale.headerAction}"/>
                 <g:ListBox ui:field="action" width="206px"/>
             </g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Scope"/>
+                <g:Label text="{locale.headerScope}"/>
                 <g:ListBox ui:field="scope" width="206px"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="valueTypePanel" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Value Type"/>
+                <g:Label text="{locale.headerValueType}"/>
                 <g:ListBox ui:field="valueType" width="206px"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="valueLiteralPanel" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Value Literal"/>
+                <g:Label text="{locale.hHeaderValueLiteral}"/>
                 <g:TextBox ui:field="value" width="200px"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="valueExpressionPanel" visible="false" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Value Expression"/>
+                <g:Label text="{locale.headerValueExpression}"/>
                 <g:TextBox text="{locale.defaultExpression}" ui:field="expression" enabled="false" width="200px"/>
                 <g:Button ui:field="btnAddExpression" width="30px" text="{locale.buttonEditConfig}"
                           addStyleNames="{res.editorCSS.propertyButton}"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="valueInlinePanel" visible="false" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Value Inline"/>
+                <g:Label text="{locale.headerValueInline}"/>
                 <g:TextBox enabled="false" ui:field="inline" width="200px"/>
                 <g:Button ui:field="btnAddInline" width="30px" text="{locale.buttonEditConfig}"
                           addStyleNames="{res.editorCSS.propertyButton}"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="headerNamePanel" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Header Name"/>
+                <g:Label text="{locale.headerName}"/>
                 <g:TextBox ui:field="headerName" width="200px" enabled="false"/>
                 <g:Button ui:field="btnAddNameSpace" width="30px" text="{locale.buttonEditConfig}"
                           addStyleNames="{res.editorCSS.propertyButton}"/>

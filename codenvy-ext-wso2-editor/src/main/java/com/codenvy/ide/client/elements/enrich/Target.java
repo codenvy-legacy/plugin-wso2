@@ -34,13 +34,13 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
  */
 public class Target {
 
-    public static final String ACTION   = "action";
-    public static final String TYPE     = "type";
-    public static final String XPATH    = "xpath";
-    public static final String PROPERTY = "property";
+    public static final String ACTION_ATTRIBUTE_NAME   = "action";
+    public static final String TYPE_ATTRIBUTE_NAME     = "type";
+    public static final String XPATH_ATTRIBUTE_NAME    = "xpath";
+    public static final String PROPERTY_ATTRIBUTE_NAME = "property";
 
-    private String           action;
-    private String           type;
+    private TargetAction     action;
+    private TargetType       type;
     private String           xpath;
     private String           property;
     private Array<NameSpace> nameSpaces;
@@ -49,10 +49,56 @@ public class Target {
         this.xpath = "/default/xpath";
         this.property = "target_property";
 
-        this.action = Enrich.TargetAction.replace.name();
-        this.type = Enrich.TargetType.custom.name();
+        this.action = TargetAction.replace;
+        this.type = TargetType.custom;
 
         this.nameSpaces = Collections.createArray();
+    }
+
+    /** Serialization representation attributes of target property of element. */
+    private String serializeAttributes() {
+        StringBuilder result = new StringBuilder();
+
+        if (!TargetAction.replace.equals(action)) {
+            result.append(ACTION_ATTRIBUTE_NAME).append("=\"").append(action).append('"').append(" ");
+        }
+
+        switch (type) {
+            case custom:
+                result.append(XPATH_ATTRIBUTE_NAME).append("=\"").append(xpath).append('"').append(" ");
+                break;
+
+            case property:
+                result.append(TYPE_ATTRIBUTE_NAME).append("=\"").append(type).append('"').append(" ");
+                result.append(PROPERTY_ATTRIBUTE_NAME).append("=\"").append(property).append('"').append(" ");
+                break;
+
+            case body:
+                result.append(TYPE_ATTRIBUTE_NAME).append("=\"").append(type).append('"').append(" ");
+                break;
+
+            case envelope:
+                result.append(TYPE_ATTRIBUTE_NAME).append("=\"").append(type).append('"').append(" ");
+                break;
+        }
+
+        return result.toString();
+    }
+
+    /** @return serialized representation of the target element */
+    @Nonnull
+    public String serialize() {
+        StringBuilder result = new StringBuilder();
+
+        StringBuilder targetNameSpaces = new StringBuilder();
+
+        for (NameSpace nameSpace : nameSpaces.asIterable()) {
+            targetNameSpaces.append(nameSpace.toString()).append(' ');
+        }
+
+        result.append("<target ").append(targetNameSpaces).append(" ").append(serializeAttributes()).append("/>\n");
+
+        return result.toString();
     }
 
     /**
@@ -71,28 +117,30 @@ public class Target {
             String nodeValue = attributeNode.getNodeValue();
 
             switch (nodeName) {
-                case ACTION:
-                    action = nodeValue;
+                case ACTION_ATTRIBUTE_NAME:
+                    action = TargetAction.valueOf(nodeValue);
                     break;
 
-                case TYPE:
-                    type = nodeValue;
+                case TYPE_ATTRIBUTE_NAME:
+                    type = TargetType.valueOf(nodeValue);
                     break;
 
-                case XPATH:
+                case XPATH_ATTRIBUTE_NAME:
                     xpath = nodeValue;
                     break;
 
-                case PROPERTY:
+                case PROPERTY_ATTRIBUTE_NAME:
                     property = nodeValue;
                     break;
 
-                case PREFIX:
-                    String name = StringUtils.trimStart(nodeName, PREFIX + '=');
-                    //TODO create entity using edit factory
-                    NameSpace nameSpace = new NameSpace(name, nodeValue);
+                default:
+                    if (StringUtils.startsWith(PREFIX, nodeName, true)) {
+                        String name = StringUtils.trimStart(nodeName, PREFIX + ':');
+                        //TODO create entity using edit factory
+                        NameSpace nameSpace = new NameSpace(name, nodeValue);
 
-                    nameSpaces.add(nameSpace);
+                        nameSpaces.add(nameSpace);
+                    }
                     break;
             }
         }
@@ -100,7 +148,7 @@ public class Target {
 
     /** @return action value of target */
     @Nonnull
-    public String getAction() {
+    public TargetAction getAction() {
         return action;
     }
 
@@ -110,13 +158,13 @@ public class Target {
      * @param action
      *         value which need to set to element
      */
-    public void setAction(@Nonnull String action) {
+    public void setAction(@Nonnull TargetAction action) {
         this.action = action;
     }
 
     /** @return type value of target */
     @Nonnull
-    public String getType() {
+    public TargetType getType() {
         return type;
     }
 
@@ -126,7 +174,7 @@ public class Target {
      * @param type
      *         value which need to set to element
      */
-    public void setType(@Nonnull String type) {
+    public void setType(@Nonnull TargetType type) {
         this.type = type;
     }
 
@@ -176,5 +224,17 @@ public class Target {
      */
     public void setNameSpaces(Array<NameSpace> nameSpaces) {
         this.nameSpaces = nameSpaces;
+    }
+
+    public enum TargetAction {
+        replace, child, sibling;
+
+        public static final String TYPE_NAME = "TargetAction";
+    }
+
+    public enum TargetType {
+        custom, envelope, body, property;
+
+        public static final String TYPE_NAME = "TargetType";
     }
 }

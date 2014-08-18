@@ -26,9 +26,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.enrich.Enrich.CloneSource.FALSE;
-import static com.codenvy.ide.client.elements.enrich.Enrich.InlineType.SourceXML;
-import static com.codenvy.ide.client.elements.enrich.Enrich.SourceType.custom;
+import static com.codenvy.ide.client.elements.enrich.Source.CloneSource.FALSE;
+import static com.codenvy.ide.client.elements.enrich.Source.InlineType.RegistryKey;
+import static com.codenvy.ide.client.elements.enrich.Source.InlineType.SourceXML;
+import static com.codenvy.ide.client.elements.enrich.Source.SourceType.custom;
 
 /**
  * Class describes entity which presented source element of Enrich mediator.
@@ -37,15 +38,15 @@ import static com.codenvy.ide.client.elements.enrich.Enrich.SourceType.custom;
  */
 public class Source {
 
-    public static final String CLONE_SOURCE        = "clone";
-    public static final String SOURCE_TYPE         = "type";
-    public static final String INLINE_REGISTRY_KEY = "key";
-    public static final String XPATH               = "xpath";
-    public static final String PROPERTY            = "property";
+    public static final String CLONE_SOURCE_ATTRIBUTE_NAME        = "clone";
+    public static final String SOURCE_TYPE_ATTRIBUTE_NAME         = "type";
+    public static final String INLINE_REGISTRY_KEY_ATTRIBUTE_NAME = "key";
+    public static final String XPATH_ATTRIBUTE_NAME               = "xpath";
+    public static final String PROPERTY_ATTRIBUTE_NAME            = "property";
 
     private String           clone;
-    private String           type;
-    private String           inlineType;
+    private SourceType       type;
+    private InlineType       inlineType;
     private String           inlRegisterKey;
     private String           sourceXML;
     private String           xpath;
@@ -54,8 +55,8 @@ public class Source {
 
     public Source() {
         this.clone = FALSE.name().toLowerCase();
-        this.type = custom.name();
-        this.inlineType = SourceXML.name();
+        this.type = custom;
+        this.inlineType = SourceXML;
 
         this.inlRegisterKey = "/default/sequence";
         this.sourceXML = "<inline/>";
@@ -65,13 +66,82 @@ public class Source {
         this.nameSpaces = Collections.createArray();
     }
 
+    /** Serialization representation attributes of source property of element. */
+    private String serializeAttributes() {
+        StringBuilder result = new StringBuilder();
+
+        if (clone.equalsIgnoreCase(CloneSource.TRUE.name())) {
+            result.append(CLONE_SOURCE_ATTRIBUTE_NAME).append("=\"").append(clone).append("\" ");
+        }
+
+        switch (type) {
+            case custom:
+                result.append(XPATH_ATTRIBUTE_NAME).append("=\"").append(xpath).append("\" ");
+                break;
+
+            case property:
+                result.append(SOURCE_TYPE_ATTRIBUTE_NAME).append("=\"").append(type).append("\" ");
+                result.append(PROPERTY_ATTRIBUTE_NAME).append("=\"").append(property).append("\" ");
+                break;
+
+            case inline:
+                result.append(SOURCE_TYPE_ATTRIBUTE_NAME).append("=\"").append(type).append("\" ");
+
+                if (inlineType.equals(RegistryKey)) {
+                    result.append(INLINE_REGISTRY_KEY_ATTRIBUTE_NAME).append("=\"").append(inlRegisterKey).append("\" ");
+                }
+
+                break;
+
+            case envelope:
+                result.append(SOURCE_TYPE_ATTRIBUTE_NAME).append("=\"").append(type).append("\" ");
+                break;
+
+            case body:
+                result.append(SOURCE_TYPE_ATTRIBUTE_NAME).append("=\"").append(type).append("\" ");
+                break;
+        }
+
+        return result.toString();
+    }
+
+    /** @return serialized representation of the source element */
+    @Nonnull
+    public String serialize() {
+        StringBuilder result = new StringBuilder();
+
+        StringBuilder sourceNameSpaces = new StringBuilder();
+
+        for (NameSpace nameSpace : nameSpaces.asIterable()) {
+            sourceNameSpaces.append(nameSpace.toString()).append(' ');
+        }
+
+        result.append("<source ").append(sourceNameSpaces).append(serializeAttributes()).append(">\n");
+
+        if (type.equals(SourceType.inline) && inlineType.equals(InlineType.SourceXML)) {
+
+            int index = sourceXML.indexOf(">");
+
+            String tag = sourceXML.substring(0, index);
+
+            String tagName = sourceXML.substring(0, tag.contains("/") ? index - 1 : index);
+            String restString = sourceXML.substring(tag.contains("/") ? index - 1 : index);
+
+            result.append(tagName).append(" " + PREFIX + "=\"\"").append(restString);
+        }
+
+        result.append("</source>");
+
+        return result.toString();
+    }
+
     /**
      * Apply attributes from XML node to the diagram element
      *
      * @param node
      *         XML node that need to be analyzed
      */
-    public void applyAttributes(@Nonnull Node node) {
+    private void applyAttributes(@Nonnull Node node) {
         NamedNodeMap attributeMap = node.getAttributes();
 
         for (int i = 0; i < attributeMap.getLength(); i++) {
@@ -81,34 +151,62 @@ public class Source {
             String nodeValue = attributeNode.getNodeValue();
 
             switch (nodeName) {
-                case CLONE_SOURCE:
+                case CLONE_SOURCE_ATTRIBUTE_NAME:
                     clone = nodeValue;
                     break;
 
-                case SOURCE_TYPE:
-                    type = nodeValue;
+                case SOURCE_TYPE_ATTRIBUTE_NAME:
+                    type = SourceType.valueOf(nodeValue);
                     break;
 
-                case INLINE_REGISTRY_KEY:
+                case INLINE_REGISTRY_KEY_ATTRIBUTE_NAME:
                     inlRegisterKey = nodeValue;
+
+                    type = SourceType.inline;
+                    inlineType = InlineType.RegistryKey;
                     break;
 
-                case XPATH:
+                case XPATH_ATTRIBUTE_NAME:
                     xpath = nodeValue;
                     break;
 
-                case PROPERTY:
+                case PROPERTY_ATTRIBUTE_NAME:
                     property = nodeValue;
                     break;
 
-                case PREFIX:
-                    String name = StringUtils.trimStart(nodeName, PREFIX + '=');
-                    //TODO create entity using edit factory
-                    NameSpace nameSpace = new NameSpace(name, nodeValue);
+                default:
+                    if (StringUtils.startsWith(PREFIX, nodeName, true)) {
+                        String name = StringUtils.trimStart(nodeName, PREFIX + ':');
+                        //TODO create entity using edit factory
+                        NameSpace nameSpace = new NameSpace(name, nodeValue);
 
-                    nameSpaces.add(nameSpace);
+                        nameSpaces.add(nameSpace);
+                    }
                     break;
             }
+        }
+    }
+
+    /**
+     * Apply properties from XML node to the diagram element
+     *
+     * @param node
+     *         XML node that need to be analyzed
+     */
+    public void applyProperty(@Nonnull Node node) {
+        applyAttributes(node);
+
+        if (node.hasChildNodes()) {
+            String item = node.getChildNodes().item(0).toString();
+
+            int indexFirst = item.indexOf(" ");
+            int indexLast = item.indexOf(">");
+
+            String tagName = item.substring(0, indexLast);
+
+            String xmlns = tagName.substring(indexFirst, tagName.contains("/") ? indexLast - 1 : indexLast);
+
+            sourceXML = item.replace(xmlns, "");
         }
     }
 
@@ -130,7 +228,7 @@ public class Source {
 
     /** @return source type value of source */
     @Nonnull
-    public String getType() {
+    public SourceType getType() {
         return type;
     }
 
@@ -140,13 +238,13 @@ public class Source {
      * @param type
      *         value which need to set to element
      */
-    public void setType(@Nonnull String type) {
+    public void setType(@Nonnull SourceType type) {
         this.type = type;
     }
 
     /** @return inline type value of source */
     @Nonnull
-    public String getInlineType() {
+    public InlineType getInlineType() {
         return inlineType;
     }
 
@@ -156,7 +254,7 @@ public class Source {
      * @param inlineType
      *         value which need to set to element
      */
-    public void setInlineType(@Nonnull String inlineType) {
+    public void setInlineType(@Nonnull InlineType inlineType) {
         this.inlineType = inlineType;
     }
 
@@ -238,5 +336,23 @@ public class Source {
      */
     public void setNameSpaces(@Nonnull Array<NameSpace> nameSpaces) {
         this.nameSpaces = nameSpaces;
+    }
+
+    public enum SourceType {
+        custom, envelope, body, property, inline;
+
+        public static final String TYPE_NAME = "SourceType";
+    }
+
+    public enum InlineType {
+        SourceXML, RegistryKey;
+
+        public static final String INLINE_TYPE = "Inline type";
+    }
+
+    public enum CloneSource {
+        TRUE, FALSE;
+
+        public static final String TYPE_NAME = "Clone source";
     }
 }

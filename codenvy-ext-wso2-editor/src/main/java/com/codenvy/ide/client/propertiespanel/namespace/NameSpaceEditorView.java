@@ -89,7 +89,7 @@ public interface NameSpaceEditorView extends View<NameSpaceEditorView.ActionDele
     public void setUri(@Nonnull String text);
 
     /** @return expression value from the special place on the view which uses for showing expression */
-    @Nullable
+    @Nonnull
     public String getExpression();
 
     /**

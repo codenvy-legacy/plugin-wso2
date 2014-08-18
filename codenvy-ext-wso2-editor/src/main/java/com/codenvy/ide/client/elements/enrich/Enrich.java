@@ -23,7 +23,6 @@ import com.codenvy.ide.client.elements.CallTemplate;
 import com.codenvy.ide.client.elements.Filter;
 import com.codenvy.ide.client.elements.Header;
 import com.codenvy.ide.client.elements.LoopBack;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.Property;
 import com.codenvy.ide.client.elements.Respond;
 import com.codenvy.ide.client.elements.Send;
@@ -32,8 +31,8 @@ import com.codenvy.ide.client.elements.Switch;
 import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
+import com.google.gwt.xml.client.NodeList;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
@@ -52,12 +51,12 @@ public class Enrich extends AbstractShape {
     public static final String ELEMENT_NAME       = "Enrich";
     public static final String SERIALIZATION_NAME = "enrich";
 
-    private static final String TARGET_ELEMENT = "target";
-    private static final String SOURCE_ELEMENT = "source";
+    private static final String TARGET_PROPERTY_NAME = "target";
+    private static final String SOURCE_PROPERTY_NAME = "source";
 
-    private static final String DESCRIPTION = "description";
+    private static final String DESCRIPTION_ATTRIBUTE_NAME = "description";
 
-    private static final List<String> PROPERTIES = Arrays.asList(TARGET_ELEMENT, SOURCE_ELEMENT);
+    private static final List<String> PROPERTIES = Arrays.asList(TARGET_PROPERTY_NAME, SOURCE_PROPERTY_NAME);
 
     private String description;
     private Source source;
@@ -160,136 +159,7 @@ public class Enrich extends AbstractShape {
     @Nonnull
     @Override
     protected String serializeProperties() {
-        StringBuilder result = new StringBuilder();
-
-        StringBuilder targetNameSpaces = new StringBuilder();
-        StringBuilder sourceNameSpaces = new StringBuilder();
-
-        for (NameSpace nameSpace : source.getNameSpaces().asIterable()) {
-            sourceNameSpaces.append(nameSpace.toString()).append(' ');
-        }
-
-        for (NameSpace nameSpace : target.getNameSpaces().asIterable()) {
-            targetNameSpaces.append(nameSpace.toString()).append(' ');
-        }
-
-        result.append("<source ").append(sourceNameSpaces).append(serializeSourceAttributes()).append(">\n");
-
-        if (source.getType().equals(SourceType.inline.name()) && source.getInlineType().equals(InlineType.SourceXML.name())) {
-            String xml = source.getSourceXML();
-
-            int index = xml.indexOf(">");
-
-            String tag = xml.substring(0, index);
-
-            String tagName = xml.substring(0, tag.contains("/") ? index - 1 : index);
-            String restString = xml.substring(tag.contains("/") ? index - 1 : index);
-
-            result.append(tagName).append(' ').append("xmlns=\"\"").append(restString);
-        }
-
-        result.append("</source>");
-
-        result.append("<target ").append(targetNameSpaces).append(serializeTargetAttributes()).append("/>\n");
-
-        return result.toString();
-    }
-
-    /** Serialization representation attributes of source property of element. */
-    private String serializeSourceAttributes() {
-        Map<String, String> attributes = new LinkedHashMap<>();
-
-        setDefaultSourceAttributes(attributes);
-
-        if (source.getClone().equalsIgnoreCase(CloneSource.FALSE.name())) {
-            attributes.remove(Source.CLONE_SOURCE);
-        }
-
-        switch (SourceType.valueOf(source.getType())) {
-            case custom:
-                attributes.remove(Source.SOURCE_TYPE);
-                attributes.remove(Source.INLINE_REGISTRY_KEY);
-                attributes.remove(Source.PROPERTY);
-                break;
-
-            case property:
-                attributes.remove(Source.INLINE_REGISTRY_KEY);
-                attributes.remove(Source.XPATH);
-                break;
-
-            case inline:
-                attributes.remove(Source.PROPERTY);
-                attributes.remove(Source.XPATH);
-
-                if (source.getInlineType().equals(InlineType.SourceXML.name())) {
-                    attributes.remove(Source.INLINE_REGISTRY_KEY);
-                }
-                break;
-
-            default:
-                attributes.remove(Source.PROPERTY);
-                attributes.remove(Source.INLINE_REGISTRY_KEY);
-                attributes.remove(Source.XPATH);
-                break;
-        }
-
-        return convertPropertiesToXMLFormat(attributes);
-    }
-
-    /**
-     * Sets default visualization of source element attributes.
-     *
-     * @param attributes
-     *         list of default attributes
-     */
-    private void setDefaultSourceAttributes(@Nonnull Map<String, String> attributes) {
-        attributes.put(Source.CLONE_SOURCE, source.getClone());
-        attributes.put(Source.XPATH, source.getXpath());
-        attributes.put(Source.SOURCE_TYPE, source.getType());
-        attributes.put(Source.PROPERTY, source.getProperty());
-        attributes.put(Source.INLINE_REGISTRY_KEY, source.getInlRegisterKey());
-    }
-
-    /**
-     * Sets default visualization of target element attributes.
-     *
-     * @param attributes
-     *         list of default attributes
-     */
-    private void setDefaultTargetAttributes(@Nonnull Map<String, String> attributes) {
-        attributes.put(Target.TYPE, target.getType());
-        attributes.put(Target.ACTION, target.getAction());
-        attributes.put(Target.PROPERTY, target.getProperty());
-        attributes.put(Target.XPATH, target.getXpath());
-    }
-
-    /** Serialization representation attributes of target property of element. */
-    private String serializeTargetAttributes() {
-        Map<String, String> attributes = new LinkedHashMap<>();
-
-        setDefaultTargetAttributes(attributes);
-
-        if (target.getAction().equals(TargetAction.replace.name())) {
-            attributes.remove(Target.ACTION);
-        }
-
-        switch (TargetType.valueOf(target.getType())) {
-            case custom:
-                attributes.remove(Target.TYPE);
-                attributes.remove(Target.PROPERTY);
-                break;
-
-            case property:
-                attributes.remove(Target.XPATH);
-                break;
-
-            default:
-                attributes.remove(Target.PROPERTY);
-                attributes.remove(Target.XPATH);
-                break;
-        }
-
-        return convertPropertiesToXMLFormat(attributes);
+        return source.serialize() + target.serialize();
     }
 
     /** {@inheritDoc} */
@@ -298,58 +168,36 @@ public class Enrich extends AbstractShape {
     protected String serializeAttributes() {
         Map<String, String> attributes = new LinkedHashMap<>();
 
-        attributes.put(DESCRIPTION, description);
+        attributes.put(DESCRIPTION_ATTRIBUTE_NAME, description);
 
         return convertPropertiesToXMLFormat(attributes);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
+    public void deserialize(@Nonnull Node node) {
+        applyAttributes(node);
 
-        switch (nodeName) {
-            case TARGET_ELEMENT:
-                //TODO create entity using editor factory
-                Target target = new Target();
-                target.applyAttributes(node);
-                break;
+        NodeList childNodes = node.getChildNodes();
 
-            case SOURCE_ELEMENT:
-                //TODO create entity using editor factory
-                Source source = new Source();
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node childNode = childNodes.item(i);
 
-                source.applyAttributes(node);
-
-                if (node.hasChildNodes()) {
-                    String document = node.getOwnerDocument().toString();
-
-                    node.getFirstChild().getOwnerDocument().getDocumentElement().removeAttribute("xmlns");
-
-                    int indexOpen = document.indexOf(">");
-                    int indexClose = document.lastIndexOf("<");
-
-                    String result = document.substring(indexOpen + 1, indexClose);
-
-                    source.setSourceXML(result);
-                }
-                break;
+            if (TARGET_PROPERTY_NAME.equals(childNode.getNodeName())) {
+                target.applyAttributes(childNode);
+            } else {
+                source.applyProperty(childNode);
+            }
         }
     }
 
     /** {@inheritDoc} */
     @Override
     protected void applyAttributes(@Nonnull Node node) {
-        NamedNodeMap attributeMap = node.getAttributes();
+        if (node.hasAttributes()) {
+            Node attributeNode = node.getAttributes().item(0);
 
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
-
-            switch (attributeNode.getNodeName()) {
-                case DESCRIPTION:
-                    description = String.valueOf(node);
-                    break;
-            }
+            description = String.valueOf(attributeNode.getNodeValue());
         }
     }
 
@@ -358,33 +206,5 @@ public class Enrich extends AbstractShape {
     @Override
     public ImageResource getIcon() {
         return resources.enrich();
-    }
-
-    public enum SourceType {
-        custom, envelope, body, property, inline;
-
-        public static final String TYPE_NAME = "EnrichSourceType";
-    }
-
-    public enum TargetAction {
-        replace, child, sibling;
-
-        public static final String TYPE_NAME = "EnrichTargetAction";
-    }
-
-    public enum TargetType {
-        custom, envelope, body, property;
-
-        public static final String TYPE_NAME = "EnrichTargetType";
-    }
-
-    public enum InlineType {
-        SourceXML, RegistryKey;
-
-        public static final String INLINE_TYPE = "Inline type";
-    }
-
-    public enum CloneSource {
-        TRUE, FALSE
     }
 }

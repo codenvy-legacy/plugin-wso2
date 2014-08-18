@@ -80,6 +80,9 @@ import static com.codenvy.ide.client.elements.Header.HeaderValueType;
 import static com.codenvy.ide.client.elements.Header.ScopeType;
 import static com.codenvy.ide.client.elements.Header.ScopeType.Synapse;
 import static com.codenvy.ide.client.elements.Header.ScopeType.transport;
+import static com.codenvy.ide.client.elements.Property.Action;
+import static com.codenvy.ide.client.elements.Property.Action.remove;
+import static com.codenvy.ide.client.elements.Property.Action.set;
 import static com.codenvy.ide.client.elements.Property.DataType;
 import static com.codenvy.ide.client.elements.Property.DataType.BOOLEAN;
 import static com.codenvy.ide.client.elements.Property.DataType.DOUBLE;
@@ -89,36 +92,32 @@ import static com.codenvy.ide.client.elements.Property.DataType.LONG;
 import static com.codenvy.ide.client.elements.Property.DataType.OM;
 import static com.codenvy.ide.client.elements.Property.DataType.SHORT;
 import static com.codenvy.ide.client.elements.Property.DataType.STRING;
-import static com.codenvy.ide.client.elements.Property.PropertyAction;
-import static com.codenvy.ide.client.elements.Property.PropertyAction.remove;
-import static com.codenvy.ide.client.elements.Property.PropertyAction.set;
-import static com.codenvy.ide.client.elements.Property.PropertyScope;
-import static com.codenvy.ide.client.elements.Property.PropertyScope.AXIS2;
-import static com.codenvy.ide.client.elements.Property.PropertyScope.AXIS2_CLIENT;
-import static com.codenvy.ide.client.elements.Property.PropertyScope.OPERATION;
-import static com.codenvy.ide.client.elements.Property.PropertyScope.SYNAPSE;
-import static com.codenvy.ide.client.elements.Property.PropertyScope.TRANSPORT;
+import static com.codenvy.ide.client.elements.Property.Scope;
+import static com.codenvy.ide.client.elements.Property.Scope.AXIS2;
+import static com.codenvy.ide.client.elements.Property.Scope.AXIS2_CLIENT;
+import static com.codenvy.ide.client.elements.Property.Scope.OPERATION;
+import static com.codenvy.ide.client.elements.Property.Scope.SYNAPSE;
+import static com.codenvy.ide.client.elements.Property.Scope.TRANSPORT;
 import static com.codenvy.ide.client.elements.Property.ValueType;
 import static com.codenvy.ide.client.elements.Property.ValueType.EXPRESSION;
 import static com.codenvy.ide.client.elements.Property.ValueType.LITERAL;
-import static com.codenvy.ide.client.elements.Send.EBoolean;
 import static com.codenvy.ide.client.elements.Send.EBoolean.FALSE;
 import static com.codenvy.ide.client.elements.Send.EBoolean.TRUE;
-import static com.codenvy.ide.client.elements.Send.ReceivingSequenceType;
-import static com.codenvy.ide.client.elements.Send.ReceivingSequenceType.Default;
-import static com.codenvy.ide.client.elements.Send.ReceivingSequenceType.Static;
+import static com.codenvy.ide.client.elements.Send.SequenceType.Default;
+import static com.codenvy.ide.client.elements.Send.SequenceType.Static;
 import static com.codenvy.ide.client.elements.Sequence.ReferringType.Dynamic;
-import static com.codenvy.ide.client.elements.enrich.Enrich.SourceType;
-import static com.codenvy.ide.client.elements.enrich.Enrich.SourceType.body;
-import static com.codenvy.ide.client.elements.enrich.Enrich.SourceType.custom;
-import static com.codenvy.ide.client.elements.enrich.Enrich.SourceType.envelope;
-import static com.codenvy.ide.client.elements.enrich.Enrich.SourceType.inline;
-import static com.codenvy.ide.client.elements.enrich.Enrich.SourceType.property;
-import static com.codenvy.ide.client.elements.enrich.Enrich.TargetAction;
-import static com.codenvy.ide.client.elements.enrich.Enrich.TargetAction.child;
-import static com.codenvy.ide.client.elements.enrich.Enrich.TargetAction.replace;
-import static com.codenvy.ide.client.elements.enrich.Enrich.TargetAction.sibling;
-import static com.codenvy.ide.client.elements.enrich.Enrich.TargetType;
+import static com.codenvy.ide.client.elements.enrich.Source.InlineType;
+import static com.codenvy.ide.client.elements.enrich.Source.SourceType;
+import static com.codenvy.ide.client.elements.enrich.Source.SourceType.body;
+import static com.codenvy.ide.client.elements.enrich.Source.SourceType.custom;
+import static com.codenvy.ide.client.elements.enrich.Source.SourceType.envelope;
+import static com.codenvy.ide.client.elements.enrich.Source.SourceType.inline;
+import static com.codenvy.ide.client.elements.enrich.Source.SourceType.property;
+import static com.codenvy.ide.client.elements.enrich.Target.TargetAction;
+import static com.codenvy.ide.client.elements.enrich.Target.TargetAction.child;
+import static com.codenvy.ide.client.elements.enrich.Target.TargetAction.replace;
+import static com.codenvy.ide.client.elements.enrich.Target.TargetAction.sibling;
+import static com.codenvy.ide.client.elements.enrich.Target.TargetType;
 import static com.codenvy.ide.client.elements.log.Log.LogCategory;
 import static com.codenvy.ide.client.elements.log.Log.LogCategory.DEBUG;
 import static com.codenvy.ide.client.elements.log.Log.LogCategory.ERROR;
@@ -131,12 +130,12 @@ import static com.codenvy.ide.client.elements.log.Log.LogLevel.CUSTOM;
 import static com.codenvy.ide.client.elements.log.Log.LogLevel.FULL;
 import static com.codenvy.ide.client.elements.log.Log.LogLevel.HEADERS;
 import static com.codenvy.ide.client.elements.log.Log.LogLevel.SIMPLE;
-import static com.codenvy.ide.client.elements.payload.PayloadFactory.FormatType;
-import static com.codenvy.ide.client.elements.payload.PayloadFactory.FormatType.Inline;
-import static com.codenvy.ide.client.elements.payload.PayloadFactory.FormatType.Registry;
-import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType;
-import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType.json;
-import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType.xml;
+import static com.codenvy.ide.client.elements.payload.Format.FormatType;
+import static com.codenvy.ide.client.elements.payload.Format.FormatType.Inline;
+import static com.codenvy.ide.client.elements.payload.Format.FormatType.Registry;
+import static com.codenvy.ide.client.elements.payload.Format.MediaType;
+import static com.codenvy.ide.client.elements.payload.Format.MediaType.json;
+import static com.codenvy.ide.client.elements.payload.Format.MediaType.xml;
 
 /**
  * @author Andrey Plotnikov
@@ -261,21 +260,21 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        SHORT.name(),
                                                                        OM.name()));
 
-        propertyTypeManager.register(PropertyScope.TYPE_NAME, Arrays.asList(SYNAPSE.getValue(),
-                                                                            TRANSPORT.getValue(),
-                                                                            AXIS2.getValue(),
-                                                                            AXIS2_CLIENT.getValue(),
-                                                                            OPERATION.getValue()));
+        propertyTypeManager.register(Scope.TYPE_NAME, Arrays.asList(SYNAPSE.getValue(),
+                                                                    TRANSPORT.getValue(),
+                                                                    AXIS2.getValue(),
+                                                                    AXIS2_CLIENT.getValue(),
+                                                                    OPERATION.getValue()));
 
-        propertyTypeManager.register(PropertyAction.TYPE_NAME, Arrays.asList(set.name(), remove.name()));
+        propertyTypeManager.register(Action.TYPE_NAME, Arrays.asList(set.name(), remove.name()));
 
         propertyTypeManager.register(MediaType.TYPE_NAME, Arrays.asList(xml.name(), json.name()));
 
         propertyTypeManager.register(FormatType.TYPE_NAME, Arrays.asList(Inline.name(), Registry.name()));
 
-        propertyTypeManager.register(EBoolean.TYPE_NAME, Arrays.asList(TRUE.getValue(), FALSE.getValue()));
+        propertyTypeManager.register(Send.EBoolean.TYPE_NAME, Arrays.asList(FALSE.name().toLowerCase(), TRUE.name().toLowerCase()));
 
-        propertyTypeManager.register(ReceivingSequenceType.TYPE_NAME, Arrays.asList(Default.name(), Static.name()));
+        propertyTypeManager.register(Send.SequenceType.TYPE_NAME, Arrays.asList(Default.name(), Static.name(), Dynamic.name()));
 
         propertyTypeManager.register(HeaderAction.TYPE_NAME, Arrays.asList(HeaderAction.set.name(), HeaderAction.remove.name()));
 
@@ -306,8 +305,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                  SELECT_FROM_TEMPLATE.getValue(),
                                                                                  SDF.getValue()));
 
-        propertyTypeManager.register(Enrich.InlineType.INLINE_TYPE, Arrays.asList(Enrich.InlineType.RegistryKey.name(),
-                                                                                  Enrich.InlineType.SourceXML.name()));
+        propertyTypeManager.register(InlineType.INLINE_TYPE, Arrays.asList(InlineType.RegistryKey.name(),
+                                                                           InlineType.SourceXML.name()));
     }
 
     @Inject

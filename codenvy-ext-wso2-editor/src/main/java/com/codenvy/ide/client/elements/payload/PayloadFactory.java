@@ -23,7 +23,6 @@ import com.codenvy.ide.client.elements.CallTemplate;
 import com.codenvy.ide.client.elements.Filter;
 import com.codenvy.ide.client.elements.Header;
 import com.codenvy.ide.client.elements.LoopBack;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.Property;
 import com.codenvy.ide.client.elements.Respond;
 import com.codenvy.ide.client.elements.Send;
@@ -34,9 +33,9 @@ import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
-import com.google.gwt.xml.client.XMLParser;
+import com.google.gwt.xml.client.NodeList;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
@@ -47,9 +46,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.payload.PayloadFactory.FormatType.Inline;
-import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType.json;
-import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType.xml;
+import static com.codenvy.ide.client.elements.payload.Format.FormatType;
 
 /**
  * Class describes PayloadFactory mediator.
@@ -61,23 +58,16 @@ public class PayloadFactory extends AbstractShape {
     public static final String ELEMENT_NAME       = "PayloadFactory";
     public static final String SERIALIZATION_NAME = "payloadFactory";
 
-    private static final String PAYLOAD_FORMAT_PROPERTY_NAME = "PayloadFormat";
-    private static final String FORMAT_PROPERTY_NAME         = "format";
-    private static final String ARGS_PROPERTY_NAME           = "args";
-    private static final String MEDIA_TYPE_PROPERTY_NAME     = "media-type";
-    private static final String DESCRIPTION_PROPERTY_NAME    = "description";
+    private static final String FORMAT_PROPERTY_NAME       = "format";
+    private static final String ARGS_PROPERTY_NAME         = "args";
+    private static final String MEDIA_TYPE_ATTRIBUTE_NAME  = "media-type";
+    private static final String DESCRIPTION_ATTRIBUTE_NAME = "description";
 
-    private static final List<String> PROPERTIES = Arrays.asList(PAYLOAD_FORMAT_PROPERTY_NAME,
-                                                                 FORMAT_PROPERTY_NAME,
-                                                                 ARGS_PROPERTY_NAME,
-                                                                 MEDIA_TYPE_PROPERTY_NAME,
-                                                                 DESCRIPTION_PROPERTY_NAME);
+    private static final List<String> PROPERTIES = Arrays.asList(FORMAT_PROPERTY_NAME,
+                                                                 ARGS_PROPERTY_NAME);
 
-    private String     payloadFormat;
-    private String     format;
-    private String     formatKey;
-    private String     mediaType;
     private String     description;
+    private Format     format;
     private Array<Arg> args;
 
     @Inject
@@ -118,59 +108,26 @@ public class PayloadFactory extends AbstractShape {
               sequenceProvider,
               switchProvider);
 
-        payloadFormat = Inline.name();
-        format = "<inline/>";
-        mediaType = xml.name();
-        formatKey = "/default/key";
+        description = "";
+        //TODO create entity using editor factory
+        format = new Format();
         args = Collections.createArray();
     }
 
-    /** @return value of payload format */
-    @Nullable
-    public String getPayloadFormat() {
-        return payloadFormat;
-    }
-
-    /**
-     * Set payload format.
-     *
-     * @param payloadFormat
-     *         value of payload format
-     */
-    public void setPayloadFormat(@Nullable String payloadFormat) {
-        this.payloadFormat = payloadFormat;
-    }
-
-    /** @return value of format */
+    /** @return format element of payload mediator */
     @Nonnull
-    public String getFormat() {
+    public Format getFormat() {
         return format;
     }
 
     /**
-     * Set format.
+     * Set format to payload mediator.
      *
      * @param format
-     *         value of format
+     *         format element which need to set
      */
-    public void setFormat(@Nullable String format) {
+    public void setFormat(@Nonnull Format format) {
         this.format = format;
-    }
-
-    /** @return value of payload format key */
-    @Nullable
-    public String getFormatKey() {
-        return formatKey;
-    }
-
-    /**
-     * Set format key.
-     *
-     * @param formatKey
-     *         value of format key
-     */
-    public void setFormatKey(@Nullable String formatKey) {
-        this.formatKey = formatKey;
     }
 
     /** @return value of args */
@@ -187,22 +144,6 @@ public class PayloadFactory extends AbstractShape {
      */
     public void setArgs(@Nullable Array<Arg> args) {
         this.args = args;
-    }
-
-    /** @return value of media type */
-    @Nullable
-    public String getMediaType() {
-        return mediaType;
-    }
-
-    /**
-     * Set media type.
-     *
-     * @param mediaType
-     *         value of media type property
-     */
-    public void setMediaType(@Nullable String mediaType) {
-        this.mediaType = mediaType;
     }
 
     /** @return value of description */
@@ -227,8 +168,8 @@ public class PayloadFactory extends AbstractShape {
     protected String serializeAttributes() {
         Map<String, String> prop = new LinkedHashMap<>();
 
-        prop.put(MEDIA_TYPE_PROPERTY_NAME, mediaType);
-        prop.put(DESCRIPTION_PROPERTY_NAME, description);
+        prop.put(MEDIA_TYPE_ATTRIBUTE_NAME, format.getMediaType().name());
+        prop.put(DESCRIPTION_ATTRIBUTE_NAME, description);
 
         return convertPropertiesToXMLFormat(prop);
     }
@@ -238,47 +179,44 @@ public class PayloadFactory extends AbstractShape {
     @Override
     protected String serializeProperties() {
         StringBuilder result = new StringBuilder();
-        result.append("<format");
 
-        if (payloadFormat.equals(FormatType.Inline.name())) {
-            result.append(">");
-
-            if (json.name().equals(mediaType)) {
-                String jsonFormat;
-                jsonFormat = format.replace("<", "&lt;");
-                jsonFormat = jsonFormat.replace(">", "&gt;");
-                result.append(jsonFormat);
-            } else {
-                Document document = XMLParser.parse(format);
-                document.getDocumentElement().setAttribute("xmlns", "");
-                result.append(document);
-            }
-
-            result.append("</format>");
-        } else {
-            result.append(" key=\"").append(formatKey).append("\"/>");
-        }
-
-        if (args.isEmpty()) {
-            result.append("<args/>");
-        } else {
-            result.append("<args>");
+        if (!args.isEmpty()) {
+            result.append("<args>\n");
 
             for (Arg arg : args.asIterable()) {
-                StringBuilder nameSpaces = new StringBuilder();
-
-                for (NameSpace nameSpace : arg.getNameSpaces().asIterable()) {
-                    nameSpaces.append(nameSpace.toString()).append(' ');
-                }
-
-                result.append("<arg ").append(nameSpaces).append("evaluator=\"").append(arg.getEvaluator()).append("\" expression=\"")
-                      .append(arg.getValue()).append("\"/>");
-
+                result.append(arg.serialize());
             }
+
             result.append("</args>");
+        } else {
+            result.append("<args/>");
         }
 
-        return result.toString();
+        return format.serialize() + result.toString();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void applyAttributes(@Nonnull Node node) {
+        NamedNodeMap attributes = node.getAttributes();
+
+        for (int i = 0; i < attributes.getLength(); i++) {
+            Node childNode = attributes.item(i);
+
+            String attributeName = childNode.getNodeName();
+            String attributeValue = childNode.getNodeValue();
+
+            switch (attributeName) {
+                case MEDIA_TYPE_ATTRIBUTE_NAME:
+                    format.setMediaType(Format.MediaType.valueOf(attributeValue));
+                    break;
+
+                case DESCRIPTION_ATTRIBUTE_NAME:
+                    description = attributeValue;
+                    break;
+            }
+        }
+
     }
 
     /** {@inheritDoc} */
@@ -286,35 +224,29 @@ public class PayloadFactory extends AbstractShape {
     public void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
 
-        Node item = node.getChildNodes().item(0);
-        String nodeValue = "";
-        if (item != null) {
-            nodeValue = item.getNodeValue();
-        }
-
         switch (nodeName) {
-            case PAYLOAD_FORMAT_PROPERTY_NAME:
-                payloadFormat = String.valueOf(nodeValue);
-                break;
-
             case FORMAT_PROPERTY_NAME:
-                format = String.valueOf(nodeValue);
+                format.applyAttributes(node);
+                format.setFormatType(FormatType.Registry);
+
+                if (node.hasChildNodes()) {
+                    format.applyProperty(node);
+                    format.setFormatType(FormatType.Inline);
+                }
                 break;
 
             case ARGS_PROPERTY_NAME:
-                //TODO create property using editor factory
-                Arg arg = new Arg(null, null);
-                arg.applyAttributes(node);
+                NodeList childNodes = node.getChildNodes();
 
-                args.add(arg);
-                break;
+                for (int i = 0; i < childNodes.getLength(); i++) {
+                    Node childNode = childNodes.item(i);
+                    //TODO create property using editor factory
+                    Arg arg = new Arg();
 
-            case MEDIA_TYPE_PROPERTY_NAME:
-                mediaType = String.valueOf(nodeValue);
-                break;
+                    arg.applyAttributes(childNode);
 
-            case DESCRIPTION_PROPERTY_NAME:
-                description = String.valueOf(nodeValue);
+                    args.add(arg);
+                }
                 break;
         }
     }
@@ -324,18 +256,6 @@ public class PayloadFactory extends AbstractShape {
     @Override
     public ImageResource getIcon() {
         return resources.payloadFactory();
-    }
-
-    public enum MediaType {
-        xml, json;
-
-        public static final String TYPE_NAME = "MediaType";
-    }
-
-    public enum FormatType {
-        Inline, Registry;
-
-        public static final String TYPE_NAME = "PayloadFormatType";
     }
 
 }

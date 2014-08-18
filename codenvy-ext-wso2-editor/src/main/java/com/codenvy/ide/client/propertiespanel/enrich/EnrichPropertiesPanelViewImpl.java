@@ -82,15 +82,6 @@ public class EnrichPropertiesPanelViewImpl extends EnrichPropertiesPanelView {
     @UiField
     FlowPanel targetPropPanel;
 
-    @UiField
-    Button btnTargetXpath;
-    @UiField
-    Button btnInlRegKey;
-    @UiField
-    Button btnSrcXML;
-    @UiField
-    Button btnSrcXPath;
-
     @Inject
     public EnrichPropertiesPanelViewImpl(EnrichPropertiesPanelViewImplUiBinder ourUiBinder) {
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -118,22 +109,22 @@ public class EnrichPropertiesPanelViewImpl extends EnrichPropertiesPanelView {
 
     @UiHandler("sourceType")
     public void onSrcTypeChanged(ChangeEvent event) {
-        delegate.onSrcTypeChanged();
+        delegate.onSourceTypeChanged();
     }
 
     @UiHandler("targetType")
     public void onTrtTypeChanged(ChangeEvent event) {
-        delegate.onTgtTypeChanged();
+        delegate.onTargetTypeChanged();
     }
 
     @UiHandler("inlineType")
     public void onInlineTypeChanged(ChangeEvent event) {
-        delegate.onSrcInlineTypeChanged();
+        delegate.onSourceInlineTypeChanged();
     }
 
     @UiHandler("srcProperty")
     public void onSrcPropertyChanged(KeyUpEvent event) {
-        delegate.onSrcPropertyChanged();
+        delegate.onSourcePropertyChanged();
     }
 
     @UiHandler("targetProperty")
@@ -289,11 +280,6 @@ public class EnrichPropertiesPanelViewImpl extends EnrichPropertiesPanelView {
         }
     }
 
-    @UiHandler("sourceType")
-    public void onSourceTypeChanged(ChangeEvent event) {
-        delegate.onSourceTypeChanged();
-    }
-
     /** {@inheritDoc} */
     @Nonnull
     @Override
@@ -303,7 +289,7 @@ public class EnrichPropertiesPanelViewImpl extends EnrichPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void setSourceXpath(@Nonnull String sourceXpath) {
+    public void setSourceXpath(@Nullable String sourceXpath) {
         this.sourceXpath.setText(sourceXpath);
     }
 
@@ -383,11 +369,6 @@ public class EnrichPropertiesPanelViewImpl extends EnrichPropertiesPanelView {
         }
     }
 
-    @UiHandler("targetType")
-    public void onTargetTypeChanged(ChangeEvent event) {
-        delegate.onTargetTypeChanged();
-    }
-
     /** {@inheritDoc} */
     @Nonnull
     @Override
@@ -397,7 +378,7 @@ public class EnrichPropertiesPanelViewImpl extends EnrichPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void setTargetXpath(@Nonnull String targetXpath) {
+    public void setTargetXpath(@Nullable String targetXpath) {
         this.targetXpath.setText(targetXpath);
     }
 
@@ -415,7 +396,7 @@ public class EnrichPropertiesPanelViewImpl extends EnrichPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void setDescription(@Nonnull String description) {
+    public void setDescription(@Nullable String description) {
         this.description.setText(description);
     }
 

@@ -26,6 +26,7 @@ import java.util.List;
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 @ImplementedBy(PropertyPropertiesPanelViewImpl.class)
 public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyPropertiesPanelView.ActionDelegate> {
@@ -223,13 +224,13 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
     public abstract void setDescription(@NotNull String description);
 
     /**
-     * Update property panel.
+     * Sets default visible of property panel of property mediator
      *
-     * @param isSet
-     *         <code>true</code> to show all properties,
-     *         <code>false</code> to show only property name, property action, property scope and description.
+     * @param isVisible
+     *         <code>true</code> shows all properties,
+     *         <code>false</code> shows only property name, property action, property scope and description.
      */
-    public abstract void updatePropertyPanel(boolean isSet);
+    public abstract void setDefaultVisible(boolean isVisible);
 
     /**
      * Set visible expression panel on view.

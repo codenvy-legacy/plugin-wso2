@@ -16,7 +16,7 @@
 package com.codenvy.ide.client.propertiespanel.namespace;
 
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.propertiespanel.log.propertyconfig.AddNameSpacesCallBack;
+import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;

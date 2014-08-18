@@ -21,7 +21,6 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -35,6 +34,7 @@ import java.util.List;
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView {
 
@@ -71,8 +71,6 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     FlowPanel valueStringPatternPanel;
     @UiField
     FlowPanel propertiesContainer;
-    @UiField
-    Button    expressionButton;
     @UiField
     TextBox   valueExpression;
     @UiField
@@ -336,13 +334,13 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
 
     /** {@inheritDoc} */
     @Override
-    public void updatePropertyPanel(boolean isSet) {
-        valueTypePanel.setVisible(isSet);
-        dataTypePanel.setVisible(isSet);
-        valueStringPatternPanel.setVisible(isSet);
-        valueLiteralPanel.setVisible(isSet);
-        valueExpressionPanel.setVisible(isSet);
-        valueStringCaptureGroupPanel.setVisible(isSet);
+    public void setDefaultVisible(boolean isVisible) {
+        valueTypePanel.setVisible(isVisible);
+        dataTypePanel.setVisible(isVisible);
+        valueStringPatternPanel.setVisible(isVisible);
+        valueLiteralPanel.setVisible(isVisible);
+        valueExpressionPanel.setVisible(isVisible);
+        valueStringCaptureGroupPanel.setVisible(isVisible);
     }
 
     /** {@inheritDoc} */

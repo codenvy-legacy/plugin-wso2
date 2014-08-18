@@ -21,8 +21,8 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.inline.ChangeInlineFormatCallBack;
 import com.codenvy.ide.client.propertiespanel.inline.InlineConfigurationPresenter;
-import com.codenvy.ide.client.propertiespanel.log.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
+import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.util.StringUtils;
@@ -219,13 +219,13 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setAction(propertyTypeManager.getValuesOfTypeByName(Header.HeaderAction.TYPE_NAME));
+        view.setAction(propertyTypeManager.getValuesByName(Header.HeaderAction.TYPE_NAME));
         view.selectHeaderAction(element.getAction());
 
-        view.setScope(propertyTypeManager.getValuesOfTypeByName(Header.ScopeType.TYPE_NAME));
+        view.setScope(propertyTypeManager.getValuesByName(Header.ScopeType.TYPE_NAME));
         view.selectScope(element.getScope());
 
-        view.setValueType(propertyTypeManager.getValuesOfTypeByName(Header.HeaderValueType.TYPE_NAME));
+        view.setValueType(propertyTypeManager.getValuesByName(Header.HeaderValueType.TYPE_NAME));
         view.selectValueType(element.getValueType());
 
         view.setValue(element.getValue());

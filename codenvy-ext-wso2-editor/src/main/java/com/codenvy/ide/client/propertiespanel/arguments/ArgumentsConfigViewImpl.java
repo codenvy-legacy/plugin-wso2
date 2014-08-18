@@ -21,7 +21,6 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.cell.client.SelectionCell;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -42,10 +41,9 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.codenvy.ide.client.elements.payload.Arg.ArgType;
 import static com.codenvy.ide.client.elements.payload.Arg.Evaluator.json;
 import static com.codenvy.ide.client.elements.payload.Arg.Evaluator.xml;
-import static com.codenvy.ide.client.propertiespanel.log.propertyconfig.PropertyConfigView.Type.EXPRESSION;
-import static com.codenvy.ide.client.propertiespanel.log.propertyconfig.PropertyConfigView.Type.LITERAL;
 import static com.google.gwt.dom.client.Style.Unit.PX;
 
 /**
@@ -59,17 +57,15 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
     }
 
     @UiField(provided = true)
-    CellTable args;
+    CellTable<Arg> args;
+
     @UiField
-    Button    btnAdd;
+    TextBox valueExpressionTextBox;
+
     @UiField
-    Button    btnRemove;
+    ListBox valueEvaluator;
     @UiField
-    TextBox   valueExpressionTextBox;
-    @UiField
-    Button    btnEdit;
-    @UiField
-    ListBox   valueEvaluator;
+    ListBox typeValue;
 
     private ActionDelegate delegate;
 
@@ -119,15 +115,10 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
             }
         };
 
-        final List<String> typeArg = new ArrayList<>();
-        typeArg.add(LITERAL.name());
-        typeArg.add(EXPRESSION.name());
-        SelectionCell categoryCell = new SelectionCell(typeArg);
-
-        Column<Arg, String> type = new Column<Arg, String>(categoryCell) {
+        TextColumn<Arg> type = new TextColumn<Arg>() {
             @Override
             public String getValue(Arg object) {
-                return "";
+                return object.getType().name();
             }
         };
 
@@ -151,7 +142,7 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
         TextColumn<Arg> evaluator = new TextColumn<Arg>() {
             @Override
             public String getValue(Arg object) {
-                return object.getEvaluator();
+                return String.valueOf(object.getEvaluator());
             }
         };
 
@@ -179,7 +170,6 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
     public void onRemovePropertyButtonClicked(ClickEvent event) {
         delegate.onRemoveArgButtonClicked();
     }
-
 
     @UiHandler("btnEdit")
     public void onEditPropertyButtonClicked(ClickEvent event) {
@@ -214,6 +204,33 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
         }
 
         args.setRowData(list);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @Nonnull
+    public String getTypeValue() {
+        int index = typeValue.getSelectedIndex();
+        return index != -1 ? typeValue.getValue(typeValue.getSelectedIndex()) : "";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setTypeValue() {
+        this.typeValue.clear();
+        this.typeValue.addItem(ArgType.Expression.name());
+        this.typeValue.addItem(ArgType.Value.name());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void selectType(@Nonnull String type) {
+        for (int i = 0; i < this.typeValue.getItemCount(); i++) {
+            if (this.typeValue.getValue(i).equals(type)) {
+                this.typeValue.setItemSelected(i, true);
+                return;
+            }
+        }
     }
 
     /** {@inheritDoc} */
@@ -256,6 +273,7 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
         this.valueEvaluator.addItem(xml.name());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void clearEvaluator() {
         valueEvaluator.clear();

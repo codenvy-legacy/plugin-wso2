@@ -16,10 +16,12 @@
 package com.codenvy.ide.client.propertiespanel.send;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -31,6 +33,7 @@ import java.util.List;
 
 /**
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
 
@@ -43,12 +46,50 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
     ListBox receivingSequencerType;
     @UiField
     ListBox buildMessageBeforeSending;
+
+    @UiField
+    FlowPanel receivingPanel;
+    @UiField
+    FlowPanel dynamicPanel;
+    @UiField
+    FlowPanel staticPanel;
+    @UiField
+    FlowPanel messagePanel;
+    @UiField
+    FlowPanel descriptionPanel;
+
+    @UiField
+    TextBox dynamicRec;
+    @UiField
+    TextBox staticRec;
     @UiField
     TextBox description;
 
     @Inject
     public SendPropertiesPanelViewImpl(SendPropertiesPanelViewImplUiBinder ourUiBinder) {
         initWidget(ourUiBinder.createAndBindUi(this));
+    }
+
+    @UiHandler("staticBtn")
+    public void onStaticReceivingBtnClicked(ClickEvent event) {
+        delegate.onStaticReceivingBtnClicked();
+    }
+
+    @UiHandler("dynamicBtn")
+    public void onDynamicReceivingBtnClicked(ClickEvent event) {
+        delegate.onDynamicReceivingBtnClicked();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setStaticSequence(@Nullable String sequence) {
+        staticRec.setText(sequence);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setDynamicSequence(@Nullable String sequence) {
+        dynamicRec.setText(sequence);
     }
 
     /** {@inheritDoc} */
@@ -68,17 +109,6 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
         this.skipSerialization.clear();
         for (String value : skipSerialization) {
             this.skipSerialization.addItem(value);
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void selectSkipSerialization(@Nullable String skipSerialization) {
-        for (int i = 0; i < this.skipSerialization.getItemCount(); i++) {
-            if (this.skipSerialization.getValue(i).equals(skipSerialization)) {
-                this.skipSerialization.setItemSelected(i, true);
-                return;
-            }
         }
     }
 
@@ -109,7 +139,7 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void selectReceivingSequencerType(@Nonnull String receivingSequencerType) {
+    public void selectReceivingSequencerType(@Nullable String receivingSequencerType) {
         for (int i = 0; i < this.receivingSequencerType.getItemCount(); i++) {
             if (this.receivingSequencerType.getValue(i).equals(receivingSequencerType)) {
                 this.receivingSequencerType.setItemSelected(i, true);
@@ -126,7 +156,7 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
     /** {@inheritDoc} */
     @Nonnull
     @Override
-    public String getBuildMessageBeforeSending() {
+    public String getBuildMessage() {
         int index = buildMessageBeforeSending.getSelectedIndex();
         return index != -1 ? buildMessageBeforeSending.getValue(buildMessageBeforeSending.getSelectedIndex()) : "";
     }
@@ -143,7 +173,7 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void selectBuildMessageBeforeSending(@Nonnull String buildMessageBeforeSending) {
+    public void selectBuildMessageBeforeSending(@Nullable String buildMessageBeforeSending) {
         for (int i = 0; i < this.buildMessageBeforeSending.getItemCount(); i++) {
             if (this.buildMessageBeforeSending.getValue(i).equals(buildMessageBeforeSending)) {
                 this.buildMessageBeforeSending.setItemSelected(i, true);
@@ -166,13 +196,43 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void setDescription(@Nonnull String description) {
+    public void setDescription(@Nullable String description) {
         this.description.setText(description);
     }
 
     @UiHandler("description")
     public void onDescriptionChanged(KeyUpEvent event) {
         delegate.onDescriptionChanged();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleRecSeqTypePanel(boolean isVisible) {
+        receivingPanel.setVisible(isVisible);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleBuildMessagePanel(boolean isVisible) {
+        messagePanel.setVisible(isVisible);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleDynamicPanel(boolean isVisible) {
+        dynamicPanel.setVisible(isVisible);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleStaticPanel(boolean isVisible) {
+        staticPanel.setVisible(isVisible);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleDescriptionPanel(boolean isVisible) {
+        descriptionPanel.setVisible(isVisible);
     }
 
 }

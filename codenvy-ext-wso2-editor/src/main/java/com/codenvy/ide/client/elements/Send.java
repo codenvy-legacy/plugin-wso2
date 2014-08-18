@@ -19,42 +19,46 @@ import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.enrich.Enrich;
 import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.payload.PayloadFactory;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.Send.EBoolean.FALSE;
-import static com.codenvy.ide.client.elements.Send.ReceivingSequenceType.Default;
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
+import static com.codenvy.ide.client.elements.Send.SequenceType.Default;
 
 /**
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class Send extends AbstractShape {
     public static final String ELEMENT_NAME       = "Send";
     public static final String SERIALIZATION_NAME = "send";
 
-    private static final String SKIP_SERIALIZATION_PROPERTY_NAME           = "SkipSerialization";
-    private static final String RECEIVING_SEQUENCER_TYPE_PROPERTY_NAME     = "ReceivingSequencerType";
-    private static final String BUILD_MESSAGE_BEFORE_SENDING_PROPERTY_NAME = "BuildMessageBeforeSending";
-    private static final String DESCRIPTION_PROPERTY_NAME                  = "Description";
+    private static final String BUILD_MESSAGE_ATTRIBUTE_NAME = "buildmessage";
+    private static final String DESCRIPTION_ATTRIBUTE_NAME   = "description";
+    private static final String EXPRESSION_ATTRIBUTE_NAME    = "receive";
+    private static final String ENDPOINT_PROPERTY_NAME       = "endpoint";
 
-    private static final List<String> PROPERTIES = Arrays.asList(SKIP_SERIALIZATION_PROPERTY_NAME,
-                                                                 RECEIVING_SEQUENCER_TYPE_PROPERTY_NAME,
-                                                                 BUILD_MESSAGE_BEFORE_SENDING_PROPERTY_NAME,
-                                                                 DESCRIPTION_PROPERTY_NAME);
+    private static final List<String> PROPERTIES = Arrays.asList(ENDPOINT_PROPERTY_NAME);
 
-    private String skipSerialization;
-    private String receivingSequencerType;
-    private String buildMessageBeforeSending;
-    private String description;
+    private SequenceType     sequencerType;
+    private String           skipSerialization;
+    private String           buildMessage;
+    private String           description;
+    private String           dynamicExpression;
+    private String           staticExpression;
+    private Array<NameSpace> nameSpaces;
 
     @Inject
     public Send(EditorResources resources,
@@ -94,46 +98,115 @@ public class Send extends AbstractShape {
               sequenceProvider,
               switchProvider);
 
-        skipSerialization = FALSE.getValue();
-        receivingSequencerType = Default.name();
-        buildMessageBeforeSending = "false";
-        description = "enter_description";
+        skipSerialization = EBoolean.FALSE.name().toLowerCase();
+        sequencerType = Default;
+        buildMessage = EBoolean.FALSE.name().toLowerCase();
+        description = "";
+        dynamicExpression = "/default/xpath";
+        staticExpression = "/default/sequence";
+        nameSpaces = Collections.createArray();
+
+        components.add(Log.ELEMENT_NAME);
 
         branches.add(branchProvider.get());
-    }
-
-    @Nullable
-    public String getSkipSerialization() {
-        return skipSerialization;
     }
 
     public void setSkipSerialization(@Nullable String skipSerialization) {
         this.skipSerialization = skipSerialization;
     }
 
-    @Nullable
-    public String getReceivingSequencerType() {
-        return receivingSequencerType;
+    /** @return value of sequence type of element */
+    @Nonnull
+    public SequenceType getSequencerType() {
+        return sequencerType;
     }
 
-    public void setReceivingSequencerType(@Nullable String receivingSequencerType) {
-        this.receivingSequencerType = receivingSequencerType;
+    /**
+     * Sets receiving sequence type to element
+     *
+     * @param receivingSequencerType
+     *         value which need to set to element
+     */
+    public void setSequencerType(@Nullable SequenceType receivingSequencerType) {
+        this.sequencerType = receivingSequencerType;
     }
 
-    @Nullable
-    public String getBuildMessageBeforeSending() {
-        return buildMessageBeforeSending;
+    /** @return value of build message before sending of element */
+    @Nonnull
+    public String getBuildMessage() {
+        return buildMessage;
     }
 
-    public void setBuildMessageBeforeSending(@Nullable String buildMessageBeforeSending) {
-        this.buildMessageBeforeSending = buildMessageBeforeSending;
+    /**
+     * Sets build message before sending parameter to element
+     *
+     * @param buildMessage
+     *         value which need to set to element
+     */
+    public void setBuildMessage(@Nullable String buildMessage) {
+        this.buildMessage = buildMessage;
     }
 
+    /** @return list of name spaces of element */
+    @Nonnull
+    public Array<NameSpace> getNameSpaces() {
+        return nameSpaces;
+    }
+
+    /**
+     * Sets list of name spaces to element
+     *
+     * @param nameSpaces
+     *         list of name spaces which need to set to element
+     */
+    public void setNameSpaces(@Nonnull Array<NameSpace> nameSpaces) {
+        this.nameSpaces = nameSpaces;
+    }
+
+    /** @return dynamic expression type of element */
+    @Nonnull
+    public String getDynamicExpression() {
+        return dynamicExpression;
+    }
+
+    /**
+     * Sets dynamic expression to element
+     *
+     * @param dynamicExpression
+     *         value which need to set to element
+     */
+    public void setDynamicExpression(@Nullable String dynamicExpression) {
+        this.dynamicExpression = dynamicExpression;
+    }
+
+    /** @return static expression type of element */
+    @Nonnull
+    public String getStaticExpression() {
+        return staticExpression;
+    }
+
+    /**
+     * Sets static expression to element
+     *
+     * @param staticExpression
+     *         value which need to set to element
+     */
+    public void setStaticExpression(@Nullable String staticExpression) {
+        this.staticExpression = staticExpression;
+    }
+
+    /** @return value description of element */
     @Nullable
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets description value to element
+     *
+     * @param description
+     *         value which need to set to element
+     */
     public void setDescription(@Nullable String description) {
         this.description = description;
     }
@@ -142,36 +215,124 @@ public class Send extends AbstractShape {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        return "skipSerialization=\"" + skipSerialization + "\" " +
-               "receivingSequencerType=\"" + receivingSequencerType + "\" " +
-               "buildMessageBeforeSending=\"" + buildMessageBeforeSending + "\" " +
-               "description=\"" + description + "\" ";
+        StringBuilder result = new StringBuilder();
+
+        StringBuilder spaces = new StringBuilder();
+
+        for (NameSpace nameSpace : nameSpaces.asIterable()) {
+            spaces.append(nameSpace.toString());
+        }
+
+        switch (sequencerType) {
+            case Static:
+                result.append(EXPRESSION_ATTRIBUTE_NAME).append("=\"").append(staticExpression).append("\" ");
+                break;
+
+            case Dynamic:
+                result.append(spaces).append(' ')
+                      .append(EXPRESSION_ATTRIBUTE_NAME).append("=\"{").append(dynamicExpression).append("}\" ");
+                break;
+        }
+
+        result.append(buildMessage.equalsIgnoreCase(EBoolean.FALSE.name())
+                      ? ' '
+                      : BUILD_MESSAGE_ATTRIBUTE_NAME + "=\"" + buildMessage + "\" ");
+
+        result.append(description.isEmpty() ? ' ' : DESCRIPTION_ATTRIBUTE_NAME + "=\"" + description + '"');
+
+        return result.toString();
+    }
+
+    /** {@inheritDoc} */
+    @Nonnull
+    @Override
+    public String serialize() {
+        StringBuilder result = new StringBuilder();
+
+        if (skipSerialization.equalsIgnoreCase(EBoolean.TRUE.name())) {
+            return "";
+        }
+
+        result.append("<send ").append(serializeAttributes()).append(">\n");
+
+        if (branches.get(0).hasShape()) {
+            result.append('<').append(ENDPOINT_PROPERTY_NAME).append(">\n");
+
+            result.append(branches.get(0).serialize());
+
+            result.append("</").append(ENDPOINT_PROPERTY_NAME).append(">\n");
+        }
+
+        result.append("</send>");
+
+        return result.toString();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void applyAttributes(@Nonnull Node node) {
+        if (node.hasAttributes()) {
+            NamedNodeMap attributes = node.getAttributes();
+
+            for (int i = 0; i < attributes.getLength(); i++) {
+                Node attributeNode = attributes.item(i);
+
+                String attributeName = attributeNode.getNodeName();
+                String attributeValue = attributeNode.getNodeValue();
+
+                switch (attributeName) {
+                    case EXPRESSION_ATTRIBUTE_NAME:
+                        if (attributeValue.contains("{")) {
+                            dynamicExpression = attributeValue.replace("{", "").replace("}", "");
+
+                            sequencerType = SequenceType.Dynamic;
+                        } else {
+                            staticExpression = attributeValue;
+
+                            sequencerType = SequenceType.Static;
+                        }
+                        break;
+
+                    case BUILD_MESSAGE_ATTRIBUTE_NAME:
+                        buildMessage = attributeValue;
+                        break;
+
+                    case DESCRIPTION_ATTRIBUTE_NAME:
+                        description = attributeValue;
+                        break;
+
+                    default:
+                        if (StringUtils.startsWith(PREFIX, attributeName, true)) {
+                            String name = StringUtils.trimStart(attributeName, PREFIX + ':');
+                            //TODO create entity using edit factory
+                            NameSpace nameSpace = new NameSpace(name, attributeValue);
+
+                            nameSpaces.add(nameSpace);
+                        }
+                }
+            }
+
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
-        String nodeValue = node.getChildNodes().item(0).getNodeValue();
+        if (node.hasChildNodes()) {
+            String nodeName = node.getNodeName();
 
-        switch (nodeName) {
-            case SKIP_SERIALIZATION_PROPERTY_NAME:
-                skipSerialization = String.valueOf(nodeValue);
-                break;
+            switch (nodeName) {
+                case ENDPOINT_PROPERTY_NAME:
+                    Branch branch = branchProvider.get();
+                    branch.setParent(this);
+                    branch.deserialize(node);
 
-            case RECEIVING_SEQUENCER_TYPE_PROPERTY_NAME:
-                receivingSequencerType = String.valueOf(nodeValue);
-                break;
+                    branch.setTitle(null);
+                    branch.setName(null);
 
-            case BUILD_MESSAGE_BEFORE_SENDING_PROPERTY_NAME:
-                buildMessageBeforeSending = String.valueOf(nodeValue);
-                break;
-
-            case DESCRIPTION_PROPERTY_NAME:
-                description = String.valueOf(nodeValue);
-                break;
-
-            default:
+                    branches.add(branch);
+                    break;
+            }
         }
     }
 
@@ -195,27 +356,15 @@ public class Send extends AbstractShape {
         return resources.send();
     }
 
-    public enum ReceivingSequenceType {
-        Default, Static;
+    public enum SequenceType {
+        Default, Static, Dynamic;
 
         public static final String TYPE_NAME = "ReceivingSequenceType";
     }
 
     public enum EBoolean {
-        TRUE("true"), FALSE("false");
+        TRUE, FALSE;
 
         public static final String TYPE_NAME = "EBoolean";
-
-        private String value;
-
-        EBoolean(String s) {
-            this.value = s;
-        }
-
-        @NotNull
-        public String getValue() {
-            return value;
-        }
     }
-
 }

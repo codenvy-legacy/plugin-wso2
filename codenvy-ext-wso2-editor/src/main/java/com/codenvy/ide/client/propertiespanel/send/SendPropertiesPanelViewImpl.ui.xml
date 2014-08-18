@@ -15,36 +15,50 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<ui:UiBinder 
-             xmlns:ui='urn:ui:com.google.gwt.uibinder'
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
+    <ui:with field="locale" type="com.codenvy.ide.client.WSO2EditorLocalizationConstant"/>
+
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
-        <g:DockLayoutPanel>
-            <g:north size="60.00">
-                <g:FlowPanel>
-                    <g:Label text="Skip Serialization"/>
-                    <g:ListBox ui:field="skipSerialization" width="206px"/>
-                </g:FlowPanel>
-            </g:north>
-            <g:north size="60.00">
-                <g:FlowPanel>
-                    <g:Label text="Receiving Sequence Type"/>
-                    <g:ListBox ui:field="receivingSequencerType" width="206px"/>
-                </g:FlowPanel>
-            </g:north>
-            <g:north size="60.00">
-                <g:FlowPanel>
-                    <g:Label text="Build Message Before Sending"/>
-                    <g:ListBox ui:field="buildMessageBeforeSending" width="206px"/>
-                </g:FlowPanel>
-            </g:north>
-            <g:north size="60.00">
-                <g:FlowPanel>
-                    <g:Label text="Description"/>
-                    <g:TextBox ui:field="description" width="200px"/>
-                </g:FlowPanel>
-            </g:north>
-        </g:DockLayoutPanel>
+
+        <g:FlowPanel>
+
+            <g:FlowPanel addStyleNames="{res.editorCSS.property}">
+                <g:Label text="{locale.skipSerialization}"/>
+                <g:ListBox ui:field="skipSerialization" width="206px"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="receivingPanel" addStyleNames="{res.editorCSS.property}">
+                <g:Label text="{locale.receivingSequenceType}"/>
+                <g:ListBox ui:field="receivingSequencerType" width="206px"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="messagePanel" addStyleNames="{res.editorCSS.property}">
+                <g:Label text="{locale.buildMessageBeforeSending}"/>
+                <g:ListBox ui:field="buildMessageBeforeSending" width="206px"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="dynamicPanel" addStyleNames="{res.editorCSS.property}" visible="false">
+                <g:Label text="{locale.dynamicReceivingSequence}"/>
+                <g:TextBox ui:field="dynamicRec" width="200px" enabled="false"/>
+                <g:Button ui:field="dynamicBtn" addStyleNames="{res.editorCSS.propertyButton}" text="{locale.buttonEditConfig}"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="staticPanel" addStyleNames="{res.editorCSS.property}" visible="false">
+                <g:Label text="{locale.staticReceivingSequence}"/>
+                <g:TextBox ui:field="staticRec" width="200px" enabled="false"/>
+                <g:Button ui:field="staticBtn" addStyleNames="{res.editorCSS.propertyButton}" text="{locale.buttonEditConfig}"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="descriptionPanel" addStyleNames="{res.editorCSS.property}">
+                <g:Label text="{locale.description}"/>
+                <g:TextBox ui:field="description" width="200px"/>
+            </g:FlowPanel>
+
+        </g:FlowPanel>
+
     </g:ScrollPanel>
+
 </ui:UiBinder>

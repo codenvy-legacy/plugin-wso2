@@ -19,39 +19,40 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
+    <ui:with field="locale" type="com.codenvy.ide.client.WSO2EditorLocalizationConstant"/>
 
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
         <g:FlowPanel>
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Payload Format"/>
+                <g:Label text="{locale.payloadFormat}"/>
                 <g:ListBox ui:field="payloadFormat" width="206px"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="formatPanel" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Format"/>
+                <g:Label text="{locale.format}"/>
                 <g:TextBox enabled="false" ui:field="format" width="200px"/>
                 <g:Button ui:field="formatButton" addStyleNames="{res.editorCSS.propertyButton}" text="..."/>
             </g:FlowPanel>
 
-            <g:FlowPanel ui:field="formatKeyPanel" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Format Key"/>
+            <g:FlowPanel ui:field="formatKeyPanel" addStyleNames="{res.editorCSS.property}" visible="false">
+                <g:Label text="{locale.payloadFormatKey}"/>
                 <g:TextBox enabled="false" ui:field="formatKey" width="200px"/>
                 <g:Button ui:field="formatKeyButton" addStyleNames="{res.editorCSS.propertyButton}" text="..."/>
             </g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Args"/>
+                <g:Label text="{locale.payloadArgs}"/>
                 <g:TextBox enabled="false" ui:field="args" width="200px"/>
                 <g:Button ui:field="argsButton" addStyleNames="{res.editorCSS.propertyButton}" text="..."/>
             </g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Media Type"/>
+                <g:Label text="{locale.payloadMediaType}"/>
                 <g:ListBox ui:field="mediaType" width="206px"/>
             </g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="Description"/>
+                <g:Label text="{locale.payloadDescription}"/>
                 <g:TextBox ui:field="description" width="200px"/>
             </g:FlowPanel>
 

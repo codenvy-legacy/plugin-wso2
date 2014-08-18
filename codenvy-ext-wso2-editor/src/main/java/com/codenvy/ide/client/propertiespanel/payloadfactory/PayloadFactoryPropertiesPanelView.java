@@ -18,7 +18,8 @@ package com.codenvy.ide.client.propertiespanel.payloadfactory;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.inject.ImplementedBy;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -34,9 +35,6 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
 
         /** Performs any actions appropriate in response to the user having changed payload format field. */
         void onPayloadFormatChanged();
-
-        /** Performs any actions appropriate in response to the user having changed format field. */
-        void onFormatChanged();
 
         /** Performs any actions appropriate in response to the user having changed media type field. */
         void onMediaTypeChanged();
@@ -56,11 +54,11 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
          * @param key
          *         text into Key Format place on the view
          */
-        void showKeyEditorWindow(@NotNull String key);
+        void showKeyEditorWindow(@Nonnull String key);
     }
 
     /** return payload format value */
-    @NotNull
+    @Nonnull
     public abstract String getPayloadFormat();
 
     /**
@@ -69,7 +67,7 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
      * @param payloadFormat
      *         payload format value
      */
-    public abstract void selectPayloadFormat(@NotNull String payloadFormat);
+    public abstract void selectPayloadFormat(@Nullable String payloadFormat);
 
     /**
      * Set payload format value.
@@ -77,10 +75,10 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
      * @param payloadFormat
      *         values of payload format field.
      */
-    public abstract void setPayloadFormat(@NotNull List<String> payloadFormat);
+    public abstract void setPayloadFormat(@Nonnull List<String> payloadFormat);
 
     /** @return format value */
-    @NotNull
+    @Nonnull
     public abstract String getFormat();
 
     /**
@@ -89,11 +87,7 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
      * @param format
      *         value of format
      */
-    public abstract void setFormat(@NotNull String format);
-
-    /** @return format key */
-    @NotNull
-    public abstract String getFormatKey();
+    public abstract void setFormat(@Nonnull String format);
 
     /**
      * Set format key.
@@ -101,21 +95,22 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
      * @param formatKey
      *         value of format key
      */
-    public abstract void setFormatKey(@NotNull String formatKey);
+    public abstract void setFormatKey(@Nullable String formatKey);
 
     /** @return args value */
-    @NotNull
+    @Nonnull
     public abstract String getArgs();
 
     /**
      * Set args value.
      *
      * @param args
+     *         value of args
      */
-    public abstract void setArgs(@NotNull String args);
+    public abstract void setArgs(@Nonnull String args);
 
     /** @return media type of PayLoad mediator. */
-    @NotNull
+    @Nonnull
     public abstract String getMediaType();
 
     /**
@@ -124,25 +119,27 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
      * @param mediaType
      *         selected value of media type
      */
-    public abstract void selectMediaType(@NotNull String mediaType);
+    public abstract void selectMediaType(@Nullable String mediaType);
 
     /**
      * Set media type values.
      *
      * @param mediaType
+     *         value of media type
      */
-    public abstract void setMediaType(@NotNull List<String> mediaType);
+    public abstract void setMediaType(@Nonnull List<String> mediaType);
 
     /** @return description */
-    @NotNull
+    @Nonnull
     public abstract String getDescription();
 
     /**
      * Set description.
      *
      * @param description
+     *         value of description
      */
-    public abstract void setDescription(@NotNull String description);
+    public abstract void setDescription(@Nullable String description);
 
 
     /**

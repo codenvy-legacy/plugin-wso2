@@ -90,6 +90,9 @@ public interface Branch {
     @Nonnull
     List<Shape> getShapes();
 
+    /** @return true if branch has shapes */
+    boolean hasShape();
+
     /** @return serialized representation of the branch */
     @Nonnull
     String serialize();

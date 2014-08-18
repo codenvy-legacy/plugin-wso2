@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.propertiespanel.log.propertyconfig;
+package com.codenvy.ide.client.propertiespanel.propertyconfig;
 
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.collections.Array;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Shnurenko
@@ -33,5 +32,5 @@ public interface AddNameSpacesCallBack {
      * @param expression
      *         value of expression from special place of view
      */
-    void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression);
+    void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression);
 }

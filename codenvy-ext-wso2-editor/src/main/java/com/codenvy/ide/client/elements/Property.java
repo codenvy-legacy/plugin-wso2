@@ -30,15 +30,14 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
+import static com.codenvy.ide.client.elements.Property.Action.set;
 import static com.codenvy.ide.client.elements.Property.DataType.STRING;
-import static com.codenvy.ide.client.elements.Property.PropertyAction.set;
-import static com.codenvy.ide.client.elements.Property.PropertyScope.SYNAPSE;
+import static com.codenvy.ide.client.elements.Property.Scope.SYNAPSE;
 import static com.codenvy.ide.client.elements.Property.ValueType.EXPRESSION;
 import static com.codenvy.ide.client.elements.Property.ValueType.LITERAL;
 
@@ -51,27 +50,27 @@ public class Property extends AbstractShape {
     public static final String ELEMENT_NAME       = "Property";
     public static final String SERIALIZATION_NAME = "property";
 
-    private static final String NAME                 = "name";
-    private static final String ACTION               = "action";
-    private static final String DATA_TYPE            = "type";
-    private static final String VALUE_LITERAL        = "value";
-    private static final String VALUE_EXPRESSION     = "expression";
-    private static final String STRING_PATTERN       = "pattern";
-    private static final String STRING_CAPTURE_GROUP = "group";
-    private static final String SCOPE                = "scope";
-    private static final String DESCRIPTION          = "description";
+    private static final String NAME_ATTRIBUTE                 = "name";
+    private static final String ACTION_ATTRIBUTE               = "action";
+    private static final String DATA_TYPE_ATTRIBUTE            = "type";
+    private static final String VALUE_LITERAL_ATTRIBUTE        = "value";
+    private static final String VALUE_EXPRESSION_ATTRIBUTE     = "expression";
+    private static final String STRING_PATTERN_ATTRIBUTE       = "pattern";
+    private static final String STRING_CAPTURE_GROUP_ATTRIBUTE = "group";
+    private static final String SCOPE_ATTRIBUTE                = "scope";
+    private static final String DESCRIPTION_ATTRIBUTE          = "description";
 
     private static final List<String> PROPERTIES = java.util.Collections.emptyList();
 
     private String           propertyName;
-    private String           propertyAction;
-    private String           valueType;
-    private String           propertyDataType;
+    private Action           propertyAction;
+    private ValueType        valueType;
+    private DataType         propertyDataType;
     private String           valueLiteral;
     private String           valueExpression;
     private String           valueStringPattern;
     private String           valueStringCaptureGroup;
-    private String           propertyScope;
+    private Scope            propertyScope;
     private String           description;
     private Array<NameSpace> nameSpaces;
 
@@ -113,16 +112,16 @@ public class Property extends AbstractShape {
               sequenceProvider,
               switchProvider);
 
-        nameSpaces = Collections.createArray();
+        propertyAction = set;
+        valueType = LITERAL;
+        propertyDataType = STRING;
+        propertyScope = SYNAPSE;
         propertyName = "property_name";
-        propertyAction = set.name();
-        valueType = LITERAL.name();
-        propertyDataType = STRING.name();
         valueLiteral = "value";
         valueExpression = "/default/expression";
         valueStringPattern = "";
         valueStringCaptureGroup = "";
-        propertyScope = SYNAPSE.getValue();
+        nameSpaces = Collections.createArray();
     }
 
     /** @return namespaces which contain in property */
@@ -158,8 +157,8 @@ public class Property extends AbstractShape {
     }
 
     /** @return action of property */
-    @Nullable
-    public String getPropertyAction() {
+    @Nonnull
+    public Action getPropertyAction() {
         return propertyAction;
     }
 
@@ -169,13 +168,13 @@ public class Property extends AbstractShape {
      * @param propertyAction
      *         value which need to set to element
      */
-    public void setPropertyAction(@Nullable String propertyAction) {
+    public void setPropertyAction(@Nullable Action propertyAction) {
         this.propertyAction = propertyAction;
     }
 
     /** @return value type of property */
-    @Nullable
-    public String getValueType() {
+    @Nonnull
+    public ValueType getValueType() {
         return valueType;
     }
 
@@ -185,13 +184,13 @@ public class Property extends AbstractShape {
      * @param valueType
      *         value which need to set to element
      */
-    public void setValueType(@Nullable String valueType) {
+    public void setValueType(@Nullable ValueType valueType) {
         this.valueType = valueType;
     }
 
     /** @return data type of property */
-    @Nullable
-    public String getPropertyDataType() {
+    @Nonnull
+    public DataType getPropertyDataType() {
         return propertyDataType;
     }
 
@@ -201,7 +200,7 @@ public class Property extends AbstractShape {
      * @param propertyDataType
      *         value which need to set to element
      */
-    public void setPropertyDataType(@Nullable String propertyDataType) {
+    public void setPropertyDataType(@Nullable DataType propertyDataType) {
         this.propertyDataType = propertyDataType;
     }
 
@@ -270,8 +269,8 @@ public class Property extends AbstractShape {
     }
 
     /** @return scope of property */
-    @Nullable
-    public String getPropertyScope() {
+    @Nonnull
+    public Scope getPropertyScope() {
         return propertyScope;
     }
 
@@ -281,7 +280,7 @@ public class Property extends AbstractShape {
      * @param propertyScope
      *         value which need to set to element
      */
-    public void setPropertyScope(@Nullable String propertyScope) {
+    public void setPropertyScope(@Nullable Scope propertyScope) {
         this.propertyScope = propertyScope;
     }
 
@@ -314,14 +313,14 @@ public class Property extends AbstractShape {
 
         setDefaultAttributes(attributes);
 
-        attributes.remove(valueType.equals(EXPRESSION.name()) ? VALUE_LITERAL : VALUE_EXPRESSION);
+        attributes.remove(valueType.equals(EXPRESSION) ? VALUE_LITERAL_ATTRIBUTE : VALUE_EXPRESSION_ATTRIBUTE);
 
-        if (propertyAction.equals(set.name())) {
-            attributes.remove(ACTION);
+        if (propertyAction.equals(set)) {
+            attributes.remove(ACTION_ATTRIBUTE);
         } else {
-            attributes.remove(VALUE_EXPRESSION);
-            attributes.remove(VALUE_LITERAL);
-            attributes.remove(DATA_TYPE);
+            attributes.remove(VALUE_EXPRESSION_ATTRIBUTE);
+            attributes.remove(VALUE_LITERAL_ATTRIBUTE);
+            attributes.remove(DATA_TYPE_ATTRIBUTE);
         }
 
         return spaces + convertPropertiesToXMLFormat(attributes);
@@ -334,15 +333,15 @@ public class Property extends AbstractShape {
      *         list of default attributes
      */
     private void setDefaultAttributes(@Nonnull Map<String, String> attributes) {
-        attributes.put(NAME, propertyName);
-        attributes.put(VALUE_EXPRESSION, valueExpression);
-        attributes.put(VALUE_LITERAL, valueLiteral);
-        attributes.put(SCOPE, propertyScope);
-        attributes.put(ACTION, propertyAction);
-        attributes.put(DATA_TYPE, propertyDataType);
-        attributes.put(STRING_CAPTURE_GROUP, valueStringCaptureGroup);
-        attributes.put(STRING_PATTERN, valueStringPattern);
-        attributes.put(DESCRIPTION, description);
+        attributes.put(NAME_ATTRIBUTE, propertyName);
+        attributes.put(VALUE_EXPRESSION_ATTRIBUTE, valueExpression);
+        attributes.put(VALUE_LITERAL_ATTRIBUTE, valueLiteral);
+        attributes.put(SCOPE_ATTRIBUTE, propertyScope.name());
+        attributes.put(ACTION_ATTRIBUTE, propertyAction.name());
+        attributes.put(DATA_TYPE_ATTRIBUTE, propertyDataType.name());
+        attributes.put(STRING_CAPTURE_GROUP_ATTRIBUTE, valueStringCaptureGroup);
+        attributes.put(STRING_PATTERN_ATTRIBUTE, valueStringPattern);
+        attributes.put(DESCRIPTION_ATTRIBUTE, description);
     }
 
     /** {@inheritDoc} */
@@ -357,40 +356,40 @@ public class Property extends AbstractShape {
             String nodeName = attributeNode.getNodeName();
 
             switch (nodeName) {
-                case NAME:
+                case NAME_ATTRIBUTE:
                     propertyName = String.valueOf(nodeValue);
                     break;
 
-                case ACTION:
-                    propertyAction = String.valueOf(nodeValue);
+                case ACTION_ATTRIBUTE:
+                    propertyAction = Action.valueOf(nodeValue);
                     break;
 
-                case DATA_TYPE:
-                    propertyDataType = String.valueOf(nodeValue);
+                case DATA_TYPE_ATTRIBUTE:
+                    propertyDataType = DataType.valueOf(nodeValue);
                     break;
 
-                case VALUE_LITERAL:
+                case VALUE_LITERAL_ATTRIBUTE:
                     valueLiteral = String.valueOf(nodeValue);
                     break;
 
-                case VALUE_EXPRESSION:
+                case VALUE_EXPRESSION_ATTRIBUTE:
                     valueExpression = String.valueOf(nodeValue);
-                    valueType = EXPRESSION.name();
+                    valueType = EXPRESSION;
                     break;
 
-                case STRING_PATTERN:
+                case STRING_PATTERN_ATTRIBUTE:
                     valueStringPattern = String.valueOf(nodeValue);
                     break;
 
-                case STRING_CAPTURE_GROUP:
+                case STRING_CAPTURE_GROUP_ATTRIBUTE:
                     valueStringCaptureGroup = String.valueOf(nodeValue);
                     break;
 
-                case SCOPE:
-                    propertyScope = String.valueOf(nodeValue);
+                case SCOPE_ATTRIBUTE:
+                    propertyScope = Scope.valueOf(nodeValue);
                     break;
 
-                case DESCRIPTION:
+                case DESCRIPTION_ATTRIBUTE:
                     description = String.valueOf(nodeValue);
                     break;
 
@@ -413,16 +412,16 @@ public class Property extends AbstractShape {
         return resources.property();
     }
 
-    public enum PropertyAction {
+    public enum Action {
         set, remove;
 
-        public static final String TYPE_NAME = "PropertyAction";
+        public static final String TYPE_NAME = "Action";
     }
 
     public enum ValueType {
         LITERAL, EXPRESSION;
 
-        public static final String TYPE_NAME = "PropertyValueType";
+        public static final String TYPE_NAME = "ValueType";
     }
 
     public enum DataType {
@@ -431,18 +430,18 @@ public class Property extends AbstractShape {
         public static final String TYPE_NAME = "PropertyDataType";
     }
 
-    public enum PropertyScope {
+    public enum Scope {
         SYNAPSE("Synapse"), TRANSPORT("transport"), AXIS2("axis2"), AXIS2_CLIENT("axis2_client"), OPERATION("operation");
 
         public static final String TYPE_NAME = "PropertyScopeType";
 
         private String value;
 
-        PropertyScope(String value) {
+        Scope(String value) {
             this.value = value;
         }
 
-        @NotNull
+        @Nonnull
         public String getValue() {
             return value;
         }

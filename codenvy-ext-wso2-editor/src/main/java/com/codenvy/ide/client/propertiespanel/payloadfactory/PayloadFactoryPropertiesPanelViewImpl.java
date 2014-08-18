@@ -21,13 +21,14 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -40,23 +41,19 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
     }
 
     @UiField
-    ListBox   payloadFormat;
+    ListBox mediaType;
     @UiField
-    TextBox   format;
+    ListBox payloadFormat;
+
     @UiField
-    TextBox   args;
+    TextBox format;
     @UiField
-    ListBox   mediaType;
+    TextBox args;
     @UiField
-    TextBox   description;
+    TextBox description;
     @UiField
-    Button    formatButton;
-    @UiField
-    Button    argsButton;
-    @UiField
-    Button    formatKeyButton;
-    @UiField
-    TextBox   formatKey;
+    TextBox formatKey;
+
     @UiField
     FlowPanel formatPanel;
     @UiField
@@ -68,6 +65,7 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getPayloadFormat() {
         int index = payloadFormat.getSelectedIndex();
@@ -76,11 +74,13 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
 
     /** {@inheritDoc} */
     @Override
-    public void setPayloadFormat(List<String> payloadFormat) {
+    public void setPayloadFormat(@Nullable List<String> payloadFormat) {
         if (payloadFormat == null) {
             return;
         }
+
         this.payloadFormat.clear();
+
         for (String value : payloadFormat) {
             this.payloadFormat.addItem(value);
         }
@@ -88,7 +88,7 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
 
     /** {@inheritDoc} */
     @Override
-    public void selectPayloadFormat(String payloadFormat) {
+    public void selectPayloadFormat(@Nullable String payloadFormat) {
         for (int i = 0; i < this.payloadFormat.getItemCount(); i++) {
             if (this.payloadFormat.getValue(i).equals(payloadFormat)) {
                 this.payloadFormat.setItemSelected(i, true);
@@ -103,6 +103,7 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getFormat() {
         return String.valueOf(format.getText());
@@ -110,28 +111,23 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
 
     /** {@inheritDoc} */
     @Override
-    public void setFormat(String format) {
+    public void setFormat(@Nonnull String format) {
         this.format.setText(format);
     }
 
     /** {@inheritDoc} */
     @Override
-    public String getFormatKey() {
-        return String.valueOf(formatKey.getText());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setFormatKey(String formatKey) {
+    public void setFormatKey(@Nullable String formatKey) {
         this.formatKey.setText(formatKey);
     }
 
     @UiHandler("format")
     public void onFormatChanged(KeyUpEvent event) {
-        delegate.onFormatChanged();
+        delegate.onPayloadFormatChanged();
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getArgs() {
         return String.valueOf(args.getText());
@@ -139,7 +135,7 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
 
     /** {@inheritDoc} */
     @Override
-    public void setArgs(String args) {
+    public void setArgs(@Nonnull String args) {
         this.args.setText(args);
     }
 
@@ -159,6 +155,7 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getMediaType() {
         int index = mediaType.getSelectedIndex();
@@ -167,7 +164,7 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
 
     /** {@inheritDoc} */
     @Override
-    public void setMediaType(List<String> mediaType) {
+    public void setMediaType(@Nullable List<String> mediaType) {
         if (mediaType == null) {
             return;
         }
@@ -181,7 +178,7 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
 
     /** {@inheritDoc} */
     @Override
-    public void selectMediaType(String mediaType) {
+    public void selectMediaType(@Nullable String mediaType) {
         for (int i = 0; i < this.mediaType.getItemCount(); i++) {
             if (this.mediaType.getValue(i).equals(mediaType)) {
                 this.mediaType.setItemSelected(i, true);
@@ -196,6 +193,7 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getDescription() {
         return String.valueOf(description.getText());
@@ -203,7 +201,7 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
 
     /** {@inheritDoc} */
     @Override
-    public void setDescription(String description) {
+    public void setDescription(@Nullable String description) {
         this.description.setText(description);
     }
 

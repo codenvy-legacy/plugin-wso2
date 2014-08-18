@@ -20,7 +20,7 @@ import com.codenvy.ide.client.elements.CallTemplate;
 import com.codenvy.ide.client.elements.log.Property;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.log.AddPropertyCallback;
-import com.codenvy.ide.client.propertiespanel.log.propertyconfig.PropertyConfigPresenter;
+import com.codenvy.ide.client.propertiespanel.propertyconfig.PropertyConfigPresenter;
 import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -28,6 +28,7 @@ import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 
+import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates;
 import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates.TYPE_NAME;
 
 /**
@@ -35,6 +36,7 @@ import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates.TY
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPanel<CallTemplate, CallTemplatePropertiesPanelView>
         implements CallTemplatePropertiesPanelView.ActionDelegate {
@@ -47,7 +49,7 @@ public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPane
     public CallTemplatePropertiesPanelPresenter(CallTemplatePropertiesPanelView view,
                                                 PropertyTypeManager propertyTypeManager,
                                                 PropertyConfigPresenter propertyConfigPresenter,
-                                                WSO2EditorLocalizationConstant local) {
+                                                final WSO2EditorLocalizationConstant local) {
         super(view, propertyTypeManager);
 
         this.propertyConfigPresenter = propertyConfigPresenter;
@@ -59,7 +61,9 @@ public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPane
             public void onPropertiesChanged(@Nonnull Array<Property> properties) {
                 element.setParameters(properties);
 
-                CallTemplatePropertiesPanelPresenter.this.view.setParameters(properties.isEmpty() ? "" : "Call Template Parameters");
+                CallTemplatePropertiesPanelPresenter.this.view.setParameters(properties.isEmpty()
+                                                                             ? ""
+                                                                             : local.calltemplateLabelParameters());
 
                 notifyListeners();
             }
@@ -69,7 +73,7 @@ public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPane
     /** {@inheritDoc} */
     @Override
     public void onAvailableTemplatesChanged() {
-        element.setAvailableTemplates(view.getAvailableTemplates());
+        element.setAvailableTemplates(AvailableTemplates.valueOf(view.getAvailableTemplates()));
 
         notifyListeners();
     }
@@ -94,7 +98,7 @@ public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPane
     @Override
     public void onParameterButtonClicked() {
         propertyConfigPresenter.showConfigWindow(element.getParameters(),
-                                                 local.propertiespanelCallTemplateConfigurationTitle(),
+                                                 local.callTemplateConfigTitle(),
                                                  addPropertyCallback);
     }
 
@@ -103,11 +107,13 @@ public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPane
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.selectAvailableTemplate(element.getAvailableTemplates());
-        view.setAvailableTemplates(propertyTypeManager.getValuesOfTypeByName(TYPE_NAME));
+        view.selectAvailableTemplate(element.getAvailableTemplates().getValue());
+        view.setAvailableTemplates(propertyTypeManager.getValuesByName(TYPE_NAME));
+
         view.setTargetTemplate(element.getTargetTemplate());
         view.setDescription(element.getDescription());
-        view.setParameters(element.getParameters().isEmpty() ? "" : "Call Template Parameters");
+
+        view.setParameters(element.getParameters().isEmpty() ? "" : local.calltemplateLabelParameters());
     }
 
 }

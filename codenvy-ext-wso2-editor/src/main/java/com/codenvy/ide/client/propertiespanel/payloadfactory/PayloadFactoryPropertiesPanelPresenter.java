@@ -31,11 +31,9 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.validation.constraints.NotNull;
 
-import static com.codenvy.ide.client.elements.payload.PayloadFactory.FormatType;
-import static com.codenvy.ide.client.elements.payload.PayloadFactory.FormatType.Inline;
-import static com.codenvy.ide.client.elements.payload.PayloadFactory.MediaType;
+import static com.codenvy.ide.client.elements.payload.Format.FormatType;
+import static com.codenvy.ide.client.elements.payload.Format.MediaType;
 
 /**
  * The property panel of PayloadFactory mediator.
@@ -61,7 +59,7 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
                                                   InlineConfigurationPresenter inlineConfigurationPresenter,
                                                   ResourceKeyEditorPresenter resourceKeyEditorPresenter,
                                                   ArgumentsConfigPresenter argumentsConfigPresenter,
-                                                  WSO2EditorLocalizationConstant locale) {
+                                                  final WSO2EditorLocalizationConstant locale) {
         super(view, propertyTypeManager);
 
         this.locale = locale;
@@ -73,7 +71,7 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
         this.changeInlineFormatCallBack = new ChangeInlineFormatCallBack() {
             @Override
             public void onInlineChanged(@Nonnull String inline) {
-                element.setFormat(inline);
+                element.getFormat().setFormatInline(inline);
 
                 PayloadFactoryPropertiesPanelPresenter.this.view.setFormat(inline);
 
@@ -84,7 +82,7 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
         this.changeResourceKeyCallBack = new ChangeResourceKeyCallBack() {
             @Override
             public void onFormatKeyChanged(@Nonnull String key) {
-                element.setFormatKey(key);
+                element.getFormat().setFormatKey(key);
 
                 PayloadFactoryPropertiesPanelPresenter.this.view.setFormatKey(key);
 
@@ -94,10 +92,10 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
 
         this.argumentCallBack = new AddArgumentCallBack() {
             @Override
-            public void onArgumentsChanged(@Nonnull Array<Arg> arg) {
-                element.setArgs(arg);
+            public void onArgumentsChanged(@Nonnull Array<Arg> args) {
+                element.setArgs(args);
 
-                PayloadFactoryPropertiesPanelPresenter.this.view.setArgs("Payload Factory Arguments");
+                PayloadFactoryPropertiesPanelPresenter.this.view.setArgs(locale.payloadFactoryArguments());
 
                 notifyListeners();
             }
@@ -105,25 +103,19 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
 
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onPayloadFormatChanged() {
-        String payloadFormat = view.getPayloadFormat();
+    /** Sets payload format value to element from special place of view and displaying properties panel to a certain value of payload format */
+    private void applyPayloadFormat() {
+        FormatType payloadFormat = FormatType.valueOf(view.getPayloadFormat());
+        element.getFormat().setFormatType(payloadFormat);
 
-        element.setPayloadFormat(payloadFormat);
-
-        boolean isInline = Inline.name().equals(payloadFormat);
-
-        view.setVisibleFormatPanel(isInline);
-        view.setVisibleFormatKeyPanel(!isInline);
-
-        notifyListeners();
+        view.setVisibleFormatPanel(FormatType.Inline.equals(payloadFormat));
+        view.setVisibleFormatKeyPanel(!FormatType.Inline.equals(payloadFormat));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onFormatChanged() {
-        element.setFormat(view.getFormat());
+    public void onPayloadFormatChanged() {
+        applyPayloadFormat();
 
         notifyListeners();
     }
@@ -131,7 +123,7 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
     /** {@inheritDoc} */
     @Override
     public void onMediaTypeChanged() {
-        element.setMediaType(view.getMediaType());
+        element.getFormat().setMediaType(MediaType.valueOf(view.getMediaType()));
 
         notifyListeners();
     }
@@ -147,7 +139,9 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
     /** {@inheritDoc} */
     @Override
     public void showFormatConfigurationWindow() {
-        inlineConfigurationPresenter.showDialog(element.getFormat(), locale.payloadFormat(), changeInlineFormatCallBack);
+        inlineConfigurationPresenter.showDialog(element.getFormat().getFormatInline(),
+                                                locale.inlineTitle(),
+                                                changeInlineFormatCallBack);
     }
 
     /** {@inheritDoc} */
@@ -158,7 +152,7 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
 
     /** {@inheritDoc} */
     @Override
-    public void showKeyEditorWindow(@NotNull String key) {
+    public void showKeyEditorWindow(@Nonnull String key) {
         resourceKeyEditorPresenter.showDialog(key, changeResourceKeyCallBack);
     }
 
@@ -167,19 +161,16 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setPayloadFormat(propertyTypeManager.getValuesOfTypeByName(FormatType.TYPE_NAME));
-        view.selectPayloadFormat(element.getPayloadFormat());
-        view.setFormat(element.getFormat());
-        view.setFormatKey(element.getFormatKey());
-        view.setMediaType(propertyTypeManager.getValuesOfTypeByName(MediaType.TYPE_NAME));
-        view.selectMediaType(element.getMediaType());
+        view.setPayloadFormat(propertyTypeManager.getValuesByName(FormatType.TYPE_NAME));
+        view.selectPayloadFormat(element.getFormat().getFormatType().name());
+
+        view.setFormat(element.getFormat().getFormatInline());
+        view.setFormatKey(element.getFormat().getFormatKey());
+        applyPayloadFormat();
+
+        view.setMediaType(propertyTypeManager.getValuesByName(MediaType.TYPE_NAME));
+        view.selectMediaType(element.getFormat().getMediaType().name());
+
         view.setDescription(element.getDescription());
-
-        boolean isInline = Inline.name().equals(view.getPayloadFormat());
-
-        view.setVisibleFormatPanel(isInline);
-        view.setVisibleFormatKeyPanel(!isInline);
-        view.setArgs(element.getArgs().isEmpty() ? "" : "Payload Factory Arguments");
     }
-
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.propertiespanel.log.propertyconfig;
+package com.codenvy.ide.client.propertiespanel.propertyconfig;
 
 import com.codenvy.ide.client.elements.log.Property;
 import com.codenvy.ide.client.mvp.View;
@@ -40,6 +40,7 @@ public interface PropertyConfigView extends View<PropertyConfigView.ActionDelega
      * Shows dialog window for editing property of element.
      *
      * @param title
+     *         value of title
      */
     void showWindow(@Nonnull String title);
 

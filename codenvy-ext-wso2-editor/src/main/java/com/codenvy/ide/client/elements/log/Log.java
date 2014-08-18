@@ -57,16 +57,17 @@ public class Log extends AbstractShape {
     public static final String ELEMENT_NAME       = "Log";
     public static final String SERIALIZATION_NAME = "log";
 
-    private static final String CATEGORY_NAME    = "category";
-    private static final String LEVEL_NAME       = "level";
-    private static final String SEPARATOR_NAME   = "separator";
-    private static final String PROPERTIES_NAME  = "property";
-    private static final String DESCRIPTION_NAME = "description";
+    private static final String CATEGORY_ATTRIBUTE_NAME    = "category";
+    private static final String LEVEL_ATTRIBUTE_NAME       = "level";
+    private static final String SEPARATOR_ATTRIBUTE_NAME   = "separator";
+    private static final String DESCRIPTION_ATTRIBUTE_NAME = "description";
 
-    private static final List<String> PROPERTIES = Arrays.asList(PROPERTIES_NAME);
+    private static final String PROPERTIES_PROPERTY_NAME = "property";
 
-    private String          logCategory;
-    private String          logLevel;
+    private static final List<String> PROPERTIES = Arrays.asList(PROPERTIES_PROPERTY_NAME);
+
+    private LogCategory     logCategory;
+    private LogLevel        logLevel;
     private String          logSeparator;
     private String          description;
     private Array<Property> properties;
@@ -109,32 +110,32 @@ public class Log extends AbstractShape {
               sequenceProvider,
               switchProvider);
 
-        logCategory = LogCategory.INFO.name();
-        logLevel = LogLevel.SIMPLE.name();
+        logCategory = LogCategory.INFO;
+        logLevel = LogLevel.SIMPLE;
         logSeparator = "";
         description = "";
         properties = Collections.createArray();
     }
 
     /** @return category value of element */
-    @Nullable
-    public String getLogCategory() {
+    @Nonnull
+    public LogCategory getLogCategory() {
         return logCategory;
     }
 
     /** Sets value of category to element */
-    public void setLogCategory(@Nullable String logCategory) {
+    public void setLogCategory(@Nullable LogCategory logCategory) {
         this.logCategory = logCategory;
     }
 
     /** @return level value of element */
-    @Nullable
-    public String getLogLevel() {
+    @Nonnull
+    public LogLevel getLogLevel() {
         return logLevel;
     }
 
     /** Sets value of level to element */
-    public void setLogLevel(@Nullable String logLevel) {
+    public void setLogLevel(@Nullable LogLevel logLevel) {
         this.logLevel = logLevel;
     }
 
@@ -177,16 +178,16 @@ public class Log extends AbstractShape {
     protected String serializeAttributes() {
         Map<String, String> attributes = new LinkedHashMap<>();
 
-        if (!logCategory.equals(LogCategory.INFO.name())) {
-            attributes.put(CATEGORY_NAME, logCategory);
+        if (!logCategory.equals(LogCategory.INFO)) {
+            attributes.put(CATEGORY_ATTRIBUTE_NAME, logCategory.name());
         }
 
-        if (!logLevel.equals(LogLevel.SIMPLE.name())) {
-            attributes.put(LEVEL_NAME, logLevel);
+        if (!logLevel.equals(LogLevel.SIMPLE)) {
+            attributes.put(LEVEL_ATTRIBUTE_NAME, logLevel.name());
         }
 
-        attributes.put(SEPARATOR_NAME, logSeparator);
-        attributes.put(DESCRIPTION_NAME, description);
+        attributes.put(SEPARATOR_ATTRIBUTE_NAME, logSeparator);
+        attributes.put(DESCRIPTION_ATTRIBUTE_NAME, description);
 
         return convertPropertiesToXMLFormat(attributes);
     }
@@ -217,7 +218,7 @@ public class Log extends AbstractShape {
         String nodeName = node.getNodeName();
 
         switch (nodeName) {
-            case PROPERTIES_NAME:
+            case PROPERTIES_PROPERTY_NAME:
                 //TODO create property using editor factory
                 Property property = new Property(null, null);
                 property.applyAttributes(node);
@@ -235,20 +236,22 @@ public class Log extends AbstractShape {
         for (int i = 0; i < attributeMap.getLength(); i++) {
             Node attributeNode = attributeMap.item(i);
 
+            String attributeValue = attributeNode.getNodeValue();
+
             switch (attributeNode.getNodeName()) {
-                case CATEGORY_NAME:
-                    logCategory = attributeNode.getNodeValue();
+                case CATEGORY_ATTRIBUTE_NAME:
+                    logCategory = LogCategory.valueOf(attributeValue);
                     break;
 
-                case LEVEL_NAME:
-                    logLevel = attributeNode.getNodeValue();
+                case LEVEL_ATTRIBUTE_NAME:
+                    logLevel = LogLevel.valueOf(attributeValue);
                     break;
 
-                case SEPARATOR_NAME:
+                case SEPARATOR_ATTRIBUTE_NAME:
                     logSeparator = attributeNode.getNodeValue();
                     break;
 
-                case DESCRIPTION_NAME:
+                case DESCRIPTION_ATTRIBUTE_NAME:
                     description = attributeNode.getNodeValue();
                     break;
             }

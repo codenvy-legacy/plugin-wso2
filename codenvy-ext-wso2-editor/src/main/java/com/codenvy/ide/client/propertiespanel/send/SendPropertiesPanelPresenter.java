@@ -15,9 +15,16 @@
  */
 package com.codenvy.ide.client.propertiespanel.send;
 
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
+import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.Send;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
+import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
+import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
+import com.codenvy.ide.client.propertiespanel.resourcekeyeditor.ChangeResourceKeyCallBack;
+import com.codenvy.ide.client.propertiespanel.resourcekeyeditor.ResourceKeyEditorPresenter;
 import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
+import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
@@ -25,19 +32,76 @@ import javax.annotation.Nonnull;
 
 /**
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send, SendPropertiesPanelView>
         implements SendPropertiesPanelView.ActionDelegate {
 
+
+    private final ResourceKeyEditorPresenter keyPresenter;
+    private final NameSpaceEditorPresenter   nameSpacePresenter;
+
+    private final AddNameSpacesCallBack     nameSpacesCallBack;
+    private final ChangeResourceKeyCallBack keyCallBack;
+
+    private final WSO2EditorLocalizationConstant locale;
+
     @Inject
-    public SendPropertiesPanelPresenter(SendPropertiesPanelView view, PropertyTypeManager propertyTypeManager) {
+    public SendPropertiesPanelPresenter(SendPropertiesPanelView view,
+                                        PropertyTypeManager propertyTypeManager,
+                                        ResourceKeyEditorPresenter keyPresenter,
+                                        NameSpaceEditorPresenter nameSpacePresenter,
+                                        WSO2EditorLocalizationConstant locale) {
+
         super(view, propertyTypeManager);
+
+        this.locale = locale;
+
+        this.keyPresenter = keyPresenter;
+        this.nameSpacePresenter = nameSpacePresenter;
+
+        this.nameSpacesCallBack = new AddNameSpacesCallBack() {
+            @Override
+            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+                element.setDynamicExpression(expression);
+                element.setNameSpaces(nameSpaces);
+
+                SendPropertiesPanelPresenter.this.view.setDynamicSequence(expression);
+
+                notifyListeners();
+            }
+        };
+
+        this.keyCallBack = new ChangeResourceKeyCallBack() {
+            @Override
+            public void onFormatKeyChanged(@Nonnull String key) {
+                element.setStaticExpression(key);
+
+                SendPropertiesPanelPresenter.this.view.setStaticSequence(key);
+
+                notifyListeners();
+            }
+        };
     }
 
     /** {@inheritDoc} */
     @Override
     public void onSkipSerializationChanged() {
-        element.setSkipSerialization(view.getSkipSerialization());
+        String skipSerialization = view.getSkipSerialization();
+        element.setSkipSerialization(skipSerialization);
+
+        setDefaultPanelView();
+
+        if (skipSerialization.equals(Send.EBoolean.TRUE.name())) {
+            view.setVisibleRecSeqTypePanel(false);
+            view.setVisibleBuildMessagePanel(false);
+            view.setVisibleDynamicPanel(false);
+            view.setVisibleStaticPanel(false);
+            view.setVisibleDescriptionPanel(false);
+        } else {
+            view.setVisibleDynamicPanel(false);
+            view.setVisibleStaticPanel(false);
+        }
 
         notifyListeners();
     }
@@ -45,15 +109,38 @@ public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send, 
     /** {@inheritDoc} */
     @Override
     public void onReceivingSequencerTypeChanged() {
-        element.setReceivingSequencerType(view.getReceivingSequencerType());
+        applySequenceType();
 
         notifyListeners();
+    }
+
+    /** Sets sequence type value to element from special place of view and displaying properties panel to a certain value of sequence type */
+    private void applySequenceType() {
+        Send.SequenceType sequenceType = Send.SequenceType.valueOf(view.getReceivingSequencerType());
+        element.setSequencerType(sequenceType);
+
+        setDefaultPanelView();
+
+        switch (sequenceType) {
+            case Static:
+                view.setVisibleDynamicPanel(false);
+                break;
+
+            case Dynamic:
+                view.setVisibleStaticPanel(false);
+                break;
+
+            default:
+                view.setVisibleDynamicPanel(false);
+                view.setVisibleStaticPanel(false);
+                break;
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void onBuildMessageBeforeSendingChanged() {
-        element.setBuildMessageBeforeSending(view.getBuildMessageBeforeSending());
+        element.setBuildMessage(view.getBuildMessage());
 
         notifyListeners();
     }
@@ -66,18 +153,47 @@ public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send, 
         notifyListeners();
     }
 
+    /** Sets default value of panel visibility */
+    private void setDefaultPanelView() {
+        view.setVisibleRecSeqTypePanel(true);
+        view.setVisibleBuildMessagePanel(true);
+        view.setVisibleDynamicPanel(true);
+        view.setVisibleStaticPanel(true);
+        view.setVisibleDescriptionPanel(true);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onStaticReceivingBtnClicked() {
+        keyPresenter.showDialog(element.getStaticExpression(), keyCallBack);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onDynamicReceivingBtnClicked() {
+        nameSpacePresenter.showWindowWithParameters(element.getNameSpaces(),
+                                                    nameSpacesCallBack,
+                                                    locale.sendNamespaceLabel(),
+                                                    element.getDynamicExpression());
+    }
+
     /** {@inheritDoc} */
     @Override
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setSkipSerialization(propertyTypeManager.getValuesOfTypeByName("EBoolean"));
-        view.selectSkipSerialization(element.getSkipSerialization());
-        view.setReceivingSequencerType(propertyTypeManager.getValuesOfTypeByName("ReceivingSequenceType"));
-        view.selectReceivingSequencerType(element.getReceivingSequencerType());
-        view.setBuildMessageBeforeSending(propertyTypeManager.getValuesOfTypeByName("EBoolean"));
-        view.selectBuildMessageBeforeSending(element.getBuildMessageBeforeSending());
+        view.setSkipSerialization(propertyTypeManager.getValuesByName(Send.EBoolean.TYPE_NAME));
+
+        view.setReceivingSequencerType(propertyTypeManager.getValuesByName(Send.SequenceType.TYPE_NAME));
+        view.selectReceivingSequencerType(element.getSequencerType().name());
+        applySequenceType();
+
+        view.setBuildMessageBeforeSending(propertyTypeManager.getValuesByName(Send.EBoolean.TYPE_NAME));
+        view.selectBuildMessageBeforeSending(element.getBuildMessage());
+
         view.setDescription(element.getDescription());
+        view.setStaticSequence(element.getStaticExpression());
+        view.setDynamicSequence(element.getDynamicExpression());
     }
 
 }

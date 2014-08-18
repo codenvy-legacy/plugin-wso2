@@ -115,6 +115,12 @@ public class BranchImpl implements Branch {
     }
 
     /** {@inheritDoc} */
+    @Override
+    public boolean hasShape(){
+        return !shapes.isEmpty();
+    }
+
+    /** {@inheritDoc} */
     @Nonnull
     @Override
     public String serialize() {

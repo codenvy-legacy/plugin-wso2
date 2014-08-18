@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.propertiespanel.log.propertyconfig;
+package com.codenvy.ide.client.propertiespanel.propertyconfig;
 
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.log.Property;

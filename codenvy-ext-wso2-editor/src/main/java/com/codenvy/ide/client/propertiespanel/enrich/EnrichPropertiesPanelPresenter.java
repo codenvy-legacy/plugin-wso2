@@ -17,13 +17,14 @@ package com.codenvy.ide.client.propertiespanel.enrich;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.Send;
 import com.codenvy.ide.client.elements.enrich.Enrich;
+import com.codenvy.ide.client.elements.enrich.Source;
+import com.codenvy.ide.client.elements.enrich.Target;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.inline.ChangeInlineFormatCallBack;
 import com.codenvy.ide.client.propertiespanel.inline.InlineConfigurationPresenter;
-import com.codenvy.ide.client.propertiespanel.log.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
+import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.resourcekeyeditor.ChangeResourceKeyCallBack;
 import com.codenvy.ide.client.propertiespanel.resourcekeyeditor.ResourceKeyEditorPresenter;
 import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
@@ -33,6 +34,10 @@ import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import static com.codenvy.ide.client.elements.enrich.Source.InlineType;
+import static com.codenvy.ide.client.elements.enrich.Source.SourceType;
+import static com.codenvy.ide.client.elements.enrich.Target.TargetType;
 
 /**
  * @author Andrey Plotnikov
@@ -118,20 +123,15 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
     @Override
     public void onCloneSourceChanged() {
         element.getSource().setClone(view.getCloneSource());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onSourceTypeChanged() {
-        element.getSource().setType(view.getSourceType());
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSrcPropertyChanged() {
+    public void onSourcePropertyChanged() {
         element.getSource().setProperty(view.getSrcProperty());
+
         notifyListeners();
     }
 
@@ -139,20 +139,15 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
     @Override
     public void onSourceXpathChanged() {
         element.getSource().setXpath(view.getSourceXpath());
+
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onTargetActionChanged() {
-        element.getTarget().setAction(view.getTargetAction());
-        notifyListeners();
-    }
+        element.getTarget().setAction(Target.TargetAction.valueOf(view.getTargetAction()));
 
-    /** {@inheritDoc} */
-    @Override
-    public void onTargetTypeChanged() {
-        element.getTarget().setType(view.getTargetType());
         notifyListeners();
     }
 
@@ -160,6 +155,15 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
     @Override
     public void onTargetXpathChanged() {
         element.getTarget().setXpath(view.getTargetXpath());
+
+        notifyListeners();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onTargetPropertyChanged() {
+        element.getTarget().setProperty(view.getTargetProperty());
+
         notifyListeners();
     }
 
@@ -171,17 +175,16 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
         notifyListeners();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onSrcTypeChanged() {
-        String type = view.getSourceType();
+    /** Sets source type value to element from special place of view and displaying properties panel to a certain value of source type */
+    private void applySourceType() {
+        SourceType type = SourceType.valueOf(view.getSourceType());
         element.getSource().setType(type);
 
         setDefaultSourcePanelView();
 
         view.setVisibleSrcInlineRegisterPanel(false);
 
-        switch (Enrich.SourceType.valueOf(type)) {
+        switch (type) {
             case custom:
                 view.setVisibleSrcPropertyPanel(false);
                 view.setVisibleSrcInlineTypePanel(false);
@@ -206,14 +209,14 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
                 view.setVisibleSrcXMLPanel(false);
                 break;
         }
-
-        notifyListeners();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onSrcInlineTypeChanged() {
-        String inlineType = view.getInlineType();
+    /**
+     * Sets source inline type value to element from special place of view and displaying properties panel to a certain value of source
+     * inline type
+     */
+    private void applySourceInlineType() {
+        InlineType inlineType = InlineType.valueOf(view.getInlineType());
         element.getSource().setInlineType(inlineType);
 
         setDefaultSourcePanelView();
@@ -221,26 +224,23 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
         view.setVisibleSrcXPathPanel(false);
         view.setVisibleSrcPropertyPanel(false);
 
-        if (inlineType.equals(Enrich.InlineType.SourceXML.name())) {
+        if (inlineType.equals(InlineType.SourceXML)) {
             view.setVisibleSrcXMLPanel(true);
             view.setVisibleSrcInlineRegisterPanel(false);
         } else {
             view.setVisibleSrcXMLPanel(false);
             view.setVisibleSrcInlineRegisterPanel(true);
         }
-
-        notifyListeners();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onTgtTypeChanged() {
-        String targetType = view.getTargetType();
+    /** Sets target type value to element from special place of view and displaying properties panel to a certain value of target type */
+    private void applyTargetType() {
+        TargetType targetType = TargetType.valueOf(view.getTargetType());
         element.getTarget().setType(targetType);
 
         setDefaultTargetPanelView();
 
-        switch (Enrich.TargetType.valueOf(targetType)) {
+        switch (targetType) {
             case custom:
                 view.setVisibleTargetPropertyPanel(false);
                 view.setVisibleTargetXPathPanel(true);
@@ -256,6 +256,28 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
                 view.setVisibleTargetXPathPanel(false);
                 break;
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSourceTypeChanged() {
+        applySourceType();
+
+        notifyListeners();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSourceInlineTypeChanged() {
+        applySourceInlineType();
+
+        notifyListeners();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onTargetTypeChanged() {
+        applyTargetType();
 
         notifyListeners();
     }
@@ -307,42 +329,43 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
 
     /** {@inheritDoc} */
     @Override
-    public void onTargetPropertyChanged() {
-        element.getTarget().setProperty(view.getTargetProperty());
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setCloneSource(propertyTypeManager.getValuesOfTypeByName(Send.EBoolean.TYPE_NAME));
+        view.setCloneSource(propertyTypeManager.getValuesByName(Source.CloneSource.TYPE_NAME));
         view.selectCloneSource(element.getSource().getClone());
 
-        view.setSourceType(propertyTypeManager.getValuesOfTypeByName(Enrich.SourceType.TYPE_NAME));
-        view.selectSourceType(element.getSource().getType());
+        view.setSourceType(propertyTypeManager.getValuesByName(SourceType.TYPE_NAME));
+        view.selectSourceType(element.getSource().getType().name());
+
+        view.setTargetAction(propertyTypeManager.getValuesByName(Target.TargetAction.TYPE_NAME));
+        view.selectTargetAction(element.getTarget().getAction().name());
+
+        view.setTargetType(propertyTypeManager.getValuesByName(TargetType.TYPE_NAME));
+        view.selectTargetType(element.getTarget().getType().name());
+
+        view.setInlineType(propertyTypeManager.getValuesByName(InlineType.INLINE_TYPE));
+        view.selectInlineType(element.getSource().getInlineType().name());
 
         view.setInlineRegisterKey(element.getSource().getInlRegisterKey());
-
         view.setSourceXpath(element.getSource().getXpath());
-
-        view.setTargetAction(propertyTypeManager.getValuesOfTypeByName(Enrich.TargetAction.TYPE_NAME));
-        view.selectTargetAction(element.getTarget().getAction());
-
-        view.setTargetType(propertyTypeManager.getValuesOfTypeByName(Enrich.TargetType.TYPE_NAME));
-
-        view.setInlineType(propertyTypeManager.getValuesOfTypeByName(Enrich.InlineType.INLINE_TYPE));
-        view.selectInlineType(element.getSource().getInlineType());
-
-        view.selectTargetType(element.getTarget().getType());
-
         view.setTargetXpath(element.getTarget().getXpath());
-
         view.setDescription(element.getDescription());
         view.setProperty(element.getSource().getProperty());
         view.setSrcXml(element.getSource().getSourceXML());
         view.setTargetProperty(element.getTarget().getProperty());
+
+        if (!SourceType.custom.equals(element.getSource().getType())) {
+            applySourceType();
+        }
+
+        if (!InlineType.SourceXML.equals(element.getSource().getInlineType())) {
+            applySourceInlineType();
+        }
+
+        if (!TargetType.custom.equals(element.getTarget().getType())) {
+            applyTargetType();
+        }
     }
 
 }

@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 
@@ -34,7 +33,6 @@ import javax.annotation.Nonnull;
  *
  * @author Valeriy Svydenko
  */
-@Singleton
 public class ResourceKeyEditorViewImpl extends Window implements ResourceKeyEditorView {
 
     interface ResourceKeyEditorViewUiBinder extends UiBinder<Widget, ResourceKeyEditorViewImpl> {

@@ -19,7 +19,7 @@ import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.log.Property;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
-import com.codenvy.ide.client.propertiespanel.log.propertyconfig.PropertyConfigPresenter;
+import com.codenvy.ide.client.propertiespanel.propertyconfig.PropertyConfigPresenter;
 import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -64,7 +64,7 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log, Lo
     /** {@inheritDoc} */
     @Override
     public void onLogCategoryChanged() {
-        element.setLogCategory(view.getLogCategory());
+        element.setLogCategory(LogCategory.valueOf(view.getLogCategory()));
 
         notifyListeners();
     }
@@ -72,7 +72,8 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log, Lo
     /** {@inheritDoc} */
     @Override
     public void onLogLevelChanged() {
-        element.setLogLevel(view.getLogLevel());
+        element.setLogLevel(Log.LogLevel.valueOf(view.getLogLevel()));
+
         notifyListeners();
     }
 
@@ -80,6 +81,7 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log, Lo
     @Override
     public void onLogSeparatorChanged() {
         element.setLogSeparator(view.getLogSeparator());
+
         notifyListeners();
     }
 
@@ -87,6 +89,7 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log, Lo
     @Override
     public void onDescriptionChanged() {
         element.setDescription(view.getDescription());
+
         notifyListeners();
     }
 
@@ -103,10 +106,12 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log, Lo
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setLogCategory(propertyTypeManager.getValuesOfTypeByName(LogCategory.TYPE_NAME));
-        view.selectLogCategory(element.getLogCategory());
-        view.setLogLevel(propertyTypeManager.getValuesOfTypeByName(Log.LogLevel.TYPE_NAME));
-        view.selectLogLevel(element.getLogLevel());
+        view.setLogCategory(propertyTypeManager.getValuesByName(LogCategory.TYPE_NAME));
+        view.selectLogCategory(element.getLogCategory().name());
+
+        view.setLogLevel(propertyTypeManager.getValuesByName(Log.LogLevel.TYPE_NAME));
+        view.selectLogLevel(element.getLogLevel().name());
+
         view.setLogSeparator(element.getLogSeparator());
         view.setDescription(element.getDescription());
     }

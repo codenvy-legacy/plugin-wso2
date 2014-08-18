@@ -30,6 +30,20 @@ import javax.annotation.Nonnull;
 @ImplementedBy(ArgumentsConfigViewImpl.class)
 public interface ArgumentsConfigView extends View<ArgumentsConfigView.ActionDelegate> {
 
+    /** @return type value from the special place on the view which uses for showing type parameter */
+    String getTypeValue();
+
+    /** Sets type values to special place of the view */
+    void setTypeValue();
+
+    /**
+     * Select type format in place on view.
+     *
+     * @param type
+     *         argument type value
+     */
+    void selectType(@Nonnull String type);
+
     /**
      * Sets the list to table on view.
      *
