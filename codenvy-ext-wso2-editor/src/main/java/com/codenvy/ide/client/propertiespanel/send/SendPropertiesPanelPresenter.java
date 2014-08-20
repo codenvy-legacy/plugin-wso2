@@ -18,17 +18,19 @@ package com.codenvy.ide.client.propertiespanel.send;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.Send;
+import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.resourcekeyeditor.ChangeResourceKeyCallBack;
 import com.codenvy.ide.client.propertiespanel.resourcekeyeditor.ResourceKeyEditorPresenter;
-import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+
+import static com.codenvy.ide.client.editor.WSO2Editor.BOOLEAN_TYPE_NAME;
 
 /**
  * @author Andrey Plotnikov
@@ -87,20 +89,20 @@ public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send, 
     /** {@inheritDoc} */
     @Override
     public void onSkipSerializationChanged() {
-        String skipSerialization = view.getSkipSerialization();
+        boolean skipSerialization = Boolean.valueOf(view.getSkipSerialization());
         element.setSkipSerialization(skipSerialization);
 
         setDefaultPanelView();
 
-        if (skipSerialization.equals(Send.EBoolean.TRUE.name())) {
+        if (skipSerialization) {
+            view.setVisibleDynamicPanel(false);
+            view.setVisibleStaticPanel(false);
+        } else {
             view.setVisibleRecSeqTypePanel(false);
             view.setVisibleBuildMessagePanel(false);
             view.setVisibleDynamicPanel(false);
             view.setVisibleStaticPanel(false);
             view.setVisibleDescriptionPanel(false);
-        } else {
-            view.setVisibleDynamicPanel(false);
-            view.setVisibleStaticPanel(false);
         }
 
         notifyListeners();
@@ -140,7 +142,7 @@ public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send, 
     /** {@inheritDoc} */
     @Override
     public void onBuildMessageBeforeSendingChanged() {
-        element.setBuildMessage(view.getBuildMessage());
+        element.setBuildMessage(Boolean.valueOf(view.getBuildMessage()));
 
         notifyListeners();
     }
@@ -182,14 +184,14 @@ public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send, 
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setSkipSerializationStates(propertyTypeManager.getValuesByName(Send.EBoolean.TYPE_NAME));
+        view.setSkipSerializationStates(propertyTypeManager.getValuesByName(BOOLEAN_TYPE_NAME));
 
         view.setReceivingSequencerTypes(propertyTypeManager.getValuesByName(Send.SequenceType.TYPE_NAME));
         view.selectReceivingSequencerType(element.getSequencerType().name());
         applySequenceType();
 
-        view.setBuildMessageBeforeSending(propertyTypeManager.getValuesByName(Send.EBoolean.TYPE_NAME));
-        view.selectBuildMessageBeforeSending(element.getBuildMessage());
+        view.setBuildMessageBeforeSending(propertyTypeManager.getValuesByName(BOOLEAN_TYPE_NAME));
+        view.selectBuildMessageBeforeSending(String.valueOf(element.getBuildMessage()));
 
         view.setDescription(element.getDescription());
         view.setStaticSequence(element.getStaticExpression());

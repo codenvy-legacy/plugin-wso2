@@ -150,11 +150,11 @@ public class AddressEndpoint extends AbstractShape {
     }
 
     @Nonnegative
-    public double getSuspendProgressionFactor() {
+    public double getSuspendProgressionFactory() {
         return suspendProgressionFactor;
     }
 
-    public void setSuspendProgressionFactor(@Nonnegative double suspendProgressionFactor) {
+    public void setSuspendProgressionFactory(@Nonnegative double suspendProgressionFactor) {
         this.suspendProgressionFactor = suspendProgressionFactor;
     }
 

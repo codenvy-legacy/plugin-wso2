@@ -117,12 +117,9 @@ import static com.codenvy.ide.client.elements.Property.Scope.TRANSPORT;
 import static com.codenvy.ide.client.elements.Property.ValueType;
 import static com.codenvy.ide.client.elements.Property.ValueType.EXPRESSION;
 import static com.codenvy.ide.client.elements.Property.ValueType.LITERAL;
-import static com.codenvy.ide.client.elements.Send.EBoolean.FALSE;
-import static com.codenvy.ide.client.elements.Send.EBoolean.TRUE;
 import static com.codenvy.ide.client.elements.Send.SequenceType.Default;
 import static com.codenvy.ide.client.elements.Send.SequenceType.Static;
 import static com.codenvy.ide.client.elements.Sequence.ReferringType.Dynamic;
-import static com.codenvy.ide.client.elements.enrich.Source.CloneSource;
 import static com.codenvy.ide.client.elements.enrich.Source.InlineType;
 import static com.codenvy.ide.client.elements.enrich.Source.SourceType;
 import static com.codenvy.ide.client.elements.enrich.Source.SourceType.body;
@@ -162,6 +159,8 @@ import static com.codenvy.ide.client.elements.payload.Format.MediaType.xml;
 public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements AbstractPropertiesPanel.PropertyChangedListener,
                                                                              WSO2EditorView.ActionDelegate,
                                                                              ElementChangedListener {
+
+    public static final String BOOLEAN_TYPE_NAME = "Boolean";
 
     private final ToolbarPresenter           toolbar;
     private final RootElement                rootElement;
@@ -287,17 +286,15 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                     AXIS2_CLIENT.getValue(),
                                                                     OPERATION.getValue()));
 
+        propertyTypeManager.register(BOOLEAN_TYPE_NAME, Arrays.asList(Boolean.FALSE.toString(), Boolean.TRUE.toString()));
+
         propertyTypeManager.register(Action.TYPE_NAME, Arrays.asList(set.name(), remove.name()));
 
         propertyTypeManager.register(MediaType.TYPE_NAME, Arrays.asList(xml.name(), json.name()));
 
         propertyTypeManager.register(FormatType.TYPE_NAME, Arrays.asList(Inline.name(), Registry.name()));
 
-        propertyTypeManager.register(Send.EBoolean.TYPE_NAME, Arrays.asList(FALSE.name().toLowerCase(), TRUE.name().toLowerCase()));
-
         propertyTypeManager.register(Send.SequenceType.TYPE_NAME, Arrays.asList(Default.name(), Static.name(), Dynamic.name()));
-
-        propertyTypeManager.register(CloneSource.TYPE_NAME, Arrays.asList(TRUE.name().toLowerCase(), FALSE.name().toLowerCase()));
 
         propertyTypeManager.register(HeaderAction.TYPE_NAME, Arrays.asList(HeaderAction.set.name(), HeaderAction.remove.name()));
 

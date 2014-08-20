@@ -52,8 +52,8 @@ public class Send extends AbstractShape {
     private static final List<String> COMPONENTS = Arrays.asList(AddressEndpoint.ELEMENT_NAME);
 
     private SequenceType     sequencerType;
-    private String           skipSerialization;
-    private String           buildMessage;
+    private boolean          skipSerialization;
+    private boolean          buildMessage;
     private String           description;
     private String           dynamicExpression;
     private String           staticExpression;
@@ -63,9 +63,9 @@ public class Send extends AbstractShape {
     public Send(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
 
-        skipSerialization = EBoolean.FALSE.name().toLowerCase();
+        skipSerialization = false;
         sequencerType = Default;
-        buildMessage = EBoolean.FALSE.name().toLowerCase();
+        buildMessage = false;
         description = "";
         dynamicExpression = "/default/xpath";
         staticExpression = "/default/sequence";
@@ -76,7 +76,7 @@ public class Send extends AbstractShape {
         branches.add(branchProvider.get());
     }
 
-    public void setSkipSerialization(@Nullable String skipSerialization) {
+    public void setSkipSerialization(boolean skipSerialization) {
         this.skipSerialization = skipSerialization;
     }
 
@@ -97,8 +97,7 @@ public class Send extends AbstractShape {
     }
 
     /** @return value of build message before sending of element */
-    @Nonnull
-    public String getBuildMessage() {
+    public boolean getBuildMessage() {
         return buildMessage;
     }
 
@@ -108,7 +107,7 @@ public class Send extends AbstractShape {
      * @param buildMessage
      *         value which need to set to element
      */
-    public void setBuildMessage(@Nullable String buildMessage) {
+    public void setBuildMessage(boolean buildMessage) {
         this.buildMessage = buildMessage;
     }
 
@@ -199,9 +198,9 @@ public class Send extends AbstractShape {
                 break;
         }
 
-        result.append(buildMessage.equalsIgnoreCase(EBoolean.FALSE.name())
-                      ? ' '
-                      : BUILD_MESSAGE_ATTRIBUTE_NAME + "=\"" + buildMessage + "\" ");
+        result.append(buildMessage
+                      ? BUILD_MESSAGE_ATTRIBUTE_NAME + "=\"true\" "
+                      : ' ');
 
         result.append(description.isEmpty() ? ' ' : DESCRIPTION_ATTRIBUTE_NAME + "=\"" + description + '"');
 
@@ -214,7 +213,7 @@ public class Send extends AbstractShape {
     public String serialize() {
         StringBuilder result = new StringBuilder();
 
-        if (skipSerialization.equalsIgnoreCase(EBoolean.TRUE.name())) {
+        if (skipSerialization) {
             return "";
         }
 
@@ -259,7 +258,7 @@ public class Send extends AbstractShape {
                         break;
 
                     case BUILD_MESSAGE_ATTRIBUTE_NAME:
-                        buildMessage = attributeValue;
+                        buildMessage = Boolean.valueOf(attributeValue);
                         break;
 
                     case DESCRIPTION_ATTRIBUTE_NAME:
@@ -327,9 +326,4 @@ public class Send extends AbstractShape {
         public static final String TYPE_NAME = "ReceivingSequenceType";
     }
 
-    public enum EBoolean {
-        TRUE, FALSE;
-
-        public static final String TYPE_NAME = "EBoolean";
-    }
 }
