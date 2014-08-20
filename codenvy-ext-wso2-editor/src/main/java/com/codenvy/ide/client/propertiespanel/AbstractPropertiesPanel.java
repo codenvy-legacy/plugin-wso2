@@ -16,9 +16,9 @@
 package com.codenvy.ide.client.propertiespanel;
 
 import com.codenvy.ide.client.elements.Shape;
+import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.mvp.AbstractView;
-import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -59,10 +59,6 @@ public abstract class AbstractPropertiesPanel<T extends Shape, V extends Abstrac
 
     public void addListener(@Nonnull PropertyChangedListener listener) {
         listeners.add(listener);
-    }
-
-    public void removeListener(@Nonnull PropertyChangedListener listener) {
-        listeners.remove(listener);
     }
 
     public void notifyListeners() {

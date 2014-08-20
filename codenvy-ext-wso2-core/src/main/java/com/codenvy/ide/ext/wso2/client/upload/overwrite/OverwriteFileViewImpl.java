@@ -16,6 +16,7 @@
 package com.codenvy.ide.ext.wso2.client.upload.overwrite;
 
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
+import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -27,6 +28,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
 
@@ -36,6 +38,8 @@ import javax.validation.constraints.NotNull;
  * @author Valeriy Svydenko
  */
 public class OverwriteFileViewImpl extends DialogBox implements OverwriteFileView {
+
+    @Singleton
     interface OverwriteFileViewImplUiBinder extends UiBinder<Widget, OverwriteFileViewImpl> {
     }
 
@@ -48,15 +52,20 @@ public class OverwriteFileViewImpl extends DialogBox implements OverwriteFileVie
     Button  btnOverwrite;
     @UiField
     TextBox fileName;
+    @UiField
+    HTML    message;
+
     @UiField(provided = true)
     final LocalizationConstant locale;
-    @UiField
-    HTML message;
+    @UiField(provided = true)
+    final WSO2Resources        res;
 
     @Inject
     public OverwriteFileViewImpl(OverwriteFileViewImplUiBinder ourUiBinder,
-                                 LocalizationConstant locale) {
+                                 LocalizationConstant locale,
+                                 WSO2Resources res) {
         this.locale = locale;
+        this.res = res;
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 

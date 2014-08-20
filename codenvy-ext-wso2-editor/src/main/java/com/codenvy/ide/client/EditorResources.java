@@ -19,11 +19,13 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.inject.Singleton;
 
 /**
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
+@Singleton
 public interface EditorResources extends ClientBundle {
 
     interface EditorCSS extends CssResource {

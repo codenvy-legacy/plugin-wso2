@@ -23,7 +23,7 @@ import com.codenvy.ide.client.propertiespanel.inline.ChangeInlineFormatCallBack;
 import com.codenvy.ide.client.propertiespanel.inline.InlineConfigurationPresenter;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
-import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
+import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -225,7 +225,7 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
         view.setScope(propertyTypeManager.getValuesByName(Header.ScopeType.TYPE_NAME));
         view.selectScope(element.getScope());
 
-        view.setValueType(propertyTypeManager.getValuesByName(Header.HeaderValueType.TYPE_NAME));
+        view.setValueTypes(propertyTypeManager.getValuesByName(Header.HeaderValueType.TYPE_NAME));
         view.selectValueType(element.getValueType());
 
         view.setValue(element.getValue());

@@ -15,6 +15,8 @@
  */
 package com.codenvy.ide.client.propertiespanel.sequence;
 
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -26,6 +28,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,6 +39,7 @@ import java.util.List;
  */
 public class SequencePropertiesPanelViewImpl extends SequencePropertiesPanelView {
 
+    @Singleton
     interface SequencePropertiesPanelViewImplUiBinder extends UiBinder<Widget, SequencePropertiesPanelViewImpl> {
     }
 
@@ -51,8 +55,18 @@ public class SequencePropertiesPanelViewImpl extends SequencePropertiesPanelView
     @UiField
     FlowPanel dynamicReferenceKeyPanel;
 
+    @UiField(provided = true)
+    final EditorResources                res;
+    @UiField(provided = true)
+    final WSO2EditorLocalizationConstant locale;
+
     @Inject
-    public SequencePropertiesPanelViewImpl(SequencePropertiesPanelViewImplUiBinder ourUiBinder) {
+    public SequencePropertiesPanelViewImpl(SequencePropertiesPanelViewImplUiBinder ourUiBinder,
+                                           EditorResources res,
+                                           WSO2EditorLocalizationConstant locale) {
+        this.res = res;
+        this.locale = locale;
+
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -60,33 +74,19 @@ public class SequencePropertiesPanelViewImpl extends SequencePropertiesPanelView
     @Nonnull
     @Override
     public String getReferringType() {
-        int index = referringType.getSelectedIndex();
-        return index != -1 ? referringType.getValue(referringType.getSelectedIndex()) : "";
+        return getSelectedItem(referringType);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setReferringTypes(@Nullable List<String> referringTypes) {
-        if (referringTypes == null) {
-            return;
-        }
-
-        this.referringType.clear();
-
-        for (String value : referringTypes) {
-            this.referringType.addItem(value);
-        }
+        setTypes(referringType, referringTypes);
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectReferringType(@Nonnull String referringType) {
-        for (int i = 0; i < this.referringType.getItemCount(); i++) {
-            if (this.referringType.getValue(i).equals(referringType)) {
-                this.referringType.setItemSelected(i, true);
-                return;
-            }
-        }
+        selectType(this.referringType, referringType);
     }
 
     /** {@inheritDoc} */

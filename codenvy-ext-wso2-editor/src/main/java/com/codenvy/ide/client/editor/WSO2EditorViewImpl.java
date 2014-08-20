@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 
@@ -30,6 +31,7 @@ import javax.annotation.Nonnull;
  */
 public class WSO2EditorViewImpl extends WSO2EditorView {
 
+    @Singleton
     interface EditorViewImplUiBinder extends UiBinder<Widget, WSO2EditorViewImpl> {
     }
 

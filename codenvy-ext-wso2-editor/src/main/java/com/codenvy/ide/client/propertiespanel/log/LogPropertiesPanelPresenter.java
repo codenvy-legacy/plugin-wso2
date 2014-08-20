@@ -20,7 +20,7 @@ import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.log.Property;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.propertyconfig.PropertyConfigPresenter;
-import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
+import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -106,10 +106,10 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log, Lo
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setLogCategory(propertyTypeManager.getValuesByName(LogCategory.TYPE_NAME));
+        view.setLogCategories(propertyTypeManager.getValuesByName(LogCategory.TYPE_NAME));
         view.selectLogCategory(element.getLogCategory().name());
 
-        view.setLogLevel(propertyTypeManager.getValuesByName(Log.LogLevel.TYPE_NAME));
+        view.setLogLevels(propertyTypeManager.getValuesByName(Log.LogLevel.TYPE_NAME));
         view.selectLogLevel(element.getLogLevel().name());
 
         view.setLogSeparator(element.getLogSeparator());

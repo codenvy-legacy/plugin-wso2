@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.switchmediator.branch;
 
+import com.codenvy.ide.client.EditorResources;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -25,6 +26,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,6 +35,8 @@ import javax.annotation.Nullable;
  * @author Andrey Plotnikov
  */
 public class BranchFiledViewImpl extends BranchFiledView {
+
+    @Singleton
     interface BranchFiledViewImplUiBinder extends UiBinder<Widget, BranchFiledViewImpl> {
     }
 
@@ -41,8 +45,13 @@ public class BranchFiledViewImpl extends BranchFiledView {
     @UiField
     Label   caseTitle;
 
+    @UiField(provided = true)
+    final EditorResources res;
+
     @Inject
-    public BranchFiledViewImpl(BranchFiledViewImplUiBinder ourUiBinder) {
+    public BranchFiledViewImpl(BranchFiledViewImplUiBinder ourUiBinder, EditorResources res) {
+        this.res = res;
+
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 

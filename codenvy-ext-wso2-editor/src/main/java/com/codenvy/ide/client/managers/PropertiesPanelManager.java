@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.propertiespanel;
+package com.codenvy.ide.client.managers;
 
-import com.codenvy.ide.client.SelectionManager;
 import com.codenvy.ide.client.elements.Shape;
 import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;

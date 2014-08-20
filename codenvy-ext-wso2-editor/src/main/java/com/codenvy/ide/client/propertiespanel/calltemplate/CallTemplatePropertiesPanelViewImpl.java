@@ -15,6 +15,8 @@
  */
 package com.codenvy.ide.client.propertiespanel.calltemplate;
 
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -24,6 +26,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,6 +41,7 @@ import java.util.List;
  */
 public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesPanelView {
 
+    @Singleton
     interface CallTemplatePropertiesPanelViewImplUiBinder extends UiBinder<Widget, CallTemplatePropertiesPanelViewImpl> {
     }
 
@@ -50,8 +54,18 @@ public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesP
     @UiField
     TextBox description;
 
+    @UiField(provided = true)
+    final EditorResources                res;
+    @UiField(provided = true)
+    final WSO2EditorLocalizationConstant locale;
+
     @Inject
-    public CallTemplatePropertiesPanelViewImpl(CallTemplatePropertiesPanelViewImplUiBinder ourUiBinder) {
+    public CallTemplatePropertiesPanelViewImpl(CallTemplatePropertiesPanelViewImplUiBinder ourUiBinder,
+                                               EditorResources res,
+                                               WSO2EditorLocalizationConstant locale) {
+        this.res = res;
+        this.locale = locale;
+
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -59,31 +73,19 @@ public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesP
     @Nonnull
     @Override
     public String getAvailableTemplates() {
-        int index = availableTemplates.getSelectedIndex();
-        return index != -1 ? availableTemplates.getValue(availableTemplates.getSelectedIndex()) : "";
+        return getSelectedItem(availableTemplates);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setAvailableTemplates(@Nullable List<String> payloadFormat) {
-        if (payloadFormat == null) {
-            return;
-        }
-        this.availableTemplates.clear();
-        for (String value : payloadFormat) {
-            this.availableTemplates.addItem(value);
-        }
+        setTypes(availableTemplates, payloadFormat);
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectAvailableTemplate(@Nonnull String availableTemplate) {
-        for (int i = 0; i < this.availableTemplates.getItemCount(); i++) {
-            if (this.availableTemplates.getValue(i).equals(availableTemplate)) {
-                this.availableTemplates.setItemSelected(i, true);
-                return;
-            }
-        }
+        selectType(availableTemplates, availableTemplate);
     }
 
     @UiHandler("availableTemplates")
@@ -95,7 +97,7 @@ public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesP
     @Nonnull
     @Override
     public String getTargetTemplate() {
-        return String.valueOf(targetTemplate.getText());
+        return targetTemplate.getText();
     }
 
     /** {@inheritDoc} */

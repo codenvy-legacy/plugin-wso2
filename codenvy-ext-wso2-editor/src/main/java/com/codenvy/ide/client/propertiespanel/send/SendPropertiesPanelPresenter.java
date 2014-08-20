@@ -23,7 +23,7 @@ import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter
 import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.resourcekeyeditor.ChangeResourceKeyCallBack;
 import com.codenvy.ide.client.propertiespanel.resourcekeyeditor.ResourceKeyEditorPresenter;
-import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
+import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -182,9 +182,9 @@ public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send, 
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setSkipSerialization(propertyTypeManager.getValuesByName(Send.EBoolean.TYPE_NAME));
+        view.setSkipSerializationStates(propertyTypeManager.getValuesByName(Send.EBoolean.TYPE_NAME));
 
-        view.setReceivingSequencerType(propertyTypeManager.getValuesByName(Send.SequenceType.TYPE_NAME));
+        view.setReceivingSequencerTypes(propertyTypeManager.getValuesByName(Send.SequenceType.TYPE_NAME));
         view.selectReceivingSequencerType(element.getSequencerType().name());
         applySequenceType();
 

@@ -16,10 +16,8 @@
 package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.elements.enrich.Enrich;
-import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.log.Property;
-import com.codenvy.ide.client.elements.payload.PayloadFactory;
+import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.gwt.resources.client.ImageResource;
@@ -57,42 +55,8 @@ public class CallTemplate extends AbstractShape {
     private Array<Property>    parameters;
 
     @Inject
-    public CallTemplate(EditorResources resources,
-                        Provider<Branch> branchProvider,
-                        Provider<Log> logProvider,
-                        Provider<Enrich> enrichProvider,
-                        Provider<Filter> filterProvider,
-                        Provider<Header> headerProvider,
-                        Provider<Call> callProvider,
-                        Provider<CallTemplate> callTemplateProvider,
-                        Provider<LoopBack> loopBackProvider,
-                        Provider<PayloadFactory> payloadFactoryProvider,
-                        Provider<com.codenvy.ide.client.elements.Property> propertyProvider,
-                        Provider<Respond> respondProvider,
-                        Provider<Send> sendProvider,
-                        Provider<Sequence> sequenceProvider,
-                        Provider<Switch> switchProvider) {
-        super(ELEMENT_NAME,
-              ELEMENT_NAME,
-              SERIALIZATION_NAME,
-              PROPERTIES,
-              resources,
-              branchProvider,
-              false,
-              true,
-              logProvider,
-              enrichProvider,
-              filterProvider,
-              headerProvider,
-              callProvider,
-              callTemplateProvider,
-              loopBackProvider,
-              payloadFactoryProvider,
-              propertyProvider,
-              respondProvider,
-              sendProvider,
-              sequenceProvider,
-              switchProvider);
+    public CallTemplate(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
 
         availableTemplates = AvailableTemplates.EMPTY;
         targetTemplate = "";
@@ -168,13 +132,8 @@ public class CallTemplate extends AbstractShape {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        StringBuilder result = new StringBuilder();
-
-        result.append(TARGET_ATTRIBUTE_NAME).append("=\"").append(targetTemplate).append("\" ");
-
-        result.append(description.isEmpty() ? "" : DESCRIPTION_ATTRIBUTE_NAME + "=\"" + description + "\"");
-
-        return result.toString();
+        return TARGET_ATTRIBUTE_NAME + "=\"" + targetTemplate + "\" " +
+               (description.isEmpty() ? "" : DESCRIPTION_ATTRIBUTE_NAME + "=\"" + description + "\"");
     }
 
     /** {@inheritDoc} */

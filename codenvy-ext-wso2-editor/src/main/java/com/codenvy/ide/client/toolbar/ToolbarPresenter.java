@@ -24,6 +24,7 @@ import com.google.inject.assistedinject.Assisted;
 
 import javax.annotation.Nonnull;
 
+import static com.codenvy.ide.client.State.CREATING_ADDRESS_ENDPOINT;
 import static com.codenvy.ide.client.State.CREATING_CALL;
 import static com.codenvy.ide.client.State.CREATING_CALLTEMPLATE;
 import static com.codenvy.ide.client.State.CREATING_ENRICH;
@@ -141,6 +142,12 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
     @Override
     public void onCallButtonClicked() {
         setState(CREATING_CALL);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onAddressEndpointButtonClicked() {
+        setState(CREATING_ADDRESS_ENDPOINT);
     }
 
 }

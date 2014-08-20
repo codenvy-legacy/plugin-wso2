@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -31,6 +32,7 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class GraphicEditorViewImpl extends Composite implements GraphicEditorView {
 
+    @Singleton
     interface GEUIBinder extends UiBinder<Widget, GraphicEditorViewImpl> {
     }
 

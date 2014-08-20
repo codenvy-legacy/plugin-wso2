@@ -163,7 +163,7 @@ public abstract class HeaderPropertiesPanelView extends AbstractView<HeaderPrope
      * @param valueType
      *         list of value types which need to set to special list box
      */
-    public abstract void setValueType(@Nullable List<String> valueType);
+    public abstract void setValueTypes(@Nullable List<String> valueType);
 
     /** @return literal value from the special place on the view which uses for showing literal parameter */
     @Nonnull

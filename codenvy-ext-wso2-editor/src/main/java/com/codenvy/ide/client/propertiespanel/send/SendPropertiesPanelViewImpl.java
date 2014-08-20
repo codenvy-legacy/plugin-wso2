@@ -15,6 +15,8 @@
  */
 package com.codenvy.ide.client.propertiespanel.send;
 
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -26,6 +28,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,6 +40,7 @@ import java.util.List;
  */
 public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
 
+    @Singleton
     interface SendPropertiesPanelViewImplUiBinder extends UiBinder<Widget, SendPropertiesPanelViewImpl> {
     }
 
@@ -65,8 +69,18 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
     @UiField
     TextBox description;
 
+    @UiField(provided = true)
+    final EditorResources                res;
+    @UiField(provided = true)
+    final WSO2EditorLocalizationConstant locale;
+
     @Inject
-    public SendPropertiesPanelViewImpl(SendPropertiesPanelViewImplUiBinder ourUiBinder) {
+    public SendPropertiesPanelViewImpl(SendPropertiesPanelViewImplUiBinder ourUiBinder,
+                                       EditorResources res,
+                                       WSO2EditorLocalizationConstant locale) {
+        this.res = res;
+        this.locale = locale;
+
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -96,20 +110,13 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
     @Nonnull
     @Override
     public String getSkipSerialization() {
-        int index = skipSerialization.getSelectedIndex();
-        return index != -1 ? skipSerialization.getValue(skipSerialization.getSelectedIndex()) : "";
+        return getSelectedItem(skipSerialization);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setSkipSerialization(@Nullable List<String> skipSerialization) {
-        if (skipSerialization == null) {
-            return;
-        }
-        this.skipSerialization.clear();
-        for (String value : skipSerialization) {
-            this.skipSerialization.addItem(value);
-        }
+    public void setSkipSerializationStates(@Nullable List<String> states) {
+        setTypes(skipSerialization, states);
     }
 
     @UiHandler("skipSerialization")
@@ -121,31 +128,19 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
     @Nonnull
     @Override
     public String getReceivingSequencerType() {
-        int index = receivingSequencerType.getSelectedIndex();
-        return index != -1 ? receivingSequencerType.getValue(receivingSequencerType.getSelectedIndex()) : "";
+        return getSelectedItem(receivingSequencerType);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setReceivingSequencerType(@Nullable List<String> receivingSequencerType) {
-        if (receivingSequencerType == null) {
-            return;
-        }
-        this.receivingSequencerType.clear();
-        for (String value : receivingSequencerType) {
-            this.receivingSequencerType.addItem(value);
-        }
+    public void setReceivingSequencerTypes(@Nullable List<String> receivingSequencerTypes) {
+        setTypes(receivingSequencerType, receivingSequencerTypes);
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectReceivingSequencerType(@Nullable String receivingSequencerType) {
-        for (int i = 0; i < this.receivingSequencerType.getItemCount(); i++) {
-            if (this.receivingSequencerType.getValue(i).equals(receivingSequencerType)) {
-                this.receivingSequencerType.setItemSelected(i, true);
-                return;
-            }
-        }
+        selectType(this.receivingSequencerType, receivingSequencerType);
     }
 
     @UiHandler("receivingSequencerType")
@@ -157,29 +152,19 @@ public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
     @Nonnull
     @Override
     public String getBuildMessage() {
-        int index = buildMessageBeforeSending.getSelectedIndex();
-        return index != -1 ? buildMessageBeforeSending.getValue(buildMessageBeforeSending.getSelectedIndex()) : "";
+        return getSelectedItem(buildMessageBeforeSending);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setBuildMessageBeforeSending(@Nonnull List<String> buildMessageBeforeSending) {
-        this.buildMessageBeforeSending.clear();
-
-        for (String value : buildMessageBeforeSending) {
-            this.buildMessageBeforeSending.addItem(value);
-        }
+        setTypes(this.buildMessageBeforeSending, buildMessageBeforeSending);
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectBuildMessageBeforeSending(@Nullable String buildMessageBeforeSending) {
-        for (int i = 0; i < this.buildMessageBeforeSending.getItemCount(); i++) {
-            if (this.buildMessageBeforeSending.getValue(i).equals(buildMessageBeforeSending)) {
-                this.buildMessageBeforeSending.setItemSelected(i, true);
-                return;
-            }
-        }
+        selectType(this.buildMessageBeforeSending, buildMessageBeforeSending);
     }
 
     @UiHandler("buildMessageBeforeSending")

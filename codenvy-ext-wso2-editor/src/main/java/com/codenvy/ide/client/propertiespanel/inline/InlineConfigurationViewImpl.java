@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 
@@ -38,6 +39,7 @@ import javax.annotation.Nonnull;
  */
 public class InlineConfigurationViewImpl extends Window implements InlineConfigurationView {
 
+    @Singleton
     interface FormatConfigurationUiBinder extends UiBinder<Widget, InlineConfigurationViewImpl> {
     }
 

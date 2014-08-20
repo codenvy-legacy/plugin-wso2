@@ -16,12 +16,14 @@
 package com.codenvy.ide.ext.wso2.client;
 
 import com.google.gwt.i18n.client.Messages;
+import com.google.inject.Singleton;
 
 /**
  * Contains all message needed for WSO2 plugin.
  *
  * @author Andrey Plotnikov
  */
+@Singleton
 public interface LocalizationConstant extends Messages {
 
     @Key("wizard.project.artifactId")

@@ -18,26 +18,14 @@ package com.codenvy.ide.client.elements.shape.branch;
 import com.codenvy.ide.client.EditorState;
 import com.codenvy.ide.client.HasState;
 import com.codenvy.ide.client.MetaModelValidator;
-import com.codenvy.ide.client.SelectionManager;
 import com.codenvy.ide.client.State;
 import com.codenvy.ide.client.elements.Branch;
-import com.codenvy.ide.client.elements.Call;
-import com.codenvy.ide.client.elements.CallTemplate;
-import com.codenvy.ide.client.elements.Filter;
-import com.codenvy.ide.client.elements.Header;
-import com.codenvy.ide.client.elements.LoopBack;
-import com.codenvy.ide.client.elements.Property;
-import com.codenvy.ide.client.elements.Respond;
-import com.codenvy.ide.client.elements.Send;
-import com.codenvy.ide.client.elements.Sequence;
 import com.codenvy.ide.client.elements.Shape;
-import com.codenvy.ide.client.elements.Switch;
-import com.codenvy.ide.client.elements.enrich.Enrich;
-import com.codenvy.ide.client.elements.log.Log;
-import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.codenvy.ide.client.elements.shape.ElementChangedListener;
 import com.codenvy.ide.client.elements.shape.ShapePresenter;
 import com.codenvy.ide.client.inject.EditorFactory;
+import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -67,25 +55,13 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
                                                                               ShapePresenter.ElementMoveListener,
                                                                               ElementChangedListener {
 
-    private final MetaModelValidator metaModelValidator;
-    private final SelectionManager   selectionManager;
-    private final EditorFactory      editorFactory;
-    private final EditorState<State> editorState;
+    private final MetaModelValidator      metaModelValidator;
+    private final SelectionManager        selectionManager;
+    private final EditorFactory           editorFactory;
+    private final MediatorCreatorsManager mediatorCreatorsManager;
+    private final EditorState<State>      editorState;
 
-    private final Provider<Log>            logProvider;
-    private final Provider<Enrich>         enrichProvider;
-    private final Provider<Filter>         filterProvider;
-    private final Provider<Header>         headerProvider;
-    private final Provider<Call>           callProvider;
-    private final Provider<CallTemplate>   callTemplateProvider;
-    private final Provider<LoopBack>       loopBackProvider;
-    private final Provider<PayloadFactory> payloadFactoryProvider;
-    private final Provider<Property>       propertyProvider;
-    private final Provider<Respond>        respondProvider;
-    private final Provider<Send>           sendProvider;
-    private final Provider<Sequence>       sequenceProvider;
-    private final Provider<Switch>         switchMediatorProvider;
-    private final Branch                   branch;
+    private final Branch branch;
 
     private final List<ElementChangedListener> elementChangedListeners;
     private final List<ShapePresenter>         elements;
@@ -94,19 +70,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     public BranchPresenter(BranchView view,
                            MetaModelValidator metaModelValidator,
                            EditorFactory editorFactory,
-                           Provider<Log> logProvider,
-                           Provider<Enrich> enrichProvider,
-                           Provider<Filter> filterProvider,
-                           Provider<Header> headerProvider,
-                           Provider<Call> callProvider,
-                           Provider<CallTemplate> callTemplateProvider,
-                           Provider<LoopBack> loopBackProvider,
-                           Provider<PayloadFactory> payloadFactoryProvider,
-                           Provider<Property> propertyProvider,
-                           Provider<Respond> respondProvider,
-                           Provider<Send> sendProvider,
-                           Provider<Sequence> sequenceProvider,
-                           Provider<Switch> switchMediatorProvider,
+                           MediatorCreatorsManager mediatorCreatorsManager,
                            @Assisted EditorState<State> editorState,
                            @Assisted SelectionManager selectionManager,
                            @Assisted Branch branch) {
@@ -114,22 +78,9 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
 
         this.metaModelValidator = metaModelValidator;
         this.editorFactory = editorFactory;
+        this.mediatorCreatorsManager = mediatorCreatorsManager;
         this.editorState = editorState;
         this.selectionManager = selectionManager;
-
-        this.logProvider = logProvider;
-        this.enrichProvider = enrichProvider;
-        this.filterProvider = filterProvider;
-        this.headerProvider = headerProvider;
-        this.callProvider = callProvider;
-        this.callTemplateProvider = callTemplateProvider;
-        this.loopBackProvider = loopBackProvider;
-        this.payloadFactoryProvider = payloadFactoryProvider;
-        this.propertyProvider = propertyProvider;
-        this.respondProvider = respondProvider;
-        this.sendProvider = sendProvider;
-        this.sequenceProvider = sequenceProvider;
-        this.switchMediatorProvider = switchMediatorProvider;
 
         this.elementChangedListeners = new ArrayList<>();
         this.elements = new ArrayList<>();
@@ -220,7 +171,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     /** {@inheritDoc} */
     @Override
     public void onMouseMoved(int x, int y) {
-        String elementName = getCreatingElementName();
+        String elementName = mediatorCreatorsManager.getElementNameByState(getState());
 
         if (elementName == null) {
             return;
@@ -279,100 +230,12 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         notifyElementChangedListeners();
     }
 
-    /** @return element name of creating element if new element is creating or <code>null<code/> if it isn't */
-    @Nullable
-    private String getCreatingElementName() {
-        switch (editorState.getState()) {
-            case CREATING_LOG:
-                return Log.ELEMENT_NAME;
-
-            case CREATING_PROPERTY:
-                return Property.ELEMENT_NAME;
-
-            case CREATING_PAYLOADFACTORY:
-                return PayloadFactory.ELEMENT_NAME;
-
-            case CREATING_SEND:
-                return Send.ELEMENT_NAME;
-
-            case CREATING_HEADER:
-                return Header.ELEMENT_NAME;
-
-            case CREATING_RESPOND:
-                return Respond.ELEMENT_NAME;
-
-            case CREATING_FILTER:
-                return Filter.ELEMENT_NAME;
-
-            case CREATING_SWITCH_MEDIATOR:
-                return Switch.ELEMENT_NAME;
-
-            case CREATING_SEQUENCE:
-                return Sequence.ELEMENT_NAME;
-
-            case CREATING_ENRICH:
-                return Enrich.ELEMENT_NAME;
-
-            case CREATING_LOOPBACK:
-                return LoopBack.ELEMENT_NAME;
-
-            case CREATING_CALLTEMPLATE:
-                return CallTemplate.ELEMENT_NAME;
-
-            case CREATING_CALL:
-                return Call.ELEMENT_NAME;
-
-            default:
-                return null;
-        }
-    }
-
     /** @return an instance of creating element if new element is creating or <code>null<code/> if it isn't */
     @Nullable
     private Shape getCreatingElement() {
-        switch (getState()) {
-            case CREATING_LOG:
-                return logProvider.get();
+        Provider<? extends Shape> provider = mediatorCreatorsManager.getProviderByState(getState());
 
-            case CREATING_PROPERTY:
-                return propertyProvider.get();
-
-            case CREATING_HEADER:
-                return headerProvider.get();
-
-            case CREATING_PAYLOADFACTORY:
-                return payloadFactoryProvider.get();
-
-            case CREATING_RESPOND:
-                return respondProvider.get();
-
-            case CREATING_FILTER:
-                return filterProvider.get();
-
-            case CREATING_SWITCH_MEDIATOR:
-                return switchMediatorProvider.get();
-
-            case CREATING_SEQUENCE:
-                return sequenceProvider.get();
-
-            case CREATING_ENRICH:
-                return enrichProvider.get();
-
-            case CREATING_LOOPBACK:
-                return loopBackProvider.get();
-
-            case CREATING_CALLTEMPLATE:
-                return callTemplateProvider.get();
-
-            case CREATING_SEND:
-                return sendProvider.get();
-
-            case CREATING_CALL:
-                return callProvider.get();
-
-            default:
-                return null;
-        }
+        return provider == null ? null : provider.get();
     }
 
     private void removeElement(@Nonnull Shape shape) {

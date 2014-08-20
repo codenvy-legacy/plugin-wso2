@@ -20,6 +20,7 @@ import com.codenvy.ide.client.common.ContentFormatter;
 import com.codenvy.ide.client.elements.enrich.Enrich;
 import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.payload.PayloadFactory;
+import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
@@ -67,42 +68,8 @@ public class RootElement extends AbstractShape {
     private String onError;
 
     @Inject
-    public RootElement(EditorResources resources,
-                       Provider<Branch> branchProvider,
-                       Provider<Log> logProvider,
-                       Provider<Enrich> enrichProvider,
-                       Provider<Filter> filterProvider,
-                       Provider<Header> headerProvider,
-                       Provider<Call> callProvider,
-                       Provider<CallTemplate> callTemplateProvider,
-                       Provider<LoopBack> loopBackProvider,
-                       Provider<PayloadFactory> payloadFactoryProvider,
-                       Provider<Property> propertyProvider,
-                       Provider<Respond> respondProvider,
-                       Provider<Send> sendProvider,
-                       Provider<Sequence> sequenceProvider,
-                       Provider<Switch> switchProvider) {
-        super(ELEMENT_NAME,
-              ELEMENT_NAME,
-              SERIALIZATION_NAME,
-              PROPERTIES,
-              resources,
-              branchProvider,
-              false,
-              false,
-              logProvider,
-              enrichProvider,
-              filterProvider,
-              headerProvider,
-              callProvider,
-              callTemplateProvider,
-              loopBackProvider,
-              payloadFactoryProvider,
-              propertyProvider,
-              respondProvider,
-              sendProvider,
-              sequenceProvider,
-              switchProvider);
+    public RootElement(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, false, resources, branchProvider, mediatorCreatorsManager);
 
         this.name = "";
         this.onError = "";

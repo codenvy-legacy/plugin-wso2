@@ -72,10 +72,10 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
     /**
      * Set payload format value.
      *
-     * @param payloadFormat
+     * @param payloadFormats
      *         values of payload format field.
      */
-    public abstract void setPayloadFormat(@Nonnull List<String> payloadFormat);
+    public abstract void setPayloadFormats(@Nonnull List<String> payloadFormats);
 
     /** @return format value */
     @Nonnull
@@ -124,10 +124,10 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
     /**
      * Set media type values.
      *
-     * @param mediaType
+     * @param mediaTypes
      *         value of media type
      */
-    public abstract void setMediaType(@Nonnull List<String> mediaType);
+    public abstract void setMediaTypes(@Nonnull List<String> mediaTypes);
 
     /** @return description */
     @Nonnull

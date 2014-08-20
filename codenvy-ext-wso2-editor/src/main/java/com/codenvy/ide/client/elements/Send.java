@@ -16,9 +16,7 @@
 package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.elements.enrich.Enrich;
-import com.codenvy.ide.client.elements.log.Log;
-import com.codenvy.ide.client.elements.payload.PayloadFactory;
+import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
@@ -51,6 +49,7 @@ public class Send extends AbstractShape {
     private static final String ENDPOINT_PROPERTY_NAME       = "endpoint";
 
     private static final List<String> PROPERTIES = Arrays.asList(ENDPOINT_PROPERTY_NAME);
+    private static final List<String> COMPONENTS = Arrays.asList(AddressEndpoint.ELEMENT_NAME);
 
     private SequenceType     sequencerType;
     private String           skipSerialization;
@@ -61,42 +60,8 @@ public class Send extends AbstractShape {
     private Array<NameSpace> nameSpaces;
 
     @Inject
-    public Send(EditorResources resources,
-                Provider<Branch> branchProvider,
-                Provider<Log> logProvider,
-                Provider<Enrich> enrichProvider,
-                Provider<Filter> filterProvider,
-                Provider<Header> headerProvider,
-                Provider<Call> callProvider,
-                Provider<CallTemplate> callTemplateProvider,
-                Provider<LoopBack> loopBackProvider,
-                Provider<PayloadFactory> payloadFactoryProvider,
-                Provider<Property> propertyProvider,
-                Provider<Respond> respondProvider,
-                Provider<Send> sendProvider,
-                Provider<Sequence> sequenceProvider,
-                Provider<Switch> switchProvider) {
-        super(ELEMENT_NAME,
-              ELEMENT_NAME,
-              SERIALIZATION_NAME,
-              PROPERTIES,
-              resources,
-              branchProvider,
-              false,
-              true,
-              logProvider,
-              enrichProvider,
-              filterProvider,
-              headerProvider,
-              callProvider,
-              callTemplateProvider,
-              loopBackProvider,
-              payloadFactoryProvider,
-              propertyProvider,
-              respondProvider,
-              sendProvider,
-              sequenceProvider,
-              switchProvider);
+    public Send(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
 
         skipSerialization = EBoolean.FALSE.name().toLowerCase();
         sequencerType = Default;
@@ -105,6 +70,8 @@ public class Send extends AbstractShape {
         dynamicExpression = "/default/xpath";
         staticExpression = "/default/sequence";
         nameSpaces = Collections.createArray();
+
+        components.addAll(COMPONENTS);
 
         branches.add(branchProvider.get());
     }

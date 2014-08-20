@@ -52,6 +52,8 @@ public abstract class ToolbarView extends AbstractView<ToolbarView.ActionDelegat
 
         void onCallButtonClicked();
 
+        void onAddressEndpointButtonClicked();
+
     }
 
 }

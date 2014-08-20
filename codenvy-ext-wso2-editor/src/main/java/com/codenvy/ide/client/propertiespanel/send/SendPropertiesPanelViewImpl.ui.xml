@@ -22,7 +22,6 @@
     <ui:with field="locale" type="com.codenvy.ide.client.WSO2EditorLocalizationConstant"/>
 
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
-
         <g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
@@ -58,7 +57,6 @@
             </g:FlowPanel>
 
         </g:FlowPanel>
-
     </g:ScrollPanel>
 
 </ui:UiBinder>

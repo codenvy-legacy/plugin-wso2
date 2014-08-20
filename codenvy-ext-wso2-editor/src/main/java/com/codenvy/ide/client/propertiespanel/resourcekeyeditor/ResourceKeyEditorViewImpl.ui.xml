@@ -17,8 +17,8 @@
   -->
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
 
+    <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
     <ui:with field="locale" type="com.codenvy.ide.client.WSO2EditorLocalizationConstant"/>
 
     <ui:style>
@@ -41,20 +41,14 @@
         }
     </ui:style>
 
-    <g:DockLayoutPanel unit="PX" width="460px" height="160px">
+    <g:FlowPanel width="460px" height="160px">
 
-        <g:center>
+        <g:Label text="{locale.resourceKey}" addStyleNames="{style.formatKeyLabel}"/>
+        <g:Label text="{locale.keyFromSpecify}" addStyleNames="{style.leftSpace}"/>
+        <g:TextBox ui:field="keyTextBox" width="410px" text="{locale.resourceKeyEditor}"
+                   addStyleNames="{style.leftSpace}"/>
+        <g:Label text="{locale.newResource}" addStyleNames="{style.newResources}"/>
 
-            <g:FlowPanel>
-                <g:Label text="{locale.resourceKey}" addStyleNames="{style.formatKeyLabel}"/>
-                <g:Label text="{locale.keyFromSpecify}" addStyleNames="{style.leftSpace}"/>
-                <g:TextBox ui:field="keyTextBox" width="410px" text="{locale.resourceKeyEditor}"
-                           addStyleNames="{style.leftSpace}"/>
-                <g:Label text="{locale.newResource}" addStyleNames="{style.newResources}"/>
-            </g:FlowPanel>
-
-        </g:center>
-
-    </g:DockLayoutPanel>
+    </g:FlowPanel>
 
 </ui:UiBinder>

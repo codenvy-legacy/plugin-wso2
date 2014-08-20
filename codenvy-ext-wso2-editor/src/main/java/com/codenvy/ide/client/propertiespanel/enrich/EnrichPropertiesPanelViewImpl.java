@@ -15,18 +15,20 @@
  */
 package com.codenvy.ide.client.propertiespanel.enrich;
 
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,6 +40,7 @@ import java.util.List;
  */
 public class EnrichPropertiesPanelViewImpl extends EnrichPropertiesPanelView {
 
+    @Singleton
     interface EnrichPropertiesPanelViewImplUiBinder extends UiBinder<Widget, EnrichPropertiesPanelViewImpl> {
     }
 
@@ -82,8 +85,18 @@ public class EnrichPropertiesPanelViewImpl extends EnrichPropertiesPanelView {
     @UiField
     FlowPanel targetPropPanel;
 
+    @UiField(provided = true)
+    final WSO2EditorLocalizationConstant loc;
+    @UiField(provided = true)
+    final EditorResources                res;
+
     @Inject
-    public EnrichPropertiesPanelViewImpl(EnrichPropertiesPanelViewImplUiBinder ourUiBinder) {
+    public EnrichPropertiesPanelViewImpl(EnrichPropertiesPanelViewImplUiBinder ourUiBinder,
+                                         EditorResources res,
+                                         WSO2EditorLocalizationConstant loc) {
+        this.res = res;
+        this.loc = loc;
+
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -180,66 +193,38 @@ public class EnrichPropertiesPanelViewImpl extends EnrichPropertiesPanelView {
     @Nonnull
     @Override
     public String getInlineType() {
-        int index = inlineType.getSelectedIndex();
-        return index != -1 ? inlineType.getValue(inlineType.getSelectedIndex()) : "";
+        return getSelectedItem(inlineType);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setInlineType(@Nullable List<String> inlineType) {
-        if (inlineType == null) {
-            return;
-        }
-
-        this.inlineType.clear();
-
-        for (String value : inlineType) {
-            this.inlineType.addItem(value);
-        }
+    public void setInlineTypes(@Nullable List<String> inlineTypes) {
+        setTypes(inlineType, inlineTypes);
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectInlineType(@Nonnull String inlineType) {
-        for (int i = 0; i < this.inlineType.getItemCount(); i++) {
-            if (this.inlineType.getValue(i).equals(inlineType)) {
-                this.inlineType.setItemSelected(i, true);
-                return;
-            }
-        }
+        selectType(this.inlineType, inlineType);
     }
 
     /** {@inheritDoc} */
     @Nonnull
     @Override
     public String getCloneSource() {
-        int index = cloneSource.getSelectedIndex();
-        return index != -1 ? cloneSource.getValue(cloneSource.getSelectedIndex()) : "";
+        return getSelectedItem(cloneSource);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setCloneSource(@Nullable List<String> cloneSource) {
-        if (cloneSource == null) {
-            return;
-        }
-
-        this.cloneSource.clear();
-
-        for (String value : cloneSource) {
-            this.cloneSource.addItem(value);
-        }
+    public void setCloneSources(@Nullable List<String> cloneSources) {
+        setTypes(cloneSource, cloneSources);
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectCloneSource(@Nonnull String cloneSource) {
-        for (int i = 0; i < this.cloneSource.getItemCount(); i++) {
-            if (this.cloneSource.getValue(i).equals(cloneSource)) {
-                this.cloneSource.setItemSelected(i, true);
-                return;
-            }
-        }
+        selectType(this.cloneSource, cloneSource);
     }
 
     @UiHandler("cloneSource")
@@ -302,33 +287,19 @@ public class EnrichPropertiesPanelViewImpl extends EnrichPropertiesPanelView {
     @Nonnull
     @Override
     public String getTargetAction() {
-        int index = targetAction.getSelectedIndex();
-        return index != -1 ? targetAction.getValue(targetAction.getSelectedIndex()) : "";
+        return getSelectedItem(targetAction);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setTargetAction(@Nullable List<String> targetAction) {
-        if (targetAction == null) {
-            return;
-        }
-
-        this.targetAction.clear();
-
-        for (String value : targetAction) {
-            this.targetAction.addItem(value);
-        }
+    public void setTargetActions(@Nullable List<String> targetActions) {
+        setTypes(this.targetAction, targetActions);
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectTargetAction(@Nonnull String targetAction) {
-        for (int i = 0; i < this.targetAction.getItemCount(); i++) {
-            if (this.targetAction.getValue(i).equals(targetAction)) {
-                this.targetAction.setItemSelected(i, true);
-                return;
-            }
-        }
+        selectType(this.targetAction, targetAction);
     }
 
     @UiHandler("targetAction")
@@ -340,33 +311,19 @@ public class EnrichPropertiesPanelViewImpl extends EnrichPropertiesPanelView {
     @Nonnull
     @Override
     public String getTargetType() {
-        int index = targetType.getSelectedIndex();
-        return index != -1 ? targetType.getValue(targetType.getSelectedIndex()) : "";
+        return getSelectedItem(targetType);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setTargetType(@Nullable List<String> targetType) {
-        if (targetType == null) {
-            return;
-        }
-
-        this.targetType.clear();
-
-        for (String value : targetType) {
-            this.targetType.addItem(value);
-        }
+    public void setTargetTypes(@Nullable List<String> targetTypes) {
+        setTypes(targetType, targetTypes);
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectTargetType(@Nonnull String targetType) {
-        for (int i = 0; i < this.targetType.getItemCount(); i++) {
-            if (this.targetType.getValue(i).equals(targetType)) {
-                this.targetType.setItemSelected(i, true);
-                return;
-            }
-        }
+        selectType(this.targetType, targetType);
     }
 
     /** {@inheritDoc} */

@@ -34,8 +34,8 @@
     </ui:style>
 
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
-
         <g:FlowPanel>
+
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
                 <g:Label text="{loc.enrichSourceMisc}" addStyleNames="{style.labelStyle}"/>
                 <g:Label text="{loc.enrichDescription}" addStyleNames="{style.fieldStyle}"/>
@@ -104,7 +104,6 @@
             </g:FlowPanel>
 
         </g:FlowPanel>
-
     </g:ScrollPanel>
 
 </ui:UiBinder>

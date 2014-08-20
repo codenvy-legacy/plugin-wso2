@@ -44,6 +44,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.assistedinject.Assisted;
 import com.orange.links.client.menu.ContextMenu;
 
@@ -59,6 +60,7 @@ import javax.annotation.Nullable;
  */
 public class ShapeViewImpl extends ShapeView implements HasAllMouseHandlers, HasClickHandlers {
 
+    @Singleton
     interface ShapeWidgetUiBinder extends UiBinder<Widget, ShapeViewImpl> {
     }
 

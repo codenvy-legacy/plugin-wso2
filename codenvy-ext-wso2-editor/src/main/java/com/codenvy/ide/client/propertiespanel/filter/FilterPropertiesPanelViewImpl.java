@@ -15,6 +15,8 @@
  */
 package com.codenvy.ide.client.propertiespanel.filter;
 
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -26,6 +28,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,6 +39,7 @@ import java.util.List;
  */
 public class FilterPropertiesPanelViewImpl extends FilterPropertiesPanelView {
 
+    @Singleton
     interface FilterPropertiesPanelViewImplUiBinder extends UiBinder<Widget, FilterPropertiesPanelViewImpl> {
     }
 
@@ -55,8 +59,18 @@ public class FilterPropertiesPanelViewImpl extends FilterPropertiesPanelView {
     @UiField
     FlowPanel xpathPanel;
 
+    @UiField(provided = true)
+    final EditorResources                res;
+    @UiField(provided = true)
+    final WSO2EditorLocalizationConstant locale;
+
     @Inject
-    public FilterPropertiesPanelViewImpl(FilterPropertiesPanelViewImplUiBinder ourUiBinder) {
+    public FilterPropertiesPanelViewImpl(FilterPropertiesPanelViewImplUiBinder ourUiBinder,
+                                         EditorResources res,
+                                         WSO2EditorLocalizationConstant locale) {
+        this.res = res;
+        this.locale = locale;
+
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -64,33 +78,19 @@ public class FilterPropertiesPanelViewImpl extends FilterPropertiesPanelView {
     @Nonnull
     @Override
     public String getConditionType() {
-        int index = conditionType.getSelectedIndex();
-        return index != -1 ? conditionType.getValue(conditionType.getSelectedIndex()) : "";
+        return getSelectedItem(conditionType);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setConditionTypes(@Nullable List<String> conditionTypes) {
-        if (conditionTypes == null) {
-            return;
-        }
-
-        this.conditionType.clear();
-
-        for (String value : conditionTypes) {
-            this.conditionType.addItem(value);
-        }
+        setTypes(conditionType, conditionTypes);
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectConditionType(@Nonnull String conditionType) {
-        for (int i = 0; i < this.conditionType.getItemCount(); i++) {
-            if (this.conditionType.getValue(i).equals(conditionType)) {
-                this.conditionType.setItemSelected(i, true);
-                return;
-            }
-        }
+        selectType(this.conditionType, conditionType);
     }
 
     /** {@inheritDoc} */

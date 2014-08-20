@@ -36,6 +36,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -53,30 +54,35 @@ import static com.google.gwt.dom.client.Style.Unit.PX;
  */
 public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigView {
 
+    @Singleton
     interface ArgumentsConfigViewImplUiBinder extends UiBinder<Widget, ArgumentsConfigViewImpl> {
     }
-
-    @UiField(provided = true)
-    CellTable<Arg> args;
 
     @UiField
     TextBox valueExpressionTextBox;
 
     @UiField
     ListBox valueEvaluator;
+
     @UiField
     ListBox typeValue;
+
+    @UiField(provided = true)
+    final WSO2EditorLocalizationConstant locale;
+
+    @UiField(provided = true)
+    final CellTable<Arg> args;
 
     private ActionDelegate delegate;
 
     @Inject
     public ArgumentsConfigViewImpl(WSO2EditorLocalizationConstant localizationConstant, ArgumentsConfigViewImplUiBinder uiBinder) {
+        this.locale = localizationConstant;
+
         this.args = createTable(localizationConstant);
 
-        Widget widget = uiBinder.createAndBindUi(this);
-
         this.setTitle(localizationConstant.argsConfigurationTitle());
-        this.setWidget(widget);
+        this.setWidget(uiBinder.createAndBindUi(this));
 
         Button btnCancel = createButton(localizationConstant.buttonCancel(), "args-configuration-cancel", new ClickHandler() {
             @Override

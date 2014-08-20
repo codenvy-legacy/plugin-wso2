@@ -95,10 +95,10 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
     /**
      * Set property action into place on view.
      *
-     * @param propertyAction
+     * @param propertyActions
      *         value of action.
      */
-    public abstract void setPropertyAction(@NotNull List<String> propertyAction);
+    public abstract void setPropertyActions(@NotNull List<String> propertyActions);
 
     /**
      * @return value type.
@@ -120,7 +120,7 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
      * @param valueType
      *         value of type.
      */
-    public abstract void setValueType(@NotNull List<String> valueType);
+    public abstract void setValueTypes(@NotNull List<String> valueTypes);
 
     /** @return property data type. */
     @NotNull
@@ -132,7 +132,7 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
      * @param propertyDataType
      *         value of data type.
      */
-    public abstract void setPropertyDataType(@NotNull List<String> propertyDataType);
+    public abstract void setPropertyDataTypes(@NotNull List<String> propertyDataTypes);
 
     /**
      * Select property data type in place on view.
@@ -207,10 +207,10 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
     /**
      * Set property scope into place on view.
      *
-     * @param propertyScope
+     * @param propertyScopes
      *         property scope.
      */
-    public abstract void setPropertyScope(@NotNull List<String> propertyScope);
+    public abstract void setPropertyScopes(@NotNull List<String> propertyScopes);
 
     /** @return description. */
     @NotNull

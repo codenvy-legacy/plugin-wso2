@@ -19,23 +19,23 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
-    <ui:with field='local' type='com.codenvy.ide.client.WSO2EditorLocalizationConstant'/>
+    <ui:with field='locale' type='com.codenvy.ide.client.WSO2EditorLocalizationConstant'/>
 
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
         <g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="{local.referringType}"/>
+                <g:Label text="{locale.referringType}"/>
                 <g:ListBox ui:field="referringType" width="206px"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="staticReferenceKeyPanel" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="{local.staticReferenceKey}"/>
+                <g:Label text="{locale.staticReferenceKey}"/>
                 <g:TextBox ui:field="staticReferenceKey" width="200px"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="dynamicReferenceKeyPanel" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="{local.dynamicReferenceKey}"/>
+                <g:Label text="{locale.dynamicReferenceKey}"/>
                 <g:TextBox enabled="false" ui:field="dynamicReferenceKey" width="200px"/>
                 <g:Button ui:field="expressionButton" addStyleNames="{res.editorCSS.propertyButton}" text="..."/>
             </g:FlowPanel>

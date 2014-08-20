@@ -17,7 +17,7 @@ package com.codenvy.ide.client.propertiespanel.empty;
 
 import com.codenvy.ide.client.elements.Shape;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
-import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
+import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.google.inject.Inject;
 
 /**

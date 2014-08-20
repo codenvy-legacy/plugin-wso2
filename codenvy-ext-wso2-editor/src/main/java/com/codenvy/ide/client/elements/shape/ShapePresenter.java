@@ -16,7 +16,7 @@
 package com.codenvy.ide.client.elements.shape;
 
 import com.codenvy.ide.client.EditorState;
-import com.codenvy.ide.client.SelectionManager;
+import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.State;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Call;

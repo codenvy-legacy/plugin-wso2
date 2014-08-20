@@ -16,8 +16,11 @@
 package com.codenvy.ide.client.mvp;
 
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.ListBox;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * The abstract implementation of view. It contains the implementation of general methods which might not be changed.
@@ -38,6 +41,56 @@ public abstract class AbstractView<T extends AbstractView.ActionDelegate> extend
     @Override
     public void setDelegate(@Nonnull T delegate) {
         this.delegate = delegate;
+    }
+
+    /**
+     * Sets available items for a given field.
+     *
+     * @param field
+     *         field that needs to contain a given list of items
+     * @param types
+     *         available items of field
+     */
+    protected void setTypes(@Nonnull ListBox field, @Nullable List<String> types) {
+        if (types == null) {
+            return;
+        }
+
+        field.clear();
+
+        for (String value : types) {
+            field.addItem(value);
+        }
+    }
+
+    /**
+     * Select item in the field.
+     *
+     * @param field
+     *         field that needs to be changed
+     * @param type
+     *         a new selected item
+     */
+    protected void selectType(@Nonnull ListBox field, @Nullable String type) {
+        for (int i = 0; i < field.getItemCount(); i++) {
+            if (field.getValue(i).equals(type)) {
+                field.setItemSelected(i, true);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Returns a selected item of field.
+     *
+     * @param field
+     *         field that contains item
+     * @return a selected item
+     */
+    @Nonnull
+    protected String getSelectedItem(@Nonnull ListBox field) {
+        int index = field.getSelectedIndex();
+        return index != -1 ? field.getValue(field.getSelectedIndex()) : "";
     }
 
 }

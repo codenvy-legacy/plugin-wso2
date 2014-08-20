@@ -15,6 +15,8 @@
  */
 package com.codenvy.ide.client.propertiespanel.payloadfactory;
 
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -26,6 +28,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,6 +40,7 @@ import java.util.List;
  */
 public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropertiesPanelView {
 
+    @Singleton
     interface PayloadFactoryPropertiesPanelViewImplUiBinder extends UiBinder<Widget, PayloadFactoryPropertiesPanelViewImpl> {
     }
 
@@ -59,8 +63,18 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
     @UiField
     FlowPanel formatKeyPanel;
 
+    @UiField(provided = true)
+    final EditorResources                res;
+    @UiField(provided = true)
+    final WSO2EditorLocalizationConstant locale;
+
     @Inject
-    public PayloadFactoryPropertiesPanelViewImpl(PayloadFactoryPropertiesPanelViewImplUiBinder ourUiBinder) {
+    public PayloadFactoryPropertiesPanelViewImpl(PayloadFactoryPropertiesPanelViewImplUiBinder ourUiBinder,
+                                                 EditorResources res,
+                                                 WSO2EditorLocalizationConstant locale) {
+        this.res = res;
+        this.locale = locale;
+
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -68,33 +82,19 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
     @Nonnull
     @Override
     public String getPayloadFormat() {
-        int index = payloadFormat.getSelectedIndex();
-        return index != -1 ? payloadFormat.getValue(payloadFormat.getSelectedIndex()) : "";
+        return getSelectedItem(payloadFormat);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setPayloadFormat(@Nullable List<String> payloadFormat) {
-        if (payloadFormat == null) {
-            return;
-        }
-
-        this.payloadFormat.clear();
-
-        for (String value : payloadFormat) {
-            this.payloadFormat.addItem(value);
-        }
+    public void setPayloadFormats(@Nullable List<String> payloadFormats) {
+        setTypes(payloadFormat, payloadFormats);
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectPayloadFormat(@Nullable String payloadFormat) {
-        for (int i = 0; i < this.payloadFormat.getItemCount(); i++) {
-            if (this.payloadFormat.getValue(i).equals(payloadFormat)) {
-                this.payloadFormat.setItemSelected(i, true);
-                return;
-            }
-        }
+        selectType(this.payloadFormat, payloadFormat);
     }
 
     @UiHandler("payloadFormat")
@@ -158,33 +158,19 @@ public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropert
     @Nonnull
     @Override
     public String getMediaType() {
-        int index = mediaType.getSelectedIndex();
-        return index != -1 ? mediaType.getValue(mediaType.getSelectedIndex()) : "";
+        return getSelectedItem(mediaType);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setMediaType(@Nullable List<String> mediaType) {
-        if (mediaType == null) {
-            return;
-        }
-
-        this.mediaType.clear();
-
-        for (String value : mediaType) {
-            this.mediaType.addItem(value);
-        }
+    public void setMediaTypes(@Nullable List<String> mediaTypes) {
+        setTypes(mediaType, mediaTypes);
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectMediaType(@Nullable String mediaType) {
-        for (int i = 0; i < this.mediaType.getItemCount(); i++) {
-            if (this.mediaType.getValue(i).equals(mediaType)) {
-                this.mediaType.setItemSelected(i, true);
-                return;
-            }
-        }
+        selectType(this.mediaType, mediaType);
     }
 
     @UiHandler("mediaType")

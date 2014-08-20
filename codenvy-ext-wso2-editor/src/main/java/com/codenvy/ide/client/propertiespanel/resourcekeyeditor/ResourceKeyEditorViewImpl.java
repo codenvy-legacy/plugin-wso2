@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.resourcekeyeditor;
 
+import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -25,6 +26,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 
@@ -35,22 +37,31 @@ import javax.annotation.Nonnull;
  */
 public class ResourceKeyEditorViewImpl extends Window implements ResourceKeyEditorView {
 
+    @Singleton
     interface ResourceKeyEditorViewUiBinder extends UiBinder<Widget, ResourceKeyEditorViewImpl> {
     }
 
     @UiField
     TextBox keyTextBox;
 
+    @UiField(provided = true)
+    final EditorResources                res;
+    @UiField(provided = true)
+    final WSO2EditorLocalizationConstant locale;
+
     private ActionDelegate delegate;
 
     @Inject
-    public ResourceKeyEditorViewImpl(ResourceKeyEditorViewUiBinder uiBinder, WSO2EditorLocalizationConstant local) {
-        Widget widget = uiBinder.createAndBindUi(this);
+    public ResourceKeyEditorViewImpl(ResourceKeyEditorViewUiBinder uiBinder,
+                                     WSO2EditorLocalizationConstant locale,
+                                     EditorResources res) {
+        this.locale = locale;
+        this.res = res;
 
-        this.setWidget(widget);
-        this.setTitle(local.resourceKeyEditorTitle());
+        this.setWidget(uiBinder.createAndBindUi(this));
+        this.setTitle(locale.resourceKeyEditorTitle());
 
-        Button btnCancel = createButton(local.buttonCancel(), "resource-key-cancel", new ClickHandler() {
+        Button btnCancel = createButton(locale.buttonCancel(), "resource-key-cancel", new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
@@ -59,7 +70,7 @@ public class ResourceKeyEditorViewImpl extends Window implements ResourceKeyEdit
         });
         getFooter().add(btnCancel);
 
-        Button btnOk = createButton(local.buttonOk(), "resource-key-ok", new ClickHandler() {
+        Button btnOk = createButton(locale.buttonOk(), "resource-key-ok", new ClickHandler() {
 
             /** {@inheritDoc} */
             @Override

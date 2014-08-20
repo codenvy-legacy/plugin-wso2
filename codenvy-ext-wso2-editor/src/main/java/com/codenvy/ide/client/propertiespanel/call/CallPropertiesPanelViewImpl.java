@@ -15,6 +15,8 @@
  */
 package com.codenvy.ide.client.propertiespanel.call;
 
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -26,6 +28,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,24 +39,36 @@ import java.util.List;
  */
 public class CallPropertiesPanelViewImpl extends CallPropertiesPanelView {
 
+    @Singleton
     interface CallPropertiesPanelViewImplUiBinder extends UiBinder<Widget, CallPropertiesPanelViewImpl> {
     }
 
     @UiField
-    ListBox   endpointType;
+    ListBox endpointType;
     @UiField
-    TextBox   description;
+    TextBox description;
     @UiField
-    TextBox   endpointRegistryKey;
+    TextBox endpointRegistryKey;
     @UiField
-    TextBox   endpointXpath;
+    TextBox endpointXpath;
+
     @UiField
     FlowPanel endpointRegistryKeyPanel;
     @UiField
     FlowPanel endpointXpathPanel;
 
+    @UiField(provided = true)
+    final EditorResources                res;
+    @UiField(provided = true)
+    final WSO2EditorLocalizationConstant locale;
+
     @Inject
-    public CallPropertiesPanelViewImpl(CallPropertiesPanelViewImplUiBinder ourUiBinder) {
+    public CallPropertiesPanelViewImpl(CallPropertiesPanelViewImplUiBinder ourUiBinder,
+                                       EditorResources res,
+                                       WSO2EditorLocalizationConstant locale) {
+        this.res = res;
+        this.locale = locale;
+
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -61,22 +76,19 @@ public class CallPropertiesPanelViewImpl extends CallPropertiesPanelView {
     @Nonnull
     @Override
     public String getEndpointType() {
-        int index = endpointType.getSelectedIndex();
-        return index != -1 ? endpointType.getValue(endpointType.getSelectedIndex()) : "";
+        return getSelectedItem(endpointType);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setEndpointTypes(@Nullable List<String> endpointTypes) {
-        if (endpointTypes == null) {
-            return;
-        }
+        setTypes(endpointType, endpointTypes);
+    }
 
-        this.endpointType.clear();
-
-        for (String value : endpointTypes) {
-            this.endpointType.addItem(value);
-        }
+    /** {@inheritDoc} */
+    @Override
+    public void selectEndpointType(@Nonnull String endpointType) {
+        selectType(this.endpointType, endpointType);
     }
 
     /** {@inheritDoc} */
@@ -99,21 +111,10 @@ public class CallPropertiesPanelViewImpl extends CallPropertiesPanelView {
     }
 
     /** {@inheritDoc} */
-    @Override
-    public void selectEndpointType(@Nonnull String endpointType) {
-        for (int i = 0; i < this.endpointType.getItemCount(); i++) {
-            if (this.endpointType.getValue(i).equals(endpointType)) {
-                this.endpointType.setItemSelected(i, true);
-                return;
-            }
-        }
-    }
-
-    /** {@inheritDoc} */
     @Nonnull
     @Override
     public String getDescription() {
-        return String.valueOf(description.getText());
+        return description.getText();
     }
 
     /** {@inheritDoc} */

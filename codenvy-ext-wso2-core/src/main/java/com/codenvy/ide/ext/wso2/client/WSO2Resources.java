@@ -20,6 +20,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
+import com.google.inject.Singleton;
 
 /**
  * Resources for WSO2 plugin.
@@ -27,6 +28,7 @@ import com.google.gwt.resources.client.TextResource;
  * @author Dmitry Kuleshov
  * @author Justin Trentesaux
  */
+@Singleton
 public interface WSO2Resources extends ClientBundle {
 
     // TODO: Remove inheritance of ModelWidgetCSS and add inheritance to GMMFResources

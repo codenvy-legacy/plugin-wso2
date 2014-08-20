@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.client.propertiespanel.root;
 
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -24,6 +26,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 
@@ -31,6 +34,8 @@ import javax.annotation.Nonnull;
  * @author Andrey Plotnikov
  */
 public class RootPropertiesPanelViewImpl extends RootPropertiesPanelView {
+
+    @Singleton
     interface RootPropertiesPanelViewImplUiBinder extends UiBinder<Widget, RootPropertiesPanelViewImpl> {
     }
 
@@ -39,8 +44,18 @@ public class RootPropertiesPanelViewImpl extends RootPropertiesPanelView {
     @UiField
     TextBox onError;
 
+    @UiField(provided = true)
+    final EditorResources                res;
+    @UiField(provided = true)
+    final WSO2EditorLocalizationConstant locale;
+
     @Inject
-    public RootPropertiesPanelViewImpl(RootPropertiesPanelViewImplUiBinder ourUiBinder) {
+    public RootPropertiesPanelViewImpl(RootPropertiesPanelViewImplUiBinder ourUiBinder,
+                                       EditorResources res,
+                                       WSO2EditorLocalizationConstant locale) {
+        this.res = res;
+        this.locale = locale;
+
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 

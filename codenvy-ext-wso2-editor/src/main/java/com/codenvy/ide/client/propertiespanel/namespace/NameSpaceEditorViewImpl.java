@@ -35,6 +35,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,43 +48,43 @@ import java.util.List;
  */
 public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorView {
 
+    @Singleton
     interface NameSpaceEditorViewImplUiBinder extends UiBinder<Widget, NameSpaceEditorViewImpl> {
     }
 
-    @UiField(provided = true)
-    CellTable<NameSpace> nameSpacesTable;
     @UiField
-    TextBox              expression;
+    TextBox expression;
     @UiField
-    Button               selectPathButton;
+    Button  selectPathButton;
     @UiField
-    TextBox              prefixTextBox;
+    TextBox prefixTextBox;
     @UiField
-    TextBox              uriTextBox;
+    TextBox uriTextBox;
     @UiField
-    Button               btnAdd;
+    Button  btnAdd;
     @UiField
-    Button               btnEdit;
+    Button  btnEdit;
     @UiField
-    Button               btnRemove;
+    Button  btnRemove;
     @UiField
-    Label                title;
+    Label   title;
 
-    Button btnOk;
-    Button btnCancel;
+    @UiField(provided = true)
+    final CellTable<NameSpace>           nameSpacesTable;
+    @UiField(provided = true)
+    final WSO2EditorLocalizationConstant locale;
 
     private ActionDelegate delegate;
 
     @Inject
-    public NameSpaceEditorViewImpl(NameSpaceEditorViewImplUiBinder uiBinder, WSO2EditorLocalizationConstant local) {
+    public NameSpaceEditorViewImpl(NameSpaceEditorViewImplUiBinder uiBinder, WSO2EditorLocalizationConstant locale) {
+        this.locale = locale;
         this.nameSpacesTable = createTable();
 
-        Widget widget = uiBinder.createAndBindUi(this);
+        this.setTitle(locale.editorTitle());
+        this.setWidget(uiBinder.createAndBindUi(this));
 
-        this.setTitle(local.editorTitle());
-        this.setWidget(widget);
-
-        btnCancel = createButton(local.buttonCancel(), "namespace-button-cancel", new ClickHandler() {
+        Button btnCancel = createButton(locale.buttonCancel(), "namespace-button-cancel", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onCancelButtonClicked();
@@ -91,7 +92,7 @@ public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorVi
         });
         getFooter().add(btnCancel);
 
-        btnOk = createButton(local.buttonOk(), "namespace-button-ok", new ClickHandler() {
+        Button btnOk = createButton(locale.buttonOk(), "namespace-button-ok", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onOkButtonClicked();

@@ -19,23 +19,23 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
-    <ui:with field='local' type='com.codenvy.ide.client.WSO2EditorLocalizationConstant'/>
+    <ui:with field='locale' type='com.codenvy.ide.client.WSO2EditorLocalizationConstant'/>
 
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
         <g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="{local.endpointType}"/>
+                <g:Label text="{locale.endpointType}"/>
                 <g:ListBox ui:field="endpointType" width="206px"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="endpointRegistryKeyPanel" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="{local.endpointRegistryKey}"/>
+                <g:Label text="{locale.endpointRegistryKey}"/>
                 <g:TextBox ui:field="endpointRegistryKey" width="200px"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="endpointXpathPanel" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="{local.endpointXpath}"/>
+                <g:Label text="{locale.endpointXpath}"/>
                 <g:TextBox enabled="false" ui:field="endpointXpath" width="200px"/>
                 <g:Button ui:field="registryXpathButton" addStyleNames="{res.editorCSS.propertyButton}" text="..."/>
             </g:FlowPanel>

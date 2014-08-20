@@ -17,6 +17,7 @@ package com.codenvy.ide.ext.wso2.client.editor;
 
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
+import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -28,6 +29,7 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
 
@@ -38,17 +40,20 @@ import javax.validation.constraints.NotNull;
  */
 public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorView {
 
+    @Singleton
     interface ESBConfEditorViewImplUiBinder extends UiBinder<Widget, ESBConfEditorViewImpl> {
     }
 
     @UiField
-    SimplePanel mainPanel;
+    SimplePanel          mainPanel;
     @UiField
-    Button      textEditorChoose;
+    Button               textEditorChoose;
     @UiField
-    Button      graphicalEditorChoose;
+    Button               graphicalEditorChoose;
     @UiField
-    Button      associateEditorChoose;
+    Button               associateEditorChoose;
+    @UiField(provided = true)
+    LocalizationConstant locale;
 
     private ActionDelegate  delegate;
     private DockLayoutPanel bothEditorPanel;
@@ -56,7 +61,9 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
     private SimplePanel     textEditorPanel;
 
     @Inject
-    public ESBConfEditorViewImpl(ESBConfEditorViewImplUiBinder ourUiBinder) {
+    public ESBConfEditorViewImpl(ESBConfEditorViewImplUiBinder ourUiBinder, LocalizationConstant locale) {
+        this.locale = locale;
+
         initWidget(ourUiBinder.createAndBindUi(this));
 
         bothEditorPanel = new DockLayoutPanel(Style.Unit.PCT);

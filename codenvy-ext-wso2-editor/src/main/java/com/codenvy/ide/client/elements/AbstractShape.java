@@ -17,9 +17,7 @@ package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.common.ContentFormatter;
-import com.codenvy.ide.client.elements.enrich.Enrich;
-import com.codenvy.ide.client.elements.log.Log;
-import com.codenvy.ide.client.elements.payload.PayloadFactory;
+import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
@@ -49,24 +47,13 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
     private final boolean isPossibleToAddBranches;
     private final boolean needsToShowIconAndTitle;
 
-    private final Provider<Log>            logProvider;
-    private final Provider<Enrich>         enrichProvider;
-    private final Provider<Filter>         filterProvider;
-    private final Provider<Header>         headerProvider;
-    private final Provider<Call>           callProvider;
-    private final Provider<CallTemplate>   callTemplateProvider;
-    private final Provider<LoopBack>       loopBackProvider;
-    private final Provider<PayloadFactory> payloadFactoryProvider;
-    private final Provider<Property>       propertyProvider;
-    private final Provider<Respond>        respondProvider;
-    private final Provider<Send>           sendProvider;
-    private final Provider<Sequence>       sequenceProvider;
-    private final Provider<Switch>         switchProvider;
+    private final MediatorCreatorsManager mediatorCreatorsManager;
 
     protected final EditorResources  resources;
     protected final Provider<Branch> branchProvider;
-    protected final List<Branch>     branches;
-    protected final Set<String>      components;
+
+    protected final List<Branch> branches;
+    protected final Set<String>  components;
 
     private int x;
     private int y;
@@ -75,45 +62,22 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
                             @Nonnull String title,
                             @Nonnull String serializationName,
                             @Nonnull List<String> properties,
-                            @Nonnull EditorResources resources,
-                            @Nonnull Provider<Branch> branchProvider,
                             boolean isPossibleToAddBranches,
                             boolean needsToShowIconAndTitle,
-                            @Nonnull Provider<Log> logProvider,
-                            @Nonnull Provider<Enrich> enrichProvider,
-                            @Nonnull Provider<Filter> filterProvider,
-                            @Nonnull Provider<Header> headerProvider,
-                            @Nonnull Provider<Call> callProvider,
-                            @Nonnull Provider<CallTemplate> callTemplateProvider,
-                            @Nonnull Provider<LoopBack> loopBackProvider,
-                            @Nonnull Provider<PayloadFactory> payloadFactoryProvider,
-                            @Nonnull Provider<Property> propertyProvider,
-                            @Nonnull Provider<Respond> respondProvider,
-                            @Nonnull Provider<Send> sendProvider,
-                            @Nonnull Provider<Sequence> sequenceProvider,
-                            @Nonnull Provider<Switch> switchProvider) {
+                            @Nonnull EditorResources resources,
+                            @Nonnull Provider<Branch> branchProvider,
+                            @Nonnull MediatorCreatorsManager mediatorCreatorsManager) {
         super(elementName, title, serializationName, properties);
 
-        this.branchProvider = branchProvider;
-        this.resources = resources;
         this.isPossibleToAddBranches = isPossibleToAddBranches;
         this.needsToShowIconAndTitle = needsToShowIconAndTitle;
+
         this.components = new HashSet<>();
         this.branches = new ArrayList<>();
 
-        this.logProvider = logProvider;
-        this.enrichProvider = enrichProvider;
-        this.filterProvider = filterProvider;
-        this.headerProvider = headerProvider;
-        this.callProvider = callProvider;
-        this.callTemplateProvider = callTemplateProvider;
-        this.loopBackProvider = loopBackProvider;
-        this.payloadFactoryProvider = payloadFactoryProvider;
-        this.propertyProvider = propertyProvider;
-        this.respondProvider = respondProvider;
-        this.sendProvider = sendProvider;
-        this.sequenceProvider = sequenceProvider;
-        this.switchProvider = switchProvider;
+        this.resources = resources;
+        this.branchProvider = branchProvider;
+        this.mediatorCreatorsManager = mediatorCreatorsManager;
     }
 
     /** {@inheritDoc} */
@@ -288,49 +252,9 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
     /** {@inheritDoc} */
     @Override
     public Shape createElement(@Nonnull String elementName) {
-        switch (elementName) {
-            case Log.SERIALIZATION_NAME:
-                return logProvider.get();
+        Provider<? extends Shape> provider = mediatorCreatorsManager.getProviderBySerializeName(elementName);
 
-            case Property.SERIALIZATION_NAME:
-                return propertyProvider.get();
-
-            case PayloadFactory.SERIALIZATION_NAME:
-                return payloadFactoryProvider.get();
-
-            case Send.SERIALIZATION_NAME:
-                return sendProvider.get();
-
-            case Header.SERIALIZATION_NAME:
-                return headerProvider.get();
-
-            case Respond.SERIALIZATION_NAME:
-                return respondProvider.get();
-
-            case Filter.SERIALIZATION_NAME:
-                return filterProvider.get();
-
-            case Switch.SERIALIZATION_NAME:
-                return switchProvider.get();
-
-            case Sequence.SERIALIZATION_NAME:
-                return sequenceProvider.get();
-
-            case Enrich.SERIALIZATION_NAME:
-                return enrichProvider.get();
-
-            case LoopBack.SERIALIZATION_NAME:
-                return loopBackProvider.get();
-
-            case CallTemplate.SERIALIZATION_NAME:
-                return callTemplateProvider.get();
-
-            case Call.SERIALIZATION_NAME:
-                return callProvider.get();
-
-            default:
-                return null;
-        }
+        return provider == null ? null : provider.get();
     }
 
     /**

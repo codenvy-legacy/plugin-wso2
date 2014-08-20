@@ -18,12 +18,14 @@ package com.codenvy.ide.client.propertiespanel.empty;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * @author Andrey Plotnikov
  */
 public class EmptyPropertiesPanelViewImpl extends EmptyPropertiesPanelView {
 
+    @Singleton
     interface EmptyPropertiesPanelViewImplUiBinder extends UiBinder<Widget, EmptyPropertiesPanelViewImpl> {
     }
 

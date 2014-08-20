@@ -15,6 +15,8 @@
  */
 package com.codenvy.ide.client.propertiespanel.switchmediator;
 
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.propertiespanel.switchmediator.branch.BranchFiledPresenter;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -24,6 +26,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,6 +35,8 @@ import javax.annotation.Nullable;
  * @author Andrey Plotnikov
  */
 public class SwitchPropertiesPanelViewImpl extends SwitchPropertiesPanelView {
+
+    @Singleton
     interface SwitchPropertiesPanelViewImplUiBinder extends UiBinder<Widget, SwitchPropertiesPanelViewImpl> {
     }
 
@@ -40,8 +45,18 @@ public class SwitchPropertiesPanelViewImpl extends SwitchPropertiesPanelView {
     @UiField
     FlowPanel regexpPanel;
 
+    @UiField(provided = true)
+    final EditorResources                res;
+    @UiField(provided = true)
+    final WSO2EditorLocalizationConstant locale;
+
     @Inject
-    public SwitchPropertiesPanelViewImpl(SwitchPropertiesPanelViewImplUiBinder ourUiBinder) {
+    public SwitchPropertiesPanelViewImpl(SwitchPropertiesPanelViewImplUiBinder ourUiBinder,
+                                         EditorResources res,
+                                         WSO2EditorLocalizationConstant locale) {
+        this.res = res;
+        this.locale = locale;
+
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 

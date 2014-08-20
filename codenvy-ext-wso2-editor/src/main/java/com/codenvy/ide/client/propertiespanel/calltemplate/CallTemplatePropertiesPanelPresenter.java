@@ -21,7 +21,7 @@ import com.codenvy.ide.client.elements.log.Property;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.log.AddPropertyCallback;
 import com.codenvy.ide.client.propertiespanel.propertyconfig.PropertyConfigPresenter;
-import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
+import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;

@@ -19,10 +19,9 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
-    <ui:with field="loc" type="com.codenvy.ide.client.WSO2EditorLocalizationConstant"/>
+    <ui:with field='loc' type='com.codenvy.ide.client.WSO2EditorLocalizationConstant'/>
 
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
-
         <g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
@@ -52,7 +51,6 @@
             </g:FlowPanel>
 
         </g:FlowPanel>
-
     </g:ScrollPanel>
 
 </ui:UiBinder>

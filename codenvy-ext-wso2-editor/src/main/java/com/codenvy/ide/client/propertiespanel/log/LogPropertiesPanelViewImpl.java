@@ -15,6 +15,8 @@
  */
 package com.codenvy.ide.client.propertiespanel.log;
 
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -25,6 +27,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,6 +38,7 @@ import java.util.List;
  */
 public class LogPropertiesPanelViewImpl extends LogPropertiesPanelView {
 
+    @Singleton
     interface LogPropertiesPanelViewImplUiBinder extends UiBinder<Widget, LogPropertiesPanelViewImpl> {
     }
 
@@ -49,8 +53,18 @@ public class LogPropertiesPanelViewImpl extends LogPropertiesPanelView {
     @UiField
     TextBox description;
 
+    @UiField(provided = true)
+    final EditorResources                res;
+    @UiField(provided = true)
+    final WSO2EditorLocalizationConstant loc;
+
     @Inject
-    public LogPropertiesPanelViewImpl(LogPropertiesPanelViewImplUiBinder ourUiBinder) {
+    public LogPropertiesPanelViewImpl(LogPropertiesPanelViewImplUiBinder ourUiBinder,
+                                      EditorResources res,
+                                      WSO2EditorLocalizationConstant loc) {
+        this.res = res;
+        this.loc = loc;
+
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -58,33 +72,19 @@ public class LogPropertiesPanelViewImpl extends LogPropertiesPanelView {
     @Override
     @Nonnull
     public String getLogCategory() {
-        int index = logCategory.getSelectedIndex();
-        return index != -1 ? logCategory.getValue(logCategory.getSelectedIndex()) : "";
+        return getSelectedItem(logCategory);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setLogCategory(@Nullable List<String> logCategory) {
-        if (logCategory == null) {
-            return;
-        }
-
-        this.logCategory.clear();
-
-        for (String value : logCategory) {
-            this.logCategory.addItem(value);
-        }
+    public void setLogCategories(@Nullable List<String> logCategories) {
+        setTypes(this.logCategory, logCategories);
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectLogCategory(@Nullable String logCategory) {
-        for (int i = 0; i < this.logCategory.getItemCount(); i++) {
-            if (this.logCategory.getValue(i).equals(logCategory)) {
-                this.logCategory.setItemSelected(i, true);
-                return;
-            }
-        }
+        selectType(this.logCategory, logCategory);
     }
 
     @UiHandler("logCategory")
@@ -96,33 +96,19 @@ public class LogPropertiesPanelViewImpl extends LogPropertiesPanelView {
     @Override
     @Nonnull
     public String getLogLevel() {
-        int index = logLevel.getSelectedIndex();
-        return index != -1 ? logLevel.getValue(logLevel.getSelectedIndex()) : "";
+        return getSelectedItem(logLevel);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setLogLevel(@Nullable List<String> logLevel) {
-        if (logLevel == null) {
-            return;
-        }
-
-        this.logLevel.clear();
-
-        for (String value : logLevel) {
-            this.logLevel.addItem(value);
-        }
+    public void setLogLevels(@Nullable List<String> logLevels) {
+        setTypes(logLevel, logLevels);
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectLogLevel(@Nullable String logLevel) {
-        for (int i = 0; i < this.logLevel.getItemCount(); i++) {
-            if (this.logLevel.getValue(i).equals(logLevel)) {
-                this.logLevel.setItemSelected(i, true);
-                return;
-            }
-        }
+        selectType(this.logLevel, logLevel);
     }
 
     @UiHandler("logLevel")
@@ -134,7 +120,7 @@ public class LogPropertiesPanelViewImpl extends LogPropertiesPanelView {
     @Override
     @Nonnull
     public String getLogSeparator() {
-        return String.valueOf(logSeparator.getText());
+        return logSeparator.getText();
     }
 
     /** {@inheritDoc} */
@@ -152,7 +138,7 @@ public class LogPropertiesPanelViewImpl extends LogPropertiesPanelView {
     @Override
     @Nonnull
     public String getDescription() {
-        return String.valueOf(description.getText());
+        return description.getText();
     }
 
     /** {@inheritDoc} */

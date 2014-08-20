@@ -21,7 +21,7 @@ import com.codenvy.ide.client.elements.Property;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
-import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
+import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -185,17 +185,17 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setValueType(propertyTypeManager.getValuesByName(ValueType.TYPE_NAME));
+        view.setValueTypes(propertyTypeManager.getValuesByName(ValueType.TYPE_NAME));
         view.selectValueType(element.getValueType().name());
         applyValueTypes();
 
-        view.setPropertyAction(propertyTypeManager.getValuesByName(Action.TYPE_NAME));
+        view.setPropertyActions(propertyTypeManager.getValuesByName(Action.TYPE_NAME));
         view.selectPropertyAction(element.getPropertyAction().name());
 
-        view.setPropertyDataType(propertyTypeManager.getValuesByName(DataType.TYPE_NAME));
+        view.setPropertyDataTypes(propertyTypeManager.getValuesByName(DataType.TYPE_NAME));
         view.selectPropertyDataType(element.getPropertyDataType().name());
 
-        view.setPropertyScope(propertyTypeManager.getValuesByName(Scope.TYPE_NAME));
+        view.setPropertyScopes(propertyTypeManager.getValuesByName(Scope.TYPE_NAME));
         view.selectPropertyScope(element.getPropertyScope());
 
         view.setPropertyName(element.getPropertyName());

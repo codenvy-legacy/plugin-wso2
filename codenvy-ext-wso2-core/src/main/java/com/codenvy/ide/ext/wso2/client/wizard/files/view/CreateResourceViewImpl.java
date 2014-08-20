@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
 
@@ -33,6 +34,8 @@ import javax.validation.constraints.NotNull;
  * @author Andrey Plotnikov
  */
 public class CreateResourceViewImpl extends Composite implements CreateResourceView {
+
+    @Singleton
     interface CreateResourceViewImplUiBinder extends UiBinder<Widget, CreateResourceViewImpl> {
     }
 

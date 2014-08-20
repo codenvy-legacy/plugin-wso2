@@ -16,12 +16,16 @@
 package com.codenvy.ide.client;
 
 import com.google.gwt.i18n.client.Messages;
+import com.google.inject.Singleton;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
  */
+@Singleton
 public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("toolbar.log.tooltip")
@@ -62,6 +66,9 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("toolbar.callTemplate.tooltip")
     String toolbarCallTemplateTooltip();
+
+    @Key("toolbar.addressEndpoint.tooltip")
+    String toolbarAddressEndpointTooltip();
 
     @Key("propertiespanel.argumentsconfig.table.value")
     String tableValue();
@@ -383,4 +390,89 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.root.onError")
     String rootOnError();
+
+    @Key("propertiespanel.addressEndpoint.basic")
+    String addressEndpointBasic();
+
+    @Key("propertiespanel.addressEndpoint.format")
+    String addressEndpointFormat();
+
+    @Key("propertiespanel.addressEndpoint.uri")
+    String addressEndpointUri();
+
+    @Key("propertiespanel.addressEndpoint.suspendState")
+    String addressEndpointSuspendState();
+
+    @Key("propertiespanel.addressEndpoint.suspendErrorCodes")
+    String addressEndpointSuspendErrorCodes();
+
+    @Key("propertiespanel.addressEndpoint.suspendInitialDuration")
+    String addressEndpointSuspendInitialDuration();
+
+    @Key("propertiespanel.addressEndpoint.suspendMaximumDuration")
+    String addressEndpointSuspendMaximumDuration();
+
+    @Key("propertiespanel.addressEndpoint.suspendProgressionFactory")
+    String addressEndpointSuspendProgressionFactory();
+
+    @Key("propertiespanel.addressEndpoint.endpointTimeoutState")
+    String addressEndpointEndpointTimeoutState();
+
+    @Key("propertiespanel.addressEndpoint.retryErrorCodes")
+    String addressEndpointRetryErrorCodes();
+
+    @Key("propertiespanel.addressEndpoint.retryCount")
+    String addressEndpointRetryCount();
+
+    @Key("propertiespanel.addressEndpoint.retryDelay")
+    String addressEndpointRetryDelay();
+
+    @Key("propertiespanel.addressEndpoint.misc")
+    String addressEndpointMisc();
+
+    @Key("propertiespanel.addressEndpoint.properties")
+    String addressEndpointProperties();
+
+    @Key("propertiespanel.addressEndpoint.optimize")
+    String addressEndpointOptimize();
+
+    @Key("propertiespanel.addressEndpoint.description")
+    String addressEndpointDescription();
+
+    @Key("propertiespanel.addressEndpoint.endpointProperty")
+    String addressEndpointEndpointProperty(@Nonnull String propertyName);
+
+    @Key("propertiespanel.addressEndpoint.qos")
+    String addressEndpointQos();
+
+    @Key("propertiespanel.addressEndpoint.reliableMessagingEnabled")
+    String addressEndpointReliableMessagingEnabled();
+
+    @Key("propertiespanel.addressEndpoint.reliableMessagingPolicy")
+    String addressEndpointReliableMessagingPolicy();
+
+    @Key("propertiespanel.addressEndpoint.securityEnabled")
+    String addressEndpointSecurityEnabled();
+
+    @Key("propertiespanel.addressEndpoint.securityPolicy")
+    String addressEndpointSecurityPolicy();
+
+    @Key("propertiespanel.addressEndpoint.addressingEnabled")
+    String addressEndpointAddressingEnabled();
+
+    @Key("propertiespanel.addressEndpoint.addressingVersion")
+    String addressEndpointAddressingVersion();
+
+    @Key("propertiespanel.addressEndpoint.addressingSeparateListener")
+    String addressEndpointAddressingSeparateListener();
+
+    @Key("propertiespanel.addressEndpoint.timeout")
+    String addressEndpointTimeout();
+
+    @Key("propertiespanel.addressEndpoint.timeoutDuration")
+    String addressEndpointTimeoutDuration();
+
+    @Key("propertiespanel.addressEndpoint.timeoutAction")
+    String addressEndpointTimeoutAction();
+
 }

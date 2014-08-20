@@ -15,6 +15,8 @@
  */
 package com.codenvy.ide.client.propertiespanel.property;
 
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -26,6 +28,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import java.util.List;
 
@@ -38,6 +41,7 @@ import java.util.List;
  */
 public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView {
 
+    @Singleton
     interface PropertyPropertiesPanelViewImplUiBinder extends UiBinder<Widget, PropertyPropertiesPanelViewImpl> {
     }
 
@@ -76,8 +80,18 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     @UiField
     FlowPanel valueExpressionPanel;
 
+    @UiField(provided = true)
+    final EditorResources                res;
+    @UiField(provided = true)
+    final WSO2EditorLocalizationConstant loc;
+
     @Inject
-    public PropertyPropertiesPanelViewImpl(PropertyPropertiesPanelViewImplUiBinder ourUiBinder) {
+    public PropertyPropertiesPanelViewImpl(PropertyPropertiesPanelViewImplUiBinder ourUiBinder,
+                                           EditorResources res,
+                                           WSO2EditorLocalizationConstant loc) {
+        this.res = res;
+        this.loc = loc;
+
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -101,31 +115,19 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     /** {@inheritDoc} */
     @Override
     public String getPropertyAction() {
-        int index = propertyAction.getSelectedIndex();
-        return index != -1 ? propertyAction.getValue(propertyAction.getSelectedIndex()) : "";
+        return getSelectedItem(propertyAction);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setPropertyAction(List<String> propertyAction) {
-        if (propertyAction == null) {
-            return;
-        }
-        this.propertyAction.clear();
-        for (String value : propertyAction) {
-            this.propertyAction.addItem(value);
-        }
+    public void setPropertyActions(List<String> propertyActions) {
+        setTypes(propertyAction, propertyActions);
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectPropertyAction(String propertyAction) {
-        for (int i = 0; i < this.propertyAction.getItemCount(); i++) {
-            if (this.propertyAction.getValue(i).equals(propertyAction)) {
-                this.propertyAction.setItemSelected(i, true);
-                return;
-            }
-        }
+        selectType(this.propertyAction, propertyAction);
     }
 
     @UiHandler("propertyAction")
@@ -136,33 +138,19 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     /** {@inheritDoc} */
     @Override
     public String getValueType() {
-        int index = valueType.getSelectedIndex();
-        return index != -1 ? valueType.getValue(valueType.getSelectedIndex()) : "";
+        return getSelectedItem(valueType);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setValueType(List<String> valueType) {
-        if (valueType == null) {
-            return;
-        }
-
-        this.valueType.clear();
-
-        for (String value : valueType) {
-            this.valueType.addItem(value);
-        }
+    public void setValueTypes(List<String> valueTypes) {
+        setTypes(valueType, valueTypes);
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectValueType(String valueType) {
-        for (int i = 0; i < this.valueType.getItemCount(); i++) {
-            if (this.valueType.getValue(i).equals(valueType)) {
-                this.valueType.setItemSelected(i, true);
-                return;
-            }
-        }
+        selectType(this.valueType, valueType);
     }
 
     @UiHandler("valueType")
@@ -173,33 +161,19 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     /** {@inheritDoc} */
     @Override
     public String getPropertyDataType() {
-        int index = propertyDataType.getSelectedIndex();
-        return index != -1 ? propertyDataType.getValue(propertyDataType.getSelectedIndex()) : "";
+        return getSelectedItem(propertyDataType);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setPropertyDataType(List<String> propertyDataType) {
-        if (propertyDataType == null) {
-            return;
-        }
-
-        this.propertyDataType.clear();
-
-        for (String value : propertyDataType) {
-            this.propertyDataType.addItem(value);
-        }
+    public void setPropertyDataTypes(List<String> propertyDataTypes) {
+        setTypes(propertyDataType, propertyDataTypes);
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectPropertyDataType(String propertyDataType) {
-        for (int i = 0; i < this.propertyDataType.getItemCount(); i++) {
-            if (this.propertyDataType.getValue(i).equals(propertyDataType)) {
-                this.propertyDataType.setItemSelected(i, true);
-                return;
-            }
-        }
+        selectType(this.propertyDataType, propertyDataType);
     }
 
     @UiHandler("propertyDataType")
@@ -210,7 +184,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     /** {@inheritDoc} */
     @Override
     public String getValueLiteral() {
-        return String.valueOf(valueLiteral.getText());
+        return valueLiteral.getText();
     }
 
     /** {@inheritDoc} */
@@ -222,7 +196,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     /** {@inheritDoc} */
     @Override
     public String getValueExpression() {
-        return String.valueOf(valueExpression.getText());
+        return valueExpression.getText();
     }
 
     /** {@inheritDoc} */
@@ -284,25 +258,14 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
 
     /** {@inheritDoc} */
     @Override
-    public void setPropertyScope(List<String> propertyScope) {
-        if (propertyScope == null) {
-            return;
-        }
-        this.propertyScope.clear();
-        for (String value : propertyScope) {
-            this.propertyScope.addItem(value);
-        }
+    public void setPropertyScopes(List<String> propertyScopes) {
+        setTypes(propertyScope, propertyScopes);
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectPropertyScope(String propertyScope) {
-        for (int i = 0; i < this.propertyScope.getItemCount(); i++) {
-            if (this.propertyScope.getValue(i).equals(propertyScope)) {
-                this.propertyScope.setItemSelected(i, true);
-                return;
-            }
-        }
+        selectType(this.propertyScope, propertyScope);
     }
 
     @UiHandler("propertyScope")

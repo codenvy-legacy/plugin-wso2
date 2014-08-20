@@ -25,7 +25,7 @@ import com.codenvy.ide.client.propertiespanel.inline.ChangeInlineFormatCallBack;
 import com.codenvy.ide.client.propertiespanel.inline.InlineConfigurationPresenter;
 import com.codenvy.ide.client.propertiespanel.resourcekeyeditor.ChangeResourceKeyCallBack;
 import com.codenvy.ide.client.propertiespanel.resourcekeyeditor.ResourceKeyEditorPresenter;
-import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
+import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -161,14 +161,14 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setPayloadFormat(propertyTypeManager.getValuesByName(FormatType.TYPE_NAME));
+        view.setPayloadFormats(propertyTypeManager.getValuesByName(FormatType.TYPE_NAME));
         view.selectPayloadFormat(element.getFormat().getFormatType().name());
 
         view.setFormat(element.getFormat().getFormatInline());
         view.setFormatKey(element.getFormat().getFormatKey());
         applyPayloadFormat();
 
-        view.setMediaType(propertyTypeManager.getValuesByName(MediaType.TYPE_NAME));
+        view.setMediaTypes(propertyTypeManager.getValuesByName(MediaType.TYPE_NAME));
         view.selectMediaType(element.getFormat().getMediaType().name());
 
         view.setDescription(element.getDescription());

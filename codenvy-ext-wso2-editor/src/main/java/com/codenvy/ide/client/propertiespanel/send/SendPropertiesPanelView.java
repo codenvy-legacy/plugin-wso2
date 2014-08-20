@@ -74,10 +74,10 @@ public abstract class SendPropertiesPanelView extends AbstractView<SendPropertie
     /**
      * Sets skip serialization value to the special place on the view which uses for showing skip serialization parameter.
      *
-     * @param skipSerialization
+     * @param states
      *         list types of skip serialization which need to set to special list box
      */
-    public abstract void setSkipSerialization(@Nullable List<String> skipSerialization);
+    public abstract void setSkipSerializationStates(@Nullable List<String> states);
 
     /** @return receiving sequence type value from the special place on the view which uses for showing receiving sequence type parameter */
     @Nonnull
@@ -94,10 +94,10 @@ public abstract class SendPropertiesPanelView extends AbstractView<SendPropertie
     /**
      * Sets receiving sequence type to the special place on the view which uses for showing receiving sequence type parameter.
      *
-     * @param receivingSequencerType
+     * @param receivingSequencerTypes
      *         list receiving sequence types which need to set to special list box
      */
-    public abstract void setReceivingSequencerType(@Nullable List<String> receivingSequencerType);
+    public abstract void setReceivingSequencerTypes(@Nullable List<String> receivingSequencerTypes);
 
     /**
      * @return build message before sending parameter from the special place on the view which uses for showing build message before

@@ -16,14 +16,14 @@
 package com.codenvy.ide.client.inject;
 
 import com.codenvy.ide.client.EditorState;
-import com.codenvy.ide.client.SelectionManager;
+import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.State;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Shape;
 import com.codenvy.ide.client.elements.shape.ShapePresenter;
 import com.codenvy.ide.client.elements.shape.ShapeView;
 import com.codenvy.ide.client.elements.shape.branch.BranchPresenter;
-import com.codenvy.ide.client.propertiespanel.PropertiesPanelManager;
+import com.codenvy.ide.client.managers.PropertiesPanelManager;
 import com.codenvy.ide.client.propertiespanel.switchmediator.branch.BranchFiledPresenter;
 import com.codenvy.ide.client.toolbar.ToolbarPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;

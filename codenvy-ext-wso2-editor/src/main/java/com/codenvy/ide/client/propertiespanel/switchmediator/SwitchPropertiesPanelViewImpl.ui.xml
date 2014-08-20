@@ -19,13 +19,13 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
-    <ui:with field='local' type='com.codenvy.ide.client.WSO2EditorLocalizationConstant'/>
+    <ui:with field='locale' type='com.codenvy.ide.client.WSO2EditorLocalizationConstant'/>
 
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
         <g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="{local.switchSourceXPath}"/>
+                <g:Label text="{locale.switchSourceXPath}"/>
                 <g:TextBox enabled="false" ui:field="sourceXpath" width="200px"/>
                 <g:Button ui:field="btnSourceXpath" addStyleNames="{res.editorCSS.propertyButton}" text="..."/>
             </g:FlowPanel>

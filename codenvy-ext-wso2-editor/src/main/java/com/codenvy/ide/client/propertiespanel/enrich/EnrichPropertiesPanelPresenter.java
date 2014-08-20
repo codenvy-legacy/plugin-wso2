@@ -27,7 +27,7 @@ import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter
 import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.resourcekeyeditor.ChangeResourceKeyCallBack;
 import com.codenvy.ide.client.propertiespanel.resourcekeyeditor.ResourceKeyEditorPresenter;
-import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
+import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -332,19 +332,19 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setCloneSource(propertyTypeManager.getValuesByName(Source.CloneSource.TYPE_NAME));
+        view.setCloneSources(propertyTypeManager.getValuesByName(Source.CloneSource.TYPE_NAME));
         view.selectCloneSource(element.getSource().getClone());
 
         view.setSourceType(propertyTypeManager.getValuesByName(SourceType.TYPE_NAME));
         view.selectSourceType(element.getSource().getType().name());
 
-        view.setTargetAction(propertyTypeManager.getValuesByName(Target.TargetAction.TYPE_NAME));
+        view.setTargetActions(propertyTypeManager.getValuesByName(Target.TargetAction.TYPE_NAME));
         view.selectTargetAction(element.getTarget().getAction().name());
 
-        view.setTargetType(propertyTypeManager.getValuesByName(TargetType.TYPE_NAME));
+        view.setTargetTypes(propertyTypeManager.getValuesByName(TargetType.TYPE_NAME));
         view.selectTargetType(element.getTarget().getType().name());
 
-        view.setInlineType(propertyTypeManager.getValuesByName(InlineType.INLINE_TYPE));
+        view.setInlineTypes(propertyTypeManager.getValuesByName(InlineType.INLINE_TYPE));
         view.selectInlineType(element.getSource().getInlineType().name());
 
         view.setInlineRegisterKey(element.getSource().getInlRegisterKey());

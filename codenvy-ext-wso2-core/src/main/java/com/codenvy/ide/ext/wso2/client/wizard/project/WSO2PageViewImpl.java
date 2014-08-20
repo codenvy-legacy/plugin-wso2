@@ -19,6 +19,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * The implementation of {@link WSO2PageView}.
@@ -36,6 +37,8 @@ public class WSO2PageViewImpl extends Composite implements WSO2PageView {
     public void setDelegate(ActionDelegate delegate) {
     }
 
+    @Singleton
     interface WSO2PageViewImplUiBinder extends UiBinder<DockLayoutPanel, WSO2PageViewImpl> {
     }
+
 }

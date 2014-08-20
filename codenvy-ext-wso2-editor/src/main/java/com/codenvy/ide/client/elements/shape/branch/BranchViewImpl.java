@@ -38,6 +38,7 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.orange.links.client.DiagramController;
 
 import javax.annotation.Nonnegative;
@@ -51,6 +52,7 @@ import java.util.List;
  */
 public class BranchViewImpl extends BranchView {
 
+    @Singleton
     interface CaseWidgetUiBinder extends UiBinder<Widget, BranchViewImpl> {
     }
 

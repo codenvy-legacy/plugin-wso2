@@ -15,6 +15,8 @@
  */
 package com.codenvy.ide.client.propertiespanel.header;
 
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -27,6 +29,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,6 +41,7 @@ import java.util.List;
  */
 public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
 
+    @Singleton
     interface HeaderPropertiesPanelViewImplUiBinder extends UiBinder<Widget, HeaderPropertiesPanelViewImpl> {
     }
 
@@ -75,8 +79,18 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
     @UiField
     FlowPanel headerNamePanel;
 
+    @UiField(provided = true)
+    final EditorResources                res;
+    @UiField(provided = true)
+    final WSO2EditorLocalizationConstant locale;
+
     @Inject
-    public HeaderPropertiesPanelViewImpl(HeaderPropertiesPanelViewImplUiBinder ourUiBinder) {
+    public HeaderPropertiesPanelViewImpl(HeaderPropertiesPanelViewImplUiBinder ourUiBinder,
+                                         EditorResources res,
+                                         WSO2EditorLocalizationConstant locale) {
+        this.res = res;
+        this.locale = locale;
+
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -99,33 +113,19 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
     @Nonnull
     @Override
     public String getAction() {
-        int index = action.getSelectedIndex();
-        return index != -1 ? action.getValue(action.getSelectedIndex()) : "";
+        return getSelectedItem(action);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setAction(@Nullable List<String> actions) {
-        if (actions == null) {
-            return;
-        }
-
-        action.clear();
-
-        for (String value : actions) {
-            action.addItem(value);
-        }
+        setTypes(action, actions);
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectHeaderAction(@Nullable String headerAction) {
-        for (int i = 0; i < action.getItemCount(); i++) {
-            if (action.getValue(i).equals(headerAction)) {
-                action.setItemSelected(i, true);
-                return;
-            }
-        }
+        selectType(action, headerAction);
     }
 
     @UiHandler("action")
@@ -137,33 +137,19 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
     @Nonnull
     @Override
     public String getScope() {
-        int index = scope.getSelectedIndex();
-        return index != -1 ? scope.getValue(scope.getSelectedIndex()) : "";
+        return getSelectedItem(scope);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setScope(@Nullable List<String> scopes) {
-        if (scopes == null) {
-            return;
-        }
-
-        scope.clear();
-
-        for (String value : scopes) {
-            scope.addItem(value);
-        }
+        setTypes(scope, scopes);
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectScope(@Nullable String selectedScope) {
-        for (int i = 0; i < scope.getItemCount(); i++) {
-            if (scope.getValue(i).equals(selectedScope)) {
-                scope.setItemSelected(i, true);
-                return;
-            }
-        }
+        selectType(scope, selectedScope);
     }
 
     @UiHandler("scope")
@@ -175,33 +161,19 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
     @Nonnull
     @Override
     public String getValueType() {
-        int index = valueType.getSelectedIndex();
-        return index != -1 ? valueType.getValue(valueType.getSelectedIndex()) : "";
+        return getSelectedItem(valueType);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setValueType(@Nullable List<String> valueTypes) {
-        if (valueTypes == null) {
-            return;
-        }
-
-        valueType.clear();
-
-        for (String value : valueTypes) {
-            valueType.addItem(value);
-        }
+    public void setValueTypes(@Nullable List<String> valueTypes) {
+        setTypes(valueType, valueTypes);
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectValueType(@Nullable String selectedType) {
-        for (int i = 0; i < valueType.getItemCount(); i++) {
-            if (valueType.getValue(i).equals(selectedType)) {
-                valueType.setItemSelected(i, true);
-                return;
-            }
-        }
+        selectType(valueType, selectedType);
     }
 
     @UiHandler("valueType")
@@ -213,7 +185,7 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
     @Nonnull
     @Override
     public String getValue() {
-        return String.valueOf(value.getText());
+        return value.getText();
     }
 
     /** {@inheritDoc} */
@@ -231,7 +203,7 @@ public class HeaderPropertiesPanelViewImpl extends HeaderPropertiesPanelView {
     @Nonnull
     @Override
     public String getHeaderName() {
-        return String.valueOf(headerName.getText());
+        return headerName.getText();
     }
 
     /** {@inheritDoc} */

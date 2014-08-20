@@ -19,6 +19,7 @@ import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.enrich.Enrich;
 import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.payload.PayloadFactory;
+import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
@@ -81,42 +82,8 @@ public class Filter extends AbstractShape {
     private Array<NameSpace> xPathNameSpaces;
 
     @Inject
-    public Filter(EditorResources resources,
-                  Provider<Branch> branchProvider,
-                  Provider<Log> logProvider,
-                  Provider<Enrich> enrichProvider,
-                  Provider<Filter> filterProvider,
-                  Provider<Header> headerProvider,
-                  Provider<Call> callProvider,
-                  Provider<CallTemplate> callTemplateProvider,
-                  Provider<LoopBack> loopBackProvider,
-                  Provider<PayloadFactory> payloadFactoryProvider,
-                  Provider<Property> propertyProvider,
-                  Provider<Respond> respondProvider,
-                  Provider<Send> sendProvider,
-                  Provider<Sequence> sequenceProvider,
-                  Provider<Switch> switchProvider) {
-        super(ELEMENT_NAME,
-              ELEMENT_NAME,
-              SERIALIZATION_NAME,
-              PROPERTIES,
-              resources,
-              branchProvider,
-              false,
-              true,
-              logProvider,
-              enrichProvider,
-              filterProvider,
-              headerProvider,
-              callProvider,
-              callTemplateProvider,
-              loopBackProvider,
-              payloadFactoryProvider,
-              propertyProvider,
-              respondProvider,
-              sendProvider,
-              sequenceProvider,
-              switchProvider);
+    public Filter(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
 
         conditionType = SOURCE_AND_REGEX;
         source = "get-property('To')";

@@ -16,6 +16,7 @@
 package com.codenvy.ide.ext.wso2.client.upload;
 
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
+import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -33,6 +34,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
 
@@ -42,32 +44,40 @@ import javax.validation.constraints.NotNull;
  * @author Valeriy Svydenko
  */
 public class ImportFileViewImpl extends DialogBox implements ImportFileView {
+
+    @Singleton
     interface ImportFileViewImplUiBinder extends UiBinder<Widget, ImportFileViewImpl> {
     }
 
     private ActionDelegate delegate;
     @UiField
-    Button    btnCancel;
+    Button      btnCancel;
     @UiField
-    Button    btnImport;
+    Button      btnImport;
     @UiField
-    FormPanel uploadForm;
+    FormPanel   uploadForm;
     @UiField
-    TextBox   url;
-    @UiField(provided = true)
-    final LocalizationConstant locale;
+    TextBox     url;
     @UiField
     RadioButton useUrl;
     @UiField
     RadioButton useLocalPath;
     @UiField
     HTML        message;
+
+    @UiField(provided = true)
+    final WSO2Resources        res;
+    @UiField(provided = true)
+    final LocalizationConstant locale;
+
     FileUpload file;
 
     @Inject
     public ImportFileViewImpl(ImportFileViewImplUiBinder ourUiBinder,
-                              LocalizationConstant locale) {
+                              LocalizationConstant locale,
+                              WSO2Resources res) {
         this.locale = locale;
+        this.res = res;
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 

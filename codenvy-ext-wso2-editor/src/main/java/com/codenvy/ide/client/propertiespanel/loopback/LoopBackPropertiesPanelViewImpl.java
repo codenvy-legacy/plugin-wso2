@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.loopback;
 
+import com.codenvy.ide.client.EditorResources;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -22,27 +23,35 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * @author Andrey Plotnikov
  */
 public class LoopBackPropertiesPanelViewImpl extends LoopBackPropertiesPanelView {
 
+    @Singleton
     interface LoopBackPropertiesPanelViewImplUiBinder extends UiBinder<Widget, LoopBackPropertiesPanelViewImpl> {
     }
 
     @UiField
     TextBox description;
 
+    @UiField(provided = true)
+    final EditorResources res;
+
     @Inject
-    public LoopBackPropertiesPanelViewImpl(LoopBackPropertiesPanelViewImplUiBinder ourUiBinder) {
+    public LoopBackPropertiesPanelViewImpl(LoopBackPropertiesPanelViewImplUiBinder ourUiBinder,
+                                           EditorResources res) {
+        this.res = res;
+
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     /** {@inheritDoc} */
     @Override
     public String getDescription() {
-        return String.valueOf(description.getText());
+        return description.getText();
     }
 
     /** {@inheritDoc} */

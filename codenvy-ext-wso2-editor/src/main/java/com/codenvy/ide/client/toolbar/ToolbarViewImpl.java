@@ -20,6 +20,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * @author Andrey Plotnikov
@@ -27,6 +28,7 @@ import com.google.inject.Inject;
  */
 public class ToolbarViewImpl extends ToolbarView {
 
+    @Singleton
     interface ToolbarViewImplUiBinder extends UiBinder<Widget, ToolbarViewImpl> {
     }
 
@@ -98,6 +100,11 @@ public class ToolbarViewImpl extends ToolbarView {
     @UiHandler("call")
     public void onCallButtonClicked(ClickEvent event) {
         delegate.onCallButtonClicked();
+    }
+
+    @UiHandler("addressEndpoint")
+    public void onAddressEndpointButtonClicked(ClickEvent event) {
+        delegate.onAddressEndpointButtonClicked();
     }
 
 }

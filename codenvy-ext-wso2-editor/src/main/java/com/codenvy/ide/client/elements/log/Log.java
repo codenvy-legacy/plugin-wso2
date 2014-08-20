@@ -18,18 +18,8 @@ package com.codenvy.ide.client.elements.log;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.AbstractShape;
 import com.codenvy.ide.client.elements.Branch;
-import com.codenvy.ide.client.elements.Call;
-import com.codenvy.ide.client.elements.CallTemplate;
-import com.codenvy.ide.client.elements.Filter;
-import com.codenvy.ide.client.elements.Header;
-import com.codenvy.ide.client.elements.LoopBack;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.Respond;
-import com.codenvy.ide.client.elements.Send;
-import com.codenvy.ide.client.elements.Sequence;
-import com.codenvy.ide.client.elements.Switch;
-import com.codenvy.ide.client.elements.enrich.Enrich;
-import com.codenvy.ide.client.elements.payload.PayloadFactory;
+import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.gwt.resources.client.ImageResource;
@@ -73,42 +63,8 @@ public class Log extends AbstractShape {
     private Array<Property> properties;
 
     @Inject
-    public Log(EditorResources resources,
-               Provider<Branch> branchProvider,
-               Provider<Log> logProvider,
-               Provider<Enrich> enrichProvider,
-               Provider<Filter> filterProvider,
-               Provider<Header> headerProvider,
-               Provider<Call> callProvider,
-               Provider<CallTemplate> callTemplateProvider,
-               Provider<LoopBack> loopBackProvider,
-               Provider<PayloadFactory> payloadFactoryProvider,
-               Provider<com.codenvy.ide.client.elements.Property> propertyProvider,
-               Provider<Respond> respondProvider,
-               Provider<Send> sendProvider,
-               Provider<Sequence> sequenceProvider,
-               Provider<Switch> switchProvider) {
-        super(ELEMENT_NAME,
-              ELEMENT_NAME,
-              SERIALIZATION_NAME,
-              PROPERTIES,
-              resources,
-              branchProvider,
-              false,
-              true,
-              logProvider,
-              enrichProvider,
-              filterProvider,
-              headerProvider,
-              callProvider,
-              callTemplateProvider,
-              loopBackProvider,
-              payloadFactoryProvider,
-              propertyProvider,
-              respondProvider,
-              sendProvider,
-              sequenceProvider,
-              switchProvider);
+    public Log(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
 
         logCategory = LogCategory.INFO;
         logLevel = LogLevel.SIMPLE;

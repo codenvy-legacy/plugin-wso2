@@ -17,8 +17,8 @@ package com.codenvy.ide.client.editor;
 
 import com.codenvy.ide.client.EditorState;
 import com.codenvy.ide.client.MetaModelValidator;
-import com.codenvy.ide.client.SelectionManager;
 import com.codenvy.ide.client.State;
+import com.codenvy.ide.client.elements.AddressEndpoint;
 import com.codenvy.ide.client.elements.Call;
 import com.codenvy.ide.client.elements.CallTemplate;
 import com.codenvy.ide.client.elements.Filter;
@@ -36,9 +36,13 @@ import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.codenvy.ide.client.elements.shape.ElementChangedListener;
 import com.codenvy.ide.client.elements.shape.ShapePresenter;
 import com.codenvy.ide.client.inject.EditorFactory;
+import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.PropertiesPanelManager;
+import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
-import com.codenvy.ide.client.propertiespanel.PropertiesPanelManager;
+import com.codenvy.ide.client.propertiespanel.addressendpoint.AddressEndpointPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.call.CallPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.calltemplate.CallTemplatePropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.empty.EmptyPropertiesPanelPresenter;
@@ -54,10 +58,10 @@ import com.codenvy.ide.client.propertiespanel.root.RootPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.send.SendPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.sequence.SequencePropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.switchmediator.SwitchPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertytypes.PropertyTypeManager;
 import com.codenvy.ide.client.toolbar.ToolbarPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -65,6 +69,18 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.codenvy.ide.client.State.CREATING_NOTHING;
+import static com.codenvy.ide.client.elements.AddressEndpoint.AddressingVersion;
+import static com.codenvy.ide.client.elements.AddressEndpoint.Format;
+import static com.codenvy.ide.client.elements.AddressEndpoint.Format.LEAVE_AS_IS;
+import static com.codenvy.ide.client.elements.AddressEndpoint.Format.REST;
+import static com.codenvy.ide.client.elements.AddressEndpoint.Format.get;
+import static com.codenvy.ide.client.elements.AddressEndpoint.Format.pox;
+import static com.codenvy.ide.client.elements.AddressEndpoint.Format.soap11;
+import static com.codenvy.ide.client.elements.AddressEndpoint.Format.soap12;
+import static com.codenvy.ide.client.elements.AddressEndpoint.Optimize;
+import static com.codenvy.ide.client.elements.AddressEndpoint.Optimize.mtom;
+import static com.codenvy.ide.client.elements.AddressEndpoint.Optimize.swa;
+import static com.codenvy.ide.client.elements.AddressEndpoint.TimeoutAction;
 import static com.codenvy.ide.client.elements.Call.EndpointType;
 import static com.codenvy.ide.client.elements.Call.EndpointType.INLINE;
 import static com.codenvy.ide.client.elements.Call.EndpointType.NONE;
@@ -185,7 +201,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                  EnrichPropertiesPanelPresenter enrichPropertiesPanelPresenter,
                                                  LoopBackPropertiesPanelPresenter loopBackPropertiesPanelPresenter,
                                                  CallTemplatePropertiesPanelPresenter callTemplatePropertiesPanelPresenter,
-                                                 CallPropertiesPanelPresenter callPropertiesPanelPresenter) {
+                                                 CallPropertiesPanelPresenter callPropertiesPanelPresenter,
+                                                 AddressEndpointPropertiesPanelPresenter addressEndpointPropertiesPanelPresenter) {
 
         PropertiesPanelManager propertiesPanelManager = editorFactory.createPropertiesPanelManager(view.getPropertiesPanel());
 
@@ -227,6 +244,9 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
 
         propertiesPanelManager.register(Call.class, callPropertiesPanelPresenter);
         callPropertiesPanelPresenter.addListener(this);
+
+        propertiesPanelManager.register(AddressEndpoint.class, addressEndpointPropertiesPanelPresenter);
+        addressEndpointPropertiesPanelPresenter.addListener(this);
 
         propertiesPanelManager.register(RootElement.class, rootPropertiesPanelPresenter);
         rootPropertiesPanelPresenter.addListener(this);
@@ -310,6 +330,24 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
 
         propertyTypeManager.register(InlineType.INLINE_TYPE, Arrays.asList(InlineType.RegistryKey.name(),
                                                                            InlineType.SourceXML.name()));
+
+        propertyTypeManager.register(Format.TYPE_NAME, Arrays.asList(LEAVE_AS_IS.name(),
+                                                                     soap11.name(),
+                                                                     soap12.name(),
+                                                                     pox.name(),
+                                                                     get.name(),
+                                                                     REST.name()));
+
+        propertyTypeManager.register(Optimize.TYPE_NAME, Arrays.asList(Optimize.LEAVE_AS_IS.name(),
+                                                                       mtom.name(),
+                                                                       swa.name()));
+
+        propertyTypeManager.register(AddressingVersion.TYPE_NAME, Arrays.asList(AddressingVersion.FINAL.getValue(),
+                                                                                AddressingVersion.SUBMISSION.getValue()));
+
+        propertyTypeManager.register(TimeoutAction.TYPE_NAME, Arrays.asList(TimeoutAction.never.name(),
+                                                                            TimeoutAction.discard.name(),
+                                                                            TimeoutAction.fault.name()));
     }
 
     @Inject
@@ -467,6 +505,61 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        LoopBack.ELEMENT_NAME,
                                                                        CallTemplate.ELEMENT_NAME,
                                                                        Call.ELEMENT_NAME));
+    }
+
+    @Inject
+    private void configureMediatorCreatorsManager(MediatorCreatorsManager mediatorCreatorsManager,
+                                                  Provider<Log> logProvider,
+                                                  Provider<Enrich> enrichProvider,
+                                                  Provider<Filter> filterProvider,
+                                                  Provider<Header> headerProvider,
+                                                  Provider<Call> callProvider,
+                                                  Provider<CallTemplate> callTemplateProvider,
+                                                  Provider<LoopBack> loopBackProvider,
+                                                  Provider<PayloadFactory> payloadFactoryProvider,
+                                                  Provider<Property> propertyProvider,
+                                                  Provider<Respond> respondProvider,
+                                                  Provider<Send> sendProvider,
+                                                  Provider<Sequence> sequenceProvider,
+                                                  Provider<Switch> switchProvider,
+                                                  Provider<AddressEndpoint> addressEndpointProvider) {
+
+        mediatorCreatorsManager.register(Log.ELEMENT_NAME, Log.SERIALIZATION_NAME, State.CREATING_LOG, logProvider);
+
+        mediatorCreatorsManager.register(Enrich.ELEMENT_NAME, Enrich.SERIALIZATION_NAME, State.CREATING_ENRICH, enrichProvider);
+
+        mediatorCreatorsManager.register(Filter.ELEMENT_NAME, Filter.SERIALIZATION_NAME, State.CREATING_FILTER, filterProvider);
+
+        mediatorCreatorsManager.register(Header.ELEMENT_NAME, Header.SERIALIZATION_NAME, State.CREATING_HEADER, headerProvider);
+
+        mediatorCreatorsManager.register(Call.ELEMENT_NAME, Call.SERIALIZATION_NAME, State.CREATING_CALL, callProvider);
+
+        mediatorCreatorsManager.register(CallTemplate.ELEMENT_NAME,
+                                         CallTemplate.SERIALIZATION_NAME,
+                                         State.CREATING_CALLTEMPLATE,
+                                         callTemplateProvider);
+
+        mediatorCreatorsManager.register(LoopBack.ELEMENT_NAME, LoopBack.SERIALIZATION_NAME, State.CREATING_LOOPBACK, loopBackProvider);
+
+        mediatorCreatorsManager.register(PayloadFactory.ELEMENT_NAME,
+                                         PayloadFactory.SERIALIZATION_NAME,
+                                         State.CREATING_PAYLOADFACTORY,
+                                         payloadFactoryProvider);
+
+        mediatorCreatorsManager.register(Property.ELEMENT_NAME, Property.SERIALIZATION_NAME, State.CREATING_PROPERTY, propertyProvider);
+
+        mediatorCreatorsManager.register(Respond.ELEMENT_NAME, Respond.SERIALIZATION_NAME, State.CREATING_RESPOND, respondProvider);
+
+        mediatorCreatorsManager.register(Send.ELEMENT_NAME, Send.SERIALIZATION_NAME, State.CREATING_SEND, sendProvider);
+
+        mediatorCreatorsManager.register(Sequence.ELEMENT_NAME, Sequence.SERIALIZATION_NAME, State.CREATING_SEQUENCE, sequenceProvider);
+
+        mediatorCreatorsManager.register(Switch.ELEMENT_NAME, Switch.SERIALIZATION_NAME, State.CREATING_SWITCH_MEDIATOR, switchProvider);
+
+        mediatorCreatorsManager.register(AddressEndpoint.ELEMENT_NAME,
+                                         AddressEndpoint.SERIALIZATION_NAME,
+                                         State.CREATING_ADDRESS_ENDPOINT,
+                                         addressEndpointProvider);
     }
 
     /** {@inheritDoc} */

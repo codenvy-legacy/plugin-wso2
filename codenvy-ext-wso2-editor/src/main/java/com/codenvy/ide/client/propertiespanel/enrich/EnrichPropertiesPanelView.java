@@ -130,10 +130,10 @@ public abstract class EnrichPropertiesPanelView extends AbstractView<EnrichPrope
     /**
      * Sets inline type value to the special place on the view which uses for showing inline type parameter.
      *
-     * @param inlineType
+     * @param inlineTypes
      *         list of inline types which need to set to special list box
      */
-    public abstract void setInlineType(@Nullable List<String> inlineType);
+    public abstract void setInlineTypes(@Nullable List<String> inlineTypes);
 
     /**
      * Select inline type format in place on view.
@@ -158,10 +158,10 @@ public abstract class EnrichPropertiesPanelView extends AbstractView<EnrichPrope
     /**
      * Sets clone source value to the special place on the view which uses for showing clone source parameter.
      *
-     * @param cloneSource
+     * @param cloneSources
      *         list of clone sources which need to set to special list box
      */
-    public abstract void setCloneSource(@Nullable List<String> cloneSource);
+    public abstract void setCloneSources(@Nullable List<String> cloneSources);
 
     /** @return source type value from the special place on the view which uses for showing source type parameter */
     @Nonnull
@@ -209,10 +209,10 @@ public abstract class EnrichPropertiesPanelView extends AbstractView<EnrichPrope
     /**
      * Sets source type value to the special place on the view which uses for showing source type parameter.
      *
-     * @param targetAction
+     * @param targetActions
      *         list of target actions which need to set to special list box
      */
-    public abstract void setTargetAction(@Nullable List<String> targetAction);
+    public abstract void setTargetActions(@Nullable List<String> targetActions);
 
     /** @return target type value from the special place on the view which uses for showing target type parameter */
     @Nonnull
@@ -229,10 +229,10 @@ public abstract class EnrichPropertiesPanelView extends AbstractView<EnrichPrope
     /**
      * Sets target type value to the special place on the view which uses for showing target type parameter.
      *
-     * @param targetType
+     * @param targetTypes
      *         list of target types which need to set to special list box
      */
-    public abstract void setTargetType(@Nullable List<String> targetType);
+    public abstract void setTargetTypes(@Nullable List<String> targetTypes);
 
     /** @return target xpath value from the special place on the view which uses for showing target xpath parameter */
     @Nonnull

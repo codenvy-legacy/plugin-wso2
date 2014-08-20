@@ -37,6 +37,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -48,36 +49,37 @@ import java.util.List;
  */
 public class PropertyConfigViewImpl extends Window implements PropertyConfigView {
 
+    @Singleton
     interface LogPropertiesConfigurationViewImplUiBinder extends UiBinder<Widget, PropertyConfigViewImpl> {
     }
 
-    @UiField(provided = true)
-    CellTable<Property> tableOfProperties;
     @UiField
-    Button    btnAdd;
+    Button  btnAdd;
     @UiField
-    Button    btnRemove;
+    Button  btnRemove;
     @UiField
-    Button    btnEdit;
+    Button  btnEdit;
     @UiField
-    TextBox   nameTextBox;
+    TextBox nameTextBox;
     @UiField
-    TextBox   valueExpressionTextBox;
+    TextBox valueExpressionTextBox;
 
-    Button btnOk;
-    Button btnCancel;
+    @UiField(provided = true)
+    final CellTable<Property>            tableOfProperties;
+    @UiField(provided = true)
+    final WSO2EditorLocalizationConstant locale;
 
     private ActionDelegate delegate;
 
     @Inject
-    public PropertyConfigViewImpl(WSO2EditorLocalizationConstant localizationConstant, LogPropertiesConfigurationViewImplUiBinder uiBinder) {
+    public PropertyConfigViewImpl(WSO2EditorLocalizationConstant localizationConstant,
+                                  LogPropertiesConfigurationViewImplUiBinder uiBinder) {
+        this.locale = localizationConstant;
         this.tableOfProperties = createTable(localizationConstant);
 
-        Widget widget = uiBinder.createAndBindUi(this);
+        setWidget(uiBinder.createAndBindUi(this));
 
-        this.setWidget(widget);
-
-        btnCancel = createButton(localizationConstant.buttonCancel(), "property-configuration-cancel", new ClickHandler() {
+        Button btnCancel = createButton(localizationConstant.buttonCancel(), "property-configuration-cancel", new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
@@ -86,7 +88,7 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
         });
         getFooter().add(btnCancel);
 
-        btnOk = createButton(localizationConstant.buttonOk(), "property-configuration-ok", new ClickHandler() {
+        Button btnOk = createButton(localizationConstant.buttonOk(), "property-configuration-ok", new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
