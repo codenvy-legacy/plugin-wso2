@@ -15,19 +15,27 @@
  */
 package com.codenvy.ide.client.editor;
 
+import com.codenvy.ide.api.parts.PartStackUIResources;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
+import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import org.vectomatic.dom.svg.ui.SVGImage;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class WSO2EditorViewImpl extends WSO2EditorView {
 
@@ -35,16 +43,30 @@ public class WSO2EditorViewImpl extends WSO2EditorView {
     interface EditorViewImplUiBinder extends UiBinder<Widget, WSO2EditorViewImpl> {
     }
 
+    @UiField(provided = true)
+    SplitLayoutPanel  splitPanel;
     @UiField
     SimpleLayoutPanel toolbar;
     @UiField
     SimpleLayoutPanel propertiesPanel;
     @UiField
     ScrollPanel       workspace;
+    @UiField
+    Button            hideBtn;
+    @UiField
+    Button            showBtn;
 
     @Inject
-    public WSO2EditorViewImpl(EditorViewImplUiBinder ourUiBinder) {
+    public WSO2EditorViewImpl(EditorViewImplUiBinder ourUiBinder, PartStackUIResources resources) {
+        this.splitPanel = new SplitLayoutPanel(3);
         initWidget(ourUiBinder.createAndBindUi(this));
+
+        SVGImage image = new SVGImage(resources.minimize());
+        image.getElement().setAttribute("name", "workBenchIconMinimize");
+
+        showBtn.getElement().setInnerHTML(image.toString());
+
+        hideBtn.getElement().setInnerHTML(image.toString());
     }
 
     /** {@inheritDoc} */
@@ -66,6 +88,26 @@ public class WSO2EditorViewImpl extends WSO2EditorView {
     @Override
     public AcceptsOneWidget getWorkspacePanel() {
         return workspace;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisiblePropertyPanel(boolean isVisible) {
+        splitPanel.setWidgetHidden(propertiesPanel.getParent(), isVisible);
+        splitPanel.onResize();
+
+        hideBtn.setVisible(!isVisible);
+        showBtn.setVisible(isVisible);
+    }
+
+    @UiHandler("hideBtn")
+    public void onHideButtonClicked(ClickEvent event) {
+        delegate.onHidePanelButtonClicked();
+    }
+
+    @UiHandler("showBtn")
+    public void onShowButtonClicked(ClickEvent event) {
+        delegate.onShowPropertyButtonClicked();
     }
 
 }

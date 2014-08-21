@@ -7,7 +7,19 @@
 }
 
 .property {
+    margin-left: 6px;
+    margin-top: 6px;
     margin-bottom: 20px;
+}
+
+.labelStyle {
+    margin-left: 6px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+.fieldStyle {
+    margin-left: 12px;
 }
 
 .selectedElement {

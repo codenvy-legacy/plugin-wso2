@@ -21,86 +21,74 @@
     <ui:with field="loc" type="com.codenvy.ide.client.WSO2EditorLocalizationConstant"/>
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
 
-    <ui:style>
-        .labelStyle {
-            margin-left: 5px;
-            margin-top: 5px;
-            margin-bottom: 5px;
-        }
-
-        .fieldStyle {
-            margin-left: 30px;
-        }
-    </ui:style>
-
     <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
         <g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="{loc.enrichSourceMisc}" addStyleNames="{style.labelStyle}"/>
-                <g:Label text="{loc.enrichDescription}" addStyleNames="{style.fieldStyle}"/>
-                <g:TextBox ui:field="description" width="200px" addStyleNames="{style.fieldStyle}"/>
+                <g:Label text="{loc.enrichSourceMisc}" addStyleNames="{res.editorCSS.labelStyle}"/>
+                <g:Label text="{loc.enrichDescription}" addStyleNames="{res.editorCSS.fieldStyle}"/>
+                <g:TextBox ui:field="description" width="200px" addStyleNames="{res.editorCSS.fieldStyle}"/>
             </g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="{loc.enrichSource}" addStyleNames="{style.labelStyle}"/>
-                <g:Label text="{loc.enrichCloneSource}" addStyleNames="{style.fieldStyle}"/>
-                <g:ListBox ui:field="cloneSource" width="206px" addStyleNames="{style.fieldStyle}"/>
+                <g:Label text="{loc.enrichSource}" addStyleNames="{res.editorCSS.labelStyle}"/>
+                <g:Label text="{loc.enrichCloneSource}" addStyleNames="{res.editorCSS.fieldStyle}"/>
+                <g:ListBox ui:field="cloneSource" width="206px" addStyleNames="{res.editorCSS.fieldStyle}"/>
             </g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="{loc.enrichSourceType}" addStyleNames="{style.fieldStyle}"/>
-                <g:ListBox ui:field="sourceType" width="206px" addStyleNames="{style.fieldStyle}"/>
+                <g:Label text="{loc.enrichSourceType}" addStyleNames="{res.editorCSS.fieldStyle}"/>
+                <g:ListBox ui:field="sourceType" width="206px" addStyleNames="{res.editorCSS.fieldStyle}"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="srcXpathPanel" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="{loc.enrichSourceXPath}" addStyleNames="{style.fieldStyle}"/>
-                <g:TextBox ui:field="sourceXpath" width="206px" enabled="false" addStyleNames="{style.fieldStyle}"/>
+                <g:Label text="{loc.enrichSourceXPath}" addStyleNames="{res.editorCSS.fieldStyle}"/>
+                <g:TextBox ui:field="sourceXpath" width="206px" enabled="false" addStyleNames="{res.editorCSS.fieldStyle}"/>
                 <g:Button ui:field="btnSrcXPath" text="{loc.buttonEditConfig}" addStyleNames="{res.editorCSS.propertyButton}"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="srcPropPanel" visible="false" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="{loc.enrichSourceProperty}" addStyleNames="{style.fieldStyle}"/>
-                <g:TextBox ui:field="srcProperty" width="200px" addStyleNames="{style.fieldStyle}"/>
+                <g:Label text="{loc.enrichSourceProperty}" addStyleNames="{res.editorCSS.fieldStyle}"/>
+                <g:TextBox ui:field="srcProperty" width="200px" addStyleNames="{res.editorCSS.fieldStyle}"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="srcInlTypePanel" visible="false" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="{loc.enrichSourceInlineType}" addStyleNames="{style.fieldStyle}"/>
-                <g:ListBox ui:field="inlineType" width="206px" addStyleNames="{style.fieldStyle}"/>
+                <g:Label text="{loc.enrichSourceInlineType}" addStyleNames="{res.editorCSS.fieldStyle}"/>
+                <g:ListBox ui:field="inlineType" width="206px" addStyleNames="{res.editorCSS.fieldStyle}"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="srcInlRegPanel" visible="false" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="{loc.enrichInlineRegistryKey}" addStyleNames="{style.fieldStyle}"/>
-                <g:TextBox ui:field="srcInlineKey" width="206px" enabled="false" addStyleNames="{style.fieldStyle}"/>
+                <g:Label text="{loc.enrichInlineRegistryKey}" addStyleNames="{res.editorCSS.fieldStyle}"/>
+                <g:TextBox ui:field="srcInlineKey" width="206px" enabled="false" addStyleNames="{res.editorCSS.fieldStyle}"/>
                 <g:Button ui:field="btnInlRegKey" text="{loc.buttonEditConfig}" addStyleNames="{res.editorCSS.propertyButton}"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="srcXMLPanel" visible="false" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="{loc.enrichSourceXml}" addStyleNames="{style.fieldStyle}"/>
-                <g:TextBox ui:field="srcXML" width="206px" enabled="false" addStyleNames="{style.fieldStyle}"/>
+                <g:Label text="{loc.enrichSourceXml}" addStyleNames="{res.editorCSS.fieldStyle}"/>
+                <g:TextBox ui:field="srcXML" width="206px" enabled="false" addStyleNames="{res.editorCSS.fieldStyle}"/>
                 <g:Button ui:field="btnSrcXML" text="{loc.buttonEditConfig}" addStyleNames="{res.editorCSS.propertyButton}"/>
             </g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="{loc.enrichTarget}" addStyleNames="{style.labelStyle}"/>
-                <g:Label text="{loc.enrichTargetAction}" addStyleNames="{style.fieldStyle}"/>
-                <g:ListBox ui:field="targetAction" width="206px" addStyleNames="{style.fieldStyle}"/>
+                <g:Label text="{loc.enrichTarget}" addStyleNames="{res.editorCSS.labelStyle}"/>
+                <g:Label text="{loc.enrichTargetAction}" addStyleNames="{res.editorCSS.fieldStyle}"/>
+                <g:ListBox ui:field="targetAction" width="206px" addStyleNames="{res.editorCSS.fieldStyle}"/>
             </g:FlowPanel>
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-                <g:Label text="{loc.enrichTargetType}" addStyleNames="{style.fieldStyle}"/>
-                <g:ListBox ui:field="targetType" width="206px" addStyleNames="{style.fieldStyle}"/>
+                <g:Label text="{loc.enrichTargetType}" addStyleNames="{res.editorCSS.fieldStyle}"/>
+                <g:ListBox ui:field="targetType" width="206px" addStyleNames="{res.editorCSS.fieldStyle}"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="targetXpathPanel" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="{loc.enrichTargetXPath}" addStyleNames="{style.fieldStyle}"/>
-                <g:TextBox ui:field="targetXpath" width="206px" enabled="false" addStyleNames="{style.fieldStyle}"/>
+                <g:Label text="{loc.enrichTargetXPath}" addStyleNames="{res.editorCSS.fieldStyle}"/>
+                <g:TextBox ui:field="targetXpath" width="206px" enabled="false" addStyleNames="{res.editorCSS.fieldStyle}"/>
                 <g:Button ui:field="btnTargetXpath" text="{loc.buttonEditConfig}" addStyleNames="{res.editorCSS.propertyButton}"/>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="targetPropPanel" visible="false" addStyleNames="{res.editorCSS.property}">
-                <g:Label text="{loc.enrichTargetProperty}" addStyleNames="{style.fieldStyle}"/>
-                <g:TextBox ui:field="targetProperty" width="200px" addStyleNames="{style.fieldStyle}"/>
+                <g:Label text="{loc.enrichTargetProperty}" addStyleNames="{res.editorCSS.fieldStyle}"/>
+                <g:TextBox ui:field="targetProperty" width="200px" addStyleNames="{res.editorCSS.fieldStyle}"/>
             </g:FlowPanel>
 
         </g:FlowPanel>

@@ -391,6 +391,9 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("propertiespanel.root.onError")
     String rootOnError();
 
+    @Key("propertiespanel.panel.labelName")
+    String panelLabelName();
+
     @Key("propertiespanel.addressEndpoint.basic")
     String addressEndpointBasic();
 

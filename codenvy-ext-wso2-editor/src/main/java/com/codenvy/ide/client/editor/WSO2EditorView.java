@@ -25,9 +25,20 @@ import javax.annotation.Nonnull;
  * The general presentation of editor view. It contains a few general places for toolbar, properties panel and workspace.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 @ImplementedBy(WSO2EditorViewImpl.class)
-public abstract class WSO2EditorView extends AbstractView<AbstractView.ActionDelegate> {
+public abstract class WSO2EditorView extends AbstractView<WSO2EditorView.ActionDelegate> {
+
+    public interface ActionDelegate extends AbstractView.ActionDelegate {
+
+        /** Performs some actions in response to user's clicking on hide panel button. */
+        void onHidePanelButtonClicked();
+
+        /** Performs some actions in response to user's clicking on show panel button. */
+        void onShowPropertyButtonClicked();
+
+    }
 
     /** @return place where toolbar need to be located */
     @Nonnull
@@ -40,5 +51,13 @@ public abstract class WSO2EditorView extends AbstractView<AbstractView.ActionDel
     /** @return place where workspace need to be located */
     @Nonnull
     public abstract AcceptsOneWidget getWorkspacePanel();
+
+    /**
+     * Changes visible state of the property panel.
+     *
+     * @param isVisible
+     *         <code>true</code> the panel will be shown, <code>false</code> it will not
+     */
+    public abstract void setVisiblePropertyPanel(boolean isVisible);
 
 }

@@ -607,6 +607,18 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
         rootElementPresenter.onElementChanged();
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void onHidePanelButtonClicked() {
+        view.setVisiblePropertyPanel(true);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onShowPropertyButtonClicked() {
+        view.setVisiblePropertyPanel(false);
+    }
+
     public interface EditorChangeListener {
 
         void onChanged();
