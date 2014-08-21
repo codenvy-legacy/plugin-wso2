@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;

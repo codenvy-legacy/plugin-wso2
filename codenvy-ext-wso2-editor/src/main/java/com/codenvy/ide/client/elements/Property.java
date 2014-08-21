@@ -36,8 +36,8 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 import static com.codenvy.ide.client.elements.Property.Action.set;
 import static com.codenvy.ide.client.elements.Property.DataType.STRING;
 import static com.codenvy.ide.client.elements.Property.Scope.SYNAPSE;
-import static com.codenvy.ide.client.elements.Property.ValueType.EXPRESSION;
-import static com.codenvy.ide.client.elements.Property.ValueType.LITERAL;
+import static com.codenvy.ide.client.elements.ValueType.EXPRESSION;
+import static com.codenvy.ide.client.elements.ValueType.LITERAL;
 
 /**
  * @author Andrey Plotnikov
@@ -382,12 +382,6 @@ public class Property extends AbstractShape {
         public static final String TYPE_NAME = "Action";
     }
 
-    public enum ValueType {
-        LITERAL, EXPRESSION;
-
-        public static final String TYPE_NAME = "ValueType";
-    }
-
     public enum DataType {
         STRING, INTEGER, BOOLEAN, DOUBLE, FLOAT, LONG, SHORT, OM;
 
@@ -401,7 +395,7 @@ public class Property extends AbstractShape {
 
         private String value;
 
-        Scope(String value) {
+        Scope(@Nonnull String value) {
             this.value = value;
         }
 

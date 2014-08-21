@@ -15,9 +15,12 @@
  */
 package com.codenvy.ide.client.propertiespanel.addressendpoint;
 
-import com.codenvy.ide.client.elements.AddressEndpoint;
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
+import com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint;
+import com.codenvy.ide.client.elements.addressendpoint.Property;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
+import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
@@ -25,10 +28,10 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 import static com.codenvy.ide.client.editor.WSO2Editor.BOOLEAN_TYPE_NAME;
-import static com.codenvy.ide.client.elements.AddressEndpoint.AddressingVersion;
-import static com.codenvy.ide.client.elements.AddressEndpoint.Format;
-import static com.codenvy.ide.client.elements.AddressEndpoint.Optimize;
-import static com.codenvy.ide.client.elements.AddressEndpoint.TimeoutAction;
+import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.AddressingVersion;
+import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Format;
+import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Optimize;
+import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction;
 
 /**
  * @author Andrey Plotnikov
@@ -37,9 +40,15 @@ public class AddressEndpointPropertiesPanelPresenter
         extends AbstractPropertiesPanel<AddressEndpoint, AddressEndpointPropertiesPanelView>
         implements AddressEndpointPropertiesPanelView.ActionDelegate {
 
+    private final WSO2EditorLocalizationConstant locale;
+
     @Inject
-    public AddressEndpointPropertiesPanelPresenter(AddressEndpointPropertiesPanelView view, PropertyTypeManager propertyTypeManager) {
+    public AddressEndpointPropertiesPanelPresenter(AddressEndpointPropertiesPanelView view,
+                                                   PropertyTypeManager propertyTypeManager,
+                                                   WSO2EditorLocalizationConstant locale) {
         super(view, propertyTypeManager);
+
+        this.locale = locale;
     }
 
     /** {@inheritDoc} */
@@ -284,10 +293,10 @@ public class AddressEndpointPropertiesPanelPresenter
         view.setRetryCount(String.valueOf(element.getRetryCount()));
         view.setRetryDelay(String.valueOf(element.getRetryDelay()));
 
-        // TODO show properties
+        showProperties(element.getProperties());
 
         view.setOptimizes(propertyTypeManager.getValuesByName(Optimize.TYPE_NAME));
-        view.selectFormat(element.getFormat().name());
+        view.selectOptimize(element.getOptimize().name());
 
         view.setDescription(element.getDescription());
 
@@ -326,6 +335,16 @@ public class AddressEndpointPropertiesPanelPresenter
 
         view.setTimeoutActions(propertyTypeManager.getValuesByName(TimeoutAction.TYPE_NAME));
         view.selectTimeoutAction(element.getTimeoutAction().name());
+    }
+
+    private void showProperties(Array<Property> properties) {
+        StringBuilder content = new StringBuilder();
+
+        for (Property property : properties.asIterable()) {
+            content.append(locale.addressEndpointEndpointProperty(property.getName())).append(' ');
+        }
+
+        view.setProperties(content.toString());
     }
 
 }

@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.elements;
+package com.codenvy.ide.client.elements.addressendpoint;
 
 import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.elements.AbstractShape;
+import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.collections.Array;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -27,9 +30,9 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.AddressEndpoint.AddressingVersion.FINAL;
-import static com.codenvy.ide.client.elements.AddressEndpoint.Format.LEAVE_AS_IS;
-import static com.codenvy.ide.client.elements.AddressEndpoint.TimeoutAction.never;
+import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.AddressingVersion.FINAL;
+import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Format.LEAVE_AS_IS;
+import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction.never;
 
 /**
  * @author Andrey Plotnikov
@@ -54,8 +57,9 @@ public class AddressEndpoint extends AbstractShape {
     private int    retryCount;
     private int    retryDelay;
 
-    private Optimize optimize;
-    private String   description;
+    private Array<Property> properties;
+    private Optimize        optimize;
+    private String          description;
 
     private boolean isReliableMessagingEnabled;
     private String  reliableMessagingPolicy;
@@ -86,7 +90,7 @@ public class AddressEndpoint extends AbstractShape {
         retryCount = 0;
         retryDelay = 0;
 
-        // TODO add properties
+        properties = com.codenvy.ide.collections.Collections.createArray();
         optimize = Optimize.LEAVE_AS_IS;
         description = "";
 
@@ -183,6 +187,15 @@ public class AddressEndpoint extends AbstractShape {
 
     public void setRetryDelay(@Nonnegative int retryDelay) {
         this.retryDelay = retryDelay;
+    }
+
+    @Nonnull
+    public Array<Property> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(@Nonnull Array<Property> properties) {
+        this.properties = properties;
     }
 
     @Nonnull

@@ -18,10 +18,11 @@ package com.codenvy.ide.client.propertiespanel.property;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.Property;
+import com.codenvy.ide.client.elements.ValueType;
+import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
-import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -32,8 +33,7 @@ import javax.annotation.Nullable;
 import static com.codenvy.ide.client.elements.Property.Action;
 import static com.codenvy.ide.client.elements.Property.DataType;
 import static com.codenvy.ide.client.elements.Property.Scope;
-import static com.codenvy.ide.client.elements.Property.ValueType;
-import static com.codenvy.ide.client.elements.Property.ValueType.EXPRESSION;
+import static com.codenvy.ide.client.elements.ValueType.EXPRESSION;
 
 /**
  * The property panel of Property mediator.

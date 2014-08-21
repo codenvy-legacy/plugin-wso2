@@ -28,6 +28,7 @@ import com.google.inject.Inject;
 import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.client.elements.log.Log.LogCategory;
+import static com.codenvy.ide.client.elements.log.Log.LogLevel;
 
 /**
  * @author Andrey Plotnikov
@@ -72,7 +73,7 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log, Lo
     /** {@inheritDoc} */
     @Override
     public void onLogLevelChanged() {
-        element.setLogLevel(Log.LogLevel.valueOf(view.getLogLevel()));
+        element.setLogLevel(LogLevel.valueOf(view.getLogLevel()));
 
         notifyListeners();
     }
@@ -109,7 +110,7 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log, Lo
         view.setLogCategories(propertyTypeManager.getValuesByName(LogCategory.TYPE_NAME));
         view.selectLogCategory(element.getLogCategory().name());
 
-        view.setLogLevels(propertyTypeManager.getValuesByName(Log.LogLevel.TYPE_NAME));
+        view.setLogLevels(propertyTypeManager.getValuesByName(LogLevel.TYPE_NAME));
         view.selectLogLevel(element.getLogLevel().name());
 
         view.setLogSeparator(element.getLogSeparator());
