@@ -68,7 +68,7 @@
 
             <g:FlowPanel addStyleNames="{res.editorCSS.property}">
 
-                <g:Label text="{local.addressEndpointSuspendState}" addStyleNames="{res.editorCSS.labelStyle}"/>
+                <g:Label text="{local.addressEndpointEndpointTimeoutState}" addStyleNames="{res.editorCSS.labelStyle}"/>
 
                 <g:FlowPanel addStyleNames="{res.editorCSS.property}">
                     <g:Label text="{local.addressEndpointRetryErrorCodes}" addStyleNames="{res.editorCSS.fieldStyle}"/>

@@ -71,11 +71,7 @@ public interface PropertyConfigView extends View<PropertyConfigView.ActionDelega
      */
     void setValueExpression(@Nonnull String text);
 
-    enum Type {
-        LITERAL, EXPRESSION
-    }
-
-    public interface ActionDelegate {
+    interface ActionDelegate {
         /**
          * Performs any actions appropriate in response to the user selected the property.
          *

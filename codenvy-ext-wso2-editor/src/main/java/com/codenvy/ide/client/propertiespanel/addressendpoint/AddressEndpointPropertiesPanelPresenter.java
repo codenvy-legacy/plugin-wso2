@@ -20,6 +20,7 @@ import com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint;
 import com.codenvy.ide.client.elements.addressendpoint.Property;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
+import com.codenvy.ide.client.propertiespanel.addressendpoint.property.PropertyPresenter;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -40,15 +41,30 @@ public class AddressEndpointPropertiesPanelPresenter
         extends AbstractPropertiesPanel<AddressEndpoint, AddressEndpointPropertiesPanelView>
         implements AddressEndpointPropertiesPanelView.ActionDelegate {
 
-    private final WSO2EditorLocalizationConstant locale;
+    private final WSO2EditorLocalizationConstant              locale;
+    private final PropertyPresenter                           propertyPresenter;
+    private final PropertyPresenter.PropertiesChangedCallback callback;
 
     @Inject
     public AddressEndpointPropertiesPanelPresenter(AddressEndpointPropertiesPanelView view,
                                                    PropertyTypeManager propertyTypeManager,
-                                                   WSO2EditorLocalizationConstant locale) {
+                                                   WSO2EditorLocalizationConstant locale,
+                                                   PropertyPresenter propertyPresenter) {
         super(view, propertyTypeManager);
 
         this.locale = locale;
+        this.propertyPresenter = propertyPresenter;
+
+        this.callback = new PropertyPresenter.PropertiesChangedCallback() {
+            @Override
+            public void onPropertiesChanged(@Nonnull Array<Property> properties) {
+                element.setProperties(properties);
+
+                showProperties(properties);
+
+                notifyListeners();
+            }
+        };
     }
 
     /** {@inheritDoc} */
@@ -166,7 +182,7 @@ public class AddressEndpointPropertiesPanelPresenter
     /** {@inheritDoc} */
     @Override
     public void onEditPropertiesButtonClicked() {
-        // TODO add dialog
+        propertyPresenter.showDialog(callback, element.getProperties());
     }
 
     /** {@inheritDoc} */
@@ -339,9 +355,16 @@ public class AddressEndpointPropertiesPanelPresenter
 
     private void showProperties(Array<Property> properties) {
         StringBuilder content = new StringBuilder();
+        int size = properties.size() - 1;
 
-        for (Property property : properties.asIterable()) {
-            content.append(locale.addressEndpointEndpointProperty(property.getName())).append(' ');
+        for (int i = 0; i <= size; i++) {
+            Property property = properties.get(i);
+
+            content.append(locale.addressEndpointEndpointProperty(property.getName()));
+
+            if (i != size) {
+                content.append(", ");
+            }
         }
 
         view.setProperties(content.toString());

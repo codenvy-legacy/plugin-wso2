@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.propertiespanel.propertyconfig;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
+import com.codenvy.ide.client.elements.ValueType;
 import com.codenvy.ide.client.elements.log.Property;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.window.Window;
@@ -53,12 +54,6 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
     interface LogPropertiesConfigurationViewImplUiBinder extends UiBinder<Widget, PropertyConfigViewImpl> {
     }
 
-    @UiField
-    Button  btnAdd;
-    @UiField
-    Button  btnRemove;
-    @UiField
-    Button  btnEdit;
     @UiField
     TextBox nameTextBox;
     @UiField
@@ -141,8 +136,8 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
         });
 
         final List<String> typeProperty = new ArrayList<>();
-        typeProperty.add(Type.LITERAL.name());
-        typeProperty.add(Type.EXPRESSION.name());
+        typeProperty.add(ValueType.LITERAL.name());
+        typeProperty.add(ValueType.EXPRESSION.name());
         SelectionCell categoryCell = new SelectionCell(typeProperty);
 
         Column<Property, String> type = new Column<Property, String>(categoryCell) {

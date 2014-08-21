@@ -20,6 +20,7 @@ import com.codenvy.ide.client.elements.ValueType;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -31,6 +32,8 @@ import static com.codenvy.ide.client.elements.addressendpoint.Property.Scope.DEF
  */
 public class Property {
 
+    private final Provider<Property> propertyProvider;
+
     private String           name;
     private String           value;
     private String           expression;
@@ -39,7 +42,9 @@ public class Property {
     private Array<NameSpace> nameSpaces;
 
     @Inject
-    public Property() {
+    public Property(Provider<Property> propertyProvider) {
+        this.propertyProvider = propertyProvider;
+
         name = "property_name";
         value = "property_value";
         expression = "/default/expression";
@@ -100,6 +105,20 @@ public class Property {
 
     public void setNameSpaces(@Nonnull Array<NameSpace> nameSpaces) {
         this.nameSpaces = nameSpaces;
+    }
+
+    @Nonnull
+    public Property clone() {
+        Property property = propertyProvider.get();
+
+        property.setName(name);
+        property.setExpression(expression);
+        property.setValue(value);
+        property.setType(type);
+        property.setScope(scope);
+        property.setNameSpaces(nameSpaces);
+
+        return property;
     }
 
     public enum Scope {

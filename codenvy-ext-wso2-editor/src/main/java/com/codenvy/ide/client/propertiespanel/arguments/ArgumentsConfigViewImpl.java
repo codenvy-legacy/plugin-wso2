@@ -153,9 +153,9 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
         };
 
         table.addColumn(type, localizationConstant.columnType());
-        table.addColumn(value, localizationConstant.tableValue());
+        table.addColumn(value, localizationConstant.columnValue());
         table.addColumn(namespaceEditorButton);
-        table.addColumn(evaluator, localizationConstant.tableEvaluator());
+        table.addColumn(evaluator, localizationConstant.columnEvaluator());
 
         table.setColumnWidth(type, 120, PX);
         table.setColumnWidth(value, 210, PX);

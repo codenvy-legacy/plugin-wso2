@@ -70,17 +70,20 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("toolbar.addressEndpoint.tooltip")
     String toolbarAddressEndpointTooltip();
 
-    @Key("propertiespanel.argumentsconfig.table.value")
-    String tableValue();
-
     @Key("propertiespanel.argumentsconfig.table.Evaluator")
-    String tableEvaluator();
+    String columnEvaluator();
 
     @Key("propertiespanel.argumentsconfig.table.name")
     String columnName();
 
+    @Key("propertiespanel.argumentsconfig.table.value")
+    String columnValue();
+
     @Key("propertiespanel.argumentsconfig.table.type")
     String columnType();
+
+    @Key("propertiespanel.argumentsconfig.table.scope")
+    String columnScope();
 
     @Key("propertiespanel.namespace.property")
     String namespacedProperty();
@@ -478,4 +481,6 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("propertiespanel.addressEndpoint.timeoutAction")
     String addressEndpointTimeoutAction();
 
+    @Key("propertiespanel.endpoint.properties.title")
+    String endpointPropertiesTitle();
 }

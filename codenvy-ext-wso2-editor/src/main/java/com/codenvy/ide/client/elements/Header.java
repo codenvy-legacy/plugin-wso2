@@ -35,7 +35,7 @@ import java.util.Map;
 import static com.codenvy.ide.client.elements.Header.HeaderAction.remove;
 import static com.codenvy.ide.client.elements.Header.HeaderAction.set;
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.Property.ValueType.LITERAL;
+import static com.codenvy.ide.client.elements.ValueType.LITERAL;
 
 /**
  * Class describes entity which presented as Header mediator.
