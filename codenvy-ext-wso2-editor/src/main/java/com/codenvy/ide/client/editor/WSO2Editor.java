@@ -105,10 +105,13 @@ import static com.codenvy.ide.client.elements.Property.Scope.SYNAPSE;
 import static com.codenvy.ide.client.elements.Property.Scope.TRANSPORT;
 import static com.codenvy.ide.client.elements.Send.SequenceType.Default;
 import static com.codenvy.ide.client.elements.Send.SequenceType.Static;
+import static com.codenvy.ide.client.elements.Sequence.ReferringType;
 import static com.codenvy.ide.client.elements.Sequence.ReferringType.Dynamic;
 import static com.codenvy.ide.client.elements.ValueType.EXPRESSION;
 import static com.codenvy.ide.client.elements.ValueType.LITERAL;
 import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.AddressingVersion;
+import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.AddressingVersion.FINAL;
+import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.AddressingVersion.SUBMISSION;
 import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Format;
 import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Format.LEAVE_AS_IS;
 import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Format.REST;
@@ -120,7 +123,12 @@ import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Op
 import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Optimize.mtom;
 import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Optimize.swa;
 import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction;
+import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction.discard;
+import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction.fault;
+import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction.never;
 import static com.codenvy.ide.client.elements.enrich.Source.InlineType;
+import static com.codenvy.ide.client.elements.enrich.Source.InlineType.RegistryKey;
+import static com.codenvy.ide.client.elements.enrich.Source.InlineType.SourceXML;
 import static com.codenvy.ide.client.elements.enrich.Source.SourceType;
 import static com.codenvy.ide.client.elements.enrich.Source.SourceType.body;
 import static com.codenvy.ide.client.elements.enrich.Source.SourceType.custom;
@@ -306,7 +314,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
 
         propertyTypeManager.register(Filter.ConditionType.TYPE_NAME, Arrays.asList(SOURCE_AND_REGEX.name(), XPATH.name()));
 
-        propertyTypeManager.register(Sequence.ReferringType.TYPE_NAME, Arrays.asList(Sequence.ReferringType.Static.name(), Dynamic.name()));
+        propertyTypeManager.register(ReferringType.TYPE_NAME, Arrays.asList(ReferringType.Static.name(), Dynamic.name()));
 
         propertyTypeManager.register(SourceType.TYPE_NAME, Arrays.asList(custom.name(),
                                                                          envelope.name(),
@@ -325,8 +333,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                  SELECT_FROM_TEMPLATE.getValue(),
                                                                                  SDF.getValue()));
 
-        propertyTypeManager.register(InlineType.INLINE_TYPE, Arrays.asList(InlineType.RegistryKey.name(),
-                                                                           InlineType.SourceXML.name()));
+        propertyTypeManager.register(InlineType.INLINE_TYPE, Arrays.asList(RegistryKey.name(),
+                                                                           SourceXML.name()));
 
         propertyTypeManager.register(Format.TYPE_NAME, Arrays.asList(LEAVE_AS_IS.name(),
                                                                      soap11.name(),
@@ -339,12 +347,12 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        mtom.name(),
                                                                        swa.name()));
 
-        propertyTypeManager.register(AddressingVersion.TYPE_NAME, Arrays.asList(AddressingVersion.FINAL.getValue(),
-                                                                                AddressingVersion.SUBMISSION.getValue()));
+        propertyTypeManager.register(AddressingVersion.TYPE_NAME, Arrays.asList(FINAL.getValue(),
+                                                                                SUBMISSION.getValue()));
 
-        propertyTypeManager.register(TimeoutAction.TYPE_NAME, Arrays.asList(TimeoutAction.never.name(),
-                                                                            TimeoutAction.discard.name(),
-                                                                            TimeoutAction.fault.name()));
+        propertyTypeManager.register(TimeoutAction.TYPE_NAME, Arrays.asList(never.name(),
+                                                                            discard.name(),
+                                                                            fault.name()));
     }
 
     @Inject
@@ -551,7 +559,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
 
         mediatorCreatorsManager.register(Sequence.ELEMENT_NAME, Sequence.SERIALIZATION_NAME, State.CREATING_SEQUENCE, sequenceProvider);
 
-        mediatorCreatorsManager.register(Switch.ELEMENT_NAME, Switch.SERIALIZATION_NAME, State.CREATING_SWITCH_MEDIATOR, switchProvider);
+        mediatorCreatorsManager.register(Switch.ELEMENT_NAME, Switch.SERIALIZATION_NAME, State.CREATING_SWITCH, switchProvider);
 
         mediatorCreatorsManager.register(AddressEndpoint.ELEMENT_NAME,
                                          AddressEndpoint.SERIALIZATION_NAME,

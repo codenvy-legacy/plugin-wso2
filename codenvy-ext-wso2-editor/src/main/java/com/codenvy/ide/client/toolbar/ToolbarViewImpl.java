@@ -74,7 +74,7 @@ public class ToolbarViewImpl extends ToolbarView {
 
     @UiHandler("switchMediator")
     public void onSwitch_mediatorButtonClicked(ClickEvent event) {
-        delegate.onSwitch_mediatorButtonClicked();
+        delegate.onSwitchButtonClicked();
     }
 
     @UiHandler("sequence")

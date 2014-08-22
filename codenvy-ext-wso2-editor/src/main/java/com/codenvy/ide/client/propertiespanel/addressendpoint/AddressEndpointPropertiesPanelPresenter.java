@@ -253,7 +253,7 @@ public class AddressEndpointPropertiesPanelPresenter
     /** {@inheritDoc} */
     @Override
     public void onAddressingVersionChanged() {
-        element.setAddressingVersion(AddressingVersion.valueOf(view.getAddressingVersion()));
+        element.setAddressingVersion(AddressingVersion.getItemByValue(view.getAddressingVersion()));
 
         notifyListeners();
     }
@@ -353,7 +353,7 @@ public class AddressEndpointPropertiesPanelPresenter
         view.selectTimeoutAction(element.getTimeoutAction().name());
     }
 
-    private void showProperties(Array<Property> properties) {
+    private void showProperties(@Nonnull Array<Property> properties) {
         StringBuilder content = new StringBuilder();
         int size = properties.size() - 1;
 

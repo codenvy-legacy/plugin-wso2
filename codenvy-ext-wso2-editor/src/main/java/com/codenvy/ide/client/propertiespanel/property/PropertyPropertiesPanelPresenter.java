@@ -158,7 +158,7 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
     /** {@inheritDoc} */
     @Override
     public void onPropertyScopeChanged() {
-        element.setPropertyScope(view.getPropertyScope());
+        element.setPropertyScope(Scope.getItemByValue(view.getPropertyScope()));
 
         notifyListeners();
     }
@@ -196,7 +196,7 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
         view.selectPropertyDataType(element.getPropertyDataType().name());
 
         view.setPropertyScopes(propertyTypeManager.getValuesByName(Scope.TYPE_NAME));
-        view.selectPropertyScope(element.getPropertyScope());
+        view.selectPropertyScope(element.getPropertyScope().getValue());
 
         view.setPropertyName(element.getPropertyName());
         view.setValueLiteral(element.getValueLiteral());

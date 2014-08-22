@@ -37,7 +37,7 @@ import static com.codenvy.ide.client.State.CREATING_PROPERTY;
 import static com.codenvy.ide.client.State.CREATING_RESPOND;
 import static com.codenvy.ide.client.State.CREATING_SEND;
 import static com.codenvy.ide.client.State.CREATING_SEQUENCE;
-import static com.codenvy.ide.client.State.CREATING_SWITCH_MEDIATOR;
+import static com.codenvy.ide.client.State.CREATING_SWITCH;
 
 /**
  * @author Andrey Plotnikov
@@ -110,8 +110,8 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
 
     /** {@inheritDoc} */
     @Override
-    public void onSwitch_mediatorButtonClicked() {
-        setState(CREATING_SWITCH_MEDIATOR);
+    public void onSwitchButtonClicked() {
+        setState(CREATING_SWITCH);
     }
 
     /** {@inheritDoc} */

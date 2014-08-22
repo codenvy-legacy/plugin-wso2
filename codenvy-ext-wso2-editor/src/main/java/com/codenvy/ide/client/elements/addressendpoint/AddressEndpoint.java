@@ -27,7 +27,7 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.AddressingVersion.FINAL;
@@ -42,8 +42,41 @@ public class AddressEndpoint extends AbstractShape {
     public static final String ELEMENT_NAME       = "Address";
     public static final String SERIALIZATION_NAME = "address";
 
-    private static final List<String> PROPERTIES = Collections.emptyList();
-//    private static final List<String> PROPERTIES = Arrays.asList(ENDPOINT_PROPERTY_NAME);
+    private static final String URI_ATTRIBUTE      = "uri";
+    private static final String FORMAT_ATTRIBUTE   = "format";
+    private static final String OPTIMIZE_ATTRIBUTE = "optimize";
+
+    private static final String POLICY_ATTRIBUTE            = "policy";
+    private static final String VERSION_ATTRIBUTE           = "version";
+    private static final String SEPARATE_LISTENER_ATTRIBUTE = "separateListener";
+
+
+    private static final String ENABLE_RM_PROPERTY         = "enableRM";
+    private static final String ENABLE_ADDRESSING_PROPERTY = "enableAddressing";
+    private static final String ENABLE_SEC_PROPERTY        = "enableSec";
+
+    private static final String TIMEOUT_PROPERTY  = "timeout";
+    private static final String DURATION_PROPERTY = "duration";
+    private static final String ACTION_PROPERTY   = "responseAction";
+
+    private static final String SUSPEND_ON_FAILURE_PROPERTY = "suspendOnFailure";
+    private static final String ERROR_CODES_PROPERTY        = "errorCodes";
+    private static final String INITIAL_DURATION_PROPERTY   = "initialDuration";
+    private static final String PROGRESSION_FACTOR_PROPERTY = "progressionFactor";
+    private static final String MAXIMUM_DURATION_PROPERTY   = "progressionFactor";
+
+    private static final String MAKE_FOR_SUSPENSION_PROPERTY       = "markForSuspension";
+    private static final String RETRIES_BEFORE_SUSPENSION_PROPERTY = "retriesBeforeSuspension";
+    private static final String RETRY_DELAY_PROPERTY               = "retryDelay";
+
+    private static final String DESCRIPTION_PROPERTY = "description";
+
+    private static final List<String> PROPERTIES = Arrays.asList(ENABLE_ADDRESSING_PROPERTY,
+                                                                 ENABLE_RM_PROPERTY,
+                                                                 ENABLE_SEC_PROPERTY,
+                                                                 TIMEOUT_PROPERTY,
+                                                                 SUSPEND_ON_FAILURE_PROPERTY,
+                                                                 MAKE_FOR_SUSPENSION_PROPERTY);
 
     private Format format;
     private String uri;
@@ -294,6 +327,96 @@ public class AddressEndpoint extends AbstractShape {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
+    @Override
+    protected String serializeAttributes() {
+        return URI_ATTRIBUTE + "=\"" + uri + '"' +
+               (LEAVE_AS_IS.equals(format) ? "" : ' ' + FORMAT_ATTRIBUTE + "=\"" + format.name() + '"') +
+               (Optimize.LEAVE_AS_IS.equals(optimize) ? "" : ' ' + OPTIMIZE_ATTRIBUTE + "=\"" + optimize.name() + '"');
+    }
+
+    /** {@inheritDoc} */
+    @Nonnull
+    @Override
+    protected String serializeProperties() {
+        String content = "";
+        String value;
+
+        if (isAddressingEnabled) {
+            content += '<' + ENABLE_ADDRESSING_PROPERTY + ' ' +
+                       VERSION_ATTRIBUTE + "=\"" + addressingVersion.getValue() + '"' +
+                       (isAddressingSeparateListener ? ' ' + SEPARATE_LISTENER_ATTRIBUTE + "=\"true\"" : "") + "/>\n";
+        }
+
+        if (isReliableMessagingEnabled) {
+            content += '<' + ENABLE_RM_PROPERTY + ' ' + POLICY_ATTRIBUTE + "=\"" + reliableMessagingPolicy + "\"/>\n";
+        }
+
+        if (isSecurityEnabled) {
+            content += '<' + ENABLE_SEC_PROPERTY + ' ' + POLICY_ATTRIBUTE + "=\"" + securityPolicy + "\"/>\n";
+        }
+
+        value = convertNumberValueToXMLAttribute(timeoutDuration, 1, DURATION_PROPERTY) +
+                (never.equals(timeoutAction) ?
+                 "" :
+                 convertStringValueToXMLAttribute(timeoutAction.name(), ACTION_PROPERTY));
+
+        content += convertStringValueToXMLAttribute(value, TIMEOUT_PROPERTY);
+
+        if (!suspendErrorCode.isEmpty() || suspendInitialDuration >= 0) {
+            value = convertStringValueToXMLAttribute(suspendErrorCode, ERROR_CODES_PROPERTY) +
+                    convertNumberValueToXMLAttribute(suspendInitialDuration, 0, INITIAL_DURATION_PROPERTY) +
+                    convertNumberValueToXMLAttribute(suspendMaximumDuration, 0, MAXIMUM_DURATION_PROPERTY) +
+                    convertNumberValueToXMLAttribute(suspendProgressionFactor, 0, PROGRESSION_FACTOR_PROPERTY);
+
+            content += convertStringValueToXMLAttribute(value, SUSPEND_ON_FAILURE_PROPERTY);
+        }
+
+        if (!retryErrorCodes.isEmpty() || retryDelay > 0) {
+            value = convertStringValueToXMLAttribute(retryErrorCodes, ERROR_CODES_PROPERTY) +
+                    convertNumberValueToXMLAttribute(retryCount, 1, RETRIES_BEFORE_SUSPENSION_PROPERTY) +
+                    convertNumberValueToXMLAttribute(retryDelay, 1, RETRY_DELAY_PROPERTY);
+
+            content += convertStringValueToXMLAttribute(value, MAKE_FOR_SUSPENSION_PROPERTY);
+        }
+
+        return content;
+    }
+
+    /** {@inheritDoc} */
+    @Nonnull
+    @Override
+    public String serialize() {
+        StringBuilder content = new StringBuilder();
+
+        for (Property property : properties.asIterable()) {
+            content.append(property.serialize());
+        }
+
+        content.append(convertStringValueToXMLAttribute(description, DESCRIPTION_PROPERTY));
+
+        return super.serialize() + content;
+    }
+
+    @Nonnull
+    private String convertStringValueToXMLAttribute(@Nonnull String value, @Nonnull String tagName) {
+        return value.isEmpty() ?
+               "" :
+               '<' + tagName + ">\n" +
+               value + '\n' +
+               "</" + tagName + ">\n";
+    }
+
+    @Nonnull
+    private String convertNumberValueToXMLAttribute(double value, double lowLimitValue, @Nonnull String tagName) {
+        return value < lowLimitValue ?
+               "" :
+               '<' + tagName + ">\n" +
+               value + '\n' +
+               "</" + tagName + ">\n";
+    }
+
+    /** {@inheritDoc} */
     @Nullable
     @Override
     public ImageResource getIcon() {
@@ -326,6 +449,18 @@ public class AddressEndpoint extends AbstractShape {
         @Nonnull
         public String getValue() {
             return value;
+        }
+
+        @Nonnull
+        public static AddressingVersion getItemByValue(String value) {
+            switch (value) {
+                case "submission":
+                    return SUBMISSION;
+
+                case "final":
+                default:
+                    return FINAL;
+            }
         }
 
     }

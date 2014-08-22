@@ -68,7 +68,7 @@ public class Property extends AbstractShape {
     private String           valueExpression;
     private String           valueStringPattern;
     private String           valueStringCaptureGroup;
-    private String           propertyScope;
+    private Scope            propertyScope;
     private String           description;
     private Array<NameSpace> nameSpaces;
 
@@ -79,7 +79,7 @@ public class Property extends AbstractShape {
         propertyAction = set;
         valueType = LITERAL;
         propertyDataType = STRING;
-        propertyScope = SYNAPSE.getValue();
+        propertyScope = SYNAPSE;
         propertyName = "property_name";
         valueLiteral = "value";
         valueExpression = "/default/expression";
@@ -234,7 +234,7 @@ public class Property extends AbstractShape {
 
     /** @return scope of property */
     @Nonnull
-    public String getPropertyScope() {
+    public Scope getPropertyScope() {
         return propertyScope;
     }
 
@@ -244,7 +244,7 @@ public class Property extends AbstractShape {
      * @param propertyScope
      *         value which need to set to element
      */
-    public void setPropertyScope(@Nullable String propertyScope) {
+    public void setPropertyScope(@Nullable Scope propertyScope) {
         this.propertyScope = propertyScope;
     }
 
@@ -300,7 +300,7 @@ public class Property extends AbstractShape {
         attributes.put(NAME_ATTRIBUTE, propertyName);
         attributes.put(VALUE_EXPRESSION_ATTRIBUTE, valueExpression);
         attributes.put(VALUE_LITERAL_ATTRIBUTE, valueLiteral);
-        attributes.put(SCOPE_ATTRIBUTE, propertyScope);
+        attributes.put(SCOPE_ATTRIBUTE, propertyScope.getValue());
         attributes.put(ACTION_ATTRIBUTE, propertyAction.name());
         attributes.put(DATA_TYPE_ATTRIBUTE, propertyDataType.name());
         attributes.put(STRING_CAPTURE_GROUP_ATTRIBUTE, valueStringCaptureGroup);
@@ -350,7 +350,7 @@ public class Property extends AbstractShape {
                     break;
 
                 case SCOPE_ATTRIBUTE:
-                    propertyScope = nodeValue;
+                    propertyScope = Scope.getItemByValue(nodeValue);
                     break;
 
                 case DESCRIPTION_ATTRIBUTE:
@@ -402,6 +402,27 @@ public class Property extends AbstractShape {
         @Nonnull
         public String getValue() {
             return value;
+        }
+
+        @Nonnull
+        public static Scope getItemByValue(String value) {
+            switch (value) {
+                case "transport":
+                    return TRANSPORT;
+
+                case "axis2":
+                    return AXIS2;
+
+                case "axis2_client":
+                    return AXIS2_CLIENT;
+
+                case "operation":
+                    return OPERATION;
+
+                default:
+                case "Synapse":
+                    return SYNAPSE;
+            }
         }
     }
 

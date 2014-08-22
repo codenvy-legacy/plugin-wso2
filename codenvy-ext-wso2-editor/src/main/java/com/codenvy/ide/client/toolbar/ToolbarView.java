@@ -40,7 +40,7 @@ public abstract class ToolbarView extends AbstractView<ToolbarView.ActionDelegat
 
         void onFilterButtonClicked();
 
-        void onSwitch_mediatorButtonClicked();
+        void onSwitchButtonClicked();
 
         void onSequenceButtonClicked();
 

@@ -28,7 +28,6 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
@@ -200,13 +199,13 @@ public class CallTemplate extends AbstractShape {
 
         public static final String TYPE_NAME = "AvailableTemplatesType";
 
-        private String value;
+        private final String value;
 
-        AvailableTemplates(String value) {
+        AvailableTemplates(@Nonnull String value) {
             this.value = value;
         }
 
-        @NotNull
+        @Nonnull
         public String getValue() {
             return value;
         }

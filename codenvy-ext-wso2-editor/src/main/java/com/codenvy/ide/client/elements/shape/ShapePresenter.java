@@ -16,25 +16,13 @@
 package com.codenvy.ide.client.elements.shape;
 
 import com.codenvy.ide.client.EditorState;
-import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.State;
 import com.codenvy.ide.client.elements.Branch;
-import com.codenvy.ide.client.elements.Call;
-import com.codenvy.ide.client.elements.CallTemplate;
-import com.codenvy.ide.client.elements.Filter;
-import com.codenvy.ide.client.elements.Header;
-import com.codenvy.ide.client.elements.LoopBack;
-import com.codenvy.ide.client.elements.Property;
-import com.codenvy.ide.client.elements.Respond;
-import com.codenvy.ide.client.elements.Send;
-import com.codenvy.ide.client.elements.Sequence;
 import com.codenvy.ide.client.elements.Shape;
-import com.codenvy.ide.client.elements.Switch;
-import com.codenvy.ide.client.elements.enrich.Enrich;
-import com.codenvy.ide.client.elements.log.Log;
-import com.codenvy.ide.client.elements.payload.PayloadFactory;
 import com.codenvy.ide.client.elements.shape.branch.BranchPresenter;
 import com.codenvy.ide.client.inject.EditorFactory;
+import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -58,16 +46,17 @@ import static com.codenvy.ide.client.elements.shape.ShapeView.DEFAULT_WIDTH;
 public class ShapePresenter extends AbstractPresenter<ShapeView> implements ShapeView.ActionDelegate,
                                                                             SelectionManager.SelectionStateListener,
                                                                             ElementChangedListener {
-    private final SelectionManager   selectionManager;
-    private final EditorFactory      editorFactory;
-    private final EditorState<State> editorState;
-    private final Shape              shape;
+    private final SelectionManager        selectionManager;
+    private final EditorFactory           editorFactory;
+    private final EditorState<State>      editorState;
+    private final MediatorCreatorsManager mediatorCreatorsManager;
+    private final Shape                   shape;
 
-    private final List<ElementDeleteListener>  elementDeleteListeners;
-    private final List<ElementMoveListener>    elementMoveListeners;
+    private final List<ElementDeleteListener> elementDeleteListeners;
+    private final List<ElementMoveListener>   elementMoveListeners;
+
     private final List<ElementChangedListener> elementChangedListeners;
-
-    private final List<BranchPresenter> branches;
+    private final List<BranchPresenter>        branches;
 
     private int x;
     private int y;
@@ -75,6 +64,7 @@ public class ShapePresenter extends AbstractPresenter<ShapeView> implements Shap
     @Inject
     public ShapePresenter(EditorFactory editorFactory,
                           SelectionManager selectionManager,
+                          MediatorCreatorsManager mediatorCreatorsManager,
                           @Assisted EditorState<State> editorState,
                           @Assisted Shape shape) {
         super(editorFactory.createShapeView(shape.isPossibleToAddBranches()));
@@ -85,6 +75,7 @@ public class ShapePresenter extends AbstractPresenter<ShapeView> implements Shap
         this.editorFactory = editorFactory;
         this.editorState = editorState;
         this.shape = shape;
+        this.mediatorCreatorsManager = mediatorCreatorsManager;
 
         this.elementMoveListeners = new ArrayList<>();
         this.elementDeleteListeners = new ArrayList<>();
@@ -232,6 +223,8 @@ public class ShapePresenter extends AbstractPresenter<ShapeView> implements Shap
     public void onStateChanged(@Nullable Shape shape) {
         Shape selectedElement = selectionManager.getElement();
 
+        view.unselectBelowCursor();
+
         if (selectedElement == null) {
             return;
         }
@@ -270,7 +263,7 @@ public class ShapePresenter extends AbstractPresenter<ShapeView> implements Shap
     /** {@inheritDoc} */
     @Override
     public void onMouseOver() {
-        String elementName = getCreatingElementName();
+        String elementName = mediatorCreatorsManager.getElementNameByState(editorState.getState());
 
         if (elementName == null) {
             return;
@@ -402,54 +395,6 @@ public class ShapePresenter extends AbstractPresenter<ShapeView> implements Shap
     public void notifyElementChangedListeners() {
         for (ElementChangedListener listener : elementChangedListeners) {
             listener.onElementChanged();
-        }
-    }
-
-    /** @return element name of creating element if new element is creating or <code>null<code/> if it isn't */
-    @Nullable
-    private String getCreatingElementName() {
-        switch (editorState.getState()) {
-            case CREATING_LOG:
-                return Log.ELEMENT_NAME;
-
-            case CREATING_PROPERTY:
-                return Property.ELEMENT_NAME;
-
-            case CREATING_PAYLOADFACTORY:
-                return PayloadFactory.ELEMENT_NAME;
-
-            case CREATING_SEND:
-                return Send.ELEMENT_NAME;
-
-            case CREATING_HEADER:
-                return Header.ELEMENT_NAME;
-
-            case CREATING_RESPOND:
-                return Respond.ELEMENT_NAME;
-
-            case CREATING_FILTER:
-                return Filter.ELEMENT_NAME;
-
-            case CREATING_SWITCH_MEDIATOR:
-                return Switch.ELEMENT_NAME;
-
-            case CREATING_SEQUENCE:
-                return Sequence.ELEMENT_NAME;
-
-            case CREATING_ENRICH:
-                return Enrich.ELEMENT_NAME;
-
-            case CREATING_LOOPBACK:
-                return LoopBack.ELEMENT_NAME;
-
-            case CREATING_CALLTEMPLATE:
-                return CallTemplate.ELEMENT_NAME;
-
-            case CREATING_CALL:
-                return Call.ELEMENT_NAME;
-
-            default:
-                return null;
         }
     }
 
