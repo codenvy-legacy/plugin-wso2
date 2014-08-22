@@ -23,29 +23,51 @@ import com.google.inject.ImplementedBy;
 import javax.annotation.Nonnull;
 
 /**
+ * The abstract view's representation of the graphical part that provides an ability to show and edit 'Properties' property of 'Address'
+ * endpoint.
+ *
  * @author Andrey Plotnikov
  */
 @ImplementedBy(PropertyViewImpl.class)
 public interface PropertyView extends View<PropertyView.ActionDelegate> {
 
+    /**
+     * Set the complete list of values to display in the special place on the view.
+     *
+     * @param properties
+     *         list which need to be set
+     */
     void setProperties(@Nonnull Array<Property> properties);
 
+    /** Displays the view. */
     void showDialog();
 
+    /** Hides the view. */
     void hideDialog();
 
     interface ActionDelegate {
 
+        /** Performs any actions appropriate in response to the user having pressed the Ok button. */
         void onOkButtonClicked();
 
+        /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
         void onCancelButtonClicked();
 
+        /** Performs any actions appropriate in response to the user having pressed the Add button. */
         void onAddButtonClicked();
 
+        /** Performs any actions appropriate in response to the user having pressed the Edit button. */
         void onEditButtonClicked();
 
+        /** Performs any actions appropriate in response to the user having pressed the Remove button. */
         void onRemoveButtonClicked();
 
+        /**
+         * Performs any actions appropriate in response to the user selected the property.
+         *
+         * @param property
+         *         selected property
+         */
         void onPropertySelected(@Nonnull Property property);
 
     }

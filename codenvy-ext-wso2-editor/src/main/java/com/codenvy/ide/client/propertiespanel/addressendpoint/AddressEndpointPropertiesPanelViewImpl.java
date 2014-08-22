@@ -466,17 +466,17 @@ public class AddressEndpointPropertiesPanelViewImpl extends AddressEndpointPrope
 
     @UiHandler("suspendInitialDuration")
     public void onSuspendInitialDuration(KeyUpEvent event) {
-        delegate.onSuspendInitialDuration();
+        delegate.onSuspendInitialDurationChanged();
     }
 
     @UiHandler("suspendMaximumDuration")
     public void onSuspendMaximumDuration(KeyUpEvent event) {
-        delegate.onSuspendMaximumDuration();
+        delegate.onSuspendMaximumDurationChanged();
     }
 
     @UiHandler("suspendProgressionFactory")
     public void onSuspendProgressionFactory(KeyUpEvent event) {
-        delegate.onSuspendProgressionFactory();
+        delegate.onSuspendProgressionFactoryChanged();
     }
 
     @UiHandler("retryErrorCodes")

@@ -24,6 +24,8 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 
 /**
+ * The presenter that provides a business logic of editing of 'Properties' property of 'Address' endpoint.
+ *
  * @author Andrey Plotnikov
  */
 public class PropertyPresenter implements PropertyView.ActionDelegate {

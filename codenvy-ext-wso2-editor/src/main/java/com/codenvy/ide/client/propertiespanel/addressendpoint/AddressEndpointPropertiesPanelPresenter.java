@@ -35,6 +35,9 @@ import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Op
 import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction;
 
 /**
+ * The presenter that provides a business logic of 'Address' endpoint properties panel. It provides an ability to work with all properties
+ * of 'Address' endpoint.
+ *
  * @author Andrey Plotnikov
  */
 public class AddressEndpointPropertiesPanelPresenter
@@ -93,7 +96,7 @@ public class AddressEndpointPropertiesPanelPresenter
 
     /** {@inheritDoc} */
     @Override
-    public void onSuspendInitialDuration() {
+    public void onSuspendInitialDurationChanged() {
         String suspendInitialDuration = view.getSuspendInitialDuration();
 
         try {
@@ -109,7 +112,7 @@ public class AddressEndpointPropertiesPanelPresenter
 
     /** {@inheritDoc} */
     @Override
-    public void onSuspendMaximumDuration() {
+    public void onSuspendMaximumDurationChanged() {
         String suspendMaximumDuration = view.getSuspendMaximumDuration();
 
         try {
@@ -125,7 +128,7 @@ public class AddressEndpointPropertiesPanelPresenter
 
     /** {@inheritDoc} */
     @Override
-    public void onSuspendProgressionFactory() {
+    public void onSuspendProgressionFactoryChanged() {
         String suspendProgressionFactory = view.getSuspendProgressionFactory();
 
         try {

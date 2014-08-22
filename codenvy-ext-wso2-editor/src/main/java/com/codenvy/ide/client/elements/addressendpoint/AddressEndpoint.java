@@ -39,6 +39,8 @@ import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Fo
 import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction.never;
 
 /**
+ * The entity that represents 'Address' endpoint from ESB configuration.
+ *
  * @author Andrey Plotnikov
  */
 public class AddressEndpoint extends AbstractShape {
