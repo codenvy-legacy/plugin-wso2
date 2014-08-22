@@ -20,7 +20,11 @@ import com.codenvy.ide.client.elements.AbstractShape;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.xml.client.NamedNodeMap;
+import com.google.gwt.xml.client.Node;
+import com.google.gwt.xml.client.NodeList;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -63,7 +67,7 @@ public class AddressEndpoint extends AbstractShape {
     private static final String ERROR_CODES_PROPERTY        = "errorCodes";
     private static final String INITIAL_DURATION_PROPERTY   = "initialDuration";
     private static final String PROGRESSION_FACTOR_PROPERTY = "progressionFactor";
-    private static final String MAXIMUM_DURATION_PROPERTY   = "progressionFactor";
+    private static final String MAXIMUM_DURATION_PROPERTY   = "maximumDuration";
 
     private static final String MAKE_FOR_SUSPENSION_PROPERTY       = "markForSuspension";
     private static final String RETRIES_BEFORE_SUSPENSION_PROPERTY = "retriesBeforeSuspension";
@@ -77,6 +81,8 @@ public class AddressEndpoint extends AbstractShape {
                                                                  TIMEOUT_PROPERTY,
                                                                  SUSPEND_ON_FAILURE_PROPERTY,
                                                                  MAKE_FOR_SUSPENSION_PROPERTY);
+
+    private final Provider<Property> propertyProvider;
 
     private Format format;
     private String uri;
@@ -108,8 +114,13 @@ public class AddressEndpoint extends AbstractShape {
     private TimeoutAction timeoutAction;
 
     @Inject
-    public AddressEndpoint(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+    public AddressEndpoint(EditorResources resources,
+                           Provider<Branch> branchProvider,
+                           MediatorCreatorsManager mediatorCreatorsManager,
+                           Provider<Property> propertyProvider) {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+
+        this.propertyProvider = propertyProvider;
 
         format = LEAVE_AS_IS;
         uri = "http://www.example.org/service";
@@ -123,7 +134,7 @@ public class AddressEndpoint extends AbstractShape {
         retryCount = 0;
         retryDelay = 0;
 
-        properties = com.codenvy.ide.collections.Collections.createArray();
+        properties = Collections.createArray();
         optimize = Optimize.LEAVE_AS_IS;
         description = "";
 
@@ -414,6 +425,217 @@ public class AddressEndpoint extends AbstractShape {
                '<' + tagName + ">\n" +
                value + '\n' +
                "</" + tagName + ">\n";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void deserialize(@Nonnull Node node) {
+        NodeList childNodes = node.getChildNodes();
+
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node item = childNodes.item(i);
+
+            applyProperty(item);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void applyAttributes(@Nonnull Node node) {
+        NamedNodeMap attributeMap = node.getAttributes();
+
+        for (int i = 0; i < attributeMap.getLength(); i++) {
+            Node attributeNode = attributeMap.item(i);
+
+            String nodeName = attributeNode.getNodeName();
+            String nodeValue = attributeNode.getNodeValue();
+
+            switch (nodeName) {
+                case URI_ATTRIBUTE:
+                    uri = nodeValue;
+                    break;
+
+                case FORMAT_ATTRIBUTE:
+                    format = Format.valueOf(nodeValue);
+                    break;
+
+                case OPTIMIZE_ATTRIBUTE:
+                    optimize = Optimize.valueOf(nodeValue);
+                    break;
+            }
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void applyProperty(@Nonnull Node node) {
+        String nodeName = node.getNodeName();
+
+        switch (nodeName) {
+            case SERIALIZATION_NAME:
+                applyElementProperty(node);
+                break;
+
+            case Property.SERIALIZE_NAME:
+                Property property = propertyProvider.get();
+                property.applyAttributes(node);
+
+                properties.add(property);
+                break;
+
+            case DESCRIPTION_PROPERTY:
+                description = node.getChildNodes().item(0).getNodeValue();
+                break;
+        }
+    }
+
+    private void applyElementProperty(@Nonnull Node node) {
+        applyAttributes(node);
+
+        NodeList childNodes = node.getChildNodes();
+
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node item = childNodes.item(i);
+            String name = item.getNodeName();
+
+            switch (name) {
+                case ENABLE_ADDRESSING_PROPERTY:
+                    applyAddressingProperties(item);
+                    break;
+
+                case ENABLE_RM_PROPERTY: {
+                    isReliableMessagingEnabled = true;
+
+                    if (node.hasAttributes()) {
+                        Node attributeNode = node.getAttributes().item(0);
+
+                        reliableMessagingPolicy = attributeNode.getNodeValue();
+                    }
+                }
+                break;
+
+                case ENABLE_SEC_PROPERTY: {
+                    isSecurityEnabled = true;
+
+                    if (node.hasAttributes()) {
+                        Node attributeNode = node.getAttributes().item(0);
+
+                        securityPolicy = attributeNode.getNodeValue();
+                    }
+                }
+                break;
+
+                case TIMEOUT_PROPERTY:
+                    applyTimeoutProperties(item);
+                    break;
+
+                case SUSPEND_ON_FAILURE_PROPERTY:
+                    applySuspendOnFailureProperties(item);
+                    break;
+
+                case MAKE_FOR_SUSPENSION_PROPERTY:
+                    applyRetryProperties(item);
+                    break;
+            }
+        }
+    }
+
+    private void applyAddressingProperties(@Nonnull Node node) {
+        isAddressingEnabled = true;
+
+        NamedNodeMap attributeMap = node.getAttributes();
+
+        for (int i = 0; i < attributeMap.getLength(); i++) {
+            Node attributeNode = attributeMap.item(i);
+
+            String attributeName = attributeNode.getNodeName();
+            String attributeValue = attributeNode.getNodeValue();
+
+            switch (attributeName) {
+                case VERSION_ATTRIBUTE:
+                    addressingVersion = AddressingVersion.getItemByValue(attributeValue);
+                    break;
+
+                case SEPARATE_LISTENER_ATTRIBUTE:
+                    isAddressingSeparateListener = true;
+                    break;
+            }
+        }
+    }
+
+    private void applyTimeoutProperties(@Nonnull Node node) {
+        NodeList childNodes = node.getChildNodes();
+
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node item = childNodes.item(i);
+
+            String propertyName = item.getNodeName();
+            String propertyValue = item.getChildNodes().item(0).getNodeValue();
+
+            switch (propertyName) {
+                case DURATION_PROPERTY:
+                    timeoutDuration = Integer.valueOf(propertyValue);
+                    break;
+
+                case ACTION_PROPERTY:
+                    timeoutAction = TimeoutAction.valueOf(propertyValue);
+                    break;
+            }
+        }
+    }
+
+    private void applySuspendOnFailureProperties(@Nonnull Node node) {
+        NodeList childNodes = node.getChildNodes();
+
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node item = childNodes.item(i);
+
+            String propertyName = item.getNodeName();
+            String propertyValue = item.getChildNodes().item(0).getNodeValue();
+
+            switch (propertyName) {
+                case ERROR_CODES_PROPERTY:
+                    suspendErrorCode = propertyValue;
+                    break;
+
+                case INITIAL_DURATION_PROPERTY:
+                    suspendInitialDuration = Integer.valueOf(propertyValue);
+                    break;
+
+                case PROGRESSION_FACTOR_PROPERTY:
+                    suspendProgressionFactor = Double.valueOf(propertyValue);
+                    break;
+
+                case MAXIMUM_DURATION_PROPERTY:
+                    suspendMaximumDuration = Integer.valueOf(propertyValue);
+                    break;
+            }
+        }
+    }
+
+    private void applyRetryProperties(@Nonnull Node node) {
+        NodeList childNodes = node.getChildNodes();
+
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node item = childNodes.item(i);
+
+            String propertyName = item.getNodeName();
+            String propertyValue = item.getChildNodes().item(0).getNodeValue();
+
+            switch (propertyName) {
+                case ERROR_CODES_PROPERTY:
+                    retryErrorCodes = propertyValue;
+                    break;
+
+                case RETRIES_BEFORE_SUSPENSION_PROPERTY:
+                    retryCount = Integer.valueOf(propertyValue);
+                    break;
+
+                case RETRY_DELAY_PROPERTY:
+                    retryDelay = Integer.valueOf(propertyValue);
+                    break;
+            }
+        }
     }
 
     /** {@inheritDoc} */

@@ -24,6 +24,7 @@ import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.Config;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 import javax.validation.constraints.NotNull;
@@ -36,6 +37,7 @@ import static com.codenvy.ide.rest.HTTPHeader.CONTENT_TYPE;
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
+@Singleton
 public class WSO2ClientServiceImpl implements WSO2ClientService {
 
     private static final String TEMPLATE_BASE_URL         = "/wso2/" + Config.getWorkspaceId();

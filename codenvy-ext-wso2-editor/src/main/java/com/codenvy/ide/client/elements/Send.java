@@ -74,7 +74,10 @@ public class Send extends AbstractShape {
 
         components.addAll(COMPONENTS);
 
-        branches.add(branchProvider.get());
+        Branch branch = branchProvider.get();
+        branch.setParent(this);
+
+        branches.add(branch);
     }
 
     public void setSkipSerialization(boolean skipSerialization) {
@@ -290,10 +293,17 @@ public class Send extends AbstractShape {
                 case ENDPOINT_PROPERTY_NAME:
                     Branch branch = branchProvider.get();
                     branch.setParent(this);
-                    branch.deserialize(node);
 
-                    branch.setTitle(null);
-                    branch.setName(null);
+                    if (node.hasChildNodes()) {
+                        Node item = node.getChildNodes().item(0);
+
+                        Shape shape = createElement(item.getNodeName());
+
+                        if (shape != null) {
+                            shape.deserialize(node);
+                            branch.addShape(shape);
+                        }
+                    }
 
                     branches.add(branch);
                     break;
