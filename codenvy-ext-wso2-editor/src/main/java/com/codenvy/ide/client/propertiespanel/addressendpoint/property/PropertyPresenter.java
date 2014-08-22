@@ -33,12 +33,12 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
 
     private final PropertyView                   view;
     private final EditorAddressPropertyPresenter editPropertyPresenter;
-    private final EditorAddressPropertyCallBack  callBack;
+    private final EditorAddressPropertyCallBack  addPropertyCallBack;
+    private final EditorAddressPropertyCallBack  editPropertyCallBack;
 
     private Property                  selectedProperty;
     private PropertiesChangedCallback callback;
     private Array<Property>           properties;
-    private int                       index;
 
     @Inject
     public PropertyPresenter(PropertyView view, EditorAddressPropertyPresenter editPropertyPresenter) {
@@ -47,27 +47,27 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
 
         this.editPropertyPresenter = editPropertyPresenter;
 
-        this.index = -1;
-
-        this.callBack = new EditorAddressPropertyCallBack() {
+        this.addPropertyCallBack = new EditorAddressPropertyCallBack() {
             @Override
             public void onAddressPropertyChanged(@Nonnull Property property) {
                 if (!isElementNameContained(property)) {
-                    index = properties.indexOf(selectedProperty);
-
-                    if (index != -1) {
-                        properties.set(index, property);
-                        index = -1;
-
-                    } else {
-                        properties.add(property);
-                    }
+                    properties.add(property);
 
                     PropertyPresenter.this.view.setProperties(properties);
-
                 } else {
                     PropertyPresenter.this.view.showErrorMessage();
                 }
+            }
+        };
+
+        this.editPropertyCallBack = new EditorAddressPropertyCallBack() {
+            @Override
+            public void onAddressPropertyChanged(@Nonnull Property property) {
+                int index = properties.indexOf(selectedProperty);
+
+                properties.set(index, property);
+
+                PropertyPresenter.this.view.setProperties(properties);
             }
         };
     }
@@ -84,6 +84,7 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -104,13 +105,13 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onAddButtonClicked() {
-        editPropertyPresenter.showDialog(null, callBack);
+        editPropertyPresenter.showDialog(null, addPropertyCallBack);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onEditButtonClicked() {
-        editPropertyPresenter.showDialog(selectedProperty, callBack);
+        editPropertyPresenter.showDialog(selectedProperty, editPropertyCallBack);
     }
 
     /** {@inheritDoc} */

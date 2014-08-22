@@ -111,7 +111,6 @@ public class EditorAddressPropertyPresenter implements EditorAddressPropertyView
                                                     nameSpacesCallBack,
                                                     local.headerValueExpression(),
                                                     selectedProperty.getExpression());
-
     }
 
     /**
@@ -139,4 +138,5 @@ public class EditorAddressPropertyPresenter implements EditorAddressPropertyView
 
         view.showWindow();
     }
+
 }

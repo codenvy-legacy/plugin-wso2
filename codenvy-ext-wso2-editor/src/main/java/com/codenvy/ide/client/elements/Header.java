@@ -132,7 +132,7 @@ public class Header extends AbstractShape {
     }
 
     /** @return value of header */
-    @Nullable
+    @Nonnull
     public String getValue() {
         return value;
     }
@@ -143,7 +143,7 @@ public class Header extends AbstractShape {
      * @param value
      *         value which need to set to element
      */
-    public void setValue(@Nullable String value) {
+    public void setValue(@Nonnull String value) {
         this.value = value;
     }
 
@@ -175,7 +175,7 @@ public class Header extends AbstractShape {
      * @param action
      *         value of action which need to set to element
      */
-    public void setAction(@Nullable HeaderAction action) {
+    public void setAction(@Nonnull HeaderAction action) {
         this.action = action;
     }
 
@@ -191,7 +191,7 @@ public class Header extends AbstractShape {
      * @param scope
      *         value fo scope which need to set to element
      */
-    public void setScope(@Nullable ScopeType scope) {
+    public void setScope(@Nonnull ScopeType scope) {
         this.scope = scope;
     }
 
@@ -207,7 +207,7 @@ public class Header extends AbstractShape {
      * @param valueType
      *         value of type which need to set to element
      */
-    public void setValueType(@Nullable HeaderValueType valueType) {
+    public void setValueType(@Nonnull HeaderValueType valueType) {
         this.valueType = valueType;
     }
 

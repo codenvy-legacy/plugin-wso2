@@ -492,6 +492,7 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.addressEndpoint.table.addresspropertyedit.scope")
     String addressPropertyEditScope();
+
     @Key("propertiespanel.endpoint.properties.title")
     String endpointPropertiesTitle();
 
@@ -500,4 +501,7 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.addressEndpoint.table.error")
     String endpointTableError();
+
+    @Key("propertiespanel.error.message")
+    String errorMessage();
 }

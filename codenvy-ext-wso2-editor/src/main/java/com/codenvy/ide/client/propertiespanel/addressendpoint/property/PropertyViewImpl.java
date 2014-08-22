@@ -57,6 +57,8 @@ public class PropertyViewImpl extends Window implements PropertyView {
     @UiField(provided = true)
     final WSO2EditorLocalizationConstant locale;
 
+    private final Info info;
+
     private ActionDelegate delegate;
 
     @Inject
@@ -65,6 +67,9 @@ public class PropertyViewImpl extends Window implements PropertyView {
 
         setTitle(locale.endpointPropertiesTitle());
         setWidget(ourUiBinder.createAndBindUi(this));
+
+        info = new Info(locale.endpointTableError());
+        info.setTitle(locale.errorMessage());
 
         initializeTable();
 
@@ -163,7 +168,6 @@ public class PropertyViewImpl extends Window implements PropertyView {
     /** {@inheritDoc} */
     @Override
     public void showErrorMessage() {
-        Info info = new Info(locale.endpointTableError());
         info.show();
     }
 
