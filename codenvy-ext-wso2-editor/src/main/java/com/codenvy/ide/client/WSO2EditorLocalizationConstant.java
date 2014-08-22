@@ -481,6 +481,23 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("propertiespanel.addressEndpoint.timeoutAction")
     String addressEndpointTimeoutAction();
 
+    @Key("propertiespanel.addressEndpoint.table.addresspropertyedit.name")
+    String addressPropertyEditName();
+
+    @Key("propertiespanel.addressEndpoint.table.addresspropertyedit.value")
+    String addressPropertyEditValue();
+
+    @Key("propertiespanel.addressEndpoint.table.addresspropertyedit.type")
+    String addressPropertyEditType();
+
+    @Key("propertiespanel.addressEndpoint.table.addresspropertyedit.scope")
+    String addressPropertyEditScope();
     @Key("propertiespanel.endpoint.properties.title")
     String endpointPropertiesTitle();
+
+    @Key("propertiespanel.addressEndpoint.table.title")
+    String editPropAdrrEndTableTitle();
+
+    @Key("propertiespanel.addressEndpoint.table.error")
+    String endpointTableError();
 }

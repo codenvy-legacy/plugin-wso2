@@ -34,8 +34,9 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.Header.HeaderAction.remove;
 import static com.codenvy.ide.client.elements.Header.HeaderAction.set;
+import static com.codenvy.ide.client.elements.Header.HeaderValueType.INLINE;
+import static com.codenvy.ide.client.elements.Header.HeaderValueType.LITERAL;
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.ValueType.LITERAL;
 
 /**
  * Class describes entity which presented as Header mediator.
@@ -55,13 +56,13 @@ public class Header extends AbstractShape {
 
     private static final List<String> PROPERTIES = java.util.Collections.emptyList();
 
-    private String action;
-    private String scope;
-    private String valueType;
-    private String headerName;
-    private String value;
-    private String expression;
-    private String inlineXml;
+    private HeaderAction    action;
+    private HeaderValueType valueType;
+    private ScopeType       scope;
+    private String          headerName;
+    private String          value;
+    private String          expression;
+    private String          inlineXml;
 
     private Array<NameSpace> headerNamespaces;
     private Array<NameSpace> expressionNamespaces;
@@ -73,9 +74,9 @@ public class Header extends AbstractShape {
         headerNamespaces = Collections.createArray();
         expressionNamespaces = Collections.createArray();
 
-        action = set.name();
-        scope = "default";
-        valueType = LITERAL.name();
+        action = set;
+        scope = ScopeType.Synapse;
+        valueType = LITERAL;
         value = "header_Value";
         headerName = "To";
         expression = "/default/expression";
@@ -164,7 +165,7 @@ public class Header extends AbstractShape {
 
     /** @return action of header */
     @Nonnull
-    public String getAction() {
+    public HeaderAction getAction() {
         return action;
     }
 
@@ -174,13 +175,13 @@ public class Header extends AbstractShape {
      * @param action
      *         value of action which need to set to element
      */
-    public void setAction(@Nullable String action) {
+    public void setAction(@Nullable HeaderAction action) {
         this.action = action;
     }
 
     /** @return scope of header */
-    @Nullable
-    public String getScope() {
+    @Nonnull
+    public ScopeType getScope() {
         return scope;
     }
 
@@ -190,13 +191,13 @@ public class Header extends AbstractShape {
      * @param scope
      *         value fo scope which need to set to element
      */
-    public void setScope(@Nullable String scope) {
+    public void setScope(@Nullable ScopeType scope) {
         this.scope = scope;
     }
 
     /** @return type of header */
     @Nonnull
-    public String getValueType() {
+    public HeaderValueType getValueType() {
         return valueType;
     }
 
@@ -206,7 +207,7 @@ public class Header extends AbstractShape {
      * @param valueType
      *         value of type which need to set to element
      */
-    public void setValueType(@Nullable String valueType) {
+    public void setValueType(@Nullable HeaderValueType valueType) {
         this.valueType = valueType;
     }
 
@@ -230,7 +231,7 @@ public class Header extends AbstractShape {
     @Nonnull
     @Override
     protected String serializeProperties() {
-        if (!valueType.equals(HeaderValueType.INLINE.name()) || inlineXml.isEmpty()) {
+        if (!valueType.equals(INLINE) || inlineXml.isEmpty()) {
             return "";
         }
 
@@ -263,16 +264,16 @@ public class Header extends AbstractShape {
 
         setDefaultAttributes(attributes);
 
-        if (action.equals(remove.name())) {
+        if (action.equals(remove)) {
             attributes.remove(VALUE);
             attributes.remove(EXPRESSION);
         } else {
             attributes.remove(ACTION);
         }
 
-        attributes.remove(valueType.equals(HeaderValueType.EXPRESSION.name()) ? VALUE : EXPRESSION);
+        attributes.remove(valueType.equals(HeaderValueType.EXPRESSION) ? VALUE : EXPRESSION);
 
-        switch (HeaderValueType.valueOf(valueType)) {
+        switch (valueType) {
             case INLINE:
                 attributes.remove(VALUE);
                 attributes.remove(NAME);
@@ -292,10 +293,10 @@ public class Header extends AbstractShape {
      */
     private void setDefaultAttributes(@Nonnull Map<String, String> attributes) {
         attributes.put(NAME, headerName);
-        attributes.put(SCOPE, scope);
+        attributes.put(SCOPE, scope.name());
         attributes.put(VALUE, value);
         attributes.put(EXPRESSION, expression);
-        attributes.put(ACTION, action);
+        attributes.put(ACTION, action.name());
     }
 
     /** {@inheritDoc} */
@@ -312,11 +313,11 @@ public class Header extends AbstractShape {
 
             switch (nodeName) {
                 case HeaderAction.ACTION:
-                    action = nodeValue;
+                    action = HeaderAction.valueOf(nodeValue);
                     break;
 
                 case ScopeType.SCOPE:
-                    scope = nodeValue;
+                    scope = ScopeType.valueOf(nodeValue);
                     break;
 
                 case VALUE:
@@ -325,7 +326,7 @@ public class Header extends AbstractShape {
 
                 case EXPRESSION:
                     expression = nodeValue;
-                    valueType = HeaderValueType.EXPRESSION.name();
+                    valueType = HeaderValueType.EXPRESSION;
                     break;
 
                 case NAME:
@@ -366,7 +367,7 @@ public class Header extends AbstractShape {
 
             inlineXml = item.replace(xmlns, "");
 
-            valueType = HeaderValueType.INLINE.name();
+            valueType = INLINE;
         }
     }
 

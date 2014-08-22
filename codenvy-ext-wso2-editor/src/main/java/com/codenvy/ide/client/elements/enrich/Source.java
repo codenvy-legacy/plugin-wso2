@@ -26,7 +26,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.enrich.Source.CloneSource.FALSE;
 import static com.codenvy.ide.client.elements.enrich.Source.InlineType.RegistryKey;
 import static com.codenvy.ide.client.elements.enrich.Source.InlineType.SourceXML;
 import static com.codenvy.ide.client.elements.enrich.Source.SourceType.custom;
@@ -44,7 +43,7 @@ public class Source {
     public static final String XPATH_ATTRIBUTE_NAME               = "xpath";
     public static final String PROPERTY_ATTRIBUTE_NAME            = "property";
 
-    private String           clone;
+    private boolean          clone;
     private SourceType       type;
     private InlineType       inlineType;
     private String           inlRegisterKey;
@@ -54,7 +53,7 @@ public class Source {
     private Array<NameSpace> nameSpaces;
 
     public Source() {
-        this.clone = FALSE.name().toLowerCase();
+        this.clone = false;
         this.type = custom;
         this.inlineType = SourceXML;
 
@@ -70,7 +69,7 @@ public class Source {
     private String serializeAttributes() {
         StringBuilder result = new StringBuilder();
 
-        if (clone.equalsIgnoreCase(CloneSource.TRUE.name())) {
+        if (clone) {
             result.append(CLONE_SOURCE_ATTRIBUTE_NAME).append("=\"").append(clone).append("\" ");
         }
 
@@ -152,7 +151,7 @@ public class Source {
 
             switch (nodeName) {
                 case CLONE_SOURCE_ATTRIBUTE_NAME:
-                    clone = nodeValue;
+                    clone = Boolean.valueOf(nodeValue);
                     break;
 
                 case SOURCE_TYPE_ATTRIBUTE_NAME:
@@ -211,8 +210,7 @@ public class Source {
     }
 
     /** @return source clone value of source */
-    @Nonnull
-    public String getClone() {
+    public boolean getClone() {
         return clone;
     }
 
@@ -222,7 +220,7 @@ public class Source {
      * @param clone
      *         value which need to set to element
      */
-    public void setClone(@Nonnull String clone) {
+    public void setClone(boolean clone) {
         this.clone = clone;
     }
 
@@ -348,11 +346,5 @@ public class Source {
         SourceXML, RegistryKey;
 
         public static final String INLINE_TYPE = "Inline type";
-    }
-
-    public enum CloneSource {
-        TRUE, FALSE;
-
-        public static final String TYPE_NAME = "Clone source";
     }
 }

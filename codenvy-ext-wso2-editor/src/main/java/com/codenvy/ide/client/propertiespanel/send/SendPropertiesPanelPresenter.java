@@ -94,7 +94,7 @@ public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send, 
 
         setDefaultPanelView();
 
-        if (skipSerialization) {
+        if (!skipSerialization) {
             view.setVisibleDynamicPanel(false);
             view.setVisibleStaticPanel(false);
         } else {

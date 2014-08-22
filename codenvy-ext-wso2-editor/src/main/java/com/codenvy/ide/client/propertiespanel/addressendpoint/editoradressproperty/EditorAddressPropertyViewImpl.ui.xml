@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<!--
+  Copyright 2014 Codenvy, S.A.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
+    <ui:with field='locale' type='com.codenvy.ide.client.WSO2EditorLocalizationConstant'/>
+
+    <ui:style>
+        .labelStyle {
+            margin-top: 2px;
+            float: left;
+        }
+
+        .fieldStyle {
+            margin-left: 12px;
+            float: left;
+            width: 200px;
+        }
+
+        .literalListBoxStyle {
+            margin-left: 16px;
+            width: 206px;
+            float: left;
+        }
+
+        .scopeListBoxStyle {
+            margin-left: 9px;
+            width: 206px;
+            float: left;
+        }
+
+        .panelStyle {
+            height: 30px;
+            margin-left: 6px;
+            margin-top: 6px;
+            margin-bottom: 15px;
+        }
+
+        .buttonStyle {
+            float: left;
+            margin-left: 3px;
+        }
+
+    </ui:style>
+
+    <g:FlowPanel height="200px" width="400px">
+
+        <g:FlowPanel addStyleNames="{style.panelStyle}">
+            <g:Label text="{locale.addressPropertyEditName}" addStyleNames="{style.labelStyle}"/>
+            <g:TextBox ui:field="name" addStyleNames="{style.fieldStyle}"/>
+        </g:FlowPanel>
+
+        <g:FlowPanel addStyleNames="{style.panelStyle}">
+            <g:Label text="{locale.addressPropertyEditValue}" addStyleNames="{style.labelStyle}"/>
+            <g:TextBox ui:field="value" addStyleNames="{style.fieldStyle}"/>
+        </g:FlowPanel>
+
+        <g:FlowPanel addStyleNames="{style.panelStyle}">
+            <g:Label text="{locale.addressPropertyEditType}" addStyleNames="{style.labelStyle}"/>
+            <g:ListBox ui:field="type" addStyleNames="{style.literalListBoxStyle}"/>
+            <g:Button ui:field="addNameSpaceButton" text="..." addStyleNames="{style.buttonStyle}"/>
+        </g:FlowPanel>
+
+        <g:FlowPanel addStyleNames="{style.panelStyle}">
+            <g:Label text="{locale.addressPropertyEditScope}" addStyleNames="{style.labelStyle}"/>
+            <g:ListBox ui:field="scope" addStyleNames="{style.scopeListBoxStyle}"/>
+        </g:FlowPanel>
+
+    </g:FlowPanel>
+
+</ui:UiBinder>

@@ -16,10 +16,11 @@
 package com.codenvy.ide.client.propertiespanel.addressendpoint.property;
 
 import com.codenvy.ide.client.elements.addressendpoint.Property;
+import com.codenvy.ide.client.propertiespanel.addressendpoint.editoradressproperty.EditorAddressPropertyCallBack;
+import com.codenvy.ide.client.propertiespanel.addressendpoint.editoradressproperty.EditorAddressPropertyPresenter;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -30,19 +31,60 @@ import javax.annotation.Nonnull;
  */
 public class PropertyPresenter implements PropertyView.ActionDelegate {
 
-    private final PropertyView       view;
-    private final Provider<Property> propertyProvider;
+    private final PropertyView                   view;
+    private final EditorAddressPropertyPresenter editPropertyPresenter;
+    private final EditorAddressPropertyCallBack  callBack;
 
     private Property                  selectedProperty;
     private PropertiesChangedCallback callback;
     private Array<Property>           properties;
+    private int                       index;
 
     @Inject
-    public PropertyPresenter(PropertyView view, Provider<Property> propertyProvider) {
+    public PropertyPresenter(PropertyView view, EditorAddressPropertyPresenter editPropertyPresenter) {
         this.view = view;
         this.view.setDelegate(this);
 
-        this.propertyProvider = propertyProvider;
+        this.editPropertyPresenter = editPropertyPresenter;
+
+        this.index = -1;
+
+        this.callBack = new EditorAddressPropertyCallBack() {
+            @Override
+            public void onAddressPropertyChanged(@Nonnull Property property) {
+                if (!isElementNameContained(property)) {
+                    index = properties.indexOf(selectedProperty);
+
+                    if (index != -1) {
+                        properties.set(index, property);
+                        index = -1;
+
+                    } else {
+                        properties.add(property);
+                    }
+
+                    PropertyPresenter.this.view.setProperties(properties);
+
+                } else {
+                    PropertyPresenter.this.view.showErrorMessage();
+                }
+            }
+        };
+    }
+
+    /**
+     * Returns true if list of properties contains a property with name that already exists.
+     *
+     * @param property
+     *         value of property which need to check
+     */
+    private boolean isElementNameContained(@Nonnull Property property) {
+        for (Property prop : properties.asIterable()) {
+            if (property.getName().equals(prop.getName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** {@inheritDoc} */
@@ -62,16 +104,13 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onAddButtonClicked() {
-        // TODO show dialog
-        properties.add(propertyProvider.get());
-
-        view.setProperties(properties);
+        editPropertyPresenter.showDialog(null, callBack);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onEditButtonClicked() {
-        // TODO show dialog
+        editPropertyPresenter.showDialog(selectedProperty, callBack);
     }
 
     /** {@inheritDoc} */

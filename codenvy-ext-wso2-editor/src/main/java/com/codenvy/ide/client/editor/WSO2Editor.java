@@ -97,7 +97,6 @@ import static com.codenvy.ide.client.elements.Property.DataType.LONG;
 import static com.codenvy.ide.client.elements.Property.DataType.OM;
 import static com.codenvy.ide.client.elements.Property.DataType.SHORT;
 import static com.codenvy.ide.client.elements.Property.DataType.STRING;
-import static com.codenvy.ide.client.elements.Property.Scope;
 import static com.codenvy.ide.client.elements.Property.Scope.AXIS2;
 import static com.codenvy.ide.client.elements.Property.Scope.AXIS2_CLIENT;
 import static com.codenvy.ide.client.elements.Property.Scope.OPERATION;
@@ -288,11 +287,11 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        SHORT.name(),
                                                                        OM.name()));
 
-        propertyTypeManager.register(Scope.TYPE_NAME, Arrays.asList(SYNAPSE.getValue(),
-                                                                    TRANSPORT.getValue(),
-                                                                    AXIS2.getValue(),
-                                                                    AXIS2_CLIENT.getValue(),
-                                                                    OPERATION.getValue()));
+        propertyTypeManager.register(Property.Scope.TYPE_NAME, Arrays.asList(SYNAPSE.getValue(),
+                                                                             TRANSPORT.getValue(),
+                                                                             AXIS2.getValue(),
+                                                                             AXIS2_CLIENT.getValue(),
+                                                                             OPERATION.getValue()));
 
         propertyTypeManager.register(BOOLEAN_TYPE_NAME, Arrays.asList(Boolean.FALSE.toString(), Boolean.TRUE.toString()));
 

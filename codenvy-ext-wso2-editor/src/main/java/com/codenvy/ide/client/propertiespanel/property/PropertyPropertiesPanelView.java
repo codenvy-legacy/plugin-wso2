@@ -117,7 +117,7 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
     /**
      * Set value type into place on view.
      *
-     * @param valueType
+     * @param valueTypes
      *         value of type.
      */
     public abstract void setValueTypes(@NotNull List<String> valueTypes);
@@ -129,7 +129,7 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
     /**
      * Set property data type into place on view.
      *
-     * @param propertyDataType
+     * @param propertyDataTypes
      *         value of data type.
      */
     public abstract void setPropertyDataTypes(@NotNull List<String> propertyDataTypes);

@@ -18,8 +18,8 @@ package com.codenvy.ide.client.propertiespanel.enrich;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.enrich.Enrich;
-import com.codenvy.ide.client.elements.enrich.Source;
 import com.codenvy.ide.client.elements.enrich.Target;
+import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.inline.ChangeInlineFormatCallBack;
 import com.codenvy.ide.client.propertiespanel.inline.InlineConfigurationPresenter;
@@ -27,7 +27,6 @@ import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter
 import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.resourcekeyeditor.ChangeResourceKeyCallBack;
 import com.codenvy.ide.client.propertiespanel.resourcekeyeditor.ResourceKeyEditorPresenter;
-import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -35,8 +34,11 @@ import com.google.inject.Inject;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static com.codenvy.ide.client.editor.WSO2Editor.BOOLEAN_TYPE_NAME;
 import static com.codenvy.ide.client.elements.enrich.Source.InlineType;
+import static com.codenvy.ide.client.elements.enrich.Source.InlineType.SourceXML;
 import static com.codenvy.ide.client.elements.enrich.Source.SourceType;
+import static com.codenvy.ide.client.elements.enrich.Source.SourceType.custom;
 import static com.codenvy.ide.client.elements.enrich.Target.TargetType;
 
 /**
@@ -122,7 +124,7 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
     /** {@inheritDoc} */
     @Override
     public void onCloneSourceChanged() {
-        element.getSource().setClone(view.getCloneSource());
+        element.getSource().setClone(Boolean.valueOf(view.getCloneSource()));
 
         notifyListeners();
     }
@@ -224,7 +226,7 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
         view.setVisibleSrcXPathPanel(false);
         view.setVisibleSrcPropertyPanel(false);
 
-        if (inlineType.equals(InlineType.SourceXML)) {
+        if (SourceXML.equals(inlineType)) {
             view.setVisibleSrcXMLPanel(true);
             view.setVisibleSrcInlineRegisterPanel(false);
         } else {
@@ -332,8 +334,8 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setCloneSources(propertyTypeManager.getValuesByName(Source.CloneSource.TYPE_NAME));
-        view.selectCloneSource(element.getSource().getClone());
+        view.setCloneSources(propertyTypeManager.getValuesByName(BOOLEAN_TYPE_NAME));
+        view.selectCloneSource(String.valueOf(element.getSource().getClone()));
 
         view.setSourceType(propertyTypeManager.getValuesByName(SourceType.TYPE_NAME));
         view.selectSourceType(element.getSource().getType().name());
@@ -355,15 +357,15 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
         view.setSrcXml(element.getSource().getSourceXML());
         view.setTargetProperty(element.getTarget().getProperty());
 
-        if (!SourceType.custom.equals(element.getSource().getType())) {
+        if (!custom.equals(element.getSource().getType())) {
             applySourceType();
         }
 
-        if (!InlineType.SourceXML.equals(element.getSource().getInlineType())) {
+        if (!SourceXML.equals(element.getSource().getInlineType())) {
             applySourceInlineType();
         }
 
-        if (!TargetType.custom.equals(element.getTarget().getType())) {
+        if (!custom.equals(element.getTarget().getType())) {
             applyTargetType();
         }
     }

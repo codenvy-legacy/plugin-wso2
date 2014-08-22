@@ -21,6 +21,7 @@ import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.ValueType;
 import com.codenvy.ide.client.elements.addressendpoint.Property;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -54,7 +55,7 @@ public class PropertyViewImpl extends Window implements PropertyView {
     CellTable<Property> properties;
 
     @UiField(provided = true)
-    WSO2EditorLocalizationConstant locale;
+    final WSO2EditorLocalizationConstant locale;
 
     private ActionDelegate delegate;
 
@@ -133,11 +134,10 @@ public class PropertyViewImpl extends Window implements PropertyView {
         properties.addColumn(type, locale.columnType());
         properties.addColumn(scope, locale.columnScope());
 
-        // TODO size
-        properties.setColumnWidth(name, 110, Style.Unit.PX);
-        properties.setColumnWidth(value, 110, Style.Unit.PX);
-        properties.setColumnWidth(type, 110, Style.Unit.PX);
-        properties.setColumnWidth(scope, 110, Style.Unit.PX);
+        properties.setColumnWidth(name, 170, Style.Unit.PX);
+        properties.setColumnWidth(value, 170, Style.Unit.PX);
+        properties.setColumnWidth(type, 60, Style.Unit.PX);
+        properties.setColumnWidth(scope, 60, Style.Unit.PX);
 
         properties.setLoadingIndicator(null);
     }
@@ -158,6 +158,13 @@ public class PropertyViewImpl extends Window implements PropertyView {
         }
 
         this.properties.setRowData(list);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void showErrorMessage() {
+        Info info = new Info(locale.endpointTableError());
+        info.show();
     }
 
     /** {@inheritDoc} */

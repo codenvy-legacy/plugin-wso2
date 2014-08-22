@@ -45,6 +45,9 @@ public interface PropertyView extends View<PropertyView.ActionDelegate> {
     /** Hides the view. */
     void hideDialog();
 
+    /** Shows message which contain info about error. */
+    void showErrorMessage();
+
     interface ActionDelegate {
 
         /** Performs any actions appropriate in response to the user having pressed the Ok button. */

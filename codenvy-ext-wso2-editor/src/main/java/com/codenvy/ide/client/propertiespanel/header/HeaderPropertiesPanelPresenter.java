@@ -18,12 +18,12 @@ package com.codenvy.ide.client.propertiespanel.header;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.Header;
 import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.inline.ChangeInlineFormatCallBack;
 import com.codenvy.ide.client.propertiespanel.inline.InlineConfigurationPresenter;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
-import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -32,7 +32,12 @@ import com.google.inject.Inject;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static com.codenvy.ide.client.elements.Header.HeaderAction;
 import static com.codenvy.ide.client.elements.Header.HeaderAction.remove;
+import static com.codenvy.ide.client.elements.Header.HeaderAction.set;
+import static com.codenvy.ide.client.elements.Header.HeaderValueType;
+import static com.codenvy.ide.client.elements.Header.HeaderValueType.LITERAL;
+import static com.codenvy.ide.client.elements.Header.ScopeType;
 
 /**
  * @author Andrey Plotnikov
@@ -105,7 +110,7 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
     /** {@inheritDoc} */
     @Override
     public void onScopeChanged() {
-        element.setScope(view.getScope());
+        element.setScope(ScopeType.valueOf(view.getScope()));
 
         notifyListeners();
     }
@@ -128,7 +133,7 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
     /** {@inheritDoc} */
     @Override
     public void onActionChanged() {
-        String action = view.getAction();
+        HeaderAction action = HeaderAction.valueOf(view.getAction());
         element.setAction(action);
 
         setDefaultPanelView();
@@ -136,7 +141,7 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
         view.setVisibleValueExpressionPanel(false);
         view.setVisibleValueInlinePanel(false);
 
-        if (remove.name().equals(action)) {
+        if (remove.equals(action)) {
             view.setVisibleValueExpressionPanel(false);
             view.setVisibleValueInlinePanel(false);
             view.setVisibleValueTypePanel(false);
@@ -149,12 +154,12 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
     /** {@inheritDoc} */
     @Override
     public void onTypeChanged() {
-        String type = view.getValueType();
+        HeaderValueType type = HeaderValueType.valueOf(view.getValueType());
         element.setValueType(type);
 
         setDefaultPanelView();
 
-        switch (Header.HeaderValueType.valueOf(type)) {
+        switch (type) {
             case EXPRESSION:
                 view.setVisibleValueLiteralPanel(false);
                 view.setVisibleValueInlinePanel(false);
@@ -219,25 +224,25 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setAction(propertyTypeManager.getValuesByName(Header.HeaderAction.TYPE_NAME));
-        view.selectHeaderAction(element.getAction());
+        view.setAction(propertyTypeManager.getValuesByName(HeaderAction.TYPE_NAME));
+        view.selectHeaderAction(element.getAction().name());
 
-        view.setScope(propertyTypeManager.getValuesByName(Header.ScopeType.TYPE_NAME));
-        view.selectScope(element.getScope());
+        view.setScope(propertyTypeManager.getValuesByName(ScopeType.TYPE_NAME));
+        view.selectScope(element.getScope().name());
 
-        view.setValueTypes(propertyTypeManager.getValuesByName(Header.HeaderValueType.TYPE_NAME));
-        view.selectValueType(element.getValueType());
+        view.setValueTypes(propertyTypeManager.getValuesByName(HeaderValueType.TYPE_NAME));
+        view.selectValueType(element.getValueType().name());
 
         view.setValue(element.getValue());
         view.setHeaderName(element.getHeaderName());
         view.setExpression(element.getExpression());
         view.setInlineXML(element.getInlineXml());
 
-        if (!element.getValueType().equals(Header.HeaderValueType.LITERAL.name())) {
+        if (!LITERAL.equals(element.getValueType())) {
             onTypeChanged();
         }
 
-        if (!element.getAction().equals(Header.HeaderAction.set.name())) {
+        if (!set.equals(element.getAction())) {
             onActionChanged();
         }
     }

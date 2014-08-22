@@ -138,7 +138,7 @@ public class Property {
     public String serialize() {
         String startTag = '<' + SERIALIZE_NAME + ' ';
         String nameAttr = NAME_ATTRIBUTE + "=\"" + name + "\" ";
-        String scope = (DEFAULT.equals(this.scope) ? "" : ' ' + SCOPE_ATTRIBUTE + "=\"" + this.scope.name() + '"');
+        String scope = (DEFAULT.equals(this.scope) ? "" : ' ' + SCOPE_ATTRIBUTE + "=\"" + this.scope.getValue() + '"');
 
         if (LITERAL.equals(type)) {
             return startTag + nameAttr +
@@ -188,7 +188,7 @@ public class Property {
                     break;
 
                 case SCOPE_ATTRIBUTE:
-                    scope = Scope.valueOf(nodeValue);
+                    scope = Scope.getItemByValue(nodeValue);
                     break;
 
                 default:
@@ -204,7 +204,7 @@ public class Property {
     }
 
     public enum Scope {
-        DEFAULT("default"), TRANSPORT("transport"), AXIS2("axis2"), AXIS2_CLIENT("axis2-client");
+        DEFAULT("default"), TRANSPORT("transport"), AXIS2("axis2"), AXIS2_CLIENT("axis2_client");
 
         public static final String TYPE_NAME = "EndpointScopeType";
 
@@ -217,6 +217,24 @@ public class Property {
         @Nonnull
         public String getValue() {
             return value;
+        }
+
+        @Nonnull
+        public static Scope getItemByValue(String value) {
+            switch (value) {
+                case "transport":
+                    return TRANSPORT;
+
+                case "axis2":
+                    return AXIS2;
+
+                case "axis2_client":
+                    return AXIS2_CLIENT;
+
+                default:
+                case "default":
+                    return DEFAULT;
+            }
         }
     }
 
