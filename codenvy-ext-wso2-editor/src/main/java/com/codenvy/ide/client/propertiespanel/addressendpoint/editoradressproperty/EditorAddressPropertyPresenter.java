@@ -75,8 +75,6 @@ public class EditorAddressPropertyPresenter implements EditorAddressPropertyView
         selectedProperty.setType(ValueType.valueOf(view.getType()));
 
         callBack.onAddressPropertyChanged(selectedProperty);
-
-        view.hideWindow();
     }
 
     /** {@inheritDoc} */
@@ -111,6 +109,11 @@ public class EditorAddressPropertyPresenter implements EditorAddressPropertyView
                                                     nameSpacesCallBack,
                                                     local.headerValueExpression(),
                                                     selectedProperty.getExpression());
+    }
+
+    /** Hides dialog window when changing of property are success. */
+    public void hideDialog() {
+        view.hideWindow();
     }
 
     /**

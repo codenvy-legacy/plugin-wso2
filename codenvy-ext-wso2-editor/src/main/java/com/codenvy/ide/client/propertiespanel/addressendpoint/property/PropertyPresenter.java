@@ -28,46 +28,56 @@ import javax.annotation.Nonnull;
  * The presenter that provides a business logic of editing of 'Properties' property of 'Address' endpoint.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class PropertyPresenter implements PropertyView.ActionDelegate {
 
     private final PropertyView                   view;
     private final EditorAddressPropertyPresenter editPropertyPresenter;
-    private final EditorAddressPropertyCallBack  addPropertyCallBack;
-    private final EditorAddressPropertyCallBack  editPropertyCallBack;
+    private final EditorAddressPropertyCallBack  addCallBack;
+    private final EditorAddressPropertyCallBack  editCallBack;
 
     private Property                  selectedProperty;
     private PropertiesChangedCallback callback;
     private Array<Property>           properties;
 
     @Inject
-    public PropertyPresenter(PropertyView view, EditorAddressPropertyPresenter editPropertyPresenter) {
+    public PropertyPresenter(PropertyView view, final EditorAddressPropertyPresenter editPropertyPresenter) {
         this.view = view;
         this.view.setDelegate(this);
 
         this.editPropertyPresenter = editPropertyPresenter;
 
-        this.addPropertyCallBack = new EditorAddressPropertyCallBack() {
+        this.addCallBack = new EditorAddressPropertyCallBack() {
             @Override
             public void onAddressPropertyChanged(@Nonnull Property property) {
                 if (!isElementNameContained(property)) {
                     properties.add(property);
 
                     PropertyPresenter.this.view.setProperties(properties);
+
+                    editPropertyPresenter.hideDialog();
                 } else {
                     PropertyPresenter.this.view.showErrorMessage();
                 }
             }
         };
 
-        this.editPropertyCallBack = new EditorAddressPropertyCallBack() {
+        this.editCallBack = new EditorAddressPropertyCallBack() {
             @Override
             public void onAddressPropertyChanged(@Nonnull Property property) {
                 int index = properties.indexOf(selectedProperty);
 
-                properties.set(index, property);
+                if (property.getName().equals(selectedProperty.getName()) || !isElementNameContained(property)) {
+                    properties.set(index, property);
 
-                PropertyPresenter.this.view.setProperties(properties);
+                    PropertyPresenter.this.view.setProperties(properties);
+
+                    editPropertyPresenter.hideDialog();
+
+                } else {
+                    PropertyPresenter.this.view.showErrorMessage();
+                }
             }
         };
     }
@@ -105,13 +115,13 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onAddButtonClicked() {
-        editPropertyPresenter.showDialog(null, addPropertyCallBack);
+        editPropertyPresenter.showDialog(null, addCallBack);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onEditButtonClicked() {
-        editPropertyPresenter.showDialog(selectedProperty, editPropertyCallBack);
+        editPropertyPresenter.showDialog(selectedProperty, editCallBack);
     }
 
     /** {@inheritDoc} */
