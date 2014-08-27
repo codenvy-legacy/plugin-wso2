@@ -16,12 +16,26 @@
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
 import com.codenvy.ide.client.editor.WSO2Editor;
+import com.codenvy.ide.client.editor.WSO2EditorView;
+
+import javax.annotation.Nonnull;
 
 /**
+ * The factory for creating instances of {@link WSO2EditorView}.
+ *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public interface EditorViewFactory {
 
-    GraphicEditorView getEditorView(WSO2Editor editor);
+    /**
+     * Create an instance of {@link WSO2EditorView} with a given editor.
+     *
+     * @param editor
+     *         editor that need to be used with a created autocompleter
+     * @return an instance of {@link WSO2EditorView}
+     */
+    @Nonnull
+    GraphicEditorView getEditorView(@Nonnull WSO2Editor editor);
 
 }

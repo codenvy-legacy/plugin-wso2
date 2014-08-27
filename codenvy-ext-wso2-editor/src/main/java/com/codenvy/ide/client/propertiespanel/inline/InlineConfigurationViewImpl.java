@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
 
 
 /**
- * The implementation of {@link InlineConfigurationView}
+ * Provides a graphical representation of dialog window for editing inline content of element.
  *
  * @author Valeriy Svydenko
  */

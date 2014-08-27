@@ -21,6 +21,8 @@ import com.codenvy.ide.ext.wso2.client.editor.ESBConfEditor;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import javax.annotation.Nonnull;
+
 
 /**
  * Editor Provider for WSO2 ESB configuration files, which are XML files.
@@ -37,6 +39,7 @@ public class XmlEditorProvider implements EditorProvider {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public EditorPartPresenter getEditor() {
         return esbConfEditor.get();

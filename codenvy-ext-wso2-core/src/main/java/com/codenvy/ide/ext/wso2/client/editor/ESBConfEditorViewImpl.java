@@ -31,12 +31,13 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The implementation of {@link ESBConfEditorView}.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorView {
 
@@ -102,19 +103,19 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
 
     /** {@inheritDoc} */
     @Override
-    public void showTextEditor(@NotNull CodenvyTextEditor textEditor) {
+    public void showTextEditor(@Nonnull CodenvyTextEditor textEditor) {
         textEditor.go(mainPanel);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void showGraphicalEditor(@NotNull AbstractEditorPresenter graphicalEditor) {
+    public void showGraphicalEditor(@Nonnull AbstractEditorPresenter graphicalEditor) {
         graphicalEditor.go(mainPanel);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void showEditors(@NotNull AbstractEditorPresenter graphicalEditor, @NotNull CodenvyTextEditor textEditor) {
+    public void showEditors(@Nonnull AbstractEditorPresenter graphicalEditor, @Nonnull CodenvyTextEditor textEditor) {
         graphicalEditor.go(graphicalEditorPanel);
         textEditor.go(textEditorPanel);
 

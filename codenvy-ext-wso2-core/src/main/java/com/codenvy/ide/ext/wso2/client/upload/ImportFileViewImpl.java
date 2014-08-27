@@ -36,7 +36,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The implementation of {@link ImportFileView}.
@@ -99,6 +99,7 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getUrl() {
         return url.getText();
@@ -106,7 +107,7 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
 
     /** {@inheritDoc} */
     @Override
-    public void setUrl(@NotNull String url) {
+    public void setUrl(@Nonnull String url) {
         this.url.setText(url);
     }
 
@@ -134,6 +135,7 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getFileName() {
         String fileName = file.getFilename();
@@ -145,7 +147,7 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
     }
 
     @Override
-    public void setMessage(@NotNull String message) {
+    public void setMessage(@Nonnull String message) {
         this.message.setHTML(message);
     }
 
@@ -163,7 +165,7 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
 
     /** {@inheritDoc} */
     @Override
-    public void setAction(@NotNull String url) {
+    public void setAction(@Nonnull String url) {
         uploadForm.setAction(url);
     }
 

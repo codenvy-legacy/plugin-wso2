@@ -44,6 +44,7 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class Switch extends AbstractShape {
     public static final String ELEMENT_NAME       = "Switch";
@@ -137,11 +138,18 @@ public class Switch extends AbstractShape {
         return branches;
     }
 
+    /** @return source xpath of switch mediator */
     @Nullable
     public String getSourceXpath() {
         return sourceXpath;
     }
 
+    /**
+     * Sets source xpath parameter to switch mediator.
+     *
+     * @param sourceXpath
+     *         value which need to set to element
+     */
     public void setSourceXpath(@Nullable String sourceXpath) {
         this.sourceXpath = sourceXpath;
     }

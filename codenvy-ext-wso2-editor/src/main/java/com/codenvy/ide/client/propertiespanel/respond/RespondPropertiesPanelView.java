@@ -18,20 +18,35 @@ package com.codenvy.ide.client.propertiespanel.respond;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.inject.ImplementedBy;
 
+import javax.annotation.Nullable;
+
 /**
+ * The abstract view's representation of 'Respond' mediator properties panel. It provides an ability to show all available properties of
+ * the mediator and edit it.
+ *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 @ImplementedBy(RespondPropertiesPanelViewImpl.class)
 public abstract class RespondPropertiesPanelView extends AbstractView<RespondPropertiesPanelView.ActionDelegate> {
 
     public interface ActionDelegate extends AbstractView.ActionDelegate {
 
+        /** Performs some actions in response to user's changing description field. */
         void onDescriptionChanged();
 
     }
 
+    /** @return description value from special view's place */
+    @Nullable
     public abstract String getDescription();
 
-    public abstract void setDescription(String description);
+    /**
+     * Sets description value to special place on view.
+     *
+     * @param description
+     *         description value which need to set to special place on view
+     */
+    public abstract void setDescription(@Nullable String description);
 
 }

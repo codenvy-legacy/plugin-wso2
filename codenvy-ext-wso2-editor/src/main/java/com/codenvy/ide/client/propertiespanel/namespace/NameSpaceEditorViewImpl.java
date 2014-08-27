@@ -43,6 +43,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Provides a graphical representation of dialog window for editing name spaces of property.
+ *
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
  */

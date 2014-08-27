@@ -34,6 +34,8 @@ import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import javax.annotation.Nonnull;
+
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 import static com.codenvy.ide.security.oauth.OAuthStatus.LOGGED_IN;
 
@@ -95,7 +97,7 @@ public class LoginAction extends Action implements OAuthCallback {
         }
     }
 
-    private void showPopUp(User user) {
+    private void showPopUp(@Nonnull User user) {
         String authUrl = restContext + "/oauth/authenticate?oauth_provider=" + WSO2_VENDOR_NAME + "&userId=" + user.getId() +
                          "&redirect_after_login=" + Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/ide/" +
                          Config.getWorkspaceName();

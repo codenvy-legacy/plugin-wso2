@@ -156,6 +156,12 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
 
     public interface PropertiesChangedCallback {
 
+        /**
+         * Performs some actions when properties was changed.
+         *
+         * @param properties
+         *         changed list of properties
+         */
         void onPropertiesChanged(@Nonnull Array<Property> properties);
 
     }

@@ -18,10 +18,10 @@ package com.codenvy.ide.client.propertiespanel.filter;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.Filter;
 import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
-import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -34,6 +34,7 @@ import javax.annotation.Nullable;
  * of 'Filter' mediator.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filter, FilterPropertiesPanelView>
         implements FilterPropertiesPanelView.ActionDelegate {
@@ -86,6 +87,7 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
         notifyListeners();
     }
 
+    /** Modifies the view of the property panel depending on the condition type of filter element. */
     private void redesignViewToConditionType() {
         Filter.ConditionType conditionType = Filter.ConditionType.valueOf(view.getConditionType());
 

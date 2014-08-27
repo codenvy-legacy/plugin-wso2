@@ -23,6 +23,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
+ * The abstract view's representation of 'Send' mediator properties panel. It provides an ability to show all available properties of
+ * the mediator and edit it.
+ *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */

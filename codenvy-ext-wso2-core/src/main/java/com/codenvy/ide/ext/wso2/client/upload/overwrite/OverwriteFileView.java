@@ -18,12 +18,13 @@ package com.codenvy.ide.ext.wso2.client.upload.overwrite;
 import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The view of {@link com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter}.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 
 @ImplementedBy(OverwriteFileViewImpl.class)
@@ -43,8 +44,8 @@ public interface OverwriteFileView extends View<OverwriteFileView.ActionDelegate
 
     }
 
-    /** @return fileName */
-    @NotNull
+    /** @return value of fileName from special view's place */
+    @Nonnull
     String getFileName();
 
     /**
@@ -52,7 +53,7 @@ public interface OverwriteFileView extends View<OverwriteFileView.ActionDelegate
      *
      * @param fileName
      */
-    void setFileName(@NotNull String fileName);
+    void setFileName(@Nonnull String fileName);
 
     /**
      * Change the enable state of the rename button.
@@ -63,12 +64,12 @@ public interface OverwriteFileView extends View<OverwriteFileView.ActionDelegate
     void setEnabledRenameButton(boolean enabled);
 
     /**
-     * Set message
+     * Sets value of message to special place on view
      *
      * @param message
-     *         the message
+     *         the message which need to set
      */
-    void setMessage(@NotNull String message);
+    void setMessage(@Nonnull String message);
 
     /** Close dialog. */
     void close();

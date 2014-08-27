@@ -22,12 +22,13 @@ import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The utility class that provides an ability to format text to readable string XML format.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class ContentFormatter {
 
@@ -40,13 +41,19 @@ public class ContentFormatter {
      *         node that need to be formatted
      * @return node in xml format with readable state
      */
-    @NotNull
-    public static String formatXML(@NotNull String inputText) {
+    @Nonnull
+    public static String formatXML(@Nonnull String inputText) {
         return parseXMLNode(XMLParser.parse(inputText).getDocumentElement(), 0);
     }
 
-    @NotNull
-    public static String trimXML(@NotNull String xmlContent) {
+    /**
+     * Returns xml content which consists of rows which doesn't contains spaces.
+     *
+     * @param xmlContent
+     *         content that must be treated
+     */
+    @Nonnull
+    public static String trimXML(@Nonnull String xmlContent) {
         StringBuilder trimXML = new StringBuilder();
 
         Array<String> rows = StringUtils.split(xmlContent, "\n");
@@ -66,8 +73,8 @@ public class ContentFormatter {
      *         depth of node in xml
      * @return node in text format
      */
-    @NotNull
-    private static String parseXMLNode(@NotNull Node node, int depth) {
+    @Nonnull
+    private static String parseXMLNode(@Nonnull Node node, int depth) {
         StringBuilder outputXml = new StringBuilder();
 
         if (depth > 0) {
@@ -94,7 +101,7 @@ public class ContentFormatter {
      *         how many tabs need to be added
      * @return tab for a tag
      */
-    @NotNull
+    @Nonnull
     private static String createTab(int depth) {
         StringBuilder tabs = new StringBuilder();
 
@@ -112,8 +119,8 @@ public class ContentFormatter {
      *         attributes that need to be formatted
      * @return node's attributes in text format
      */
-    @NotNull
-    private static String transformAttributes(@NotNull NamedNodeMap attributes) {
+    @Nonnull
+    private static String transformAttributes(@Nonnull NamedNodeMap attributes) {
         StringBuilder text = new StringBuilder();
 
         for (int i = 0; i < attributes.getLength(); i++) {
@@ -133,8 +140,8 @@ public class ContentFormatter {
      *         depth of parent node in xml
      * @return children nodes in text format
      */
-    @NotNull
-    private static String transformChildrenNodes(@NotNull Node node, int depth) {
+    @Nonnull
+    private static String transformChildrenNodes(@Nonnull Node node, int depth) {
         StringBuilder text = new StringBuilder();
         NodeList nodeList = node.getChildNodes();
 
@@ -160,7 +167,7 @@ public class ContentFormatter {
      *         node that need to be checked
      * @return <code>true</code> if a node is the text node, and <code>false</code> otherwise
      */
-    private static boolean isTextNode(@NotNull Node node) {
+    private static boolean isTextNode(@Nonnull Node node) {
         return node.getNodeName().equals("#text");
     }
 
@@ -171,7 +178,7 @@ public class ContentFormatter {
      *         node that need to be checked
      * @return <code>true</code> if a node has a text child node, and <code>false</code> otherwise
      */
-    private static boolean hasTextChildNode(@NotNull Node node) {
+    private static boolean hasTextChildNode(@Nonnull Node node) {
         if (node.hasChildNodes()) {
             Node child = node.getChildNodes().item(0);
             return isTextNode(child);

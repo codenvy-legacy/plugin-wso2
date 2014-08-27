@@ -33,6 +33,9 @@ import javax.annotation.Nonnull;
 import static com.codenvy.ide.client.editor.WSO2Editor.BOOLEAN_TYPE_NAME;
 
 /**
+ * The presenter that provides a business logic of 'Send' mediator properties panel. It provides an ability to work with all properties
+ * of 'Send' mediator.
+ *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */

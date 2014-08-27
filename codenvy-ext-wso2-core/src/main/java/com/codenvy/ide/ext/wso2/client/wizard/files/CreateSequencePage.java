@@ -26,7 +26,8 @@ import com.codenvy.ide.ext.wso2.client.wizard.files.view.CreateResourceView;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.SEQUENCE_FOLDER_NAME;
 
@@ -66,6 +67,7 @@ public class CreateSequencePage extends AbstractCreateResourcePage {
     }
 
     /** {@inheritDoc} */
+    @Nullable
     @Override
     public String getNotice() {
         if (view.getResourceName().isEmpty()) {
@@ -77,7 +79,7 @@ public class CreateSequencePage extends AbstractCreateResourcePage {
 
     /** {@inheritDoc} */
     @Override
-    public void commit(@NotNull CommitCallback callback) {
+    public void commit(@Nonnull CommitCallback callback) {
         String sequenceTemplate = resources.sequenceTemplate().getText();
         content = sequenceTemplate.replaceAll("@name", view.getResourceName());
 

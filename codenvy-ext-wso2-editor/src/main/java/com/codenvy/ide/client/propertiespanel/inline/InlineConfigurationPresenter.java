@@ -24,7 +24,7 @@ import com.google.inject.Inject;
 import javax.annotation.Nonnull;
 
 /**
- * Presenter for Payload Format window.
+ * The presenter that provides a business logic of dialog window for editing inline property.
  *
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
@@ -65,7 +65,16 @@ public class InlineConfigurationPresenter implements InlineConfigurationView.Act
         view.setEnableBtnOk();
     }
 
-    /** Show dialog. */
+    /**
+     * Show dialog window for editing inline parameter.
+     *
+     * @param content
+     *         value of inline property
+     * @param title
+     *         title of dialog window
+     * @param callBack
+     *         callback which need to set inline value to element
+     */
     public void showDialog(@Nonnull String content,
                            @Nonnull String title,
                            @Nonnull ChangeInlineFormatCallBack callBack) {

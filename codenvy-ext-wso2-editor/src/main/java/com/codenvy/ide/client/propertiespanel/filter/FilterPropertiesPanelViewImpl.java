@@ -35,7 +35,10 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
+ * Provides a graphical representation of 'Filter' property panel for editing property of 'Filter' mediator.
+ *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class FilterPropertiesPanelViewImpl extends FilterPropertiesPanelView {
 

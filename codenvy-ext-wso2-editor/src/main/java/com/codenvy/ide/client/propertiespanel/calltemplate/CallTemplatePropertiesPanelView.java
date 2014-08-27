@@ -23,7 +23,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * The view of {@link CallTemplatePropertiesPanelPresenter}
+ * The abstract view's representation of 'CallTemplate' mediator properties panel. It provides an ability to show all available properties
+ * of the mediator and edit it.
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko

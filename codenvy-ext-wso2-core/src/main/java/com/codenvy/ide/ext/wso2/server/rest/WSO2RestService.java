@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -58,6 +58,7 @@ import static javax.ws.rs.core.MediaType.TEXT_HTML;
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 @Path("/wso2/{ws-name}")
 public class WSO2RestService {
@@ -66,10 +67,17 @@ public class WSO2RestService {
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
 
+    /**
+     * Detect configuration file with given name.
+     *
+     * @param fileInfo
+     *         information about configuration file
+     */
     @Path("detect")
     @POST
     @Consumes(APPLICATION_JSON)
-    public Response detectConfigurationFile(FileInfo fileInfo) throws VirtualFileSystemException {
+    @Nonnull
+    public Response detectConfigurationFile(@Nonnull FileInfo fileInfo) throws VirtualFileSystemException {
         VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(getVfsID());
         MountPoint mountPoint = vfsProvider.getMountPoint(false);
 
@@ -81,10 +89,10 @@ public class WSO2RestService {
         return Response.ok(result, TEXT_HTML).build();
     }
 
-    private String moveFile(@NotNull VirtualFile file,
-                            @NotNull MountPoint mountPoint,
-                            @NotNull String projectName,
-                            @NotNull String parentFolder)
+    private String moveFile(@Nonnull VirtualFile file,
+                            @Nonnull MountPoint mountPoint,
+                            @Nonnull String projectName,
+                            @Nonnull String parentFolder)
             throws VirtualFileSystemException {
         String pathToFolder = SRC_FOLDER_NAME + "/" + MAIN_FOLDER_NAME + "/" + SYNAPSE_CONFIG_FOLDER_NAME + "/" +
                               parentFolder;
@@ -101,10 +109,17 @@ public class WSO2RestService {
         return parentFolder;
     }
 
+    /**
+     * Upload a configuration file from url.
+     *
+     * @param fileInfo
+     *         information about configuration file
+     */
     @Path("upload")
     @POST
     @Consumes(APPLICATION_JSON)
-    public Response uploadConfigurationFile(FileInfo fileInfo) throws VirtualFileSystemException {
+    @Nonnull
+    public Response uploadConfigurationFile(@Nonnull FileInfo fileInfo) throws VirtualFileSystemException {
         VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(getVfsID());
         MountPoint mountPoint = vfsProvider.getMountPoint(false);
         VirtualFile projectParent = mountPoint.getVirtualFile(fileInfo.getProjectName());
@@ -129,10 +144,17 @@ public class WSO2RestService {
         return Response.ok(parentFolder, TEXT_HTML).build();
     }
 
+    /**
+     * Overwrite configuration file with given name.
+     *
+     * @param fileInfo
+     *         information about configuration file
+     */
     @Path("file/{operation}")
     @POST
     @Consumes(APPLICATION_JSON)
-    public Response overwriteConfigurationFile(@PathParam("operation") String operation, FileInfo fileInfo)
+    @Nonnull
+    public Response overwriteConfigurationFile(@Nonnull @PathParam("operation") String operation, @Nonnull FileInfo fileInfo)
             throws VirtualFileSystemException {
 
         VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(getVfsID());
@@ -141,7 +163,8 @@ public class WSO2RestService {
         String parentFolder = getParentFolderForImportingFile(file);
         VirtualFile oldFile = mountPoint.getVirtualFile(
                 fileInfo.getProjectName() + "/" + SRC_FOLDER_NAME + "/" + MAIN_FOLDER_NAME + "/" + SYNAPSE_CONFIG_FOLDER_NAME + "/" +
-                parentFolder + "/" + fileInfo.getFileName());
+                parentFolder + "/" + fileInfo.getFileName()
+                                                       );
 
         switch (operation) {
             case "overwrite":
@@ -168,7 +191,8 @@ public class WSO2RestService {
      *         importing file
      * @return parent folder for file or empty string if file is not esb configuration
      */
-    private String getParentFolderForImportingFile(VirtualFile virtualFile) throws VirtualFileSystemException {
+    @Nonnull
+    private String getParentFolderForImportingFile(@Nonnull VirtualFile virtualFile) throws VirtualFileSystemException {
         InputStream fileContent = virtualFile.getContent().getStream();
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 
@@ -206,6 +230,7 @@ public class WSO2RestService {
     }
 
     /** @return virtual file system id */
+    @Nonnull
     private String getVfsID() {
         return EnvironmentContext.getCurrent().getWorkspaceId();
     }

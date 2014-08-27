@@ -28,6 +28,8 @@ import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 
+import javax.annotation.Nonnull;
+
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_EXTENSION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_MIME_TYPE;
 
@@ -49,10 +51,17 @@ public class GinModule extends AbstractGinModule {
                         .build(EditorViewFactory.class));
     }
 
+    /**
+     * Create an instance of FileType.
+     *
+     * @param wso2Resources
+     *         resources which need to create FileType
+     * @return an instance of FileType
+     */
     @Provides
     @ESBXmlFileType
     @Singleton
-    protected FileType esbXmlFileType(WSO2Resources wso2Resources) {
+    protected FileType esbXmlFileType(@Nonnull WSO2Resources wso2Resources) {
         return new FileType(wso2Resources.xmlFileIcon(), ESB_XML_MIME_TYPE, ESB_XML_EXTENSION);
     }
 

@@ -628,6 +628,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
 
     public interface EditorChangeListener {
 
+        /** Performs some actions when editor was changed. */
         void onChanged();
 
     }

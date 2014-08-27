@@ -25,6 +25,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
+ * The presenter that provides a business logic of dialog window for editing name spaces of property.
+ *
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
  */

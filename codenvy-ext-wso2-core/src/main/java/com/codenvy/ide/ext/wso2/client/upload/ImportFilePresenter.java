@@ -41,8 +41,8 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.ext.wso2.shared.Constants.MAIN_FOLDER_NAME;
@@ -53,6 +53,7 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NA
  * The presenter for import configuration files.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 @Singleton
 public class ImportFilePresenter implements ImportFileView.ActionDelegate {
@@ -140,7 +141,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
 
     /** {@inheritDoc} */
     @Override
-    public void onSubmitComplete(@NotNull String result) {
+    public void onSubmitComplete(@Nonnull String result) {
         if (result.isEmpty()) {
             final FileInfo fileInfo = dtoFactory.createDto(FileInfo.class)
                                                 .withFileName(view.getFileName())
@@ -178,7 +179,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
      * @param fileName
      *         name of the file
      */
-    private void refreshTreeWithParentFolder(String response, final String fileName) {
+    private void refreshTreeWithParentFolder(@Nonnull String response, @Nonnull final String fileName) {
         if (response.endsWith("already exists. ")) {
             overwrite.showDialog(fileName, viewCloseHandler);
         } else {
@@ -238,7 +239,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
      * @return {@link Resource}
      */
     @Nullable
-    private Resource getResourceByName(@NotNull Folder parent, @NotNull String name) {
+    private Resource getResourceByName(@Nonnull Folder parent, @Nonnull String name) {
         Array<Resource> children = parent.getChildren();
 
         for (Resource child : children.asIterable()) {
@@ -250,7 +251,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
         return null;
     }
 
-    private void showError(@NotNull Throwable throwable) {
+    private void showError(@Nonnull Throwable throwable) {
         Notification notification = new Notification(throwable.getMessage(), ERROR);
         notificationManager.showNotification(notification);
     }

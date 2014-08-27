@@ -33,6 +33,7 @@ public abstract class WSO2AsyncCallback<T> implements AsyncCallback<T> {
         this.notificationManager = notificationManager;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onFailure(Throwable caught) {
         Notification notification = new Notification(caught.getMessage(), ERROR);

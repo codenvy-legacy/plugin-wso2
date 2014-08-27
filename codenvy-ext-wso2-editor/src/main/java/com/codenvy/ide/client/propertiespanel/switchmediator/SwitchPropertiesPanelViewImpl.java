@@ -32,7 +32,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
+ * Provides a graphical representation of 'Switch' property panel for editing property of 'Switch' mediator.
+ *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class SwitchPropertiesPanelViewImpl extends SwitchPropertiesPanelView {
 

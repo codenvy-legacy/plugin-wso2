@@ -18,12 +18,13 @@ package com.codenvy.ide.ext.wso2.client.wizard.files.view;
 import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The view for creating WSO2 resources. Provides an ability to input resource name.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 @ImplementedBy(CreateResourceViewImpl.class)
 public interface CreateResourceView extends View<CreateResourceView.ActionDelegate> {
@@ -35,11 +36,24 @@ public interface CreateResourceView extends View<CreateResourceView.ActionDelega
         void onValueChanged();
     }
 
-    void setResourceNameTitle(@NotNull String title);
+    /**
+     * Sets title of dialog window for creating resource.
+     *
+     * @param title
+     *         title which need to set
+     */
+    void setResourceNameTitle(@Nonnull String title);
 
-    @NotNull
+    /** @return resource name from special view's name */
+    @Nonnull
     String getResourceName();
 
-    void setResourceName(@NotNull String name);
+    /**
+     * Sets resource name to special place on view.
+     *
+     * @param name
+     *         value of name which need to set
+     */
+    void setResourceName(@Nonnull String name);
 
 }

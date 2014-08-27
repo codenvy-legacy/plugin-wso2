@@ -37,7 +37,10 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
+ * Provides a graphical representation of 'Address endpoint' property panel for editing property of 'Address' endpoint.
+ *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class AddressEndpointPropertiesPanelViewImpl extends AddressEndpointPropertiesPanelView {
 

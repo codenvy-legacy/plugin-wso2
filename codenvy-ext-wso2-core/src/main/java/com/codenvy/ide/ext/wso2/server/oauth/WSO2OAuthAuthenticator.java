@@ -29,6 +29,7 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson.JacksonFactory;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -36,6 +37,7 @@ import java.util.HashSet;
  * OAuth authentication for wso2 account.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class WSO2OAuthAuthenticator extends OAuthAuthenticator {
 
@@ -47,20 +49,23 @@ public class WSO2OAuthAuthenticator extends OAuthAuthenticator {
                                                 new ClientParametersAuthentication(clientSecrets.getDetails().getClientId(),
                                                                                    clientSecrets.getDetails().getClientSecret()),
                                                 clientSecrets.getDetails().getClientId(),
-                                                clientSecrets.getDetails().getAuthUri())
+                                                clientSecrets.getDetails().getAuthUri()
+              )
                       .setScopes(Collections.<String>emptyList())
                       .setCredentialStore(credentialStore).build(),
-              new HashSet<>(clientSecrets.getDetails().getRedirectUris()));
+              new HashSet<>(clientSecrets.getDetails().getRedirectUris())
+             );
 
     }
 
     /** {@inheritDoc} */
     @Override
-    public User getUser(OAuthToken accessToken) throws OAuthAuthenticationException {
+    public User getUser(@Nonnull OAuthToken accessToken) throws OAuthAuthenticationException {
         return null;
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getOAuthProvider() {
         return "wso2";

@@ -40,6 +40,9 @@ import static com.codenvy.ide.client.elements.Header.HeaderValueType.LITERAL;
 import static com.codenvy.ide.client.elements.Header.ScopeType;
 
 /**
+ * The presenter that provides a business logic of 'Header' mediator properties panel. It provides an ability to work with all properties
+ * of 'Header' mediator.
+ *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */

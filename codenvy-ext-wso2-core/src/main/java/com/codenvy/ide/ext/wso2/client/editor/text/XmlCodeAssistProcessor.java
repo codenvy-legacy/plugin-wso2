@@ -29,13 +29,15 @@ import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashSet;
 
 /**
  * Implementation of {@link CodeAssistProcessor} for XML files.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class XmlCodeAssistProcessor implements CodeAssistProcessor {
 
@@ -47,7 +49,7 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
 
     /** {@inheritDoc} */
     @Override
-    public void computeCompletionProposals(TextEditorPartView view, int offset, CodeAssistCallback callback) {
+    public void computeCompletionProposals(@Nonnull TextEditorPartView view, int offset, @Nonnull CodeAssistCallback callback) {
         if (view.getSelection().hasSelection()) {
             // Doesn't make much sense to autocomplete attributes when something is selected.
             callback.proposalComputed(null);
@@ -90,7 +92,8 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
      *         text before cursor
      * @return prefix
      */
-    private String computePrefixString(@NotNull String textBeforeCursor) {
+    @Nullable
+    private String computePrefixString(@Nonnull String textBeforeCursor) {
         RegExp regexpSpaces = RegExp.compile("\\s+");
         textBeforeCursor = textBeforeCursor.replaceAll("^\\s+", "");
 
@@ -109,8 +112,12 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
      * @param prefix
      *         the text before cursor.
      */
-    private XmlCompletionProposal[] prepareProposals(Array<String> attributes, @NotNull InvocationContext context, @NotNull String prefix,
-                                                     @NotNull String textAfterCursor, @NotNull String textBeforeCursor) {
+    @Nonnull
+    private XmlCompletionProposal[] prepareProposals(@Nonnull Array<String> attributes,
+                                                     @Nonnull InvocationContext context,
+                                                     @Nonnull String prefix,
+                                                     @Nonnull String textAfterCursor,
+                                                     @Nonnull String textBeforeCursor) {
 
         HashSet<String> introducedAttributes = getIntroducedAttributes(textAfterCursor, textBeforeCursor);
 
@@ -137,8 +144,9 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
      *
      * @return a set with attributes.
      */
-    private HashSet<String> getIntroducedAttributes(@NotNull String textAfterCursor, @NotNull String textBeforeCursor) {
-        HashSet<String> attributes = new HashSet<String>();
+    @Nonnull
+    private HashSet<String> getIntroducedAttributes(@Nonnull String textAfterCursor, @Nonnull String textBeforeCursor) {
+        HashSet<String> attributes = new HashSet<>();
         int indexOfOpenTag = textBeforeCursor.lastIndexOf('<');
         int indexOfCloseTag = textAfterCursor.indexOf('>');
         StringBuilder currentTag = new StringBuilder();
@@ -171,7 +179,8 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
      * @param view
      *         the view whose document is used to compute the proposals
      */
-    private String getTextBeforeCursor(@NotNull TextEditorPartView view) {
+    @Nonnull
+    private String getTextBeforeCursor(@Nonnull TextEditorPartView view) {
         StringBuilder textBeforeCursor = new StringBuilder();
         Document document = view.getDocument();
         Position cursor = view.getSelection().getCursorPosition();
@@ -205,7 +214,8 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
      * @param view
      *         the view whose document is used to compute the proposals
      */
-    private String getTextAfterCursor(TextEditorPartView view) {
+    @Nonnull
+    private String getTextAfterCursor(@Nonnull TextEditorPartView view) {
         StringBuilder textAfterCursor = new StringBuilder();
         Document document = view.getDocument();
         Position cursor = view.getSelection().getCursorPosition();
@@ -235,12 +245,14 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
 
     /** {@inheritDoc} */
     @Override
+    @Nullable
     public char[] getCompletionProposalAutoActivationCharacters() {
         return null;
     }
 
     /** {@inheritDoc} */
     @Override
+    @Nullable
     public String getErrorMessage() {
         return null;
     }
@@ -255,7 +267,8 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
      * @return the text of the line with cursor.
      * @throws BadLocationException
      */
-    private String getLineAtCursor(Document document, int offset) throws BadLocationException {
+    @Nonnull
+    private String getLineAtCursor(@Nonnull Document document, int offset) throws BadLocationException {
         Region line = document.getLineInformationOfOffset(offset);
         return document.get(line.getOffset(), line.getLength());
     }
@@ -267,7 +280,8 @@ public class XmlCodeAssistProcessor implements CodeAssistProcessor {
      *         current line
      * @return name of the tag.
      */
-    private String getTagToBeCompleted(@NotNull String line) {
+    @Nonnull
+    private String getTagToBeCompleted(@Nonnull String line) {
         int tagStartPosition = line.lastIndexOf('<') + 1;
         String substring = line.substring(tagStartPosition);
         int tagEndPosition = tagStartPosition + substring.indexOf(' ');

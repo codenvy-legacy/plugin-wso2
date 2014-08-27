@@ -28,8 +28,8 @@ import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.codenvy.ide.texteditor.api.parser.Parser;
 import com.google.inject.Inject;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_EXTENSION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_MIME_TYPE;
@@ -39,6 +39,7 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_MIME_TYPE;
  *
  * @author Dmitry Kuleshov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class XmlEditorConfiguration extends TextEditorConfiguration {
 
@@ -53,23 +54,25 @@ public class XmlEditorConfiguration extends TextEditorConfiguration {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
-    public Parser getParser(@NotNull TextEditorPartView view) {
+    public AutoEditStrategy[] getAutoEditStrategies(@Nonnull TextEditorPartView view, @Nonnull String contentType) {
+        return new AutoEditStrategy[]{autoCompleterFactory.createAutoCompleter(view)};
+    }
+
+    /** {@inheritDoc} */
+    @Nonnull
+    @Override
+    public Parser getParser(@Nonnull TextEditorPartView view) {
         CmParser parser = getParserForMime(ESB_XML_MIME_TYPE);
         parser.setNameAndFactory(ESB_XML_EXTENSION, new BasicTokenFactory());
         return parser;
     }
 
     /** {@inheritDoc} */
-    @Override
-    public AutoEditStrategy[] getAutoEditStrategies(TextEditorPartView view, String contentType) {
-        return new AutoEditStrategy[]{autoCompleterFactory.createAutoCompleter(view)};
-    }
-
-    /** {@inheritDoc} */
     @Nullable
     @Override
-    public StringMap<CodeAssistProcessor> getContentAssistantProcessors(@NotNull TextEditorPartView view) {
+    public StringMap<CodeAssistProcessor> getContentAssistantProcessors(@Nonnull TextEditorPartView view) {
         StringMap<CodeAssistProcessor> map = Collections.createStringMap();
         map.put(Document.DEFAULT_CONTENT_TYPE, new XmlCodeAssistProcessor(xsdSchemaParser));
         return map;

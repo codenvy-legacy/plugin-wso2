@@ -35,6 +35,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
+ * Provides a graphical representation of 'Payload factory' property panel for editing property of 'Payload factory' mediator.
+ *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */

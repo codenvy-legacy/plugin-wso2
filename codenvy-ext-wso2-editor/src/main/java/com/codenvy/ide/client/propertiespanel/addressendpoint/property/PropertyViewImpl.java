@@ -43,7 +43,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Provides a graphical representation of dialog window for editing property of address endpoint.
+ *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class PropertyViewImpl extends Window implements PropertyView {
 
@@ -92,6 +95,7 @@ public class PropertyViewImpl extends Window implements PropertyView {
         getFooter().add(btnOk);
     }
 
+    /** Adds columns names and values to table. Sets selection model to table. */
     private void initializeTable() {
         final SingleSelectionModel<Property> selectionModel = new SingleSelectionModel<>();
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {

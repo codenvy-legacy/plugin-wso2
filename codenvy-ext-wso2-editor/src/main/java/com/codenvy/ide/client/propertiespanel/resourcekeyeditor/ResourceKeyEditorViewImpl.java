@@ -31,9 +31,10 @@ import com.google.inject.Singleton;
 import javax.annotation.Nonnull;
 
 /**
- * The implementation of {@link ResourceKeyEditorView}
+ * Provides a graphical representation of dialog window for editing resource key.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class ResourceKeyEditorViewImpl extends Window implements ResourceKeyEditorView {
 

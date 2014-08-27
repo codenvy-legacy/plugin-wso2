@@ -28,7 +28,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- * The action for creating a endpoint.
+ * The action for creating an endpoint.
  *
  * @author Andrey Plotnikov
  */
