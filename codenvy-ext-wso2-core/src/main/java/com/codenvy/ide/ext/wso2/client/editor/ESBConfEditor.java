@@ -31,14 +31,15 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 /**
  * The editor for WSO2 ESB configuration.
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEditorView.ActionDelegate, PropertyListener {
 
@@ -67,7 +68,7 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
 
     /** {@inheritDoc} */
     @Override
-    public void init(@NotNull EditorInput input) throws EditorInitException {
+    public void init(@Nonnull EditorInput input) throws EditorInitException {
         super.init(input);
         textEditor.init(input);
         graphicEditor.init(input);
@@ -111,6 +112,7 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getTitle() {
         if (isDirty()) {
@@ -136,7 +138,7 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
 
     /** {@inheritDoc} */
     @Override
-    public void go(AcceptsOneWidget container) {
+    public void go(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
 
         isGraphicalEditorChanged = false;
@@ -180,7 +182,7 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
 
     /** {@inheritDoc} */
     @Override
-    public void propertyChanged(PartPresenter source, int propId) {
+    public void propertyChanged(@Nonnull PartPresenter source, int propId) {
         if (propId == EditorPartPresenter.PROP_DIRTY && source instanceof GraphicEditor) {
             textEditor.getDocument().set(graphicEditor.serialize());
 

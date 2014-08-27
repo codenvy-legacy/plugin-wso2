@@ -15,16 +15,21 @@
  */
 package com.codenvy.ide.client.inject;
 
+import com.codenvy.ide.client.editor.WSO2Editor;
 import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
-import com.codenvy.ide.client.editor.WSO2Editor;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 @GinModules(GinModule.class)
 public interface Injector extends Ginjector {
 
+    /** @return WSO2Editor entity */
+    @Nonnull
     WSO2Editor getEditor();
 
 }

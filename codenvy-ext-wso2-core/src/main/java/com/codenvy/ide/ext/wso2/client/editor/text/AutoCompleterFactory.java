@@ -17,7 +17,7 @@ package com.codenvy.ide.ext.wso2.client.editor.text;
 
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The factory for creating instances of {@link TagAutoCompleter}.
@@ -33,5 +33,6 @@ public interface AutoCompleterFactory {
      *         editor that need to be used with a created autocompleter
      * @return an instance of {@link TagAutoCompleter}
      */
-    TagAutoCompleter createAutoCompleter(@NotNull TextEditorPartView editor);
+    @Nonnull
+    TagAutoCompleter createAutoCompleter(@Nonnull TextEditorPartView editor);
 }

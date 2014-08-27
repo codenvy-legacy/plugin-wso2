@@ -21,10 +21,13 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.annotation.Nonnull;
+
 /**
  * The implementation of {@link WSO2PageView}.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class WSO2PageViewImpl extends Composite implements WSO2PageView {
 
@@ -33,8 +36,9 @@ public class WSO2PageViewImpl extends Composite implements WSO2PageView {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void setDelegate(ActionDelegate delegate) {
+    public void setDelegate(@Nonnull ActionDelegate delegate) {
     }
 
     @Singleton

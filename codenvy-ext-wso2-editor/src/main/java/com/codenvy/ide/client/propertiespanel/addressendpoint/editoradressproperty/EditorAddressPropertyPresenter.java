@@ -32,6 +32,8 @@ import static com.codenvy.ide.client.elements.ValueType.EXPRESSION;
 import static com.codenvy.ide.client.elements.addressendpoint.Property.Scope;
 
 /**
+ * The presenter that provides a business logic of dialog window for editing properties of address endpoint.
+ *
  * @author Dmitry Shnurenko
  */
 public class EditorAddressPropertyPresenter implements EditorAddressPropertyView.ActionDelegate {
@@ -111,7 +113,7 @@ public class EditorAddressPropertyPresenter implements EditorAddressPropertyView
                                                     selectedProperty.getExpression());
     }
 
-    /** Hides dialog window when changing of property are success. */
+    /** Hides dialog window for editing properties. */
     public void hideDialog() {
         view.hideWindow();
     }

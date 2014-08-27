@@ -45,6 +45,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Provides a graphical representation of dialog window for editing property.
+ *
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
  */
@@ -93,6 +95,12 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
         getFooter().add(btnOk);
     }
 
+    /**
+     * Returns cell table entity. Adds column names and values to table. Sets selection model to table.
+     *
+     * @param localizationConstant
+     *         localization constant which contains special names of element in current table
+     */
     private CellTable<Property> createTable(final WSO2EditorLocalizationConstant localizationConstant) {
         final CellTable<Property> table = new CellTable<>();
 

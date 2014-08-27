@@ -27,6 +27,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
+ * The presenter that provides a business logic of dialog window for editing properties.
+ *
  * @author Dmitry Shnurenko
  */
 public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegate {
@@ -126,6 +128,8 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
      *
      * @param properties
      *         properties which need to be edited.
+     * @param title
+     *         title which need to set to dialog window
      * @param callback
      *         callback that need to be handled when properties editing is successful
      */

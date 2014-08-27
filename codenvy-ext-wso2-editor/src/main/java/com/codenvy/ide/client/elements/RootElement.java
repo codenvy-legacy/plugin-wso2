@@ -38,6 +38,7 @@ import java.util.Map;
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class RootElement extends AbstractShape {
     public static final String ELEMENT_NAME       = "RootElement";
@@ -79,20 +80,34 @@ public class RootElement extends AbstractShape {
         branches.add(branchProvider.get());
     }
 
+    /** @return name of root element */
     @Nonnull
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets name to root element
+     *
+     * @param name
+     *         value which need to set to element
+     */
     public void setName(@Nonnull String name) {
         this.name = name;
     }
 
+    /** @return error value of root element */
     @Nonnull
     public String getOnError() {
         return onError;
     }
 
+    /**
+     * Sets value of error to element
+     *
+     * @param onError
+     *         value which need to set to element
+     */
     public void setOnError(@Nonnull String onError) {
         this.onError = onError;
     }

@@ -20,7 +20,7 @@ import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The view of {@link ESBConfEditor}.
@@ -32,24 +32,65 @@ public interface ESBConfEditorView extends View<ESBConfEditorView.ActionDelegate
 
     public interface ActionDelegate {
 
+        /** Performs some actions in response to user clicked on source view button. */
         void onTextEditorButtonClicked();
 
+        /** Performs some actions in response to user clicked on design view button. */
         void onGraphicalEditorButtonClicked();
 
+        /** Performs some actions in response to user clicked on dual view button. */
         void onAssociateEditorButtonClicked();
 
     }
 
+    /**
+     * Sets enabling of source view button.
+     *
+     * @param enable
+     *         <code>true</code> button is enable,<code>false</code> button is disable
+     */
     void setEnableTextEditorButton(boolean enable);
 
+    /**
+     * Sets enabling of design view button.
+     *
+     * @param enable
+     *         <code>true</code> button is enable,<code>false</code> button is disable
+     */
     void setEnableGraphicalEditorButton(boolean enable);
 
+    /**
+     * Sets enabling of dual view button.
+     *
+     * @param enable
+     *         <code>true</code> button is enable,<code>false</code> button is disable
+     */
     void setEnableBothEditorButton(boolean enable);
 
-    void showTextEditor(@NotNull CodenvyTextEditor textEditor);
+    /**
+     * Shows main panel for displaying text.
+     *
+     * @param textEditor
+     *         editor which provides displaying of source view
+     */
+    void showTextEditor(@Nonnull CodenvyTextEditor textEditor);
 
-    void showGraphicalEditor(@NotNull AbstractEditorPresenter graphicalEditor);
+    /**
+     * Shows main panel for displaying design view.
+     *
+     * @param graphicalEditor
+     *         editor which provides displaying of design view
+     */
+    void showGraphicalEditor(@Nonnull AbstractEditorPresenter graphicalEditor);
 
-    void showEditors(@NotNull AbstractEditorPresenter graphicalEditor, @NotNull CodenvyTextEditor textEditor);
+    /**
+     * Shows main panel for displaying dual view.
+     *
+     * @param graphicalEditor
+     *         editor which provides displaying of design view
+     * @param textEditor
+     *         editor which provides displaying of source view
+     */
+    void showEditors(@Nonnull AbstractEditorPresenter graphicalEditor, @Nonnull CodenvyTextEditor textEditor);
 
 }

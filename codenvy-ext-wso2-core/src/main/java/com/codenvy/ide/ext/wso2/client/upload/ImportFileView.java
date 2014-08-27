@@ -18,16 +18,18 @@ package com.codenvy.ide.ext.wso2.client.upload;
 import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The view of {@link ImportFilePresenter}.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 
 @ImplementedBy(ImportFileViewImpl.class)
 public interface ImportFileView extends View<ImportFileView.ActionDelegate> {
+
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
         void onCancelClicked();
@@ -41,7 +43,7 @@ public interface ImportFileView extends View<ImportFileView.ActionDelegate> {
          * @param result
          *         result of submit operation
          */
-        void onSubmitComplete(@NotNull String result);
+        void onSubmitComplete(@Nonnull String result);
 
         /** Performs any actions appropriate in response to the user having changed file name field. */
         void onFileNameChanged();
@@ -59,16 +61,17 @@ public interface ImportFileView extends View<ImportFileView.ActionDelegate> {
         void onUseLocalPathChosen();
     }
 
-    /** @return url */
-    @NotNull
+    /** @return url from special view's place */
+    @Nonnull
     String getUrl();
 
     /**
      * Set URL into place on view.
      *
      * @param url
+     *         value of url which need to set
      */
-    void setUrl(@NotNull String url);
+    void setUrl(@Nonnull String url);
 
     /** @return <code>true</code> if use url is chosen, and <code>false</code> otherwise */
     boolean isUseUrl();
@@ -92,17 +95,17 @@ public interface ImportFileView extends View<ImportFileView.ActionDelegate> {
      */
     void setUseUrl(boolean isUseUrl);
 
-    /** @return file name */
-    @NotNull
+    /** @return file name from special view's place */
+    @Nonnull
     String getFileName();
 
     /**
-     * Set error message
+     * Set error message to special place on view
      *
      * @param message
-     *         the message
+     *         the message which need to set
      */
-    void setMessage(@NotNull String message);
+    void setMessage(@Nonnull String message);
 
     /**
      * Change the enable state of the import button.
@@ -126,7 +129,7 @@ public interface ImportFileView extends View<ImportFileView.ActionDelegate> {
      * @param url
      *         the form's action
      */
-    void setAction(@NotNull String url);
+    void setAction(@Nonnull String url);
 
     /** Submits the form. */
     void submit();

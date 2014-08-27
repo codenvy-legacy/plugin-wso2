@@ -33,28 +33,79 @@ import javax.annotation.Nonnull;
 
 /**
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 @Singleton
 public interface EditorFactory {
 
+    /**
+     * Create an instance of {@link ToolbarPresenter} with a given state of editor.
+     *
+     * @param editorState
+     *         editor that need to be used
+     * @return an instance of {@link ToolbarPresenter}
+     */
     @Nonnull
     ToolbarPresenter createToolbar(@Nonnull EditorState<State> editorState);
 
+    /**
+     * Create an instance of {@link PropertiesPanelManager} with a given widget.
+     *
+     * @param container
+     *         widget that need to be used
+     * @return an instance of {@link PropertiesPanelManager}
+     */
     @Nonnull
     PropertiesPanelManager createPropertiesPanelManager(@Nonnull AcceptsOneWidget container);
 
+    /**
+     * Create an instance of {@link BranchPresenter} with a given state of editor.
+     *
+     * @param editorState
+     *         editor that need to be used
+     * @param selectionManager
+     *         selection manager which need to select an element
+     * @param branch
+     *         element which need to be used
+     * @return an instance of {@link BranchPresenter}
+     */
     @Nonnull
     BranchPresenter createContainer(@Nonnull EditorState<State> editorState,
                                     @Nonnull SelectionManager selectionManager,
                                     @Nonnull Branch branch);
 
+    /**
+     * Create an instance of {@link ShapePresenter} with a given state of editor and for given shape.
+     *
+     * @param editorState
+     *         editor that need to be used
+     * @param shape
+     *         element for which presenter will be created
+     * @return an instance of {@link ShapePresenter}
+     */
     @Nonnull
     ShapePresenter createShapePresenter(@Nonnull EditorState<State> editorState,
                                         @Nonnull Shape shape);
 
+    /**
+     * Create an instance of {@link ShapeView} with allow to enhance branches.
+     *
+     * @param isPossibleChangeCases
+     *         <code>true</code> possible to add branches,<code>false</code> impossible to add branches
+     * @return an instance of {@link ShapeView}
+     */
     @Nonnull
     ShapeView createShapeView(boolean isPossibleChangeCases);
 
+    /**
+     * Create an instance of {@link BranchFiledPresenter} with a given branch.
+     *
+     * @param branch
+     *         branch for which need to create presenter
+     * @param index
+     *         number of branch
+     * @return an instance of {@link BranchFiledPresenter}
+     */
     @Nonnull
     BranchFiledPresenter createBranchFieldPresenter(@Nonnull Branch branch, int index);
 

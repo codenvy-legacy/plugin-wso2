@@ -36,7 +36,8 @@ import static com.codenvy.ide.client.elements.Property.Scope;
 import static com.codenvy.ide.client.elements.ValueType.EXPRESSION;
 
 /**
- * The property panel of Property mediator.
+ * The presenter that provides a business logic of 'Property' mediator properties panel. It provides an ability to work with all properties
+ * of 'Property' mediator.
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko

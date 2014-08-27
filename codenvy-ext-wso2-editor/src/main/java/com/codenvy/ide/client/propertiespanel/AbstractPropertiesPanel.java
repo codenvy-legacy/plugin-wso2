@@ -33,6 +33,7 @@ import java.util.List;
  *         type of view that is needed for this panel
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public abstract class AbstractPropertiesPanel<T extends Shape, V extends AbstractView> extends AbstractPresenter<V> {
 
@@ -57,10 +58,17 @@ public abstract class AbstractPropertiesPanel<T extends Shape, V extends Abstrac
         this.element = element;
     }
 
+    /**
+     * Adds listener to list of listeners of property panel
+     *
+     * @param listener
+     *         listener which need to add
+     */
     public void addListener(@Nonnull PropertyChangedListener listener) {
         listeners.add(listener);
     }
 
+    /** Notify all listeners of property panel when some element on property panel was changed. */
     public void notifyListeners() {
         for (PropertyChangedListener listener : listeners) {
             listener.onPropertyChanged();
@@ -69,6 +77,7 @@ public abstract class AbstractPropertiesPanel<T extends Shape, V extends Abstrac
 
     public interface PropertyChangedListener {
 
+        /** Performs some actions when property was changed. */
         void onPropertyChanged();
 
     }

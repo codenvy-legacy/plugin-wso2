@@ -39,6 +39,7 @@ import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Ti
  * of 'Address' endpoint.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class AddressEndpointPropertiesPanelPresenter
         extends AbstractPropertiesPanel<AddressEndpoint, AddressEndpointPropertiesPanelView>
@@ -356,6 +357,12 @@ public class AddressEndpointPropertiesPanelPresenter
         view.selectTimeoutAction(element.getTimeoutAction().name());
     }
 
+    /**
+     * Shows value of properties in special place on the view.
+     *
+     * @param properties
+     *         list of properties which must to be displayed
+     */
     private void showProperties(@Nonnull Array<Property> properties) {
         StringBuilder content = new StringBuilder();
         int size = properties.size() - 1;

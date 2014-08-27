@@ -21,6 +21,8 @@ import com.google.inject.ImplementedBy;
 import javax.annotation.Nonnull;
 
 /**
+ * The presentation of Editor Address Property view. It contains a general places for properties of address endpoint.
+ *
  * @author Dmitry Shnurenko
  */
 @ImplementedBy(EditorAddressPropertyViewImpl.class)

@@ -16,8 +16,8 @@
 package com.codenvy.ide.client.propertiespanel.root;
 
 import com.codenvy.ide.client.elements.RootElement;
-import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 

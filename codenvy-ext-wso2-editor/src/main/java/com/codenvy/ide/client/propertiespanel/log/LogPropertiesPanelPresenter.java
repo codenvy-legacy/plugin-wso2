@@ -18,9 +18,9 @@ package com.codenvy.ide.client.propertiespanel.log;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.log.Property;
+import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.propertyconfig.PropertyConfigPresenter;
-import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -31,6 +31,9 @@ import static com.codenvy.ide.client.elements.log.Log.LogCategory;
 import static com.codenvy.ide.client.elements.log.Log.LogLevel;
 
 /**
+ * The presenter that provides a business logic of 'Log' mediator properties panel. It provides an ability to work with all properties
+ * of 'Log' mediator.
+ *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko

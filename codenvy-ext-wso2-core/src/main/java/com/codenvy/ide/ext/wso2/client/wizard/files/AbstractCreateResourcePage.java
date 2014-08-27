@@ -32,8 +32,8 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.MAIN_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SRC_FOLDER_NAME;
@@ -62,15 +62,15 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
     protected       boolean              incorrectName;
     protected       String               content;
 
-    public AbstractCreateResourcePage(@NotNull CreateResourceView view,
-                                      @NotNull String caption,
+    public AbstractCreateResourcePage(@Nonnull CreateResourceView view,
+                                      @Nonnull String caption,
                                       @Nullable ImageResource icon,
-                                      @NotNull LocalizationConstant locale,
-                                      @NotNull ResourceProvider resourceProvider,
-                                      @NotNull EditorAgent editorAgent,
-                                      @NotNull String parentFolderName,
-                                      @NotNull FileType fileType,
-                                      @NotNull NotificationManager notificationManager) {
+                                      @Nonnull LocalizationConstant locale,
+                                      @Nonnull ResourceProvider resourceProvider,
+                                      @Nonnull EditorAgent editorAgent,
+                                      @Nonnull String parentFolderName,
+                                      @Nonnull FileType fileType,
+                                      @Nonnull NotificationManager notificationManager) {
         super(caption, icon);
 
         this.view = view;
@@ -84,6 +84,7 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
     }
 
     /** {@inheritDoc} */
+    @Nullable
     @Override
     public String getNotice() {
         if (incorrectName) {
@@ -158,9 +159,9 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
      *         name that child should have
      * @param callback
      */
-    private void getResourceByName(@NotNull final Folder parent,
-                                   @NotNull final String name,
-                                   @NotNull final AsyncCallback<Resource> callback) {
+    private void getResourceByName(@Nonnull final Folder parent,
+                                   @Nonnull final String name,
+                                   @Nonnull final AsyncCallback<Resource> callback) {
 
         activeProject.refreshChildren(parent, new WSO2AsyncCallback<Folder>(notificationManager) {
             @Override
@@ -201,14 +202,14 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
     }
 
     /** @return resource name with extension */
-    @NotNull
-    private String getResourceNameWithExtension(@NotNull String resourceName) {
+    @Nonnull
+    private String getResourceNameWithExtension(@Nonnull String resourceName) {
         return resourceName + '.' + fileType.getExtension();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void commit(@NotNull final CommitCallback callback) {
+    public void commit(@Nonnull final CommitCallback callback) {
         String mimeType = fileType.getMimeTypes().get(0);
         activeProject.createFile(parentFolder, getResourceNameWithExtension(view.getResourceName()), content, mimeType,
                                  new AsyncCallback<File>() {
@@ -222,6 +223,7 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
                                      public void onFailure(Throwable caught) {
                                          callback.onFailure(caught);
                                      }
-                                 });
+                                 }
+                                );
     }
 }

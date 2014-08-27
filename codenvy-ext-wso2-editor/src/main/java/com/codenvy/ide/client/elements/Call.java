@@ -43,6 +43,7 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class Call extends AbstractShape {
     public static final String ELEMENT_NAME       = "Call";
@@ -83,43 +84,71 @@ public class Call extends AbstractShape {
         branches.add(branch);
     }
 
+    /** @return endpoint type of call mediator */
     @Nonnull
     public EndpointType getEndpointType() {
         return endpointType;
     }
 
+    /**
+     * Sets endpoint type parameter to element
+     *
+     * @param endpointType
+     *         value which need to set to element
+     */
     public void setEndpointType(@Nonnull EndpointType endpointType) {
         this.endpointType = endpointType;
     }
 
+    /** @return registry key of call mediator */
     @Nonnull
     public String getRegistryKey() {
         return registryKey;
     }
 
+    /**
+     * Sets registry key parameter to element
+     *
+     * @param registryKey
+     *         value which need to set to element
+     */
     public void setRegistryKey(@Nonnull String registryKey) {
         this.registryKey = registryKey;
     }
 
+    /** @return xpath of call mediator */
     @Nullable
     public String getXpath() {
         return xPath;
     }
 
+    /**
+     * Sets xpath parameter to element
+     *
+     * @param xPath
+     *         value which need to set to element
+     */
     public void setXpath(@Nullable String xPath) {
         this.xPath = xPath;
     }
 
+    /** @return description of call mediator */
     @Nonnull
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets description to element
+     *
+     * @param description
+     *         value which need to set to element
+     */
     public void setDescription(@Nonnull String description) {
         this.description = description;
     }
 
-    /** @return namespaces which contain in call */
+    /** @return list of namespaces which contain in call */
     @Nonnull
     public Array<NameSpace> getNameSpaces() {
         return nameSpaces;

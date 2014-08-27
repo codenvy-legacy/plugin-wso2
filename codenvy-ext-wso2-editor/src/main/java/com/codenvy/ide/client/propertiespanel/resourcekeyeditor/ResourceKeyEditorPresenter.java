@@ -20,9 +20,10 @@ import com.google.inject.Inject;
 import javax.annotation.Nonnull;
 
 /**
- * Presenter for Resource Key window.
+ * The presenter that provides a business logic of dialog window for editing resource key.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class ResourceKeyEditorPresenter implements ResourceKeyEditorView.ActionDelegate {
 
@@ -43,7 +44,14 @@ public class ResourceKeyEditorPresenter implements ResourceKeyEditorView.ActionD
         view.closeDialog();
     }
 
-    /** Show dialog. */
+    /**
+     * Show dialog window for editing resource key.
+     *
+     * @param content
+     *         value of resource key which need to set to special place of dialog window
+     * @param callBack
+     *         callback that need to be handled when resource key editing is successful
+     */
     public void showDialog(@Nonnull String content, @Nonnull ChangeResourceKeyCallBack callBack) {
         changeResourceKeyCallBack = callBack;
 

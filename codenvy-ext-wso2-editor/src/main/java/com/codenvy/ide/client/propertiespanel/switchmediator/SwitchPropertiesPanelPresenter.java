@@ -20,11 +20,11 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.Switch;
 import com.codenvy.ide.client.inject.EditorFactory;
-import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
-import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
-import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.switchmediator.branch.BranchFiledPresenter;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
+import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
+import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
+import com.codenvy.ide.client.propertiespanel.switchmediator.branch.BranchFiledPresenter;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -36,9 +36,10 @@ import java.util.List;
 
 /**
  * The presenter that provides a business logic of 'Switch' mediator properties panel. It provides an ability to work with all properties
- * of 'Call' mediator.
+ * of 'Switch' mediator.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class SwitchPropertiesPanelPresenter extends AbstractPropertiesPanel<Switch, SwitchPropertiesPanelView>
         implements SwitchPropertiesPanelView.ActionDelegate, BranchFiledPresenter.BranchChangedListener {

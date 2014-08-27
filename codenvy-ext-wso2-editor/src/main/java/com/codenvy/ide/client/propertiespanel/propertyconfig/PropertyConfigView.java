@@ -23,6 +23,8 @@ import com.google.inject.ImplementedBy;
 import javax.annotation.Nonnull;
 
 /**
+ * The presentation of Property Config view. It contains a general places for properties of element.
+ *
  * @author Dmitry Shnurenko
  */
 @ImplementedBy(PropertyConfigViewImpl.class)

@@ -79,7 +79,12 @@ public class Log extends AbstractShape {
         return logCategory;
     }
 
-    /** Sets value of category to element */
+    /**
+     * Sets value of category to element
+     *
+     * @param logCategory
+     *         value that should be set
+     */
     public void setLogCategory(@Nullable LogCategory logCategory) {
         this.logCategory = logCategory;
     }
@@ -90,7 +95,12 @@ public class Log extends AbstractShape {
         return logLevel;
     }
 
-    /** Sets value of level to element */
+    /**
+     * Sets value of level to element
+     *
+     * @param logLevel
+     *         value that should be set
+     */
     public void setLogLevel(@Nullable LogLevel logLevel) {
         this.logLevel = logLevel;
     }
@@ -101,7 +111,12 @@ public class Log extends AbstractShape {
         return logSeparator;
     }
 
-    /** Sets value of separator to element */
+    /**
+     * Sets value of separator to element
+     *
+     * @param logSeparator
+     *         value that should be set
+     */
     public void setLogSeparator(@Nullable String logSeparator) {
         this.logSeparator = logSeparator;
     }
@@ -112,7 +127,12 @@ public class Log extends AbstractShape {
         return properties;
     }
 
-    /** Sets list of properties to element */
+    /**
+     * Sets list of properties to element
+     *
+     * @param logProperties
+     *         list of properties that should be set
+     */
     public void setLogProperties(@Nonnull Array<Property> logProperties) {
         this.properties = logProperties;
     }
@@ -123,7 +143,12 @@ public class Log extends AbstractShape {
         return description;
     }
 
-    /** Sets value of description to element */
+    /**
+     * Sets value of description to element
+     *
+     * @param description
+     *         value that should be set
+     */
     public void setDescription(@Nullable String description) {
         this.description = description;
     }

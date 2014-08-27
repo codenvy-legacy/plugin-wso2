@@ -18,6 +18,7 @@ package com.codenvy.ide.client.propertiespanel.payloadfactory;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.payload.Arg;
 import com.codenvy.ide.client.elements.payload.PayloadFactory;
+import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.arguments.AddArgumentCallBack;
 import com.codenvy.ide.client.propertiespanel.arguments.ArgumentsConfigPresenter;
@@ -25,7 +26,6 @@ import com.codenvy.ide.client.propertiespanel.inline.ChangeInlineFormatCallBack;
 import com.codenvy.ide.client.propertiespanel.inline.InlineConfigurationPresenter;
 import com.codenvy.ide.client.propertiespanel.resourcekeyeditor.ChangeResourceKeyCallBack;
 import com.codenvy.ide.client.propertiespanel.resourcekeyeditor.ResourceKeyEditorPresenter;
-import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -36,10 +36,12 @@ import static com.codenvy.ide.client.elements.payload.Format.FormatType;
 import static com.codenvy.ide.client.elements.payload.Format.MediaType;
 
 /**
- * The property panel of PayloadFactory mediator.
+ * The presenter that provides a business logic of 'Payload Factory' mediator properties panel. It provides an ability to work with all
+ * properties of 'Payload Factory' mediator.
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPanel<PayloadFactory, PayloadFactoryPropertiesPanelView>
         implements PayloadFactoryPropertiesPanelView.ActionDelegate {

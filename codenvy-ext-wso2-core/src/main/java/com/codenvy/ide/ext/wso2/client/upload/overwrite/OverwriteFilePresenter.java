@@ -37,8 +37,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.ext.wso2.shared.Constants.MAIN_FOLDER_NAME;
@@ -49,6 +49,7 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NA
  * The presenter for overwrite imported file.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 @Singleton
 public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate {
@@ -87,23 +88,27 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
         this.local = local;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCancelButtonClicked() {
         modifyExistingFile(DELETE_FILE_OPERATION);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onRenameButtonClicked() {
         modifyExistingFile(RENAME_FILE_OPERATION);
         parentViewUtils.onCloseView();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onOverwriteButtonClicked() {
         modifyExistingFile(OVERWRITE_FILE_OPERATION);
         parentViewUtils.onCloseView();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onNameChanged() {
         boolean enable = !oldFileName.equals(view.getFileName());
@@ -118,7 +123,7 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
      * @param fileName
      *         name of the new file
      */
-    private void refreshTree(String callback, final String fileName) {
+    private void refreshTree(@Nonnull String callback, @Nonnull final String fileName) {
         final Folder parentFolder;
 
         Project activeProject = resourceProvider.getActiveProject();
@@ -154,12 +159,15 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
      * @return {@link Resource}
      */
     @Nullable
-    private Resource getResourceByName(@NotNull Folder parent, @NotNull String name) {
-        Array<Resource> children = parent.getChildren();
+    private Resource getResourceByName(@Nullable Folder parent, @Nonnull String name) {
+        if (parent != null) {
 
-        for (Resource child : children.asIterable()) {
-            if (name.equals(child.getName())) {
-                return child;
+            Array<Resource> children = parent.getChildren();
+
+            for (Resource child : children.asIterable()) {
+                if (name.equals(child.getName())) {
+                    return child;
+                }
             }
         }
 
@@ -172,7 +180,7 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
      * @param operation
      *         name of the modification operation
      */
-    private void modifyExistingFile(final String operation) {
+    private void modifyExistingFile(@Nonnull final String operation) {
         final FileInfo fileInfo = dtoFactory.createDto(FileInfo.class)
                                             .withFileName(oldFileName)
                                             .withNewFileName(view.getFileName())
@@ -194,7 +202,15 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
         }
     }
 
-    public void showDialog(String fileName, ImportFilePresenter.ViewCloseHandler parentViewUtils) {
+    /**
+     * Shows dialog window for editing file.
+     *
+     * @param fileName
+     *         name of file which need to set to current file
+     * @param parentViewUtils
+     *         need to close the view in another model
+     */
+    public void showDialog(@Nonnull String fileName, @Nonnull ImportFilePresenter.ViewCloseHandler parentViewUtils) {
         this.parentViewUtils = parentViewUtils;
         oldFileName = fileName;
 

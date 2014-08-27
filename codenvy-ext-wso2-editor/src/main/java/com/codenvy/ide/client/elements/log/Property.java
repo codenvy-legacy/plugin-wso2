@@ -89,7 +89,12 @@ public class Property {
         return nameSpaces;
     }
 
-    /** Sets namespaces to property */
+    /**
+     * Sets namespaces to property
+     *
+     * @param nameSpaces
+     *         list of name spaces that should be set
+     */
     public void setNameSpaces(@Nonnull Array<NameSpace> nameSpaces) {
         this.nameSpaces = nameSpaces;
     }
@@ -100,7 +105,12 @@ public class Property {
         return name;
     }
 
-    /** Sets name of namespace */
+    /**
+     * Sets name of namespace
+     *
+     * @param name
+     *         value that should be set
+     */
     public void setName(@Nonnull String name) {
         this.name = name;
     }
@@ -111,7 +121,7 @@ public class Property {
         return expression;
     }
 
-    /** @return copy of element */
+    /** @return copy of property element */
     public Property clone() {
         //TODO create property using editor factory
         Property property = new Property(name, expression);

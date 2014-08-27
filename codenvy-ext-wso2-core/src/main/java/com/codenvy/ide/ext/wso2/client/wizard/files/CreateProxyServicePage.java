@@ -25,7 +25,8 @@ import com.codenvy.ide.ext.wso2.client.editor.ESBXmlFileType;
 import com.codenvy.ide.ext.wso2.client.wizard.files.view.CreateResourceView;
 import com.google.inject.Inject;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.PROXY_SERVICE_FOLDER_NAME;
 
@@ -64,6 +65,7 @@ public class CreateProxyServicePage extends AbstractCreateResourcePage {
     }
 
     /** {@inheritDoc} */
+    @Nullable
     @Override
     public String getNotice() {
         if (view.getResourceName().isEmpty()) {
@@ -75,7 +77,7 @@ public class CreateProxyServicePage extends AbstractCreateResourcePage {
 
     /** {@inheritDoc} */
     @Override
-    public void commit(@NotNull CommitCallback callback) {
+    public void commit(@Nonnull CommitCallback callback) {
         String proxyServiceTemplate = resources.proxyServiceTemplate().getText();
         content = proxyServiceTemplate.replaceAll("@name", view.getResourceName());
 

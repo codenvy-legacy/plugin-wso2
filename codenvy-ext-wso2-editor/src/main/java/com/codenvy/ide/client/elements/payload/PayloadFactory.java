@@ -42,6 +42,7 @@ import static com.codenvy.ide.client.elements.payload.Format.FormatType;
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class PayloadFactory extends AbstractShape {
     public static final String ELEMENT_NAME       = "PayloadFactory";
@@ -85,17 +86,17 @@ public class PayloadFactory extends AbstractShape {
         this.format = format;
     }
 
-    /** @return value of args */
+    /** @return list of args of payload factory mediator */
     @Nonnull
     public Array<Arg> getArgs() {
         return args;
     }
 
     /**
-     * Set args.
+     * Set list of args to payload factory mediator.
      *
      * @param args
-     *         property arguments
+     *         list of property arguments which need to set
      */
     public void setArgs(@Nullable Array<Arg> args) {
         this.args = args;
@@ -108,10 +109,10 @@ public class PayloadFactory extends AbstractShape {
     }
 
     /**
-     * Set description.
+     * Set description to payload factory mediator.
      *
      * @param description
-     *         description of PayloadFactory
+     *         description which need to set
      */
     public void setDescription(@Nullable String description) {
         this.description = description;

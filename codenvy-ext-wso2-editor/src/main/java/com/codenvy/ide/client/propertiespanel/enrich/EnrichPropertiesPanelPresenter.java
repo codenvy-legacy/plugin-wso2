@@ -42,6 +42,9 @@ import static com.codenvy.ide.client.elements.enrich.Source.SourceType.custom;
 import static com.codenvy.ide.client.elements.enrich.Target.TargetType;
 
 /**
+ * The presenter that provides a business logic of 'Enrich' mediator properties panel. It provides an ability to work with all properties
+ * of 'Enrich' mediator.
+ *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
@@ -365,7 +368,7 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
             applySourceInlineType();
         }
 
-        if (!custom.equals(element.getTarget().getType())) {
+        if (!TargetType.custom.equals(element.getTarget().getType())) {
             applyTargetType();
         }
     }

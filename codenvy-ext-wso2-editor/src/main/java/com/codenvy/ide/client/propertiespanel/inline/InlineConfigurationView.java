@@ -24,6 +24,7 @@ import javax.annotation.Nonnull;
  * The presentation of Inline Configuration view. It contains a general places for format message.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 @ImplementedBy(InlineConfigurationViewImpl.class)
 public interface InlineConfigurationView extends View<InlineConfigurationView.ActionDelegate> {
@@ -44,14 +45,14 @@ public interface InlineConfigurationView extends View<InlineConfigurationView.Ac
         void onValueChanged();
     }
 
-    /** Close dialog. */
+    /** Close dialog window. */
     void closeDialog();
 
-    /** Enable OK button. */
+    /** Sets enable of button. */
     void setEnableBtnOk();
 
     /**
-     * Show dialog.
+     * Show dialog window for editing inline property of element.
      *
      * @param content
      *         format content.
@@ -59,9 +60,10 @@ public interface InlineConfigurationView extends View<InlineConfigurationView.Ac
     void showDialog(@Nonnull String content);
 
     /**
-     * Set title of window.
+     * Sets title of window.
      *
      * @param title
+     *         value of title which need to set to window
      */
     void setWindowTitle(@Nonnull String title);
 }

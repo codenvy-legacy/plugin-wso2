@@ -28,7 +28,6 @@ import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.api.ui.wizard.ProjectWizard.PROJECT;
 import static com.codenvy.ide.api.ui.wizard.ProjectWizard.PROJECT_NAME;
@@ -39,6 +38,7 @@ import static com.codenvy.ide.api.ui.wizard.ProjectWizard.PROJECT_VISIBILITY;
  * The wizard page provides creating an empty ESB configuration project.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class WSO2PagePresenter extends AbstractWizardPage implements WSO2PageView.ActionDelegate {
     private final WSO2PageView         view;
@@ -60,33 +60,38 @@ public class WSO2PagePresenter extends AbstractWizardPage implements WSO2PageVie
         this.view.setDelegate(this);
     }
 
+    /** {@inheritDoc} */
     @Nullable
     @Override
     public String getNotice() {
         return null;
     }
 
-    @Nonnull
+    /** {@inheritDoc} */
     @Override
     public boolean isCompleted() {
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void focusComponent() {
     }
 
+    /** {@inheritDoc} */
     @Override
     public void removeOptions() {
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void go(AcceptsOneWidget container) {
+    public void go(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void commit(@NotNull final CommitCallback callback) {
+    public void commit(@Nonnull final CommitCallback callback) {
         final ProjectDescriptor projectDescriptor = factory.createDto(ProjectDescriptor.class);
         projectDescriptor.withProjectTypeId(wizardContext.getData(PROJECT_TYPE).getProjectTypeId());
 
@@ -147,7 +152,7 @@ public class WSO2PagePresenter extends AbstractWizardPage implements WSO2PageVie
 
     private void createProject(@Nonnull final CommitCallback callback,
                                @Nonnull ProjectDescriptor projectDescriptor,
-                               @Nonnull final String name) {
+                               @Nullable final String name) {
         projectServiceClient
                 .createProject(name, projectDescriptor,
                                new AsyncRequestCallback<ProjectDescriptor>() {
@@ -170,7 +175,8 @@ public class WSO2PagePresenter extends AbstractWizardPage implements WSO2PageVie
                                    protected void onFailure(Throwable exception) {
                                        callback.onFailure(exception);
                                    }
-                               });
+                               }
+                              );
     }
 
 }

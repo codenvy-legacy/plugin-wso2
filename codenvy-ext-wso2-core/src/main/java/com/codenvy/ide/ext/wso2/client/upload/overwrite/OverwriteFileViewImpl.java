@@ -30,12 +30,14 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
 /**
  * The implementation of {@link OverwriteFileView}.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class OverwriteFileViewImpl extends DialogBox implements OverwriteFileView {
 
@@ -74,13 +76,16 @@ public class OverwriteFileViewImpl extends DialogBox implements OverwriteFileVie
 
     }
 
+    /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getFileName() {
         return fileName.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void setFileName(@NotNull String fileName) {
+    public void setFileName(@Nonnull String fileName) {
         this.fileName.setText(fileName);
     }
 
@@ -104,7 +109,7 @@ public class OverwriteFileViewImpl extends DialogBox implements OverwriteFileVie
     }
 
     @Override
-    public void setMessage(@NotNull String message) {
+    public void setMessage(@Nonnull String message) {
         this.message.setHTML(message);
     }
 

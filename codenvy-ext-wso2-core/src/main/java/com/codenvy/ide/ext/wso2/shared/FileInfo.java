@@ -17,29 +17,78 @@ package com.codenvy.ide.ext.wso2.shared;
 
 import com.codenvy.dto.shared.DTO;
 
+import javax.annotation.Nonnull;
+
 /**
  * Contains information about importing file.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 
 @DTO
 public interface FileInfo {
+
+    /** @return value of file name */
+    @Nonnull
     String getFileName();
 
-    void setFileName(String fileName);
+    /**
+     * Sets value of file name to file.
+     *
+     * @param fileName
+     *         name which need to set
+     */
+    void setFileName(@Nonnull String fileName);
 
-    FileInfo withFileName(String fileName);
+    /**
+     * Returns file info entity with current file name.
+     *
+     * @param fileName
+     *         name of file
+     */
+    @Nonnull
+    FileInfo withFileName(@Nonnull String fileName);
 
+    /** @return name of project */
+    @Nonnull
     String getProjectName();
 
-    void setProjectName(String projectName);
+    /**
+     * Sets name to project.
+     *
+     * @param projectName
+     *         name which need to set to project
+     */
+    void setProjectName(@Nonnull String projectName);
 
-    FileInfo withProjectName(String projectName);
+    /**
+     * Returns file info entity with current project name.
+     *
+     * @param projectName
+     *         name of project
+     */
+    @Nonnull
+    FileInfo withProjectName(@Nonnull String projectName);
 
+    /** @return new name of file */
+    @Nonnull
     String getNewFileName();
 
-    void setNewFileName(String newFileName);
+    /**
+     * Sets new name to file.
+     *
+     * @param newFileName
+     *         name which need to set to file
+     */
+    void setNewFileName(@Nonnull String newFileName);
 
-    FileInfo withNewFileName(String newFileName);
+    /**
+     * Sets new name to file and return FileInfo entity.
+     *
+     * @param newFileName
+     *         new name of file which need set to file
+     */
+    @Nonnull
+    FileInfo withNewFileName(@Nonnull String newFileName);
 }

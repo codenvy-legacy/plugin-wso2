@@ -18,10 +18,10 @@ package com.codenvy.ide.client.propertiespanel.call;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.Call;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
-import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
-import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
+import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
+import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -34,6 +34,7 @@ import javax.annotation.Nullable;
  * of 'Call' mediator.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, CallPropertiesPanelView>
         implements CallPropertiesPanelView.ActionDelegate {
@@ -73,6 +74,7 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, 
         notifyListeners();
     }
 
+    /** Modifies the view of the panel depending on the type of endpoint of call element. */
     private void redesignViewToEndpointType() {
         Call.EndpointType endpointType = Call.EndpointType.valueOf(view.getEndpointType());
         element.setEndpointType(endpointType);

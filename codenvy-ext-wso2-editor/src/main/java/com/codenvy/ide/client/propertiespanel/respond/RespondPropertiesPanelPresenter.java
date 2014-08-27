@@ -16,14 +16,17 @@
 package com.codenvy.ide.client.propertiespanel.respond;
 
 import com.codenvy.ide.client.elements.Respond;
-import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 
 /**
+ * The presenter that provides a business logic of 'Respond' mediator properties panel. It provides an ability to work with all properties
+ * of 'Respond' mediator.
+ *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */

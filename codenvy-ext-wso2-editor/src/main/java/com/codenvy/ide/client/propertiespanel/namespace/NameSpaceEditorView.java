@@ -24,6 +24,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
+ * The presentation of Name Space Editor view. It contains a general places for name spaces properties.
+ *
  * @author Dmitry Shnurenko
  */
 @ImplementedBy(NameSpaceEditorViewImpl.class)

@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 import static com.codenvy.ide.client.elements.payload.Arg.ArgType;
 
 /**
- * The argument of mediator.
+ * The presenter that provides a business logic of dialog window for editing argument properties.
  *
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
