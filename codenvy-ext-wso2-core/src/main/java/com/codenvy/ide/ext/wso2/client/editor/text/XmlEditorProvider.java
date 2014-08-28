@@ -26,14 +26,27 @@ import com.google.inject.Provider;
  * Editor Provider for WSO2 ESB configuration files, which are XML files.
  *
  * @author Dmitry Kuleshov
+ * @author Andrey Plotnikov
  */
 public class XmlEditorProvider implements EditorProvider {
 
-    private Provider<ESBConfEditor> esbConfEditor;
+    private final Provider<ESBConfEditor> esbConfEditor;
 
     @Inject
     public XmlEditorProvider(Provider<ESBConfEditor> esbConfEditor) {
         this.esbConfEditor = esbConfEditor;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getId() {
+        return "WSO2SequenceEditor";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getDescription() {
+        return "WSO2 Sequence Editor";
     }
 
     /** {@inheritDoc} */

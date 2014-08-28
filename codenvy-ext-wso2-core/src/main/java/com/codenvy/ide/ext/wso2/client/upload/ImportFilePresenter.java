@@ -18,13 +18,10 @@ package com.codenvy.ide.ext.wso2.client.upload;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Folder;
 import com.codenvy.ide.api.resources.model.Project;
-import com.codenvy.ide.api.resources.model.Resource;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
@@ -41,8 +38,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.ext.wso2.shared.Constants.MAIN_FOLDER_NAME;
@@ -53,6 +49,7 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NA
  * The presenter for import configuration files.
  *
  * @author Valeriy Svydenko
+ * @author Andrey Plotnikov
  */
 @Singleton
 public class ImportFilePresenter implements ImportFileView.ActionDelegate {
@@ -65,7 +62,6 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
 
     private final ImportFileView         view;
     private final EventBus               eventBus;
-    private final ConsolePart            console;
     private final NotificationManager    notificationManager;
     private final String                 restContext;
     private final ResourceProvider       resourceProvider;
@@ -79,7 +75,6 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
     public ImportFilePresenter(final ImportFileView view,
                                OverwriteFilePresenter overwrite,
                                WSO2ClientService service,
-                               ConsolePart console,
                                @Named("restContext") String restContext,
                                NotificationManager notificationManager,
                                ResourceProvider resourceProvider,
@@ -89,7 +84,6 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
         this.view = view;
         this.eventBus = eventBus;
         this.view.setDelegate(this);
-        this.console = console;
         this.notificationManager = notificationManager;
         this.restContext = restContext;
         this.resourceProvider = resourceProvider;
@@ -116,8 +110,12 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
     public void onImportClicked() {
         final Project activeProject = resourceProvider.getActiveProject();
 
+        if (activeProject == null) {
+            return;
+        }
+
         if (view.isUseLocalPath()) {
-            view.setAction(restContext + "/vfs/" + Config.getWorkspaceId() + "/v2/uploadfile/" + activeProject.getId());
+            view.setAction(restContext + "/project/" + Config.getWorkspaceId() + "/uploadFile" + activeProject.getPath());
             view.submit();
         } else {
             final FileInfo fileInfo = dtoFactory.createDto(FileInfo.class)
@@ -128,19 +126,20 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
                 service.uploadFile(fileInfo, new WSO2AsyncRequestCallback<String>(new StringUnmarshaller(), notificationManager) {
                     @Override
                     protected void onSuccess(String callback) {
-                        refreshTreeWithParentFolder(callback, fileInfo.getFileName().substring(fileInfo.getFileName().lastIndexOf('/') + 1,
-                                                                                               fileInfo.getFileName().length()));
+                        String fileName = fileInfo.getFileName();
+
+                        refreshTreeWithParentFolder(callback, fileName.substring(fileName.lastIndexOf('/') + 1, fileName.length()));
                     }
                 });
             } catch (RequestException e) {
-                showError(e);
+                showError(e.getMessage());
             }
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onSubmitComplete(@NotNull String result) {
+    public void onSubmitComplete(@Nonnull String result) {
         if (result.isEmpty()) {
             final FileInfo fileInfo = dtoFactory.createDto(FileInfo.class)
                                                 .withFileName(view.getFileName())
@@ -158,15 +157,14 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
                     }
                 });
             } catch (RequestException e) {
-                showError(e);
+                showError(e.getMessage());
             }
         } else {
             if (result.startsWith("<pre>") && result.endsWith("</pre>")) {
                 result = result.substring(5, (result.length() - 6));
             }
-            console.print(result);
-            Notification notification = new Notification(result, ERROR);
-            notificationManager.showNotification(notification);
+
+            showError(result);
         }
     }
 
@@ -178,81 +176,74 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
      * @param fileName
      *         name of the file
      */
-    private void refreshTreeWithParentFolder(String response, final String fileName) {
+    private void refreshTreeWithParentFolder(@Nonnull String response, @Nonnull String fileName) {
         if (response.endsWith("already exists. ")) {
             overwrite.showDialog(fileName, viewCloseHandler);
         } else {
-            final Folder parentFolder;
-            boolean parentIsExist = false;
-
-            Project activeProject = resourceProvider.getActiveProject();
-
-            Resource src = getResourceByName(activeProject, SRC_FOLDER_NAME);
-            if (src != null) {
-                Resource main = getResourceByName((Folder)src, MAIN_FOLDER_NAME);
-                if (main != null) {
-                    Resource synapse_config = getResourceByName((Folder)main, SYNAPSE_CONFIG_FOLDER_NAME);
-                    if (synapse_config != null) {
-                        if (response.isEmpty()) {
-                            parentFolder = (Folder)synapse_config;
-                        } else {
-                            parentFolder = (Folder)getResourceByName((Folder)synapse_config, response);
-                        }
-                        if (parentFolder != null) {
-                            parentIsExist = true;
-                            activeProject.refreshChildren(parentFolder, new WSO2AsyncCallback<Folder>(notificationManager) {
-                                @Override
-                                public void onSuccess(Folder folder) {
-                                    File file = (File)parentFolder.findResourceByName(fileName, "file");
-                                    eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(file));
-                                    view.close();
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-            if (!parentIsExist) {
-                refreshProject();
-            }
+            refreshProjectExpolorerTree(response, fileName);
         }
     }
 
-    /** Refresh a project tree. */
-    private void refreshProject() {
-        resourceProvider.getActiveProject().refreshChildren(new WSO2AsyncCallback<Project>(notificationManager) {
+    private void refreshProjectExpolorerTree(@Nonnull String response, @Nonnull final String fileName) {
+        Project activeProject = resourceProvider.getActiveProject();
+
+        if (activeProject == null) {
+            return;
+        }
+
+        Folder src = (Folder)activeProject.findChildByName(SRC_FOLDER_NAME);
+        if (src == null) {
+            refreshFolder(activeProject, activeProject, fileName);
+
+            return;
+        }
+
+        Folder main = (Folder)src.findChildByName(MAIN_FOLDER_NAME);
+        if (main == null) {
+            refreshFolder(activeProject, src, fileName);
+
+            return;
+        }
+
+        Folder synapse_config = (Folder)main.findChildByName(SYNAPSE_CONFIG_FOLDER_NAME);
+
+        if (synapse_config == null) {
+            refreshFolder(activeProject, main, fileName);
+
+            return;
+        }
+
+        if (response.isEmpty()) {
+            refreshFolder(activeProject, synapse_config, fileName);
+
+            return;
+        }
+
+        Folder parentFolder = (Folder)synapse_config.findChildByName(response);
+
+        if (parentFolder == null) {
+            refreshFolder(activeProject, synapse_config, response);
+
+            return;
+        }
+
+        refreshFolder(activeProject, parentFolder, fileName);
+    }
+
+    private void refreshFolder(@Nonnull Project project, @Nonnull final Folder parentFolder, @Nonnull final String resourceName) {
+        project.refreshChildren(parentFolder, new WSO2AsyncCallback<Folder>(notificationManager) {
             @Override
-            public void onSuccess(Project result) {
+            public void onSuccess(Folder folder) {
+                File file = (File)parentFolder.findResourceByName(resourceName, File.TYPE);
+                eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(file));
+
                 view.close();
             }
         });
     }
 
-    /**
-     * Find resource by name in parent folder
-     *
-     * @param parent
-     *         place where child should be
-     * @param name
-     *         name that child should have
-     * @return {@link Resource}
-     */
-    @Nullable
-    private Resource getResourceByName(@NotNull Folder parent, @NotNull String name) {
-        Array<Resource> children = parent.getChildren();
-
-        for (Resource child : children.asIterable()) {
-            if (name.equals(child.getName())) {
-                return child;
-            }
-        }
-
-        return null;
-    }
-
-    private void showError(@NotNull Throwable throwable) {
-        Notification notification = new Notification(throwable.getMessage(), ERROR);
-        notificationManager.showNotification(notification);
+    private void showError(@Nonnull String message) {
+        notificationManager.showNotification(new Notification(message, ERROR));
     }
 
     /** {@inheritDoc} */
@@ -290,25 +281,29 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
 
     /** Check format for upload file */
     private void checkValidFileName() {
-        if (!view.getFileName().isEmpty()) {
-            if (!view.getFileName().endsWith(".xml")) {
-                view.setMessage(local.wso2ImportFileFormatError());
-                view.setEnabledImportButton(false);
-            } else {
-                view.setMessage("");
-                view.setEnabledImportButton(true);
-            }
+        String fileName = view.getFileName();
+
+        if (fileName.isEmpty()) {
+            return;
         }
+
+        boolean isXMLFile = fileName.endsWith(".xml");
+
+        view.setMessage(isXMLFile ? "" : local.wso2ImportFileFormatError());
+        view.setEnabledImportButton(isXMLFile);
     }
 
     /** Show dialog. */
     public void showDialog() {
         view.setUseUrl(false);
         view.setUseLocalPath(true);
+
         view.setMessage("");
+        view.setUrl("");
+
         view.setEnabledImportButton(false);
         view.setEnterUrlFieldEnabled(false);
-        view.setUrl("");
+
         view.showDialog();
     }
 }

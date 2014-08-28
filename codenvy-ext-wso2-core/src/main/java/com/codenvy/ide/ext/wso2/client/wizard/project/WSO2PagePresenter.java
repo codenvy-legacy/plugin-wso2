@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] Codenvy, S.A.
+ * Copyright 2014 Codenvy, S.A.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ import static com.codenvy.ide.api.ui.wizard.ProjectWizard.PROJECT_VISIBILITY;
  * The wizard page provides creating an empty ESB configuration project.
  *
  * @author Valeriy Svydenko
+ * @author Andrey Plotnikov
  */
 public class WSO2PagePresenter extends AbstractWizardPage implements WSO2PageView.ActionDelegate {
     private final WSO2PageView         view;
@@ -66,7 +67,6 @@ public class WSO2PagePresenter extends AbstractWizardPage implements WSO2PageVie
         return null;
     }
 
-    @Nonnull
     @Override
     public boolean isCompleted() {
         return true;

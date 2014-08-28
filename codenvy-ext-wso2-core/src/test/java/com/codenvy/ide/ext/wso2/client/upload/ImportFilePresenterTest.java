@@ -16,10 +16,10 @@
 
 package com.codenvy.ide.ext.wso2.client.upload;
 
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Folder;
@@ -34,7 +34,6 @@ import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
@@ -42,10 +41,10 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -57,9 +56,13 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.MAIN_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SRC_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NAME;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
@@ -70,6 +73,7 @@ import static org.mockito.Mockito.when;
  * Here we're testing {@link ImportFilePresenter}.
  *
  * @author Valeriy Svydenko
+ * @author Andrey Plotnikov
  */
 @GwtModule("com.codenvy.ide.ext.wso2.WSO2")
 public class ImportFilePresenterTest extends GwtTestWithMockito {
@@ -80,11 +84,12 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
     private static final String PARENT_FOLDER  = "parentFolderName";
 
     @Mock(answer = RETURNS_DEEP_STUBS)
-    private Folder                 parentFolder;
+    private Folder   parentFolder;
     @Mock(answer = RETURNS_DEEP_STUBS)
-    private Folder                 endpointsFolder;
+    private Folder   endpointsFolder;
     @Mock(answer = RETURNS_DEEP_STUBS)
-    private FileInfo               fileInfo;
+    private FileInfo fileInfo;
+
     @Mock
     private Project                activeProject;
     @Mock
@@ -97,24 +102,27 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
     private Folder                 synapse_config;
     @Mock
     private Resource               file;
+
     @Mock
-    private ImportFileView         view;
+    private ImportFileView       view;
     @Mock
-    private ConsolePart            console;
+    private NotificationManager  notificationManager;
     @Mock
-    private NotificationManager    notificationManager;
+    private LocalizationConstant local;
     @Mock
-    private LocalizationConstant   local;
+    private EventBus             eventBus;
     @Mock
-    private EventBus               eventBus;
-    @Mock
-    private WSO2ClientService      service;
+    private WSO2ClientService    service;
+
     @Mock(answer = RETURNS_DEEP_STUBS)
-    private ResourceProvider       resourceProvider;
+    private AppContext       appContext;
     @Mock(answer = RETURNS_DEEP_STUBS)
-    private DtoFactory             dtoFactory;
+    private ResourceProvider resourceProvider;
+    @Mock(answer = RETURNS_DEEP_STUBS)
+    private DtoFactory       dtoFactory;
+
     @InjectMocks
-    private ImportFilePresenter    importFilePresenter;
+    private ImportFilePresenter importFilePresenter;
 
     @Before
     public void setUp() throws Exception {
@@ -144,8 +152,8 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
     @Test
     public void buttonImportShouldBeDisableWhenFileNameIsNotValid() {
         when(view.getFileName()).thenReturn(NOT_VALID_NAME);
-        importFilePresenter.onFileNameChanged();
 
+        importFilePresenter.onFileNameChanged();
 
         verify(view).setMessage(eq(local.wso2ImportFileFormatError()));
         verify(view).setEnabledImportButton(eq(false));
@@ -162,11 +170,14 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
 
     @Test
     public void buttonImportShouldBeDisableWhenFileNameIsInvalid() {
+        when(local.wso2ImportFileFormatError()).thenReturn(MESSAGE);
+
         importFilePresenter.onFileNameChangedWithInvalidFormat();
 
         verify(view).setEnabledImportButton(eq(false));
-        verify(view).setMessage(eq(local.wso2ImportFileFormatError()));
+        verify(view).setMessage(eq(MESSAGE));
         verify(view).setEnabledImportButton(eq(false));
+        verify(local).wso2ImportFileFormatError();
     }
 
     @Test
@@ -232,36 +243,50 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
     public void notificationShouldBeShowWhenResultMessageIsNotEmpty() throws Exception {
         importFilePresenter.onSubmitComplete(MESSAGE);
 
-        verify(console).print(MESSAGE);
-        verify(notificationManager).showNotification((Notification)anyObject());
+        ArgumentCaptor<Notification> notificationArgumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        verify(notificationManager).showNotification(notificationArgumentCaptor.capture());
+
+        Notification notification = notificationArgumentCaptor.getValue();
+
+        assertEquals(MESSAGE, notification.getMessage());
+        assertTrue(notification.isError());
     }
 
     @Test
     public void notificationShouldBeShowWithoutHTMLTagsWhenResultMessageIsNotEmpty() throws Exception {
         importFilePresenter.onSubmitComplete("<pre>" + MESSAGE + "</pre>");
 
-        verify(console).print(eq(MESSAGE));
-        verify(notificationManager).showNotification((Notification)anyObject());
+        ArgumentCaptor<Notification> notificationArgumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        verify(notificationManager).showNotification(notificationArgumentCaptor.capture());
+
+        Notification notification = notificationArgumentCaptor.getValue();
+
+        assertEquals(MESSAGE, notification.getMessage());
+        assertTrue(notification.isError());
     }
 
-    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
     @Test
     public void onFailureMethodInSubmitCallbackShouldBeExecutedWhenSomeProblemHappened() throws Exception {
         final Throwable throwable = mock(Throwable.class);
+
         doAnswer(new Answer() {
+            @SuppressWarnings({"NonJREEmulationClassesInClientCode", "unchecked"})
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
+
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, throwable);
+
                 return callback;
             }
-        }).when(service).detectConfigurationFile((FileInfo)anyObject(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).detectConfigurationFile(any(FileInfo.class), Matchers.<AsyncRequestCallback<String>>anyObject());
 
         when(local.wso2ImportDialogError()).thenReturn(MESSAGE);
-        when(dtoFactory.createDto(Matchers.<Class<FileInfo>>anyObject()))
-                .thenReturn(mock(FileInfo.class, Mockito.RETURNS_MOCKS));
+        when(dtoFactory.createDto(Matchers.<Class<FileInfo>>anyObject())).thenReturn(mock(FileInfo.class, RETURNS_MOCKS));
         when(view.getFileName()).thenReturn(MESSAGE);
         when(resourceProvider.getActiveProject().getName()).thenReturn(MESSAGE);
 
@@ -270,58 +295,76 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
         verify(view).setMessage(Matchers.eq(MESSAGE));
     }
 
-    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode", "ThrowableResultOfMethodCallIgnored"})
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     @Test
     public void onFailureMethodOnImportClickedCallbackShouldBeExecutedWhenSomeProblemHappened() throws Exception {
         final Throwable throwable = mock(Throwable.class);
+        when(throwable.getMessage()).thenReturn(MESSAGE);
+
         doAnswer(new Answer() {
+            @SuppressWarnings({"NonJREEmulationClassesInClientCode", "unchecked"})
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 WSO2AsyncRequestCallback<Void> callback = (WSO2AsyncRequestCallback<Void>)arguments[1];
+
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, throwable);
+
                 return callback;
             }
-        }).when(service).uploadFile((FileInfo)anyObject(), (WSO2AsyncRequestCallback<String>)anyObject());
+        }).when(service).uploadFile(any(FileInfo.class), Matchers.<WSO2AsyncRequestCallback<String>>anyObject());
 
         when(dtoFactory.createDto(Matchers.<Class<FileInfo>>anyObject()))
-                .thenReturn(mock(FileInfo.class, Mockito.RETURNS_MOCKS));
+                .thenReturn(mock(FileInfo.class, RETURNS_MOCKS));
 
         importFilePresenter.onImportClicked();
 
         verify(throwable).getMessage();
-        verify(notificationManager).showNotification((Notification)anyObject());
+
+        ArgumentCaptor<Notification> notificationArgumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        verify(notificationManager).showNotification(notificationArgumentCaptor.capture());
+
+        Notification notification = notificationArgumentCaptor.getValue();
+
+        assertEquals(MESSAGE, notification.getMessage());
+        assertTrue(notification.isError());
     }
 
-    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
     @Test
     public void onSuccessMethodOnImportClickedCallbackShouldBeExecutedWhenFileUploaded() throws Exception {
         prepareTestForSuccessResultWhenMethodSubmitCalled();
 
         doAnswer(new Answer() {
+            @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 WSO2AsyncRequestCallback<Void> callback = (WSO2AsyncRequestCallback<Void>)arguments[1];
+
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, "already exists. ");
+
                 return callback;
             }
-        }).when(service).uploadFile((FileInfo)anyObject(), (WSO2AsyncRequestCallback<String>)anyObject());
+        }).when(service).uploadFile(any(FileInfo.class), Matchers.<WSO2AsyncRequestCallback<String>>anyObject());
+
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Object[] arguments = invocationOnMock.getArguments();
                 ViewCloseHandler utils = (ViewCloseHandler)arguments[1];
+
                 utils.onCloseView();
+
                 return utils;
             }
-        }).when(overwrite).showDialog(anyString(), (ViewCloseHandler)anyObject());
+        }).when(overwrite).showDialog(anyString(), any(ViewCloseHandler.class));
 
         importFilePresenter.onImportClicked();
 
-        verify(overwrite).showDialog(eq(MESSAGE), (ViewCloseHandler)anyObject());
+        verify(overwrite).showDialog(eq(MESSAGE), any(ViewCloseHandler.class));
         verify(view).close();
     }
 
@@ -336,9 +379,8 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
         verify(view).submit();
     }
 
-    @SuppressWarnings("unchecked")
     private void prepareTestForSuccessResultWhenMethodSubmitCalled() {
-        when(dtoFactory.createDto((Class<FileInfo>)anyObject())).thenReturn(fileInfo);
+        when(dtoFactory.createDto(Matchers.<Class<FileInfo>>anyObject())).thenReturn(fileInfo);
         when(fileInfo.withFileName(anyString()).withProjectName(anyString())).thenReturn(fileInfo);
 
         when(view.getFileName()).thenReturn(MESSAGE);
@@ -346,9 +388,10 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
         when(fileInfo.getFileName()).thenReturn(MESSAGE);
 
         when(resourceProvider.getActiveProject()).thenReturn(activeProject);
-        when(activeProject.getChildren()).thenReturn(Collections.<Resource>createArray(src));
-        when(src.getChildren()).thenReturn(Collections.<Resource>createArray(main));
-        when(main.getChildren()).thenReturn(Collections.<Resource>createArray(synapse_config));
+
+        when(activeProject.findChildByName(eq(SRC_FOLDER_NAME))).thenReturn(src);
+        when(src.findChildByName(eq(MAIN_FOLDER_NAME))).thenReturn(main);
+        when(main.findChildByName(eq(SYNAPSE_CONFIG_FOLDER_NAME))).thenReturn(synapse_config);
 
         when(src.getName()).thenReturn(SRC_FOLDER_NAME);
         when(main.getName()).thenReturn(MAIN_FOLDER_NAME);
@@ -356,39 +399,42 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
         when(parentFolder.getName()).thenReturn(PARENT_FOLDER);
     }
 
-    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
     @Test
     public void onSuccessMethodInSubmitCallbackShouldBeExecutedWhenNoProblemHappenedAndResponseContainsAlreadyExist() throws Exception {
         prepareTestForSuccessResultWhenMethodSubmitCalled();
 
         doAnswer(new Answer() {
+            @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
+
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, "already exists. ");
+
                 return callback;
             }
-        }).when(service).detectConfigurationFile((FileInfo)anyObject(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).detectConfigurationFile((FileInfo)anyObject(), Matchers.<AsyncRequestCallback<String>>anyObject());
 
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Object[] arguments = invocationOnMock.getArguments();
                 ViewCloseHandler utils = (ViewCloseHandler)arguments[1];
+
                 utils.onCloseView();
+
                 return utils;
             }
-        }).when(overwrite).showDialog(anyString(), (ViewCloseHandler)anyObject());
+        }).when(overwrite).showDialog(anyString(), any(ViewCloseHandler.class));
 
         importFilePresenter.onSubmitComplete("");
 
-        verify(overwrite).showDialog(eq(MESSAGE), (ViewCloseHandler)anyObject());
+        verify(overwrite).showDialog(eq(MESSAGE), any(ViewCloseHandler.class));
         verify(view).close();
     }
 
-    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
     @Test
     public void onSuccessMethodInSubmitCallbackShouldBeExecutedWhenNoProblemHappenedAndResponseIsEmpty() throws Exception {
         prepareTestForSuccessResultWhenMethodSubmitCalled();
@@ -398,26 +444,33 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
         when(synapse_config.getChildren()).thenReturn(Collections.<Resource>createArray(parentFolder));
 
         doAnswer(new Answer() {
+            @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
+
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, "");
+
                 return callback;
             }
-        }).when(service).detectConfigurationFile((FileInfo)anyObject(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).detectConfigurationFile((FileInfo)anyObject(), Matchers.<AsyncRequestCallback<String>>anyObject());
 
         doAnswer(new Answer() {
+            @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncCallback<Void> callback = (AsyncCallback<Void>)arguments[1];
+
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, parentFolder);
+
                 return callback;
             }
-        }).when(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        }).when(activeProject).refreshChildren((Folder)anyObject(), Matchers.<AsyncCallback<Folder>>anyObject());
+
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
@@ -428,45 +481,51 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
 
                 return event;
             }
-        }).when(eventBus).fireEvent((ResourceChangedEvent)anyObject());
+        }).when(eventBus).fireEvent(isA(ResourceChangedEvent.class));
 
         importFilePresenter.onSubmitComplete("");
 
         verify(view).close();
+        verify(eventBus).fireEvent(isA(ResourceChangedEvent.class));
     }
 
-    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
     @Test
     public void onSuccessMethodInSubmitCallbackShouldBeExecutedWhenNoProblemHappenedAndResponseIsNotEmpty() throws Exception {
         prepareTestForSuccessResultWhenMethodSubmitCalled();
-        when(synapse_config.getChildren()).thenReturn(Collections.<Resource>createArray(endpointsFolder));
+
+        when(synapse_config.findChildByName(eq(ENDPOINTS_FOLDER_NAME))).thenReturn(endpointsFolder);
         when(endpointsFolder.getName()).thenReturn(ENDPOINTS_FOLDER_NAME);
 
         final Resource file = mock(File.class);
-        when(endpointsFolder.findResourceByName(anyString(), anyString())).thenReturn(file);
-
+        when(endpointsFolder.findResourceByName(anyString(), eq(File.TYPE))).thenReturn(file);
 
         doAnswer(new Answer() {
+            @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
+
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, ENDPOINTS_FOLDER_NAME);
+
                 return callback;
             }
-        }).when(service).detectConfigurationFile((FileInfo)anyObject(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).detectConfigurationFile(any(FileInfo.class), Matchers.<AsyncRequestCallback<String>>anyObject());
 
         doAnswer(new Answer() {
+            @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncCallback<Void> callback = (AsyncCallback<Void>)arguments[1];
+
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, endpointsFolder);
+
                 return callback;
             }
-        }).when(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        }).when(activeProject).refreshChildren((Folder)anyObject(), Matchers.<AsyncCallback<Folder>>anyObject());
 
         doAnswer(new Answer() {
             @Override
@@ -478,47 +537,65 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
 
                 return event;
             }
-        }).when(eventBus).fireEvent((ResourceChangedEvent)anyObject());
+        }).when(eventBus).fireEvent(isA(ResourceChangedEvent.class));
 
         importFilePresenter.onSubmitComplete("");
 
+        verify(eventBus).fireEvent(isA(ResourceChangedEvent.class));
         verify(view).close();
-        verify(eventBus).fireEvent((Event<?>)anyObject());
     }
 
-    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode", "ThrowableResultOfMethodCallIgnored"})
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     @Test
     public void onFailureMethodInSubmitCallbackShouldBeExecutedWhenSomeProblemHappenedAndResponseIsNotEmpty() throws Exception {
         prepareTestForSuccessResultWhenMethodSubmitCalled();
+
         when(synapse_config.getChildren()).thenReturn(Collections.<Resource>createArray(endpointsFolder));
         when(endpointsFolder.getName()).thenReturn(ENDPOINTS_FOLDER_NAME);
 
         doAnswer(new Answer() {
+            @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
+
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, ENDPOINTS_FOLDER_NAME);
+
                 return callback;
             }
-        }).when(service).detectConfigurationFile((FileInfo)anyObject(), (AsyncRequestCallback<String>)anyObject());
+        }).when(service).detectConfigurationFile((FileInfo)anyObject(), Matchers.<AsyncRequestCallback<String>>anyObject());
 
         final Throwable throwable = mock(Throwable.class);
+        when(throwable.getMessage()).thenReturn(MESSAGE);
+
         doAnswer(new Answer() {
+            @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncCallback<Void> callback = (AsyncCallback<Void>)arguments[1];
+
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, throwable);
+
                 return callback;
             }
-        }).when(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        }).when(activeProject).refreshChildren((Folder)anyObject(), Matchers.<AsyncCallback<Folder>>anyObject());
 
         importFilePresenter.onSubmitComplete("");
 
         verify(throwable).getMessage();
-        verify(notificationManager).showNotification((Notification)anyObject());
+
+        ArgumentCaptor<Notification> notificationArgumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        verify(notificationManager).showNotification(notificationArgumentCaptor.capture());
+
+        Notification notification = notificationArgumentCaptor.getValue();
+
+        assertEquals(MESSAGE, notification.getMessage());
+        assertTrue(notification.isError());
     }
+
 }

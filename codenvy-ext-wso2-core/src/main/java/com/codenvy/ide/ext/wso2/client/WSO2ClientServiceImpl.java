@@ -15,20 +15,20 @@
  */
 package com.codenvy.ide.ext.wso2.client;
 
-import com.codenvy.ide.MimeType;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
-import com.codenvy.ide.rest.HTTPHeader;
-import com.codenvy.ide.ui.loader.Loader;
+import com.codenvy.ide.ui.loader.IdeLoader;
 import com.codenvy.ide.util.Config;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
+import static com.codenvy.ide.MimeType.APPLICATION_JSON;
 import static com.codenvy.ide.rest.HTTPHeader.CONTENT_TYPE;
 
 /**
@@ -44,60 +44,65 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
     private static final String DETECT_CONFIGURATION_FILE = TEMPLATE_BASE_URL + "/detect";
     private static final String UPLOAD_CONFIGURATION_FILE = TEMPLATE_BASE_URL + "/upload";
     private static final String MODIFY_CONFIGURATION_FILE = TEMPLATE_BASE_URL + "/file";
-    private static final String GET_WSO2_SERVICE_INFO     = TEMPLATE_BASE_URL + "/info";
 
-    private final String              restContext;
-    private final Loader              loader;
-    private final AsyncRequestFactory asyncRequestFactory;
+    private final String               restContext;
+    private final Provider<IdeLoader>  ideLoaderProvider;
+    private final AsyncRequestFactory  asyncRequestFactory;
+    private final LocalizationConstant localizationConstant;
 
     @Inject
     public WSO2ClientServiceImpl(@Named("restContext") String restContext,
-                                 Loader loader,
-                                 AsyncRequestFactory asyncRequestFactory) {
+                                 Provider<IdeLoader> ideLoaderProvider,
+                                 AsyncRequestFactory asyncRequestFactory,
+                                 LocalizationConstant localizationConstant) {
         this.restContext = restContext;
-        this.loader = loader;
+        this.ideLoaderProvider = ideLoaderProvider;
         this.asyncRequestFactory = asyncRequestFactory;
+        this.localizationConstant = localizationConstant;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void detectConfigurationFile(@NotNull FileInfo fileInfo, @NotNull AsyncRequestCallback<String> callback)
+    public void detectConfigurationFile(@Nonnull FileInfo fileInfo, @Nonnull AsyncRequestCallback<String> callback)
             throws RequestException {
         String requestUrl = restContext + DETECT_CONFIGURATION_FILE;
 
-        loader.setMessage("Importing file...");
+        IdeLoader loader = ideLoaderProvider.get();
+        loader.setMessage(localizationConstant.importingFileMessage());
 
-        asyncRequestFactory.createPostRequest(requestUrl, fileInfo, true).loader(loader).header(CONTENT_TYPE, MimeType.APPLICATION_JSON)
+        asyncRequestFactory.createPostRequest(requestUrl, fileInfo, true)
+                           .loader(loader)
+                           .header(CONTENT_TYPE, APPLICATION_JSON)
                            .send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void uploadFile(@NotNull FileInfo fileInfo, @NotNull AsyncRequestCallback<String> callback) throws RequestException {
+    public void uploadFile(@Nonnull FileInfo fileInfo, @Nonnull AsyncRequestCallback<String> callback) throws RequestException {
         String requestUrl = restContext + UPLOAD_CONFIGURATION_FILE;
 
-        loader.setMessage("Importing file...");
+        IdeLoader loader = ideLoaderProvider.get();
+        loader.setMessage(localizationConstant.importingFileMessage());
 
-        asyncRequestFactory.createPostRequest(requestUrl, fileInfo, true).loader(loader).header(CONTENT_TYPE, MimeType.APPLICATION_JSON)
+        asyncRequestFactory.createPostRequest(requestUrl, fileInfo, true)
+                           .loader(loader)
+                           .header(CONTENT_TYPE, APPLICATION_JSON)
                            .send(callback);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void modifyFile(@NotNull FileInfo fileInfo, @NotNull String operation, @NotNull AsyncRequestCallback<String> callback)
+    public void modifyFile(@Nonnull FileInfo fileInfo, @Nonnull String operation, @Nonnull AsyncRequestCallback<String> callback)
             throws RequestException {
         String requestUrl = restContext + MODIFY_CONFIGURATION_FILE + "/" + operation;
 
-        asyncRequestFactory.createPostRequest(requestUrl, fileInfo, true).header(CONTENT_TYPE, MimeType.APPLICATION_JSON)
+        IdeLoader loader = ideLoaderProvider.get();
+        loader.setMessage(localizationConstant.modifyingFileMessage());
+
+        asyncRequestFactory.createPostRequest(requestUrl, fileInfo, true)
+                           .loader(loader)
+                           .header(CONTENT_TYPE, APPLICATION_JSON)
                            .send(callback);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void getWSO2ServiceInfo(@NotNull AsyncRequestCallback<String> callback) throws RequestException {
-        String url = restContext + GET_WSO2_SERVICE_INFO;
-
-        asyncRequestFactory.createGetRequest(url).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
-                           .send(callback);
-    }
 }

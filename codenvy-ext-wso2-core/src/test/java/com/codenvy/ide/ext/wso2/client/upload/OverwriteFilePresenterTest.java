@@ -39,6 +39,7 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
@@ -48,11 +49,14 @@ import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
 
+import static com.codenvy.ide.ext.wso2.shared.Constants.ENDPOINTS_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.MAIN_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SRC_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NAME;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -69,6 +73,7 @@ import static org.mockito.Mockito.when;
  * Here we're testing {@link OverwriteFilePresenter}
  *
  * @author Valeriy Svydenko
+ * @author Andrey Plotnikov
  */
 @RunWith(MockitoJUnitRunner.class)
 public class OverwriteFilePresenterTest {
@@ -147,23 +152,28 @@ public class OverwriteFilePresenterTest {
         verify(view).setEnabledRenameButton(eq(false));
     }
 
-    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     @Test
     public void cancelButtonShouldBeExecutedWhenSomeProblemHappened() throws Exception {
-        when(dtoFactory.createDto(Matchers.<Class<FileInfo>>anyObject()))
-                .thenReturn(mock(FileInfo.class, RETURNS_MOCKS));
+        when(dtoFactory.createDto(Matchers.<Class<FileInfo>>anyObject())).thenReturn(mock(FileInfo.class, RETURNS_MOCKS));
 
         final Throwable throwable = mock(Throwable.class);
+        when(throwable.getMessage()).thenReturn(PROJECT_NAME);
+
         doAnswer(new Answer() {
+            @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Object[] arguments = invocationOnMock.getArguments();
+
                 WSO2AsyncRequestCallback<String> callback = (WSO2AsyncRequestCallback<String>)arguments[2];
+
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, throwable);
-                return callback;
+
+                return null;
             }
-        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (WSO2AsyncRequestCallback<String>)anyObject());
+        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), Matchers.<WSO2AsyncRequestCallback<String>>anyObject());
 
         when(resourceProvider.getActiveProject()).thenReturn(activeProject);
         when(view.getFileName()).thenReturn(FILE_NAME);
@@ -172,49 +182,59 @@ public class OverwriteFilePresenterTest {
         overwriteFilePresenter.onCancelButtonClicked();
 
         verify(throwable).getMessage();
-        verify(notificationManager).showNotification((Notification)anyObject());
+
+        ArgumentCaptor<Notification> notificationArgumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        verify(notificationManager).showNotification(notificationArgumentCaptor.capture());
+
+        Notification notification = notificationArgumentCaptor.getValue();
+
+        assertEquals(PROJECT_NAME, notification.getMessage());
+        assertTrue(notification.isError());
     }
 
     private void prepareDataForExecutingTests() {
-        when(dtoFactory.createDto(Matchers.<Class<FileInfo>>anyObject()))
-                .thenReturn(mock(FileInfo.class, RETURNS_MOCKS));
+        when(dtoFactory.createDto(Matchers.<Class<FileInfo>>anyObject())).thenReturn(mock(FileInfo.class, RETURNS_MOCKS));
         when(resourceProvider.getActiveProject()).thenReturn(activeProject);
         when(view.getFileName()).thenReturn(FILE_NAME);
         when(resourceProvider.getActiveProject().getName()).thenReturn(PROJECT_NAME);
 
         when(resourceProvider.getActiveProject()).thenReturn(activeProject);
-        when(activeProject.getChildren()).thenReturn(Collections.<Resource>createArray(src));
-        when(src.getChildren()).thenReturn(Collections.<Resource>createArray(main));
-        when(main.getChildren()).thenReturn(Collections.<Resource>createArray(synapse_config));
+
+        when(activeProject.findChildByName(eq(SRC_FOLDER_NAME))).thenReturn(src);
+        when(src.findChildByName(eq(MAIN_FOLDER_NAME))).thenReturn(main);
+        when(main.findChildByName(eq(SYNAPSE_CONFIG_FOLDER_NAME))).thenReturn(synapse_config);
+
         when(src.getName()).thenReturn(SRC_FOLDER_NAME);
         when(main.getName()).thenReturn(MAIN_FOLDER_NAME);
         when(synapse_config.getName()).thenReturn(SYNAPSE_CONFIG_FOLDER_NAME);
-
     }
 
-    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
     @Test
     public void cancelButtonShouldBeExecutedWithoutProblems() throws Exception {
         prepareDataForExecutingTests();
 
         doAnswer(new Answer() {
+            @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
+
                 WSO2AsyncRequestCallback<String> callback = (WSO2AsyncRequestCallback<String>)arguments[2];
+
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, "");
-                return callback;
+
+                return null;
             }
-        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (WSO2AsyncRequestCallback<String>)anyObject());
+        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), Matchers.<WSO2AsyncRequestCallback<String>>anyObject());
 
         overwriteFilePresenter.onCancelButtonClicked();
 
         verify(view).close();
-        verify(activeProject, never()).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        verify(activeProject, never()).refreshChildren((Folder)anyObject(), Matchers.<AsyncCallback<Folder>>anyObject());
     }
 
-    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
     @Test
     public void onFailureMethodInModifyFileShouldBeExecutedWhenRequestExceptionHappened() throws Exception {
         when(dtoFactory.createDto(Matchers.<Class<FileInfo>>anyObject())).thenReturn(mock(FileInfo.class, RETURNS_MOCKS));
@@ -222,31 +242,43 @@ public class OverwriteFilePresenterTest {
         when(view.getFileName()).thenReturn(FILE_NAME);
         when(resourceProvider.getActiveProject().getName()).thenReturn(PROJECT_NAME);
 
-        doThrow(RequestException.class).when(service).modifyFile((FileInfo)anyObject(), anyString(),
-                                                                 (WSO2AsyncRequestCallback<String>)anyObject());
+        doThrow(RequestException.class).when(service).modifyFile(any(FileInfo.class),
+                                                                 anyString(),
+                                                                 Matchers.<WSO2AsyncRequestCallback<String>>anyObject());
 
 
         overwriteFilePresenter.onCancelButtonClicked();
 
-        verify(notificationManager).showNotification((Notification)anyObject());
+        ArgumentCaptor<Notification> notificationArgumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        verify(notificationManager).showNotification(notificationArgumentCaptor.capture());
+
+        Notification notification = notificationArgumentCaptor.getValue();
+        assertTrue(notification.isError());
     }
 
-    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     @Test
     public void renameButtonShouldBeExecutedWhenSomeProblemHappened() throws Exception {
         when(dtoFactory.createDto(Matchers.<Class<FileInfo>>anyObject())).thenReturn(mock(FileInfo.class, RETURNS_MOCKS));
 
         final Throwable throwable = mock(Throwable.class);
+        when(throwable.getMessage()).thenReturn(PROJECT_NAME);
+
         doAnswer(new Answer() {
+            @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Object[] arguments = invocationOnMock.getArguments();
+
                 WSO2AsyncRequestCallback<String> callback = (WSO2AsyncRequestCallback<String>)arguments[2];
+
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, throwable);
-                return callback;
+
+                return null;
             }
-        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (WSO2AsyncRequestCallback<String>)anyObject());
+        }).when(service).modifyFile(any(FileInfo.class), anyString(), Matchers.<WSO2AsyncRequestCallback<String>>anyObject());
 
         when(resourceProvider.getActiveProject()).thenReturn(activeProject);
         when(view.getFileName()).thenReturn(FILE_NAME);
@@ -257,25 +289,38 @@ public class OverwriteFilePresenterTest {
 
         verify(parentViewUtils).onCloseView();
         verify(throwable).getMessage();
-        verify(notificationManager).showNotification((Notification)anyObject());
+
+        ArgumentCaptor<Notification> notificationArgumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        verify(notificationManager).showNotification(notificationArgumentCaptor.capture());
+
+        Notification notification = notificationArgumentCaptor.getValue();
+        assertEquals(PROJECT_NAME, throwable.getMessage());
+        assertTrue(notification.isError());
     }
 
-    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     @Test
     public void overwriteButtonShouldBeExecutedWhenSomeProblemHappened() throws Exception {
         when(dtoFactory.createDto(Matchers.<Class<FileInfo>>anyObject())).thenReturn(mock(FileInfo.class, RETURNS_MOCKS));
 
         final Throwable throwable = mock(Throwable.class);
+        when(throwable.getMessage()).thenReturn(PROJECT_NAME);
+
         doAnswer(new Answer() {
+            @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Object[] arguments = invocationOnMock.getArguments();
+
                 WSO2AsyncRequestCallback<String> callback = (WSO2AsyncRequestCallback<String>)arguments[2];
+
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, throwable);
-                return callback;
+
+                return null;
             }
-        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (WSO2AsyncRequestCallback<String>)anyObject());
+        }).when(service).modifyFile(any(FileInfo.class), anyString(), Matchers.<WSO2AsyncRequestCallback<String>>anyObject());
 
         when(resourceProvider.getActiveProject()).thenReturn(activeProject);
         when(view.getFileName()).thenReturn(FILE_NAME);
@@ -286,38 +331,55 @@ public class OverwriteFilePresenterTest {
 
         verify(parentViewUtils).onCloseView();
         verify(throwable).getMessage();
-        verify(notificationManager).showNotification((Notification)anyObject());
+
+        ArgumentCaptor<Notification> notificationArgumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        verify(notificationManager).showNotification(notificationArgumentCaptor.capture());
+
+        Notification notification = notificationArgumentCaptor.getValue();
+        assertEquals(PROJECT_NAME, throwable.getMessage());
+        assertTrue(notification.isError());
     }
 
-    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
     @Test
     public void renameButtonShouldBeExecutedAndTreeRefreshedWithoutProblems() throws Exception {
         prepareDataForExecutingTests();
 
+        when(synapse_config.findChildByName(eq(ENDPOINTS_FOLDER_NAME))).thenReturn(parentFolder);
+
         final Resource file = mock(File.class);
-        when(synapse_config.findResourceByName(anyString(), anyString())).thenReturn(file);
-        when(synapse_config.getChildren()).thenReturn(Collections.<Resource>createArray(parentFolder));
+        when(parentFolder.findResourceByName(anyString(), eq(File.TYPE))).thenReturn(file);
 
         doAnswer(new Answer() {
+            @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
+
                 WSO2AsyncRequestCallback<String> callback = (WSO2AsyncRequestCallback<String>)arguments[2];
+
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, "");
-                return callback;
+
+                return null;
             }
-        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (WSO2AsyncRequestCallback<String>)anyObject());
+        }).when(service).modifyFile(any(FileInfo.class), anyString(), Matchers.<WSO2AsyncRequestCallback<String>>anyObject());
+
         doAnswer(new Answer() {
+            @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
+
                 AsyncCallback<Void> callback = (AsyncCallback<Void>)arguments[1];
+
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, parentFolder);
-                return callback;
+
+                return null;
             }
-        }).when(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        }).when(activeProject).refreshChildren(any(Folder.class), Matchers.<AsyncCallback<Folder>>anyObject());
+
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
@@ -326,46 +388,56 @@ public class OverwriteFilePresenterTest {
 
                 assertEquals(file, event.getResource());
 
-                return event;
+                return null;
             }
-        }).when(eventBus).fireEvent((ResourceChangedEvent)anyObject());
+        }).when(eventBus).fireEvent(any(ResourceChangedEvent.class));
 
         overwriteFilePresenter.showDialog(FILE_NAME, parentViewUtils);
         overwriteFilePresenter.onRenameButtonClicked();
 
-        verify(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        verify(activeProject).refreshChildren(any(Folder.class), Matchers.<AsyncCallback<Folder>>anyObject());
         verify(parentViewUtils).onCloseView();
     }
 
-    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
     @Test
     public void overwriteButtonShouldBeExecutedAndTreeRefreshedWithoutProblems() throws Exception {
         prepareDataForExecutingTests();
 
+        when(synapse_config.findChildByName(eq(ENDPOINTS_FOLDER_NAME))).thenReturn(parentFolder);
+
         final Resource file = mock(File.class);
-        when(synapse_config.findResourceByName(anyString(), anyString())).thenReturn(file);
-        when(synapse_config.getChildren()).thenReturn(Collections.<Resource>createArray(parentFolder));
+        when(parentFolder.findResourceByName(anyString(), eq(File.TYPE))).thenReturn(file);
 
         doAnswer(new Answer() {
+            @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
+
                 WSO2AsyncRequestCallback<String> callback = (WSO2AsyncRequestCallback<String>)arguments[2];
+
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, "");
-                return callback;
+
+                return null;
             }
-        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (WSO2AsyncRequestCallback<String>)anyObject());
+        }).when(service).modifyFile(any(FileInfo.class), anyString(), Matchers.<WSO2AsyncRequestCallback<String>>anyObject());
+
         doAnswer(new Answer() {
+            @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
+
                 AsyncCallback<Void> callback = (AsyncCallback<Void>)arguments[1];
+
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, parentFolder);
-                return callback;
+
+                return null;
             }
-        }).when(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        }).when(activeProject).refreshChildren(any(Folder.class), Matchers.<AsyncCallback<Folder>>anyObject());
+
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
@@ -376,16 +448,16 @@ public class OverwriteFilePresenterTest {
 
                 return event;
             }
-        }).when(eventBus).fireEvent((ResourceChangedEvent)anyObject());
+        }).when(eventBus).fireEvent(any(ResourceChangedEvent.class));
 
         overwriteFilePresenter.showDialog(FILE_NAME, parentViewUtils);
         overwriteFilePresenter.onOverwriteButtonClicked();
 
-        verify(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        verify(activeProject).refreshChildren((Folder)anyObject(), Matchers.<AsyncCallback<Folder>>anyObject());
         verify(parentViewUtils).onCloseView();
     }
 
-    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     @Test
     public void overwriteButtonShouldBeExecutedAndTreeRefreshWithSomeProblem() throws Exception {
         prepareDataForExecutingTests();
@@ -395,38 +467,56 @@ public class OverwriteFilePresenterTest {
         when(synapse_config.getChildren()).thenReturn(Collections.<Resource>createArray(parentFolder));
 
         doAnswer(new Answer() {
+            @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
+
                 WSO2AsyncRequestCallback<String> callback = (WSO2AsyncRequestCallback<String>)arguments[2];
+
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, "");
-                return callback;
+
+                return null;
             }
-        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (WSO2AsyncRequestCallback<String>)anyObject());
+        }).when(service).modifyFile(any(FileInfo.class), anyString(), Matchers.<WSO2AsyncRequestCallback<String>>anyObject());
 
         final Throwable throwable = mock(Throwable.class);
+        when(throwable.getMessage()).thenReturn(PROJECT_NAME);
+
         doAnswer(new Answer() {
+            @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
+
                 AsyncCallback<Void> callback = (AsyncCallback<Void>)arguments[1];
+
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, throwable);
-                return callback;
+
+                return null;
             }
-        }).when(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        }).when(activeProject).refreshChildren(any(Folder.class), Matchers.<AsyncCallback<Folder>>anyObject());
 
         overwriteFilePresenter.showDialog(FILE_NAME, parentViewUtils);
         overwriteFilePresenter.onOverwriteButtonClicked();
 
-        verify(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        verify(activeProject).refreshChildren(any(Folder.class), Matchers.<AsyncCallback<Folder>>anyObject());
         verify(parentViewUtils).onCloseView();
+
         verify(throwable).getMessage();
-        verify(notificationManager).showNotification((Notification)anyObject());
+
+        ArgumentCaptor<Notification> notificationArgumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        verify(notificationManager).showNotification(notificationArgumentCaptor.capture());
+
+        Notification notification = notificationArgumentCaptor.getValue();
+        assertEquals(PROJECT_NAME, throwable.getMessage());
+        assertTrue(notification.isError());
     }
 
-    @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     @Test
     public void refreshButtonShouldBeExecutedAndTreeRefreshWithSomeProblem() throws Exception {
         prepareDataForExecutingTests();
@@ -436,34 +526,53 @@ public class OverwriteFilePresenterTest {
         when(synapse_config.getChildren()).thenReturn(Collections.<Resource>createArray(parentFolder));
 
         doAnswer(new Answer() {
+            @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
+
                 WSO2AsyncRequestCallback<String> callback = (WSO2AsyncRequestCallback<String>)arguments[2];
+
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, "");
+
                 return callback;
             }
-        }).when(service).modifyFile((FileInfo)anyObject(), anyString(), (WSO2AsyncRequestCallback<String>)anyObject());
+        }).when(service).modifyFile(any(FileInfo.class), anyString(), Matchers.<WSO2AsyncRequestCallback<String>>anyObject());
 
         final Throwable throwable = mock(Throwable.class);
+        when(throwable.getMessage()).thenReturn(PROJECT_NAME);
+
         doAnswer(new Answer() {
+            @SuppressWarnings({"unchecked", "NonJREEmulationClassesInClientCode"})
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
+
                 AsyncCallback<Void> callback = (AsyncCallback<Void>)arguments[1];
+
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, throwable);
+
                 return callback;
             }
-        }).when(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        }).when(activeProject).refreshChildren(any(Folder.class), Matchers.<AsyncCallback<Folder>>anyObject());
 
         overwriteFilePresenter.showDialog(FILE_NAME, parentViewUtils);
         overwriteFilePresenter.onRenameButtonClicked();
 
-        verify(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        verify(activeProject).refreshChildren(any(Folder.class), Matchers.<AsyncCallback<Folder>>anyObject());
         verify(parentViewUtils).onCloseView();
+
         verify(throwable).getMessage();
-        verify(notificationManager).showNotification((Notification)anyObject());
+
+        ArgumentCaptor<Notification> notificationArgumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        verify(notificationManager).showNotification(notificationArgumentCaptor.capture());
+
+        Notification notification = notificationArgumentCaptor.getValue();
+        assertEquals(PROJECT_NAME, throwable.getMessage());
+        assertTrue(notification.isError());
     }
+
 }

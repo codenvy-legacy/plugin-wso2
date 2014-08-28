@@ -20,7 +20,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.ImplementedBy;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The service for working with 'WSO2' plugin's rest services.
@@ -39,7 +39,7 @@ public interface WSO2ClientService {
      *         callback that need to execute when the answer is come
      * @throws RequestException
      */
-    void detectConfigurationFile(@NotNull FileInfo fileInfo, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void detectConfigurationFile(@Nonnull FileInfo fileInfo, @Nonnull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Upload a configuration file from url.
@@ -50,7 +50,7 @@ public interface WSO2ClientService {
      *         callback that need to execute when the answer is come
      * @throws RequestException
      */
-    void uploadFile(@NotNull FileInfo fileInfo, @NotNull AsyncRequestCallback<String> callback) throws RequestException;
+    void uploadFile(@Nonnull FileInfo fileInfo, @Nonnull AsyncRequestCallback<String> callback) throws RequestException;
 
     /**
      * Modify configuration file with given name.
@@ -61,16 +61,6 @@ public interface WSO2ClientService {
      *         callback that need to execute when the answer is come
      * @throws RequestException
      */
-    void modifyFile(@NotNull FileInfo fileInfo, @NotNull String operation, @NotNull AsyncRequestCallback<String> callback)
+    void modifyFile(@Nonnull FileInfo fileInfo, @Nonnull String operation, @Nonnull AsyncRequestCallback<String> callback)
             throws RequestException;
-
-    /**
-     * Get information about WSO2 service configuration.
-     *
-     * @param callback
-     *         callback that need to execute when the answer is come
-     * @throws RequestException
-     */
-    void getWSO2ServiceInfo(@NotNull AsyncRequestCallback<String> callback) throws RequestException;
-
 }

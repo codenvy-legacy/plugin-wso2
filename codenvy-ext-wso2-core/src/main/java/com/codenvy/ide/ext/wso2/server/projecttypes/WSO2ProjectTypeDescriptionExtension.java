@@ -44,11 +44,13 @@ public class WSO2ProjectTypeDescriptionExtension implements ProjectTypeDescripti
         registry.registerDescription(this);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<ProjectType> getProjectTypes() {
         return Arrays.asList(new ProjectType(ESB_CONFIGURATION_PROJECT_ID, ESB_CONFIGURATION_PROJECT_NAME, WSO2_PROJECT_ID));
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<AttributeDescription> getAttributeDescriptions() {
         return Arrays.asList(new AttributeDescription(LANGUAGE),

@@ -17,43 +17,42 @@ package com.codenvy.ide.ext.wso2.client.upload;
 
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
+
+import static com.google.gwt.user.client.ui.FormPanel.ENCODING_MULTIPART;
+import static com.google.gwt.user.client.ui.FormPanel.METHOD_POST;
 
 /**
  * The implementation of {@link ImportFileView}.
  *
  * @author Valeriy Svydenko
+ * @author Andrey Plotnikov
  */
-public class ImportFileViewImpl extends DialogBox implements ImportFileView {
+public class ImportFileViewImpl extends Window implements ImportFileView {
 
     @Singleton
     interface ImportFileViewImplUiBinder extends UiBinder<Widget, ImportFileViewImpl> {
     }
 
-    private ActionDelegate delegate;
-    @UiField
-    Button      btnCancel;
-    @UiField
-    Button      btnImport;
     @UiField
     FormPanel   uploadForm;
     @UiField
@@ -70,7 +69,9 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
     @UiField(provided = true)
     final LocalizationConstant locale;
 
-    FileUpload file;
+    private final Button         btnImport;
+    private       FileUpload     file;
+    private       ActionDelegate delegate;
 
     @Inject
     public ImportFileViewImpl(ImportFileViewImplUiBinder ourUiBinder,
@@ -79,10 +80,24 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
         this.locale = locale;
         this.res = res;
 
-        Widget widget = ourUiBinder.createAndBindUi(this);
+        this.setTitle(locale.wso2ImportDialogTitle());
+        this.setWidget(ourUiBinder.createAndBindUi(this));
 
-        this.setText(locale.wso2ImportDialogTitle());
-        this.setWidget(widget);
+        Button btnCancel = createButton(locale.wso2ButtonCancel(), "esb-conf-import-cancel", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCancelClicked();
+            }
+        });
+        getFooter().add(btnCancel);
+
+        btnImport = createButton(locale.wso2ButtonImport(), "esb-conf-import", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onImportClicked();
+            }
+        });
+        getFooter().add(btnImport);
 
         bind();
     }
@@ -90,7 +105,6 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
     /** Bind handlers. */
     private void bind() {
         uploadForm.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-
             @Override
             public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
                 delegate.onSubmitComplete(event.getResults());
@@ -99,6 +113,7 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getUrl() {
         return url.getText();
@@ -106,7 +121,7 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
 
     /** {@inheritDoc} */
     @Override
-    public void setUrl(@NotNull String url) {
+    public void setUrl(@Nonnull String url) {
         this.url.setText(url);
     }
 
@@ -128,12 +143,14 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
         useLocalPath.setValue(isUseLocalPath);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setUseUrl(boolean isUseUrl) {
         useUrl.setValue(isUseUrl);
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getFileName() {
         String fileName = file.getFilename();
@@ -144,8 +161,9 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void setMessage(@NotNull String message) {
+    public void setMessage(@Nonnull String message) {
         this.message.setHTML(message);
     }
 
@@ -163,7 +181,7 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
 
     /** {@inheritDoc} */
     @Override
-    public void setAction(@NotNull String url) {
+    public void setAction(@Nonnull String url) {
         uploadForm.setAction(url);
     }
 
@@ -176,7 +194,7 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
     /** {@inheritDoc} */
     @Override
     public void close() {
-        this.hide();
+        hide();
 
         uploadForm.remove(file);
         file = null;
@@ -187,14 +205,11 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        uploadForm.setEncoding(FormPanel.ENCODING_MULTIPART);
-        uploadForm.setMethod(FormPanel.METHOD_POST);
-
-        VerticalPanel panel = new VerticalPanel();
-        uploadForm.setWidget(panel);
+        uploadForm.setEncoding(ENCODING_MULTIPART);
+        uploadForm.setMethod(METHOD_POST);
 
         file = new FileUpload();
-        file.setName("ImportFile");
+        file.setName("file");
         file.setHeight("26px");
         file.setWidth("100%");
         file.addChangeHandler(new ChangeHandler() {
@@ -207,27 +222,22 @@ public class ImportFileViewImpl extends DialogBox implements ImportFileView {
                 }
             }
         });
-        panel.add(file);
-        this.center();
-        this.show();
+
+        uploadForm.setWidget(file);
+
+        show();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {
+        hide();
     }
 
     /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate actionDelegate) {
         this.delegate = actionDelegate;
-    }
-
-    @SuppressWarnings("UnusedParameters")
-    @UiHandler("btnCancel")
-    public void onCancelClicked(ClickEvent event) {
-        delegate.onCancelClicked();
-    }
-
-    @SuppressWarnings("UnusedParameters")
-    @UiHandler("btnImport")
-    public void onImportClicked(ClickEvent event) {
-        delegate.onImportClicked();
     }
 
     @SuppressWarnings("UnusedParameters")

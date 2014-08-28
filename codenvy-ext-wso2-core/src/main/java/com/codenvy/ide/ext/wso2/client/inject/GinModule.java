@@ -16,7 +16,7 @@
 package com.codenvy.ide.ext.wso2.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.api.resources.FileType;
+import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ext.wso2.client.editor.ESBXmlFileType;
 import com.codenvy.ide.ext.wso2.client.editor.graphical.EditorViewFactory;

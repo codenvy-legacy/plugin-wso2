@@ -21,10 +21,6 @@
     <ui:with field='res' type='com.codenvy.ide.ext.wso2.client.WSO2Resources'/>
 
     <ui:style>
-        .alignBtn {
-            float: right;
-        }
-
         .spacing {
             margin-bottom: 10px;
         }
@@ -32,37 +28,11 @@
         .emptyBorder {
             margin: 6px;
         }
-
-        .space {
-            margin-right: 5px;
-        }
     </ui:style>
 
-    <g:DockLayoutPanel unit="PX" width="350px" height="90px" addStyleNames="{style.emptyBorder}">
-
-        <g:north size="30.0">
-            <g:HTML ui:field="message"/>
-        </g:north>
-
-        <g:north size="37.0">
-            <g:TextBox width="340px" ui:field="fileName" addStyleNames="{style.spacing}"/>
-        </g:north>
-
-        <g:south size="26.0">
-
-            <g:FlowPanel>
-                <g:Button addStyleNames="{style.alignBtn}" text="{locale.wso2ButtonCancel}" width="70px" ui:field="btnCancel"/>
-
-                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.wso2ButtonOverwrite}" width="70px"
-                          ui:field="btnOverwrite"/>
-
-                <g:Button addStyleNames="{style.alignBtn} {style.space}" text="{locale.wso2ButtonRename}" width="70px"
-                          ui:field="btnRename"/>
-            </g:FlowPanel>
-
-        </g:south>
-
-    </g:DockLayoutPanel>
-
+    <g:FlowPanel width="350px" height="50px" addStyleNames="{style.emptyBorder}">
+        <g:HTML ui:field="message" height="20px"/>
+        <g:TextBox width="340px" height="18px" ui:field="fileName" addStyleNames="{style.spacing}"/>
+    </g:FlowPanel>
 
 </ui:UiBinder>

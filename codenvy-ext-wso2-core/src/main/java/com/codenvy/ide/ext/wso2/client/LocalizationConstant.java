@@ -155,10 +155,6 @@ public interface LocalizationConstant extends Messages {
     @Key("authorize.need.title.oauth")
     String authorizeNeedTitleOauth();
 
-    String loginSuccess();
-
-    String loginActionTitle();
-
     @Key("editor.text")
     String editorText();
 
@@ -167,4 +163,8 @@ public interface LocalizationConstant extends Messages {
 
     @Key("editor.associate")
     String editorAssociate();
+
+    String importingFileMessage();
+
+    String modifyingFileMessage();
 }

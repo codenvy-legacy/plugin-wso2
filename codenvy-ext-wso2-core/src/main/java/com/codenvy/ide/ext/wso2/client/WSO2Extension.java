@@ -18,7 +18,8 @@ package com.codenvy.ide.ext.wso2.client;
 
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
-import com.codenvy.ide.api.resources.FileType;
+import com.codenvy.ide.api.filetypes.FileType;
+import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
@@ -30,7 +31,6 @@ import com.codenvy.ide.ext.wso2.client.action.CreateLocalEntryAction;
 import com.codenvy.ide.ext.wso2.client.action.CreateProxyServiceAction;
 import com.codenvy.ide.ext.wso2.client.action.CreateSequenceAction;
 import com.codenvy.ide.ext.wso2.client.action.ImportSynapseAction;
-import com.codenvy.ide.ext.wso2.client.action.LoginAction;
 import com.codenvy.ide.ext.wso2.client.action.WSO2ProjectActionGroup;
 import com.codenvy.ide.ext.wso2.client.editor.ESBXmlFileType;
 import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorProvider;
@@ -50,7 +50,6 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_PROXY_SERVICE_ACT
 import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_SEQUENCE_ACTION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
 import static com.codenvy.ide.ext.wso2.shared.Constants.IMPORT_SYNAPSE_ACTION;
-import static com.codenvy.ide.ext.wso2.shared.Constants.LOGIN_WSO2_ACTION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_ACTION_GROUP;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_IMPORT_RESOURCE_GROUP;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_MAIN_ACTION_GROUP;
@@ -84,14 +83,15 @@ public class WSO2Extension {
 
     @Inject
     public void initXmlEditor(WSO2Resources wso2Resources,
-                              ResourceProvider resourceProvider,
                               EditorRegistry editorRegistry,
+                              FileTypeRegistry fileTypeRegistry,
                               XmlEditorProvider xmlEditorProvider,
                               @ESBXmlFileType FileType esbXmlFileType) {
 
         ScriptInjector.fromUrl(wso2Resources.xmlParserJS().getSafeUri().asString()).setWindow(TOP_WINDOW).inject();
 
-        resourceProvider.registerFileType(esbXmlFileType);
+        editorRegistry.registerDefaultEditor(esbXmlFileType, xmlEditorProvider);
+        fileTypeRegistry.registerFileType(esbXmlFileType);
 
         editorRegistry.register(esbXmlFileType, xmlEditorProvider);
     }
@@ -105,8 +105,7 @@ public class WSO2Extension {
                             CreateEndpointAction createEndpointAction,
                             CreateSequenceAction createSequenceAction,
                             CreateProxyServiceAction createProxyServiceAction,
-                            CreateLocalEntryAction createLocalEntryAction,
-                            LoginAction loginAction) {
+                            CreateLocalEntryAction createLocalEntryAction) {
 
         DefaultActionGroup wso2MainMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_MENU);
         DefaultActionGroup wso2ContextMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
@@ -131,13 +130,11 @@ public class WSO2Extension {
         actionManager.registerAction(CREATE_SEQUENCE_ACTION, createSequenceAction);
         actionManager.registerAction(CREATE_PROXY_SERVICE_ACTION, createProxyServiceAction);
         actionManager.registerAction(CREATE_LOCAL_ENTRY_ACTION, createLocalEntryAction);
-        actionManager.registerAction(LOGIN_WSO2_ACTION, loginAction);
 
         wso2ActionGroup.add(wso2NewGroup);
         wso2ActionGroup.add(wso2ImportGroup);
 
         wso2MainGroup.add(wso2ActionGroup);
-        wso2MainGroup.add(loginAction);
 
         wso2NewGroup.add(createEndpointAction);
         wso2NewGroup.add(createSequenceAction);

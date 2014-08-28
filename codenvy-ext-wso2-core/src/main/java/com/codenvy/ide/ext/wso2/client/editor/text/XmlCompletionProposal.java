@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.text;
 
+import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
@@ -24,13 +25,13 @@ import com.codenvy.ide.texteditor.api.codeassistant.Completion;
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * {@link CompletionProposal} implementation for XML code assistant.
  *
  * @author Valeriy Svydenko
+ * @author Andrey Plotnikov
  */
 public class XmlCompletionProposal implements CompletionProposal {
 
@@ -55,7 +56,7 @@ public class XmlCompletionProposal implements CompletionProposal {
 
     /** {@inheritDoc} */
     @Override
-    public Image getImage() {
+    public Icon getIcon() {
         return null;
     }
 

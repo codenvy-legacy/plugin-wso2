@@ -16,8 +16,8 @@
 package com.codenvy.ide.ext.wso2.client.wizard.files;
 
 import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
@@ -26,7 +26,7 @@ import com.codenvy.ide.ext.wso2.client.wizard.files.view.CreateResourceView;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.SEQUENCE_FOLDER_NAME;
 
@@ -39,8 +39,6 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.SEQUENCE_FOLDER_NAME;
 @Singleton
 public class CreateSequencePage extends AbstractCreateResourcePage {
 
-    private WSO2Resources resources;
-
     @Inject
     public CreateSequencePage(CreateResourceView view,
                               LocalizationConstant locale,
@@ -52,17 +50,15 @@ public class CreateSequencePage extends AbstractCreateResourcePage {
 
         super(view,
               locale.wizardFileSequenceTitle(),
+              locale.wizardFileSequenceFieldsName(),
               resources.sequence_wizard(),
               locale,
               resourceProvider,
               editorAgent,
               SEQUENCE_FOLDER_NAME,
               esbXmlFileType,
-              notificationManager);
-
-        this.resources = resources;
-
-        view.setResourceNameTitle(locale.wizardFileSequenceFieldsName());
+              notificationManager,
+              resources);
     }
 
     /** {@inheritDoc} */
@@ -77,7 +73,7 @@ public class CreateSequencePage extends AbstractCreateResourcePage {
 
     /** {@inheritDoc} */
     @Override
-    public void commit(@NotNull CommitCallback callback) {
+    public void commit(@Nonnull CommitCallback callback) {
         String sequenceTemplate = resources.sequenceTemplate().getText();
         content = sequenceTemplate.replaceAll("@name", view.getResourceName());
 

@@ -16,8 +16,8 @@
 package com.codenvy.ide.ext.wso2.client.wizard.files;
 
 import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
@@ -26,7 +26,7 @@ import com.codenvy.ide.ext.wso2.client.wizard.files.view.CreateResourceView;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.ENDPOINTS_FOLDER_NAME;
 
@@ -39,8 +39,6 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.ENDPOINTS_FOLDER_NAME;
 @Singleton
 public class CreateEndpointPage extends AbstractCreateResourcePage {
 
-    private WSO2Resources resources;
-
     @Inject
     public CreateEndpointPage(CreateResourceView view,
                               LocalizationConstant locale,
@@ -52,17 +50,15 @@ public class CreateEndpointPage extends AbstractCreateResourcePage {
 
         super(view,
               locale.wizardFileEndpointTitle(),
+              locale.wizardFileEndpointFieldsName(),
               resources.endpoint_wizard(),
               locale,
               resourceProvider,
               editorAgent,
               ENDPOINTS_FOLDER_NAME,
               esbXmlFileType,
-              notificationManager);
-
-        this.resources = resources;
-
-        view.setResourceNameTitle(locale.wizardFileEndpointFieldsName());
+              notificationManager,
+              resources);
     }
 
     /** {@inheritDoc} */
@@ -77,7 +73,7 @@ public class CreateEndpointPage extends AbstractCreateResourcePage {
 
     /** {@inheritDoc} */
     @Override
-    public void commit(@NotNull CommitCallback callback) {
+    public void commit(@Nonnull CommitCallback callback) {
         String endpointTemplate = resources.endpointTemplate().getText();
         content = endpointTemplate.replaceAll("@name", view.getResourceName());
 

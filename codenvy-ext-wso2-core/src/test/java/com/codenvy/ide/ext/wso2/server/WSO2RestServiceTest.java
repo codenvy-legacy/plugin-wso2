@@ -15,23 +15,20 @@
  */
 package com.codenvy.ide.ext.wso2.server;
 
+import com.codenvy.api.core.ForbiddenException;
+import com.codenvy.api.core.NotFoundException;
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.vfs.server.ContentStream;
 import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.ext.wso2.server.rest.WSO2RestService;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 
-import org.everrest.core.RequestHandler;
 import org.everrest.core.ResourceBinder;
-import org.everrest.core.impl.ApplicationContextImpl;
-import org.everrest.core.impl.ApplicationProviderBinder;
 import org.everrest.core.impl.ContainerResponse;
-import org.everrest.core.impl.EverrestConfiguration;
+import org.everrest.core.impl.EverrestProcessor;
 import org.everrest.core.impl.ProviderBinder;
-import org.everrest.core.impl.RequestDispatcher;
-import org.everrest.core.impl.RequestHandlerImpl;
 import org.everrest.core.impl.ResourceBinderImpl;
 import org.everrest.core.tools.DependencySupplierImpl;
 import org.everrest.core.tools.ResourceLauncher;
@@ -41,7 +38,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -58,7 +57,6 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -71,49 +69,42 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class WSO2RestServiceTest {
 
-    public static final String PROJECT_NAME                  = "projectName";
-    public static final String FILE_NAME                     = "fileName";
-    public static final String BASE_URI                      = "http://localhost";
-    public static final String SYNAPSE_CONFIGURATION_CONTENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                                                               "<sequence></sequence>";
+    private static final String PROJECT_NAME                  = "projectName";
+    private static final String FILE_NAME                     = "fileName";
+    private static final String BASE_URI                      = "http://localhost";
+    private static final String SYNAPSE_CONFIGURATION_CONTENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                                                                "<sequence></sequence>";
 
     @Mock(answer = RETURNS_DEEP_STUBS)
     private VirtualFileSystemRegistry vfsRegistry;
     @Mock
-    private WSO2                      wso2;
-    @Mock
     private VirtualFile               synapseFile;
     @InjectMocks
     private WSO2RestService           service;
-    private ResourceLauncher          launcher;
+
+    private ResourceLauncher launcher;
 
     @Before
     public void setUp() throws Exception {
         DependencySupplierImpl dependencies = new DependencySupplierImpl();
         dependencies.addComponent(VirtualFileSystemRegistry.class, vfsRegistry);
-        dependencies.addComponent(WSO2.class, wso2);
 
         ResourceBinder resources = new ResourceBinderImpl();
         resources.addResource(WSO2RestService.class, null);
 
-        ProviderBinder providers = new ApplicationProviderBinder();
-        RequestHandler requestHandler = new RequestHandlerImpl(new RequestDispatcher(resources),
-                                                               providers,
-                                                               dependencies,
-                                                               new EverrestConfiguration());
-        ApplicationContextImpl.setCurrent(new ApplicationContextImpl(null, null, ProviderBinder.getInstance()));
+        EverrestProcessor processor = new EverrestProcessor(resources, ProviderBinder.getInstance(), dependencies);
 
-        launcher = new ResourceLauncher(requestHandler);
+        launcher = new ResourceLauncher(processor);
     }
 
     private ContainerResponse prepareResponseLauncherService(String method, String path, byte[] data) throws Exception {
         Map<String, List<String>> headers = new HashMap<>(1);
         headers.put("Content-Type", Arrays.asList("application/json"));
 
-        return launcher.service(method, "/wso2/dev-monit/" + path, BASE_URI, headers, data, null);
+        return launcher.service(method, "/wso2/workspaceId/" + path, BASE_URI, headers, data, null);
     }
 
-    private void prepareForFileModificationRequestTest() throws VirtualFileSystemException {
+    private void prepareForFileModificationRequestTest() throws ServerException, NotFoundException, ForbiddenException {
         InputStream is = new ByteArrayInputStream(SYNAPSE_CONFIGURATION_CONTENT.getBytes());
         ContentStream contentStream = new ContentStream(null, is, null);
 
@@ -166,10 +157,15 @@ public class WSO2RestServiceTest {
 
         byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
 
-        VirtualFileSystemException exception = mock(VirtualFileSystemException.class);
-        when(exception.getMessage()).thenReturn("does not exists.");
-
-        doThrow(exception).when(synapseFile).moveTo((VirtualFile)anyObject(), anyString());
+        doThrow(new ServerException("does not exists."))
+                .doAnswer(new Answer() {
+                    @Override
+                    public Object answer(InvocationOnMock invocation) throws Throwable {
+                        // This code needs for not throwing exception when this method execute second time
+                        return null;
+                    }
+                })
+                .when(synapseFile).moveTo((VirtualFile)anyObject(), anyString());
 
         ContainerResponse response = prepareResponseLauncherService("POST", "detect", data);
 
@@ -220,6 +216,8 @@ public class WSO2RestServiceTest {
                                       .withProjectName(PROJECT_NAME);
 
         byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
+
+        when(synapseFile.createFile(eq("note.xml"), eq(ESB_XML_MIME_TYPE), (InputStream)anyObject())).thenReturn(synapseFile);
 
         ContainerResponse response = prepareResponseLauncherService("POST", "upload", data);
 
@@ -272,6 +270,7 @@ public class WSO2RestServiceTest {
 
         verify(synapseFile).updateContent(anyString(), (InputStream)anyObject(), anyString());
         verify(synapseFile).delete(anyString());
+
         assertEquals(200, response.getStatus());
     }
 }

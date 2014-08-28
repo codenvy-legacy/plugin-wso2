@@ -22,8 +22,6 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Folder;
 import com.codenvy.ide.api.resources.model.Project;
-import com.codenvy.ide.api.resources.model.Resource;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
@@ -34,11 +32,9 @@ import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.ext.wso2.shared.Constants.MAIN_FOLDER_NAME;
@@ -49,14 +45,13 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NA
  * The presenter for overwrite imported file.
  *
  * @author Valeriy Svydenko
+ * @author Andrey Plotnikov
  */
-@Singleton
 public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate {
 
     private static final String DELETE_FILE_OPERATION    = "delete";
     private static final String RENAME_FILE_OPERATION    = "rename";
     private static final String OVERWRITE_FILE_OPERATION = "overwrite";
-    private static final String FILE                     = "file";
 
     private final OverwriteFileView    view;
     private final DtoFactory           dtoFactory;
@@ -87,23 +82,27 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
         this.local = local;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCancelButtonClicked() {
         modifyExistingFile(DELETE_FILE_OPERATION);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onRenameButtonClicked() {
         modifyExistingFile(RENAME_FILE_OPERATION);
         parentViewUtils.onCloseView();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onOverwriteButtonClicked() {
         modifyExistingFile(OVERWRITE_FILE_OPERATION);
         parentViewUtils.onCloseView();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onNameChanged() {
         boolean enable = !oldFileName.equals(view.getFileName());
@@ -118,52 +117,67 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
      * @param fileName
      *         name of the new file
      */
-    private void refreshTree(String callback, final String fileName) {
-        final Folder parentFolder;
-
+    private void refreshTree(@Nonnull String callback, @Nonnull final String fileName) {
         Project activeProject = resourceProvider.getActiveProject();
 
-        Resource src = getResourceByName(activeProject, SRC_FOLDER_NAME);
-        Resource main = getResourceByName((Folder)src, MAIN_FOLDER_NAME);
-        Resource synapse_config = getResourceByName((Folder)main, SYNAPSE_CONFIG_FOLDER_NAME);
-        if (callback.isEmpty()) {
-            parentFolder = (Folder)synapse_config;
-        } else {
-            parentFolder = (Folder)getResourceByName((Folder)synapse_config, callback);
+        if (activeProject == null) {
+            return;
         }
 
-        activeProject.refreshChildren(parentFolder, new WSO2AsyncCallback<Folder>(notificationManager) {
+        Folder src = (Folder)activeProject.findChildByName(SRC_FOLDER_NAME);
+        if (src == null) {
+            refreshFolder(activeProject, activeProject, fileName);
+
+            return;
+        }
+
+        Folder main = (Folder)src.findChildByName(MAIN_FOLDER_NAME);
+        if (main == null) {
+            refreshFolder(activeProject, src, fileName);
+
+            return;
+        }
+
+        Folder synapse_config = (Folder)main.findChildByName(SYNAPSE_CONFIG_FOLDER_NAME);
+
+        if (synapse_config == null) {
+            refreshFolder(activeProject, main, fileName);
+
+            return;
+        }
+
+        if (callback.isEmpty()) {
+            refreshFolder(activeProject, synapse_config, fileName);
+
+            return;
+        }
+
+        Folder parentFolder = (Folder)synapse_config.findChildByName(callback);
+
+        if (parentFolder == null) {
+            refreshFolder(activeProject, synapse_config, callback);
+
+            return;
+        }
+
+        refreshFolder(activeProject, parentFolder, fileName);
+    }
+
+    private void refreshFolder(@Nonnull Project project, @Nonnull Folder parentFolder, @Nonnull final String resourceName) {
+        project.refreshChildren(parentFolder, new WSO2AsyncCallback<Folder>(notificationManager) {
             @Override
             public void onSuccess(Folder folder) {
-                if (parentFolder != null) {
-                    File file = (File)parentFolder.findResourceByName(fileName, FILE);
+                File file = (File)folder.findResourceByName(resourceName, File.TYPE);
+
+                if (file != null) {
                     eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(file));
+                } else {
+                    eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(folder));
                 }
+
                 view.close();
             }
         });
-    }
-
-    /**
-     * Find resource by name in parent folder
-     *
-     * @param parent
-     *         place where child should be
-     * @param name
-     *         name that child should have
-     * @return {@link Resource}
-     */
-    @Nullable
-    private Resource getResourceByName(@NotNull Folder parent, @NotNull String name) {
-        Array<Resource> children = parent.getChildren();
-
-        for (Resource child : children.asIterable()) {
-            if (name.equals(child.getName())) {
-                return child;
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -172,7 +186,7 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
      * @param operation
      *         name of the modification operation
      */
-    private void modifyExistingFile(final String operation) {
+    private void modifyExistingFile(@Nonnull final String operation) {
         final FileInfo fileInfo = dtoFactory.createDto(FileInfo.class)
                                             .withFileName(oldFileName)
                                             .withNewFileName(view.getFileName())
@@ -183,18 +197,18 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
                 @Override
                 protected void onSuccess(String callback) {
                     view.close();
+
                     if (!"delete".equals(operation)) {
                         refreshTree(callback, fileInfo.getFileName());
                     }
                 }
             });
         } catch (RequestException e) {
-            Notification notification = new Notification(e.getMessage(), ERROR);
-            notificationManager.showNotification(notification);
+            notificationManager.showNotification(new Notification(e.getMessage(), ERROR));
         }
     }
 
-    public void showDialog(String fileName, ImportFilePresenter.ViewCloseHandler parentViewUtils) {
+    public void showDialog(@Nonnull String fileName, @Nonnull ImportFilePresenter.ViewCloseHandler parentViewUtils) {
         this.parentViewUtils = parentViewUtils;
         oldFileName = fileName;
 

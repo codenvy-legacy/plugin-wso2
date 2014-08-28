@@ -16,8 +16,8 @@
 package com.codenvy.ide.ext.wso2.client.wizard.files;
 
 import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
@@ -25,7 +25,7 @@ import com.codenvy.ide.ext.wso2.client.editor.ESBXmlFileType;
 import com.codenvy.ide.ext.wso2.client.wizard.files.view.CreateResourceView;
 import com.google.inject.Inject;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.LOCAL_ENTRY_FOLDER_NAME;
 
@@ -36,8 +36,6 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.LOCAL_ENTRY_FOLDER_NAME;
  * @author Dmitriy Shnurenko
  */
 public class CreateLocalEntryPage extends AbstractCreateResourcePage {
-
-    private WSO2Resources resources;
 
     @Inject
     public CreateLocalEntryPage(CreateResourceView view,
@@ -50,16 +48,15 @@ public class CreateLocalEntryPage extends AbstractCreateResourcePage {
 
         super(view,
               locale.wizardFileLocalEntryTitle(),
+              locale.wizardFileLocalEntryFieldsName(),
               resources.local_entry_wizard(),
-              locale, resourceProvider,
+              locale,
+              resourceProvider,
               editorAgent,
               LOCAL_ENTRY_FOLDER_NAME,
               esbXmlFileType,
-              notificationManager);
-
-        this.resources = resources;
-
-        view.setResourceNameTitle(locale.wizardFileLocalEntryFieldsName());
+              notificationManager,
+              resources);
     }
 
     /** {@inheritDoc} */
@@ -74,7 +71,7 @@ public class CreateLocalEntryPage extends AbstractCreateResourcePage {
 
     /** {@inheritDoc} */
     @Override
-    public void commit(@NotNull CommitCallback callback) {
+    public void commit(@Nonnull CommitCallback callback) {
         String localEntryTemplate = resources.localEntryTemplate().getText();
         content = localEntryTemplate.replaceAll("@name", view.getResourceName());
 

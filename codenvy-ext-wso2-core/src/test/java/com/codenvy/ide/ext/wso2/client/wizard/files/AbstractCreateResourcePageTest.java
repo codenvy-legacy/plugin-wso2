@@ -16,8 +16,8 @@
 package com.codenvy.ide.ext.wso2.client.wizard.files;
 
 import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Folder;
@@ -35,6 +35,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -49,9 +50,11 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.MAIN_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SRC_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NAME;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.Answers.RETURNS_MOCKS;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -87,23 +90,24 @@ public abstract class AbstractCreateResourcePageTest {
     private Folder                synapse_config;
 
     @Mock(answer = RETURNS_DEEP_STUBS)
-    protected Folder                     parentFolder;
+    protected Folder               parentFolder;
     @Mock
-    protected AcceptsOneWidget           container;
+    protected AcceptsOneWidget     container;
     @Mock
-    protected ResourceProvider           resourceProvider;
+    protected ResourceProvider     resourceProvider;
     @Mock
-    protected EditorAgent                editorAgent;
+    protected EditorAgent          editorAgent;
     @Mock
-    protected LocalizationConstant       locale;
+    protected LocalizationConstant locale;
     @Mock
-    protected NotificationManager        notificationManager;
+    protected NotificationManager  notificationManager;
     @Mock
-    protected CreateResourceView         view;
+    protected CreateResourceView   view;
     @Mock(answer = RETURNS_MOCKS)
-    protected WSO2Resources              resources;
+    protected WSO2Resources        resources;
     @Mock(answer = RETURNS_DEEP_STUBS)
-    protected FileType                   fileType;
+    protected FileType             fileType;
+
     protected String                     parentFolderName;
     protected AbstractCreateResourcePage page;
 
@@ -148,15 +152,19 @@ public abstract class AbstractCreateResourcePageTest {
         }).when(synapse_config).findChildByName(anyString());
 
         doAnswer(new Answer() {
+            @SuppressWarnings("unchecked")
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] args = invocation.getArguments();
-                AsyncCallback callback = (AsyncCallback)args[1];
+
                 Folder folder = (Folder)args[0];
+                AsyncCallback<Folder> callback = (AsyncCallback)args[1];
+
                 callback.onSuccess(folder);
+
                 return null;
             }
-        }).when(activeProject).refreshChildren((Folder)anyObject(), (AsyncCallback)anyObject());
+        }).when(activeProject).refreshChildren(any(Folder.class), Matchers.<AsyncCallback<Folder>>anyObject());
 
         page.setUpdateDelegate(delegate);
 
@@ -195,41 +203,50 @@ public abstract class AbstractCreateResourcePageTest {
         }).when(synapse_config).findChildByName(anyString());
 
         doAnswer(new Answer() {
+            @SuppressWarnings("unchecked")
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] args = invocation.getArguments();
-                AsyncCallback callBack = (AsyncCallback)args[2];
+
+                AsyncCallback<Folder> callBack = (AsyncCallback)args[2];
                 callBack.onSuccess(src);
+
                 return null;
             }
-        }).when(activeProject).createFolder(eq(activeProject), eq(SRC_FOLDER_NAME), (AsyncCallback)anyObject());
+        }).when(activeProject).createFolder(eq(activeProject), eq(SRC_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
 
         doAnswer(new Answer() {
+            @SuppressWarnings("unchecked")
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] args = invocation.getArguments();
-                AsyncCallback callBack = (AsyncCallback)args[2];
+
+                AsyncCallback<Folder> callBack = (AsyncCallback)args[2];
                 callBack.onSuccess(main);
+
                 return null;
             }
-        }).when(activeProject).createFolder(eq(src), eq(MAIN_FOLDER_NAME), (AsyncCallback)anyObject());
+        }).when(activeProject).createFolder(eq(src), eq(MAIN_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
 
         doAnswer(new Answer() {
+            @SuppressWarnings("unchecked")
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] args = invocation.getArguments();
-                AsyncCallback callBack = (AsyncCallback)args[2];
+
+                AsyncCallback<Folder> callBack = (AsyncCallback<Folder>)args[2];
                 callBack.onSuccess(synapse_config);
+
                 return null;
             }
-        }).when(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), (AsyncCallback)anyObject());
+        }).when(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
 
         page.go(container);
 
-        verify(activeProject).createFolder(eq(activeProject), eq(SRC_FOLDER_NAME), (AsyncCallback)anyObject());
-        verify(activeProject).createFolder(eq(src), eq(MAIN_FOLDER_NAME), (AsyncCallback)anyObject());
-        verify(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), (AsyncCallback)anyObject());
-        verify(activeProject).createFolder(eq(synapse_config), eq(parentFolderName), (AsyncCallback)anyObject());
+        verify(activeProject).createFolder(eq(activeProject), eq(SRC_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
+        verify(activeProject).createFolder(eq(src), eq(MAIN_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
+        verify(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
+        verify(activeProject).createFolder(eq(synapse_config), eq(parentFolderName), Matchers.<AsyncCallback<Folder>>anyObject());
 
         verify(container).setWidget(view);
         verify(resourceProvider).getActiveProject();
@@ -266,32 +283,38 @@ public abstract class AbstractCreateResourcePageTest {
         }).when(synapse_config).findChildByName(anyString());
 
         doAnswer(new Answer() {
+            @SuppressWarnings("unchecked")
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] args = invocation.getArguments();
-                AsyncCallback callBack = (AsyncCallback)args[2];
+
+                AsyncCallback<Folder> callBack = (AsyncCallback)args[2];
                 callBack.onSuccess(main);
+
                 return null;
             }
-        }).when(activeProject).createFolder(eq(src), eq(MAIN_FOLDER_NAME), (AsyncCallback)anyObject());
+        }).when(activeProject).createFolder(eq(src), eq(MAIN_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
 
         doAnswer(new Answer() {
+            @SuppressWarnings("unchecked")
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] args = invocation.getArguments();
-                AsyncCallback callBack = (AsyncCallback)args[2];
+
+                AsyncCallback<Folder> callBack = (AsyncCallback)args[2];
                 callBack.onSuccess(synapse_config);
+
                 return null;
             }
-        }).when(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), (AsyncCallback)anyObject());
+        }).when(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
 
         page.go(container);
 
-        verify(activeProject).createFolder(eq(src), eq(MAIN_FOLDER_NAME), (AsyncCallback)anyObject());
-        verify(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), (AsyncCallback)anyObject());
-        verify(activeProject).createFolder(eq(synapse_config), eq(parentFolderName), (AsyncCallback)anyObject());
+        verify(activeProject).createFolder(eq(src), eq(MAIN_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
+        verify(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
+        verify(activeProject).createFolder(eq(synapse_config), eq(parentFolderName), Matchers.<AsyncCallback<Folder>>anyObject());
 
-        verify(activeProject, never()).createFolder(eq(activeProject), eq(SRC_FOLDER_NAME), (AsyncCallback)anyObject());
+        verify(activeProject, never()).createFolder(eq(activeProject), eq(SRC_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
 
         verify(container).setWidget(view);
         verify(resourceProvider).getActiveProject();
@@ -328,22 +351,25 @@ public abstract class AbstractCreateResourcePageTest {
         }).when(synapse_config).findChildByName(anyString());
 
         doAnswer(new Answer() {
+            @SuppressWarnings("unchecked")
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] args = invocation.getArguments();
-                AsyncCallback callBack = (AsyncCallback)args[2];
+
+                AsyncCallback<Folder> callBack = (AsyncCallback)args[2];
                 callBack.onSuccess(synapse_config);
+
                 return null;
             }
-        }).when(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), (AsyncCallback)anyObject());
+        }).when(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
 
         page.go(container);
 
-        verify(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), (AsyncCallback)anyObject());
-        verify(activeProject).createFolder(eq(synapse_config), eq(parentFolderName), (AsyncCallback)anyObject());
+        verify(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
+        verify(activeProject).createFolder(eq(synapse_config), eq(parentFolderName), Matchers.<AsyncCallback<Folder>>anyObject());
 
-        verify(activeProject, never()).createFolder(eq(activeProject), eq(SRC_FOLDER_NAME), (AsyncCallback)anyObject());
-        verify(activeProject, never()).createFolder(eq(src), eq(MAIN_FOLDER_NAME), (AsyncCallback)anyObject());
+        verify(activeProject, never()).createFolder(eq(activeProject), eq(SRC_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
+        verify(activeProject, never()).createFolder(eq(src), eq(MAIN_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
 
         verify(container).setWidget(view);
         verify(resourceProvider).getActiveProject();
@@ -380,22 +406,25 @@ public abstract class AbstractCreateResourcePageTest {
         }).when(synapse_config).findChildByName(anyString());
 
         doAnswer(new Answer() {
+            @SuppressWarnings("unchecked")
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] args = invocation.getArguments();
-                AsyncCallback callBack = (AsyncCallback)args[2];
+
+                AsyncCallback<Folder> callBack = (AsyncCallback)args[2];
                 callBack.onSuccess(synapse_config);
+
                 return null;
             }
-        }).when(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), (AsyncCallback)anyObject());
+        }).when(activeProject).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
 
         page.go(container);
 
-        verify(activeProject).createFolder(eq(synapse_config), eq(parentFolderName), (AsyncCallback)anyObject());
+        verify(activeProject).createFolder(eq(synapse_config), eq(parentFolderName), Matchers.<AsyncCallback<Folder>>anyObject());
 
-        verify(activeProject, never()).createFolder(eq(activeProject), eq(SRC_FOLDER_NAME), (AsyncCallback)anyObject());
-        verify(activeProject, never()).createFolder(eq(src), eq(MAIN_FOLDER_NAME), (AsyncCallback)anyObject());
-        verify(activeProject, never()).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), (AsyncCallback)anyObject());
+        verify(activeProject, never()).createFolder(eq(activeProject), eq(SRC_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
+        verify(activeProject, never()).createFolder(eq(src), eq(MAIN_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
+        verify(activeProject, never()).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
 
         verify(container).setWidget(view);
         verify(resourceProvider).getActiveProject();
@@ -434,7 +463,7 @@ public abstract class AbstractCreateResourcePageTest {
             when(view.getResourceName()).thenReturn(name);
             page.onValueChanged();
 
-            assertEquals(false, page.isCompleted());
+            assertFalse(page.isCompleted());
         }
     }
 
@@ -471,10 +500,10 @@ public abstract class AbstractCreateResourcePageTest {
         verify(main).findChildByName(anyString());
         verify(synapse_config).findChildByName(anyString());
 
-        verify(activeProject, never()).createFolder(eq(activeProject), eq(SRC_FOLDER_NAME), (AsyncCallback)anyObject());
-        verify(activeProject, never()).createFolder(eq(src), eq(MAIN_FOLDER_NAME), (AsyncCallback)anyObject());
-        verify(activeProject, never()).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), (AsyncCallback)anyObject());
-        verify(activeProject, never()).createFolder(eq(synapse_config), eq(parentFolderName), (AsyncCallback)anyObject());
+        verify(activeProject, never()).createFolder(eq(activeProject), eq(SRC_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
+        verify(activeProject, never()).createFolder(eq(src), eq(MAIN_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
+        verify(activeProject, never()).createFolder(eq(main), eq(SYNAPSE_CONFIG_FOLDER_NAME), Matchers.<AsyncCallback<Folder>>anyObject());
+        verify(activeProject, never()).createFolder(eq(synapse_config), eq(parentFolderName), Matchers.<AsyncCallback<Folder>>anyObject());
 
         verify(container).setWidget(view);
         verify(resourceProvider).getActiveProject();
@@ -529,54 +558,79 @@ public abstract class AbstractCreateResourcePageTest {
         assertNull(page.getNotice());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void onFailureMethodInCommitCallbackShouldBeExecuted() throws Exception {
         final Throwable throwable = mock(Throwable.class);
         when(view.getResourceName()).thenReturn(SOME_TEXT);
+
         doAnswer(new Answer() {
+            @SuppressWarnings("unchecked")
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncCallback<File> callback = (AsyncCallback<File>)arguments[4];
+
+                AsyncCallback<File> callback = (AsyncCallback)arguments[4];
                 callback.onFailure(throwable);
+
                 return callback;
             }
-        }).when(activeProject).createFile((Folder)anyObject(), anyString(), anyString(), anyString(), (AsyncCallback<File>)anyObject());
+        }).when(activeProject).createFile(any(Folder.class),
+                                          anyString(),
+                                          anyString(),
+                                          anyString(),
+                                          Matchers.<AsyncCallback<File>>anyObject());
+
         WizardPage.CommitCallback commitCallback = mock(WizardPage.CommitCallback.class);
 
         page.go(container);
 
         page.commit(commitCallback);
 
-        verify(activeProject).createFile(eq(parentFolder), eq(FULL_RESOURCE_NAME), anyString(), eq(ESB_XML_MIME_TYPE),
-                                         (AsyncCallback<File>)anyObject());
+        verify(activeProject).createFile(eq(parentFolder),
+                                         eq(FULL_RESOURCE_NAME),
+                                         anyString(),
+                                         eq(ESB_XML_MIME_TYPE),
+                                         Matchers.<AsyncCallback<File>>anyObject());
+
         verify(commitCallback).onFailure(throwable);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void onSuccessMethodInCommitCallbackShouldBeExecuted() throws Exception {
         final File file = mock(File.class);
         when(view.getResourceName()).thenReturn(SOME_TEXT);
+
         doAnswer(new Answer() {
+            @SuppressWarnings("unchecked")
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncCallback<File> callback = (AsyncCallback<File>)arguments[4];
+
+                AsyncCallback<File> callback = (AsyncCallback)arguments[4];
                 callback.onSuccess(file);
+
                 return callback;
             }
-        }).when(activeProject).createFile((Folder)anyObject(), anyString(), anyString(), anyString(), (AsyncCallback<File>)anyObject());
+        }).when(activeProject).createFile(any(Folder.class),
+                                          anyString(),
+                                          anyString(),
+                                          anyString(),
+                                          Matchers.<AsyncCallback<File>>anyObject());
+
         WizardPage.CommitCallback commitCallback = mock(WizardPage.CommitCallback.class);
 
         page.go(container);
 
         page.commit(commitCallback);
 
-        verify(activeProject).createFile(eq(parentFolder), eq(FULL_RESOURCE_NAME), anyString(), eq(ESB_XML_MIME_TYPE),
-                                         (AsyncCallback<File>)anyObject());
+        verify(activeProject).createFile(eq(parentFolder),
+                                         eq(FULL_RESOURCE_NAME),
+                                         anyString(),
+                                         eq(ESB_XML_MIME_TYPE),
+                                         Matchers.<AsyncCallback<File>>anyObject());
+
         verify(commitCallback).onSuccess();
         verify(editorAgent).openEditor(eq(file));
     }
+
 }

@@ -27,6 +27,7 @@ import com.codenvy.ide.api.ui.workspace.PropertyListener;
 import com.codenvy.ide.ext.wso2.client.editor.graphical.GraphicEditor;
 import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorConfiguration;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -88,6 +89,15 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
             textEditor.doSave();
             graphicEditor.doSave();
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void doSave(@NotNull AsyncCallback<EditorInput> callback) {
+        doSave();
+
+        // We should throw null value because for our implementation it isn't needed method. This implementation provides skipping any logic.
+        callback.onSuccess(null);
     }
 
     /** {@inheritDoc} */

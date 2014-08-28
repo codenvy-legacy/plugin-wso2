@@ -17,39 +17,35 @@ package com.codenvy.ide.ext.wso2.client.upload.overwrite;
 
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
 /**
  * The implementation of {@link OverwriteFileView}.
  *
  * @author Valeriy Svydenko
+ * @author Andrey Plotnikov
  */
-public class OverwriteFileViewImpl extends DialogBox implements OverwriteFileView {
+public class OverwriteFileViewImpl extends Window implements OverwriteFileView {
 
     @Singleton
     interface OverwriteFileViewImplUiBinder extends UiBinder<Widget, OverwriteFileViewImpl> {
     }
 
-    private ActionDelegate delegate;
-    @UiField
-    Button  btnCancel;
-    @UiField
-    Button  btnRename;
-    @UiField
-    Button  btnOverwrite;
     @UiField
     TextBox fileName;
     @UiField
@@ -60,6 +56,9 @@ public class OverwriteFileViewImpl extends DialogBox implements OverwriteFileVie
     @UiField(provided = true)
     final WSO2Resources        res;
 
+    private final Button         btnRename;
+    private       ActionDelegate delegate;
+
     @Inject
     public OverwriteFileViewImpl(OverwriteFileViewImplUiBinder ourUiBinder,
                                  LocalizationConstant locale,
@@ -67,34 +66,63 @@ public class OverwriteFileViewImpl extends DialogBox implements OverwriteFileVie
         this.locale = locale;
         this.res = res;
 
-        Widget widget = ourUiBinder.createAndBindUi(this);
+        this.setTitle(locale.wso2FileOverwriteTitle());
+        this.setWidget(ourUiBinder.createAndBindUi(this));
 
-        this.setText(locale.wso2FileOverwriteTitle());
-        this.setWidget(widget);
+        Button btnCancel = createButton(locale.wso2ButtonCancel(), "esb-conf-file-cancel", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onCancelButtonClicked();
+            }
+        });
+        getFooter().add(btnCancel);
 
+        btnRename = createButton(locale.wso2ButtonRename(), "esb-conf-file-rename", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onRenameButtonClicked();
+            }
+        });
+        getFooter().add(btnRename);
+
+        Button btnOverwrite = createButton(locale.wso2ButtonOverwrite(), "esb-conf-file-overwrite", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onOverwriteButtonClicked();
+            }
+        });
+        getFooter().add(btnOverwrite);
     }
 
+    /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getFileName() {
         return fileName.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void setFileName(@NotNull String fileName) {
+    public void setFileName(@Nonnull @NotNull String fileName) {
         this.fileName.setText(fileName);
     }
 
     /** {@inheritDoc} */
     @Override
     public void close() {
-        this.hide();
+        hide();
     }
 
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.center();
-        this.show();
+        show();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onClose() {
+        hide();
     }
 
     /** {@inheritDoc} */
@@ -103,8 +131,9 @@ public class OverwriteFileViewImpl extends DialogBox implements OverwriteFileVie
         btnRename.setEnabled(enabled);
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void setMessage(@NotNull String message) {
+    public void setMessage(@Nonnull @NotNull String message) {
         this.message.setHTML(message);
     }
 
@@ -112,24 +141,6 @@ public class OverwriteFileViewImpl extends DialogBox implements OverwriteFileVie
     @Override
     public void setDelegate(ActionDelegate actionDelegate) {
         this.delegate = actionDelegate;
-    }
-
-    @SuppressWarnings("UnusedParameters")
-    @UiHandler("btnCancel")
-    public void onCancelButtonClicked(ClickEvent event) {
-        delegate.onCancelButtonClicked();
-    }
-
-    @SuppressWarnings("UnusedParameters")
-    @UiHandler("btnRename")
-    public void onRenameButtonClicked(ClickEvent event) {
-        delegate.onRenameButtonClicked();
-    }
-
-    @SuppressWarnings("UnusedParameters")
-    @UiHandler("btnOverwrite")
-    public void onOverwriteButtonClicked(ClickEvent event) {
-        delegate.onOverwriteButtonClicked();
     }
 
     @SuppressWarnings("UnusedParameters")

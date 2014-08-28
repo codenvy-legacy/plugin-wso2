@@ -26,6 +26,7 @@ import com.google.inject.Singleton;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_NAME;
@@ -33,6 +34,7 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
 
 /**
  * @author Valeriy Svydenko
+ * @author Andrey Plotnikov
  */
 @Singleton
 public class WSO2ProjectTypeExtension implements ProjectTypeExtension {
@@ -42,23 +44,32 @@ public class WSO2ProjectTypeExtension implements ProjectTypeExtension {
         registry.registerProjectType(this);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ProjectType getProjectType() {
         return new ProjectType(ESB_CONFIGURATION_PROJECT_ID, WSO2_PROJECT_ID, WSO2_PROJECT_ID);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Attribute> getPredefinedAttributes() {
         return Arrays.asList(new Attribute(Constants.LANGUAGE, WSO2_PROJECT_ID),
                              new Attribute(Constants.FRAMEWORK, WSO2_PROJECT_ID));
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<ProjectTemplateDescription> getTemplates() {
         return Arrays.asList(new ProjectTemplateDescription("zip",
                                                             ESB_CONFIGURATION_PROJECT_NAME,
                                                             "This is a simple ESB configuration project.",
                                                             "templates/esbproject.zip"));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Map<String, String> getIconRegistry() {
+        return null;
     }
 
 }

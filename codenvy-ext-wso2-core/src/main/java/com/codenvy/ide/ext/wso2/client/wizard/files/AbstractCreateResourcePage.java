@@ -16,8 +16,8 @@
 package com.codenvy.ide.ext.wso2.client.wizard.files;
 
 import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Folder;
@@ -26,14 +26,15 @@ import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.api.resources.model.ResourceNameValidator;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
+import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncCallback;
 import com.codenvy.ide.ext.wso2.client.wizard.files.view.CreateResourceView;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.MAIN_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SRC_FOLDER_NAME;
@@ -52,25 +53,30 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
     private final EditorAgent         editorAgent;
     private final String              parentFolderName;
     private final FileType            fileType;
-    private       Project             activeProject;
     private final NotificationManager notificationManager;
-    private       Folder              parentFolder;
+
+    private Project activeProject;
+    private Folder  parentFolder;
 
     protected final CreateResourceView   view;
-    protected       LocalizationConstant locale;
-    protected       boolean              hasSameFile;
-    protected       boolean              incorrectName;
-    protected       String               content;
+    protected final LocalizationConstant locale;
+    protected final WSO2Resources        resources;
 
-    public AbstractCreateResourcePage(@NotNull CreateResourceView view,
-                                      @NotNull String caption,
+    protected boolean hasSameFile;
+    protected boolean incorrectName;
+    protected String  content;
+
+    public AbstractCreateResourcePage(@Nonnull CreateResourceView view,
+                                      @Nonnull String caption,
+                                      @Nonnull String resourceNameTitle,
                                       @Nullable ImageResource icon,
-                                      @NotNull LocalizationConstant locale,
-                                      @NotNull ResourceProvider resourceProvider,
-                                      @NotNull EditorAgent editorAgent,
-                                      @NotNull String parentFolderName,
-                                      @NotNull FileType fileType,
-                                      @NotNull NotificationManager notificationManager) {
+                                      @Nonnull LocalizationConstant locale,
+                                      @Nonnull ResourceProvider resourceProvider,
+                                      @Nonnull EditorAgent editorAgent,
+                                      @Nonnull String parentFolderName,
+                                      @Nonnull FileType fileType,
+                                      @Nonnull NotificationManager notificationManager,
+                                      @Nonnull WSO2Resources resources) {
         super(caption, icon);
 
         this.view = view;
@@ -81,6 +87,9 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
         this.view.setDelegate(this);
         this.locale = locale;
         this.notificationManager = notificationManager;
+        this.resources = resources;
+
+        this.view.setResourceNameTitle(resourceNameTitle);
     }
 
     /** {@inheritDoc} */
@@ -158,9 +167,9 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
      *         name that child should have
      * @param callback
      */
-    private void getResourceByName(@NotNull final Folder parent,
-                                   @NotNull final String name,
-                                   @NotNull final AsyncCallback<Resource> callback) {
+    private void getResourceByName(@Nonnull final Folder parent,
+                                   @Nonnull final String name,
+                                   @Nonnull final AsyncCallback<Resource> callback) {
 
         activeProject.refreshChildren(parent, new WSO2AsyncCallback<Folder>(notificationManager) {
             @Override
@@ -201,16 +210,18 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
     }
 
     /** @return resource name with extension */
-    @NotNull
-    private String getResourceNameWithExtension(@NotNull String resourceName) {
+    @Nonnull
+    private String getResourceNameWithExtension(@Nonnull String resourceName) {
         return resourceName + '.' + fileType.getExtension();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void commit(@NotNull final CommitCallback callback) {
-        String mimeType = fileType.getMimeTypes().get(0);
-        activeProject.createFile(parentFolder, getResourceNameWithExtension(view.getResourceName()), content, mimeType,
+    public void commit(@Nonnull final CommitCallback callback) {
+        activeProject.createFile(parentFolder,
+                                 getResourceNameWithExtension(view.getResourceName()),
+                                 content,
+                                 fileType.getMimeTypes().get(0),
                                  new AsyncCallback<File>() {
                                      @Override
                                      public void onSuccess(File result) {

@@ -16,13 +16,16 @@
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
+import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.client.editor.WSO2Editor;
 import com.codenvy.ide.client.inject.Injector;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
 
 /**
  * The graphical editor for ESB configuration.
@@ -54,6 +57,15 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     @Override
     public void doSave() {
         dirtyState = false;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void doSave(@NotNull AsyncCallback<EditorInput> callback) {
+        doSave();
+
+        // We should throw null value because for our implementation it isn't needed method. This implementation provides skipping any logic.
+        callback.onSuccess(null);
     }
 
     /** {@inheritDoc} */
