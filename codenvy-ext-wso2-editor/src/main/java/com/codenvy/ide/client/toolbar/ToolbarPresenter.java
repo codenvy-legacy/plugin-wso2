@@ -27,7 +27,6 @@ import javax.annotation.Nonnull;
 import static com.codenvy.ide.client.State.CREATING_ADDRESS_ENDPOINT;
 import static com.codenvy.ide.client.State.CREATING_CALL;
 import static com.codenvy.ide.client.State.CREATING_CALLTEMPLATE;
-import static com.codenvy.ide.client.State.CREATING_CONNECTOR;
 import static com.codenvy.ide.client.State.CREATING_ENRICH;
 import static com.codenvy.ide.client.State.CREATING_FILTER;
 import static com.codenvy.ide.client.State.CREATING_HEADER;
@@ -36,6 +35,8 @@ import static com.codenvy.ide.client.State.CREATING_LOOPBACK;
 import static com.codenvy.ide.client.State.CREATING_PAYLOADFACTORY;
 import static com.codenvy.ide.client.State.CREATING_PROPERTY;
 import static com.codenvy.ide.client.State.CREATING_RESPOND;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_CREATE;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_INIT;
 import static com.codenvy.ide.client.State.CREATING_SEND;
 import static com.codenvy.ide.client.State.CREATING_SEQUENCE;
 import static com.codenvy.ide.client.State.CREATING_SWITCH;
@@ -154,8 +155,14 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
 
     /** {@inheritDoc} */
     @Override
-    public void onSalesforceConnectorClicked() {
-        setState(CREATING_CONNECTOR);
+    public void onSalesforceInitClicked() {
+        setState(CREATING_SALESFORCE_INIT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesforceCreateClicked() {
+        setState(CREATING_SALESFORCE_CREATE);
     }
 
 }

@@ -31,7 +31,7 @@ import com.codenvy.ide.client.elements.Sequence;
 import com.codenvy.ide.client.elements.Switch;
 import com.codenvy.ide.client.elements.ValueType;
 import com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint;
-import com.codenvy.ide.client.elements.connectors.salesforce.BaseSalesforce;
+import com.codenvy.ide.client.elements.connectors.salesforce.Create;
 import com.codenvy.ide.client.elements.connectors.salesforce.Init;
 import com.codenvy.ide.client.elements.enrich.Enrich;
 import com.codenvy.ide.client.elements.log.Log;
@@ -48,6 +48,7 @@ import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.addressendpoint.AddressEndpointPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.call.CallPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.calltemplate.CallTemplatePropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.create.CreatePropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.init.InitPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.empty.EmptyPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.enrich.EnrichPropertiesPanelPresenter;
@@ -214,7 +215,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                  CallTemplatePropertiesPanelPresenter callTemplatePropertiesPanelPresenter,
                                                  CallPropertiesPanelPresenter callPropertiesPanelPresenter,
                                                  AddressEndpointPropertiesPanelPresenter addressEndpointPropertiesPanelPresenter,
-                                                 InitPropertiesPanelPresenter initPropertiesPanelPresenter) {
+                                                 InitPropertiesPanelPresenter initPropertiesPanelPresenter,
+                                                 CreatePropertiesPanelPresenter createPropertiesPanelPresenter) {
 
         PropertiesPanelManager propertiesPanelManager = editorFactory.createPropertiesPanelManager(view.getPropertiesPanel());
 
@@ -262,6 +264,9 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
 
         propertiesPanelManager.register(Init.class, initPropertiesPanelPresenter);
         initPropertiesPanelPresenter.addListener(this);
+
+        propertiesPanelManager.register(Create.class, createPropertiesPanelPresenter);
+        createPropertiesPanelPresenter.addListener(this);
 
         propertiesPanelManager.register(RootElement.class, rootPropertiesPanelPresenter);
         rootPropertiesPanelPresenter.addListener(this);
@@ -384,7 +389,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        LoopBack.ELEMENT_NAME,
                                                                        CallTemplate.ELEMENT_NAME,
                                                                        Call.ELEMENT_NAME,
-                                                                       Init.ELEMENT_NAME));
+                                                                       Init.ELEMENT_NAME,
+                                                                       Create.ELEMENT_NAME));
 
         metaModelValidator.register(Log.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                     Property.ELEMENT_NAME,
@@ -399,7 +405,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                     LoopBack.ELEMENT_NAME,
                                                                     CallTemplate.ELEMENT_NAME,
                                                                     Call.ELEMENT_NAME,
-                                                                    Init.ELEMENT_NAME));
+                                                                    Init.ELEMENT_NAME,
+                                                                    Create.ELEMENT_NAME));
 
         metaModelValidator.register(Call.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                      Property.ELEMENT_NAME,
@@ -414,7 +421,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                      LoopBack.ELEMENT_NAME,
                                                                      CallTemplate.ELEMENT_NAME,
                                                                      Call.ELEMENT_NAME,
-                                                                     Init.ELEMENT_NAME));
+                                                                     Init.ELEMENT_NAME,
+                                                                     Create.ELEMENT_NAME));
 
         metaModelValidator.register(Property.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                          Property.ELEMENT_NAME,
@@ -429,7 +437,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                          LoopBack.ELEMENT_NAME,
                                                                          CallTemplate.ELEMENT_NAME,
                                                                          Call.ELEMENT_NAME,
-                                                                         Init.ELEMENT_NAME));
+                                                                         Init.ELEMENT_NAME,
+                                                                         Create.ELEMENT_NAME));
 
         metaModelValidator.register(Enrich.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                        Property.ELEMENT_NAME,
@@ -444,7 +453,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        LoopBack.ELEMENT_NAME,
                                                                        CallTemplate.ELEMENT_NAME,
                                                                        Call.ELEMENT_NAME,
-                                                                       Init.ELEMENT_NAME));
+                                                                       Init.ELEMENT_NAME,
+                                                                       Create.ELEMENT_NAME));
 
         metaModelValidator.register(Sequence.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                          Property.ELEMENT_NAME,
@@ -459,7 +469,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                          LoopBack.ELEMENT_NAME,
                                                                          CallTemplate.ELEMENT_NAME,
                                                                          Call.ELEMENT_NAME,
-                                                                         Init.ELEMENT_NAME));
+                                                                         Init.ELEMENT_NAME,
+                                                                         Create.ELEMENT_NAME));
 
         metaModelValidator.register(Send.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                      Property.ELEMENT_NAME,
@@ -474,7 +485,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                      LoopBack.ELEMENT_NAME,
                                                                      CallTemplate.ELEMENT_NAME,
                                                                      Call.ELEMENT_NAME,
-                                                                     Init.ELEMENT_NAME));
+                                                                     Init.ELEMENT_NAME,
+                                                                     Create.ELEMENT_NAME));
 
         metaModelValidator.register(PayloadFactory.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                                Property.ELEMENT_NAME,
@@ -489,7 +501,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                LoopBack.ELEMENT_NAME,
                                                                                CallTemplate.ELEMENT_NAME,
                                                                                Call.ELEMENT_NAME,
-                                                                               Init.ELEMENT_NAME));
+                                                                               Init.ELEMENT_NAME,
+                                                                               Create.ELEMENT_NAME));
 
         metaModelValidator.register(Header.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                        Property.ELEMENT_NAME,
@@ -504,7 +517,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        LoopBack.ELEMENT_NAME,
                                                                        CallTemplate.ELEMENT_NAME,
                                                                        Call.ELEMENT_NAME,
-                                                                       Init.ELEMENT_NAME));
+                                                                       Init.ELEMENT_NAME,
+                                                                       Create.ELEMENT_NAME));
 
         metaModelValidator.register(CallTemplate.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                              Property.ELEMENT_NAME,
@@ -519,7 +533,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                              LoopBack.ELEMENT_NAME,
                                                                              CallTemplate.ELEMENT_NAME,
                                                                              Call.ELEMENT_NAME,
-                                                                             Init.ELEMENT_NAME));
+                                                                             Init.ELEMENT_NAME,
+                                                                             Create.ELEMENT_NAME));
 
         metaModelValidator.register(Filter.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                        Property.ELEMENT_NAME,
@@ -534,7 +549,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        LoopBack.ELEMENT_NAME,
                                                                        CallTemplate.ELEMENT_NAME,
                                                                        Call.ELEMENT_NAME,
-                                                                       Init.ELEMENT_NAME));
+                                                                       Init.ELEMENT_NAME,
+                                                                       Create.ELEMENT_NAME));
 
         metaModelValidator.register(Init.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                      Property.ELEMENT_NAME,
@@ -550,7 +566,25 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                      CallTemplate.ELEMENT_NAME,
                                                                      Call.ELEMENT_NAME,
                                                                      Header.ELEMENT_NAME,
-                                                                     Init.ELEMENT_NAME));
+                                                                     Init.ELEMENT_NAME,
+                                                                     Create.ELEMENT_NAME));
+
+        metaModelValidator.register(Create.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
+                                                                       Property.ELEMENT_NAME,
+                                                                       PayloadFactory.ELEMENT_NAME,
+                                                                       Send.ELEMENT_NAME,
+                                                                       Header.ELEMENT_NAME,
+                                                                       Respond.ELEMENT_NAME,
+                                                                       Filter.ELEMENT_NAME,
+                                                                       Switch.ELEMENT_NAME,
+                                                                       Sequence.ELEMENT_NAME,
+                                                                       Enrich.ELEMENT_NAME,
+                                                                       LoopBack.ELEMENT_NAME,
+                                                                       CallTemplate.ELEMENT_NAME,
+                                                                       Call.ELEMENT_NAME,
+                                                                       Header.ELEMENT_NAME,
+                                                                       Init.ELEMENT_NAME,
+                                                                       Create.ELEMENT_NAME));
     }
 
     @Inject
@@ -570,7 +604,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                   Provider<Switch> switchProvider,
                                                   Provider<AddressEndpoint> addressEndpointProvider,
                                                   Provider<Init> initSalesforceProvider,
-                                                  Provider<BaseSalesforce> baseSalesforcePropertyPanelProvider) {
+                                                  Provider<Create> createSalesforceProvider) {
 
         mediatorCreatorsManager.register(Log.ELEMENT_NAME, Log.SERIALIZATION_NAME, State.CREATING_LOG, logProvider);
 
@@ -609,10 +643,13 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                          State.CREATING_ADDRESS_ENDPOINT,
                                          addressEndpointProvider);
 
-        mediatorCreatorsManager.register(Init.ELEMENT_NAME,
-                                         Init.SERIALIZATION_NAME,
-                                         State.CREATING_CONNECTOR,
-                                         initSalesforceProvider);
+        mediatorCreatorsManager
+                .register(Init.ELEMENT_NAME, Init.SERIALIZATION_NAME, State.CREATING_SALESFORCE_INIT, initSalesforceProvider);
+
+        mediatorCreatorsManager.register(Create.ELEMENT_NAME,
+                                         Create.SERIALIZATION_NAME,
+                                         State.CREATING_SALESFORCE_CREATE,
+                                         createSalesforceProvider);
     }
 
     /** {@inheritDoc} */

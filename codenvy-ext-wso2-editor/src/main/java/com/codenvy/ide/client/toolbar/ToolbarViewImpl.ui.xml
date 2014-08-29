@@ -124,7 +124,14 @@
         <g:north size="37.00">
             <g:PushButton ui:field="salesforceInitConnector" addStyleNames="{style.buttonStyle}"
                           title="{local.toolbarSalesforceInitConnectorTooltip}">
-                <g:upFace image="{res.salesforceInitToolbar}"/>
+                <g:upFace image="{res.salesforceConnectorToolbar}"/>
+            </g:PushButton>
+        </g:north>
+
+        <g:north size="37.00">
+            <g:PushButton ui:field="salesforceCreateConnector" addStyleNames="{style.buttonStyle}"
+                          title="{local.toolbarSalesforceCreateConnectorTooltip}">
+                <g:upFace image="{res.salesforceConnectorToolbar}"/>
             </g:PushButton>
         </g:north>
 

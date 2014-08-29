@@ -17,6 +17,7 @@ package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.common.ContentFormatter;
+import com.codenvy.ide.client.elements.connectors.salesforce.Create;
 import com.codenvy.ide.client.elements.connectors.salesforce.Init;
 import com.codenvy.ide.client.elements.enrich.Enrich;
 import com.codenvy.ide.client.elements.log.Log;
@@ -64,7 +65,8 @@ public class RootElement extends AbstractShape {
                                                                  LoopBack.ELEMENT_NAME,
                                                                  CallTemplate.ELEMENT_NAME,
                                                                  Call.ELEMENT_NAME,
-                                                                 Init.ELEMENT_NAME);
+                                                                 Init.ELEMENT_NAME,
+                                                                 Create.ELEMENT_NAME);
 
     private String name;
     private String onError;

@@ -543,4 +543,16 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.connector.configuration.title")
     String propertiespanelConnectorConfigurationTitle();
+
+    @Key("toolbar.salesforceCreateConnector.tooltip")
+    String toolbarSalesforceCreateConnectorTooltip();
+
+    @Key("propertiespanel.connector.allOrNone")
+    String connectorAllOrNone();
+
+    @Key("propertiespanel.connector.allowFieldTruncate")
+    String connectorAllowFieldTruncate();
+
+    @Key("propertiespanel.connector.subjects")
+    String connectorSubjects();
 }

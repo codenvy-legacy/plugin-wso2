@@ -385,7 +385,7 @@ public interface EditorResources extends ClientBundle {
     ImageResource salesforce();
 
     @Source("icons/SalesforceToolbar.gif")
-    ImageResource salesforceInitToolbar();
+    ImageResource salesforceConnectorToolbar();
 
     @Source("icons/cursors/AddElementCursor.png")
     DataResource applyCursor();
