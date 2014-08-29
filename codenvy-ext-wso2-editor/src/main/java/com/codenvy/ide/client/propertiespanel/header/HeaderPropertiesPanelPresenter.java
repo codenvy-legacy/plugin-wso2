@@ -40,6 +40,9 @@ import static com.codenvy.ide.client.elements.Header.HeaderValueType.LITERAL;
 import static com.codenvy.ide.client.elements.Header.ScopeType;
 
 /**
+ * The class provides the business logic that allows editor to react on user's action and to change state of Header mediator
+ * depending on user's changes of properties.
+ *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */

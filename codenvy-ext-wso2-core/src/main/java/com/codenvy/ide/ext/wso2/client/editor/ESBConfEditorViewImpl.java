@@ -31,12 +31,13 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The implementation of {@link ESBConfEditorView}.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorView {
 
@@ -84,37 +85,37 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
 
     /** {@inheritDoc} */
     @Override
-    public void setEnableTextEditorButton(boolean enable) {
+    public void setEnableSourceViewButton(boolean enable) {
         textEditorChoose.setEnabled(enable);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setEnableGraphicalEditorButton(boolean enable) {
+    public void setEnableDesignViewButton(boolean enable) {
         graphicalEditorChoose.setEnabled(enable);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setEnableBothEditorButton(boolean enable) {
+    public void setEnableDualViewButton(boolean enable) {
         associateEditorChoose.setEnabled(enable);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void showTextEditor(@NotNull CodenvyTextEditor textEditor) {
+    public void showSourceView(@Nonnull CodenvyTextEditor textEditor) {
         textEditor.go(mainPanel);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void showGraphicalEditor(@NotNull AbstractEditorPresenter graphicalEditor) {
+    public void showDesignView(@Nonnull AbstractEditorPresenter graphicalEditor) {
         graphicalEditor.go(mainPanel);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void showEditors(@NotNull AbstractEditorPresenter graphicalEditor, @NotNull CodenvyTextEditor textEditor) {
+    public void showDualView(@Nonnull AbstractEditorPresenter graphicalEditor, @Nonnull CodenvyTextEditor textEditor) {
         graphicalEditor.go(graphicalEditorPanel);
         textEditor.go(textEditorPanel);
 
@@ -123,16 +124,16 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
 
     @UiHandler("textEditorChoose")
     public void onTextEditorButtonClicked(ClickEvent event) {
-        delegate.onTextEditorButtonClicked();
+        delegate.onSourceViewButtonClicked();
     }
 
     @UiHandler("graphicalEditorChoose")
     public void onGraphicalEditorButtonClicked(ClickEvent event) {
-        delegate.onGraphicalEditorButtonClicked();
+        delegate.onDesignViewButtonClicked();
     }
 
     @UiHandler("associateEditorChoose")
     public void onAssociateEditorButtonClicked(ClickEvent event) {
-        delegate.onAssociateEditorButtonClicked();
+        delegate.onDualViewButtonClicked();
     }
 }

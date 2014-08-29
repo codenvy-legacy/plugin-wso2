@@ -27,10 +27,14 @@ import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.Widget;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
- * {@link CompletionProposal} implementation for XML code assistant.
+ * Class provides a business logic which propose variants of context completion.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  * @author Andrey Plotnikov
  */
 public class XmlCompletionProposal implements CompletionProposal {
@@ -44,24 +48,28 @@ public class XmlCompletionProposal implements CompletionProposal {
 
     /** {@inheritDoc} */
     @Override
+    @Nullable
     public Widget getAdditionalProposalInfo() {
         return null;
     }
 
     /** {@inheritDoc} */
     @Override
+    @Nonnull
     public String getDisplayString() {
         return new SafeHtmlBuilder().appendEscaped(name).toSafeHtml().asString();
     }
 
     /** {@inheritDoc} */
     @Override
+    @Nullable
     public Icon getIcon() {
         return null;
     }
 
     /** {@inheritDoc} */
     @Override
+    @Nullable
     public char[] getTriggerCharacters() {
         return null;
     }
@@ -74,7 +82,7 @@ public class XmlCompletionProposal implements CompletionProposal {
 
     /** {@inheritDoc} */
     @Override
-    public void getCompletion(CompletionCallback callback) {
+    public void getCompletion(@Nonnull CompletionCallback callback) {
         callback.onCompletion(new Completion() {
             @Override
             public void apply(Document document) {
@@ -97,9 +105,9 @@ public class XmlCompletionProposal implements CompletionProposal {
 
     /**
      * @param context
-     *         the context to set
+     *         context which need to set
      */
-    public void setContext(InvocationContext context) {
+    public void setContext(@Nonnull InvocationContext context) {
         this.context = context;
     }
 }

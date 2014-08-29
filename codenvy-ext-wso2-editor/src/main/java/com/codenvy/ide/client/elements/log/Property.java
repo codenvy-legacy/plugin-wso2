@@ -28,7 +28,9 @@ import javax.annotation.Nullable;
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 
 /**
- * Class describes entity which presented property of mediator.
+ * The class which describes state of property element of Log mediator and also has methods for changing it. Also the class contains the
+ * business logic that allows to display serialization representation depending of the current state of element. Deserelization mechanism
+ * allows to restore the condition of the element when you open ESB project after saving.
  *
  * @author Dmitry Shnurenko
  */
@@ -89,7 +91,12 @@ public class Property {
         return nameSpaces;
     }
 
-    /** Sets namespaces to property */
+    /**
+     * Sets namespaces to property
+     *
+     * @param nameSpaces
+     *         list of name spaces that should be set
+     */
     public void setNameSpaces(@Nonnull Array<NameSpace> nameSpaces) {
         this.nameSpaces = nameSpaces;
     }
@@ -100,7 +107,12 @@ public class Property {
         return name;
     }
 
-    /** Sets name of namespace */
+    /**
+     * Sets name of namespace
+     *
+     * @param name
+     *         value that should be set
+     */
     public void setName(@Nonnull String name) {
         this.name = name;
     }
@@ -111,7 +123,7 @@ public class Property {
         return expression;
     }
 
-    /** @return copy of element */
+    /** @return copy of property element */
     public Property clone() {
         //TODO create property using editor factory
         Property property = new Property(name, expression);

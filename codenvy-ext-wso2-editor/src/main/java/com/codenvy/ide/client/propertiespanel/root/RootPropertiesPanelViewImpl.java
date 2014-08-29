@@ -29,7 +29,10 @@ import com.google.inject.Singleton;
 import javax.annotation.Nonnull;
 
 /**
+ * Provides a graphical representation of 'Root' property panel for editing property of 'Root' element.
+ *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class RootPropertiesPanelViewImpl extends RootPropertiesPanelView {
 

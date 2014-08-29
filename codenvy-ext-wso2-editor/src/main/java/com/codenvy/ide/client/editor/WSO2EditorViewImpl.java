@@ -34,6 +34,8 @@ import org.vectomatic.dom.svg.ui.SVGImage;
 import javax.annotation.Nonnull;
 
 /**
+ * Provides a graphical representation of WSO2 editor.
+ *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */

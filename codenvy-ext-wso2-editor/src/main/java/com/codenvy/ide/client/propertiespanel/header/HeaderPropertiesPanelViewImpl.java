@@ -36,6 +36,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
+ * Provides a graphical representation of 'Header' property panel for editing property of 'Header' mediator.
+ *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */

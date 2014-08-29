@@ -41,10 +41,15 @@ import static com.codenvy.ide.client.elements.Filter.ConditionType.XPATH;
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 
 /**
- * The entity that represents 'Filter' mediator from ESB configuration.
+ * The class which describes state of Filter mediator and also has methods for changing it. Also the class contains the business
+ * logic that allows to display serialization representation depending of the current state of element. Deserelization mechanism allows to
+ * restore the condition of the element when you open ESB project after saving. This mediator has two branches 'then' and 'else'. In these
+ * branches we can add an element. For more information about Filter mediator go to
+ * <a href=" https://docs.wso2.com/display/ESB460/Filter+Mediator"> https://docs.wso2.com/display/ESB460/Filter+Mediator</a>
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class Filter extends AbstractShape {
     public static final String ELEMENT_NAME       = "Filter";
@@ -108,56 +113,98 @@ public class Filter extends AbstractShape {
         branches.addAll(Arrays.asList(thenBranch, elseBranch));
     }
 
+    /** @return condition type of filter mediator */
     @Nonnull
     public ConditionType getConditionType() {
         return conditionType;
     }
 
+    /**
+     * Sets condition type parameter to element
+     *
+     * @param conditionType
+     *         value which need to set to element
+     */
     public void setConditionType(@Nonnull ConditionType conditionType) {
         this.conditionType = conditionType;
     }
 
+    /** @return source of filter mediator */
     @Nullable
     public String getSource() {
         return source;
     }
 
+    /**
+     * Sets source parameter to element
+     *
+     * @param source
+     *         value which need to set to element
+     */
     public void setSource(@Nullable String source) {
         this.source = source;
     }
 
+    /** @return regular expression of filter mediator */
     @Nonnull
     public String getRegularExpression() {
         return regularExpression;
     }
 
+    /**
+     * Sets regular expression parameter to element
+     *
+     * @param regularExpression
+     *         value which need to set to element
+     */
     public void setRegularExpression(@Nonnull String regularExpression) {
         this.regularExpression = regularExpression;
     }
 
+    /** @return xpath of filter mediator */
     @Nullable
     public String getXPath() {
         return xPath;
     }
 
+    /**
+     * Sets xpath parameter to element
+     *
+     * @param xPath
+     *         value which need to set to element
+     */
     public void setXPath(@Nullable String xPath) {
         this.xPath = xPath;
     }
 
+    /** @return list of source namespaces of filter mediator */
     @Nonnull
     public Array<NameSpace> getSourceNameSpaces() {
         return sourceNameSpaces;
     }
 
+    /**
+     * Sets list of source namespaces to element
+     *
+     * @param sourceNameSpaces
+     *         list of source namespaces which need to set to element
+     */
     public void setSourceNameSpaces(@Nonnull Array<NameSpace> sourceNameSpaces) {
         this.sourceNameSpaces = sourceNameSpaces;
     }
 
+    /** @return list of xpath namespaces of filter mediator */
     @Nonnull
     public Array<NameSpace> getXPathNameSpaces() {
         return xPathNameSpaces;
     }
 
+    /**
+     * Sets list of xpath namespaces to element
+     *
+     * @param xPathNameSpaces
+     *         list which need to set to element
+     */
     public void setXPathNameSpaces(@Nonnull Array<NameSpace> xPathNameSpaces) {
         this.xPathNameSpaces = xPathNameSpaces;
     }
@@ -183,6 +230,7 @@ public class Filter extends AbstractShape {
         }
     }
 
+    /** @return xml representation of namespaces which presented as attributes of element */
     @Nonnull
     private String convertNameSpacesToXMLAttributes(@Nonnull Array<NameSpace> nameSpaces) {
         StringBuilder result = new StringBuilder();

@@ -33,6 +33,9 @@ import javax.annotation.Nonnull;
 import static com.codenvy.ide.client.editor.WSO2Editor.BOOLEAN_TYPE_NAME;
 
 /**
+ * The class provides the business logic that allows editor to react on user's action and to change state of Send mediator
+ * depending on user's changes of properties.
+ *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */

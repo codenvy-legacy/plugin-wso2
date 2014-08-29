@@ -35,9 +35,10 @@ import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
 /**
- * The implementation of {@link OverwriteFileView}.
+ * Provides a graphical representation which allows user to change name of file.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  * @author Andrey Plotnikov
  */
 public class OverwriteFileViewImpl extends Window implements OverwriteFileView {
@@ -103,7 +104,7 @@ public class OverwriteFileViewImpl extends Window implements OverwriteFileView {
 
     /** {@inheritDoc} */
     @Override
-    public void setFileName(@Nonnull @NotNull String fileName) {
+    public void setFileName(@Nonnull String fileName) {
         this.fileName.setText(fileName);
     }
 
@@ -133,7 +134,7 @@ public class OverwriteFileViewImpl extends Window implements OverwriteFileView {
 
     /** {@inheritDoc} */
     @Override
-    public void setMessage(@Nonnull @NotNull String message) {
+    public void setMessage(@Nonnull String message) {
         this.message.setHTML(message);
     }
 

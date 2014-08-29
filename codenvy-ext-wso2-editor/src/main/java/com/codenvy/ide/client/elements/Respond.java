@@ -31,7 +31,10 @@ import java.util.Map;
 import static java.util.Collections.emptyList;
 
 /**
- * The entity that represents 'Respond' mediator from ESB configuration.
+ * The class which describes state of Respond mediator and also has methods for changing it. Also the class contains the business
+ * logic that allows to display serialization representation depending of the current state of element. Deserelization mechanism allows to
+ * restore the condition of the element when you open ESB project after saving. For more information about Respond mediator go to
+ * <a href=" https://docs.wso2.com/display/ESB460/Respond+Mediator"> https://docs.wso2.com/display/ESB460/Respond+Mediator</a>
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko

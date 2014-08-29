@@ -38,10 +38,14 @@ import java.util.Map;
 import static com.codenvy.ide.client.elements.payload.Format.FormatType;
 
 /**
- * Class describes PayloadFactory mediator.
+ * The class which describes state of PayloadFactory mediator and also has methods for changing it. Also the class contains the business
+ * logic that allows to display serialization representation depending of the current state of element. Deserelization mechanism allows to
+ * restore the condition of the element when you open ESB project after saving. For more information about PayloadFactory mediator go to
+ * <a href=" https://docs.wso2.com/display/ESB460/PayLoad+Mediator"> https://docs.wso2.com/display/ESB460/PayLoad+Mediator</a>
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class PayloadFactory extends AbstractShape {
     public static final String ELEMENT_NAME       = "PayloadFactory";
@@ -85,17 +89,17 @@ public class PayloadFactory extends AbstractShape {
         this.format = format;
     }
 
-    /** @return value of args */
+    /** @return list of args of payload factory mediator */
     @Nonnull
     public Array<Arg> getArgs() {
         return args;
     }
 
     /**
-     * Set args.
+     * Set list of args to payload factory mediator.
      *
      * @param args
-     *         property arguments
+     *         list of property arguments which need to set
      */
     public void setArgs(@Nullable Array<Arg> args) {
         this.args = args;
@@ -108,10 +112,10 @@ public class PayloadFactory extends AbstractShape {
     }
 
     /**
-     * Set description.
+     * Set description to payload factory mediator.
      *
      * @param description
-     *         description of PayloadFactory
+     *         description which need to set
      */
     public void setDescription(@Nullable String description) {
         this.description = description;

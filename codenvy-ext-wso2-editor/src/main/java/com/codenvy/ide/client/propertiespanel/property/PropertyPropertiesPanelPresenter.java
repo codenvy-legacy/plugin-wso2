@@ -36,7 +36,8 @@ import static com.codenvy.ide.client.elements.Property.Scope;
 import static com.codenvy.ide.client.elements.ValueType.EXPRESSION;
 
 /**
- * The property panel of Property mediator.
+ * The class provides the business logic that allows editor to react on user's action and to change state of Property mediator
+ * depending on user's changes of properties.
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko

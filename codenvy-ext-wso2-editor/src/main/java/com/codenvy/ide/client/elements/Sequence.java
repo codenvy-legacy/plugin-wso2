@@ -35,7 +35,10 @@ import static com.codenvy.ide.client.elements.Sequence.ReferringType.Dynamic;
 import static com.codenvy.ide.client.elements.Sequence.ReferringType.Static;
 
 /**
- * The entity that represents 'Sequence' mediator from ESB configuration.
+ * The class which describes state of Sequence mediator and also has methods for changing it. Also the class contains the business
+ * logic that allows to display serialization representation depending of the current state of element. Deserelization mechanism allows to
+ * restore the condition of the element when you open ESB project after saving. For more information about Sequence mediator go to
+ * <a href=" https://docs.wso2.com/display/ESB460/Sequence+Mediator"> https://docs.wso2.com/display/ESB460/Sequence+Mediator</a>
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko

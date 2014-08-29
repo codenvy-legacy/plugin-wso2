@@ -35,7 +35,10 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
+ * Provides a graphical representation of 'Sequence' property panel for editing property of 'Sequence' mediator.
+ *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class SequencePropertiesPanelViewImpl extends SequencePropertiesPanelView {
 

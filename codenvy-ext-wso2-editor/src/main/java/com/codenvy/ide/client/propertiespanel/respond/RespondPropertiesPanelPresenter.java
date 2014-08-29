@@ -16,14 +16,17 @@
 package com.codenvy.ide.client.propertiespanel.respond;
 
 import com.codenvy.ide.client.elements.Respond;
-import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 
 /**
+ * The class provides the business logic that allows editor to react on user's action and to change state of Respond mediator
+ * depending on user's changes of properties.
+ *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */

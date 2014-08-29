@@ -19,7 +19,7 @@ import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
 
 /**
- * The view of {@link WSO2PagePresenter}.
+ * The abstract view's representation of empty ESB configuration project.
  *
  * @author Valeriy Svydenko
  */

@@ -18,7 +18,11 @@ package com.codenvy.ide.client.propertiespanel.inline;
 import javax.annotation.Nonnull;
 
 /**
+ * The entity which includes inline parameter, that may be modified, must implement this interface. This
+ * method will be call when inline parameter is changed.
+ *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public interface ChangeInlineFormatCallBack {
     /**

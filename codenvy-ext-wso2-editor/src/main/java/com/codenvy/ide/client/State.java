@@ -16,7 +16,10 @@
 package com.codenvy.ide.client;
 
 /**
+ * The list of states that can be taken by editor.
+ *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public enum State {
     CREATING_LOG,

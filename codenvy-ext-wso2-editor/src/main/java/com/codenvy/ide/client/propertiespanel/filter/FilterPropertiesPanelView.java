@@ -31,6 +31,10 @@ import java.util.List;
 @ImplementedBy(FilterPropertiesPanelViewImpl.class)
 public abstract class FilterPropertiesPanelView extends AbstractView<FilterPropertiesPanelView.ActionDelegate> {
 
+    /**
+     * Interface defines methods of {@link FilterPropertiesPanelPresenter} which calls from view. These methods defines
+     * some actions when user change properties of Filter mediator.
+     */
     public interface ActionDelegate extends AbstractView.ActionDelegate {
 
         /** Performs some actions in response to user's changing condition type field. */

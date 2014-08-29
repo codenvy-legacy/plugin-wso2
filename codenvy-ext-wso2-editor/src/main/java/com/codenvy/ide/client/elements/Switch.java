@@ -40,10 +40,16 @@ import java.util.Map;
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 
 /**
- * The entity that represents 'Switch' mediator from ESB configuration.
+ * The class which describes state of Switch mediator and also has methods for changing it. Also the class contains the business
+ * logic that allows to display serialization representation depending of the current state of element. Deserelization mechanism allows to
+ * restore the condition of the element when you open ESB project after saving. Switch mediator may contains some branches which may
+ * include an elements.By default Switch mediator contains two branches 'case' and 'default'.
+ * For more information about Property mediator go to
+ * <a href=" https://docs.wso2.com/display/ESB460/Property+Mediator"> https://docs.wso2.com/display/ESB460/Property+Mediator</a>
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class Switch extends AbstractShape {
     public static final String ELEMENT_NAME       = "Switch";
@@ -137,11 +143,18 @@ public class Switch extends AbstractShape {
         return branches;
     }
 
+    /** @return source xpath of switch mediator */
     @Nullable
     public String getSourceXpath() {
         return sourceXpath;
     }
 
+    /**
+     * Sets source xpath parameter to switch mediator.
+     *
+     * @param sourceXpath
+     *         value which need to set to element
+     */
     public void setSourceXpath(@Nullable String sourceXpath) {
         this.sourceXpath = sourceXpath;
     }

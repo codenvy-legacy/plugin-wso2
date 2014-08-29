@@ -25,11 +25,14 @@ import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
+import javax.annotation.Nonnull;
+
 /**
  * This very class provides support for the XML tag auto completion. By tag auto completions we mean adding enclosing tags during editing
  * of an XML document with all required formatting.
  *
  * @author Dmitry Kuleshov
+ * @author Dmitry Shnurenko
  */
 public class TagAutoCompleter implements AutoEditStrategy {
 
@@ -42,7 +45,7 @@ public class TagAutoCompleter implements AutoEditStrategy {
 
     /** {@inheritDoc} */
     @Override
-    public void customizeDocumentCommand(Document document, DocumentCommand command) {
+    public void customizeDocumentCommand(@Nonnull Document document, @Nonnull DocumentCommand command) {
         try {
             if (isCompletionApplicable(document, command)) {
                 final int offset = editor.getSelection().getSelectedRange().offset;
@@ -57,7 +60,7 @@ public class TagAutoCompleter implements AutoEditStrategy {
         }
     }
 
-    private boolean isCompletionApplicable(Document document, DocumentCommand command) throws BadLocationException {
+    private boolean isCompletionApplicable(@Nonnull Document document, @Nonnull DocumentCommand command) throws BadLocationException {
         if (command.text.charAt(0) == '>') {
             int offset = editor.getSelection().getSelectedRange().offset;
             String line = getLineAtCursor(document, offset);
@@ -68,7 +71,7 @@ public class TagAutoCompleter implements AutoEditStrategy {
         return false;
     }
 
-    private int countSymbolOccurrence(String line, char symbol) {
+    private int countSymbolOccurrence(@Nonnull String line, char symbol) {
         int number = 0;
         for (int i = 0; i < line.length(); i++) {
             if (line.charAt(i) == symbol) {
@@ -78,12 +81,14 @@ public class TagAutoCompleter implements AutoEditStrategy {
         return number;
     }
 
-    private String getLineAtCursor(Document document, int offset) throws BadLocationException {
+    @Nonnull
+    private String getLineAtCursor(@Nonnull Document document, int offset) throws BadLocationException {
         Region line = document.getLineInformationOfOffset(offset);
         return document.get(line.getOffset(), line.getLength());
     }
 
-    private String getTagToBeCompleted(String line) {
+    @Nonnull
+    private String getTagToBeCompleted(@Nonnull String line) {
         int tagStartPosition = line.lastIndexOf('<') + 1;
         String substring = line.substring(tagStartPosition);
         int tagEndPosition = tagStartPosition + substring.indexOf(" ");
@@ -91,7 +96,8 @@ public class TagAutoCompleter implements AutoEditStrategy {
         return tagEndPosition < tagStartPosition ? substring : line.substring(tagStartPosition, tagEndPosition);
     }
 
-    private String getTagCompletion(DocumentCommand command, String tag) {
+    @Nonnull
+    private String getTagCompletion(@Nonnull DocumentCommand command, @Nonnull String tag) {
         return command.text + "</" + tag + '>';
     }
 }

@@ -24,11 +24,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
+ * The presentation of Name Space Editor view. It contains a general places for name spaces properties.
+ *
  * @author Dmitry Shnurenko
  */
 @ImplementedBy(NameSpaceEditorViewImpl.class)
 public interface NameSpaceEditorView extends View<NameSpaceEditorView.ActionDelegate> {
 
+    /**
+     * Interface defines methods of {@link NameSpaceEditorPresenter} which calls from view. These methods defines
+     * some actions when user adds, removes or edits name spaces.
+     */
     public interface ActionDelegate {
 
         /** Performs any actions appropriate in response to the user having pressed the Add button. */

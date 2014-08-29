@@ -366,6 +366,10 @@ public abstract class AddressEndpointPropertiesPanelView extends AbstractView<Ad
     @Nonnull
     public abstract String getTimeoutAction();
 
+    /**
+     * Interface defines methods of {@link AddressEndpointPropertiesPanelPresenter} which calls from view. These methods defines
+     * some actions when user changes properties of address endpoint.
+     */
     public interface ActionDelegate extends AbstractView.ActionDelegate {
 
         /** Performs some actions in response to user's changing format field. */

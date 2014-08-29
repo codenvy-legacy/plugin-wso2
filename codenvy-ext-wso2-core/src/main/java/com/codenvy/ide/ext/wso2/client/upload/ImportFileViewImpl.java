@@ -42,7 +42,7 @@ import static com.google.gwt.user.client.ui.FormPanel.ENCODING_MULTIPART;
 import static com.google.gwt.user.client.ui.FormPanel.METHOD_POST;
 
 /**
- * The implementation of {@link ImportFileView}.
+ * Provides a graphical representation which allows user to import file to ESB project from different places.
  *
  * @author Valeriy Svydenko
  * @author Andrey Plotnikov

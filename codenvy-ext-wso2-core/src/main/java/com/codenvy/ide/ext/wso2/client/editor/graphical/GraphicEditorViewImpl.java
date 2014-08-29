@@ -26,7 +26,7 @@ import com.google.inject.Singleton;
 import com.google.inject.assistedinject.Assisted;
 
 /**
- * The implementation of {@link GraphicEditorView}.
+ * Provides graphical representation of wso2 editor window.
  *
  * @author Andrey Plotnikov
  */

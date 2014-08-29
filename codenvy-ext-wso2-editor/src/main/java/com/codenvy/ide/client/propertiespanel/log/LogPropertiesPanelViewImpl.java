@@ -34,7 +34,10 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
+ * Provides a graphical representation of 'Log' property panel for editing property of 'Log' mediator.
+ *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class LogPropertiesPanelViewImpl extends LogPropertiesPanelView {
 

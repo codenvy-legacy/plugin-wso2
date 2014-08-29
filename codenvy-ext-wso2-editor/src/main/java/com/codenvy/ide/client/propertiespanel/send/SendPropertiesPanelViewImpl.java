@@ -35,6 +35,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
+ * Provides a graphical representation of 'Send' property panel for editing property of 'Send' element.
+ *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */

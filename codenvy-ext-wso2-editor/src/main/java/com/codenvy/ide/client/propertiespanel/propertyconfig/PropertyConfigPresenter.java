@@ -27,6 +27,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
+ * The class provides the business logic that allows editor to react on user's action related to change of element's property.
+ * Logic which provides the class allows add, remove and edit properties of mediator via special dialog window.
+ *
  * @author Dmitry Shnurenko
  */
 public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegate {
@@ -126,6 +129,8 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
      *
      * @param properties
      *         properties which need to be edited.
+     * @param title
+     *         title which need to set to dialog window
      * @param callback
      *         callback that need to be handled when properties editing is successful
      */

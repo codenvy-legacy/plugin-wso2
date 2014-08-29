@@ -93,6 +93,7 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
     }
 
     /** {@inheritDoc} */
+    @Nullable
     @Override
     public String getNotice() {
         if (incorrectName) {
@@ -130,21 +131,21 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
 
     /** {@inheritDoc} */
     @Override
-    public void go(AcceptsOneWidget container) {
+    public void go(@Nonnull AcceptsOneWidget container) {
         activeProject = resourceProvider.getActiveProject();
 
         getResourceByName(activeProject, SRC_FOLDER_NAME, new WSO2AsyncCallback<Resource>(notificationManager) {
             @Override
-            public void onSuccess(Resource result) {
+            public void onSuccess(@Nonnull Resource result) {
                 getResourceByName((Folder)result, MAIN_FOLDER_NAME, new WSO2AsyncCallback<Resource>(notificationManager) {
                     @Override
-                    public void onSuccess(Resource result) {
+                    public void onSuccess(@Nonnull Resource result) {
                         getResourceByName((Folder)result, SYNAPSE_CONFIG_FOLDER_NAME, new WSO2AsyncCallback<Resource>(notificationManager) {
                             @Override
-                            public void onSuccess(Resource result) {
+                            public void onSuccess(@Nonnull Resource result) {
                                 getResourceByName((Folder)result, parentFolderName, new WSO2AsyncCallback<Resource>(notificationManager) {
                                     @Override
-                                    public void onSuccess(Resource result) {
+                                    public void onSuccess(@Nonnull Resource result) {
                                         parentFolder = (Folder)result;
                                     }
                                 });
@@ -233,6 +234,7 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
                                      public void onFailure(Throwable caught) {
                                          callback.onFailure(caught);
                                      }
-                                 });
+                                 }
+                                );
     }
 }

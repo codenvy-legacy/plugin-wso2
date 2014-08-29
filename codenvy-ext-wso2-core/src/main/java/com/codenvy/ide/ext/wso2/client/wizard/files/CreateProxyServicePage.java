@@ -26,6 +26,7 @@ import com.codenvy.ide.ext.wso2.client.wizard.files.view.CreateResourceView;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.PROXY_SERVICE_FOLDER_NAME;
 
@@ -60,6 +61,7 @@ public class CreateProxyServicePage extends AbstractCreateResourcePage {
     }
 
     /** {@inheritDoc} */
+    @Nullable
     @Override
     public String getNotice() {
         if (view.getResourceName().isEmpty()) {

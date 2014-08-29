@@ -21,6 +21,8 @@ import com.google.inject.ImplementedBy;
 import javax.annotation.Nonnull;
 
 /**
+ * The presentation of Editor Address Property view. It contains a general places for properties of address endpoint.
+ *
  * @author Dmitry Shnurenko
  */
 @ImplementedBy(EditorAddressPropertyViewImpl.class)
@@ -96,6 +98,10 @@ public interface EditorAddressPropertyView extends View<EditorAddressPropertyVie
      */
     void setTextBoxEnable(boolean isEnable);
 
+    /**
+     * Interface defines methods of EditorAddressProperty's presenter which calls from view. These methods defines
+     * some actions when user click the button or change value of parameters in list box.
+     */
     public interface ActionDelegate {
 
         /** Performs any actions appropriate in response to the user clicked ok button. */

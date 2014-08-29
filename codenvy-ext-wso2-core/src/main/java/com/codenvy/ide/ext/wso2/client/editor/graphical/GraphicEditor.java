@@ -102,11 +102,18 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
         container.setWidget(view);
     }
 
+    /** @return a serialized text type of diagram */
     @Nonnull
     public String serialize() {
         return editor.serialize();
     }
 
+    /**
+     * Convert a text type of diagram to a graphical type.
+     *
+     * @param content
+     *         content that need to be parsed
+     */
     public void deserialize(@Nonnull String content) {
         editor.deserialize(content);
     }

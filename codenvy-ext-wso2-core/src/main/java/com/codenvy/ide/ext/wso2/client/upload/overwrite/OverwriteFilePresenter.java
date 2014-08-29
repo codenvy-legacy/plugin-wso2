@@ -42,10 +42,12 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.SRC_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NAME;
 
 /**
- * The presenter for overwrite imported file.
+ * The class provides the business logic which allows us to change name of existing file, to delete file or overwrite it
+ * via special dialog window.
  *
  * @author Valeriy Svydenko
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate {
 
@@ -208,6 +210,14 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
         }
     }
 
+    /**
+     * Shows dialog window for editing file.
+     *
+     * @param fileName
+     *         name of file which need to set to current file
+     * @param parentViewUtils
+     *         need to close the view in another model
+     */
     public void showDialog(@Nonnull String fileName, @Nonnull ImportFilePresenter.ViewCloseHandler parentViewUtils) {
         this.parentViewUtils = parentViewUtils;
         oldFileName = fileName;

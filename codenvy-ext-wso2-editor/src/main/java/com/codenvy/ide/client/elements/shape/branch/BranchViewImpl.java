@@ -48,7 +48,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Provides a graphical representation of the element's branch.
+ *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class BranchViewImpl extends BranchView {
 

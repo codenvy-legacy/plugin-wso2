@@ -23,7 +23,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * The view of {@link CallTemplatePropertiesPanelPresenter}
+ * The abstract view's representation of 'CallTemplate' mediator properties panel. It provides an ability to show all available properties
+ * of the mediator and edit it.
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
@@ -31,6 +32,10 @@ import java.util.List;
 @ImplementedBy(CallTemplatePropertiesPanelViewImpl.class)
 public abstract class CallTemplatePropertiesPanelView extends AbstractView<CallTemplatePropertiesPanelView.ActionDelegate> {
 
+    /**
+     * Interface defines methods of {@link CallTemplatePropertiesPanelPresenter} which calls from view. These methods defines
+     * some actions when user change properties of CallTemplate mediator.
+     */
     public interface ActionDelegate extends AbstractView.ActionDelegate {
 
         /** Performs any actions appropriate in response when available template field changed. */

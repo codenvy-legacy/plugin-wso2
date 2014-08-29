@@ -42,6 +42,9 @@ import static com.codenvy.ide.client.elements.enrich.Source.SourceType.custom;
 import static com.codenvy.ide.client.elements.enrich.Target.TargetType;
 
 /**
+ * The class provides the business logic that allows editor to react on user's action and to change state of Call mediator
+ * depending on user's changes of properties.
+ *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
@@ -365,7 +368,7 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
             applySourceInlineType();
         }
 
-        if (!custom.equals(element.getTarget().getType())) {
+        if (!TargetType.custom.equals(element.getTarget().getType())) {
             applyTargetType();
         }
     }

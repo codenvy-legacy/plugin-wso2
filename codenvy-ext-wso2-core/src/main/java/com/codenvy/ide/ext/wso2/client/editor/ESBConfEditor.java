@@ -32,14 +32,16 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 /**
- * The editor for WSO2 ESB configuration.
+ * The presenter that provides a business logic of ESB editor. It provides an ability to work with all
+ * properties of ESB editor.
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEditorView.ActionDelegate, PropertyListener {
 
@@ -68,7 +70,7 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
 
     /** {@inheritDoc} */
     @Override
-    public void init(@NotNull EditorInput input) throws EditorInitException {
+    public void init(@Nonnull EditorInput input) throws EditorInitException {
         super.init(input);
         textEditor.init(input);
         graphicEditor.init(input);
@@ -77,7 +79,7 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     /** {@inheritDoc} */
     @Override
     protected void initializeEditor() {
-        onGraphicalEditorButtonClicked();
+        onDesignViewButtonClicked();
     }
 
     /** {@inheritDoc} */
@@ -93,7 +95,7 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
 
     /** {@inheritDoc} */
     @Override
-    public void doSave(@NotNull AsyncCallback<EditorInput> callback) {
+    public void doSave(@Nonnull AsyncCallback<EditorInput> callback) {
         doSave();
 
         // We should throw null value because for our implementation it isn't needed method. This implementation provides skipping any logic.
@@ -121,6 +123,7 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getTitle() {
         if (isDirty()) {
@@ -146,7 +149,7 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
 
     /** {@inheritDoc} */
     @Override
-    public void go(AcceptsOneWidget container) {
+    public void go(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
 
         isGraphicalEditorChanged = false;
@@ -154,32 +157,32 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
 
     /** {@inheritDoc} */
     @Override
-    public void onTextEditorButtonClicked() {
-        view.setEnableTextEditorButton(false);
-        view.setEnableGraphicalEditorButton(true);
-        view.setEnableBothEditorButton(true);
+    public void onSourceViewButtonClicked() {
+        view.setEnableSourceViewButton(false);
+        view.setEnableDesignViewButton(true);
+        view.setEnableDualViewButton(true);
 
-        view.showTextEditor(textEditor);
+        view.showSourceView(textEditor);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onGraphicalEditorButtonClicked() {
-        view.setEnableTextEditorButton(true);
-        view.setEnableGraphicalEditorButton(false);
-        view.setEnableBothEditorButton(true);
+    public void onDesignViewButtonClicked() {
+        view.setEnableSourceViewButton(true);
+        view.setEnableDesignViewButton(false);
+        view.setEnableDualViewButton(true);
 
-        view.showGraphicalEditor(graphicEditor);
+        view.showDesignView(graphicEditor);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onAssociateEditorButtonClicked() {
-        view.setEnableTextEditorButton(true);
-        view.setEnableGraphicalEditorButton(true);
-        view.setEnableBothEditorButton(false);
+    public void onDualViewButtonClicked() {
+        view.setEnableSourceViewButton(true);
+        view.setEnableDesignViewButton(true);
+        view.setEnableDualViewButton(false);
 
-        view.showEditors(graphicEditor, textEditor);
+        view.showDualView(graphicEditor, textEditor);
     }
 
     /** {@inheritDoc} */
@@ -190,7 +193,7 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
 
     /** {@inheritDoc} */
     @Override
-    public void propertyChanged(PartPresenter source, int propId) {
+    public void propertyChanged(@Nonnull PartPresenter source, int propId) {
         if (propId == EditorPartPresenter.PROP_DIRTY && source instanceof GraphicEditor) {
             textEditor.getDocument().set(graphicEditor.serialize());
 

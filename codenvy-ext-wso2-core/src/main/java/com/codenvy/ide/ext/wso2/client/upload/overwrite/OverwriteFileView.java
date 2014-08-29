@@ -21,13 +21,20 @@ import com.google.inject.ImplementedBy;
 import javax.annotation.Nonnull;
 
 /**
- * The view of {@link com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter}.
+ * The abstract view's representation which describes methods to receive information from the user and to set it to the file. It
+ * provides an ability to show all available tools for working with the file.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  * @author Andrey Plotnikov
  */
 @ImplementedBy(OverwriteFileViewImpl.class)
 public interface OverwriteFileView extends View<OverwriteFileView.ActionDelegate> {
+
+    /**
+     * Interface defines methods of OverwriteFile's presenter which calls from view. These methods defines some actions when a user
+     * click the button and when a user change the name of file.
+     */
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
         void onCancelButtonClicked();
@@ -43,7 +50,7 @@ public interface OverwriteFileView extends View<OverwriteFileView.ActionDelegate
 
     }
 
-    /** @return fileName */
+    /** @return value of fileName from special view's place */
     @Nonnull
     String getFileName();
 
@@ -63,10 +70,10 @@ public interface OverwriteFileView extends View<OverwriteFileView.ActionDelegate
     void setEnabledRenameButton(boolean enabled);
 
     /**
-     * Set message
+     * Sets value of message to special place on view
      *
      * @param message
-     *         the message
+     *         the message which need to set
      */
     void setMessage(@Nonnull String message);
 

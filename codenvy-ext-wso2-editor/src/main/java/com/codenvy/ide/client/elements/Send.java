@@ -36,6 +36,11 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 import static com.codenvy.ide.client.elements.Send.SequenceType.Default;
 
 /**
+ * The class which describes state of Send mediator and also has methods for changing it. Also the class contains the business logic
+ * that allows to display serialization representation depending of the current state of element. Deserelization mechanism allows to
+ * restore the condition of the element when you open ESB project after saving. For more information about Send mediator go to
+ * <a href="https://docs.wso2.com/display/ESB460/Send+Mediator">https://docs.wso2.com/display/ESB460/Send+Mediator</a>
+ *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko

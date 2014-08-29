@@ -31,6 +31,10 @@ import javax.annotation.Nullable;
 @ImplementedBy(SwitchPropertiesPanelViewImpl.class)
 public abstract class SwitchPropertiesPanelView extends AbstractView<SwitchPropertiesPanelView.ActionDelegate> {
 
+    /**
+     * Interface defines methods of {@link SwitchPropertiesPanelPresenter} which calls from view. These methods defines
+     * some actions when user changes properties of Switch mediator.
+     */
     public interface ActionDelegate extends AbstractView.ActionDelegate {
 
         /** Performs some actions in response to user's editing xpath. */

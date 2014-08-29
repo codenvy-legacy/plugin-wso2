@@ -28,7 +28,9 @@ import javax.annotation.Nullable;
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 
 /**
- * Class describes entity which presented target element of Enrich mediator.
+ * The class which describes state of Target element of Enrich mediator and also has methods for changing it. Also the class contains
+ * the business logic that allows to display serialization representation depending of the current state of element. Deserelization
+ * mechanism allows to restore the condition of the element when you open ESB project after saving.
  *
  * @author Dmitry Shnurenko
  */

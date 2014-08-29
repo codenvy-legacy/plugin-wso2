@@ -18,11 +18,13 @@ package com.codenvy.ide.client.propertiespanel.property;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.inject.ImplementedBy;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * The view of {@link PropertyPropertiesPanelPresenter}
+ * The abstract view's representation of 'Property' mediator properties panel. It provides an ability to show all available properties of
+ * the mediator and edit it.
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
@@ -31,6 +33,10 @@ import java.util.List;
 @ImplementedBy(PropertyPropertiesPanelViewImpl.class)
 public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyPropertiesPanelView.ActionDelegate> {
 
+    /**
+     * Interface defines methods of {@link PropertyPropertiesPanelPresenter} which calls from view. These methods defines
+     * some actions when user changes properties of Property mediator.
+     */
     public interface ActionDelegate extends AbstractView.ActionDelegate {
 
         /** Performs any actions appropriate in response to the user having changed property name field. */
@@ -68,20 +74,20 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
 
     }
 
-    /** @return property name. */
-    @NotNull
+    /** @return property name from special view's place. */
+    @Nonnull
     public abstract String getPropertyName();
 
     /**
-     * Set property name into place on view.
+     * Set property name to specials place on view.
      *
      * @param propertyName
-     *         name of property.
+     *         name of property which need to set.
      */
-    public abstract void setPropertyName(@NotNull String propertyName);
+    public abstract void setPropertyName(@Nullable String propertyName);
 
-    /** @return property action. */
-    @NotNull
+    /** @return property action from special view's place. */
+    @Nonnull
     public abstract String getPropertyAction();
 
     /**
@@ -90,20 +96,18 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
      * @param propertyAction
      *         property action.
      */
-    public abstract void selectPropertyAction(@NotNull String propertyAction);
+    public abstract void selectPropertyAction(@Nonnull String propertyAction);
 
     /**
-     * Set property action into place on view.
+     * Set values of property action to special place on view.
      *
      * @param propertyActions
-     *         value of action.
+     *         list which contains values of property action.
      */
-    public abstract void setPropertyActions(@NotNull List<String> propertyActions);
+    public abstract void setPropertyActions(@Nonnull List<String> propertyActions);
 
-    /**
-     * @return value type.
-     */
-    @NotNull
+    /** @return value type from special view's place. */
+    @Nonnull
     public abstract String getValueType();
 
     /**
@@ -112,27 +116,27 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
      * @param valueType
      *         value of type.
      */
-    public abstract void selectValueType(@NotNull String valueType);
+    public abstract void selectValueType(@Nonnull String valueType);
 
     /**
-     * Set value type into place on view.
+     * Set values of value type to special place on view.
      *
      * @param valueTypes
-     *         value of type.
+     *         list which contains values of value type.
      */
-    public abstract void setValueTypes(@NotNull List<String> valueTypes);
+    public abstract void setValueTypes(@Nonnull List<String> valueTypes);
 
-    /** @return property data type. */
-    @NotNull
+    /** @return property data type from special view's place. */
+    @Nonnull
     public abstract String getPropertyDataType();
 
     /**
-     * Set property data type into place on view.
+     * Set property data type to special place on view.
      *
      * @param propertyDataTypes
      *         value of data type.
      */
-    public abstract void setPropertyDataTypes(@NotNull List<String> propertyDataTypes);
+    public abstract void setPropertyDataTypes(@Nonnull List<String> propertyDataTypes);
 
     /**
      * Select property data type in place on view.
@@ -140,60 +144,58 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
      * @param propertyDataType
      *         value of data type.
      */
-    public abstract void selectPropertyDataType(@NotNull String propertyDataType);
+    public abstract void selectPropertyDataType(@Nonnull String propertyDataType);
 
-    /** @return value of literal. */
-    @NotNull
+    /** @return value of literal from special view's place . */
+    @Nonnull
     public abstract String getValueLiteral();
 
     /**
-     * Set value of literal into place on view.
+     * Set value of literal into special place on view.
      *
      * @param valueLiteral
      *         value of literal.
      */
-    public abstract void setValueLiteral(@NotNull String valueLiteral);
+    public abstract void setValueLiteral(@Nullable String valueLiteral);
 
-    /**
-     * @return value of expression.
-     */
-    @NotNull
+    /** @return value of expression from special view's place. */
+    @Nonnull
     public abstract String getValueExpression();
 
     /**
-     * Set value of expression into place on view.
+     * Set value of expression into special place on view.
      *
      * @param valueExpression
-     *         value of expression.
+     *         value of expression which need to set.
      */
-    public abstract void setValueExpression(@NotNull String valueExpression);
+    public abstract void setValueExpression(@Nullable String valueExpression);
 
-    /** @return value of string pattern. */
-    @NotNull
+    /** @return value of string pattern from special view's place. */
+    @Nonnull
     public abstract String getValueStringPattern();
 
     /**
-     * Set value of string pattern into place on view.
+     * Set value of string pattern into special place on view.
      *
      * @param valueStringPattern
-     *         value of string pattern.
+     *         value of string pattern which need to set.
      */
-    public abstract void setValueStringPattern(@NotNull String valueStringPattern);
+    public abstract void setValueStringPattern(@Nullable String valueStringPattern);
 
-    /** @return value of capture group. */
-    @NotNull
+    /** @return value of capture group from special view's place. */
+    @Nonnull
     public abstract String getValueStringCaptureGroup();
 
     /**
-     * Set value of capture group into place on view.
+     * Set value of capture group into special place on view.
      *
      * @param valueStringCaptureGroup
-     *         value of capture group.
+     *         value of capture group which need to set.
      */
-    public abstract void setValueStringCaptureGroup(@NotNull String valueStringCaptureGroup);
+    public abstract void setValueStringCaptureGroup(@Nullable String valueStringCaptureGroup);
 
-    /** @return property scope. */
-    @NotNull
+    /** @return property scope from special view's place . */
+    @Nonnull
     public abstract String getPropertyScope();
 
     /**
@@ -202,26 +204,27 @@ public abstract class PropertyPropertiesPanelView extends AbstractView<PropertyP
      * @param propertyScope
      *         property scope.
      */
-    public abstract void selectPropertyScope(@NotNull String propertyScope);
+    public abstract void selectPropertyScope(@Nonnull String propertyScope);
 
     /**
-     * Set property scope into place on view.
+     * Set property scope into special place on view.
      *
      * @param propertyScopes
-     *         property scope.
+     *         property scope which need to set.
      */
-    public abstract void setPropertyScopes(@NotNull List<String> propertyScopes);
+    public abstract void setPropertyScopes(@Nonnull List<String> propertyScopes);
 
-    /** @return description. */
-    @NotNull
+    /** @return description of element from special view's place. */
+    @Nonnull
     public abstract String getDescription();
 
     /**
      * Set description into place on view.
      *
      * @param description
+     *         value of description which need to set
      */
-    public abstract void setDescription(@NotNull String description);
+    public abstract void setDescription(@Nullable String description);
 
     /**
      * Sets default visible of property panel of property mediator

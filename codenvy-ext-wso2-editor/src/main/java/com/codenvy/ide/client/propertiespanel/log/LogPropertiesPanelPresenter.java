@@ -18,9 +18,9 @@ package com.codenvy.ide.client.propertiespanel.log;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.log.Property;
+import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.propertyconfig.PropertyConfigPresenter;
-import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -31,6 +31,9 @@ import static com.codenvy.ide.client.elements.log.Log.LogCategory;
 import static com.codenvy.ide.client.elements.log.Log.LogLevel;
 
 /**
+ * The class provides the business logic that allows editor to react on user's action and to change state of Log mediator
+ * depending on user's changes of properties.
+ *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko

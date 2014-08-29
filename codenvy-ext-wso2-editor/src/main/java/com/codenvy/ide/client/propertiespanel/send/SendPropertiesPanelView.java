@@ -23,12 +23,19 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
+ * The abstract view's representation of 'Send' mediator properties panel. It provides an ability to show all available properties of
+ * the mediator and edit it.
+ *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
 @ImplementedBy(SendPropertiesPanelViewImpl.class)
 public abstract class SendPropertiesPanelView extends AbstractView<SendPropertiesPanelView.ActionDelegate> {
 
+    /**
+     * Interface defines methods of {@link SendPropertiesPanelPresenter} which calls from view. These methods defines
+     * some actions when user changes properties of Send mediator.
+     */
     public interface ActionDelegate extends AbstractView.ActionDelegate {
 
         /** Performs any actions appropriate in response to the user having changed skip serialization parameter. */

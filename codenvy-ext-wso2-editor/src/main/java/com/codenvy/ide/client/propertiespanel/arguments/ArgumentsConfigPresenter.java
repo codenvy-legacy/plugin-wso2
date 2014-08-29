@@ -30,7 +30,8 @@ import javax.annotation.Nullable;
 import static com.codenvy.ide.client.elements.payload.Arg.ArgType;
 
 /**
- * The argument of mediator.
+ * The class provides the business logic that allows editor to react on user's action related to change of element's arguments.
+ * Logic which provides the class allows add, remove and edit argument properties of mediator via special dialog window.
  *
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko

@@ -21,7 +21,11 @@ import com.codenvy.ide.collections.Array;
 import javax.annotation.Nonnull;
 
 /**
+ * The entity which includes arguments, that may be modified, must implement this interface. This
+ * method will be call when argument  changed.
+ *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public interface AddArgumentCallBack {
     /**

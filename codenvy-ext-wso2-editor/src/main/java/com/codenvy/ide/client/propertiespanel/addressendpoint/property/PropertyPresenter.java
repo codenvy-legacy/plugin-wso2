@@ -25,7 +25,9 @@ import com.google.inject.Inject;
 import javax.annotation.Nonnull;
 
 /**
- * The presenter that provides a business logic of editing of 'Properties' property of 'Address' endpoint.
+ * The class provides the business logic that allows editor to react on user's action related to change of Address's
+ * endpoint properties. Logic which provides the class allows add, remove and edit properties of Address endpoint via
+ * special dialog window.
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
@@ -156,6 +158,12 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
 
     public interface PropertiesChangedCallback {
 
+        /**
+         * Performs some actions when properties was changed.
+         *
+         * @param properties
+         *         changed list of properties
+         */
         void onPropertiesChanged(@Nonnull Array<Property> properties);
 
     }

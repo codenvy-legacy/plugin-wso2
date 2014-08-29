@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * The implementation of {CallTemplatePropertiesPanelView}
+ * Provides a graphical representation of 'CallTemplate' property panel for editing property of 'CallTemplate' mediator.
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
@@ -118,6 +118,7 @@ public class CallTemplatePropertiesPanelViewImpl extends CallTemplatePropertiesP
         return String.valueOf(description.getText());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setParameters(@Nonnull String parameter) {
         parameters.setText(parameter);

@@ -32,10 +32,11 @@ import static com.codenvy.ide.MimeType.APPLICATION_JSON;
 import static com.codenvy.ide.rest.HTTPHeader.CONTENT_TYPE;
 
 /**
- * The implementation of {@link WSO2ClientService}.
+ * Class contains methods which provide ability to upload or modify project's files.
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 @Singleton
 public class WSO2ClientServiceImpl implements WSO2ClientService {

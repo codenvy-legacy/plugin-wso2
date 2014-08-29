@@ -25,8 +25,14 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
+ * Provides a graphical representation of 'LoopBack' property panel for editing property of 'LoopBack' mediator.
+ *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class LoopBackPropertiesPanelViewImpl extends LoopBackPropertiesPanelView {
 
@@ -49,6 +55,7 @@ public class LoopBackPropertiesPanelViewImpl extends LoopBackPropertiesPanelView
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getDescription() {
         return description.getText();
@@ -56,7 +63,7 @@ public class LoopBackPropertiesPanelViewImpl extends LoopBackPropertiesPanelView
 
     /** {@inheritDoc} */
     @Override
-    public void setDescription(String description) {
+    public void setDescription(@Nullable String description) {
         this.description.setText(description);
     }
 

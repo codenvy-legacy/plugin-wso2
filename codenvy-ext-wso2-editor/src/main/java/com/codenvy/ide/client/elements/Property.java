@@ -40,6 +40,11 @@ import static com.codenvy.ide.client.elements.ValueType.EXPRESSION;
 import static com.codenvy.ide.client.elements.ValueType.LITERAL;
 
 /**
+ * The class which describes state of Property mediator and also has methods for changing it. Also the class contains the business
+ * logic that allows to display serialization representation depending of the current state of element. Deserelization mechanism allows to
+ * restore the condition of the element when you open ESB project after saving. For more information about Property mediator go to
+ * <a href=" https://docs.wso2.com/display/ESB460/Property+Mediator"> https://docs.wso2.com/display/ESB460/Property+Mediator</a>
+ *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko

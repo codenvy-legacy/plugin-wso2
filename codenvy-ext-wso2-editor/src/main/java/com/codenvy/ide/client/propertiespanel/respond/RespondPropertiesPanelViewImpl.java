@@ -25,8 +25,13 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.annotation.Nullable;
+
 /**
+ * Provides a graphical representation of 'Respond' property panel for editing property of 'Respond' mediator.
+ *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class RespondPropertiesPanelViewImpl extends RespondPropertiesPanelView {
 
@@ -48,6 +53,7 @@ public class RespondPropertiesPanelViewImpl extends RespondPropertiesPanelView {
     }
 
     /** {@inheritDoc} */
+    @Nullable
     @Override
     public String getDescription() {
         return description.getText();
@@ -55,7 +61,7 @@ public class RespondPropertiesPanelViewImpl extends RespondPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void setDescription(String description) {
+    public void setDescription(@Nullable String description) {
         this.description.setText(description);
     }
 

@@ -48,6 +48,10 @@ public interface PropertyView extends View<PropertyView.ActionDelegate> {
     /** Shows message which contain info about error. */
     void showErrorMessage();
 
+    /**
+     * Interface defines methods of {@link PropertyPresenter} presenter which calls from view. These methods defines
+     * some actions when user click the button of dialog view for editing properties of address endpoint.
+     */
     interface ActionDelegate {
 
         /** Performs any actions appropriate in response to the user having pressed the Ok button. */

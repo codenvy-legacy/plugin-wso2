@@ -21,7 +21,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Provides a graphical representation of empty property panel.
+ *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class EmptyPropertiesPanelViewImpl extends EmptyPropertiesPanelView {
 
