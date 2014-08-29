@@ -48,6 +48,14 @@ public class CreatePropertiesPanelViewImpl extends CreatePropertiesPanelView {
 
     @UiField
     SimplePanel baseConnector;
+
+    @UiField
+    TextBox     truncate;
+    @UiField
+    TextBox     allOrNone;
+    @UiField
+    TextBox     subjects;
+
     @UiField
     FlowPanel   allOrNoneNamespacePanel;
     @UiField
@@ -65,12 +73,6 @@ public class CreatePropertiesPanelViewImpl extends CreatePropertiesPanelView {
     final EditorResources                res;
     @UiField(provided = true)
     final WSO2EditorLocalizationConstant loc;
-    @UiField
-    TextBox truncate;
-    @UiField
-    TextBox allOrNone;
-    @UiField
-    TextBox subjects;
 
     @Inject
     public CreatePropertiesPanelViewImpl(CreatePropertiesPanelViewImplUiBinder ourUiBinder,

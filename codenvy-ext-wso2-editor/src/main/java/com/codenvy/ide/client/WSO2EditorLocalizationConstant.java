@@ -535,9 +535,6 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("propertiespanel.error.message")
     String errorMessage();
 
-    @Key("propertiespanel.connector.inline")
-    String propertiespanelConnectorInline();
-
     @Key("propertiespanel.connector.expression")
     String propertiespanelConnectorExpression();
 
@@ -555,4 +552,7 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.connector.subjects")
     String connectorSubjects();
+
+    @Key("toolbar.salesforceUpdateConnector.tooltip")
+    String toolbarSalesforceUpdateConnectorTooltip();
 }

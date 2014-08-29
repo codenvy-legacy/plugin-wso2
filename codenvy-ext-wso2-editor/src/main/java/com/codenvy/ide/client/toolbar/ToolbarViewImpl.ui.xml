@@ -135,6 +135,13 @@
             </g:PushButton>
         </g:north>
 
+        <g:north size="37.00">
+            <g:PushButton ui:field="salesforceUpdateConnector" addStyleNames="{style.buttonStyle}"
+                          title="{local.toolbarSalesforceUpdateConnectorTooltip}">
+                <g:upFace image="{res.salesforceConnectorToolbar}"/>
+            </g:PushButton>
+        </g:north>
+
     </g:DockLayoutPanel>
 
 </ui:UiBinder>

@@ -37,6 +37,7 @@ import static com.codenvy.ide.client.State.CREATING_PROPERTY;
 import static com.codenvy.ide.client.State.CREATING_RESPOND;
 import static com.codenvy.ide.client.State.CREATING_SALESFORCE_CREATE;
 import static com.codenvy.ide.client.State.CREATING_SALESFORCE_INIT;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_UPDATE;
 import static com.codenvy.ide.client.State.CREATING_SEND;
 import static com.codenvy.ide.client.State.CREATING_SEQUENCE;
 import static com.codenvy.ide.client.State.CREATING_SWITCH;
@@ -163,6 +164,12 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
     @Override
     public void onSalesforceCreateClicked() {
         setState(CREATING_SALESFORCE_CREATE);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesforceUpdateClicked() {
+        setState(CREATING_SALESFORCE_UPDATE);
     }
 
 }

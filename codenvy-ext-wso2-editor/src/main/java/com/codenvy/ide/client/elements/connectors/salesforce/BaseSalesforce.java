@@ -22,6 +22,7 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -38,6 +39,7 @@ import static com.codenvy.ide.client.elements.connectors.salesforce.BaseSalesfor
  *
  * @author Valeriy Svydenko
  */
+@Singleton
 public class BaseSalesforce extends AbstractShape {
     public static final  String       ELEMENT_NAME = "BaseSalesforce";
     private static final List<String> PROPERTIES   = Collections.emptyList();

@@ -59,6 +59,8 @@ public abstract class ToolbarView extends AbstractView<ToolbarView.ActionDelegat
 
         void onSalesforceCreateClicked();
 
+        void onSalesforceUpdateClicked();
+
     }
 
 }

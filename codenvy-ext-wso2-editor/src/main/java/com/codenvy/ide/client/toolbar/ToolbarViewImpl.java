@@ -117,4 +117,9 @@ public class ToolbarViewImpl extends ToolbarView {
         delegate.onSalesforceCreateClicked();
     }
 
+    @UiHandler("salesforceUpdateConnector")
+    public void onSalesforceUpdateClicked(ClickEvent event) {
+        delegate.onSalesforceUpdateClicked();
+    }
+
 }
