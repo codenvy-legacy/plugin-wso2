@@ -27,6 +27,7 @@ import javax.annotation.Nonnull;
 import static com.codenvy.ide.client.State.CREATING_ADDRESS_ENDPOINT;
 import static com.codenvy.ide.client.State.CREATING_CALL;
 import static com.codenvy.ide.client.State.CREATING_CALLTEMPLATE;
+import static com.codenvy.ide.client.State.CREATING_CONNECTOR;
 import static com.codenvy.ide.client.State.CREATING_ENRICH;
 import static com.codenvy.ide.client.State.CREATING_FILTER;
 import static com.codenvy.ide.client.State.CREATING_HEADER;
@@ -41,6 +42,7 @@ import static com.codenvy.ide.client.State.CREATING_SWITCH;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements HasState<State>, ToolbarView.ActionDelegate {
 
@@ -148,6 +150,12 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
     @Override
     public void onAddressEndpointButtonClicked() {
         setState(CREATING_ADDRESS_ENDPOINT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesforceConnectorClicked() {
+        setState(CREATING_CONNECTOR);
     }
 
 }

@@ -20,6 +20,7 @@ import com.google.inject.ImplementedBy;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 @ImplementedBy(ToolbarViewImpl.class)
 public abstract class ToolbarView extends AbstractView<ToolbarView.ActionDelegate> {
@@ -53,6 +54,8 @@ public abstract class ToolbarView extends AbstractView<ToolbarView.ActionDelegat
         void onCallButtonClicked();
 
         void onAddressEndpointButtonClicked();
+
+        void onSalesforceConnectorClicked();
 
     }
 

@@ -496,6 +496,36 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("propertiespanel.endpoint.properties.title")
     String endpointPropertiesTitle();
 
+    @Key("toolbar.salesforceInitConnector.tooltip")
+    String toolbarSalesforceInitConnectorTooltip();
+
+    @Key("propertiespanel.connector.config.ref")
+    String connectorConfigRef();
+
+    @Key("propertiespanel.connector.available.configs")
+    String connectorAvailableConfigs();
+
+    @Key("propertiespanel.connector.new.config")
+    String connectorNewConfig();
+
+    @Key("propertiespanel.connector.parameter.editor.type")
+    String connectorParameterEditorType();
+
+    @Key("propertiespanel.connector.username")
+    String connectorUsername();
+
+    @Key("propertiespanel.connector.password")
+    String connectorPassword();
+
+    @Key("propertiespanel.connector.login.url")
+    String connectorLoginUrl();
+
+    @Key("propertiespanel.connector.new.config.value")
+    String connectorNewConfigValue();
+
+    @Key("propertiespanel.connector.force.login")
+    String connectorForceLogin();
+
     @Key("propertiespanel.addressEndpoint.table.title")
     String editPropAdrrEndTableTitle();
 
@@ -504,4 +534,13 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.error.message")
     String errorMessage();
+
+    @Key("propertiespanel.connector.inline")
+    String propertiespanelConnectorInline();
+
+    @Key("propertiespanel.connector.expression")
+    String propertiespanelConnectorExpression();
+
+    @Key("propertiespanel.connector.configuration.title")
+    String propertiespanelConnectorConfigurationTitle();
 }

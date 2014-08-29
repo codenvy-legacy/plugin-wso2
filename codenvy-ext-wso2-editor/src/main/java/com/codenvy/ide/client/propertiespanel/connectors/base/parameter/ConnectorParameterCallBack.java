@@ -13,27 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client;
+package com.codenvy.ide.client.propertiespanel.connectors.base.parameter;
+
+import javax.annotation.Nonnull;
 
 /**
- * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
-public enum State {
-    CREATING_LOG,
-    CREATING_PROPERTY,
-    CREATING_PAYLOADFACTORY,
-    CREATING_SEND,
-    CREATING_HEADER,
-    CREATING_RESPOND,
-    CREATING_FILTER,
-    CREATING_SWITCH,
-    CREATING_SEQUENCE,
-    CREATING_ENRICH,
-    CREATING_LOOPBACK,
-    CREATING_CALLTEMPLATE,
-    CREATING_CALL,
-    CREATING_ADDRESS_ENDPOINT,
-    CREATING_CONNECTOR,
-    CREATING_NOTHING
+public interface ConnectorParameterCallBack {
+    /**
+     * Performs some actions when parameter of connector was changed.
+     *
+     * @param name
+     *         changed name of parameter
+     */
+    void onAddressPropertyChanged(@Nonnull String name);
 }

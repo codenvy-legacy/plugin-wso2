@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<!--
+  Copyright 2014 Codenvy, S.A.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+        >
+
+    <ui:with field='locale' type='com.codenvy.ide.client.WSO2EditorLocalizationConstant'/>
+    <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
+
+    <ui:style>
+        .parameterField {
+            float: left;
+            margin-top: 5px;
+            margin-left: 10px;
+        }
+
+        .parameterLabel {
+            float: left;
+            margin-top: 5px;
+            margin-left: 10px;
+            width: 65px;
+        }
+
+        .parameterPanel {
+            height: 55px;
+            margin: 10px 20px 15px;
+        }
+
+    </ui:style>
+
+    <g:FlowPanel>
+
+        <g:FlowPanel addStyleNames="{style.parameterPanel}">
+            <g:Label text="{locale.logName}" addStyleNames="{style.parameterLabel}"/>
+            <g:TextBox ui:field="name" width="370px" addStyleNames="{style.parameterField}"/>
+        </g:FlowPanel>
+
+
+        <g:FlowPanel addStyleNames="{style.parameterPanel}">
+            <g:Label text="{locale.connectorUsername}" addStyleNames="{style.parameterLabel}"/>
+            <g:TextBox ui:field="usernameValue" width="180px" addStyleNames="{style.parameterField}"/>
+
+            <g:TextBox visible="false" ui:field="usernameNamespaceValue" width="180px" addStyleNames="{style.parameterField}"/>
+            <g:Button visible="false" ui:field="usernameBtn" text="..." addStyleNames="{style.parameterField}"/>
+
+            <g:ListBox ui:field="usernameType" width="180px" addStyleNames="{style.parameterField}"/>
+        </g:FlowPanel>
+
+        <g:FlowPanel addStyleNames="{style.parameterPanel}">
+            <g:Label text="{locale.connectorPassword}" addStyleNames="{style.parameterLabel}"/>
+            <g:TextBox ui:field="passwordValue" width="180px" addStyleNames="{style.parameterField}"/>
+
+            <g:TextBox visible="false" ui:field="passwordNamespaceValue" width="180px" addStyleNames="{style.parameterField}"/>
+            <g:Button visible="false" ui:field="passwordBtn" text="..." addStyleNames="{style.parameterField}"/>
+
+            <g:ListBox ui:field="passwordType" width="180px" addStyleNames="{style.parameterField}"/>
+        </g:FlowPanel>
+
+        <g:FlowPanel addStyleNames="{style.parameterPanel}">
+            <g:Label text="{locale.connectorLoginUrl}" addStyleNames="{style.parameterLabel}"/>
+            <g:TextBox ui:field="loginUrlValue" width="180px" addStyleNames="{style.parameterField}"/>
+
+            <g:TextBox visible="false" ui:field="loginUrlNamespaceValue" width="180px" addStyleNames="{style.parameterField}"/>
+            <g:Button visible="false" ui:field="loginUrlBtn" text="..." addStyleNames="{style.parameterField}"/>
+
+            <g:ListBox ui:field="loginUrlType" width="180px" addStyleNames="{style.parameterField}"/>
+        </g:FlowPanel>
+
+        <g:FlowPanel addStyleNames="{style.parameterPanel}">
+            <g:Label text="{locale.connectorForceLogin}" addStyleNames="{style.parameterLabel}"/>
+            <g:TextBox ui:field="forceLoginValue" width="180px" addStyleNames="{style.parameterField}"/>
+
+            <g:TextBox visible="false" ui:field="forceLoginNamespaceValue" width="180px" addStyleNames="{style.parameterField}"/>
+            <g:Button visible="false" ui:field="forceLoginBtn" text="..." addStyleNames="{style.parameterField}"/>
+
+            <g:ListBox ui:field="forceLoginType" width="180px" addStyleNames="{style.parameterField}"/>
+        </g:FlowPanel>
+
+    </g:FlowPanel>
+
+</ui:UiBinder>

@@ -381,6 +381,12 @@ public interface EditorResources extends ClientBundle {
     @Source("icons/Rmsequence.gif")
     ImageResource rmsequence();
 
+    @Source("icons/Salesforce.gif")
+    ImageResource salesforce();
+
+    @Source("icons/SalesforceToolbar.gif")
+    ImageResource salesforceInitToolbar();
+
     @Source("icons/cursors/AddElementCursor.png")
     DataResource applyCursor();
 

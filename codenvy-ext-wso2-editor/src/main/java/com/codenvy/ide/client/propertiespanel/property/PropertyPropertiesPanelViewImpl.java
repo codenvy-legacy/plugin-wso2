@@ -252,8 +252,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     /** {@inheritDoc} */
     @Override
     public String getPropertyScope() {
-        int index = propertyScope.getSelectedIndex();
-        return index != -1 ? propertyScope.getValue(propertyScope.getSelectedIndex()) : "";
+        return getSelectedItem(propertyScope);
     }
 
     /** {@inheritDoc} */
@@ -276,7 +275,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     /** {@inheritDoc} */
     @Override
     public String getDescription() {
-        return String.valueOf(description.getText());
+        return description.getText();
     }
 
     /** {@inheritDoc} */
