@@ -26,12 +26,13 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
- * The implementation of {@link CreateResourceView}.
+ * Provides a graphical representation of dialog window for creating resource.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class CreateResourceViewImpl extends Composite implements CreateResourceView {
 
@@ -58,11 +59,12 @@ public class CreateResourceViewImpl extends Composite implements CreateResourceV
 
     /** {@inheritDoc} */
     @Override
-    public void setResourceNameTitle(@NotNull String title) {
+    public void setResourceNameTitle(@Nonnull String title) {
         resourceNameTitle.setText(title);
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getResourceName() {
         return resourceName.getText();
@@ -70,7 +72,7 @@ public class CreateResourceViewImpl extends Composite implements CreateResourceV
 
     /** {@inheritDoc} */
     @Override
-    public void setResourceName(@NotNull String name) {
+    public void setResourceName(@Nonnull String name) {
         resourceName.setText(name);
     }
 

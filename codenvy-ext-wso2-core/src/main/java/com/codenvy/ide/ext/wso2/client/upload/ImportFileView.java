@@ -21,13 +21,20 @@ import com.google.inject.ImplementedBy;
 import javax.annotation.Nonnull;
 
 /**
- * The view of {@link ImportFilePresenter}.
+ * The abstract view's representation which describes methods to receive information from the user and to set it to the file. It
+ * provides an ability to show all available tools for working with the file.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  * @author Andrey Plotnikov
  */
 @ImplementedBy(ImportFileViewImpl.class)
 public interface ImportFileView extends View<ImportFileView.ActionDelegate> {
+
+    /**
+     * Interface defines methods of ImportFile's presenter which calls from view. These methods defines some actions when a user
+     * clicks a button, changes file name or url.
+     */
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
         void onCancelClicked();
@@ -59,7 +66,7 @@ public interface ImportFileView extends View<ImportFileView.ActionDelegate> {
         void onUseLocalPathChosen();
     }
 
-    /** @return url */
+    /** @return url from special view's place */
     @Nonnull
     String getUrl();
 
@@ -67,6 +74,7 @@ public interface ImportFileView extends View<ImportFileView.ActionDelegate> {
      * Set URL into place on view.
      *
      * @param url
+     *         value of url which need to set
      */
     void setUrl(@Nonnull String url);
 
@@ -92,15 +100,15 @@ public interface ImportFileView extends View<ImportFileView.ActionDelegate> {
      */
     void setUseUrl(boolean isUseUrl);
 
-    /** @return file name */
+    /** @return file name from special view's place */
     @Nonnull
     String getFileName();
 
     /**
-     * Set error message
+     * Set error message to special place on view
      *
      * @param message
-     *         the message
+     *         the message which need to set
      */
     void setMessage(@Nonnull String message);
 

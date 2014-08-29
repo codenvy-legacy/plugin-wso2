@@ -30,10 +30,12 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * The implementation of {@link PropertyPropertiesPanelView}
+ * Provides a graphical representation of 'Property' property panel for editing property of 'Property' mediator.
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
@@ -96,6 +98,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getPropertyName() {
         return String.valueOf(propertyName.getText());
@@ -103,7 +106,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
 
     /** {@inheritDoc} */
     @Override
-    public void setPropertyName(String propertyName) {
+    public void setPropertyName(@Nullable String propertyName) {
         this.propertyName.setText(propertyName);
     }
 
@@ -113,6 +116,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getPropertyAction() {
         return getSelectedItem(propertyAction);
@@ -120,13 +124,13 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
 
     /** {@inheritDoc} */
     @Override
-    public void setPropertyActions(List<String> propertyActions) {
+    public void setPropertyActions(@Nonnull List<String> propertyActions) {
         setTypes(propertyAction, propertyActions);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void selectPropertyAction(String propertyAction) {
+    public void selectPropertyAction(@Nonnull String propertyAction) {
         selectType(this.propertyAction, propertyAction);
     }
 
@@ -136,6 +140,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getValueType() {
         return getSelectedItem(valueType);
@@ -143,13 +148,13 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
 
     /** {@inheritDoc} */
     @Override
-    public void setValueTypes(List<String> valueTypes) {
+    public void setValueTypes(@Nonnull List<String> valueTypes) {
         setTypes(valueType, valueTypes);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void selectValueType(String valueType) {
+    public void selectValueType(@Nonnull String valueType) {
         selectType(this.valueType, valueType);
     }
 
@@ -159,6 +164,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getPropertyDataType() {
         return getSelectedItem(propertyDataType);
@@ -166,13 +172,13 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
 
     /** {@inheritDoc} */
     @Override
-    public void setPropertyDataTypes(List<String> propertyDataTypes) {
+    public void setPropertyDataTypes(@Nonnull List<String> propertyDataTypes) {
         setTypes(propertyDataType, propertyDataTypes);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void selectPropertyDataType(String propertyDataType) {
+    public void selectPropertyDataType(@Nonnull String propertyDataType) {
         selectType(this.propertyDataType, propertyDataType);
     }
 
@@ -182,6 +188,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getValueLiteral() {
         return valueLiteral.getText();
@@ -189,11 +196,12 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
 
     /** {@inheritDoc} */
     @Override
-    public void setValueLiteral(String valueLiteral) {
+    public void setValueLiteral(@Nullable String valueLiteral) {
         this.valueLiteral.setText(valueLiteral);
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getValueExpression() {
         return valueExpression.getText();
@@ -201,7 +209,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
 
     /** {@inheritDoc} */
     @Override
-    public void setValueExpression(String valueExpression) {
+    public void setValueExpression(@Nullable String valueExpression) {
         this.valueExpression.setText(valueExpression);
     }
 
@@ -216,6 +224,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getValueStringPattern() {
         return String.valueOf(valueStringPattern.getText());
@@ -223,7 +232,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
 
     /** {@inheritDoc} */
     @Override
-    public void setValueStringPattern(String valueStringPattern) {
+    public void setValueStringPattern(@Nullable String valueStringPattern) {
         this.valueStringPattern.setText(valueStringPattern);
     }
 
@@ -233,6 +242,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getValueStringCaptureGroup() {
         return valueStringCaptureGroup.getText();
@@ -240,7 +250,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
 
     /** {@inheritDoc} */
     @Override
-    public void setValueStringCaptureGroup(String valueStringCaptureGroup) {
+    public void setValueStringCaptureGroup(@Nullable String valueStringCaptureGroup) {
         this.valueStringCaptureGroup.setText(valueStringCaptureGroup);
     }
 
@@ -250,6 +260,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getPropertyScope() {
         return getSelectedItem(propertyScope);
@@ -257,13 +268,13 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
 
     /** {@inheritDoc} */
     @Override
-    public void setPropertyScopes(List<String> propertyScopes) {
+    public void setPropertyScopes(@Nonnull List<String> propertyScopes) {
         setTypes(propertyScope, propertyScopes);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void selectPropertyScope(String propertyScope) {
+    public void selectPropertyScope(@Nonnull String propertyScope) {
         selectType(this.propertyScope, propertyScope);
     }
 
@@ -273,6 +284,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getDescription() {
         return description.getText();
@@ -280,7 +292,7 @@ public class PropertyPropertiesPanelViewImpl extends PropertyPropertiesPanelView
 
     /** {@inheritDoc} */
     @Override
-    public void setDescription(String description) {
+    public void setDescription(@Nullable String description) {
         this.description.setText(description);
     }
 

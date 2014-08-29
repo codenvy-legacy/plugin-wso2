@@ -31,7 +31,9 @@ import static com.codenvy.ide.client.elements.enrich.Source.InlineType.SourceXML
 import static com.codenvy.ide.client.elements.enrich.Source.SourceType.custom;
 
 /**
- * Class describes entity which presented source element of Enrich mediator.
+ * The class which describes state of Source element of Enrich mediator and also has methods for changing it. Also the class contains
+ * the business logic that allows to display serialization representation depending of the current state of element. Deserelization
+ * mechanism allows to restore the condition of the element when you open ESB project after saving.
  *
  * @author Dmitry Shnurenko
  */

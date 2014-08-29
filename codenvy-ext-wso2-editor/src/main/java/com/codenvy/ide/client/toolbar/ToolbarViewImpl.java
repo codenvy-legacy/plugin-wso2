@@ -23,8 +23,11 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Provides a graphical representation of tool bar.
+ *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class ToolbarViewImpl extends ToolbarView {
 

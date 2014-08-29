@@ -30,6 +30,7 @@ import static com.codenvy.ide.client.elements.Switch.REGEXP_ATTRIBUTE_NAME;
  * The class that provides business logic of the reg exp property of case branch in 'Switch' mediator.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class BranchFiledPresenter extends AbstractPresenter<BranchFiledView> implements BranchFiledView.ActionDelegate {
 
@@ -90,6 +91,7 @@ public class BranchFiledPresenter extends AbstractPresenter<BranchFiledView> imp
 
     public interface BranchChangedListener {
 
+        /** Performs some actions when branch was changed. */
         void onBranchChanged();
     }
 

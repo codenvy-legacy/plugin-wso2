@@ -21,6 +21,9 @@ import com.codenvy.ide.collections.Array;
 import javax.annotation.Nonnull;
 
 /**
+ * The entity which includes property, that may be modified, must implement this interface and realize method. This
+ * method will be call when property changed.
+ *
  * @author Dmitry Shnurenko
  */
 public interface AddPropertyCallback {

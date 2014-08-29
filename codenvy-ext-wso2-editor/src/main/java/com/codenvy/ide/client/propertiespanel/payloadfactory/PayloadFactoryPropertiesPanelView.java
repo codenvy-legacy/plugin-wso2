@@ -23,14 +23,20 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * The view of {@link PayloadFactoryPropertiesPanelPresenter}
+ * The abstract view's representation of 'Payload factory' mediator properties panel. It provides an ability to show all available
+ * properties of the mediator and edit it.
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 @ImplementedBy(PayloadFactoryPropertiesPanelViewImpl.class)
 public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<PayloadFactoryPropertiesPanelView.ActionDelegate> {
 
+    /**
+     * Interface defines methods of {@link PayloadFactoryPropertiesPanelPresenter} which calls from view. These methods defines
+     * some actions when user changes properties of PayloadFactory mediator.
+     */
     public interface ActionDelegate extends AbstractView.ActionDelegate {
 
         /** Performs any actions appropriate in response to the user having changed payload format field. */
@@ -77,12 +83,12 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
      */
     public abstract void setPayloadFormats(@Nonnull List<String> payloadFormats);
 
-    /** @return format value */
+    /** @return format value from special view's place */
     @Nonnull
     public abstract String getFormat();
 
     /**
-     * Set format value.
+     * Set format value to special place on view.
      *
      * @param format
      *         value of format
@@ -90,26 +96,26 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
     public abstract void setFormat(@Nonnull String format);
 
     /**
-     * Set format key.
+     * Set format key to special place on view.
      *
      * @param formatKey
      *         value of format key
      */
     public abstract void setFormatKey(@Nullable String formatKey);
 
-    /** @return args value */
+    /** @return args value from special view's place */
     @Nonnull
     public abstract String getArgs();
 
     /**
-     * Set args value.
+     * Set args value to special place on view.
      *
      * @param args
      *         value of args
      */
     public abstract void setArgs(@Nonnull String args);
 
-    /** @return media type of PayLoad mediator. */
+    /** @return media type of PayLoad mediator from special view's place */
     @Nonnull
     public abstract String getMediaType();
 
@@ -125,16 +131,16 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
      * Set media type values.
      *
      * @param mediaTypes
-     *         value of media type
+     *         list which need to set
      */
     public abstract void setMediaTypes(@Nonnull List<String> mediaTypes);
 
-    /** @return description */
+    /** @return description from special view's place */
     @Nonnull
     public abstract String getDescription();
 
     /**
-     * Set description.
+     * Set description to special place on view.
      *
      * @param description
      *         value of description

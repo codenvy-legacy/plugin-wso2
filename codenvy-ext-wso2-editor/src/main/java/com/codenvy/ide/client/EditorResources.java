@@ -22,8 +22,11 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Singleton;
 
 /**
+ * Class contains references to resources which need to correct displaying of WSO2 plugin.
+ *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 @Singleton
 public interface EditorResources extends ClientBundle {

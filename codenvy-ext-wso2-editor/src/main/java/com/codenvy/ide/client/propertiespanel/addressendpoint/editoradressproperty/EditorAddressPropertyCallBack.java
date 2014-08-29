@@ -20,6 +20,9 @@ import com.codenvy.ide.client.elements.addressendpoint.Property;
 import javax.annotation.Nonnull;
 
 /**
+ * The entity which includes property of address endpoint, that may be modified, must implement this interface. This
+ * method will be call when property is changed.
+ *
  * @author Dmitry Shnurenko
  */
 public interface EditorAddressPropertyCallBack {

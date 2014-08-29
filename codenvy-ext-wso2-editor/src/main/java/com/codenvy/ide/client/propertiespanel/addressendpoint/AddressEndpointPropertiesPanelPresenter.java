@@ -35,10 +35,11 @@ import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Op
 import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction;
 
 /**
- * The presenter that provides a business logic of 'Address' endpoint properties panel. It provides an ability to work with all properties
- * of 'Address' endpoint.
+ * The class provides the business logic that allows editor to react on user's action and to change state of Address endpoint
+ * depending on user's changes of properties.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class AddressEndpointPropertiesPanelPresenter
         extends AbstractPropertiesPanel<AddressEndpoint, AddressEndpointPropertiesPanelView>
@@ -356,6 +357,12 @@ public class AddressEndpointPropertiesPanelPresenter
         view.selectTimeoutAction(element.getTimeoutAction().name());
     }
 
+    /**
+     * Shows value of properties in special place on the view.
+     *
+     * @param properties
+     *         list of properties which must to be displayed
+     */
     private void showProperties(@Nonnull Array<Property> properties) {
         StringBuilder content = new StringBuilder();
         int size = properties.size() - 1;

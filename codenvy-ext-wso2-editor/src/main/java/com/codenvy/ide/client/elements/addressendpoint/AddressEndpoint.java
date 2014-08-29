@@ -39,9 +39,13 @@ import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Fo
 import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction.never;
 
 /**
- * The entity that represents 'Address' endpoint from ESB configuration.
+ * The class which describes state of Address endpoint and also has methods for changing it. Also the class contains the business logic
+ * that allows to display serialization representation depending of the current state of element. Deserelization mechanism allows to
+ * restore the condition of the element when you open ESB project after saving. For detail information about Address endpoint go to
+ * <a href=" https://docs.wso2.com/display/ESB460/Address+Endpoint"> https://docs.wso2.com/display/ESB460/Address+Endpoint</a>
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class AddressEndpoint extends AbstractShape {
 
@@ -154,187 +158,335 @@ public class AddressEndpoint extends AbstractShape {
         timeoutAction = never;
     }
 
+    /** @return value of format of address endpoint */
     @Nonnull
     public Format getFormat() {
         return format;
     }
 
+    /**
+     * Sets value of format to address endpoint.
+     *
+     * @param format
+     *         value that should be set
+     */
     public void setFormat(@Nonnull Format format) {
         this.format = format;
     }
 
+    /** @return value of uri of address endpoint */
     @Nonnull
     public String getUri() {
         return uri;
     }
 
+    /**
+     * Sets value of uri to address endpoint.
+     *
+     * @param uri
+     *         value that should be set
+     */
     public void setUri(@Nonnull String uri) {
         this.uri = uri;
     }
 
+    /** @return value of suspend error code of address endpoint */
     @Nonnull
     public String getSuspendErrorCode() {
         return suspendErrorCode;
     }
 
+    /**
+     * Sets value of suspend error to address endpoint.
+     *
+     * @param suspendErrorCode
+     *         value that should be set
+     */
     public void setSuspendErrorCode(@Nonnull String suspendErrorCode) {
         this.suspendErrorCode = suspendErrorCode;
     }
 
+    /** @return value of suspend initial duration of address endpoint */
     @Nonnegative
     public int getSuspendInitialDuration() {
         return suspendInitialDuration;
     }
 
+    /**
+     * Sets value of suspend initial duration to address endpoint.
+     *
+     * @param suspendInitialDuration
+     *         value that should be set
+     */
     public void setSuspendInitialDuration(@Nonnegative int suspendInitialDuration) {
         this.suspendInitialDuration = suspendInitialDuration;
     }
 
+    /** @return value of suspend maximum duration of address endpoint */
     @Nonnegative
     public int getSuspendMaximumDuration() {
         return suspendMaximumDuration;
     }
 
+    /**
+     * Sets value of suspend maximum duration to address endpoint.
+     *
+     * @param suspendMaximumDuration
+     *         value that should be set
+     */
     public void setSuspendMaximumDuration(@Nonnegative int suspendMaximumDuration) {
         this.suspendMaximumDuration = suspendMaximumDuration;
     }
 
+    /** @return value of suspend progression factory of address endpoint */
     @Nonnegative
     public double getSuspendProgressionFactory() {
         return suspendProgressionFactor;
     }
 
+    /**
+     * Sets value of suspend progression factory to address endpoint.
+     *
+     * @param suspendProgressionFactor
+     *         value that should be set
+     */
     public void setSuspendProgressionFactory(@Nonnegative double suspendProgressionFactor) {
         this.suspendProgressionFactor = suspendProgressionFactor;
     }
 
+    /** @return value of retry error code of address endpoint */
     @Nonnull
     public String getRetryErrorCodes() {
         return retryErrorCodes;
     }
 
+    /**
+     * Sets value of retry error code to address endpoint.
+     *
+     * @param retryErrorCodes
+     *         value that should be set
+     */
     public void setRetryErrorCodes(@Nonnull String retryErrorCodes) {
         this.retryErrorCodes = retryErrorCodes;
     }
 
+    /** @return value of retry count of address endpoint */
     @Nonnegative
     public int getRetryCount() {
         return retryCount;
     }
 
+    /**
+     * Sets value of retry count to address endpoint.
+     *
+     * @param retryCount
+     *         value that should be set
+     */
     public void setRetryCount(@Nonnegative int retryCount) {
         this.retryCount = retryCount;
     }
 
+    /** @return value of retry delay of address endpoint */
     @Nonnegative
     public int getRetryDelay() {
         return retryDelay;
     }
 
+    /**
+     * Sets value of retry delay to address endpoint.
+     *
+     * @param retryDelay
+     *         value that should be set
+     */
     public void setRetryDelay(@Nonnegative int retryDelay) {
         this.retryDelay = retryDelay;
     }
 
+    /** @return list of properties of address endpoint */
     @Nonnull
     public Array<Property> getProperties() {
         return properties;
     }
 
+    /**
+     * Sets list of properties to address endpoint.
+     *
+     * @param properties
+     *         list that should be set
+     */
     public void setProperties(@Nonnull Array<Property> properties) {
         this.properties = properties;
     }
 
+    /** @return value of optimize of address endpoint */
     @Nonnull
     public Optimize getOptimize() {
         return optimize;
     }
 
+    /**
+     * Sets value of optimize to address endpoint.
+     *
+     * @param optimize
+     *         value that should be set
+     */
     public void setOptimize(@Nonnull Optimize optimize) {
         this.optimize = optimize;
     }
 
+    /** @return description of address endpoint */
     @Nonnull
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets description to address endpoint.
+     *
+     * @param description
+     *         value that should be set
+     */
     public void setDescription(@Nonnull String description) {
         this.description = description;
     }
 
+    /** @return value of reliable messaging of address endpoint */
     public boolean isReliableMessagingEnabled() {
         return isReliableMessagingEnabled;
     }
 
+    /**
+     * Sets value of reliable messaging to address endpoint.
+     *
+     * @param isReliableMessagingEnabled
+     *         value that should be set.<code>true</code> reliable messaging enable,<code>false</code> reliable messaging disable
+     */
     public void setReliableMessagingEnabled(boolean isReliableMessagingEnabled) {
         this.isReliableMessagingEnabled = isReliableMessagingEnabled;
     }
 
+    /** @return value of reliable messaging policy of address endpoint */
     @Nonnull
     public String getReliableMessagingPolicy() {
         return reliableMessagingPolicy;
     }
 
+    /**
+     * Sets value reliable messaging policy to address endpoint.
+     *
+     * @param reliableMessagingPolicy
+     *         value that should be set.
+     */
     public void setReliableMessagingPolicy(@Nonnull String reliableMessagingPolicy) {
         this.reliableMessagingPolicy = reliableMessagingPolicy;
     }
 
+    /** @return value of security of address endpoint */
     public boolean isSecurityEnabled() {
         return isSecurityEnabled;
     }
 
+    /**
+     * Sets value of security to address endpoint.
+     *
+     * @param isSecurityEnabled
+     *         value that should be set.<code>true</code> security enable,<code>false</code> security disable
+     */
     public void setSecurityEnabled(boolean isSecurityEnabled) {
         this.isSecurityEnabled = isSecurityEnabled;
     }
 
+    /** @return value of security policy of address endpoint */
     @Nonnull
     public String getSecurityPolicy() {
         return securityPolicy;
     }
 
+    /**
+     * Sets value of security policy to address endpoint.
+     *
+     * @param securityPolicy
+     *         value that should be set
+     */
     public void setSecurityPolicy(@Nonnull String securityPolicy) {
         this.securityPolicy = securityPolicy;
     }
 
+    /** @return value of addressing of address endpoint */
     public boolean isAddressingEnabled() {
         return isAddressingEnabled;
     }
 
+    /**
+     * Sets value of retry delay to address endpoint.
+     *
+     * @param isAddressingEnabled
+     *         value that should be set.<code>true</code> addressing enable,<code>false</code> addressing disable
+     */
     public void setAddressingEnabled(boolean isAddressingEnabled) {
         this.isAddressingEnabled = isAddressingEnabled;
     }
 
+    /** @return value of addressing version of address endpoint */
     @Nonnull
     public AddressingVersion getAddressingVersion() {
         return addressingVersion;
     }
 
+    /**
+     * Sets value of addressing version to address endpoint.
+     *
+     * @param addressingVersion
+     *         value that should be set
+     */
     public void setAddressingVersion(@Nonnull AddressingVersion addressingVersion) {
         this.addressingVersion = addressingVersion;
     }
 
+    /** @return value of addressing separate listener of address endpoint */
     public boolean isAddressingSeparateListener() {
         return isAddressingSeparateListener;
     }
 
+    /**
+     * Sets value of retry delay to address endpoint.
+     *
+     * @param isAddressingSeparateListener
+     *         value that should be set.<code>true</code> addressing separate listener enable,<code>false</code> addressing separate
+     *         listener disable
+     */
     public void setAddressingSeparateListener(boolean isAddressingSeparateListener) {
         this.isAddressingSeparateListener = isAddressingSeparateListener;
     }
 
+    /** @return value of timeout duration of address endpoint */
     @Nonnegative
     public int getTimeoutDuration() {
         return timeoutDuration;
     }
 
+    /**
+     * Sets value of timeout duration to address endpoint.
+     *
+     * @param timeoutDuration
+     *         value that should be set
+     */
     public void setTimeoutDuration(@Nonnegative int timeoutDuration) {
         this.timeoutDuration = timeoutDuration;
     }
 
+    /** @return value of timeout action of address endpoint */
     @Nonnull
     public TimeoutAction getTimeoutAction() {
         return timeoutAction;
     }
 
+    /**
+     * Sets value of timeout action to address endpoint.
+     *
+     * @param timeoutAction
+     *         value that should be set
+     */
     public void setTimeoutAction(@Nonnull TimeoutAction timeoutAction) {
         this.timeoutAction = timeoutAction;
     }
@@ -411,6 +563,14 @@ public class AddressEndpoint extends AbstractShape {
         return super.serialize() + content;
     }
 
+    /**
+     * Returns xml representation of attributes of address endpoint which to be displayed as siblings of address node.
+     *
+     * @param value
+     *         value of attribute which need to display
+     * @param tagName
+     *         name of tag of attribute which need to display
+     */
     @Nonnull
     private String convertStringValueToXMLAttribute(@Nonnull String value, @Nonnull String tagName) {
         return value.isEmpty() ?
@@ -420,6 +580,16 @@ public class AddressEndpoint extends AbstractShape {
                "</" + tagName + ">\n";
     }
 
+    /**
+     * Returns xml representation of attributes of address endpoint which are numbers.
+     *
+     * @param value
+     *         value of attribute which need to display
+     * @param lowLimitValue
+     *         minimum value of the attribute
+     * @param tagName
+     *         name of tag of attribute which need to display
+     */
     @Nonnull
     private String convertNumberValueToXMLAttribute(double value, double lowLimitValue, @Nonnull String tagName) {
         return value < lowLimitValue ?
@@ -491,6 +661,12 @@ public class AddressEndpoint extends AbstractShape {
         }
     }
 
+    /**
+     * Apply property from XML node to the diagram element.
+     *
+     * @param node
+     *         XML node that need to be analyzed
+     */
     private void applyElementProperty(@Nonnull Node node) {
         applyAttributes(node);
 
@@ -542,6 +718,12 @@ public class AddressEndpoint extends AbstractShape {
         }
     }
 
+    /**
+     * Apply addressing properties from XML node to the diagram element.
+     *
+     * @param node
+     *         XML node that need to be analyzed
+     */
     private void applyAddressingProperties(@Nonnull Node node) {
         isAddressingEnabled = true;
 
@@ -565,6 +747,12 @@ public class AddressEndpoint extends AbstractShape {
         }
     }
 
+    /**
+     * Apply timeout properties from XML node to the diagram element.
+     *
+     * @param node
+     *         XML node that need to be analyzed
+     */
     private void applyTimeoutProperties(@Nonnull Node node) {
         NodeList childNodes = node.getChildNodes();
 
@@ -586,6 +774,12 @@ public class AddressEndpoint extends AbstractShape {
         }
     }
 
+    /**
+     * Apply suspend on failure properties from XML node to the diagram element.
+     *
+     * @param node
+     *         XML node that need to be analyzed
+     */
     private void applySuspendOnFailureProperties(@Nonnull Node node) {
         NodeList childNodes = node.getChildNodes();
 
@@ -615,6 +809,12 @@ public class AddressEndpoint extends AbstractShape {
         }
     }
 
+    /**
+     * Apply retry properties from XML node to the diagram element.
+     *
+     * @param node
+     *         XML node that need to be analyzed
+     */
     private void applyRetryProperties(@Nonnull Node node) {
         NodeList childNodes = node.getChildNodes();
 

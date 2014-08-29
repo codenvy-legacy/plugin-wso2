@@ -31,6 +31,10 @@ import java.util.List;
 @ImplementedBy(SequencePropertiesPanelViewImpl.class)
 public abstract class SequencePropertiesPanelView extends AbstractView<SequencePropertiesPanelView.ActionDelegate> {
 
+    /**
+     * Interface defines methods of {@link SequencePropertiesPanelPresenter} which calls from view. These methods defines
+     * some actions when user changes properties of Sequence mediator.
+     */
     public interface ActionDelegate extends AbstractView.ActionDelegate {
 
         /** Performs some actions in response to user's changing referring type field. */

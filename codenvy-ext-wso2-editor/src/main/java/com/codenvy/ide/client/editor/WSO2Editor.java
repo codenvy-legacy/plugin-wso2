@@ -169,6 +169,8 @@ import static com.codenvy.ide.client.elements.payload.Format.MediaType.json;
 import static com.codenvy.ide.client.elements.payload.Format.MediaType.xml;
 
 /**
+ * The presenter that provides a business logic of WSO2Editor. It provides ability to configure the editor.
+ *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
@@ -803,6 +805,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
 
     public interface EditorChangeListener {
 
+        /** Performs some actions when editor was changed. */
         void onChanged();
 
     }

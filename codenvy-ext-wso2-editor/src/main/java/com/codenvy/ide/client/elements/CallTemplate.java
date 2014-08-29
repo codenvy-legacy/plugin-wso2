@@ -32,7 +32,10 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Class describes CallTemplate mediator.
+ * The class which describes state of CallTemplate mediator and also has methods for changing it. Also the class contains the business
+ * logic that allows to display serialization representation depending of the current state of element. Deserelization mechanism allows to
+ * restore the condition of the element when you open ESB project after saving. For more information about CallTemplate mediator go to
+ * <a href=" https://docs.wso2.com/display/ESB460/CallTemplate+Mediator"> https://docs.wso2.com/display/ESB460/CallTemplate+Mediator</a>
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko

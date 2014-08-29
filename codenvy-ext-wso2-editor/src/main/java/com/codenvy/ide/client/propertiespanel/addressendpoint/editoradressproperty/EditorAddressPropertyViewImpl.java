@@ -36,6 +36,8 @@ import com.google.inject.Singleton;
 import javax.annotation.Nonnull;
 
 /**
+ * Provides a graphical representation of dialog window for editing properties of address endpoint.
+ *
  * @author Dmitry Shnurenko
  */
 public class EditorAddressPropertyViewImpl extends Window implements EditorAddressPropertyView {

@@ -21,6 +21,8 @@ import com.google.inject.Singleton;
 import javax.annotation.Nonnull;
 
 /**
+ * Contains all names of graphical elements needed for WSO2 editor.
+ *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko

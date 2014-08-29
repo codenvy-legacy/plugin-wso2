@@ -15,6 +15,8 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.text;
 
+import javax.annotation.Nonnull;
+
 /**
  * Invocation context for XML attributes assistant, it's hold prefix and offset of current code assistant session.
  *
@@ -30,17 +32,18 @@ public class InvocationContext {
      * @param offset
      *         an offset within the document for which completions should be computed.
      */
-    public InvocationContext(String prefix, int offset) {
+    public InvocationContext(@Nonnull String prefix, int offset) {
         this.prefix = prefix;
         this.offset = offset;
     }
 
-    /** @return the offset */
+    /** @return the value of offset */
     public int getOffset() {
         return offset;
     }
 
-    /** @return the prefix */
+    /** @return the value of prefix */
+    @Nonnull
     public String getPrefix() {
         return prefix;
     }

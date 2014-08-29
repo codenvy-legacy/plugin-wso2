@@ -46,9 +46,10 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.SRC_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NAME;
 
 /**
- * The presenter for import configuration files.
+ * The class provides the business logic which allows us to import file from different places via special dialog window.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  * @author Andrey Plotnikov
  */
 @Singleton

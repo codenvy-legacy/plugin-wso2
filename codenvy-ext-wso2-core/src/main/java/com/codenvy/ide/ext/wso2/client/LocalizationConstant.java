@@ -164,7 +164,9 @@ public interface LocalizationConstant extends Messages {
     @Key("editor.associate")
     String editorAssociate();
 
+    @Key("importingFileMessage")
     String importingFileMessage();
 
+    @Key("modifyingFileMessage")
     String modifyingFileMessage();
 }

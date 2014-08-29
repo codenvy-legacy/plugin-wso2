@@ -31,6 +31,10 @@ import java.util.List;
 @ImplementedBy(CallPropertiesPanelViewImpl.class)
 public abstract class CallPropertiesPanelView extends AbstractView<CallPropertiesPanelView.ActionDelegate> {
 
+    /**
+     * Interface defines methods of {@link CallPropertiesPanelPresenter} which calls from view. These methods defines
+     * some actions when user change properties of Call mediator.
+     */
     public interface ActionDelegate extends AbstractView.ActionDelegate {
 
         /** Performs some actions in response to user's changing endpoint type field. */

@@ -24,7 +24,8 @@ import com.google.inject.Inject;
 import javax.annotation.Nonnull;
 
 /**
- * Presenter for Payload Format window.
+ * The class provides the business logic that allows editor to react on user's action related to change of element's inline context.
+ * Logic which provides the class allows add, remove and edit inline context of mediator via special dialog window.
  *
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
@@ -65,7 +66,16 @@ public class InlineConfigurationPresenter implements InlineConfigurationView.Act
         view.setEnableBtnOk();
     }
 
-    /** Show dialog. */
+    /**
+     * Show dialog window for editing inline parameter.
+     *
+     * @param content
+     *         value of inline property
+     * @param title
+     *         title of dialog window
+     * @param callBack
+     *         callback which need to set inline value to element
+     */
     public void showDialog(@Nonnull String content,
                            @Nonnull String title,
                            @Nonnull ChangeInlineFormatCallBack callBack) {

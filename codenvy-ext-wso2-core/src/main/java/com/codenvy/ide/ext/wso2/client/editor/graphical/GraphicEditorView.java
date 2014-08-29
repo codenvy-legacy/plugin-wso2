@@ -18,7 +18,7 @@ package com.codenvy.ide.ext.wso2.client.editor.graphical;
 import com.codenvy.ide.api.mvp.View;
 
 /**
- * The view of {@link GraphicEditor}.
+ * The abstract view's representation of editor's design view.
  *
  * @author Andrey Plotnikov
  */

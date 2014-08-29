@@ -22,6 +22,7 @@ import com.codenvy.api.project.shared.AttributeDescription;
 import com.codenvy.api.project.shared.ProjectType;
 import com.google.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
@@ -33,9 +34,10 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJEC
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
 
 /**
- * Register WSO2 extension {@link com.codenvy.api.project.server.ProjectTypeDescriptionExtension} to register project types.
+ * Register WSO2 extension {@link ProjectTypeDescriptionExtension} to register project types.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 @Singleton
 public class WSO2ProjectTypeDescriptionExtension implements ProjectTypeDescriptionExtension {
@@ -45,12 +47,14 @@ public class WSO2ProjectTypeDescriptionExtension implements ProjectTypeDescripti
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public List<ProjectType> getProjectTypes() {
         return Arrays.asList(new ProjectType(ESB_CONFIGURATION_PROJECT_ID, ESB_CONFIGURATION_PROJECT_NAME, WSO2_PROJECT_ID));
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public List<AttributeDescription> getAttributeDescriptions() {
         return Arrays.asList(new AttributeDescription(LANGUAGE),

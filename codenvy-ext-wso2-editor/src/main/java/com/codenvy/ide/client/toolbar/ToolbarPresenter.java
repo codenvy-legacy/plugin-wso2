@@ -44,8 +44,11 @@ import static com.codenvy.ide.client.State.CREATING_SEQUENCE;
 import static com.codenvy.ide.client.State.CREATING_SWITCH;
 
 /**
+ * The presenter that provides a business logic of tool bar. It provides an ability to work with all elements which it contains.
+ *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements HasState<State>, ToolbarView.ActionDelegate {
 

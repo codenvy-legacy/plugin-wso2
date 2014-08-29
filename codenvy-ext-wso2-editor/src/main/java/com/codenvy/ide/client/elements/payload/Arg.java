@@ -28,9 +28,12 @@ import javax.annotation.Nullable;
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 
 /**
- * Class describes entity which presented argument property of mediator.
+ * The class which describes state of Arg property of PayloadFactory mediator and also has methods for changing it. Also the class contains
+ * the business  logic that allows to display serialization representation depending of the current state of element. Deserelization
+ * mechanism allows to restore the condition of the element when you open ESB project after saving.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class Arg {
     private static final String EVALUATOR_ATTRIBUTE_NAME  = "evaluator";
@@ -74,7 +77,12 @@ public class Arg {
         return type;
     }
 
-    /** Set type of arg */
+    /**
+     * Set type of arg element of payload factory mediator
+     *
+     * @param type
+     *         value which need to set
+     */
     public void setType(@Nonnull ArgType type) {
         this.type = type;
     }
@@ -85,18 +93,28 @@ public class Arg {
         return value;
     }
 
-    /** Set value of arg */
+    /**
+     * Set value of arg element of payload factory mediator
+     *
+     * @param value
+     *         value which need to set
+     */
     public void setValue(@Nullable String value) {
         this.value = value;
     }
 
-    /** @return namespaces of arg */
+    /** @return list of namespaces of arg element */
     @Nonnull
     public Array<NameSpace> getNameSpaces() {
         return nameSpaces;
     }
 
-    /** Set namespaces of arg */
+    /**
+     * Set list of namespaces to arg element of payload factory mediator
+     *
+     * @param nameSpaces
+     *         list of namespaces which need to set
+     */
     public void setNameSpaces(@Nonnull Array<NameSpace> nameSpaces) {
         this.nameSpaces = nameSpaces;
     }

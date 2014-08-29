@@ -42,10 +42,10 @@ public interface ResourceKeyEditorView extends View<ResourceKeyEditorView.Action
     }
 
     /**
-     * Show dialog.
+     * Show dialog window for editing resource key.
      *
      * @param content
-     *         format content.
+     *         format content which need to set to window.
      */
     void showDialog(@Nonnull String content);
 

@@ -21,6 +21,9 @@ import com.codenvy.ide.collections.Array;
 import javax.annotation.Nonnull;
 
 /**
+ * The entity which includes name spaces, that may be modified, must implement this interface. This
+ * method will be call when name spaces is changed.
+ *
  * @author Dmitry Shnurenko
  */
 public interface AddNameSpacesCallBack {

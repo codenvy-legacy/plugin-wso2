@@ -35,7 +35,10 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
+ * Provides a graphical representation of 'Call' property panel for editing property of 'Call' mediator.
+ *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class CallPropertiesPanelViewImpl extends CallPropertiesPanelView {
 

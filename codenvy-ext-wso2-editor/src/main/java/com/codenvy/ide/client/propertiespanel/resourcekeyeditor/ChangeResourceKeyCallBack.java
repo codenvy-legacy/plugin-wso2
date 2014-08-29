@@ -18,7 +18,11 @@ package com.codenvy.ide.client.propertiespanel.resourcekeyeditor;
 import javax.annotation.Nonnull;
 
 /**
+ * The entity which includes resource key parameter, that may be modified, must implement this interface. This
+ * method will be call when resource key parameter is changed.
+ *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public interface ChangeResourceKeyCallBack {
     /**

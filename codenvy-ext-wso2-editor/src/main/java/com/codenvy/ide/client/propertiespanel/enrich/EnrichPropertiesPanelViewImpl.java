@@ -35,6 +35,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
+ * Provides a graphical representation of 'Enrich' property panel for editing property of 'Enrich' mediator.
+ *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */

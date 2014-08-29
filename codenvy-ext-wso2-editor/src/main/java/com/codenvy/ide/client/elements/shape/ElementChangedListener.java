@@ -22,6 +22,7 @@ package com.codenvy.ide.client.elements.shape;
  */
 public interface ElementChangedListener {
 
+    /** Performs some actions when element was changed. */
     void onElementChanged();
 
 }

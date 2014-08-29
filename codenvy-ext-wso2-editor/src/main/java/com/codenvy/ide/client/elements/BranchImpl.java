@@ -30,7 +30,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Contains a business logic for changing, serialization, deserialization of element which is a branch.
+ *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class BranchImpl implements Branch {
 
@@ -116,7 +119,7 @@ public class BranchImpl implements Branch {
 
     /** {@inheritDoc} */
     @Override
-    public boolean hasShape(){
+    public boolean hasShape() {
         return !shapes.isEmpty();
     }
 
@@ -141,6 +144,7 @@ public class BranchImpl implements Branch {
         return content.toString();
     }
 
+    /** @return xml representation of attributes of element */
     @Nonnull
     private String convertAttributesToXML() {
         StringBuilder result = new StringBuilder();
@@ -178,6 +182,12 @@ public class BranchImpl implements Branch {
         }
     }
 
+    /**
+     * Deserialize attributes of current node.
+     *
+     * @param node
+     *         XML node that need to be deserialized
+     */
     private void deserializeAttributes(@Nonnull Node node) {
         attributes.clear();
 

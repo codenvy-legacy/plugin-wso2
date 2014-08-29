@@ -23,12 +23,19 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
+ * The abstract view's representation of 'Enrich' mediator properties panel. It provides an ability to show all available properties of
+ * the mediator and edit it.
+ *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
 @ImplementedBy(EnrichPropertiesPanelViewImpl.class)
 public abstract class EnrichPropertiesPanelView extends AbstractView<EnrichPropertiesPanelView.ActionDelegate> {
 
+    /**
+     * Interface defines methods of {@link EnrichPropertiesPanelPresenter} which calls from view. These methods defines
+     * some actions when user change properties of Enrich mediator.
+     */
     public interface ActionDelegate extends AbstractView.ActionDelegate {
 
         /** Performs any actions appropriate in response to the user having changed clone source. */

@@ -18,10 +18,10 @@ package com.codenvy.ide.client.propertiespanel.calltemplate;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.CallTemplate;
 import com.codenvy.ide.client.elements.log.Property;
+import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.log.AddPropertyCallback;
 import com.codenvy.ide.client.propertiespanel.propertyconfig.PropertyConfigPresenter;
-import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -32,7 +32,8 @@ import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates;
 import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates.TYPE_NAME;
 
 /**
- * Presenter for view which support editing CallTemplate mediator.
+ * The class provides the business logic that allows editor to react on user's action and to change state of CallTemplate mediator
+ * depending on user's changes of properties.
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko

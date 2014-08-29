@@ -23,6 +23,7 @@ import com.codenvy.api.project.shared.ProjectType;
 import com.codenvy.ide.Constants;
 import com.google.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +35,7 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
 
 /**
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  * @author Andrey Plotnikov
  */
 @Singleton
@@ -45,12 +47,14 @@ public class WSO2ProjectTypeExtension implements ProjectTypeExtension {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public ProjectType getProjectType() {
         return new ProjectType(ESB_CONFIGURATION_PROJECT_ID, WSO2_PROJECT_ID, WSO2_PROJECT_ID);
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public List<Attribute> getPredefinedAttributes() {
         return Arrays.asList(new Attribute(Constants.LANGUAGE, WSO2_PROJECT_ID),
@@ -58,6 +62,7 @@ public class WSO2ProjectTypeExtension implements ProjectTypeExtension {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public List<ProjectTemplateDescription> getTemplates() {
         return Arrays.asList(new ProjectTemplateDescription("zip",

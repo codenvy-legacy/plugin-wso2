@@ -30,6 +30,10 @@ import javax.annotation.Nonnull;
 @ImplementedBy(WSO2EditorViewImpl.class)
 public abstract class WSO2EditorView extends AbstractView<WSO2EditorView.ActionDelegate> {
 
+    /**
+     * Interface defines methods of WSO2Editor's presenter which calls from view. These methods defines
+     * some actions when user click show or hide button of properties panel.
+     */
     public interface ActionDelegate extends AbstractView.ActionDelegate {
 
         /** Performs some actions in response to user's clicking on hide panel button. */

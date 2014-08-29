@@ -23,6 +23,8 @@ import com.google.inject.ImplementedBy;
 import javax.annotation.Nonnull;
 
 /**
+ * The presentation of Property Config view. It contains a general places for properties of element.
+ *
  * @author Dmitry Shnurenko
  */
 @ImplementedBy(PropertyConfigViewImpl.class)
@@ -71,6 +73,10 @@ public interface PropertyConfigView extends View<PropertyConfigView.ActionDelega
      */
     void setValueExpression(@Nonnull String text);
 
+    /**
+     * Interface defines methods of {@link PropertyConfigPresenter} which calls from view. These methods defines
+     * some actions when user click the button on dialog window for adding, removing or editing properties.
+     */
     interface ActionDelegate {
         /**
          * Performs any actions appropriate in response to the user selected the property.

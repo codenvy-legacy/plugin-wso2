@@ -36,7 +36,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Class describes entity which presented as Log mediator.
+ * The class which describes state of Log mediator and also has methods for changing it. Also the class contains the business logic
+ * that allows to display serialization representation depending of the current state of element. Deserelization mechanism allows to
+ * restore the condition of the element when you open ESB project after saving. For more information about Log mediator go to
+ * <a href=" https://docs.wso2.com/display/ESB460/Log+Mediator"> https://docs.wso2.com/display/ESB460/Log+Mediator</a>
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
@@ -79,7 +82,12 @@ public class Log extends AbstractShape {
         return logCategory;
     }
 
-    /** Sets value of category to element */
+    /**
+     * Sets value of category to element
+     *
+     * @param logCategory
+     *         value that should be set
+     */
     public void setLogCategory(@Nullable LogCategory logCategory) {
         this.logCategory = logCategory;
     }
@@ -90,7 +98,12 @@ public class Log extends AbstractShape {
         return logLevel;
     }
 
-    /** Sets value of level to element */
+    /**
+     * Sets value of level to element
+     *
+     * @param logLevel
+     *         value that should be set
+     */
     public void setLogLevel(@Nullable LogLevel logLevel) {
         this.logLevel = logLevel;
     }
@@ -101,7 +114,12 @@ public class Log extends AbstractShape {
         return logSeparator;
     }
 
-    /** Sets value of separator to element */
+    /**
+     * Sets value of separator to element
+     *
+     * @param logSeparator
+     *         value that should be set
+     */
     public void setLogSeparator(@Nullable String logSeparator) {
         this.logSeparator = logSeparator;
     }
@@ -112,7 +130,12 @@ public class Log extends AbstractShape {
         return properties;
     }
 
-    /** Sets list of properties to element */
+    /**
+     * Sets list of properties to element
+     *
+     * @param logProperties
+     *         list of properties that should be set
+     */
     public void setLogProperties(@Nonnull Array<Property> logProperties) {
         this.properties = logProperties;
     }
@@ -123,7 +146,12 @@ public class Log extends AbstractShape {
         return description;
     }
 
-    /** Sets value of description to element */
+    /**
+     * Sets value of description to element
+     *
+     * @param description
+     *         value that should be set
+     */
     public void setDescription(@Nullable String description) {
         this.description = description;
     }

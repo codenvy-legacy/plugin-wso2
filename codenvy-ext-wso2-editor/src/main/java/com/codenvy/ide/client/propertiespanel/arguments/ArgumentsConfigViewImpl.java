@@ -48,9 +48,10 @@ import static com.codenvy.ide.client.elements.payload.Arg.Evaluator.xml;
 import static com.google.gwt.dom.client.Style.Unit.PX;
 
 /**
- * The implementation of {@link ArgumentsConfigView}
+ * Provides a graphical representation of dialog window for editing argument's properties of element.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigView {
 

@@ -23,9 +23,11 @@ import com.google.inject.ImplementedBy;
 import javax.annotation.Nonnull;
 
 /**
- * The view of {@link ArgumentsConfigPresenter}
+ * The abstract view's representation of dialog window for editing arguments parameter of element. It provides an ability to show
+ * and change all available properties of mediator's argument parameter.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 @ImplementedBy(ArgumentsConfigViewImpl.class)
 public interface ArgumentsConfigView extends View<ArgumentsConfigView.ActionDelegate> {
@@ -76,6 +78,10 @@ public interface ArgumentsConfigView extends View<ArgumentsConfigView.ActionDele
     /** Clear evaluator value */
     void clearEvaluator();
 
+    /**
+     * Interface defines methods of {@link ArgumentsConfigPresenter} which calls from view. These methods defines
+     * some actions when user click the button on dialog window for adding, removing or editing arguments.
+     */
     public interface ActionDelegate {
         /**
          * Performs any actions appropriate in response to the user selected the property.

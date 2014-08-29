@@ -26,12 +26,14 @@ import com.google.gwt.xml.client.XMLParser;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * The utility class that provides an ability to format XSD and to get the attributes of the tag.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 @Singleton
 public class XsdSchemaParser {
@@ -59,7 +61,7 @@ public class XsdSchemaParser {
      *         name of the tag
      * @return an array of attributes.
      */
-    public Array<String> getAttributes(String tag) {
+    public Array<String> getAttributes(@Nonnull String tag) {
         this.tag = tag;
         Document xml = XMLParser.parse(resources.xmlSchemaDefinition().getText());
         NodeList childNodes = xml.getFirstChild().getChildNodes();
@@ -79,7 +81,7 @@ public class XsdSchemaParser {
      * @param attributesName
      *         array of attribute names.
      */
-    private void computeAttributes(@Nullable NodeList nodes, Array<String> attributesName) {
+    private void computeAttributes(@Nullable NodeList nodes, @Nonnull Array<String> attributesName) {
         nodes = getNodesWithAttributes(COMPLEX_CONTENT_NODE, nodes);
         nodes = getNodesWithAttributes(EXTENSION_NODE, nodes);
         if (nodes != null) {
@@ -104,7 +106,7 @@ public class XsdSchemaParser {
      * @param attributesName
      *         an array with names of attributes.
      */
-    private void computeAttributeNames(NamedNodeMap attributesOfAttributeNode, Array<String> attributesName) {
+    private void computeAttributeNames(@Nonnull NamedNodeMap attributesOfAttributeNode, @Nonnull Array<String> attributesName) {
         for (int i = 0; i < attributesOfAttributeNode.getLength(); i++) {
 
             Node attribute = attributesOfAttributeNode.item(i);
@@ -130,12 +132,15 @@ public class XsdSchemaParser {
      *         list of the attributes
      * @return the list of nodes with the the attributes.
      */
-    private NodeList getNodesWithAttributes(String nodeName, NodeList attributeNodes) {
-        for (int i = 0; i < attributeNodes.getLength(); i++) {
-            if (attributeNodes.item(i).getNodeName().equalsIgnoreCase(nodeName) ||
-                attributeNodes.item(i).getNodeName().equalsIgnoreCase(PREFIX_NODE + nodeName)) {
-                attributeNodes = attributeNodes.item(i).getChildNodes();
-                return attributeNodes;
+    private NodeList getNodesWithAttributes(@Nonnull String nodeName, @Nullable NodeList attributeNodes) {
+        if (attributeNodes != null) {
+
+            for (int i = 0; i < attributeNodes.getLength(); i++) {
+                if (attributeNodes.item(i).getNodeName().equalsIgnoreCase(nodeName) ||
+                    attributeNodes.item(i).getNodeName().equalsIgnoreCase(PREFIX_NODE + nodeName)) {
+                    attributeNodes = attributeNodes.item(i).getChildNodes();
+                    return attributeNodes;
+                }
             }
         }
         return null;
@@ -149,7 +154,7 @@ public class XsdSchemaParser {
      * @param attributesName
      *         array of attributes.
      */
-    private void findComplexTypeNodes(NodeList nodes, Array<String> attributesName) {
+    private void findComplexTypeNodes(@Nonnull NodeList nodes, @Nonnull Array<String> attributesName) {
         for (int i = 0; i < nodes.getLength(); i++) {
 
             Node child = nodes.item(i);
@@ -174,7 +179,10 @@ public class XsdSchemaParser {
      * @param attributesName
      *         array of attribute names.
      */
-    private void computeChildOfComplexTypeNode(NamedNodeMap attributes, Node parent, Array<String> attributesName) {
+    private void computeChildOfComplexTypeNode(@Nonnull NamedNodeMap attributes,
+                                               @Nonnull Node parent,
+                                               @Nonnull Array<String> attributesName) {
+
         for (int i = 0; i < attributes.getLength(); i++) {
 
             String nodeValue = attributes.item(i).getNodeValue();

@@ -48,6 +48,7 @@ import static com.codenvy.ide.client.elements.shape.branch.BranchView.TITLE_HEIG
  * The class that provides business logic of the element's branch widget.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class BranchPresenter extends AbstractPresenter<BranchView> implements BranchView.ActionDelegate,
                                                                               HasState<State>,

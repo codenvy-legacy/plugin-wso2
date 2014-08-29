@@ -34,13 +34,13 @@ public class NameSpace {
         this.uri = uri;
     }
 
-    /** @return prefix of namespace */
+    /** @return value of prefix of namespace */
     @Nonnull
     public String getPrefix() {
         return prefix;
     }
 
-    /** @return uri of namespace */
+    /** @return value of uri of namespace */
     @Nonnull
     public String getUri() {
         return uri;

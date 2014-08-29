@@ -23,12 +23,19 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
+ * The abstract view's representation of 'Header' mediator properties panel. It provides an ability to show all available properties of
+ * the mediator and edit it.
+ *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
 @ImplementedBy(HeaderPropertiesPanelViewImpl.class)
 public abstract class HeaderPropertiesPanelView extends AbstractView<HeaderPropertiesPanelView.ActionDelegate> {
 
+    /**
+     * Interface defines methods of {@link HeaderPropertiesPanelPresenter} which calls from view. These methods defines
+     * some actions when user change properties of Header mediator.
+     */
     public interface ActionDelegate extends AbstractView.ActionDelegate {
 
         /** Performs any actions appropriate in response to the user having changed scope. */

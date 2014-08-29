@@ -33,7 +33,12 @@ import static com.codenvy.ide.client.elements.ValueType.LITERAL;
 import static com.codenvy.ide.client.elements.addressendpoint.Property.Scope.DEFAULT;
 
 /**
+ * The class which describes state of Property element of Address endpoint and also has methods for changing it. Also the class contains
+ * the business logic that allows to display serialization representation depending of the current state of element. Deserelization
+ * mechanism allows to restore the condition of the element when you open ESB project after saving.
+ *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class Property {
 
@@ -65,60 +70,103 @@ public class Property {
         nameSpaces = Collections.createArray();
     }
 
+    /** @return name of property of address endpoint */
     @Nonnull
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets name to property element of address endpoint.
+     *
+     * @param name
+     *         value that should be set
+     */
     public void setName(@Nonnull String name) {
         this.name = name;
     }
 
+    /** @return value of property of address endpoint */
     @Nonnull
     public String getValue() {
         return value;
     }
 
+    /**
+     * Sets value to property element of address endpoint.
+     *
+     * @param value
+     *         value that should be set
+     */
     public void setValue(@Nonnull String value) {
         this.value = value;
     }
 
+    /** @return expression of property of address endpoint */
     @Nonnull
     public String getExpression() {
         return expression;
     }
 
+    /**
+     * Sets expression to property element of address endpoint.
+     *
+     * @param expression
+     *         value that should be set
+     */
     public void setExpression(@Nonnull String expression) {
         this.expression = expression;
     }
 
+    /** @return type of property of address endpoint */
     @Nonnull
     public ValueType getType() {
         return type;
     }
 
+    /**
+     * Sets type to property element of address endpoint.
+     *
+     * @param type
+     *         value that should be set
+     */
     public void setType(@Nonnull ValueType type) {
         this.type = type;
     }
 
+    /** @return scope of property of address endpoint */
     @Nonnull
     public Scope getScope() {
         return scope;
     }
 
+    /**
+     * Sets scope to property element of address endpoint.
+     *
+     * @param scope
+     *         value that should be set
+     */
     public void setScope(@Nonnull Scope scope) {
         this.scope = scope;
     }
 
+    /** @return list of name spaces of property of address endpoint */
     @Nonnull
     public Array<NameSpace> getNameSpaces() {
         return nameSpaces;
     }
 
+    /**
+     * Sets list of name spaces to property element of address endpoint.
+     *
+     * @param nameSpaces
+     *         list that should be set
+     */
     public void setNameSpaces(@Nonnull Array<NameSpace> nameSpaces) {
         this.nameSpaces = nameSpaces;
     }
 
+    /** @return copy of property */
     @Nonnull
     public Property clone() {
         Property property = propertyProvider.get();

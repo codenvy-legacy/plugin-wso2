@@ -29,6 +29,10 @@ import javax.annotation.Nonnull;
 @ImplementedBy(RootPropertiesPanelViewImpl.class)
 public abstract class RootPropertiesPanelView extends AbstractView<RootPropertiesPanelView.ActionDelegate> {
 
+    /**
+     * Interface defines methods of {@link RootPropertiesPanelPresenter} which calls from view. These methods defines
+     * some actions when user changes properties of root element.
+     */
     public interface ActionDelegate extends AbstractView.ActionDelegate {
 
         /** Performs any actions appropriate in response to the user having changed name field on properties panel. */

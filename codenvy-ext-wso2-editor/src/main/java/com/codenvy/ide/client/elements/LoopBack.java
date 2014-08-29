@@ -31,7 +31,10 @@ import java.util.Map;
 import static java.util.Collections.emptyList;
 
 /**
- * The entity that represents 'LoopBack' mediator from ESB configuration.
+ * The class which describes state of LoopBack mediator and also has methods for changing it. Also the class contains the business
+ * logic that allows to display serialization representation depending of the current state of element. Deserelization mechanism allows to
+ * restore the condition of the element when you open ESB project after saving. For more information about LoopBack mediator go to
+ * <a href=" https://docs.wso2.com/display/ESB460/LoopBack+Mediator"> https://docs.wso2.com/display/ESB460/LoopBack+Mediator</a>
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
