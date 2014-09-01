@@ -31,29 +31,16 @@ public abstract class BaseConnectorPanelView extends AbstractView<BaseConnectorP
 
     public interface ActionDelegate extends AbstractView.ActionDelegate {
 
-        /**
-         * Performs any actions appropriate in response to the user having changed parameter editor type field.
-         *
-         * @param parameterEditorTypeValue
-         *         value of parameter editor type
-         */
-        void onParameterEditorTypeChanged(@Nonnull String parameterEditorTypeValue);
+        /** Performs any actions appropriate in response to the user having changed parameter editor type field. */
+        void onParameterEditorTypeChanged();
 
-        /**
-         * Performs any actions appropriate in response to the user having changed available configs field.
-         *
-         * @param value
-         *         value of available config
-         */
-        void onAvailableConfigsChanged(@Nonnull String value);
+        /** Performs any actions appropriate in response to the user having changed available configs field. */
+        void onAvailableConfigsChanged();
 
         /**
          * Performs any actions appropriate in response to the user having changed configRef field.
-         *
-         * @param value
-         *         value of new configRef
          */
-        void onConfigRefChanged(@Nonnull String value);
+        void onConfigRefChanged();
 
         /** Performs any actions appropriate in response to the showing connector configuration parameter window. */
         void showConfigParameterWindow();
@@ -63,6 +50,10 @@ public abstract class BaseConnectorPanelView extends AbstractView<BaseConnectorP
     /** @return parameter editor type value from the special place on the view */
     @Nonnull
     public abstract String getParameterEditorType();
+
+    /** @return parameter available config from the special place on the view */
+    @Nonnull
+    public abstract String getAvailableConfig();
 
     /**
      * Select parameter editor type in place on view.
@@ -95,6 +86,14 @@ public abstract class BaseConnectorPanelView extends AbstractView<BaseConnectorP
      *         value of available configs
      */
     public abstract void selectAvailableConfigs(@Nonnull String state);
+
+    /**
+     * Sets available configs to the special place on the view which uses for showing Available Config parameter.
+     *
+     * @param configs
+     *         all available configs
+     */
+    public abstract void setAvailableConfigs(@Nonnull List<String> configs);
 
     /**
      * Add available config.

@@ -88,7 +88,7 @@ public class Update extends AbstractShape {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        return (((configRef == null) || configRef.isEmpty()) ? "" : CONFIG_KEY + "=\"" + configRef + "\"");
+        return configRef == null || configRef.isEmpty() ? "" : CONFIG_KEY + "=\"" + configRef + "\"";
     }
 
     /** {@inheritDoc} */
@@ -99,6 +99,7 @@ public class Update extends AbstractShape {
                                                   : prepareProperties(allOrNone, truncate, subjects);
     }
 
+    @Nonnull
     private String prepareProperties(@Nonnull String allOrNone,
                                      @Nonnull String truncate,
                                      @Nonnull String subjects) {
@@ -123,30 +124,31 @@ public class Update extends AbstractShape {
     @Override
     public void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
+        String nodeValue = node.getChildNodes().item(0).getNodeValue();
         boolean isInline = Inline.equals(parameterEditorType);
 
         switch (nodeName) {
             case ALL_OR_NONE:
                 if (isInline) {
-                    allOrNoneInline = node.getChildNodes().item(0).getNodeValue();
+                    allOrNoneInline = nodeValue;
                 } else {
-                    allOrNone = node.getChildNodes().item(0).getNodeValue();
+                    allOrNone = nodeValue;
                 }
                 break;
 
             case TRUNCATE:
                 if (isInline) {
-                    truncateInline = node.getChildNodes().item(0).getNodeValue();
+                    truncateInline = nodeValue;
                 } else {
-                    truncate = node.getChildNodes().item(0).getNodeValue();
+                    truncate = nodeValue;
                 }
                 break;
 
             case SUBJECTS:
                 if (isInline) {
-                    subjectsInline = node.getChildNodes().item(0).getNodeValue();
+                    subjectsInline = nodeValue;
                 } else {
-                    subjects = node.getChildNodes().item(0).getNodeValue();
+                    subjects = nodeValue;
                 }
                 break;
 

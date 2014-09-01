@@ -22,8 +22,6 @@ import com.google.inject.ImplementedBy;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.BaseSalesforce.ParameterEditorType;
-
 /**
  * The view of {@link InitPropertiesPanelPresenter}
  *
@@ -57,7 +55,6 @@ public abstract class InitPropertiesPanelView extends AbstractView<InitPropertie
 
         /** Performs any actions appropriate in response to the user having clicked loginUrl button on properties panel. */
         void loginUrlButtonClicked();
-
     }
 
     /** @return force login value from the special place on the view which uses for showing forceLogin parameter */
@@ -149,11 +146,67 @@ public abstract class InitPropertiesPanelView extends AbstractView<InitPropertie
     public abstract void addBaseConnector(@Nonnull BaseConnectorPanelPresenter base);
 
     /**
-     * Displays properties panel to a certain value of parameter editor type.
+     * Sets visible username field on the view.
      *
-     * @param parameterEditorType
-     *         value of parameter editor type that was selected
+     * @param isVisible
+     *         <code>true</code> to show username field, <code>false</code> not to show
      */
-    public abstract void onParameterEditorTypeChanged(@Nonnull ParameterEditorType parameterEditorType);
+    public abstract void setVisibleUsername(boolean isVisible);
+
+    /**
+     * Sets visible username namespace field on the view.
+     *
+     * @param isVisible
+     *         <code>true</code> to show username namespace field, <code>false</code> not to show
+     */
+    public abstract void setVisibleUsernameNamespacePanel(boolean isVisible);
+
+    /**
+     * Sets visible password namespace field on the view.
+     *
+     * @param isVisible
+     *         <code>true</code> to show password namespace field, <code>false</code> not to show
+     */
+    public abstract void setVisiblePasswordNamespacePanel(boolean isVisible);
+
+    /**
+     * Sets visible password field on the view.
+     *
+     * @param isVisible
+     *         <code>true</code> to show password field, <code>false</code> not to show
+     */
+    public abstract void setVisiblePassword(boolean isVisible);
+
+    /**
+     * Sets visible login url namespace field on the view.
+     *
+     * @param isVisible
+     *         <code>true</code> to show login url namespace field, <code>false</code> not to show
+     */
+    public abstract void setVisibleLoginUrlNamespacePanel(boolean isVisible);
+
+    /**
+     * Sets visible loginUrl field on the view.
+     *
+     * @param isVisible
+     *         <code>true</code> to show loginUrl field, <code>false</code> not to show
+     */
+    public abstract void setVisibleLoginUrl(boolean isVisible);
+
+    /**
+     * Sets visible force login namespace field on the view.
+     *
+     * @param isVisible
+     *         <code>true</code> to show force login namespace field, <code>false</code> not to show
+     */
+    public abstract void setVisibleForceLoginNamespacePanel(boolean isVisible);
+
+    /**
+     * Sets visible forceLogin field on the view.
+     *
+     * @param isVisible
+     *         <code>true</code> to show forceLogin field, <code>false</code> not to show
+     */
+    public abstract void setVisibleForceLogin(boolean isVisible);
 
 }

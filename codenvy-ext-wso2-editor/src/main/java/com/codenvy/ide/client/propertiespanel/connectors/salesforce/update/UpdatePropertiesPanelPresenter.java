@@ -170,10 +170,19 @@ public class UpdatePropertiesPanelPresenter extends AbstractPropertiesPanel<Upda
     /** {@inheritDoc} */
     @Override
     public void onPropertyChanged(@Nonnull ParameterEditorType parameterEditorType, @Nonnull String configRef) {
+        boolean isNamespaceEditorParam = parameterEditorType.equals(ParameterEditorType.NamespacedPropertyEditor);
+
         element.setParameterEditorType(parameterEditorType);
         element.setConfigRef(configRef);
 
-        view.onParameterEditorTypeChanged(parameterEditorType);
+        view.setVisibleAllOrNoneNamespacePanel(isNamespaceEditorParam);
+        view.setVisibleAllOrNone(!isNamespaceEditorParam);
+
+        view.setVisibleTruncateNamespacePanel(isNamespaceEditorParam);
+        view.setVisibleTruncate(!isNamespaceEditorParam);
+
+        view.setVisibleSubjectsNamespacePanel(isNamespaceEditorParam);
+        view.setVisibleSubjects(!isNamespaceEditorParam);
 
         notifyListeners();
     }

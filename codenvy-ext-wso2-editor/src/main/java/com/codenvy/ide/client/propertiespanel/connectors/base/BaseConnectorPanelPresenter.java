@@ -96,14 +96,18 @@ public class BaseConnectorPanelPresenter extends AbstractPropertiesPanel<BaseSal
 
         view.setParameterEditorType(propertyTypeManager.getValuesByName(ParameterEditorType.TYPE_NAME));
         view.selectParameterEditorType(element.getParameterEditorType().name());
+
         view.setConfigRef(element.getConfigRef());
+
         view.setNewConfig(element.getNewConfig());
+
+        view.setAvailableConfigs(element.getAvailableConfigs());
         view.selectAvailableConfigs(EMPTY.getValue());
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onParameterEditorTypeChanged(@Nonnull String parameterEditorTypeValue) {
+    public void onParameterEditorTypeChanged() {
         element.setParameterEditorType(ParameterEditorType.valueOf(view.getParameterEditorType()));
 
         notifyListeners(view.getConfigRef());
@@ -111,7 +115,9 @@ public class BaseConnectorPanelPresenter extends AbstractPropertiesPanel<BaseSal
 
     /** {@inheritDoc} */
     @Override
-    public void onAvailableConfigsChanged(@Nonnull String value) {
+    public void onAvailableConfigsChanged() {
+        String value = view.getAvailableConfig();
+
         if (!SELECT_FROM_CONFIG.getValue().equals(value)) {
             view.setConfigRef(value);
             element.setConfigRef(value);
@@ -122,10 +128,12 @@ public class BaseConnectorPanelPresenter extends AbstractPropertiesPanel<BaseSal
 
     /** {@inheritDoc} */
     @Override
-    public void onConfigRefChanged(@Nonnull String value) {
-        element.setConfigRef(value);
+    public void onConfigRefChanged() {
+        String configValue = view.getConfigRef();
 
-        notifyListeners(value);
+        element.setConfigRef(configValue);
+
+        notifyListeners(configValue);
     }
 
     /** {@inheritDoc} */

@@ -95,7 +95,7 @@ public class Init extends AbstractShape {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        return (((configRef == null) || configRef.isEmpty()) ? "" : CONFIG_KEY + "=\"" + configRef + "\"");
+        return configRef == null || configRef.isEmpty() ? "" : CONFIG_KEY + "=\"" + configRef + "\"";
     }
 
     /** {@inheritDoc} */
@@ -106,6 +106,7 @@ public class Init extends AbstractShape {
                                                   : prepareProperties(username, password, forceLogin, loginUrl);
     }
 
+    @Nonnull
     private String prepareProperties(@Nonnull String username,
                                      @Nonnull String password,
                                      @Nonnull String forceLogin,
@@ -135,38 +136,39 @@ public class Init extends AbstractShape {
     @Override
     public void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
+        String nodeValue = node.getChildNodes().item(0).getNodeValue();
         boolean isInline = Inline.equals(parameterEditorType);
 
         switch (nodeName) {
             case USERNAME:
                 if (isInline) {
-                    usernameInline = node.getChildNodes().item(0).getNodeValue();
+                    usernameInline = nodeValue;
                 } else {
-                    username = node.getChildNodes().item(0).getNodeValue();
+                    username = nodeValue;
                 }
                 break;
 
             case PASSWORD:
                 if (isInline) {
-                    passwordInline = node.getChildNodes().item(0).getNodeValue();
+                    passwordInline = nodeValue;
                 } else {
-                    password = node.getChildNodes().item(0).getNodeValue();
+                    password = nodeValue;
                 }
                 break;
 
             case LOGIN_URL:
                 if (isInline) {
-                    loginUrlInline = node.getChildNodes().item(0).getNodeValue();
+                    loginUrlInline = nodeValue;
                 } else {
-                    loginUrl = node.getChildNodes().item(0).getNodeValue();
+                    loginUrl = nodeValue;
                 }
                 break;
 
             case FORCE_LOGIN:
                 if (isInline) {
-                    forceLoginInline = node.getChildNodes().item(0).getNodeValue();
+                    forceLoginInline = nodeValue;
                 } else {
-                    forceLogin = node.getChildNodes().item(0).getNodeValue();
+                    forceLogin = nodeValue;
                 }
                 break;
         }

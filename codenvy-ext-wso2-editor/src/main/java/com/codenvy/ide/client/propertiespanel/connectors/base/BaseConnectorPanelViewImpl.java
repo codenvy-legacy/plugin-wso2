@@ -78,6 +78,13 @@ public class BaseConnectorPanelViewImpl extends BaseConnectorPanelView {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
+    @Override
+    public String getAvailableConfig() {
+        return getSelectedItem(availableConfigs);
+    }
+
+    /** {@inheritDoc} */
     @Override
     public void selectParameterEditorType(@Nonnull String state) {
         selectType(parameterEditorType, state);
@@ -103,6 +110,12 @@ public class BaseConnectorPanelViewImpl extends BaseConnectorPanelView {
 
     /** {@inheritDoc} */
     @Override
+    public void setAvailableConfigs(@Nonnull List<String> configs) {
+        setTypes(availableConfigs, configs);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void addAvailableConfigs(@Nonnull String state) {
         availableConfigs.addItem(state);
     }
@@ -122,17 +135,17 @@ public class BaseConnectorPanelViewImpl extends BaseConnectorPanelView {
 
     @UiHandler("parameterEditorType")
     public void onPayloadFormatChanged(ChangeEvent event) {
-        delegate.onParameterEditorTypeChanged(parameterEditorType.getValue(parameterEditorType.getSelectedIndex()));
+        delegate.onParameterEditorTypeChanged();
     }
 
     @UiHandler("availableConfigs")
     public void onAvailableConfigsChanged(ChangeEvent event) {
-        delegate.onAvailableConfigsChanged(getSelectedItem(availableConfigs));
+        delegate.onAvailableConfigsChanged();
     }
 
     @UiHandler("configRef")
     public void onConfigRefChanged(KeyUpEvent event) {
-        delegate.onConfigRefChanged(configRef.getValue());
+        delegate.onConfigRefChanged();
     }
 
     @UiHandler("newConfigButton")

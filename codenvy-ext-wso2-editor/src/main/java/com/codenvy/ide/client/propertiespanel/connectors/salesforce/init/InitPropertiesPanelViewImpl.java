@@ -33,8 +33,6 @@ import com.google.inject.Singleton;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.BaseSalesforce.ParameterEditorType;
-
 /**
  * The implementation of {InitPropertiesPanelView}
  *
@@ -213,20 +211,50 @@ public class InitPropertiesPanelViewImpl extends InitPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void onParameterEditorTypeChanged(@Nonnull ParameterEditorType parameterEditorType) {
-        boolean isNamespaceEditorParam = parameterEditorType.equals(ParameterEditorType.NamespacedPropertyEditor);
+    public void setVisibleUsername(boolean isVisible) {
+        username.setVisible(isVisible);
+    }
 
-        usernameNamespacePanel.setVisible(isNamespaceEditorParam);
-        username.setVisible(!isNamespaceEditorParam);
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleUsernameNamespacePanel(boolean isVisible) {
+        usernameNamespacePanel.setVisible(isVisible);
+    }
 
-        passwordNamespacePanel.setVisible(isNamespaceEditorParam);
-        password.setVisible(!isNamespaceEditorParam);
+    /** {@inheritDoc} */
+    @Override
+    public void setVisiblePasswordNamespacePanel(boolean isVisible) {
+        passwordNamespacePanel.setVisible(isVisible);
+    }
 
-        loginUrlNamespacePanel.setVisible(isNamespaceEditorParam);
-        loginUrl.setVisible(!isNamespaceEditorParam);
+    /** {@inheritDoc} */
+    @Override
+    public void setVisiblePassword(boolean isVisible) {
+        password.setVisible(isVisible);
+    }
 
-        forceLoginNamespacePanel.setVisible(isNamespaceEditorParam);
-        forceLogin.setVisible(!isNamespaceEditorParam);
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleLoginUrlNamespacePanel(boolean isVisible) {
+        loginUrlNamespacePanel.setVisible(isVisible);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleLoginUrl(boolean isVisible) {
+        loginUrl.setVisible(isVisible);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleForceLoginNamespacePanel(boolean isVisible) {
+        forceLoginNamespacePanel.setVisible(isVisible);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleForceLogin(boolean isVisible) {
+        forceLogin.setVisible(isVisible);
     }
 
 }

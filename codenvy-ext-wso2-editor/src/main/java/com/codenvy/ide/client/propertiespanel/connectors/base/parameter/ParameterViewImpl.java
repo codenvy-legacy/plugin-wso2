@@ -103,7 +103,6 @@ public class ParameterViewImpl extends Window implements ParameterView {
         initTypeListBox();
 
         Button btnCancel = createButton(locale.buttonCancel(), "connector-parameter-cancel", new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onCancelButtonClicked();
@@ -112,7 +111,6 @@ public class ParameterViewImpl extends Window implements ParameterView {
         getFooter().add(btnCancel);
 
         Button btnOk = createButton(locale.buttonOk(), "connector-parameter-ok", new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onOkButtonClicked();

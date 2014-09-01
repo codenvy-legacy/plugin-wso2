@@ -44,46 +44,56 @@ public class BaseSalesforce extends AbstractShape {
     public static final  String       ELEMENT_NAME = "BaseSalesforce";
     private static final List<String> PROPERTIES   = Collections.emptyList();
 
+    final private List<String> availableConfigs;
+
     private String              newConfig;
     private String              configRef;
     private ParameterEditorType parameterEditorType;
 
-    private List<String> availableConfigs = new LinkedList<>();
-
     @Inject
-    protected BaseSalesforce(EditorResources resources,
-                             Provider<Branch> branchProvider,
-                             MediatorCreatorsManager mediatorCreatorsManager,
-                             WSO2EditorLocalizationConstant local) {
+    public BaseSalesforce(EditorResources resources,
+                          Provider<Branch> branchProvider,
+                          MediatorCreatorsManager mediatorCreatorsManager,
+                          WSO2EditorLocalizationConstant local) {
         super(ELEMENT_NAME, ELEMENT_NAME, ELEMENT_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
 
         newConfig = local.connectorNewConfigValue();
+
         parameterEditorType = Inline;
+
         availableConfigs = new LinkedList<>();
         availableConfigs.addAll(Arrays.asList(EMPTY.getValue(), SELECT_FROM_CONFIG.getValue()));
     }
 
+    @Nonnull
     public String getConfigRef() {
         return configRef;
     }
 
-    public void setConfigRef(String configRef) {
+    public void setConfigRef(@Nonnull String configRef) {
         this.configRef = configRef;
     }
 
-    public void addAvailableConfig(String availableConfig) {
+    public void addAvailableConfig(@Nonnull String availableConfig) {
         this.availableConfigs.add(availableConfig);
     }
 
+    @Nonnull
     public String getNewConfig() {
         return newConfig;
     }
 
+    @Nonnull
+    public List<String> getAvailableConfigs() {
+        return availableConfigs;
+    }
+
+    @Nonnull
     public ParameterEditorType getParameterEditorType() {
         return parameterEditorType;
     }
 
-    public void setParameterEditorType(ParameterEditorType parameterEditorType) {
+    public void setParameterEditorType(@Nonnull ParameterEditorType parameterEditorType) {
         this.parameterEditorType = parameterEditorType;
     }
 
@@ -98,7 +108,7 @@ public class BaseSalesforce extends AbstractShape {
 
         public static final String TYPE_NAME = "AvailableConfigs";
 
-        private String value;
+        private final String value;
 
         AvailableConfigs(@Nonnull String value) {
             this.value = value;

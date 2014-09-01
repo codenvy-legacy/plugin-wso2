@@ -202,10 +202,22 @@ public class InitPropertiesPanelPresenter extends AbstractPropertiesPanel<Init, 
     /** {@inheritDoc} */
     @Override
     public void onPropertyChanged(@Nonnull ParameterEditorType parameterEditorType, @Nonnull String configRef) {
+        boolean isNamespaceEditorParam = parameterEditorType.equals(ParameterEditorType.NamespacedPropertyEditor);
+
         element.setParameterEditorType(parameterEditorType);
         element.setConfigRef(configRef);
 
-        view.onParameterEditorTypeChanged(parameterEditorType);
+        view.setVisibleUsernameNamespacePanel(isNamespaceEditorParam);
+        view.setVisibleUsername(!isNamespaceEditorParam);
+
+        view.setVisiblePasswordNamespacePanel(isNamespaceEditorParam);
+        view.setVisiblePassword(!isNamespaceEditorParam);
+
+        view.setVisibleForceLoginNamespacePanel(isNamespaceEditorParam);
+        view.setVisibleForceLogin(!isNamespaceEditorParam);
+
+        view.setVisibleLoginUrlNamespacePanel(isNamespaceEditorParam);
+        view.setVisibleLoginUrl(!isNamespaceEditorParam);
 
         notifyListeners();
     }

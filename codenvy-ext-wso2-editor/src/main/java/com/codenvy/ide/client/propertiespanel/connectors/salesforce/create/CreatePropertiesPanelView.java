@@ -22,8 +22,6 @@ import com.google.inject.ImplementedBy;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.BaseSalesforce.ParameterEditorType;
-
 /**
  * The view of {@link CreatePropertiesPanelPresenter}
  *
@@ -123,11 +121,51 @@ public abstract class CreatePropertiesPanelView extends AbstractView<CreatePrope
     public abstract void addBaseConnector(@Nonnull BaseConnectorPanelPresenter base);
 
     /**
-     * Displays properties panel to a certain value of parameter editor type.
+     * Sets visible allOrNone namespace panel on the view.
      *
-     * @param parameterEditorType
-     *         value of parameter editor type that was selected
+     * @param isVisible
+     *         <code>true</code> to show allOrNone namespace panel, <code>false</code> not to show
      */
-    public abstract void onParameterEditorTypeChanged(@Nonnull ParameterEditorType parameterEditorType);
+    public abstract void setVisibleAllOrNoneNamespacePanel(boolean isVisible);
+
+    /**
+     * Sets visible allOrNone field on the view.
+     *
+     * @param isVisible
+     *         <code>true</code> to show allOrNone field, <code>false</code> not to show
+     */
+    public abstract void setVisibleAllOrNone(boolean isVisible);
+
+    /**
+     * Sets visible login url truncate panel on the view.
+     *
+     * @param isVisible
+     *         <code>true</code> to show login url truncate panel, <code>false</code> not to show
+     */
+    public abstract void setVisibleTruncateNamespacePanel(boolean isVisible);
+
+    /**
+     * Sets visible truncate field on the view.
+     *
+     * @param isVisible
+     *         <code>true</code> to show truncate field, <code>false</code> not to show
+     */
+    public abstract void setVisibleTruncate(boolean isVisible);
+
+    /**
+     * Sets visible subjects namespace panel on the view.
+     *
+     * @param isVisible
+     *         <code>true</code> to show subjects namespace panel, <code>false</code> not to show
+     */
+    public abstract void setVisibleSubjectsNamespacePanel(boolean isVisible);
+
+    /**
+     * Sets visible subjects field on the view.
+     *
+     * @param isVisible
+     *         <code>true</code> to show subjects field, <code>false</code> not to show
+     */
+    public abstract void setVisibleSubjects(boolean isVisible);
 
 }

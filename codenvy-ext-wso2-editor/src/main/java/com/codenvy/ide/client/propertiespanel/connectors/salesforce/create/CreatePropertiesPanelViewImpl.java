@@ -33,8 +33,6 @@ import com.google.inject.Singleton;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.BaseSalesforce.ParameterEditorType;
-
 /**
  * The implementation of {CreatePropertiesPanelView}
  *
@@ -50,24 +48,24 @@ public class CreatePropertiesPanelViewImpl extends CreatePropertiesPanelView {
     SimplePanel baseConnector;
 
     @UiField
-    TextBox     truncate;
+    TextBox truncate;
     @UiField
-    TextBox     allOrNone;
+    TextBox allOrNone;
     @UiField
-    TextBox     subjects;
+    TextBox subjects;
 
     @UiField
-    FlowPanel   allOrNoneNamespacePanel;
+    FlowPanel allOrNoneNamespacePanel;
     @UiField
-    TextBox     allOrNoneNamespace;
+    TextBox   allOrNoneNamespace;
     @UiField
-    FlowPanel   truncateNamespacePanel;
+    FlowPanel truncateNamespacePanel;
     @UiField
-    TextBox     truncateNamespace;
+    TextBox   truncateNamespace;
     @UiField
-    TextBox     subjectsNamespace;
+    TextBox   subjectsNamespace;
     @UiField
-    FlowPanel   subjectsNamespacePanel;
+    FlowPanel subjectsNamespacePanel;
 
     @UiField(provided = true)
     final EditorResources                res;
@@ -180,17 +178,38 @@ public class CreatePropertiesPanelViewImpl extends CreatePropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void onParameterEditorTypeChanged(@Nonnull ParameterEditorType parameterEditorType) {
-        boolean isNamespaceEditorParam = parameterEditorType.equals(ParameterEditorType.NamespacedPropertyEditor);
+    public void setVisibleAllOrNoneNamespacePanel(boolean isVisible) {
+        allOrNoneNamespacePanel.setVisible(isVisible);
+    }
 
-        allOrNoneNamespacePanel.setVisible(isNamespaceEditorParam);
-        allOrNone.setVisible(!isNamespaceEditorParam);
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleAllOrNone(boolean isVisible) {
+        allOrNone.setVisible(isVisible);
+    }
 
-        truncateNamespacePanel.setVisible(isNamespaceEditorParam);
-        truncate.setVisible(!isNamespaceEditorParam);
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleTruncateNamespacePanel(boolean isVisible) {
+        truncateNamespacePanel.setVisible(isVisible);
+    }
 
-        subjectsNamespacePanel.setVisible(isNamespaceEditorParam);
-        subjects.setVisible(!isNamespaceEditorParam);
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleTruncate(boolean isVisible) {
+        truncate.setVisible(isVisible);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleSubjectsNamespacePanel(boolean isVisible) {
+        subjectsNamespacePanel.setVisible(isVisible);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleSubjects(boolean isVisible) {
+        subjects.setVisible(isVisible);
     }
 
 }
