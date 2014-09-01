@@ -17,6 +17,7 @@ package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.connectors.salesforce.Create;
+import com.codenvy.ide.client.elements.connectors.salesforce.Delete;
 import com.codenvy.ide.client.elements.connectors.salesforce.Init;
 import com.codenvy.ide.client.elements.connectors.salesforce.Update;
 import com.codenvy.ide.client.elements.enrich.Enrich;
@@ -79,7 +80,8 @@ public class Switch extends AbstractShape {
                                                                  Call.ELEMENT_NAME,
                                                                  Init.ELEMENT_NAME,
                                                                  Create.ELEMENT_NAME,
-                                                                 Update.ELEMENT_NAME);
+                                                                 Update.ELEMENT_NAME,
+                                                                 Delete.ELEMENT_NAME);
 
     private String           sourceXpath;
     private Array<NameSpace> nameSpaces;

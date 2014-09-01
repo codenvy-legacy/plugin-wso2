@@ -544,6 +544,9 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("toolbar.salesforceCreateConnector.tooltip")
     String toolbarSalesforceCreateConnectorTooltip();
 
+    @Key("toolbar.connector.salesforceDelete.tooltip")
+    String salesForceDeleteTooltip();
+
     @Key("propertiespanel.connector.allOrNone")
     String connectorAllOrNone();
 

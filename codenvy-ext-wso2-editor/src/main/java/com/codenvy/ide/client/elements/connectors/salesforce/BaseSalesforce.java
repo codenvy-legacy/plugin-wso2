@@ -44,8 +44,8 @@ public class BaseSalesforce extends AbstractShape {
     public static final  String       ELEMENT_NAME = "BaseSalesforce";
     private static final List<String> PROPERTIES   = Collections.emptyList();
 
-    final private List<String> availableConfigs;
-
+    private final List<String>        availableConfigs;
+   
     private String              newConfig;
     private String              configRef;
     private ParameterEditorType parameterEditorType;

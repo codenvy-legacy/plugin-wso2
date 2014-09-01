@@ -153,6 +153,17 @@ public class BaseConnectorPanelPresenter extends AbstractPropertiesPanel<BaseSal
     }
 
     /**
+     * Calls method from view which sets value of selected parameter of parameter editor type.
+     * This selected value sets to special place on view.
+     *
+     * @param editorType
+     *         value of parameter editor type
+     */
+    public void setParameterEditorType(@Nonnull ParameterEditorType editorType) {
+        view.selectParameterEditorType(editorType.name());
+    }
+
+    /**
      * Add a listener for detecting a moment of changing selected property value.
      *
      * @param listener

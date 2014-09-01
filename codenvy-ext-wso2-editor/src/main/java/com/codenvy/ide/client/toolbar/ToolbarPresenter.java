@@ -36,6 +36,7 @@ import static com.codenvy.ide.client.State.CREATING_PAYLOADFACTORY;
 import static com.codenvy.ide.client.State.CREATING_PROPERTY;
 import static com.codenvy.ide.client.State.CREATING_RESPOND;
 import static com.codenvy.ide.client.State.CREATING_SALESFORCE_CREATE;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_DELETE;
 import static com.codenvy.ide.client.State.CREATING_SALESFORCE_INIT;
 import static com.codenvy.ide.client.State.CREATING_SALESFORCE_UPDATE;
 import static com.codenvy.ide.client.State.CREATING_SEND;
@@ -156,14 +157,20 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
 
     /** {@inheritDoc} */
     @Override
-    public void onSalesforceInitClicked() {
+    public void onSalesForceInitClicked() {
         setState(CREATING_SALESFORCE_INIT);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onSalesforceCreateClicked() {
+    public void onSalesForceCreateClicked() {
         setState(CREATING_SALESFORCE_CREATE);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesForceDeleteClicked() {
+        setState(CREATING_SALESFORCE_DELETE);
     }
 
     /** {@inheritDoc} */
