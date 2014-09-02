@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.connectors.base;
 
-import com.codenvy.ide.client.elements.connectors.salesforce.BaseSalesforce;
+import com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ConnectorParameterCallBack;
@@ -27,16 +27,16 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.BaseSalesforce.AvailableConfigs.EMPTY;
-import static com.codenvy.ide.client.elements.connectors.salesforce.BaseSalesforce.AvailableConfigs.SELECT_FROM_CONFIG;
-import static com.codenvy.ide.client.elements.connectors.salesforce.BaseSalesforce.ParameterEditorType;
+import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.AvailableConfigs.EMPTY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.AvailableConfigs.SELECT_FROM_CONFIG;
+import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType;
 
 /**
  * The presenter that provides a business logic of base connector properties panel for salesforce connectors.
  *
  * @author Valeriy Svydenko
  */
-public class BaseConnectorPanelPresenter extends AbstractPropertiesPanel<BaseSalesforce, BaseConnectorPanelView>
+public class BaseConnectorPanelPresenter extends AbstractPropertiesPanel<GeneralProperty, BaseConnectorPanelView>
         implements BaseConnectorPanelView.ActionDelegate {
 
     /** The listener for detecting a moment of changing base property value. */
@@ -60,7 +60,7 @@ public class BaseConnectorPanelPresenter extends AbstractPropertiesPanel<BaseSal
     @Inject
     public BaseConnectorPanelPresenter(BaseConnectorPanelView view,
                                        PropertyTypeManager propertyTypeManager,
-                                       BaseSalesforce base,
+                                       GeneralProperty base,
                                        ParameterPresenter parameterPresenter) {
 
         super(view, propertyTypeManager);

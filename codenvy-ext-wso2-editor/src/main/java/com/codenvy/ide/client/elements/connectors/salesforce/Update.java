@@ -32,8 +32,8 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.BaseSalesforce.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.salesforce.BaseSalesforce.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType;
+import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType.Inline;
 import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
@@ -95,12 +95,12 @@ public class Update extends AbstractShape {
     @Nonnull
     @Override
     protected String serializeProperties() {
-        return Inline.equals(parameterEditorType) ? prepareProperties(allOrNoneInline, truncateInline, subjectsInline)
-                                                  : prepareProperties(allOrNone, truncate, subjects);
+        return Inline.equals(parameterEditorType) ? convertPropertiesToXml(allOrNoneInline, truncateInline, subjectsInline)
+                                                  : convertPropertiesToXml(allOrNone, truncate, subjects);
     }
 
     @Nonnull
-    private String prepareProperties(@Nonnull String allOrNone,
+    private String convertPropertiesToXml(@Nonnull String allOrNone,
                                      @Nonnull String truncate,
                                      @Nonnull String subjects) {
         StringBuilder result = new StringBuilder();

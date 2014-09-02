@@ -130,4 +130,19 @@ public class ToolbarViewImpl extends ToolbarView {
         delegate.onSalesforceUpdateClicked();
     }
 
+    @UiHandler("emptyRecycleConnector")
+    public void onSalesForceEmptyRecycleBinClicked(ClickEvent event) {
+        delegate.onSalesForceEmptyRecycleBinClicked();
+    }
+
+    @UiHandler("logOutConnector")
+    public void onSalesForceLogOutClicked(ClickEvent event) {
+        delegate.onSalesForceLogOutClicked();
+    }
+
+    @UiHandler("getUserInfoConnector")
+    public void onSalesForceGetUserInfoClicked(ClickEvent event) {
+        delegate.onSalesForceGetUserInfoClicked();
+    }
+
 }

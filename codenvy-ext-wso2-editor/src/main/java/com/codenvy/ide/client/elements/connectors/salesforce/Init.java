@@ -32,8 +32,8 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.BaseSalesforce.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.salesforce.BaseSalesforce.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType;
+import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType.Inline;
 import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
@@ -102,12 +102,12 @@ public class Init extends AbstractShape {
     @Nonnull
     @Override
     protected String serializeProperties() {
-        return Inline.equals(parameterEditorType) ? prepareProperties(usernameInline, passwordInline, forceLoginInline, loginUrlInline)
-                                                  : prepareProperties(username, password, forceLogin, loginUrl);
+        return Inline.equals(parameterEditorType) ? convertPropertiesToXml(usernameInline, passwordInline, forceLoginInline, loginUrlInline)
+                                                  : convertPropertiesToXml(username, password, forceLogin, loginUrl);
     }
 
     @Nonnull
-    private String prepareProperties(@Nonnull String username,
+    private String convertPropertiesToXml(@Nonnull String username,
                                      @Nonnull String password,
                                      @Nonnull String forceLogin,
                                      @Nonnull String loginUrl) {

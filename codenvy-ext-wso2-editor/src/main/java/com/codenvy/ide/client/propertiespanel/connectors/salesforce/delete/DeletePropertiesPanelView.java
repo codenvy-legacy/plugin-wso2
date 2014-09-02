@@ -36,11 +36,11 @@ public abstract class DeletePropertiesPanelView extends AbstractView<DeletePrope
      * @param base
      *         presenter of general panel
      */
-    abstract void setGeneralPanel(@Nonnull BaseConnectorPanelPresenter base);
+    public abstract void setGeneralPanel(@Nonnull BaseConnectorPanelPresenter base);
 
     /** @return value of all or none parameter from special view's place */
     @Nonnull
-    abstract String getAllOrNone();
+    public abstract String getAllOrNone();
 
     /**
      * Sets value of all or none parameter to special place on view.
@@ -48,11 +48,11 @@ public abstract class DeletePropertiesPanelView extends AbstractView<DeletePrope
      * @param allOrNone
      *         value which need to set
      */
-    abstract void setAllOrNone(@Nonnull String allOrNone);
+    public abstract void setAllOrNone(@Nonnull String allOrNone);
 
     /** @return value of subject parameter from special view's place */
     @Nonnull
-    abstract String getSubjectValue();
+    public abstract String getSubjectValue();
 
     /**
      * Sets value of subject parameter to special place on view.
@@ -60,7 +60,7 @@ public abstract class DeletePropertiesPanelView extends AbstractView<DeletePrope
      * @param subject
      *         value which need to set
      */
-    abstract void setSubjectValue(@Nonnull String subject);
+    public abstract void setSubjectValue(@Nonnull String subject);
 
     /**
      * Sets parameter which allows to hide or to show buttons on properties panel of Delete connector.
@@ -68,7 +68,7 @@ public abstract class DeletePropertiesPanelView extends AbstractView<DeletePrope
      * @param isVisible
      *         <code>true</code> button is visible, <code>false</code> button isn't visible
      */
-    abstract void setVisibleButton(boolean isVisible);
+    public abstract void setVisibleButton(boolean isVisible);
 
     /**
      * Sets parameter which allows to do enable or disable text field on properties panel of Delete connector.
@@ -76,7 +76,7 @@ public abstract class DeletePropertiesPanelView extends AbstractView<DeletePrope
      * @param isVisible
      *         <code>true</code> field is enable, <code>false</code> field is disable
      */
-    abstract void setEnableTextField(boolean isVisible);
+    public abstract void setEnableTextField(boolean isVisible);
 
 
     public interface ActionDelegate extends AbstractView.ActionDelegate {

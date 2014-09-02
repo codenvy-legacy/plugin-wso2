@@ -149,6 +149,27 @@
             </g:PushButton>
         </g:north>
 
+        <g:north size="37.00">
+            <g:PushButton ui:field="emptyRecycleConnector" addStyleNames="{style.buttonStyle}"
+                          title="{local.toolbarEmptyRecycleBinConnector}">
+                <g:upFace image="{res.salesforceConnectorToolbar}"/>
+            </g:PushButton>
+        </g:north>
+
+        <g:north size="37.00">
+            <g:PushButton ui:field="logOutConnector" addStyleNames="{style.buttonStyle}"
+                          title="{local.toolbarLogOutConnector}">
+                <g:upFace image="{res.salesforceConnectorToolbar}"/>
+            </g:PushButton>
+        </g:north>
+
+        <g:north size="37.00">
+            <g:PushButton ui:field="getUserInfoConnector" addStyleNames="{style.buttonStyle}"
+                          title="{local.toolbarGetUserInfoConnector}">
+                <g:upFace image="{res.salesforceConnectorToolbar}"/>
+            </g:PushButton>
+        </g:north>
+
     </g:DockLayoutPanel>
 
 </ui:UiBinder>

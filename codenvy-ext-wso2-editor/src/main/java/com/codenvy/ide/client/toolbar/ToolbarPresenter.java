@@ -37,7 +37,10 @@ import static com.codenvy.ide.client.State.CREATING_PROPERTY;
 import static com.codenvy.ide.client.State.CREATING_RESPOND;
 import static com.codenvy.ide.client.State.CREATING_SALESFORCE_CREATE;
 import static com.codenvy.ide.client.State.CREATING_SALESFORCE_DELETE;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_EMPTY_RECYCLE_BIN;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_GET_USER_INFORMATION;
 import static com.codenvy.ide.client.State.CREATING_SALESFORCE_INIT;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_LOGOUT;
 import static com.codenvy.ide.client.State.CREATING_SALESFORCE_UPDATE;
 import static com.codenvy.ide.client.State.CREATING_SEND;
 import static com.codenvy.ide.client.State.CREATING_SEQUENCE;
@@ -180,6 +183,24 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
     @Override
     public void onSalesforceUpdateClicked() {
         setState(CREATING_SALESFORCE_UPDATE);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesForceEmptyRecycleBinClicked() {
+        setState(CREATING_SALESFORCE_EMPTY_RECYCLE_BIN);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesForceLogOutClicked() {
+        setState(CREATING_SALESFORCE_LOGOUT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesForceGetUserInfoClicked() {
+        setState(CREATING_SALESFORCE_GET_USER_INFORMATION);
     }
 
 }

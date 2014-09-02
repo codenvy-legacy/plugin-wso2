@@ -19,7 +19,10 @@ import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.common.ContentFormatter;
 import com.codenvy.ide.client.elements.connectors.salesforce.Create;
 import com.codenvy.ide.client.elements.connectors.salesforce.Delete;
+import com.codenvy.ide.client.elements.connectors.salesforce.EmptyRecycleBin;
+import com.codenvy.ide.client.elements.connectors.salesforce.GetUserInformation;
 import com.codenvy.ide.client.elements.connectors.salesforce.Init;
+import com.codenvy.ide.client.elements.connectors.salesforce.LogOut;
 import com.codenvy.ide.client.elements.connectors.salesforce.Update;
 import com.codenvy.ide.client.elements.enrich.Enrich;
 import com.codenvy.ide.client.elements.log.Log;
@@ -74,7 +77,10 @@ public class RootElement extends AbstractShape {
                                                                  Init.ELEMENT_NAME,
                                                                  Create.ELEMENT_NAME,
                                                                  Delete.ELEMENT_NAME,
-                                                                 Update.ELEMENT_NAME);
+                                                                 Update.ELEMENT_NAME,
+                                                                 EmptyRecycleBin.ELEMENT_NAME,
+                                                                 LogOut.ELEMENT_NAME,
+                                                                 GetUserInformation.ELEMENT_NAME);
 
     private String name;
     private String onError;

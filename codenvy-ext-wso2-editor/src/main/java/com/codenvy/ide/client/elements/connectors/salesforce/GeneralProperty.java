@@ -30,9 +30,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.BaseSalesforce.AvailableConfigs.EMPTY;
-import static com.codenvy.ide.client.elements.connectors.salesforce.BaseSalesforce.AvailableConfigs.SELECT_FROM_CONFIG;
-import static com.codenvy.ide.client.elements.connectors.salesforce.BaseSalesforce.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.AvailableConfigs.EMPTY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.AvailableConfigs.SELECT_FROM_CONFIG;
+import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType.Inline;
 
 /**
  * The Class describes a basic data of properties panel panel for salesforce connectors.
@@ -40,21 +40,21 @@ import static com.codenvy.ide.client.elements.connectors.salesforce.BaseSalesfor
  * @author Valeriy Svydenko
  */
 @Singleton
-public class BaseSalesforce extends AbstractShape {
+public class GeneralProperty extends AbstractShape {
     public static final  String       ELEMENT_NAME = "BaseSalesforce";
     private static final List<String> PROPERTIES   = Collections.emptyList();
 
     private final List<String>        availableConfigs;
-   
+
     private String              newConfig;
     private String              configRef;
     private ParameterEditorType parameterEditorType;
 
     @Inject
-    public BaseSalesforce(EditorResources resources,
-                          Provider<Branch> branchProvider,
-                          MediatorCreatorsManager mediatorCreatorsManager,
-                          WSO2EditorLocalizationConstant local) {
+    public GeneralProperty(EditorResources resources,
+                           Provider<Branch> branchProvider,
+                           MediatorCreatorsManager mediatorCreatorsManager,
+                           WSO2EditorLocalizationConstant local) {
         super(ELEMENT_NAME, ELEMENT_NAME, ELEMENT_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
 
         newConfig = local.connectorNewConfigValue();

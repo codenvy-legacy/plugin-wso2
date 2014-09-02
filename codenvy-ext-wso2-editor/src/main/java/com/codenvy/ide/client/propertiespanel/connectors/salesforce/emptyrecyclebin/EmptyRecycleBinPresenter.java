@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.propertiespanel.connectors.salesforce.delete;
+package com.codenvy.ide.client.propertiespanel.connectors.salesforce.emptyrecyclebin;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType;
-import com.codenvy.ide.client.elements.connectors.salesforce.Delete;
+import com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty;
+import com.codenvy.ide.client.elements.connectors.salesforce.EmptyRecycleBin;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.connectors.base.BaseConnectorPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.delete.DeletePropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
@@ -38,7 +39,7 @@ import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralPrope
  *
  * @author Dmitry Shnurenko
  */
-public class DeletePropertiesPanelPresenter extends AbstractPropertiesPanel<Delete, DeletePropertiesPanelView>
+public class EmptyRecycleBinPresenter extends AbstractPropertiesPanel<EmptyRecycleBin, DeletePropertiesPanelView>
         implements DeletePropertiesPanelView.ActionDelegate, BaseConnectorPanelPresenter.BasePropertyChangedListener {
 
     private final WSO2EditorLocalizationConstant local;
@@ -48,11 +49,11 @@ public class DeletePropertiesPanelPresenter extends AbstractPropertiesPanel<Dele
     private final AddNameSpacesCallBack          allOrNoneNameSpacesCallBack;
 
     @Inject
-    public DeletePropertiesPanelPresenter(WSO2EditorLocalizationConstant local,
-                                          BaseConnectorPanelPresenter baseConnectorPresenter,
-                                          DeletePropertiesPanelView view,
-                                          NameSpaceEditorPresenter nameSpacePresenter,
-                                          PropertyTypeManager propertyTypeManager) {
+    public EmptyRecycleBinPresenter(WSO2EditorLocalizationConstant local,
+                                    BaseConnectorPanelPresenter baseConnectorPresenter,
+                                    DeletePropertiesPanelView view,
+                                    NameSpaceEditorPresenter nameSpacePresenter,
+                                    PropertyTypeManager propertyTypeManager) {
 
         super(view, propertyTypeManager);
 
@@ -69,7 +70,7 @@ public class DeletePropertiesPanelPresenter extends AbstractPropertiesPanel<Dele
                 element.setSubjectsNameSpaces(nameSpaces);
                 element.setSubjectExpression(expression);
 
-                DeletePropertiesPanelPresenter.this.view.setSubjectValue(expression);
+                EmptyRecycleBinPresenter.this.view.setSubjectValue(expression);
 
                 notifyListeners();
             }
@@ -81,7 +82,7 @@ public class DeletePropertiesPanelPresenter extends AbstractPropertiesPanel<Dele
                 element.setAllOrNoneNameSpaces(nameSpaces);
                 element.setAllOrNoneExpr(expression);
 
-                DeletePropertiesPanelPresenter.this.view.setAllOrNone(expression);
+                EmptyRecycleBinPresenter.this.view.setAllOrNone(expression);
 
                 notifyListeners();
             }
@@ -90,7 +91,7 @@ public class DeletePropertiesPanelPresenter extends AbstractPropertiesPanel<Dele
 
     /** {@inheritDoc} */
     @Override
-    public void onPropertyChanged(@Nonnull ParameterEditorType parameterType, @Nonnull String configRef) {
+    public void onPropertyChanged(@Nonnull GeneralProperty.ParameterEditorType parameterType, @Nonnull String configRef) {
         element.setParameterEditorType(parameterType);
         element.setConfigRef(configRef);
 
