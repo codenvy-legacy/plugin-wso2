@@ -561,6 +561,18 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("toolbar.salesforceUpdateConnector.tooltip")
     String toolbarSalesforceUpdateConnectorTooltip();
 
+    @Key("propertiespanel.connector.subject")
+    String propertiespanelConnectorSubject();
+
+    @Key("toolbar.salesforceDescribeGlobalConnector.tooltip")
+    String toolbarSalesforceDescribeGlobalConnectorTooltip();
+
+    @Key("toolbar.salesforceDescribeSobjectConnector.tooltip")
+    String toolbarSalesforceDescribeSobjectConnectorTooltip();
+
+    @Key("toolbar.salesforceDescribeSobjectsConnector.tooltip")
+    String toolbarSalesforceDescribeSobjectsConnectorTooltip();
+
     @Key("toolbar.connector.salesforceEmptyRecycleBin.tooltip")
     String toolbarEmptyRecycleBinConnector();
 

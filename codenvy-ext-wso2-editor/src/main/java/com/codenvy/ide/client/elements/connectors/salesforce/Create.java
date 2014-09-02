@@ -50,7 +50,7 @@ public class Create extends AbstractShape {
     public static final String CONFIG_KEY         = "configKey";
     public static final String ALL_OR_NONE        = "allOrNone";
     public static final String TRUNCATE           = "allowFieldTruncate";
-    public static final String SUBJECTS           = "subjects";
+    public static final String SUBJECTS           = "sobjects";
 
     private static final List<String> PROPERTIES = Arrays.asList(ALL_OR_NONE, TRUNCATE, SUBJECTS);
 
@@ -256,6 +256,11 @@ public class Create extends AbstractShape {
 
     public void setTruncateNameSpaces(@Nonnull Array<NameSpace> truncateNameSpaces) {
         this.truncateNameSpaces = truncateNameSpaces;
+    }
+
+    @Nonnull
+    public ParameterEditorType getParameterEditorType() {
+        return parameterEditorType;
     }
 
     @Nonnull

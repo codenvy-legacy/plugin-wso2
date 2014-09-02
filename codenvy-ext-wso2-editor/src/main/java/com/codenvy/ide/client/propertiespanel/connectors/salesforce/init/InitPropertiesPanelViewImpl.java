@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * The implementation of {InitPropertiesPanelView}
+ *  Provides a graphical representation of Init connector property panel for editing property of Init connector.
  *
  * @author Valeriy Svydenko
  */

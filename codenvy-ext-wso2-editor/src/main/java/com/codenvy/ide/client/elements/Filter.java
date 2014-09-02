@@ -18,8 +18,11 @@ package com.codenvy.ide.client.elements;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.connectors.salesforce.Create;
 import com.codenvy.ide.client.elements.connectors.salesforce.Delete;
+import com.codenvy.ide.client.elements.connectors.salesforce.DescribeSubject;
+import com.codenvy.ide.client.elements.connectors.salesforce.DescribeSubjects;
 import com.codenvy.ide.client.elements.connectors.salesforce.EmptyRecycleBin;
 import com.codenvy.ide.client.elements.connectors.salesforce.GetUserInformation;
+import com.codenvy.ide.client.elements.connectors.salesforce.DescribeGlobal;
 import com.codenvy.ide.client.elements.connectors.salesforce.Init;
 import com.codenvy.ide.client.elements.connectors.salesforce.LogOut;
 import com.codenvy.ide.client.elements.connectors.salesforce.Update;
@@ -91,7 +94,11 @@ public class Filter extends AbstractShape {
                                                                  Delete.ELEMENT_NAME,
                                                                  EmptyRecycleBin.ELEMENT_NAME,
                                                                  LogOut.ELEMENT_NAME,
-                                                                 GetUserInformation.ELEMENT_NAME);
+                                                                 GetUserInformation.ELEMENT_NAME,
+                                                                 Delete.ELEMENT_NAME,
+                                                                 DescribeGlobal.ELEMENT_NAME,
+                                                                 DescribeSubject.ELEMENT_NAME,
+                                                                 DescribeSubjects.ELEMENT_NAME);
 
     private ConditionType    conditionType;
     private String           source;

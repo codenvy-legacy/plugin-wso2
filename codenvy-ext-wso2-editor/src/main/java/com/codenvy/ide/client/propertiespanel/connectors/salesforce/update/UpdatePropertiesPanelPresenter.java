@@ -155,7 +155,9 @@ public class UpdatePropertiesPanelPresenter extends AbstractPropertiesPanel<Upda
         super.go(container);
 
         view.addBaseConnector(baseConnectorPresenter);
+
         baseConnectorPresenter.setConfigRef(element.getConfigRef());
+        baseConnectorPresenter.selectParameterEditorType(element.getParameterEditorType());
 
         view.setAllOrNoneNamespace(element.getAllOrNone());
         view.setAllOrNone(element.getAllOrNoneInlineInline());

@@ -21,6 +21,8 @@ import com.google.inject.ImplementedBy;
 import javax.annotation.Nonnull;
 import java.util.List;
 
+import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType;
+
 /**
  * The view of {@link BaseConnectorPanelPresenter}
  *
@@ -114,5 +116,13 @@ public abstract class BaseConnectorPanelView extends AbstractView<BaseConnectorP
      *         value of configuration reference
      */
     public abstract void setConfigRef(@Nonnull String configRef);
+
+    /**
+     * Select parameter editor type to the special place on the view.
+     *
+     * @param parameterEditorType
+     *         parameter value
+     */
+    public abstract void selectParameterEditorType(@Nonnull ParameterEditorType parameterEditorType);
 
 }

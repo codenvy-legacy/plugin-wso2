@@ -37,6 +37,9 @@ import static com.codenvy.ide.client.State.CREATING_PROPERTY;
 import static com.codenvy.ide.client.State.CREATING_RESPOND;
 import static com.codenvy.ide.client.State.CREATING_SALESFORCE_CREATE;
 import static com.codenvy.ide.client.State.CREATING_SALESFORCE_DELETE;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_DESCRIBE_GLOBAL;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_DESCRIBE_SUBJECT;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_DESCRIBE_SUBJECTS;
 import static com.codenvy.ide.client.State.CREATING_SALESFORCE_EMPTY_RECYCLE_BIN;
 import static com.codenvy.ide.client.State.CREATING_SALESFORCE_GET_USER_INFORMATION;
 import static com.codenvy.ide.client.State.CREATING_SALESFORCE_INIT;
@@ -181,7 +184,7 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
 
     /** {@inheritDoc} */
     @Override
-    public void onSalesforceUpdateClicked() {
+    public void onSalesForceUpdateClicked() {
         setState(CREATING_SALESFORCE_UPDATE);
     }
 
@@ -201,6 +204,24 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
     @Override
     public void onSalesForceGetUserInfoClicked() {
         setState(CREATING_SALESFORCE_GET_USER_INFORMATION);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesForceDescribeGlobalClicked() {
+        setState(CREATING_SALESFORCE_DESCRIBE_GLOBAL);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesForceDescribeSubjectClicked() {
+        setState(CREATING_SALESFORCE_DESCRIBE_SUBJECT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesForceDescribeSubjectsClicked() {
+        setState(CREATING_SALESFORCE_DESCRIBE_SUBJECTS);
     }
 
 }

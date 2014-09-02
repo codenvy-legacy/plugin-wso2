@@ -50,7 +50,7 @@ public class Update extends AbstractShape {
     public static final String CONFIG_KEY         = "configKey";
     public static final String ALL_OR_NONE        = "allOrNone";
     public static final String TRUNCATE           = "allowFieldTruncate";
-    public static final String SUBJECTS           = "subjects";
+    public static final String SUBJECTS           = "sobjects";
 
     private static final List<String> PROPERTIES = Arrays.asList(ALL_OR_NONE, TRUNCATE, SUBJECTS);
 
@@ -265,6 +265,11 @@ public class Update extends AbstractShape {
 
     public void setSubjectsNameSpaces(@Nonnull Array<NameSpace> subjectsNameSpaces) {
         this.subjectsNameSpaces = subjectsNameSpaces;
+    }
+
+    @Nonnull
+    public ParameterEditorType getParameterEditorType() {
+        return parameterEditorType;
     }
 
     /** {@inheritDoc} */

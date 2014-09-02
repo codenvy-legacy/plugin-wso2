@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * The implementation of {CreatePropertiesPanelView}
+ * Provides a graphical representation of Create connector property panel for editing property of Create connector.
  *
  * @author Valeriy Svydenko
  */

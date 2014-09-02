@@ -86,7 +86,16 @@ public abstract class ToolbarView extends AbstractView<ToolbarView.ActionDelegat
         void onSalesForceDeleteClicked();
 
         /** Performs some actions in response to a user clicked on SalesForce update icon of tool bar. */
-        void onSalesforceUpdateClicked();
+        void onSalesForceUpdateClicked();
+
+        /** Performs some actions in response to a user clicked on SalesForce update icon of tool bar. */
+        void onSalesForceDescribeGlobalClicked();
+
+        /** Performs some actions in response to a user clicked on SalesForce update icon of tool bar. */
+        void onSalesForceDescribeSubjectClicked();
+
+        /** Performs some actions in response to a user clicked on SalesForce update icon of tool bar. */
+        void onSalesForceDescribeSubjectsClicked();
 
         /** Performs some actions in response to a user clicked on SalesForce empty recycle bin icon of tool bar. */
         void onSalesForceEmptyRecycleBinClicked();

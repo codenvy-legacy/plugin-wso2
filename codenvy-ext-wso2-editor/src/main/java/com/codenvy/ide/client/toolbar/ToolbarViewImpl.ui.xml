@@ -22,11 +22,6 @@
     <ui:with field="local" type="com.codenvy.ide.client.WSO2EditorLocalizationConstant"/>
 
     <ui:style>
-        .fullSize {
-            width: 100%;
-            height: 100%;
-        }
-
         .buttonStyle {
             width: 25px;
             height: 27px;
@@ -35,141 +30,116 @@
         }
     </ui:style>
 
-    <g:DockLayoutPanel addStyleNames="{style.fullSize}">
+    <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
+        <g:FlowPanel>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="log" addStyleNames="{style.buttonStyle}" title="{local.toolbarLogTooltip}">
                 <g:upFace image="{res.logToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="property" addStyleNames="{style.buttonStyle}" title="{local.toolbarPropertyTooltip}">
                 <g:upFace image="{res.propertyToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="payloadFactory" addStyleNames="{style.buttonStyle}" title="{local.toolbarPayloadFactoryTooltip}">
                 <g:upFace image="{res.payloadFactoryToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="send" addStyleNames="{style.buttonStyle}" title="{local.toolbarSendTooltip}">
                 <g:upFace image="{res.sendToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="header" addStyleNames="{style.buttonStyle}" title="{local.toolbarHeaderTooltip}">
                 <g:upFace image="{res.headerToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="respond" addStyleNames="{style.buttonStyle}" title="{local.toolbarRespondTooltip}">
                 <g:upFace image="{res.respondToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="filter" addStyleNames="{style.buttonStyle}" title="{local.toolbarFilterTooltip}">
                 <g:upFace image="{res.filterToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="switchMediator" addStyleNames="{style.buttonStyle}" title="{local.toolbarSwitchTooltip}">
                 <g:upFace image="{res.switchToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="sequence" addStyleNames="{style.buttonStyle}" title="{local.toolbarSequenceTooltip}">
                 <g:upFace image="{res.sequenceToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="enrich" addStyleNames="{style.buttonStyle}" title="{local.toolbarEnrichTooltip}">
                 <g:upFace image="{res.enrichToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="loopBack" addStyleNames="{style.buttonStyle}" title="{local.toolbarLoopBackTooltip}">
                 <g:upFace image="{res.loopBackToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="callTemplate" addStyleNames="{style.buttonStyle}" title="{local.toolbarCallTemplateTooltip}">
                 <g:upFace image="{res.callTemplateToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="call" addStyleNames="{style.buttonStyle}" title="{local.toolbarCallTooltip}">
                 <g:upFace image="{res.callToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="addressEndpoint" addStyleNames="{style.buttonStyle}" title="{local.toolbarAddressEndpointTooltip}">
                 <g:upFace image="{res.addressToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="salesforceInitConnector" addStyleNames="{style.buttonStyle}"
                           title="{local.toolbarSalesforceInitConnectorTooltip}">
                 <g:upFace image="{res.salesforceConnectorToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="salesforceCreateConnector" addStyleNames="{style.buttonStyle}"
                           title="{local.toolbarSalesforceCreateConnectorTooltip}">
                 <g:upFace image="{res.salesforceConnectorToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="salesForceDeleteConnector" addStyleNames="{style.buttonStyle}"
                           title="{local.salesForceDeleteTooltip}">
                 <g:upFace image="{res.salesforceConnectorToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="salesforceUpdateConnector" addStyleNames="{style.buttonStyle}"
                           title="{local.toolbarSalesforceUpdateConnectorTooltip}">
                 <g:upFace image="{res.salesforceConnectorToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="emptyRecycleConnector" addStyleNames="{style.buttonStyle}"
                           title="{local.toolbarEmptyRecycleBinConnector}">
                 <g:upFace image="{res.salesforceConnectorToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="logOutConnector" addStyleNames="{style.buttonStyle}"
                           title="{local.toolbarLogOutConnector}">
                 <g:upFace image="{res.salesforceConnectorToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-        <g:north size="37.00">
             <g:PushButton ui:field="getUserInfoConnector" addStyleNames="{style.buttonStyle}"
                           title="{local.toolbarGetUserInfoConnector}">
                 <g:upFace image="{res.salesforceConnectorToolbar}"/>
             </g:PushButton>
-        </g:north>
 
-    </g:DockLayoutPanel>
+            <g:PushButton ui:field="salesforceDescribeGlobalConnector" addStyleNames="{style.buttonStyle}"
+                          title="{local.toolbarSalesforceDescribeGlobalConnectorTooltip}">
+                <g:upFace image="{res.salesforceConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="salesforceDescribeSobjectConnector" addStyleNames="{style.buttonStyle}"
+                          title="{local.toolbarSalesforceDescribeSobjectConnectorTooltip}">
+                <g:upFace image="{res.salesforceConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="salesforceDescribeSobjectsConnector" addStyleNames="{style.buttonStyle}"
+                          title="{local.toolbarSalesforceDescribeSobjectsConnectorTooltip}">
+                <g:upFace image="{res.salesforceConnectorToolbar}"/>
+            </g:PushButton>
+
+        </g:FlowPanel>
+    </g:ScrollPanel>
 
 </ui:UiBinder>

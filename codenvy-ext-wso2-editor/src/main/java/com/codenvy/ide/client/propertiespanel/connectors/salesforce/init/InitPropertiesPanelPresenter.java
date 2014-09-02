@@ -184,7 +184,9 @@ public class InitPropertiesPanelPresenter extends AbstractPropertiesPanel<Init, 
         super.go(container);
 
         view.addBaseConnector(baseConnectorPresenter);
+
         baseConnectorPresenter.setConfigRef(element.getConfigRef());
+        baseConnectorPresenter.selectParameterEditorType(element.getParameterEditorType());
 
         view.setUsernameNamespace(element.getUsername());
         view.setUsername(element.getUsernameInline());

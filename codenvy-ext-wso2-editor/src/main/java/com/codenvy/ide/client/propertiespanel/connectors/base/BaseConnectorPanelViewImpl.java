@@ -33,6 +33,8 @@ import com.google.inject.Singleton;
 import javax.annotation.Nonnull;
 import java.util.List;
 
+import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType;
+
 /**
  * The implementation of {BaseConnectorView}
  *
@@ -131,6 +133,12 @@ public class BaseConnectorPanelViewImpl extends BaseConnectorPanelView {
     @Override
     public void setConfigRef(@Nonnull String configRef) {
         this.configRef.setText(configRef);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void selectParameterEditorType(@Nonnull ParameterEditorType parameterEditorType) {
+        selectType(this.parameterEditorType, parameterEditorType.name());
     }
 
     @UiHandler("parameterEditorType")

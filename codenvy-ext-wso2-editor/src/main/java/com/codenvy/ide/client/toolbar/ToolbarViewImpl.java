@@ -111,12 +111,12 @@ public class ToolbarViewImpl extends ToolbarView {
     }
 
     @UiHandler("salesforceInitConnector")
-    public void onSalesforceInitClicked(ClickEvent event) {
+    public void onSalesForceInitClicked(ClickEvent event) {
         delegate.onSalesForceInitClicked();
     }
 
     @UiHandler("salesforceCreateConnector")
-    public void onSalesforceCreateClicked(ClickEvent event) {
+    public void onSalesForceCreateClicked(ClickEvent event) {
         delegate.onSalesForceCreateClicked();
     }
 
@@ -126,8 +126,23 @@ public class ToolbarViewImpl extends ToolbarView {
     }
 
     @UiHandler("salesforceUpdateConnector")
-    public void onSalesforceUpdateClicked(ClickEvent event) {
-        delegate.onSalesforceUpdateClicked();
+    public void onSalesForceUpdateClicked(ClickEvent event) {
+        delegate.onSalesForceUpdateClicked();
+    }
+
+    @UiHandler("salesforceDescribeGlobalConnector")
+    public void onSalesForceDescribeGlobalClicked(ClickEvent event) {
+        delegate.onSalesForceDescribeGlobalClicked();
+    }
+
+    @UiHandler("salesforceDescribeSobjectConnector")
+    public void onSalesForceDescribeSubjectClicked(ClickEvent event) {
+        delegate.onSalesForceDescribeSubjectClicked();
+    }
+
+    @UiHandler("salesforceDescribeSobjectsConnector")
+    public void onSalesForceDescribeSubjectsClicked(ClickEvent event) {
+        delegate.onSalesForceDescribeSubjectsClicked();
     }
 
     @UiHandler("emptyRecycleConnector")

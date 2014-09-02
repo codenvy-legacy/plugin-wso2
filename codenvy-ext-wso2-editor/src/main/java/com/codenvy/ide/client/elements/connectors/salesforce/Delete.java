@@ -48,7 +48,7 @@ public class Delete extends AbstractShape {
     public static final String SERIALIZATION_NAME = "salesforce.delete";
     public static final String CONFIG_KEY         = "configKey";
     public static final String ALL_OR_NONE        = "allOrNone";
-    public static final String SUBJECTS           = "subjects";
+    public static final String SUBJECTS           = "sobjects";
 
     private static final List<String> PROPERTIES = Arrays.asList(ALL_OR_NONE, SUBJECTS);
 

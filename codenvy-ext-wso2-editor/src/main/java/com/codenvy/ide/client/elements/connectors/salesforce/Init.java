@@ -309,6 +309,11 @@ public class Init extends AbstractShape {
         return forceLoginNameSpaces;
     }
 
+    @Nonnull
+    public ParameterEditorType getParameterEditorType() {
+        return parameterEditorType;
+    }
+
     public void setForceLoginNameSpaces(@Nonnull Array<NameSpace> forceLoginNameSpaces) {
         this.forceLoginNameSpaces = forceLoginNameSpaces;
     }
