@@ -18,7 +18,7 @@ package com.codenvy.ide.client.propertiespanel.switchmediator;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.Switch;
+import com.codenvy.ide.client.elements.mediators.Switch;
 import com.codenvy.ide.client.inject.EditorFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;

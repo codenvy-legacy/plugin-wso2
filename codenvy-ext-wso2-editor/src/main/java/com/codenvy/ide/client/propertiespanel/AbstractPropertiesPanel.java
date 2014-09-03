@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel;
 
-import com.codenvy.ide.client.elements.Shape;
+import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.mvp.AbstractView;
@@ -35,7 +35,7 @@ import java.util.List;
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
-public abstract class AbstractPropertiesPanel<T extends Shape, V extends AbstractView> extends AbstractPresenter<V> {
+public abstract class AbstractPropertiesPanel<T extends Element, V extends AbstractView> extends AbstractPresenter<V> {
 
     protected     T                             element;
     protected     PropertyTypeManager           propertyTypeManager;

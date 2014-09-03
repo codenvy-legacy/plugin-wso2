@@ -25,7 +25,6 @@ import javax.annotation.Nonnull;
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
-
 @DTO
 public interface FileInfo {
 

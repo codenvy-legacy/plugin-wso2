@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.respond;
 
-import com.codenvy.ide.client.elements.Respond;
+import com.codenvy.ide.client.elements.mediators.Respond;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;

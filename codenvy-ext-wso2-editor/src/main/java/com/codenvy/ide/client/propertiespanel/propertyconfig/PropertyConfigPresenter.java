@@ -16,7 +16,7 @@
 package com.codenvy.ide.client.propertiespanel.propertyconfig;
 
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.log.Property;
+import com.codenvy.ide.client.elements.mediators.log.Property;
 import com.codenvy.ide.client.propertiespanel.log.AddPropertyCallback;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.collections.Array;

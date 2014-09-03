@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.log;
 
-import com.codenvy.ide.client.elements.log.Property;
+import com.codenvy.ide.client.elements.mediators.log.Property;
 import com.codenvy.ide.collections.Array;
 
 import javax.annotation.Nonnull;

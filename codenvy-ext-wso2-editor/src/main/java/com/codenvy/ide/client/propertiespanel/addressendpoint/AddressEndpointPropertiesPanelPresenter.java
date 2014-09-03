@@ -16,8 +16,8 @@
 package com.codenvy.ide.client.propertiespanel.addressendpoint;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint;
-import com.codenvy.ide.client.elements.addressendpoint.Property;
+import com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint;
+import com.codenvy.ide.client.elements.endpoints.addressendpoint.Property;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.addressendpoint.property.PropertyPresenter;
@@ -29,10 +29,10 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 import static com.codenvy.ide.client.editor.WSO2Editor.BOOLEAN_TYPE_NAME;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.AddressingVersion;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Format;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Optimize;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Optimize;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of Address endpoint

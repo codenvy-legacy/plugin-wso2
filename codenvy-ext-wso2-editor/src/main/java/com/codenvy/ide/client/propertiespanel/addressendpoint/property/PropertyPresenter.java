@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.addressendpoint.property;
 
-import com.codenvy.ide.client.elements.addressendpoint.Property;
+import com.codenvy.ide.client.elements.endpoints.addressendpoint.Property;
 import com.codenvy.ide.client.propertiespanel.addressendpoint.editoradressproperty.EditorAddressPropertyCallBack;
 import com.codenvy.ide.client.propertiespanel.addressendpoint.editoradressproperty.EditorAddressPropertyPresenter;
 import com.codenvy.ide.collections.Array;

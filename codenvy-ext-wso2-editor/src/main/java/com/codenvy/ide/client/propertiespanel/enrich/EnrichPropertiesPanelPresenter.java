@@ -17,8 +17,8 @@ package com.codenvy.ide.client.propertiespanel.enrich;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.enrich.Enrich;
-import com.codenvy.ide.client.elements.enrich.Target;
+import com.codenvy.ide.client.elements.mediators.enrich.Enrich;
+import com.codenvy.ide.client.elements.mediators.enrich.Target;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.inline.ChangeInlineFormatCallBack;
@@ -35,11 +35,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static com.codenvy.ide.client.editor.WSO2Editor.BOOLEAN_TYPE_NAME;
-import static com.codenvy.ide.client.elements.enrich.Source.InlineType;
-import static com.codenvy.ide.client.elements.enrich.Source.InlineType.SourceXML;
-import static com.codenvy.ide.client.elements.enrich.Source.SourceType;
-import static com.codenvy.ide.client.elements.enrich.Source.SourceType.custom;
-import static com.codenvy.ide.client.elements.enrich.Target.TargetType;
+import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType;
+import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType.SourceXML;
+import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType;
+import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType.custom;
+import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetType;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of Call mediator

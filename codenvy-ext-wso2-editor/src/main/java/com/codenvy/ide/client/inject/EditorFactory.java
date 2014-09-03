@@ -18,10 +18,10 @@ package com.codenvy.ide.client.inject;
 import com.codenvy.ide.client.EditorState;
 import com.codenvy.ide.client.State;
 import com.codenvy.ide.client.elements.Branch;
-import com.codenvy.ide.client.elements.Shape;
-import com.codenvy.ide.client.elements.shape.ShapePresenter;
-import com.codenvy.ide.client.elements.shape.ShapeView;
-import com.codenvy.ide.client.elements.shape.branch.BranchPresenter;
+import com.codenvy.ide.client.elements.Element;
+import com.codenvy.ide.client.elements.widgets.branch.BranchPresenter;
+import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
+import com.codenvy.ide.client.elements.widgets.element.ElementView;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
 import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.propertiespanel.switchmediator.branch.BranchFiledPresenter;
@@ -77,27 +77,27 @@ public interface EditorFactory {
                                     @Nonnull Branch branch);
 
     /**
-     * Create an instance of {@link ShapePresenter} with a given state of editor and for given shape.
+     * Create an instance of {@link ElementPresenter} with a given state of editor and for given element.
      *
      * @param editorState
      *         editor that need to be used
-     * @param shape
+     * @param element
      *         element for which presenter will be created
-     * @return an instance of {@link ShapePresenter}
+     * @return an instance of {@link ElementPresenter}
      */
     @Nonnull
-    ShapePresenter createShapePresenter(@Nonnull EditorState<State> editorState,
-                                        @Nonnull Shape shape);
+    ElementPresenter createElementPresenter(@Nonnull EditorState<State> editorState,
+                                            @Nonnull Element element);
 
     /**
-     * Create an instance of {@link ShapeView} with allow to enhance branches.
+     * Create an instance of {@link ElementView} with allow to enhance branches.
      *
      * @param isPossibleChangeCases
      *         <code>true</code> possible to add branches,<code>false</code> impossible to add branches
-     * @return an instance of {@link ShapeView}
+     * @return an instance of {@link ElementView}
      */
     @Nonnull
-    ShapeView createShapeView(boolean isPossibleChangeCases);
+    ElementView createElementView(boolean isPossibleChangeCases);
 
     /**
      * Create an instance of {@link BranchFiledPresenter} with a given branch.

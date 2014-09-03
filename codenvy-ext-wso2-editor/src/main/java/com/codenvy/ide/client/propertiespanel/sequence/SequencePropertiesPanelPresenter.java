@@ -17,7 +17,7 @@ package com.codenvy.ide.client.propertiespanel.sequence;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.Sequence;
+import com.codenvy.ide.client.elements.mediators.Sequence;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
@@ -29,7 +29,7 @@ import com.google.inject.Inject;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.codenvy.ide.client.elements.Sequence.ReferringType.Static;
+import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType.Static;
 
 /**
  * The presenter that provides a business logic of 'Sequence' mediator properties panel. It provides an ability to work with all properties

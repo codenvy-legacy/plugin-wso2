@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.arguments;
 
-import com.codenvy.ide.client.elements.payload.Arg;
+import com.codenvy.ide.client.elements.mediators.payload.Arg;
 import com.codenvy.ide.collections.Array;
 
 import javax.annotation.Nonnull;

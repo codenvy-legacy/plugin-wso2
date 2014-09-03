@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.managers;
 
-import com.codenvy.ide.client.elements.Shape;
+import com.codenvy.ide.client.elements.Element;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -37,13 +37,13 @@ public class SelectionManager {
         /**
          * Performs any actions appropriate in response to the user having  selected a diagram element.
          *
-         * @param shape
+         * @param element
          *         diagram element that was selected
          */
-        void onStateChanged(@Nullable Shape shape);
+        void onStateChanged(@Nullable Element element);
     }
 
-    private       Shape                        shape;
+    private       Element                      element;
     private final List<SelectionStateListener> listeners;
 
     @Inject
@@ -53,18 +53,18 @@ public class SelectionManager {
 
     /** @return selected diagram element. The method can return <code>null</code> in case no diagram element is selected. */
     @Nullable
-    public Shape getElement() {
-        return shape;
+    public Element getElement() {
+        return element;
     }
 
     /**
      * Change selected diagram element.
      *
-     * @param shape
+     * @param element
      *         a new selected diagram element
      */
-    public void setElement(@Nullable Shape shape) {
-        this.shape = shape;
+    public void setElement(@Nullable Element element) {
+        this.element = element;
 
         notifyListeners();
     }
@@ -92,7 +92,7 @@ public class SelectionManager {
     /** Notify all listeners about changing selected diagram element. */
     public void notifyListeners() {
         for (SelectionStateListener listener : listeners) {
-            listener.onStateChanged(shape);
+            listener.onStateChanged(element);
         }
     }
 

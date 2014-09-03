@@ -16,8 +16,8 @@
 package com.codenvy.ide.client.propertiespanel.payloadfactory;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.payload.Arg;
-import com.codenvy.ide.client.elements.payload.PayloadFactory;
+import com.codenvy.ide.client.elements.mediators.payload.Arg;
+import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.arguments.AddArgumentCallBack;
@@ -32,8 +32,8 @@ import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 
-import static com.codenvy.ide.client.elements.payload.Format.FormatType;
-import static com.codenvy.ide.client.elements.payload.Format.MediaType;
+import static com.codenvy.ide.client.elements.mediators.payload.Format.FormatType;
+import static com.codenvy.ide.client.elements.mediators.payload.Format.MediaType;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of PayloadFactory mediator

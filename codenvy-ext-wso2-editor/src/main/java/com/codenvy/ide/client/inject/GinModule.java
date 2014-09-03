@@ -15,8 +15,8 @@
  */
 package com.codenvy.ide.client.inject;
 
-import com.codenvy.ide.client.elements.shape.ShapeView;
-import com.codenvy.ide.client.elements.shape.ShapeViewImpl;
+import com.codenvy.ide.client.elements.widgets.element.ElementView;
+import com.codenvy.ide.client.elements.widgets.element.ElementViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 
@@ -28,7 +28,7 @@ public class GinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
-        install(new GinFactoryModuleBuilder().implement(ShapeView.class, ShapeViewImpl.class).build(EditorFactory.class));
+        install(new GinFactoryModuleBuilder().implement(ElementView.class, ElementViewImpl.class).build(EditorFactory.class));
     }
 
 }

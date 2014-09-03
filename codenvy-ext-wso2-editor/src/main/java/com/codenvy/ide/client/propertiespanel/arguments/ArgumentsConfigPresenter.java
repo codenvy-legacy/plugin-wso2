@@ -17,7 +17,7 @@ package com.codenvy.ide.client.propertiespanel.arguments;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.payload.Arg;
+import com.codenvy.ide.client.elements.mediators.payload.Arg;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
@@ -27,7 +27,7 @@ import com.google.inject.Inject;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.codenvy.ide.client.elements.payload.Arg.ArgType;
+import static com.codenvy.ide.client.elements.mediators.payload.Arg.ArgType;
 
 /**
  * The class provides the business logic that allows editor to react on user's action related to change of element's arguments.

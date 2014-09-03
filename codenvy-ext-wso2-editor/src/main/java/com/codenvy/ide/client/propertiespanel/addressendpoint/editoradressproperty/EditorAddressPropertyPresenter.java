@@ -17,8 +17,8 @@ package com.codenvy.ide.client.propertiespanel.addressendpoint.editoradressprope
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.ValueType;
-import com.codenvy.ide.client.elements.addressendpoint.Property;
+import com.codenvy.ide.client.elements.mediators.ValueType;
+import com.codenvy.ide.client.elements.endpoints.addressendpoint.Property;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
@@ -28,8 +28,8 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.codenvy.ide.client.elements.ValueType.EXPRESSION;
-import static com.codenvy.ide.client.elements.addressendpoint.Property.Scope;
+import static com.codenvy.ide.client.elements.mediators.ValueType.EXPRESSION;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.Scope;
 
 /**
  * The class provides the business logic that allows editor to react on user's action related to change of Address's

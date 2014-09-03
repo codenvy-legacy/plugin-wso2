@@ -16,7 +16,7 @@
 package com.codenvy.ide.client.propertiespanel.arguments;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.payload.Arg;
+import com.codenvy.ide.client.elements.mediators.payload.Arg;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.cell.client.ButtonCell;
@@ -42,9 +42,9 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.payload.Arg.ArgType;
-import static com.codenvy.ide.client.elements.payload.Arg.Evaluator.json;
-import static com.codenvy.ide.client.elements.payload.Arg.Evaluator.xml;
+import static com.codenvy.ide.client.elements.mediators.payload.Arg.ArgType;
+import static com.codenvy.ide.client.elements.mediators.payload.Arg.Evaluator.json;
+import static com.codenvy.ide.client.elements.mediators.payload.Arg.Evaluator.xml;
 import static com.google.gwt.dom.client.Style.Unit.PX;
 
 /**

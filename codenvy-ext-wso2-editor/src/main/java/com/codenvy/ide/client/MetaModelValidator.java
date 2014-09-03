@@ -16,7 +16,7 @@
 package com.codenvy.ide.client;
 
 import com.codenvy.ide.client.elements.Branch;
-import com.codenvy.ide.client.elements.Shape;
+import com.codenvy.ide.client.elements.Element;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -90,8 +90,8 @@ public class MetaModelValidator {
      * isn't
      */
     public boolean canInsertElement(@Nonnull Branch branch, @Nonnull String newElement, int x, int y) {
-        Shape prevElement = findPrevElementByPosition(branch, x, y);
-        Shape nextElement = findNextElementByPosition(branch, x, y);
+        Element prevElement = findPrevElementByPosition(branch, x, y);
+        Element nextElement = findNextElementByPosition(branch, x, y);
 
         if (prevElement == null && nextElement == null) {
             return true;
@@ -121,19 +121,19 @@ public class MetaModelValidator {
      * @return the previous diagram element of a given position
      */
     @Nullable
-    private Shape findPrevElementByPosition(@Nonnull Branch branch, int x, int y) {
-        List<Shape> shapes = branch.getShapes();
+    private Element findPrevElementByPosition(@Nonnull Branch branch, int x, int y) {
+        List<Element> elements = branch.getElements();
 
-        for (int i = 0; i < shapes.size(); i++) {
-            Shape shape = shapes.get(i);
-            int shapeX = shape.getX();
+        for (int i = 0; i < elements.size(); i++) {
+            Element element = elements.get(i);
+            int elementX = element.getX();
 
-            if (shapeX > x || (shapeX == x && shape.getY() > y)) {
-                return i == 0 ? null : shapes.get(i - 1);
+            if (elementX > x || (elementX == x && element.getY() > y)) {
+                return i == 0 ? null : elements.get(i - 1);
             }
         }
 
-        return shapes.isEmpty() ? null : shapes.get(shapes.size() - 1);
+        return elements.isEmpty() ? null : elements.get(elements.size() - 1);
     }
 
     /**
@@ -148,11 +148,11 @@ public class MetaModelValidator {
      * @return the next diagram element of a given position
      */
     @Nullable
-    private Shape findNextElementByPosition(@Nonnull Branch branch, int x, int y) {
-        for (Shape shape : branch.getShapes()) {
-            int shapeX = shape.getX();
-            if (shapeX > x || (shapeX == x && shape.getY() > y)) {
-                return shape;
+    private Element findNextElementByPosition(@Nonnull Branch branch, int x, int y) {
+        for (Element element : branch.getElements()) {
+            int elementX = element.getX();
+            if (elementX > x || (elementX == x && element.getY() > y)) {
+                return element;
             }
         }
 
@@ -169,23 +169,23 @@ public class MetaModelValidator {
      * @return <code>true</code> if it is possible to remove a diagram element, <code>false</code> it isn't
      */
     public boolean canRemoveElement(@Nonnull Branch branch, @Nonnull String elementId) {
-        Shape shape = findElementById(branch, elementId);
+        Element element = findElementById(branch, elementId);
 
-        if (shape == null) {
+        if (element == null) {
             return true;
         }
 
-        List<Shape> shapes = branch.getShapes();
-        int index = shapes.indexOf(shape);
+        List<Element> elements = branch.getElements();
+        int index = elements.indexOf(element);
 
-        if (index == 0 || index == shapes.size() - 1) {
+        if (index == 0 || index == elements.size() - 1) {
             return true;
         }
 
-        Shape prevShape = shapes.get(index - 1);
-        Shape nextShape = shapes.get(index + 1);
+        Element prevElement = elements.get(index - 1);
+        Element nextElement = elements.get(index + 1);
 
-        return canCreateConnection(prevShape.getElementName(), nextShape.getElementName());
+        return canCreateConnection(prevElement.getElementName(), nextElement.getElementName());
     }
 
     /**
@@ -198,10 +198,10 @@ public class MetaModelValidator {
      * @return a diagram element
      */
     @Nullable
-    private Shape findElementById(@Nonnull Branch branch, @Nonnull String elementId) {
-        for (Shape shape : branch.getShapes()) {
-            if (elementId.equals(shape.getId())) {
-                return shape;
+    private Element findElementById(@Nonnull Branch branch, @Nonnull String elementId) {
+        for (Element element : branch.getElements()) {
+            if (elementId.equals(element.getId())) {
+                return element;
             }
         }
 

@@ -15,9 +15,9 @@
  */
 package com.codenvy.ide.client.propertiespanel.empty;
 
-import com.codenvy.ide.client.elements.Shape;
-import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
+import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.google.inject.Inject;
 
 /**
@@ -26,7 +26,7 @@ import com.google.inject.Inject;
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
-public class EmptyPropertiesPanelPresenter extends AbstractPropertiesPanel<Shape, EmptyPropertiesPanelView> {
+public class EmptyPropertiesPanelPresenter extends AbstractPropertiesPanel<Element, EmptyPropertiesPanelView> {
 
     @Inject
     public EmptyPropertiesPanelPresenter(EmptyPropertiesPanelView view, PropertyTypeManager propertyTypeManager) {

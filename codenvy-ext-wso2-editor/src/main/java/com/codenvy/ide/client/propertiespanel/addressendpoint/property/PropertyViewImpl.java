@@ -16,8 +16,8 @@
 package com.codenvy.ide.client.propertiespanel.addressendpoint.property;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.ValueType;
-import com.codenvy.ide.client.elements.addressendpoint.Property;
+import com.codenvy.ide.client.elements.mediators.ValueType;
+import com.codenvy.ide.client.elements.endpoints.addressendpoint.Property;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.ui.window.Window;

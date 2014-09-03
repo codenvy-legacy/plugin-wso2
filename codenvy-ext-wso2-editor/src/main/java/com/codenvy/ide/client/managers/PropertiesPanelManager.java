@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.managers;
 
-import com.codenvy.ide.client.elements.Shape;
+import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -35,8 +35,8 @@ import java.util.Map;
  */
 public class PropertiesPanelManager implements SelectionManager.SelectionStateListener {
 
-    private final Map<Class, Object> panels;
-    private final AcceptsOneWidget   container;
+    private final Map<Class<?>, AbstractPropertiesPanel<? extends Element, ? extends AbstractView>> panels;
+    private final AcceptsOneWidget                                                                  container;
 
     @Inject
     public PropertiesPanelManager(@Assisted AcceptsOneWidget container) {
@@ -54,40 +54,36 @@ public class PropertiesPanelManager implements SelectionManager.SelectionStateLi
      * @param <T>
      *         type of diagram element
      */
-    public <T extends Shape, V extends AbstractView> void register(@Nullable Class<T> diagramElement,
-                                                                   @Nonnull AbstractPropertiesPanel<T, V> panel) {
+    public <T extends Element, V extends AbstractView> void register(@Nullable Class<T> diagramElement,
+                                                                     @Nonnull AbstractPropertiesPanel<T, V> panel) {
         panels.put(diagramElement, panel);
     }
 
     /**
      * Show properties panel for a given diagram element.
      *
-     * @param shape
+     * @param element
      *         diagram element that need to be shown in a special properties panel
      * @param <T>
      *         type of diagram element
-     * @param <V>
-     *         type of properties panel view
      */
     @SuppressWarnings("unchecked")
-    public <T extends Shape, V extends AbstractView> void show(@Nullable T shape) {
-        Object value = panels.get(shape == null ? null : shape.getClass());
+    public <T extends Element> void show(@Nullable T element) {
+        AbstractPropertiesPanel value = panels.get(element == null ? null : element.getClass());
 
-        if (value != null && value instanceof AbstractPropertiesPanel) {
-            AbstractPropertiesPanel<T, V> panel = (AbstractPropertiesPanel<T, V>)value;
-
-            if (shape != null) {
-                panel.setElement(shape);
+        if (value != null) {
+            if (element != null) {
+                value.setElement(element);
             }
 
-            panel.go(container);
+            value.go(container);
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onStateChanged(@Nullable Shape shape) {
-        show(shape);
+    public void onStateChanged(@Nullable Element element) {
+        show(element);
     }
 
 }

@@ -16,8 +16,8 @@
 package com.codenvy.ide.client.propertiespanel.propertyconfig;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.ValueType;
-import com.codenvy.ide.client.elements.log.Property;
+import com.codenvy.ide.client.elements.mediators.ValueType;
+import com.codenvy.ide.client.elements.mediators.log.Property;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.cell.client.ButtonCell;

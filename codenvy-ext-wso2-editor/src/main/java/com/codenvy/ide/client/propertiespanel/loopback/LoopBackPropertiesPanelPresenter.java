@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.loopback;
 
-import com.codenvy.ide.client.elements.LoopBack;
+import com.codenvy.ide.client.elements.mediators.LoopBack;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;

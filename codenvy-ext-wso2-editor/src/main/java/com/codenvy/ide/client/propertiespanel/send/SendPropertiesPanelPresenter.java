@@ -17,7 +17,7 @@ package com.codenvy.ide.client.propertiespanel.send;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.Send;
+import com.codenvy.ide.client.elements.mediators.Send;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;

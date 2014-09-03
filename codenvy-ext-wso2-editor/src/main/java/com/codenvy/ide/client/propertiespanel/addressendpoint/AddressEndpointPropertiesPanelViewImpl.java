@@ -104,9 +104,9 @@ public class AddressEndpointPropertiesPanelViewImpl extends AddressEndpointPrope
     ListBox timeoutAction;
 
     @UiField(provided = true)
-    EditorResources                res;
+    final EditorResources                res;
     @UiField(provided = true)
-    WSO2EditorLocalizationConstant local;
+    final WSO2EditorLocalizationConstant local;
 
     @Inject
     public AddressEndpointPropertiesPanelViewImpl(AddressEndpointPropertiesPanelViewImplUiBinder ourUiBinder,

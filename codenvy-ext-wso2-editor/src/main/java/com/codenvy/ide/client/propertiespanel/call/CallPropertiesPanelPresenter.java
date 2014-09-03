@@ -16,7 +16,7 @@
 package com.codenvy.ide.client.propertiespanel.call;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.Call;
+import com.codenvy.ide.client.elements.mediators.Call;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;

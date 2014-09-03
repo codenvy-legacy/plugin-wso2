@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.Switch.REGEXP_ATTRIBUTE_NAME;
+import static com.codenvy.ide.client.elements.mediators.Switch.REGEXP_ATTRIBUTE_NAME;
 
 /**
  * The class that provides business logic of the reg exp property of case branch in 'Switch' mediator.

@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.addressendpoint.editoradressproperty;
 
-import com.codenvy.ide.client.elements.addressendpoint.Property;
+import com.codenvy.ide.client.elements.endpoints.addressendpoint.Property;
 
 import javax.annotation.Nonnull;
 

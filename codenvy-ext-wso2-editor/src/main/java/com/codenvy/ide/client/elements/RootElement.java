@@ -17,9 +17,19 @@ package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.common.ContentFormatter;
-import com.codenvy.ide.client.elements.enrich.Enrich;
-import com.codenvy.ide.client.elements.log.Log;
-import com.codenvy.ide.client.elements.payload.PayloadFactory;
+import com.codenvy.ide.client.elements.mediators.Call;
+import com.codenvy.ide.client.elements.mediators.CallTemplate;
+import com.codenvy.ide.client.elements.mediators.Filter;
+import com.codenvy.ide.client.elements.mediators.Header;
+import com.codenvy.ide.client.elements.mediators.LoopBack;
+import com.codenvy.ide.client.elements.mediators.Property;
+import com.codenvy.ide.client.elements.mediators.Respond;
+import com.codenvy.ide.client.elements.mediators.Send;
+import com.codenvy.ide.client.elements.mediators.Sequence;
+import com.codenvy.ide.client.elements.mediators.Switch;
+import com.codenvy.ide.client.elements.mediators.enrich.Enrich;
+import com.codenvy.ide.client.elements.mediators.log.Log;
+import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
@@ -43,7 +53,7 @@ import java.util.Map;
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
-public class RootElement extends AbstractShape {
+public class RootElement extends AbstractElement {
     public static final String ELEMENT_NAME       = "RootElement";
     public static final String SERIALIZATION_NAME = "sequence";
 
