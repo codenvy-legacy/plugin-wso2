@@ -59,17 +59,25 @@ public class PayloadFactory extends AbstractElement {
     private static final List<String> PROPERTIES = Arrays.asList(FORMAT_PROPERTY_NAME,
                                                                  ARGS_PROPERTY_NAME);
 
+    private final Provider<Arg> argProvider;
+
     private String     description;
     private Format     format;
     private Array<Arg> args;
 
     @Inject
-    public PayloadFactory(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+    public PayloadFactory(EditorResources resources,
+                          Provider<Branch> branchProvider,
+                          MediatorCreatorsManager mediatorCreatorsManager,
+                          Provider<Arg> argProvider,
+                          Format format) {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
 
+        this.argProvider = argProvider;
+
         description = "";
-        //TODO create entity using editor factory
-        format = new Format();
+
+        this.format = format;
         args = Collections.createArray();
     }
 
@@ -199,9 +207,8 @@ public class PayloadFactory extends AbstractElement {
 
                 for (int i = 0; i < childNodes.getLength(); i++) {
                     Node childNode = childNodes.item(i);
-                    //TODO create property using editor factory
-                    Arg arg = new Arg();
 
+                    Arg arg = argProvider.get();
                     arg.applyAttributes(childNode);
 
                     args.add(arg);

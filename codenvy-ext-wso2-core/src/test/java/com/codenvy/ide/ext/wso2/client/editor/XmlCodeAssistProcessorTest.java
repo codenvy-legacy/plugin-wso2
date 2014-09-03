@@ -26,9 +26,9 @@ import com.codenvy.ide.texteditor.api.CodeAssistCallback;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -50,27 +50,26 @@ import static org.mockito.Mockito.when;
  * Here we're testing {@link com.codenvy.ide.ext.wso2.client.editor.text.XmlCodeAssistProcessor}.
  *
  * @author Valeriy Svydenko
+ * @author Andrey Plotnikov
  */
 @RunWith(MockitoJUnitRunner.class)
 public class XmlCodeAssistProcessorTest {
-    private XmlCodeAssistProcessor xmlCodeAssistProcessor;
-    @Mock
-    private XsdSchemaParser        xsdSchemaParser;
-    @Mock(answer = RETURNS_DEEP_STUBS)
-    private TextEditorPartView     textEditorPartView;
-    @Mock
-    private CodeAssistCallback     callback;
-    @Mock(answer = RETURNS_MOCKS)
-    private Document               document;
-    @Mock(answer = RETURNS_MOCKS)
-    private Position               position;
-    @Mock(answer = RETURNS_MOCKS)
-    private Region                 region;
 
-    @Before
-    public void setUp() throws Exception {
-        this.xmlCodeAssistProcessor = new XmlCodeAssistProcessor(xsdSchemaParser);
-    }
+    @Mock
+    private XsdSchemaParser    xsdSchemaParser;
+    @Mock(answer = RETURNS_DEEP_STUBS)
+    private TextEditorPartView textEditorPartView;
+    @Mock
+    private CodeAssistCallback callback;
+    @Mock(answer = RETURNS_MOCKS)
+    private Document           document;
+    @Mock(answer = RETURNS_MOCKS)
+    private Position           position;
+    @Mock(answer = RETURNS_MOCKS)
+    private Region             region;
+
+    @InjectMocks
+    private XmlCodeAssistProcessor xmlCodeAssistProcessor;
 
     @Test
     public void completionProposalsShouldBeReturnCallbackWithNullWhenSomethingIsSelected() {

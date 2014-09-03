@@ -21,6 +21,7 @@ import com.codenvy.ide.client.elements.Element;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -49,12 +50,11 @@ public class MetaModelValidatorTest {
     @Mock
     private Element thirdElement;
 
+    @InjectMocks
     private MetaModelValidator validator;
 
     @Before
     public void setUp() throws Exception {
-        validator = new MetaModelValidator();
-
         validator.register(ELEMENT1, Arrays.asList(ELEMENT1));
     }
 

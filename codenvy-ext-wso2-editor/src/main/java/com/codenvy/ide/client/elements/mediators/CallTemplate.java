@@ -54,14 +54,22 @@ public class CallTemplate extends AbstractElement {
 
     private static final List<String> PROPERTIES = Arrays.asList(PARAMETERS_PROPERTY_NAME);
 
+    private final Provider<Property> propertyProvider;
+
     private AvailableTemplates availableTemplates;
     private String             targetTemplate;
     private String             description;
     private Array<Property>    parameters;
 
     @Inject
-    public CallTemplate(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+    public CallTemplate(EditorResources resources,
+                        Provider<Branch> branchProvider,
+                        MediatorCreatorsManager mediatorCreatorsManager,
+                        Provider<Property> propertyProvider) {
+
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+
+        this.propertyProvider = propertyProvider;
 
         availableTemplates = AvailableTemplates.EMPTY;
         targetTemplate = "";
@@ -164,7 +172,7 @@ public class CallTemplate extends AbstractElement {
     /** {@inheritDoc} */
     @Override
     protected void applyProperty(@Nonnull Node node) {
-        Property property = new Property(null, null);
+        Property property = propertyProvider.get();
 
         property.applyAttributes(node);
 

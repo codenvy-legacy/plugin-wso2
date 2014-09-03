@@ -21,9 +21,10 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 
@@ -33,19 +34,24 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
  * allows to restore the condition of the element when you open ESB project after saving.
  *
  * @author Dmitry Shnurenko
+ * @author Andrey Plotnikov
  */
 public class Property {
 
     private static final String NAME_ATTRIBUTE  = "name";
     private static final String VALUE_ATTRIBUTE = "value";
 
+    private final Provider<Property>  propertyProvider;
+    private final Provider<NameSpace> nameSpaceProvider;
+
     private String           name;
     private String           expression;
     private Array<NameSpace> nameSpaces;
 
-    public Property(@Nullable String name, @Nullable String expression) {
-        this.name = name;
-        this.expression = expression;
+    @Inject
+    public Property(Provider<Property> propertyProvider, Provider<NameSpace> nameSpaceProvider) {
+        this.propertyProvider = propertyProvider;
+        this.nameSpaceProvider = nameSpaceProvider;
         this.nameSpaces = Collections.createArray();
     }
 
@@ -76,8 +82,11 @@ public class Property {
                 default:
                     if (StringUtils.startsWith(PREFIX, nodeName, true)) {
                         String name = StringUtils.trimStart(nodeName, PREFIX + ':');
-                        //TODO create entity using edit factory
-                        NameSpace nameSpace = new NameSpace(name, nodeValue);
+
+                        NameSpace nameSpace = nameSpaceProvider.get();
+
+                        nameSpace.setPrefix(name);
+                        nameSpace.setUri(nodeValue);
 
                         nameSpaces.add(nameSpace);
                     }
@@ -123,10 +132,22 @@ public class Property {
         return expression;
     }
 
+    /**
+     * Set expression of namespace
+     *
+     * @param expression
+     *         expression that should be set
+     */
+    public void setExpression(@Nonnull String expression) {
+        this.expression = expression;
+    }
+
     /** @return copy of property element */
     public Property clone() {
-        //TODO create property using editor factory
-        Property property = new Property(name, expression);
+        Property property = propertyProvider.get();
+
+        property.setName(name);
+        property.setExpression(expression);
         property.setNameSpaces(nameSpaces);
 
         return property;

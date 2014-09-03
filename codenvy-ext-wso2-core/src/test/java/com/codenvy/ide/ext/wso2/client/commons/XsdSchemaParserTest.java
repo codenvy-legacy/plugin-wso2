@@ -20,8 +20,8 @@ import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
@@ -32,17 +32,16 @@ import static org.mockito.Mockito.when;
  * Here we're testing {@link XsdSchemaParser}.
  *
  * @author Valeriy Svydenko
+ * @author Andrey Plotnikov
  */
 @GwtModule("com.codenvy.ide.ext.wso2.WSO2")
 public class XsdSchemaParserTest extends GwtTestWithMockito {
-    @Mock(answer = RETURNS_DEEP_STUBS)
-    private WSO2Resources   resources;
-    private XsdSchemaParser xsdSchemaParser;
 
-    @Before
-    public void setUp() throws Exception {
-        xsdSchemaParser = new XsdSchemaParser(resources);
-    }
+    @Mock(answer = RETURNS_DEEP_STUBS)
+    private WSO2Resources resources;
+
+    @InjectMocks
+    private XsdSchemaParser xsdSchemaParser;
 
     @Test
     public void logMediatorShouldHaveThreeAttributes() {

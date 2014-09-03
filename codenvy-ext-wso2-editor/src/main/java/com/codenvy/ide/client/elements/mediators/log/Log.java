@@ -59,6 +59,8 @@ public class Log extends AbstractElement {
 
     private static final List<String> PROPERTIES = Arrays.asList(PROPERTIES_PROPERTY_NAME);
 
+    private final Provider<Property> propertyProvider;
+
     private LogCategory     logCategory;
     private LogLevel        logLevel;
     private String          logSeparator;
@@ -66,8 +68,14 @@ public class Log extends AbstractElement {
     private Array<Property> properties;
 
     @Inject
-    public Log(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+    public Log(EditorResources resources,
+               Provider<Branch> branchProvider,
+               MediatorCreatorsManager mediatorCreatorsManager,
+               Provider<Property> propertyProvider) {
+
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+
+        this.propertyProvider = propertyProvider;
 
         logCategory = LogCategory.INFO;
         logLevel = LogLevel.SIMPLE;
@@ -203,8 +211,8 @@ public class Log extends AbstractElement {
 
         switch (nodeName) {
             case PROPERTIES_PROPERTY_NAME:
-                //TODO create property using editor factory
-                Property property = new Property(null, null);
+                Property property = propertyProvider.get();
+
                 property.applyAttributes(node);
 
                 properties.add(property);

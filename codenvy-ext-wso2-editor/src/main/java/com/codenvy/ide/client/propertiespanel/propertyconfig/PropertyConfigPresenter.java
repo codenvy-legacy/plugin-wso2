@@ -22,6 +22,7 @@ import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,21 +32,27 @@ import javax.annotation.Nullable;
  * Logic which provides the class allows add, remove and edit properties of mediator via special dialog window.
  *
  * @author Dmitry Shnurenko
+ * @author Andrey Plotnikov
  */
 public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegate {
 
     private final PropertyConfigView       propertiesView;
     private final NameSpaceEditorPresenter nameSpacePresenter;
+    private final Provider<Property>       propertyProvider;
     private final AddNameSpacesCallBack    addNameSpacesCallBack;
-    private       Array<Property>          arrayTemporary;
-    private       Property                 selectedProperty;
-    private       AddPropertyCallback      addPropertyCallback;
-    private       int                      index;
+
+    private Array<Property>     arrayTemporary;
+    private Property            selectedProperty;
+    private AddPropertyCallback addPropertyCallback;
+    private int                 index;
 
     @Inject
-    public PropertyConfigPresenter(PropertyConfigView propertyConfigView, NameSpaceEditorPresenter nameSpacePresenter) {
+    public PropertyConfigPresenter(PropertyConfigView propertyConfigView,
+                                   NameSpaceEditorPresenter nameSpacePresenter,
+                                   Provider<Property> propertyProvider) {
         this.propertiesView = propertyConfigView;
         this.nameSpacePresenter = nameSpacePresenter;
+        this.propertyProvider = propertyProvider;
         this.index = -1;
 
         this.propertiesView.setDelegate(this);
@@ -76,7 +83,10 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
         String name = propertiesView.getName().isEmpty() ? "property_name" : propertiesView.getName();
         String expression = propertiesView.getValueExpression().isEmpty() ? "property_value" : propertiesView.getValueExpression();
 
-        Property property = new Property(name, expression);
+        Property property = propertyProvider.get();
+
+        property.setName(name);
+        property.setExpression(expression);
 
         propertiesView.setName("");
         propertiesView.setValueExpression("");

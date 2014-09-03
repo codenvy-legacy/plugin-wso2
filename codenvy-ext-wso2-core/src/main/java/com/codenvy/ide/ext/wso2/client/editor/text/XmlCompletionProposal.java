@@ -87,8 +87,9 @@ public class XmlCompletionProposal implements CompletionProposal {
             @Override
             public void apply(Document document) {
                 String insert = name + "=\"\"";
-                ReplaceEdit replaceEdit =
-                        new ReplaceEdit(context.getOffset() - context.getPrefix().length(), context.getPrefix().length(), insert);
+                ReplaceEdit replaceEdit = new ReplaceEdit(context.getOffset() - context.getPrefix().length(),
+                                                          context.getPrefix().length(),
+                                                          insert);
                 try {
                     replaceEdit.apply(document);
                 } catch (BadLocationException e) {

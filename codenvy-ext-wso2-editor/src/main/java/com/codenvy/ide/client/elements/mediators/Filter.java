@@ -39,9 +39,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 import static com.codenvy.ide.client.elements.mediators.Filter.ConditionType.SOURCE_AND_REGEX;
 import static com.codenvy.ide.client.elements.mediators.Filter.ConditionType.XPATH;
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 
 /**
  * The class which describes state of Filter mediator and also has methods for changing it. Also the class contains the business
@@ -82,6 +82,8 @@ public class Filter extends AbstractElement {
                                                                  CallTemplate.ELEMENT_NAME,
                                                                  Call.ELEMENT_NAME);
 
+    private final Provider<NameSpace> nameSpaceProvider;
+
     private ConditionType    conditionType;
     private String           source;
     private String           regularExpression;
@@ -90,8 +92,14 @@ public class Filter extends AbstractElement {
     private Array<NameSpace> xPathNameSpaces;
 
     @Inject
-    public Filter(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+    public Filter(EditorResources resources,
+                  Provider<Branch> branchProvider,
+                  MediatorCreatorsManager mediatorCreatorsManager,
+                  Provider<NameSpace> nameSpaceProvider) {
+
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+
+        this.nameSpaceProvider = nameSpaceProvider;
 
         conditionType = SOURCE_AND_REGEX;
         source = "get-property('To')";
@@ -276,8 +284,11 @@ public class Filter extends AbstractElement {
                 default:
                     if (StringUtils.startsWith(PREFIX, nodeName, true)) {
                         String name = StringUtils.trimStart(nodeName, PREFIX + ':');
-                        //TODO create entity using edit factory
-                        NameSpace nameSpace = new NameSpace(name, nodeValue);
+
+                        NameSpace nameSpace = nameSpaceProvider.get();
+
+                        nameSpace.setPrefix(name);
+                        nameSpace.setUri(nodeValue);
 
                         nameSpaces.add(nameSpace);
                     }

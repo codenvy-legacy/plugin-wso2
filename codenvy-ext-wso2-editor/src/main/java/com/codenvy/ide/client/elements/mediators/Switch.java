@@ -84,6 +84,8 @@ public class Switch extends AbstractElement {
                                                                  CallTemplate.ELEMENT_NAME,
                                                                  Call.ELEMENT_NAME);
 
+    private final Provider<NameSpace> nameSpaceProvider;
+
     private String           sourceXpath;
     private Array<NameSpace> nameSpaces;
 
@@ -91,8 +93,14 @@ public class Switch extends AbstractElement {
     private Branch defaultBranch;
 
     @Inject
-    public Switch(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+    public Switch(EditorResources resources,
+                  Provider<Branch> branchProvider,
+                  MediatorCreatorsManager mediatorCreatorsManager,
+                  Provider<NameSpace> nameSpaceProvider) {
+
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, true, true, resources, branchProvider, mediatorCreatorsManager);
+
+        this.nameSpaceProvider = nameSpaceProvider;
 
         sourceXpath = "default/xpath";
         nameSpaces = Collections.createArray();
@@ -224,8 +232,11 @@ public class Switch extends AbstractElement {
                 default:
                     if (StringUtils.startsWith(PREFIX, nodeName, true)) {
                         String name = StringUtils.trimStart(nodeName, PREFIX + ':');
-                        //TODO create entity using edit factory
-                        NameSpace nameSpace = new NameSpace(name, nodeValue);
+
+                        NameSpace nameSpace = nameSpaceProvider.get();
+
+                        nameSpace.setPrefix(name);
+                        nameSpace.setUri(nodeValue);
 
                         nameSpaces.add(nameSpace);
                     }

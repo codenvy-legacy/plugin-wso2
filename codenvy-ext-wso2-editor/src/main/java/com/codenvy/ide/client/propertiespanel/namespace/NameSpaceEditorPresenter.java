@@ -20,6 +20,7 @@ import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBa
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,18 +30,22 @@ import javax.annotation.Nullable;
  *
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
+ * @author Andrey Plotnikov
  */
 public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDelegate {
 
-    private final NameSpaceEditorView   nameSpaceEditorView;
-    private       NameSpace             selectedNameSpace;
-    private       Array<NameSpace>      nameSpacesTemporary;
-    private       AddNameSpacesCallBack callBack;
-    private       int                   index;
+    private final NameSpaceEditorView nameSpaceEditorView;
+    private final Provider<NameSpace> nameSpaceProvider;
+
+    private NameSpace             selectedNameSpace;
+    private Array<NameSpace>      nameSpacesTemporary;
+    private AddNameSpacesCallBack callBack;
+    private int                   index;
 
     @Inject
-    public NameSpaceEditorPresenter(NameSpaceEditorView nameSpaceEditorView) {
+    public NameSpaceEditorPresenter(NameSpaceEditorView nameSpaceEditorView, Provider<NameSpace> nameSpaceProvider) {
         this.nameSpaceEditorView = nameSpaceEditorView;
+        this.nameSpaceProvider = nameSpaceProvider;
         this.index = -1;
 
         this.nameSpaceEditorView.setDelegate(this);
@@ -98,8 +103,10 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
         String prefix = nameSpaceEditorView.getPrefix();
         String uri = nameSpaceEditorView.getUri();
 
-        //TODO create using edit factory
-        NameSpace nameSpace = new NameSpace(prefix, uri);
+        NameSpace nameSpace = nameSpaceProvider.get();
+
+        nameSpace.setPrefix(prefix);
+        nameSpace.setUri(uri);
 
         nameSpaceEditorView.setPrefix("");
         nameSpaceEditorView.setUri("");

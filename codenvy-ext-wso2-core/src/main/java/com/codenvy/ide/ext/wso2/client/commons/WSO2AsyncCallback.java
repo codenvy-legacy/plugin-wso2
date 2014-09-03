@@ -25,6 +25,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * Class to receive a response from a remote procedure call.
  *
  * @author Valeriy Svydenko
+ * @author Andrey Plotnikov
  */
 public abstract class WSO2AsyncCallback<T> implements AsyncCallback<T> {
     private NotificationManager notificationManager;
@@ -36,7 +37,6 @@ public abstract class WSO2AsyncCallback<T> implements AsyncCallback<T> {
     /** {@inheritDoc} */
     @Override
     public void onFailure(Throwable caught) {
-        Notification notification = new Notification(caught.getMessage(), ERROR);
-        notificationManager.showNotification(notification);
+        notificationManager.showNotification(new Notification(caught.getMessage(), ERROR));
     }
 }

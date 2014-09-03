@@ -57,14 +57,17 @@ public class Enrich extends AbstractElement {
     private Target target;
 
     @Inject
-    public Enrich(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+    public Enrich(EditorResources resources,
+                  Provider<Branch> branchProvider,
+                  MediatorCreatorsManager mediatorCreatorsManager,
+                  Source source,
+                  Target target) {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
 
         this.description = "";
 
-        //TODO use edit factory to create entity
-        this.source = new Source();
-        this.target = new Target();
+        this.source = source;
+        this.target = target;
     }
 
     /** @return source entity of enrich element */

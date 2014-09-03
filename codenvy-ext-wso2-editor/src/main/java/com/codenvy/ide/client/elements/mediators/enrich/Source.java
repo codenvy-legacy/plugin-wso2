@@ -21,6 +21,8 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,6 +47,8 @@ public class Source {
     public static final String XPATH_ATTRIBUTE_NAME               = "xpath";
     public static final String PROPERTY_ATTRIBUTE_NAME            = "property";
 
+    private final Provider<NameSpace> nameSpaceProvider;
+
     private boolean          clone;
     private SourceType       type;
     private InlineType       inlineType;
@@ -54,7 +58,10 @@ public class Source {
     private String           property;
     private Array<NameSpace> nameSpaces;
 
-    public Source() {
+    @Inject
+    public Source(Provider<NameSpace> nameSpaceProvider) {
+        this.nameSpaceProvider = nameSpaceProvider;
+
         this.clone = false;
         this.type = custom;
         this.inlineType = SourceXML;
@@ -178,12 +185,14 @@ public class Source {
                 default:
                     if (StringUtils.startsWith(PREFIX, nodeName, true)) {
                         String name = StringUtils.trimStart(nodeName, PREFIX + ':');
-                        //TODO create entity using edit factory
-                        NameSpace nameSpace = new NameSpace(name, nodeValue);
+
+                        NameSpace nameSpace = nameSpaceProvider.get();
+
+                        nameSpace.setPrefix(name);
+                        nameSpace.setUri(nodeValue);
 
                         nameSpaces.add(nameSpace);
                     }
-                    break;
             }
         }
     }

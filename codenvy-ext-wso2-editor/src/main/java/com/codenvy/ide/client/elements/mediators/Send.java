@@ -61,6 +61,8 @@ public class Send extends AbstractElement {
     private static final List<String> PROPERTIES = Arrays.asList(ENDPOINT_PROPERTY_NAME);
     private static final List<String> COMPONENTS = Arrays.asList(AddressEndpoint.ELEMENT_NAME);
 
+    private final Provider<NameSpace> nameSpaceProvider;
+
     private SequenceType     sequencerType;
     private boolean          skipSerialization;
     private boolean          buildMessage;
@@ -70,8 +72,14 @@ public class Send extends AbstractElement {
     private Array<NameSpace> nameSpaces;
 
     @Inject
-    public Send(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+    public Send(EditorResources resources,
+                Provider<Branch> branchProvider,
+                MediatorCreatorsManager mediatorCreatorsManager,
+                Provider<NameSpace> nameSpaceProvider) {
+
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+
+        this.nameSpaceProvider = nameSpaceProvider;
 
         skipSerialization = false;
         sequencerType = Default;
@@ -281,8 +289,11 @@ public class Send extends AbstractElement {
                     default:
                         if (StringUtils.startsWith(PREFIX, attributeName, true)) {
                             String name = StringUtils.trimStart(attributeName, PREFIX + ':');
-                            //TODO create entity using edit factory
-                            NameSpace nameSpace = new NameSpace(name, attributeValue);
+
+                            NameSpace nameSpace = nameSpaceProvider.get();
+
+                            nameSpace.setPrefix(name);
+                            nameSpace.setUri(attributeValue);
 
                             nameSpaces.add(nameSpace);
                         }

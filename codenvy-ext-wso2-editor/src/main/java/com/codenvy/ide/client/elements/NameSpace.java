@@ -15,23 +15,29 @@
  */
 package com.codenvy.ide.client.elements;
 
+import com.google.inject.Provider;
+
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 /**
  * Class describes entity which presented name space.
  *
  * @author Dmitry Shnurenko
+ * @author Andrey Plotnikov
  */
 public class NameSpace {
 
     public static final String PREFIX = "xmlns";
 
-    private final String prefix;
-    private final String uri;
+    private final Provider<NameSpace> nameSpaceProvider;
 
-    public NameSpace(@Nonnull String prefix, @Nonnull String uri) {
-        this.prefix = prefix;
-        this.uri = uri;
+    private String prefix;
+    private String uri;
+
+    @Inject
+    public NameSpace(Provider<NameSpace> nameSpaceProvider) {
+        this.nameSpaceProvider = nameSpaceProvider;
     }
 
     /** @return value of prefix of namespace */
@@ -40,17 +46,29 @@ public class NameSpace {
         return prefix;
     }
 
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
     /** @return value of uri of namespace */
     @Nonnull
     public String getUri() {
         return uri;
     }
 
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
     /** @return copy of namespace */
     @Nonnull
     public NameSpace clone() {
-        //TODO create nameSpace using editor factory
-        return new NameSpace(prefix, uri);
+        NameSpace nameSpace = nameSpaceProvider.get();
+
+        nameSpace.setPrefix(prefix);
+        nameSpace.setUri(uri);
+
+        return nameSpace;
     }
 
     /** @return string representation of the namespace */

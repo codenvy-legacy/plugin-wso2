@@ -64,6 +64,8 @@ public class Call extends AbstractElement {
     private static final List<String> PROPERTIES = Arrays.asList(ENDPOINT_PROPERTY_NAME);
     private static final List<String> COMPONENTS = Arrays.asList(AddressEndpoint.ELEMENT_NAME);
 
+    private final Provider<NameSpace> nameSpaceProvider;
+
     private EndpointType     endpointType;
     private String           registryKey;
     private String           xPath;
@@ -74,8 +76,14 @@ public class Call extends AbstractElement {
     private boolean isKeyExpressionAttributeFound;
 
     @Inject
-    public Call(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+    public Call(EditorResources resources,
+                Provider<Branch> branchProvider,
+                MediatorCreatorsManager mediatorCreatorsManager,
+                Provider<NameSpace> nameSpaceProvider) {
+
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+
+        this.nameSpaceProvider = nameSpaceProvider;
 
         endpointType = INLINE;
         registryKey = "/default/key";
@@ -294,8 +302,11 @@ public class Call extends AbstractElement {
                 default:
                     if (StringUtils.startsWith(PREFIX, nodeName, true)) {
                         String name = StringUtils.trimStart(nodeName, PREFIX + ':');
-                        //TODO create entity using edit factory
-                        NameSpace nameSpace = new NameSpace(name, nodeValue);
+
+                        NameSpace nameSpace = nameSpaceProvider.get();
+
+                        nameSpace.setPrefix(name);
+                        nameSpace.setUri(nodeValue);
 
                         nameSpaces.add(nameSpace);
                     }

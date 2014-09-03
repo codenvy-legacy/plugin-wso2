@@ -21,6 +21,8 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,11 +36,15 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
  *
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
+ * @author Andrey Plotnikov
  */
 public class Arg {
     private static final String EVALUATOR_ATTRIBUTE_NAME  = "evaluator";
     private static final String EXPRESSION_ATTRIBUTE_NAME = "expression";
     private static final String VALUE_ATTRIBUTE_NAME      = "value";
+
+    private final Provider<NameSpace> nameSpaceProvider;
+    private final Provider<Arg>       argProvider;
 
     private ArgType type;
     private String  value;
@@ -47,7 +53,11 @@ public class Arg {
     private Evaluator        evaluator;
     private Array<NameSpace> nameSpaces;
 
-    public Arg() {
+    @Inject
+    public Arg(Provider<NameSpace> nameSpaceProvider, Provider<Arg> argProvider) {
+        this.nameSpaceProvider = nameSpaceProvider;
+        this.argProvider = argProvider;
+
         this.expression = "/default/expression";
         this.type = ArgType.Value;
         this.value = "default";
@@ -193,8 +203,11 @@ public class Arg {
                 default:
                     if (StringUtils.startsWith(PREFIX, attributeName, true)) {
                         String name = StringUtils.trimStart(attributeName, PREFIX + ':');
-                        //TODO create entity using edit factory
-                        NameSpace nameSpace = new NameSpace(name, attributeValue);
+
+                        NameSpace nameSpace = nameSpaceProvider.get();
+
+                        nameSpace.setPrefix(name);
+                        nameSpace.setUri(attributeValue);
 
                         nameSpaces.add(nameSpace);
                     }
@@ -205,8 +218,7 @@ public class Arg {
     /** @return copy of element */
     @Nonnull
     public Arg clone() {
-        //TODO create arg using editor factory
-        Arg arg = new Arg();
+        Arg arg = argProvider.get();
         arg.setNameSpaces(nameSpaces);
 
         return arg;

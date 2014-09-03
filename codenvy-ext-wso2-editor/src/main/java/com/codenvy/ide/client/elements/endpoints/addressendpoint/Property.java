@@ -28,9 +28,9 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.Scope.DEFAULT;
 import static com.codenvy.ide.client.elements.mediators.ValueType.EXPRESSION;
 import static com.codenvy.ide.client.elements.mediators.ValueType.LITERAL;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.Scope.DEFAULT;
 
 /**
  * The class which describes state of Property element of Address endpoint and also has methods for changing it. Also the class contains
@@ -49,7 +49,8 @@ public class Property {
     private static final String EXPRESSION_ATTRIBUTE = "expression";
     private static final String SCOPE_ATTRIBUTE      = "scope";
 
-    private final Provider<Property> propertyProvider;
+    private final Provider<Property>  propertyProvider;
+    private final Provider<NameSpace> nameSpaceProvider;
 
     private String           name;
     private String           value;
@@ -59,8 +60,9 @@ public class Property {
     private Array<NameSpace> nameSpaces;
 
     @Inject
-    public Property(Provider<Property> propertyProvider) {
+    public Property(Provider<Property> propertyProvider, Provider<NameSpace> nameSpaceProvider) {
         this.propertyProvider = propertyProvider;
+        this.nameSpaceProvider = nameSpaceProvider;
 
         name = "property_name";
         value = "property_value";
@@ -242,8 +244,11 @@ public class Property {
                 default:
                     if (StringUtils.startsWith(PREFIX, nodeName, true)) {
                         String name = StringUtils.trimStart(nodeName, PREFIX + ':');
-                        //TODO create entity using edit factory
-                        NameSpace nameSpace = new NameSpace(name, nodeValue);
+
+                        NameSpace nameSpace = nameSpaceProvider.get();
+
+                        nameSpace.setPrefix(name);
+                        nameSpace.setUri(nodeValue);
 
                         nameSpaces.add(nameSpace);
                     }

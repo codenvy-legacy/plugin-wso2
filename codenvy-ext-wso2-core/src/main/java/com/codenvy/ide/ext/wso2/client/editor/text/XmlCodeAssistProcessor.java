@@ -28,6 +28,7 @@ import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;
+import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,11 +39,13 @@ import java.util.HashSet;
  *
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
+ * @author Andrey Plotnikov
  */
 public class XmlCodeAssistProcessor implements CodeAssistProcessor {
 
     private XsdSchemaParser xsdSchemaParser;
 
+    @Inject
     public XmlCodeAssistProcessor(XsdSchemaParser xsdSchemaParser) {
         this.xsdSchemaParser = xsdSchemaParser;
     }

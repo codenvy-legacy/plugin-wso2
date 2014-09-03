@@ -23,6 +23,7 @@ import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBa
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,25 +36,30 @@ import static com.codenvy.ide.client.elements.mediators.payload.Arg.ArgType;
  *
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
+ * @author Andrey Plotnikov
  */
 public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDelegate {
 
     private final WSO2EditorLocalizationConstant local;
     private final ArgumentsConfigView            argView;
+    private final Provider<Arg>                  argProvider;
     private final NameSpaceEditorPresenter       nameSpacePresenter;
     private final AddNameSpacesCallBack          addNameSpacesCallBack;
-    private       AddArgumentCallBack            argumentCallBack;
-    private       Array<Arg>                     arrayTemporary;
-    private       Arg                            selectedArg;
-    private       int                            index;
+
+    private AddArgumentCallBack argumentCallBack;
+    private Array<Arg>          arrayTemporary;
+    private Arg                 selectedArg;
+    private int                 index;
 
     @Inject
     public ArgumentsConfigPresenter(ArgumentsConfigView argumentsConfigView,
                                     NameSpaceEditorPresenter nameSpacePresenter,
-                                    WSO2EditorLocalizationConstant local) {
+                                    WSO2EditorLocalizationConstant local,
+                                    Provider<Arg> argProvider) {
         this.local = local;
         this.nameSpacePresenter = nameSpacePresenter;
         this.argView = argumentsConfigView;
+        this.argProvider = argProvider;
         this.argView.setDelegate(this);
         this.index = -1;
 
@@ -85,7 +91,7 @@ public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDeleg
         String evaluator = argView.getEvaluator().isEmpty() ? "xml" : argView.getEvaluator();
         String type = argView.getTypeValue().isEmpty() ? "Value" : argView.getTypeValue();
 
-        Arg arg = new Arg();
+        Arg arg = argProvider.get();
         arg.setType(ArgType.valueOf(type));
         arg.setEvaluator(Arg.Evaluator.valueOf(evaluator));
         arg.setValue(value);

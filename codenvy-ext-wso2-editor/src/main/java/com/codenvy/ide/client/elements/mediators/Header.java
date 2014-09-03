@@ -35,11 +35,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 import static com.codenvy.ide.client.elements.mediators.Header.HeaderAction.remove;
 import static com.codenvy.ide.client.elements.mediators.Header.HeaderAction.set;
 import static com.codenvy.ide.client.elements.mediators.Header.HeaderValueType.INLINE;
 import static com.codenvy.ide.client.elements.mediators.Header.HeaderValueType.LITERAL;
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 
 /**
  * The class which describes state of Header mediator and also has methods for changing it. Also the class contains the business
@@ -61,6 +61,7 @@ public class Header extends AbstractElement {
     private static final String SCOPE      = "scope";
 
     private static final List<String> PROPERTIES = java.util.Collections.emptyList();
+    private final Provider<NameSpace> nameSpaceProvider;
 
     private HeaderAction    action;
     private HeaderValueType valueType;
@@ -74,8 +75,14 @@ public class Header extends AbstractElement {
     private Array<NameSpace> expressionNamespaces;
 
     @Inject
-    public Header(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+    public Header(EditorResources resources,
+                  Provider<Branch> branchProvider,
+                  MediatorCreatorsManager mediatorCreatorsManager,
+                  Provider<NameSpace> nameSpaceProvider) {
+
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+
+        this.nameSpaceProvider = nameSpaceProvider;
 
         headerNamespaces = Collections.createArray();
         expressionNamespaces = Collections.createArray();
@@ -342,8 +349,11 @@ public class Header extends AbstractElement {
                 default:
                     if (StringUtils.startsWith(PREFIX, nodeName, true)) {
                         String name = StringUtils.trimStart(nodeName, PREFIX + ':');
-                        //TODO create entity using edit factory
-                        NameSpace nameSpace = new NameSpace(name, nodeValue);
+
+                        NameSpace nameSpace = nameSpaceProvider.get();
+
+                        nameSpace.setPrefix(name);
+                        nameSpace.setUri(nodeValue);
 
                         if (isFirst) {
                             headerNamespaces.add(nameSpace);

@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static org.junit.runners.Parameterized.Parameter;
 import static org.junit.runners.Parameterized.Parameters;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.Answers.RETURNS_MOCKS;
@@ -52,8 +53,11 @@ public class TagAutoCompleterTest2 {
     private TextEditorPartView editor;
     @InjectMocks
     private TagAutoCompleter   tagAutoCompleter;
-    private String             text;
-    private String             nextElement;
+
+    @Parameter(0)
+    public String text;
+    @Parameter(1)
+    public String nextElement;
 
     @Parameters
     public static List<Object[]> parameters() {
@@ -79,11 +83,6 @@ public class TagAutoCompleterTest2 {
         });
     }
 
-    public TagAutoCompleterTest2(String text, String nextElement) {
-        this.text = text;
-        this.nextElement = nextElement;
-    }
-
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -91,7 +90,6 @@ public class TagAutoCompleterTest2 {
 
     @Test
     public void textShouldBeNotCompleted() throws Exception {
-
         when(document.get(anyInt(), anyInt())).thenReturn(text);
 
         DocumentCommand command = new DocumentCommand();

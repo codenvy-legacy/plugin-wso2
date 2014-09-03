@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.elements.mediators.payload;
 
 import com.google.gwt.xml.client.Node;
+import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,6 +29,7 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
  * Deserelization mechanism allows to restore the condition of the element when you open ESB project after saving.
  *
  * @author Dmitry Shnurenko
+ * @author Andrey Plotnikov
  */
 public class Format {
 
@@ -38,6 +40,7 @@ public class Format {
     private String     formatKey;
     private String     formatInline;
 
+    @Inject
     public Format() {
         this.mediaType = MediaType.xml;
         this.formatType = FormatType.Inline;

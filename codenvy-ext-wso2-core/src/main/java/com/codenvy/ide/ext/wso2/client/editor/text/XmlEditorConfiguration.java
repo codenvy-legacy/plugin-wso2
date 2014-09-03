@@ -17,7 +17,6 @@ package com.codenvy.ide.ext.wso2.client.editor.text;
 
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
-import com.codenvy.ide.ext.wso2.client.commons.XsdSchemaParser;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.AutoEditStrategy;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
@@ -27,6 +26,7 @@ import com.codenvy.ide.texteditor.api.parser.BasicTokenFactory;
 import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.codenvy.ide.texteditor.api.parser.Parser;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,17 +40,18 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_MIME_TYPE;
  * @author Dmitry Kuleshov
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
+ * @author Andrey Plotnikov
  */
 public class XmlEditorConfiguration extends TextEditorConfiguration {
 
-    private AutoCompleterFactory autoCompleterFactory;
-    private XsdSchemaParser      xsdSchemaParser;
+    private final AutoCompleterFactory             autoCompleterFactory;
+    private final Provider<XmlCodeAssistProcessor> xmlCodeAssistProcessorProvider;
 
     @Inject
     public XmlEditorConfiguration(AutoCompleterFactory autoCompleterFactory,
-                                  XsdSchemaParser xsdSchemaParser) {
+                                  Provider<XmlCodeAssistProcessor> xmlCodeAssistProcessorProvider) {
         this.autoCompleterFactory = autoCompleterFactory;
-        this.xsdSchemaParser = xsdSchemaParser;
+        this.xmlCodeAssistProcessorProvider = xmlCodeAssistProcessorProvider;
     }
 
     /** {@inheritDoc} */
@@ -74,7 +75,8 @@ public class XmlEditorConfiguration extends TextEditorConfiguration {
     @Override
     public StringMap<CodeAssistProcessor> getContentAssistantProcessors(@Nonnull TextEditorPartView view) {
         StringMap<CodeAssistProcessor> map = Collections.createStringMap();
-        map.put(Document.DEFAULT_CONTENT_TYPE, new XmlCodeAssistProcessor(xsdSchemaParser));
+        map.put(Document.DEFAULT_CONTENT_TYPE, xmlCodeAssistProcessorProvider.get());
+
         return map;
     }
 }
