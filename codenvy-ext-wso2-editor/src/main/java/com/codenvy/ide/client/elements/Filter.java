@@ -18,14 +18,25 @@ package com.codenvy.ide.client.elements;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.connectors.salesforce.Create;
 import com.codenvy.ide.client.elements.connectors.salesforce.Delete;
+import com.codenvy.ide.client.elements.connectors.salesforce.DescribeGlobal;
 import com.codenvy.ide.client.elements.connectors.salesforce.DescribeSubject;
 import com.codenvy.ide.client.elements.connectors.salesforce.DescribeSubjects;
 import com.codenvy.ide.client.elements.connectors.salesforce.EmptyRecycleBin;
 import com.codenvy.ide.client.elements.connectors.salesforce.GetUserInformation;
-import com.codenvy.ide.client.elements.connectors.salesforce.DescribeGlobal;
 import com.codenvy.ide.client.elements.connectors.salesforce.Init;
 import com.codenvy.ide.client.elements.connectors.salesforce.LogOut;
+import com.codenvy.ide.client.elements.connectors.salesforce.Query;
+import com.codenvy.ide.client.elements.connectors.salesforce.QueryAll;
+import com.codenvy.ide.client.elements.connectors.salesforce.QueryMore;
+import com.codenvy.ide.client.elements.connectors.salesforce.ResetPassword;
+import com.codenvy.ide.client.elements.connectors.salesforce.Retrieve;
+import com.codenvy.ide.client.elements.connectors.salesforce.Search;
+import com.codenvy.ide.client.elements.connectors.salesforce.SendEmail;
+import com.codenvy.ide.client.elements.connectors.salesforce.SendEmailMessage;
+import com.codenvy.ide.client.elements.connectors.salesforce.SetPassword;
+import com.codenvy.ide.client.elements.connectors.salesforce.Undelete;
 import com.codenvy.ide.client.elements.connectors.salesforce.Update;
+import com.codenvy.ide.client.elements.connectors.salesforce.Upset;
 import com.codenvy.ide.client.elements.enrich.Enrich;
 import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.payload.PayloadFactory;
@@ -98,7 +109,18 @@ public class Filter extends AbstractShape {
                                                                  Delete.ELEMENT_NAME,
                                                                  DescribeGlobal.ELEMENT_NAME,
                                                                  DescribeSubject.ELEMENT_NAME,
-                                                                 DescribeSubjects.ELEMENT_NAME);
+                                                                 DescribeSubjects.ELEMENT_NAME,
+                                                                 Query.ELEMENT_NAME,
+                                                                 QueryAll.ELEMENT_NAME,
+                                                                 QueryMore.ELEMENT_NAME,
+                                                                 ResetPassword.ELEMENT_NAME,
+                                                                 Retrieve.ELEMENT_NAME,
+                                                                 Search.ELEMENT_NAME,
+                                                                 SendEmail.ELEMENT_NAME,
+                                                                 SendEmailMessage.ELEMENT_NAME,
+                                                                 SetPassword.ELEMENT_NAME,
+                                                                 Undelete.ELEMENT_NAME,
+                                                                 Upset.ELEMENT_NAME);
 
     private ConditionType    conditionType;
     private String           source;

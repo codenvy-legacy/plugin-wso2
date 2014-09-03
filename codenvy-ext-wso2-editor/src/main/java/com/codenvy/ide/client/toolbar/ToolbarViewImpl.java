@@ -110,12 +110,12 @@ public class ToolbarViewImpl extends ToolbarView {
         delegate.onAddressEndpointButtonClicked();
     }
 
-    @UiHandler("salesforceInitConnector")
+    @UiHandler("salesForceInitConnector")
     public void onSalesForceInitClicked(ClickEvent event) {
         delegate.onSalesForceInitClicked();
     }
 
-    @UiHandler("salesforceCreateConnector")
+    @UiHandler("salesForceCreateConnector")
     public void onSalesForceCreateClicked(ClickEvent event) {
         delegate.onSalesForceCreateClicked();
     }
@@ -125,24 +125,79 @@ public class ToolbarViewImpl extends ToolbarView {
         delegate.onSalesForceDeleteClicked();
     }
 
-    @UiHandler("salesforceUpdateConnector")
+    @UiHandler("salesForceUpdateConnector")
     public void onSalesForceUpdateClicked(ClickEvent event) {
         delegate.onSalesForceUpdateClicked();
     }
 
-    @UiHandler("salesforceDescribeGlobalConnector")
+    @UiHandler("salesForceDescribeGlobalConnector")
     public void onSalesForceDescribeGlobalClicked(ClickEvent event) {
         delegate.onSalesForceDescribeGlobalClicked();
     }
 
-    @UiHandler("salesforceDescribeSobjectConnector")
+    @UiHandler("salesForceDescribeSobjectConnector")
     public void onSalesForceDescribeSubjectClicked(ClickEvent event) {
         delegate.onSalesForceDescribeSubjectClicked();
     }
 
-    @UiHandler("salesforceDescribeSobjectsConnector")
+    @UiHandler("salesForceDescribeSobjectsConnector")
     public void onSalesForceDescribeSubjectsClicked(ClickEvent event) {
         delegate.onSalesForceDescribeSubjectsClicked();
+    }
+
+    @UiHandler("salesForceQueryConnector")
+    public void onSalesForceQueryClicked(ClickEvent event) {
+        delegate.onSalesForceQueryClicked();
+    }
+
+    @UiHandler("salesForceQueryAllConnector")
+    public void onSalesForceQueryAllClicked(ClickEvent event) {
+        delegate.onSalesForceQueryAllClicked();
+    }
+
+    @UiHandler("salesForceQueryMoreConnector")
+    public void onSalesForceQueryMoreClicked(ClickEvent event) {
+        delegate.onSalesForceQueryMoreClicked();
+    }
+
+    @UiHandler("salesForceResetPasswordConnector")
+    public void onSalesForceResetPasswordClicked(ClickEvent event) {
+        delegate.onSalesForceResetPasswordClicked();
+    }
+
+    @UiHandler("salesForceRetriveConnector")
+    public void onSalesForceRetriveClicked(ClickEvent event) {
+        delegate.onSalesForceRetriveClicked();
+    }
+
+    @UiHandler("salesForceSearchConnector")
+    public void onSalesForceSearchClicked(ClickEvent event) {
+        delegate.onSalesForceSearchClicked();
+    }
+
+    @UiHandler("salesForceSendEmailConnector")
+    public void onSalesForceSendEmailClicked(ClickEvent event) {
+        delegate.onSalesForceSendEmailClicked();
+    }
+
+    @UiHandler("salesForceSendEmailMessageConnector")
+    public void onSalesForceSendEmailMessageClicked(ClickEvent event) {
+        delegate.onSalesForceSendEmailMessageClicked();
+    }
+
+    @UiHandler("salesForceSetPasswordConnector")
+    public void onSalesForceSetPasswordClicked(ClickEvent event) {
+        delegate.onSalesForceSetPasswordClicked();
+    }
+
+    @UiHandler("salesForceUndeleteConnector")
+    public void onSalesForceUndeleteClicked(ClickEvent event) {
+        delegate.onSalesForceUndeleteClicked();
+    }
+
+    @UiHandler("salesForceUpsetConnector")
+    public void onSalesForceUpsetClicked(ClickEvent event) {
+        delegate.onSalesForceUpsetClicked();
     }
 
     @UiHandler("emptyRecycleConnector")

@@ -44,7 +44,18 @@ import static com.codenvy.ide.client.State.CREATING_SALESFORCE_EMPTY_RECYCLE_BIN
 import static com.codenvy.ide.client.State.CREATING_SALESFORCE_GET_USER_INFORMATION;
 import static com.codenvy.ide.client.State.CREATING_SALESFORCE_INIT;
 import static com.codenvy.ide.client.State.CREATING_SALESFORCE_LOGOUT;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_QUERY;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_QUERY_MORE;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_QURY_ALL;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_RESET_PASSWORD;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_RETRIVE;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_SEARCH;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_SEND_EMAIL;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_SEND_EMAIL_MESSAGE;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_SET_PASSWORD;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_UNDELETE;
 import static com.codenvy.ide.client.State.CREATING_SALESFORCE_UPDATE;
+import static com.codenvy.ide.client.State.CREATING_SALESFORCE_UPSET;
 import static com.codenvy.ide.client.State.CREATING_SEND;
 import static com.codenvy.ide.client.State.CREATING_SEQUENCE;
 import static com.codenvy.ide.client.State.CREATING_SWITCH;
@@ -204,6 +215,72 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
     @Override
     public void onSalesForceGetUserInfoClicked() {
         setState(CREATING_SALESFORCE_GET_USER_INFORMATION);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesForceQueryClicked() {
+        setState(CREATING_SALESFORCE_QUERY);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesForceQueryAllClicked() {
+        setState(CREATING_SALESFORCE_QURY_ALL);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesForceQueryMoreClicked() {
+        setState(CREATING_SALESFORCE_QUERY_MORE);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesForceResetPasswordClicked() {
+        setState(CREATING_SALESFORCE_RESET_PASSWORD);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesForceRetriveClicked() {
+        setState(CREATING_SALESFORCE_RETRIVE);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesForceSearchClicked() {
+        setState(CREATING_SALESFORCE_SEARCH);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesForceSendEmailClicked() {
+        setState(CREATING_SALESFORCE_SEND_EMAIL);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesForceSendEmailMessageClicked() {
+        setState(CREATING_SALESFORCE_SEND_EMAIL_MESSAGE);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesForceSetPasswordClicked() {
+        setState(CREATING_SALESFORCE_SET_PASSWORD);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesForceUndeleteClicked() {
+        setState(CREATING_SALESFORCE_UNDELETE);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSalesForceUpsetClicked() {
+        setState(CREATING_SALESFORCE_UPSET);
     }
 
     /** {@inheritDoc} */

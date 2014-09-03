@@ -106,6 +106,39 @@ public abstract class ToolbarView extends AbstractView<ToolbarView.ActionDelegat
         /** Performs some actions in response to a user clicked on SalesForce get user information icon of tool bar. */
         void onSalesForceGetUserInfoClicked();
 
+        /** Performs some actions in response to a user clicked on SalesForce get user information icon of tool bar. */
+        void onSalesForceQueryClicked();
+
+        /** Performs some actions in response to a user clicked on SalesForce get user information icon of tool bar. */
+        void onSalesForceQueryAllClicked();
+
+        /** Performs some actions in response to a user clicked on SalesForce get user information icon of tool bar. */
+        void onSalesForceQueryMoreClicked();
+
+        /** Performs some actions in response to a user clicked on SalesForce get user information icon of tool bar. */
+        void onSalesForceResetPasswordClicked();
+
+        /** Performs some actions in response to a user clicked on SalesForce get user information icon of tool bar. */
+        void onSalesForceRetriveClicked();
+
+        /** Performs some actions in response to a user clicked on SalesForce get user information icon of tool bar. */
+        void onSalesForceSearchClicked();
+
+        /** Performs some actions in response to a user clicked on SalesForce get user information icon of tool bar. */
+        void onSalesForceSendEmailClicked();
+
+        /** Performs some actions in response to a user clicked on SalesForce get user information icon of tool bar. */
+        void onSalesForceSendEmailMessageClicked();
+
+        /** Performs some actions in response to a user clicked on SalesForce get user information icon of tool bar. */
+        void onSalesForceSetPasswordClicked();
+
+        /** Performs some actions in response to a user clicked on SalesForce get user information icon of tool bar. */
+        void onSalesForceUndeleteClicked();
+
+        /** Performs some actions in response to a user clicked on SalesForce get user information icon of tool bar. */
+        void onSalesForceUpsetClicked();
+
     }
 
 }

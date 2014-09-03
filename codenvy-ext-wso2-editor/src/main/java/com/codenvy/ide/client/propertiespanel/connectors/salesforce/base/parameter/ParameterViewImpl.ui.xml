@@ -37,7 +37,7 @@
         }
 
         .parameterPanel {
-            height: 55px;
+            height: 40px;
             margin: 10px 20px 15px;
         }
 
@@ -47,7 +47,7 @@
 
         <g:FlowPanel addStyleNames="{style.parameterPanel}">
             <g:Label text="{locale.logName}" addStyleNames="{style.parameterLabel}"/>
-            <g:TextBox ui:field="name" width="370px" addStyleNames="{style.parameterField}"/>
+            <g:TextBox ui:field="name" width="410px" addStyleNames="{style.parameterField}"/>
         </g:FlowPanel>
 
 
@@ -56,7 +56,7 @@
             <g:TextBox ui:field="usernameValue" width="180px" addStyleNames="{style.parameterField}"/>
 
             <g:TextBox visible="false" ui:field="usernameNamespaceValue" width="180px" addStyleNames="{style.parameterField}"/>
-            <g:Button visible="false" ui:field="usernameBtn" text="..." addStyleNames="{style.parameterField}"/>
+            <g:Button enabled="false" ui:field="usernameBtn" text="..." addStyleNames="{style.parameterField}"/>
 
             <g:ListBox ui:field="usernameType" width="180px" addStyleNames="{style.parameterField}"/>
         </g:FlowPanel>
@@ -66,7 +66,7 @@
             <g:TextBox ui:field="passwordValue" width="180px" addStyleNames="{style.parameterField}"/>
 
             <g:TextBox visible="false" ui:field="passwordNamespaceValue" width="180px" addStyleNames="{style.parameterField}"/>
-            <g:Button visible="false" ui:field="passwordBtn" text="..." addStyleNames="{style.parameterField}"/>
+            <g:Button enabled="false" ui:field="passwordBtn" text="..." addStyleNames="{style.parameterField}"/>
 
             <g:ListBox ui:field="passwordType" width="180px" addStyleNames="{style.parameterField}"/>
         </g:FlowPanel>
@@ -76,7 +76,7 @@
             <g:TextBox ui:field="loginUrlValue" width="180px" addStyleNames="{style.parameterField}"/>
 
             <g:TextBox visible="false" ui:field="loginUrlNamespaceValue" width="180px" addStyleNames="{style.parameterField}"/>
-            <g:Button visible="false" ui:field="loginUrlBtn" text="..." addStyleNames="{style.parameterField}"/>
+            <g:Button enabled="false" ui:field="loginUrlBtn" text="..." addStyleNames="{style.parameterField}"/>
 
             <g:ListBox ui:field="loginUrlType" width="180px" addStyleNames="{style.parameterField}"/>
         </g:FlowPanel>
@@ -86,7 +86,7 @@
             <g:TextBox ui:field="forceLoginValue" width="180px" addStyleNames="{style.parameterField}"/>
 
             <g:TextBox visible="false" ui:field="forceLoginNamespaceValue" width="180px" addStyleNames="{style.parameterField}"/>
-            <g:Button visible="false" ui:field="forceLoginBtn" text="..." addStyleNames="{style.parameterField}"/>
+            <g:Button enabled="false" ui:field="forceLoginBtn" text="..." addStyleNames="{style.parameterField}"/>
 
             <g:ListBox ui:field="forceLoginType" width="180px" addStyleNames="{style.parameterField}"/>
         </g:FlowPanel>

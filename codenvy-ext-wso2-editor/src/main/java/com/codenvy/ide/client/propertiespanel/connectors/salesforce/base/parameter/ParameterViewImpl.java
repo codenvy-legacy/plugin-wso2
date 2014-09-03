@@ -154,7 +154,7 @@ public class ParameterViewImpl extends Window implements ParameterView {
     @Override
     public void setUsernamePanelVisible(boolean isVisible) {
         usernameNamespaceValue.setVisible(isVisible);
-        usernameBtn.setVisible(isVisible);
+        usernameBtn.setEnabled(isVisible);
         usernameValue.setVisible(!isVisible);
     }
 
@@ -187,7 +187,7 @@ public class ParameterViewImpl extends Window implements ParameterView {
     @Override
     public void setLoginUrlPanelVisible(boolean isVisible) {
         loginUrlNamespaceValue.setVisible(isVisible);
-        loginUrlBtn.setVisible(isVisible);
+        loginUrlBtn.setEnabled(isVisible);
         loginUrlValue.setVisible(!isVisible);
     }
 
@@ -220,7 +220,7 @@ public class ParameterViewImpl extends Window implements ParameterView {
     @Override
     public void setPasswordPanelVisible(boolean isVisible) {
         passwordNamespaceValue.setVisible(isVisible);
-        passwordBtn.setVisible(isVisible);
+        passwordBtn.setEnabled(isVisible);
         passwordValue.setVisible(!isVisible);
     }
 
@@ -253,7 +253,7 @@ public class ParameterViewImpl extends Window implements ParameterView {
     @Override
     public void setForceLoginPanelVisible(boolean isVisible) {
         forceLoginNamespaceValue.setVisible(isVisible);
-        forceLoginBtn.setVisible(isVisible);
+        forceLoginBtn.setEnabled(isVisible);
         forceLoginValue.setVisible(!isVisible);
     }
 

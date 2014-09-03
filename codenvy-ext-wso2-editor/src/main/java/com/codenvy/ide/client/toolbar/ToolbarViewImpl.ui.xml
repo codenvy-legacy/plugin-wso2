@@ -89,12 +89,12 @@
                 <g:upFace image="{res.addressToolbar}"/>
             </g:PushButton>
 
-            <g:PushButton ui:field="salesforceInitConnector" addStyleNames="{style.buttonStyle}"
+            <g:PushButton ui:field="salesForceInitConnector" addStyleNames="{style.buttonStyle}"
                           title="{local.toolbarSalesforceInitConnectorTooltip}">
                 <g:upFace image="{res.salesforceConnectorToolbar}"/>
             </g:PushButton>
 
-            <g:PushButton ui:field="salesforceCreateConnector" addStyleNames="{style.buttonStyle}"
+            <g:PushButton ui:field="salesForceCreateConnector" addStyleNames="{style.buttonStyle}"
                           title="{local.toolbarSalesforceCreateConnectorTooltip}">
                 <g:upFace image="{res.salesforceConnectorToolbar}"/>
             </g:PushButton>
@@ -104,7 +104,7 @@
                 <g:upFace image="{res.salesforceConnectorToolbar}"/>
             </g:PushButton>
 
-            <g:PushButton ui:field="salesforceUpdateConnector" addStyleNames="{style.buttonStyle}"
+            <g:PushButton ui:field="salesForceUpdateConnector" addStyleNames="{style.buttonStyle}"
                           title="{local.toolbarSalesforceUpdateConnectorTooltip}">
                 <g:upFace image="{res.salesforceConnectorToolbar}"/>
             </g:PushButton>
@@ -124,18 +124,73 @@
                 <g:upFace image="{res.salesforceConnectorToolbar}"/>
             </g:PushButton>
 
-            <g:PushButton ui:field="salesforceDescribeGlobalConnector" addStyleNames="{style.buttonStyle}"
+            <g:PushButton ui:field="salesForceDescribeGlobalConnector" addStyleNames="{style.buttonStyle}"
                           title="{local.toolbarSalesforceDescribeGlobalConnectorTooltip}">
                 <g:upFace image="{res.salesforceConnectorToolbar}"/>
             </g:PushButton>
 
-            <g:PushButton ui:field="salesforceDescribeSobjectConnector" addStyleNames="{style.buttonStyle}"
+            <g:PushButton ui:field="salesForceDescribeSobjectConnector" addStyleNames="{style.buttonStyle}"
                           title="{local.toolbarSalesforceDescribeSobjectConnectorTooltip}">
                 <g:upFace image="{res.salesforceConnectorToolbar}"/>
             </g:PushButton>
 
-            <g:PushButton ui:field="salesforceDescribeSobjectsConnector" addStyleNames="{style.buttonStyle}"
+            <g:PushButton ui:field="salesForceDescribeSobjectsConnector" addStyleNames="{style.buttonStyle}"
                           title="{local.toolbarSalesforceDescribeSobjectsConnectorTooltip}">
+                <g:upFace image="{res.salesforceConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="salesForceQueryConnector" addStyleNames="{style.buttonStyle}"
+                          title="{local.connectorSalesforceQueryTooltip}">
+                <g:upFace image="{res.salesforceConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="salesForceQueryAllConnector" addStyleNames="{style.buttonStyle}"
+                          title="{local.connectorSalesforceQueryAllTooltip}">
+                <g:upFace image="{res.salesforceConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="salesForceQueryMoreConnector" addStyleNames="{style.buttonStyle}"
+                          title="{local.connectorSalesforceQueryMoreTooltip}">
+                <g:upFace image="{res.salesforceConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="salesForceResetPasswordConnector" addStyleNames="{style.buttonStyle}"
+                          title="{local.connectorSalesforceResetPasswordTooltip}">
+                <g:upFace image="{res.salesforceConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="salesForceRetriveConnector" addStyleNames="{style.buttonStyle}"
+                          title="{local.connectorSalesforceRetriveTooltip}">
+                <g:upFace image="{res.salesforceConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="salesForceSearchConnector" addStyleNames="{style.buttonStyle}"
+                          title="{local.connectorSalesforceSearchTooltip}">
+                <g:upFace image="{res.salesforceConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="salesForceSendEmailConnector" addStyleNames="{style.buttonStyle}"
+                          title="{local.connectorSalesforceSendEmailTooltip}">
+                <g:upFace image="{res.salesforceConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="salesForceSendEmailMessageConnector" addStyleNames="{style.buttonStyle}"
+                          title="{local.connectorSalesforceSendEmailMessageTooltip}">
+                <g:upFace image="{res.salesforceConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="salesForceSetPasswordConnector" addStyleNames="{style.buttonStyle}"
+                          title="{local.connectorSalesforceSetPasswordTooltip}">
+                <g:upFace image="{res.salesforceConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="salesForceUndeleteConnector" addStyleNames="{style.buttonStyle}"
+                          title="{local.connectorSalesforceUndeleteTooltip}">
+                <g:upFace image="{res.salesforceConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="salesForceUpsetConnector" addStyleNames="{style.buttonStyle}"
+                          title="{local.connectorSalesforceUpsetTooltip}">
                 <g:upFace image="{res.salesforceConnectorToolbar}"/>
             </g:PushButton>
 
