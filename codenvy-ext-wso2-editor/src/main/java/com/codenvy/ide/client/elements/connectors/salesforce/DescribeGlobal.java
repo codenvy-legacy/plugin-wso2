@@ -16,20 +16,15 @@
 package com.codenvy.ide.client.elements.connectors.salesforce;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.elements.AbstractShape;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType;
 
 /**
  * The Class describes DescribeGlobal connector for Salesforce group connectors. Also the class contains the business logic
@@ -37,64 +32,19 @@ import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralPrope
  * restore the condition of the element when you open ESB project after saving.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
-public class DescribeGlobal extends AbstractShape {
+public class DescribeGlobal extends AbstractSalesForceConnector {
 
     public static final String ELEMENT_NAME       = "describeGlobal";
     public static final String SERIALIZATION_NAME = "salesforce.describeGlobal";
-    public static final String CONFIG_KEY         = "configKey";
 
     private static final List<String> PROPERTIES = Arrays.asList();
-
-    private String              configRef;
-    private ParameterEditorType parameterEditorType;
 
     @Inject
     public DescribeGlobal(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
 
         parameterEditorType = ParameterEditorType.Inline;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    protected String serializeAttributes() {
-        return configRef == null || configRef.isEmpty() ? "" : CONFIG_KEY + "=\"" + configRef + "\"";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void applyAttributes(@Nonnull Node node) {
-        if (node.hasAttributes()) {
-            Node attribute = node.getAttributes().item(0);
-
-            configRef = attribute.getNodeValue();
-        }
-    }
-
-    public void setParameterEditorType(@Nonnull ParameterEditorType parameterEditorType) {
-        this.parameterEditorType = parameterEditorType;
-    }
-
-    @Nonnull
-    public String getConfigRef() {
-        return configRef;
-    }
-
-    public void setConfigRef(@Nonnull String configRef) {
-        this.configRef = configRef;
-    }
-
-    @Nonnull
-    public ParameterEditorType getParameterEditorType() {
-        return parameterEditorType;
-    }
-
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.salesforce();
     }
 }

@@ -538,7 +538,7 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     String errorMessage();
 
     @Key("propertiespanel.connector.expression")
-    String propertiespanelConnectorExpression();
+    String connectorExpression();
 
     @Key("propertiespanel.connector.configuration.title")
     String propertiespanelConnectorConfigurationTitle();

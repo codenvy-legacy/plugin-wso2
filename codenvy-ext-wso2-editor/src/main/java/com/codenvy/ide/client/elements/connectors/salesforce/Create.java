@@ -16,13 +16,11 @@
 package com.codenvy.ide.client.elements.connectors.salesforce;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.elements.AbstractShape;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -32,8 +30,8 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.NamespacedPropertyEditor;
 import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
@@ -42,29 +40,27 @@ import static com.codenvy.ide.collections.Collections.createArray;
  * restore the condition of the element when you open ESB project after saving.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
-public class Create extends AbstractShape {
+public class Create extends AbstractSalesForceConnector {
 
     public static final String ELEMENT_NAME       = "Create";
     public static final String SERIALIZATION_NAME = "salesforce.create";
-    public static final String CONFIG_KEY         = "configKey";
     public static final String ALL_OR_NONE        = "allOrNone";
     public static final String TRUNCATE           = "allowFieldTruncate";
     public static final String SUBJECTS           = "sobjects";
 
     private static final List<String> PROPERTIES = Arrays.asList(ALL_OR_NONE, TRUNCATE, SUBJECTS);
 
-    private String              configRef;
-    private String              allOrNone;
-    private String              truncate;
-    private String              subjects;
-    private String              allOrNoneInline;
-    private String              truncateInline;
-    private String              subjectsInline;
-    private ParameterEditorType parameterEditorType;
-    private Array<NameSpace>    truncateNameSpaces;
-    private Array<NameSpace>    subjectsNameSpaces;
-    private Array<NameSpace>    allOrNoneNameSpaces;
+    private String           allOrNone;
+    private String           truncate;
+    private String           subjects;
+    private String           allOrNoneInline;
+    private String           truncateInline;
+    private String           subjectsInline;
+    private Array<NameSpace> truncateNameSpaces;
+    private Array<NameSpace> subjectsNameSpaces;
+    private Array<NameSpace> allOrNoneNameSpaces;
 
     @Inject
     public Create(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
@@ -77,18 +73,9 @@ public class Create extends AbstractShape {
         truncateInline = "";
         subjectsInline = "";
 
-        parameterEditorType = ParameterEditorType.Inline;
-
         allOrNoneNameSpaces = createArray();
         truncateNameSpaces = createArray();
         subjectsNameSpaces = createArray();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    protected String serializeAttributes() {
-        return configRef == null || configRef.isEmpty() ? "" : CONFIG_KEY + "=\"" + configRef + "\"";
     }
 
     /** {@inheritDoc} */
@@ -133,6 +120,8 @@ public class Create extends AbstractShape {
                     allOrNoneInline = nodeValue;
                 } else {
                     allOrNone = nodeValue;
+
+                    parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
 
@@ -141,6 +130,8 @@ public class Create extends AbstractShape {
                     truncateInline = nodeValue;
                 } else {
                     truncate = nodeValue;
+
+                    parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
 
@@ -149,41 +140,12 @@ public class Create extends AbstractShape {
                     subjectsInline = nodeValue;
                 } else {
                     subjects = nodeValue;
+
+                    parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
 
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void applyAttributes(@Nonnull Node node) {
-        NamedNodeMap attributeMap = node.getAttributes();
-
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
-
-            String attributeValue = attributeNode.getNodeValue();
-
-            switch (attributeNode.getNodeName()) {
-                case CONFIG_KEY:
-                    configRef = attributeValue;
-                    break;
-            }
-        }
-    }
-
-    public void setParameterEditorType(@Nonnull ParameterEditorType parameterEditorType) {
-        this.parameterEditorType = parameterEditorType;
-    }
-
-    @Nonnull
-    public String getConfigRef() {
-        return configRef;
-    }
-
-    public void setConfigRef(@Nonnull String configRef) {
-        this.configRef = configRef;
     }
 
     @Nonnull
@@ -214,11 +176,11 @@ public class Create extends AbstractShape {
     }
 
     @Nonnull
-    public String getAllOrNoneInlineInline() {
+    public String getAllOrNoneInline() {
         return allOrNoneInline;
     }
 
-    public void setAllOrNoneInlineInline(@Nonnull String allOrNoneInline) {
+    public void setAllOrNoneInline(@Nonnull String allOrNoneInline) {
         this.allOrNoneInline = allOrNoneInline;
     }
 
@@ -259,11 +221,6 @@ public class Create extends AbstractShape {
     }
 
     @Nonnull
-    public ParameterEditorType getParameterEditorType() {
-        return parameterEditorType;
-    }
-
-    @Nonnull
     public Array<NameSpace> getSubjectsNameSpaces() {
         return subjectsNameSpaces;
     }
@@ -272,10 +229,4 @@ public class Create extends AbstractShape {
         this.subjectsNameSpaces = subjectsNameSpaces;
     }
 
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.salesforce();
-    }
 }

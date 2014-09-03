@@ -16,13 +16,11 @@
 package com.codenvy.ide.client.elements.connectors.salesforce;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.elements.AbstractShape;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -32,8 +30,8 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.NamespacedPropertyEditor;
 import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
@@ -42,12 +40,12 @@ import static com.codenvy.ide.collections.Collections.createArray;
  * restore the condition of the element when you open ESB project after saving.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
-public class Init extends AbstractShape {
+public class Init extends AbstractSalesForceConnector {
 
     public static final String ELEMENT_NAME       = "Init";
     public static final String SERIALIZATION_NAME = "salesforce.init";
-    public static final String CONFIG_KEY         = "configKey";
     public static final String USERNAME           = "username";
     public static final String PASSWORD           = "password";
     public static final String LOGIN_URL          = "loginUrl";
@@ -55,20 +53,20 @@ public class Init extends AbstractShape {
 
     private static final List<String> PROPERTIES = Arrays.asList(USERNAME, PASSWORD, LOGIN_URL, FORCE_LOGIN);
 
-    private String              configRef;
-    private String              username;
-    private String              password;
-    private String              loginUrl;
-    private String              forceLogin;
-    private String              usernameInline;
-    private String              passwordInline;
-    private String              loginUrlInline;
-    private String              forceLoginInline;
-    private ParameterEditorType parameterEditorType;
-    private Array<NameSpace>    passwordNameSpaces;
-    private Array<NameSpace>    loginUrlNameSpaces;
-    private Array<NameSpace>    forceLoginNameSpaces;
-    private Array<NameSpace>    usernameNameSpaces;
+    private String username;
+    private String password;
+    private String loginUrl;
+    private String forceLogin;
+
+    private String usernameInline;
+    private String passwordInline;
+    private String loginUrlInline;
+    private String forceLoginInline;
+
+    private Array<NameSpace> passwordNameSpaces;
+    private Array<NameSpace> loginUrlNameSpaces;
+    private Array<NameSpace> forceLoginNameSpaces;
+    private Array<NameSpace> usernameNameSpaces;
 
     @Inject
     public Init(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
@@ -78,24 +76,16 @@ public class Init extends AbstractShape {
         password = "";
         loginUrl = "";
         forceLogin = "";
+
         usernameInline = "";
         passwordInline = "";
         forceLoginInline = "";
         loginUrlInline = "";
 
-        parameterEditorType = ParameterEditorType.Inline;
-
         usernameNameSpaces = createArray();
         passwordNameSpaces = createArray();
         forceLoginNameSpaces = createArray();
         loginUrlNameSpaces = createArray();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    protected String serializeAttributes() {
-        return configRef == null || configRef.isEmpty() ? "" : CONFIG_KEY + "=\"" + configRef + "\"";
     }
 
     /** {@inheritDoc} */
@@ -108,9 +98,9 @@ public class Init extends AbstractShape {
 
     @Nonnull
     private String convertPropertiesToXml(@Nonnull String username,
-                                     @Nonnull String password,
-                                     @Nonnull String forceLogin,
-                                     @Nonnull String loginUrl) {
+                                          @Nonnull String password,
+                                          @Nonnull String forceLogin,
+                                          @Nonnull String loginUrl) {
         StringBuilder result = new StringBuilder();
 
         if (!username.isEmpty()) {
@@ -145,6 +135,8 @@ public class Init extends AbstractShape {
                     usernameInline = nodeValue;
                 } else {
                     username = nodeValue;
+
+                    parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
 
@@ -153,6 +145,8 @@ public class Init extends AbstractShape {
                     passwordInline = nodeValue;
                 } else {
                     password = nodeValue;
+
+                    parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
 
@@ -161,6 +155,8 @@ public class Init extends AbstractShape {
                     loginUrlInline = nodeValue;
                 } else {
                     loginUrl = nodeValue;
+
+                    parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
 
@@ -169,40 +165,11 @@ public class Init extends AbstractShape {
                     forceLoginInline = nodeValue;
                 } else {
                     forceLogin = nodeValue;
+
+                    parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void applyAttributes(@Nonnull Node node) {
-        NamedNodeMap attributeMap = node.getAttributes();
-
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
-
-            String attributeValue = attributeNode.getNodeValue();
-
-            switch (attributeNode.getNodeName()) {
-                case CONFIG_KEY:
-                    configRef = attributeValue;
-                    break;
-            }
-        }
-    }
-
-    public void setParameterEditorType(@Nonnull ParameterEditorType parameterEditorType) {
-        this.parameterEditorType = parameterEditorType;
-    }
-
-    @Nonnull
-    public String getConfigRef() {
-        return configRef;
-    }
-
-    public void setConfigRef(@Nonnull String configRef) {
-        this.configRef = configRef;
     }
 
     @Nonnull
@@ -309,19 +276,8 @@ public class Init extends AbstractShape {
         return forceLoginNameSpaces;
     }
 
-    @Nonnull
-    public ParameterEditorType getParameterEditorType() {
-        return parameterEditorType;
-    }
-
     public void setForceLoginNameSpaces(@Nonnull Array<NameSpace> forceLoginNameSpaces) {
         this.forceLoginNameSpaces = forceLoginNameSpaces;
     }
 
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.salesforce();
-    }
 }

@@ -17,11 +17,13 @@ package com.codenvy.ide.client.propertiespanel.connectors.salesforce.update;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector;
+import com.codenvy.ide.client.elements.connectors.salesforce.GeneralPropertyManager;
 import com.codenvy.ide.client.elements.connectors.salesforce.Update;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
-import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
-import com.codenvy.ide.client.propertiespanel.connectors.base.BaseConnectorPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.create.CreatePropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.GeneralConnectorPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.GeneralConnectorPanelView;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
@@ -29,69 +31,66 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType;
+import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.NamespacedPropertyEditor;
 
 /**
  * The presenter that provides a business logic of 'Create' connector properties panel for salesforce connectors.
  *
  * @author Valeriy Svydenko
  */
-public class UpdatePropertiesPanelPresenter extends AbstractPropertiesPanel<Update, CreatePropertiesPanelView>
-        implements CreatePropertiesPanelView.ActionDelegate, BaseConnectorPanelPresenter.BasePropertyChangedListener {
+public class UpdatePropertiesPanelPresenter extends GeneralConnectorPanelPresenter<Update> {
 
-    private final WSO2EditorLocalizationConstant local;
-    private final BaseConnectorPanelPresenter    baseConnectorPresenter;
+    private final WSO2EditorLocalizationConstant locale;
     private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
-    private final AddNameSpacesCallBack          addAllOrNoneNameSpacesCallBack;
-    private final AddNameSpacesCallBack          addTruncateNameSpacesCallBack;
-    private final AddNameSpacesCallBack          addSubjectsNameSpacesCallBack;
+    private final AddNameSpacesCallBack          allOrNoneCallBack;
+    private final AddNameSpacesCallBack          truncateCallBack;
+    private final AddNameSpacesCallBack          sobjectsCallBack;
 
     @Inject
-    public UpdatePropertiesPanelPresenter(CreatePropertiesPanelView view,
-                                          PropertyTypeManager propertyTypeManager,
-                                          WSO2EditorLocalizationConstant local,
-                                          BaseConnectorPanelPresenter baseConnectorPresenter,
-                                          NameSpaceEditorPresenter nameSpaceEditorPresenter) {
-        super(view, propertyTypeManager);
+    public UpdatePropertiesPanelPresenter(WSO2EditorLocalizationConstant locale,
+                                          GeneralConnectorPanelView view,
+                                          NameSpaceEditorPresenter nameSpaceEditorPresenter,
+                                          GeneralPropertyManager generalPropertyManager,
+                                          ParameterPresenter parameterPresenter,
+                                          PropertyTypeManager propertyTypeManager) {
+        super(view, generalPropertyManager, parameterPresenter, propertyTypeManager);
 
-        this.local = local;
+        this.locale = locale;
+
         this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
-        this.baseConnectorPresenter = baseConnectorPresenter;
-        this.baseConnectorPresenter.addListener(this);
 
-        this.addAllOrNoneNameSpacesCallBack = new AddNameSpacesCallBack() {
+        this.allOrNoneCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
+            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setAllOrNoneNameSpaces(nameSpaces);
                 element.setAllOrNone(expression);
 
-                UpdatePropertiesPanelPresenter.this.view.setAllOrNoneNamespace(expression);
+                UpdatePropertiesPanelPresenter.this.view.setFirstTextBoxValue(expression);
 
                 notifyListeners();
             }
         };
 
-        this.addTruncateNameSpacesCallBack = new AddNameSpacesCallBack() {
+        this.truncateCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
+            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setTruncateNameSpaces(nameSpaces);
                 element.setTruncate(expression);
 
-                UpdatePropertiesPanelPresenter.this.view.setTruncateNamespace(expression);
+                UpdatePropertiesPanelPresenter.this.view.setSecondTextBoxValue(expression);
 
                 notifyListeners();
             }
         };
 
-        this.addSubjectsNameSpacesCallBack = new AddNameSpacesCallBack() {
+        this.sobjectsCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
+            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setSubjectsNameSpaces(nameSpaces);
                 element.setSubjects(expression);
 
-                UpdatePropertiesPanelPresenter.this.view.setSubjectsNamespace(expression);
+                UpdatePropertiesPanelPresenter.this.view.setThirdTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -100,53 +99,86 @@ public class UpdatePropertiesPanelPresenter extends AbstractPropertiesPanel<Upda
 
     /** {@inheritDoc} */
     @Override
-    public void onAllOrNoneChanged() {
-        element.setAllOrNoneInlineInline(view.getAllOrNone());
+    public void onParameterEditorTypeChanged() {
+        AbstractSalesForceConnector.ParameterEditorType editorType = AbstractSalesForceConnector.ParameterEditorType.valueOf(view.getParameterEditorType());
+        element.setParameterEditorType(editorType);
+
+        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+
+        view.setVisibleFirstButton(isEquals);
+        view.setVisibleSecondButton(isEquals);
+        view.setVisibleThirdButton(isEquals);
+
+        view.setEnableFirstTextBox(!isEquals);
+        view.setEnableSecondTextBox(!isEquals);
+        view.setEnableThirdTextBox(!isEquals);
+
+        view.setFirstTextBoxValue(isEquals ? element.getAllOrNone() : element.getAllOrNoneInline());
+        view.setSecondTextBoxValue(isEquals ? element.getTruncate() : element.getTruncateInline());
+        view.setThirdTextBoxValue(isEquals ? element.getSubjects() : element.getSubjectsInline());
 
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onTruncateChanged() {
-        element.setTruncateInline(view.getTruncate());
+    public void onFirstTextBoxValueChanged() {
+        element.setAllOrNoneInline(view.getFirstTextBoxValue());
 
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onSubjectChanged() {
-        element.setSubjectsInline(view.getSubjects());
+    public void onSecondTextBoxValueChanged() {
+        element.setTruncateInline(view.getSecondTextBoxValue());
 
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void allOrNoneButtonClicked() {
+    public void onThirdTextBoxValueChanged() {
+        element.setSubjectsInline(view.getThirdTextBoxValue());
+
+        notifyListeners();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onFirstButtonClicked() {
         nameSpaceEditorPresenter.showWindowWithParameters(element.getAllOrNoneNameSpaces(),
-                                                          addAllOrNoneNameSpacesCallBack,
-                                                          local.propertiespanelConnectorExpression(),
+                                                          allOrNoneCallBack,
+                                                          locale.connectorExpression(),
                                                           element.getAllOrNone());
     }
 
     /** {@inheritDoc} */
     @Override
-    public void truncateButtonClicked() {
+    public void onSecondButtonClicked() {
         nameSpaceEditorPresenter.showWindowWithParameters(element.getTruncateNameSpaces(),
-                                                          addTruncateNameSpacesCallBack,
-                                                          local.propertiespanelConnectorExpression(),
+                                                          truncateCallBack,
+                                                          locale.connectorExpression(),
                                                           element.getTruncate());
     }
 
     /** {@inheritDoc} */
     @Override
-    public void subjectsButtonClicked() {
+    public void onThirdButtonClicked() {
         nameSpaceEditorPresenter.showWindowWithParameters(element.getSubjectsNameSpaces(),
-                                                          addSubjectsNameSpacesCallBack,
-                                                          local.propertiespanelConnectorExpression(),
+                                                          sobjectsCallBack,
+                                                          locale.connectorExpression(),
                                                           element.getSubjects());
+    }
+
+    private void redesignViewToCurrentConnector() {
+        view.setVisibleFirstPanel(true);
+        view.setVisibleSecondPanel(true);
+        view.setVisibleThirdPanel(true);
+
+        view.setFirstLabelTitle(locale.connectorAllOrNone());
+        view.setSecondLabelTitle(locale.connectorAllowFieldTruncate());
+        view.setThirdLabelTitle(locale.connectorSubjects());
     }
 
     /** {@inheritDoc} */
@@ -154,38 +186,7 @@ public class UpdatePropertiesPanelPresenter extends AbstractPropertiesPanel<Upda
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.addBaseConnector(baseConnectorPresenter);
-
-        baseConnectorPresenter.setConfigRef(element.getConfigRef());
-        baseConnectorPresenter.selectParameterEditorType(element.getParameterEditorType());
-
-        view.setAllOrNoneNamespace(element.getAllOrNone());
-        view.setAllOrNone(element.getAllOrNoneInlineInline());
-
-        view.setTruncate(element.getTruncateInline());
-        view.setTruncateNamespace(element.getTruncate());
-
-        view.setSubjects(element.getSubjectsInline());
-        view.setSubjectsNamespace(element.getSubjects());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onPropertyChanged(@Nonnull ParameterEditorType parameterEditorType, @Nonnull String configRef) {
-        boolean isNamespaceEditorParam = parameterEditorType.equals(ParameterEditorType.NamespacedPropertyEditor);
-
-        element.setParameterEditorType(parameterEditorType);
-        element.setConfigRef(configRef);
-
-        view.setVisibleAllOrNoneNamespacePanel(isNamespaceEditorParam);
-        view.setVisibleAllOrNone(!isNamespaceEditorParam);
-
-        view.setVisibleTruncateNamespacePanel(isNamespaceEditorParam);
-        view.setVisibleTruncate(!isNamespaceEditorParam);
-
-        view.setVisibleSubjectsNamespacePanel(isNamespaceEditorParam);
-        view.setVisibleSubjects(!isNamespaceEditorParam);
-
-        notifyListeners();
+        redesignViewToCurrentConnector();
+        onParameterEditorTypeChanged();
     }
 }

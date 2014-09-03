@@ -145,8 +145,8 @@ import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Ti
 import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction.discard;
 import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction.fault;
 import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction.never;
-import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.AvailableConfigs;
-import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType;
+import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.AvailableConfigs;
+import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.enrich.Source.InlineType;
 import static com.codenvy.ide.client.elements.enrich.Source.InlineType.RegistryKey;
 import static com.codenvy.ide.client.elements.enrich.Source.InlineType.SourceXML;

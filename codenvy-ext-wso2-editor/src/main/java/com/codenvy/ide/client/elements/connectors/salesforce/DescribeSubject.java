@@ -16,7 +16,6 @@
 package com.codenvy.ide.client.elements.connectors.salesforce;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.elements.AbstractShape;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
@@ -31,8 +30,8 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.NamespacedPropertyEditor;
 import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
@@ -41,21 +40,19 @@ import static com.codenvy.ide.collections.Collections.createArray;
  * restore the condition of the element when you open ESB project after saving.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
-public class DescribeSubject extends AbstractShape {
+public class DescribeSubject extends AbstractSalesForceConnector {
 
     public static final String ELEMENT_NAME       = "describeSobject";
     public static final String SERIALIZATION_NAME = "salesforce.describeSobject";
     public static final String SUBJECT            = "sobject";
-    public static final String CONFIG_KEY         = "configKey";
 
     private static final List<String> PROPERTIES = Arrays.asList(SUBJECT);
 
-    private String              configRef;
-    private String              subject;
-    private String              subjectsInline;
-    private ParameterEditorType parameterEditorType;
-    private Array<NameSpace>    subjectsNameSpaces;
+    private String           subject;
+    private String           subjectsInline;
+    private Array<NameSpace> subjectsNameSpaces;
 
     @Inject
     public DescribeSubject(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
@@ -65,15 +62,6 @@ public class DescribeSubject extends AbstractShape {
         subjectsInline = "";
 
         subjectsNameSpaces = createArray();
-
-        parameterEditorType = ParameterEditorType.Inline;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    protected String serializeAttributes() {
-        return configRef == null || configRef.isEmpty() ? "" : CONFIG_KEY + "=\"" + configRef + "\"";
     }
 
     /** {@inheritDoc} */
@@ -85,7 +73,7 @@ public class DescribeSubject extends AbstractShape {
 
     @Nonnull
     private String prepareProperties(@Nonnull String subject) {
-        return !subject.isEmpty() ? '<' + SUBJECT + '>' + this.subject + "</" + SUBJECT + '>' : "";
+        return !subject.isEmpty() ? '<' + SUBJECT + '>' + subject + "</" + SUBJECT + '>' : "";
     }
 
     /** {@inheritDoc} */
@@ -101,55 +89,29 @@ public class DescribeSubject extends AbstractShape {
                     subjectsInline = nodeValue;
                 } else {
                     subject = nodeValue;
+
+                    parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void applyAttributes(@Nonnull Node node) {
-        if (node.hasAttributes()) {
-            Node attribute = node.getAttributes().item(0);
-
-            configRef = attribute.getNodeValue();
-        }
-    }
-
-    public void setParameterEditorType(@Nonnull ParameterEditorType parameterEditorType) {
-        this.parameterEditorType = parameterEditorType;
-    }
-
     @Nonnull
-    public String getConfigRef() {
-        return configRef;
-    }
-
-    public void setConfigRef(@Nonnull String configRef) {
-        this.configRef = configRef;
-    }
-
-    @Nonnull
-    public String getSubjects() {
+    public String getSubject() {
         return subject;
     }
 
-    public void setSubjects(@Nullable String subject) {
+    public void setSubject(@Nullable String subject) {
         this.subject = subject;
     }
 
     @Nonnull
-    public String getSubjectsInline() {
+    public String getSubjectInline() {
         return subjectsInline;
     }
 
-    public void setSubjectsInline(@Nonnull String subjectsInline) {
+    public void setSubjectInline(@Nonnull String subjectsInline) {
         this.subjectsInline = subjectsInline;
-    }
-
-    @Nonnull
-    public ParameterEditorType getParameterEditorType() {
-        return parameterEditorType;
     }
 
     @Nonnull
@@ -161,10 +123,4 @@ public class DescribeSubject extends AbstractShape {
         this.subjectsNameSpaces = subjectsNameSpaces;
     }
 
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.salesforce();
-    }
 }

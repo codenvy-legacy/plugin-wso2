@@ -16,7 +16,6 @@
 package com.codenvy.ide.client.elements.connectors.salesforce;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.elements.AbstractShape;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
@@ -31,8 +30,8 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.NamespacedPropertyEditor;
 import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
@@ -41,21 +40,19 @@ import static com.codenvy.ide.collections.Collections.createArray;
  * restore the condition of the element when you open ESB project after saving.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
-public class DescribeSubjects extends AbstractShape {
+public class DescribeSubjects extends AbstractSalesForceConnector {
 
     public static final String ELEMENT_NAME       = "describeSobjects";
     public static final String SERIALIZATION_NAME = "salesforce.describeSobjects";
     public static final String SUBJECTS           = "sobjects";
-    public static final String CONFIG_KEY         = "configKey";
 
     private static final List<String> PROPERTIES = Arrays.asList(SUBJECTS);
 
-    private String              configRef;
-    private String              subjects;
-    private String              subjectsInline;
-    private ParameterEditorType parameterEditorType;
-    private Array<NameSpace>    subjectsNameSpaces;
+    private String           subjects;
+    private String           subjectsInline;
+    private Array<NameSpace> subjectsNameSpaces;
 
     @Inject
     public DescribeSubjects(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
@@ -65,15 +62,6 @@ public class DescribeSubjects extends AbstractShape {
         subjectsInline = "";
 
         subjectsNameSpaces = createArray();
-
-        parameterEditorType = ParameterEditorType.Inline;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    protected String serializeAttributes() {
-        return configRef == null || configRef.isEmpty() ? "" : CONFIG_KEY + "=\"" + configRef + "\"";
     }
 
     /** {@inheritDoc} */
@@ -85,7 +73,7 @@ public class DescribeSubjects extends AbstractShape {
 
     @Nonnull
     private String prepareProperties(@Nonnull String subjects) {
-        return !subjects.isEmpty() ? '<' + SUBJECTS + '>' + this.subjects + "</" + SUBJECTS + '>' : "";
+        return !subjects.isEmpty() ? '<' + SUBJECTS + '>' + subjects + "</" + SUBJECTS + '>' : "";
     }
 
     /** {@inheritDoc} */
@@ -101,32 +89,11 @@ public class DescribeSubjects extends AbstractShape {
                     subjectsInline = nodeValue;
                 } else {
                     subjects = nodeValue;
+
+                    parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void applyAttributes(@Nonnull Node node) {
-        if (node.hasAttributes()) {
-            Node attribute = node.getAttributes().item(0);
-
-            configRef = attribute.getNodeValue();
-        }
-    }
-
-    public void setParameterEditorType(@Nonnull ParameterEditorType parameterEditorType) {
-        this.parameterEditorType = parameterEditorType;
-    }
-
-    @Nonnull
-    public String getConfigRef() {
-        return configRef;
-    }
-
-    public void setConfigRef(@Nonnull String configRef) {
-        this.configRef = configRef;
     }
 
     @Nonnull
@@ -156,15 +123,4 @@ public class DescribeSubjects extends AbstractShape {
         this.subjectsNameSpaces = subjectsNameSpaces;
     }
 
-    @Nonnull
-    public ParameterEditorType getParameterEditorType() {
-        return parameterEditorType;
-    }
-
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.salesforce();
-    }
 }

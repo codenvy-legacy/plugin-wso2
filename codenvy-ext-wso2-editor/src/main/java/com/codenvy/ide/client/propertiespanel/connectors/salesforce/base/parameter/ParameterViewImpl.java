@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.client.propertiespanel.connectors.base.parameter;
+package com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.parameter;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.ui.window.Window;

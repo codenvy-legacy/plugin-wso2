@@ -16,53 +16,26 @@
 package com.codenvy.ide.client.propertiespanel.connectors.salesforce.describeglobal;
 
 import com.codenvy.ide.client.elements.connectors.salesforce.DescribeGlobal;
+import com.codenvy.ide.client.elements.connectors.salesforce.GeneralPropertyManager;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
-import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
-import com.codenvy.ide.client.propertiespanel.connectors.base.BaseConnectorPanelPresenter;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.GeneralConnectorPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.GeneralConnectorPanelView;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.parameter.ParameterPresenter;
 import com.google.inject.Inject;
-
-import javax.annotation.Nonnull;
-
-import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType;
 
 /**
  * The presenter that provides a business logic of 'DescribeGlobal' connector properties panel for salesforce connectors.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
-public class DescribeGlobalPropertiesPanelPresenter extends AbstractPropertiesPanel<DescribeGlobal, DescribeGlobalPropertiesPanelView>
-        implements BaseConnectorPanelPresenter.BasePropertyChangedListener {
-
-    private final BaseConnectorPanelPresenter baseConnectorPresenter;
+public class DescribeGlobalPropertiesPanelPresenter extends GeneralConnectorPanelPresenter<DescribeGlobal> {
 
     @Inject
-    public DescribeGlobalPropertiesPanelPresenter(DescribeGlobalPropertiesPanelView view,
-                                                  PropertyTypeManager propertyTypeManager,
-                                                  BaseConnectorPanelPresenter baseConnectorPresenter) {
-        super(view, propertyTypeManager);
-
-        this.baseConnectorPresenter = baseConnectorPresenter;
-        this.baseConnectorPresenter.addListener(this);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void go(@Nonnull AcceptsOneWidget container) {
-        super.go(container);
-
-        view.addBaseConnector(baseConnectorPresenter);
-
-        baseConnectorPresenter.setConfigRef(element.getConfigRef());
-        baseConnectorPresenter.selectParameterEditorType(element.getParameterEditorType());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onPropertyChanged(@Nonnull ParameterEditorType parameterEditorType, @Nonnull String configRef) {
-        element.setParameterEditorType(parameterEditorType);
-        element.setConfigRef(configRef);
-
-        notifyListeners();
+    public DescribeGlobalPropertiesPanelPresenter(GeneralConnectorPanelView view,
+                                                  GeneralPropertyManager generalPropertyManager,
+                                                  ParameterPresenter parameterPresenter,
+                                                  PropertyTypeManager propertyTypeManager) {
+        super(view, generalPropertyManager, parameterPresenter, propertyTypeManager);
     }
 }

@@ -17,11 +17,12 @@ package com.codenvy.ide.client.propertiespanel.connectors.salesforce.delete;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType;
 import com.codenvy.ide.client.elements.connectors.salesforce.Delete;
+import com.codenvy.ide.client.elements.connectors.salesforce.GeneralPropertyManager;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
-import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
-import com.codenvy.ide.client.propertiespanel.connectors.base.BaseConnectorPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.GeneralConnectorPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.GeneralConnectorPanelView;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
@@ -30,7 +31,8 @@ import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType;
+import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.NamespacedPropertyEditor;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of Delete connector
@@ -38,30 +40,25 @@ import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralPrope
  *
  * @author Dmitry Shnurenko
  */
-public class DeletePropertiesPanelPresenter extends AbstractPropertiesPanel<Delete, DeletePropertiesPanelView>
-        implements DeletePropertiesPanelView.ActionDelegate, BaseConnectorPanelPresenter.BasePropertyChangedListener {
+public class DeletePropertiesPanelPresenter extends GeneralConnectorPanelPresenter<Delete> {
 
-    private final WSO2EditorLocalizationConstant local;
-    private final BaseConnectorPanelPresenter    baseConnectorPresenter;
+    private final WSO2EditorLocalizationConstant locale;
     private final NameSpaceEditorPresenter       nameSpacePresenter;
     private final AddNameSpacesCallBack          subjectNameSpacesCallBack;
     private final AddNameSpacesCallBack          allOrNoneNameSpacesCallBack;
 
     @Inject
-    public DeletePropertiesPanelPresenter(WSO2EditorLocalizationConstant local,
-                                          BaseConnectorPanelPresenter baseConnectorPresenter,
-                                          DeletePropertiesPanelView view,
+    public DeletePropertiesPanelPresenter(WSO2EditorLocalizationConstant locale,
                                           NameSpaceEditorPresenter nameSpacePresenter,
+                                          GeneralConnectorPanelView view,
+                                          GeneralPropertyManager generalPropertyManager,
+                                          ParameterPresenter parameterPresenter,
                                           PropertyTypeManager propertyTypeManager) {
+        super(view, generalPropertyManager, parameterPresenter, propertyTypeManager);
 
-        super(view, propertyTypeManager);
-
-        this.local = local;
+        this.locale = locale;
 
         this.nameSpacePresenter = nameSpacePresenter;
-
-        this.baseConnectorPresenter = baseConnectorPresenter;
-        this.baseConnectorPresenter.addListener(this);
 
         this.subjectNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
@@ -69,7 +66,7 @@ public class DeletePropertiesPanelPresenter extends AbstractPropertiesPanel<Dele
                 element.setSubjectsNameSpaces(nameSpaces);
                 element.setSubjectExpression(expression);
 
-                DeletePropertiesPanelPresenter.this.view.setSubjectValue(expression);
+                DeletePropertiesPanelPresenter.this.view.setSecondTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -81,60 +78,73 @@ public class DeletePropertiesPanelPresenter extends AbstractPropertiesPanel<Dele
                 element.setAllOrNoneNameSpaces(nameSpaces);
                 element.setAllOrNoneExpr(expression);
 
-                DeletePropertiesPanelPresenter.this.view.setAllOrNone(expression);
+                DeletePropertiesPanelPresenter.this.view.setFirstTextBoxValue(expression);
 
                 notifyListeners();
             }
         };
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void onPropertyChanged(@Nonnull ParameterEditorType parameterType, @Nonnull String configRef) {
-        element.setParameterEditorType(parameterType);
-        element.setConfigRef(configRef);
+    public void onParameterEditorTypeChanged() {
+        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
+        element.setParameterEditorType(editorType);
 
-        view.setSubjectValue(Inline.equals(parameterType) ? element.getSubject() : element.getSubjectExpression());
-        view.setAllOrNone(Inline.equals(parameterType) ? element.getAllOrNone() : element.getAllOrNoneExpr());
+        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
 
-        view.setVisibleButton(!Inline.equals(parameterType));
-        view.setEnableTextField(Inline.equals(parameterType));
+        view.setVisibleFirstButton(isEquals);
+        view.setVisibleSecondButton(isEquals);
+
+        view.setEnableFirstTextBox(!isEquals);
+        view.setEnableSecondTextBox(!isEquals);
+
+        view.setFirstTextBoxValue(isEquals ? element.getAllOrNoneExpr() : element.getAllOrNone());
+        view.setSecondTextBoxValue(isEquals ? element.getSubjectExpression() : element.getSubject());
 
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onAllOrNoneChanged() {
-        element.setAllOrNone(view.getAllOrNone());
+    public void onFirstTextBoxValueChanged() {
+        element.setAllOrNone(view.getFirstTextBoxValue());
 
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onSubjectChanged() {
-        element.setSubject(view.getSubjectValue());
+    public void onSecondTextBoxValueChanged() {
+        element.setSubject(view.getSecondTextBoxValue());
 
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onAllOrNoneBtnClicked() {
+    public void onFirstButtonClicked() {
         nameSpacePresenter.showWindowWithParameters(element.getAllOrNoneNameSpaces(),
                                                     allOrNoneNameSpacesCallBack,
-                                                    local.propertiespanelConnectorExpression(),
+                                                    locale.connectorExpression(),
                                                     element.getAllOrNoneExpr());
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onSubjectBtnClicked() {
+    public void onSecondButtonClicked() {
         nameSpacePresenter.showWindowWithParameters(element.getSubjectsNameSpaces(),
                                                     subjectNameSpacesCallBack,
-                                                    local.propertiespanelConnectorExpression(),
+                                                    locale.connectorExpression(),
                                                     element.getSubjectExpression());
+    }
+
+    private void redesignViewToCurrentConnector() {
+        view.setVisibleFirstPanel(true);
+        view.setVisibleSecondPanel(true);
+
+        view.setFirstLabelTitle(locale.connectorAllOrNone());
+        view.setSecondLabelTitle(locale.connectorSubjects());
+
     }
 
     /** {@inheritDoc} */
@@ -142,10 +152,7 @@ public class DeletePropertiesPanelPresenter extends AbstractPropertiesPanel<Dele
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setGeneralPanel(baseConnectorPresenter);
-        baseConnectorPresenter.setConfigRef(element.getConfigRef());
-        baseConnectorPresenter.setParameterEditorType(element.getParameterEditorType());
-
-        onPropertyChanged(element.getParameterEditorType(), element.getConfigRef());
+        redesignViewToCurrentConnector();
+        onParameterEditorTypeChanged();
     }
 }

@@ -16,7 +16,6 @@
 package com.codenvy.ide.client.elements.connectors.salesforce;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.elements.AbstractShape;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
@@ -32,7 +31,8 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.NamespacedPropertyEditor;
 
 /**
  * The Class describes EmptyRecycleBin connector for Salesforce group connectors. Also the class contains the business logic
@@ -41,22 +41,19 @@ import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralPrope
  *
  * @author Dmitry Shnurenko
  */
-public class EmptyRecycleBin extends AbstractShape {
+public class EmptyRecycleBin extends AbstractSalesForceConnector {
 
     public static final String ELEMENT_NAME       = "EmptyRecycleBin";
     public static final String SERIALIZATION_NAME = "salesforce.emptyRecycleBin";
-    public static final String CONFIG_KEY         = "configKey";
     public static final String ALL_OR_NONE        = "allOrNone";
     public static final String SUBJECTS           = "sobjects";
 
     private static final List<String> PROPERTIES = Arrays.asList(ALL_OR_NONE, SUBJECTS);
 
-    private String                              configKey;
     private String                              allOrNone;
     private String                              subject;
     private String                              allOrNoneExpr;
     private String                              subjectExpression;
-    private GeneralProperty.ParameterEditorType parameterEditorType;
     private Array<NameSpace>                    allOrNoneNameSpaces;
     private Array<NameSpace>                    subjectsNameSpaces;
 
@@ -64,23 +61,13 @@ public class EmptyRecycleBin extends AbstractShape {
     public EmptyRecycleBin(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
 
-        configKey = "";
         allOrNone = "";
         subject = "";
         allOrNoneExpr = "";
         subjectExpression = "";
 
-        parameterEditorType = Inline;
-
         allOrNoneNameSpaces = Collections.createArray();
         subjectsNameSpaces = Collections.createArray();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    protected String serializeAttributes() {
-        return configKey == null || configKey.isEmpty() ? "" : CONFIG_KEY + "=\"" + configKey + "\"";
     }
 
     /** {@inheritDoc} */
@@ -127,28 +114,11 @@ public class EmptyRecycleBin extends AbstractShape {
                     subject = nodeValue;
                 } else {
                     subjectExpression = nodeValue;
+
+                    parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void applyAttributes(@Nonnull Node node) {
-        if (node.hasAttributes()) {
-            Node attribute = node.getAttributes().item(0);
-
-            configKey = attribute.getNodeValue();
-        }
-    }
-
-    @Nonnull
-    public String getConfigRef() {
-        return configKey;
-    }
-
-    public void setConfigRef(@Nonnull String configRef) {
-        this.configKey = configRef;
     }
 
     @Nonnull
@@ -188,15 +158,6 @@ public class EmptyRecycleBin extends AbstractShape {
     }
 
     @Nonnull
-    public GeneralProperty.ParameterEditorType getParameterEditorType() {
-        return parameterEditorType;
-    }
-
-    public void setParameterEditorType(@Nonnull GeneralProperty.ParameterEditorType parameterEditorType) {
-        this.parameterEditorType = parameterEditorType;
-    }
-
-    @Nonnull
     public String getAllOrNoneExpr() {
         return allOrNoneExpr;
     }
@@ -214,10 +175,4 @@ public class EmptyRecycleBin extends AbstractShape {
         this.subjectExpression = subjectExpression;
     }
 
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.salesforce();
-    }
 }

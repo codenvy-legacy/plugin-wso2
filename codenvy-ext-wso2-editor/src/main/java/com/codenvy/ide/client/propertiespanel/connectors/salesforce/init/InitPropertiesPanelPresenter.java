@@ -17,10 +17,13 @@ package com.codenvy.ide.client.propertiespanel.connectors.salesforce.init;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector;
+import com.codenvy.ide.client.elements.connectors.salesforce.GeneralPropertyManager;
 import com.codenvy.ide.client.elements.connectors.salesforce.Init;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
-import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
-import com.codenvy.ide.client.propertiespanel.connectors.base.BaseConnectorPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.GeneralConnectorPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.GeneralConnectorPanelView;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
@@ -28,154 +31,189 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType;
+import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.NamespacedPropertyEditor;
 
 /**
  * The presenter that provides a business logic of 'Init' connector properties panel for salesforce connectors.
  *
  * @author Valeriy Svydenko
  */
-public class InitPropertiesPanelPresenter extends AbstractPropertiesPanel<Init, InitPropertiesPanelView>
-        implements InitPropertiesPanelView.ActionDelegate, BaseConnectorPanelPresenter.BasePropertyChangedListener {
+public class InitPropertiesPanelPresenter extends GeneralConnectorPanelPresenter<Init> {
 
-    private final WSO2EditorLocalizationConstant local;
-    private final BaseConnectorPanelPresenter    baseConnectorPresenter;
-    private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
-    private final AddNameSpacesCallBack          addUsernameNameSpacesCallBack;
-    private final AddNameSpacesCallBack          addPasswordNameSpacesCallBack;
-    private final AddNameSpacesCallBack          addForceLoginNameSpacesCallBack;
-    private final AddNameSpacesCallBack          addLoginUrlNameSpacesCallBack;
+    private final WSO2EditorLocalizationConstant locale;
+    private final NameSpaceEditorPresenter       nameSpacePresenter;
+    private final AddNameSpacesCallBack          userNameCallBack;
+    private final AddNameSpacesCallBack          passwordCallBack;
+    private final AddNameSpacesCallBack          loginUrlCallBack;
+    private final AddNameSpacesCallBack          forceLoginCallBack;
+
 
     @Inject
-    public InitPropertiesPanelPresenter(InitPropertiesPanelView view,
-                                        PropertyTypeManager propertyTypeManager,
-                                        WSO2EditorLocalizationConstant local,
-                                        BaseConnectorPanelPresenter baseConnectorPresenter,
-                                        NameSpaceEditorPresenter nameSpaceEditorPresenter) {
-        super(view, propertyTypeManager);
+    public InitPropertiesPanelPresenter(WSO2EditorLocalizationConstant locale,
+                                        NameSpaceEditorPresenter nameSpacePresenter,
+                                        GeneralConnectorPanelView view,
+                                        GeneralPropertyManager generalPropertyManager,
+                                        ParameterPresenter parameterPresenter,
+                                        PropertyTypeManager propertyTypeManager) {
+        super(view, generalPropertyManager, parameterPresenter, propertyTypeManager);
 
-        this.local = local;
-        this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
-        this.baseConnectorPresenter = baseConnectorPresenter;
-        this.baseConnectorPresenter.addListener(this);
+        this.locale = locale;
 
-        this.addUsernameNameSpacesCallBack = new AddNameSpacesCallBack() {
+        this.nameSpacePresenter = nameSpacePresenter;
+
+        this.userNameCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
+            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setUsernameNameSpaces(nameSpaces);
                 element.setUsername(expression);
 
-                InitPropertiesPanelPresenter.this.view.setUsernameNamespace(expression);
+                InitPropertiesPanelPresenter.this.view.setFirstTextBoxValue(expression);
 
                 notifyListeners();
             }
         };
 
-        this.addPasswordNameSpacesCallBack = new AddNameSpacesCallBack() {
+        this.passwordCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
+            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setPasswordNameSpaces(nameSpaces);
                 element.setPassword(expression);
 
-                InitPropertiesPanelPresenter.this.view.setPasswordNamespace(expression);
+                InitPropertiesPanelPresenter.this.view.setSecondTextBoxValue(expression);
 
                 notifyListeners();
             }
         };
 
-        this.addForceLoginNameSpacesCallBack = new AddNameSpacesCallBack() {
+        this.loginUrlCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
-                element.setForceLoginNameSpaces(nameSpaces);
-                element.setForceLogin(expression);
-
-                InitPropertiesPanelPresenter.this.view.setForceLoginNamespace(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.addLoginUrlNameSpacesCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
+            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setLoginUrlNameSpaces(nameSpaces);
                 element.setLoginUrl(expression);
 
-                InitPropertiesPanelPresenter.this.view.setLoginUrlNamespace(expression);
+                InitPropertiesPanelPresenter.this.view.setThirdTextBoxValue(expression);
+
+                notifyListeners();
+            }
+        };
+
+        this.forceLoginCallBack = new AddNameSpacesCallBack() {
+            @Override
+            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+                element.setForceLoginNameSpaces(nameSpaces);
+                element.setForceLogin(expression);
+
+                InitPropertiesPanelPresenter.this.view.setFourthTextBoxValue(expression);
 
                 notifyListeners();
             }
         };
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void onUsernameChanged() {
-        element.setUsernameInline(view.getUsername());
+    public void onParameterEditorTypeChanged() {
+        AbstractSalesForceConnector.ParameterEditorType editorType = AbstractSalesForceConnector.ParameterEditorType.valueOf(view.getParameterEditorType());
+        element.setParameterEditorType(editorType);
+
+        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+
+        view.setVisibleFirstButton(isEquals);
+        view.setVisibleSecondButton(isEquals);
+        view.setVisibleThirdButton(isEquals);
+        view.setVisibleFourthButton(isEquals);
+
+        view.setEnableFirstTextBox(!isEquals);
+        view.setEnableSecondTextBox(!isEquals);
+        view.setEnableThirdTextBox(!isEquals);
+        view.setEnableFourthTextBox(!isEquals);
+
+        view.setFirstTextBoxValue(isEquals ? element.getUsername() : element.getUsernameInline());
+        view.setSecondTextBoxValue(isEquals ? element.getPassword() : element.getPasswordInline());
+        view.setThirdTextBoxValue(isEquals ? element.getLoginUrl() : element.getLoginUrlInline());
+        view.setFourthTextBoxValue(isEquals ? element.getForceLogin() : element.getForceLoginInline());
 
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onPasswordChanged() {
-        element.setPasswordInline(view.getPassword());
+    public void onFirstTextBoxValueChanged() {
+        element.setUsernameInline(view.getFirstTextBoxValue());
 
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onLoginUrlChanged() {
-        element.setLoginUrlInline(view.getLoginUrl());
+    public void onSecondTextBoxValueChanged() {
+        element.setPasswordInline(view.getSecondTextBoxValue());
 
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onForceLoginChanged() {
-        element.setForceLoginInline(view.getForceLogin());
+    public void onThirdTextBoxValueChanged() {
+        element.setLoginUrlInline(view.getThirdTextBoxValue());
 
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void usernameButtonClicked() {
-        nameSpaceEditorPresenter.showWindowWithParameters(element.getUsernameNameSpaces(),
-                                                          addUsernameNameSpacesCallBack,
-                                                          local.propertiespanelConnectorExpression(),
-                                                          element.getUsername());
+    public void onFourthTextBoxValueChanged() {
+        element.setForceLoginInline(view.getFourthTextBoxValue());
+
+        notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void passwordButtonClicked() {
-        nameSpaceEditorPresenter.showWindowWithParameters(element.getPasswordNameSpaces(),
-                                                          addPasswordNameSpacesCallBack,
-                                                          local.propertiespanelConnectorExpression(),
-                                                          element.getPassword());
+    public void onFirstButtonClicked() {
+        nameSpacePresenter.showWindowWithParameters(element.getUsernameNameSpaces(),
+                                                    userNameCallBack,
+                                                    locale.connectorExpression(),
+                                                    element.getUsername());
     }
 
     /** {@inheritDoc} */
     @Override
-    public void forceLoginButtonClicked() {
-        nameSpaceEditorPresenter.showWindowWithParameters(element.getForceLoginNameSpaces(),
-                                                          addForceLoginNameSpacesCallBack,
-                                                          local.propertiespanelConnectorExpression(),
-                                                          element.getForceLogin());
+    public void onSecondButtonClicked() {
+        nameSpacePresenter.showWindowWithParameters(element.getPasswordNameSpaces(),
+                                                    passwordCallBack,
+                                                    locale.connectorExpression(),
+                                                    element.getPassword());
     }
 
     /** {@inheritDoc} */
     @Override
-    public void loginUrlButtonClicked() {
-        nameSpaceEditorPresenter.showWindowWithParameters(element.getLoginUrlNameSpaces(),
-                                                          addLoginUrlNameSpacesCallBack,
-                                                          local.propertiespanelConnectorExpression(),
-                                                          element.getLoginUrl());
+    public void onThirdButtonClicked() {
+        nameSpacePresenter.showWindowWithParameters(element.getLoginUrlNameSpaces(),
+                                                    loginUrlCallBack,
+                                                    locale.connectorExpression(),
+                                                    element.getLoginUrl());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onFourthButtonClicked() {
+        nameSpacePresenter.showWindowWithParameters(element.getForceLoginNameSpaces(),
+                                                    forceLoginCallBack,
+                                                    locale.connectorExpression(),
+                                                    element.getForceLogin());
+    }
+
+    private void redesignViewToCurrentConnector() {
+        view.setVisibleFirstPanel(true);
+        view.setVisibleSecondPanel(true);
+        view.setVisibleThirdPanel(true);
+        view.setVisibleFourthPanel(true);
+
+        view.setFirstLabelTitle(locale.connectorUsername());
+        view.setSecondLabelTitle(locale.connectorPassword());
+        view.setThirdLabelTitle(locale.connectorLoginUrl());
+        view.setFourthLabelTitle(locale.connectorForceLogin());
     }
 
     /** {@inheritDoc} */
@@ -183,44 +221,7 @@ public class InitPropertiesPanelPresenter extends AbstractPropertiesPanel<Init, 
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.addBaseConnector(baseConnectorPresenter);
-
-        baseConnectorPresenter.setConfigRef(element.getConfigRef());
-        baseConnectorPresenter.selectParameterEditorType(element.getParameterEditorType());
-
-        view.setUsernameNamespace(element.getUsername());
-        view.setUsername(element.getUsernameInline());
-
-        view.setPassword(element.getPasswordInline());
-        view.setPasswordNamespace(element.getPassword());
-
-        view.setLoginUrl(element.getLoginUrlInline());
-        view.setLoginUrlNamespace(element.getLoginUrl());
-
-        view.setForceLogin(element.getForceLoginInline());
-        view.setForceLoginNamespace(element.getForceLogin());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onPropertyChanged(@Nonnull ParameterEditorType parameterEditorType, @Nonnull String configRef) {
-        boolean isNamespaceEditorParam = parameterEditorType.equals(ParameterEditorType.NamespacedPropertyEditor);
-
-        element.setParameterEditorType(parameterEditorType);
-        element.setConfigRef(configRef);
-
-        view.setVisibleUsernameNamespacePanel(isNamespaceEditorParam);
-        view.setVisibleUsername(!isNamespaceEditorParam);
-
-        view.setVisiblePasswordNamespacePanel(isNamespaceEditorParam);
-        view.setVisiblePassword(!isNamespaceEditorParam);
-
-        view.setVisibleForceLoginNamespacePanel(isNamespaceEditorParam);
-        view.setVisibleForceLogin(!isNamespaceEditorParam);
-
-        view.setVisibleLoginUrlNamespacePanel(isNamespaceEditorParam);
-        view.setVisibleLoginUrl(!isNamespaceEditorParam);
-
-        notifyListeners();
+        redesignViewToCurrentConnector();
+        onParameterEditorTypeChanged();
     }
 }

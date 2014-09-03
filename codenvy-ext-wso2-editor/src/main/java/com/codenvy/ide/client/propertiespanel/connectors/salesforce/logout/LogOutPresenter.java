@@ -15,16 +15,13 @@
  */
 package com.codenvy.ide.client.propertiespanel.connectors.salesforce.logout;
 
+import com.codenvy.ide.client.elements.connectors.salesforce.GeneralPropertyManager;
 import com.codenvy.ide.client.elements.connectors.salesforce.LogOut;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
-import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
-import com.codenvy.ide.client.propertiespanel.connectors.base.BaseConnectorPanelPresenter;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.GeneralConnectorPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.GeneralConnectorPanelView;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.parameter.ParameterPresenter;
 import com.google.inject.Inject;
-
-import javax.annotation.Nonnull;
-
-import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralProperty.ParameterEditorType;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of Logout connector
@@ -32,39 +29,13 @@ import static com.codenvy.ide.client.elements.connectors.salesforce.GeneralPrope
  *
  * @author Dmitry Shnurenko
  */
-public class LogOutPresenter extends AbstractPropertiesPanel<LogOut, LogOutView>
-        implements BaseConnectorPanelPresenter.BasePropertyChangedListener {
-
-    private final BaseConnectorPanelPresenter baseConnectorPresenter;
+public class LogOutPresenter extends GeneralConnectorPanelPresenter<LogOut> {
 
     @Inject
-    public LogOutPresenter(BaseConnectorPanelPresenter baseConnectorPresenter,
-                           LogOutView view,
-                           PropertyTypeManager propertyTypeManager) {
-
-        super(view, propertyTypeManager);
-
-        this.baseConnectorPresenter = baseConnectorPresenter;
-        this.baseConnectorPresenter.addListener(this);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onPropertyChanged(@Nonnull ParameterEditorType parameterEditorType, @Nonnull String configRef) {
-        element.setParameterEditorType(parameterEditorType);
-        element.setConfigRef(configRef);
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void go(@Nonnull AcceptsOneWidget container) {
-        super.go(container);
-
-        view.setGeneralPanel(baseConnectorPresenter);
-
-        baseConnectorPresenter.setConfigRef(element.getConfigRef());
-        baseConnectorPresenter.setParameterEditorType(element.getParameterEditorType());
+    protected LogOutPresenter(GeneralConnectorPanelView view,
+                              GeneralPropertyManager generalPropertyManager,
+                              ParameterPresenter parameterPresenter,
+                              PropertyTypeManager propertyTypeManager) {
+        super(view, generalPropertyManager, parameterPresenter, propertyTypeManager);
     }
 }
