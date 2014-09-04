@@ -20,9 +20,9 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.salesforce.DescribeSubjects;
 import com.codenvy.ide.client.elements.connectors.salesforce.GeneralPropertyManager;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.GeneralConnectorPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.GeneralConnectorPanelView;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralConnectorPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralConnectorPanelView;
+import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
@@ -31,8 +31,8 @@ import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
 
 /**
  * The presenter that provides a business logic of 'DescribeSobjects' connector properties panel for salesforce connectors.

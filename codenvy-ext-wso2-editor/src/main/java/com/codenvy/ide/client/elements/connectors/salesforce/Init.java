@@ -18,9 +18,9 @@ package com.codenvy.ide.client.elements.connectors.salesforce;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -30,8 +30,8 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
 import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
@@ -42,7 +42,7 @@ import static com.codenvy.ide.collections.Collections.createArray;
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
-public class Init extends AbstractSalesForceConnector {
+public class Init extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "Init";
     public static final String SERIALIZATION_NAME = "salesforce.init";

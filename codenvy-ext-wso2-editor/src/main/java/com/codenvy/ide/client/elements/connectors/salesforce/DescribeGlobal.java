@@ -17,12 +17,11 @@ package com.codenvy.ide.client.elements.connectors.salesforce;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.Branch;
+import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,7 +33,7 @@ import java.util.List;
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
-public class DescribeGlobal extends AbstractSalesForceConnector {
+public class DescribeGlobal extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "describeGlobal";
     public static final String SERIALIZATION_NAME = "salesforce.describeGlobal";

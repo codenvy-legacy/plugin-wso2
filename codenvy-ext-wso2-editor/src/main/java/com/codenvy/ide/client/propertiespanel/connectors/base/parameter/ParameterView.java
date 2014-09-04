@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.parameter;
+package com.codenvy.ide.client.propertiespanel.connectors.base.parameter;
 
 import com.codenvy.ide.client.mvp.View;
 import com.google.inject.ImplementedBy;

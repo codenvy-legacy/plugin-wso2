@@ -16,13 +16,11 @@
 package com.codenvy.ide.client.elements.connectors.salesforce;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.elements.AbstractShape;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -32,8 +30,8 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
 import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
@@ -43,11 +41,10 @@ import static com.codenvy.ide.collections.Collections.createArray;
  *
  * @author Valeriy Svydenko
  */
-public class Upset extends AbstractShape {
+public class Upset extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "Upset";
     public static final String SERIALIZATION_NAME = "salesforce.upset";
-    public static final String CONFIG_KEY         = "configKey";
     public static final String ALL_OR_NONE        = "allOrNone";
     public static final String EXTERNAL_ID        = "externalId";
     public static final String TRUNCATE           = "allowFieldTruncate";
@@ -55,20 +52,20 @@ public class Upset extends AbstractShape {
 
     private static final List<String> PROPERTIES = Arrays.asList(ALL_OR_NONE, TRUNCATE, EXTERNAL_ID, SUBJECTS);
 
-    private String              configRef;
-    private String              allOrNone;
-    private String              truncate;
-    private String              externalId;
-    private String              subjects;
-    private String              allOrNoneInline;
-    private String              truncateInline;
-    private String              externalIdInline;
-    private String              subjectsInline;
-    private ParameterEditorType parameterEditorType;
-    private Array<NameSpace>    truncateNameSpaces;
-    private Array<NameSpace>    subjectsNameSpaces;
-    private Array<NameSpace>    externalIdNameSpaces;
-    private Array<NameSpace>    allOrNoneNameSpaces;
+    private String allOrNone;
+    private String truncate;
+    private String externalId;
+    private String subjects;
+
+    private String allOrNoneInline;
+    private String truncateInline;
+    private String externalIdInline;
+    private String subjectsInline;
+
+    private Array<NameSpace> truncateNameSpaces;
+    private Array<NameSpace> subjectsNameSpaces;
+    private Array<NameSpace> externalIdNameSpaces;
+    private Array<NameSpace> allOrNoneNameSpaces;
 
     @Inject
     public Upset(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
@@ -78,24 +75,16 @@ public class Upset extends AbstractShape {
         truncate = "";
         subjects = "";
         externalId = "";
+
         allOrNoneInline = "";
         externalIdInline = "";
         truncateInline = "";
         subjectsInline = "";
 
-        parameterEditorType = ParameterEditorType.Inline;
-
         allOrNoneNameSpaces = createArray();
         externalIdNameSpaces = createArray();
         truncateNameSpaces = createArray();
         subjectsNameSpaces = createArray();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    protected String serializeAttributes() {
-        return configRef == null || configRef.isEmpty() ? "" : CONFIG_KEY + "=\"" + configRef + "\"";
     }
 
     /** {@inheritDoc} */
@@ -124,12 +113,12 @@ public class Upset extends AbstractShape {
             result.append('<').append(TRUNCATE).append('>').append(truncate).append("</").append(TRUNCATE).append('>');
         }
 
-        if (!subjects.isEmpty()) {
-            result.append('<').append(SUBJECTS).append('>').append(subjects).append("</").append(SUBJECTS).append('>');
+        if (!externalId.isEmpty()) {
+            result.append('<').append(EXTERNAL_ID).append('>').append(externalId).append("</").append(EXTERNAL_ID).append('>');
         }
 
-        if (!externalId.isEmpty()) {
-            result.append('<').append(SUBJECTS).append('>').append(externalId).append("</").append(SUBJECTS).append('>');
+        if (!subjects.isEmpty()) {
+            result.append('<').append(SUBJECTS).append('>').append(subjects).append("</").append(SUBJECTS).append('>');
         }
 
         return result.toString();
@@ -140,6 +129,7 @@ public class Upset extends AbstractShape {
     public void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
+
         boolean isInline = Inline.equals(parameterEditorType);
 
         switch (nodeName) {
@@ -148,6 +138,8 @@ public class Upset extends AbstractShape {
                     allOrNoneInline = nodeValue;
                 } else {
                     allOrNone = nodeValue;
+
+                    parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
 
@@ -156,6 +148,8 @@ public class Upset extends AbstractShape {
                     truncateInline = nodeValue;
                 } else {
                     truncate = nodeValue;
+
+                    parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
 
@@ -164,6 +158,8 @@ public class Upset extends AbstractShape {
                     subjectsInline = nodeValue;
                 } else {
                     subjects = nodeValue;
+
+                    parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
 
@@ -172,41 +168,12 @@ public class Upset extends AbstractShape {
                     externalIdInline = nodeValue;
                 } else {
                     externalId = nodeValue;
+
+                    parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
 
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void applyAttributes(@Nonnull Node node) {
-        NamedNodeMap attributeMap = node.getAttributes();
-
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
-
-            String attributeValue = attributeNode.getNodeValue();
-
-            switch (attributeNode.getNodeName()) {
-                case CONFIG_KEY:
-                    configRef = attributeValue;
-                    break;
-            }
-        }
-    }
-
-    public void setParameterEditorType(@Nonnull ParameterEditorType parameterEditorType) {
-        this.parameterEditorType = parameterEditorType;
-    }
-
-    @Nonnull
-    public String getConfigRef() {
-        return configRef;
-    }
-
-    public void setConfigRef(@Nonnull String configRef) {
-        this.configRef = configRef;
     }
 
     @Nonnull
@@ -215,7 +182,7 @@ public class Upset extends AbstractShape {
     }
 
     public void setAllOrNone(@Nullable String allOrNone) {
-        this.allOrNone = allOrNone;
+        this.allOrNone = allOrNone + "¿";
     }
 
     @Nonnull
@@ -246,11 +213,11 @@ public class Upset extends AbstractShape {
     }
 
     @Nonnull
-    public String getAllOrNoneInlineInline() {
+    public String getAllOrNoneInline() {
         return allOrNoneInline;
     }
 
-    public void setAllOrNoneInlineInline(@Nonnull String allOrNoneInline) {
+    public void setAllOrNoneInline(@Nonnull String allOrNoneInline) {
         this.allOrNoneInline = allOrNoneInline;
     }
 
@@ -309,11 +276,6 @@ public class Upset extends AbstractShape {
     }
 
     @Nonnull
-    public ParameterEditorType getParameterEditorType() {
-        return parameterEditorType;
-    }
-
-    @Nonnull
     public Array<NameSpace> getSubjectsNameSpaces() {
         return subjectsNameSpaces;
     }
@@ -322,10 +284,4 @@ public class Upset extends AbstractShape {
         this.subjectsNameSpaces = subjectsNameSpaces;
     }
 
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.salesforce();
-    }
 }

@@ -16,24 +16,21 @@
 package com.codenvy.ide.client.elements.connectors.salesforce;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.elements.AbstractShape;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 
 /**
  * The Class describes Undelete connector for Salesforce group connectors. Also the class contains the business logic
@@ -42,22 +39,19 @@ import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSale
  *
  * @author Dmitry Shnurenko
  */
-public class Undelete extends AbstractShape {
+public class Undelete extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "Undelete";
     public static final String SERIALIZATION_NAME = "salesforce.undelete";
-    public static final String CONFIG_KEY         = "configKey";
     public static final String ALL_OR_NONE        = "allOrNone";
     public static final String SUBJECTS           = "sobjects";
 
     private static final List<String> PROPERTIES = Arrays.asList(ALL_OR_NONE, SUBJECTS);
 
-    private String              configKey;
     private String              allOrNone;
     private String              subject;
     private String              allOrNoneExpr;
     private String              subjectExpression;
-    private ParameterEditorType parameterEditorType;
     private Array<NameSpace>    allOrNoneNameSpaces;
     private Array<NameSpace>    subjectsNameSpaces;
 
@@ -65,23 +59,13 @@ public class Undelete extends AbstractShape {
     public Undelete(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
 
-        configKey = "";
         allOrNone = "";
         subject = "";
         allOrNoneExpr = "";
         subjectExpression = "";
 
-        parameterEditorType = Inline;
-
         allOrNoneNameSpaces = Collections.createArray();
         subjectsNameSpaces = Collections.createArray();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    protected String serializeAttributes() {
-        return configKey == null || configKey.isEmpty() ? "" : CONFIG_KEY + "=\"" + configKey + "\"";
     }
 
     /** {@inheritDoc} */
@@ -134,25 +118,6 @@ public class Undelete extends AbstractShape {
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void applyAttributes(@Nonnull Node node) {
-        if (node.hasAttributes()) {
-            Node attribute = node.getAttributes().item(0);
-
-            configKey = attribute.getNodeValue();
-        }
-    }
-
-    @Nonnull
-    public String getConfigRef() {
-        return configKey;
-    }
-
-    public void setConfigRef(@Nonnull String configRef) {
-        this.configKey = configRef;
-    }
-
     @Nonnull
     public String getAllOrNone() {
         return allOrNone;
@@ -190,15 +155,6 @@ public class Undelete extends AbstractShape {
     }
 
     @Nonnull
-    public ParameterEditorType getParameterEditorType() {
-        return parameterEditorType;
-    }
-
-    public void setParameterEditorType(@Nonnull ParameterEditorType parameterEditorType) {
-        this.parameterEditorType = parameterEditorType;
-    }
-
-    @Nonnull
     public String getAllOrNoneExpr() {
         return allOrNoneExpr;
     }
@@ -214,12 +170,5 @@ public class Undelete extends AbstractShape {
 
     public void setSubjectExpression(@Nonnull String subjectExpression) {
         this.subjectExpression = subjectExpression;
-    }
-
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.salesforce();
     }
 }

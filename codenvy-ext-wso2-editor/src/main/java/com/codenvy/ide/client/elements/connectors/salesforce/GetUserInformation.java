@@ -17,12 +17,11 @@ package com.codenvy.ide.client.elements.connectors.salesforce;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.Branch;
+import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,7 +32,7 @@ import java.util.List;
  *
  * @author Dmitry Shnurenko
  */
-public class GetUserInformation extends AbstractSalesForceConnector {
+public class GetUserInformation extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "GetUserInfo";
     public static final String SERIALIZATION_NAME = "salesforce.getUserInformation";

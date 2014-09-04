@@ -17,13 +17,12 @@ package com.codenvy.ide.client.propertiespanel.connectors.salesforce.update;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector;
 import com.codenvy.ide.client.elements.connectors.salesforce.GeneralPropertyManager;
 import com.codenvy.ide.client.elements.connectors.salesforce.Update;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.GeneralConnectorPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.GeneralConnectorPanelView;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralConnectorPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralConnectorPanelView;
+import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
@@ -32,10 +31,12 @@ import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
 
 /**
- * The presenter that provides a business logic of 'Create' connector properties panel for salesforce connectors.
+ * The class provides the business logic that allows editor to react on user's action and to change state of Update connector
+ * depending on user's changes of properties.
  *
  * @author Valeriy Svydenko
  */
@@ -100,7 +101,7 @@ public class UpdatePropertiesPanelPresenter extends GeneralConnectorPanelPresent
     /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
-        AbstractSalesForceConnector.ParameterEditorType editorType = AbstractSalesForceConnector.ParameterEditorType.valueOf(view.getParameterEditorType());
+        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
         element.setParameterEditorType(editorType);
 
         boolean isEquals = NamespacedPropertyEditor.equals(editorType);

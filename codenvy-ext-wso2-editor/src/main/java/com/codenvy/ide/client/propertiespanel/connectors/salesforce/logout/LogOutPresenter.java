@@ -18,9 +18,9 @@ package com.codenvy.ide.client.propertiespanel.connectors.salesforce.logout;
 import com.codenvy.ide.client.elements.connectors.salesforce.GeneralPropertyManager;
 import com.codenvy.ide.client.elements.connectors.salesforce.LogOut;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.GeneralConnectorPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.GeneralConnectorPanelView;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralConnectorPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralConnectorPanelView;
+import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.google.inject.Inject;
 
 /**

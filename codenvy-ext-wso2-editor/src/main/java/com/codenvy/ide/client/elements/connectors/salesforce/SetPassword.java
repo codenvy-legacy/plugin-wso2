@@ -16,13 +16,11 @@
 package com.codenvy.ide.client.elements.connectors.salesforce;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.elements.AbstractShape;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -32,8 +30,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
@@ -43,24 +40,21 @@ import static com.codenvy.ide.collections.Collections.createArray;
  *
  * @author Valeriy Svydenko
  */
-public class SetPassword extends AbstractShape {
+public class SetPassword extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "SetPassword";
     public static final String SERIALIZATION_NAME = "salesforce.setPassword";
-    public static final String CONFIG_KEY         = "configKey";
     public static final String USERNAME           = "username";
     public static final String PASSWORD           = "password";
 
     private static final List<String> PROPERTIES = Arrays.asList(USERNAME, PASSWORD);
 
-    private String              configRef;
-    private String              username;
-    private String              password;
-    private String              usernameInline;
-    private String              passwordInline;
-    private ParameterEditorType parameterEditorType;
-    private Array<NameSpace>    passwordNameSpaces;
-    private Array<NameSpace>    usernameNameSpaces;
+    private String           username;
+    private String           password;
+    private String           usernameInline;
+    private String           passwordInline;
+    private Array<NameSpace> passwordNameSpaces;
+    private Array<NameSpace> usernameNameSpaces;
 
     @Inject
     public SetPassword(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
@@ -71,17 +65,8 @@ public class SetPassword extends AbstractShape {
         usernameInline = "";
         passwordInline = "";
 
-        parameterEditorType = ParameterEditorType.Inline;
-
         usernameNameSpaces = createArray();
         passwordNameSpaces = createArray();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    protected String serializeAttributes() {
-        return configRef == null || configRef.isEmpty() ? "" : CONFIG_KEY + "=\"" + configRef + "\"";
     }
 
     /** {@inheritDoc} */
@@ -132,37 +117,6 @@ public class SetPassword extends AbstractShape {
                 }
                 break;
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void applyAttributes(@Nonnull Node node) {
-        NamedNodeMap attributeMap = node.getAttributes();
-
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
-
-            String attributeValue = attributeNode.getNodeValue();
-
-            switch (attributeNode.getNodeName()) {
-                case CONFIG_KEY:
-                    configRef = attributeValue;
-                    break;
-            }
-        }
-    }
-
-    public void setParameterEditorType(@Nonnull ParameterEditorType parameterEditorType) {
-        this.parameterEditorType = parameterEditorType;
-    }
-
-    @Nonnull
-    public String getConfigRef() {
-        return configRef;
-    }
-
-    public void setConfigRef(@Nonnull String configRef) {
-        this.configRef = configRef;
     }
 
     @Nonnull
@@ -217,17 +171,5 @@ public class SetPassword extends AbstractShape {
 
     public void setPasswordNameSpaces(@Nonnull Array<NameSpace> passwordNameSpaces) {
         this.passwordNameSpaces = passwordNameSpaces;
-    }
-
-    @Nonnull
-    public ParameterEditorType getParameterEditorType() {
-        return parameterEditorType;
-    }
-
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.salesforce();
     }
 }

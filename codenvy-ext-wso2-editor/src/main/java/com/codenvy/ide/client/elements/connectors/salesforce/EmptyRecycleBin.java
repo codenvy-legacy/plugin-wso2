@@ -18,21 +18,20 @@ package com.codenvy.ide.client.elements.connectors.salesforce;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
 
 /**
  * The Class describes EmptyRecycleBin connector for Salesforce group connectors. Also the class contains the business logic
@@ -41,7 +40,7 @@ import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSale
  *
  * @author Dmitry Shnurenko
  */
-public class EmptyRecycleBin extends AbstractSalesForceConnector {
+public class EmptyRecycleBin extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "EmptyRecycleBin";
     public static final String SERIALIZATION_NAME = "salesforce.emptyRecycleBin";

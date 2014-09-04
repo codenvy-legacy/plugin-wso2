@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.propertiespanel.connectors.salesforce.base;
+package com.codenvy.ide.client.propertiespanel.connectors.base;
 
-import com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector;
+import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.elements.connectors.salesforce.GeneralPropertyManager;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.parameter.ConnectorParameterCallBack;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ConnectorParameterCallBack;
+import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import javax.annotation.Nonnull;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.AvailableConfigs.SELECT_FROM_CONFIG;
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.AvailableConfigs.SELECT_FROM_CONFIG;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -34,7 +34,7 @@ import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSale
  *
  * @author Dmitry Shnurenko
  */
-public abstract class GeneralConnectorPanelPresenter<T extends AbstractSalesForceConnector>
+public abstract class GeneralConnectorPanelPresenter<T extends AbstractConnector>
         extends AbstractPropertiesPanel<T, GeneralConnectorPanelView>
         implements GeneralConnectorPanelView.ActionDelegate, GeneralPropertyManager.GeneralPropertyListener {
 
@@ -78,6 +78,8 @@ public abstract class GeneralConnectorPanelPresenter<T extends AbstractSalesForc
             view.setConfigRef(value);
             element.setConfigRef(value);
         }
+
+        notifyListeners();
     }
 
     /** {@inheritDoc} */

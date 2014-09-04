@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.propertiespanel.connectors.salesforce.base;
+package com.codenvy.ide.client.propertiespanel.connectors.base;
 
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.inject.ImplementedBy;
@@ -21,11 +21,16 @@ import com.google.inject.ImplementedBy;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 
 /**
  * The abstract view's representation of current connector's properties panel. It provides an ability to show all available properties
- * of the connector and edit it.
+ * of the connector and edit it. To display the parameter of connector we need four panels. Depends on current connector, the number
+ * of displaying panels may be changed. For displaying or hiding parameter panels of connector we have some methods in our interface.
+ * For example setVisibleFirstPanel(boolean isVisible). For detailed settings any panel we have methods which allows show and hide
+ * button or set enable and disable text box. For example setEnableFirstTextBox(boolean isEnable) and
+ * setVisibleFirstButton(boolean isVisible). Each panel has its index number which corresponds to index number of connector's parameter
+ * on properties panel.
  *
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko

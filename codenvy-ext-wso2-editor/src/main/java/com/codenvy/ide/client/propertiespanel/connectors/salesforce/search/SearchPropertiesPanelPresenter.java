@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.propertiespanel.connectors.salesforce.resetpassword;
+package com.codenvy.ide.client.propertiespanel.connectors.salesforce.search;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.elements.connectors.salesforce.GeneralPropertyManager;
-import com.codenvy.ide.client.elements.connectors.salesforce.ResetPassword;
+import com.codenvy.ide.client.elements.connectors.salesforce.Search;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralConnectorPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralConnectorPanelView;
@@ -31,52 +32,50 @@ import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
 
-
 /**
- * The class provides the business logic that allows editor to react on user's action and to change state of ResetPassword connector
+ * The class provides the business logic that allows editor to react on user's action and to change state of connector
  * depending on user's changes of properties.
  *
- * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
-public class ResetPasswordPropertiesPanelPresenter extends GeneralConnectorPanelPresenter<ResetPassword> {
+public class SearchPropertiesPanelPresenter extends GeneralConnectorPanelPresenter<Search> {
 
     private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          userIdNameSpacesCallBack;
+    private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
+    private final AddNameSpacesCallBack          searchCallBack;
 
     @Inject
-    public ResetPasswordPropertiesPanelPresenter(WSO2EditorLocalizationConstant locale,
-                                                 NameSpaceEditorPresenter nameSpacePresenter,
-                                                 GeneralConnectorPanelView view,
-                                                 GeneralPropertyManager generalPropertyManager,
-                                                 ParameterPresenter parameterPresenter,
-                                                 PropertyTypeManager propertyTypeManager) {
+    public SearchPropertiesPanelPresenter(WSO2EditorLocalizationConstant locale,
+                                          NameSpaceEditorPresenter nameSpaceEditorPresenter,
+                                          GeneralConnectorPanelView view,
+                                          GeneralPropertyManager generalPropertyManager,
+                                          ParameterPresenter parameterPresenter,
+                                          PropertyTypeManager propertyTypeManager) {
         super(view, generalPropertyManager, parameterPresenter, propertyTypeManager);
 
         this.locale = locale;
 
-        this.nameSpacePresenter = nameSpacePresenter;
+        this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
 
-        this.userIdNameSpacesCallBack = new AddNameSpacesCallBack() {
+        this.searchCallBack = new AddNameSpacesCallBack() {
             @Override
             public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setUserIdNameSpaces(nameSpaces);
-                element.setUserIdExpr(expression);
+                element.setSearchStringNameSpaces(nameSpaces);
+                element.setSearchString(expression);
 
-                ResetPasswordPropertiesPanelPresenter.this.view.setSecondTextBoxValue(expression);
+                SearchPropertiesPanelPresenter.this.view.setFirstTextBoxValue(expression);
 
                 notifyListeners();
             }
         };
     }
 
-    /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
+        AbstractConnector.ParameterEditorType editorType =
+                AbstractConnector.ParameterEditorType.valueOf(view.getParameterEditorType());
         element.setParameterEditorType(editorType);
 
         boolean isEquals = NamespacedPropertyEditor.equals(editorType);
@@ -85,7 +84,7 @@ public class ResetPasswordPropertiesPanelPresenter extends GeneralConnectorPanel
 
         view.setEnableFirstTextBox(!isEquals);
 
-        view.setFirstTextBoxValue(isEquals ? element.getUserIdExpr() : element.getUserId());
+        view.setFirstTextBoxValue(isEquals ? element.getSearchString() : element.getSearchStringInline());
 
         notifyListeners();
     }
@@ -93,7 +92,7 @@ public class ResetPasswordPropertiesPanelPresenter extends GeneralConnectorPanel
     /** {@inheritDoc} */
     @Override
     public void onFirstTextBoxValueChanged() {
-        element.setUserId(view.getFirstTextBoxValue());
+        element.setSearchStringInline(view.getFirstTextBoxValue());
 
         notifyListeners();
     }
@@ -101,16 +100,16 @@ public class ResetPasswordPropertiesPanelPresenter extends GeneralConnectorPanel
     /** {@inheritDoc} */
     @Override
     public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getUserIdNameSpaces(),
-                                                    userIdNameSpacesCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getUserIdExpr());
+        nameSpaceEditorPresenter.showWindowWithParameters(element.getSearchStringNameSpaces(),
+                                                          searchCallBack,
+                                                          locale.connectorExpression(),
+                                                          element.getSearchString());
     }
 
     private void redesignViewToCurrentConnector() {
         view.setVisibleFirstPanel(true);
 
-        view.setFirstLabelTitle(locale.connectorUserId());
+        view.setFirstLabelTitle(locale.connectroSearchString());
     }
 
     /** {@inheritDoc} */

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.propertiespanel.connectors.salesforce.resetpassword;
+package com.codenvy.ide.client.propertiespanel.connectors.salesforce.undelete;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.salesforce.GeneralPropertyManager;
-import com.codenvy.ide.client.elements.connectors.salesforce.ResetPassword;
+import com.codenvy.ide.client.elements.connectors.salesforce.Undelete;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralConnectorPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralConnectorPanelView;
@@ -34,46 +34,57 @@ import javax.annotation.Nonnull;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
 
-
 /**
- * The class provides the business logic that allows editor to react on user's action and to change state of ResetPassword connector
+ * The class provides the business logic that allows editor to react on user's action and to change state of Undelete connector
  * depending on user's changes of properties.
  *
- * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
-public class ResetPasswordPropertiesPanelPresenter extends GeneralConnectorPanelPresenter<ResetPassword> {
+public class UndeletePropertiesPanelPresenter extends GeneralConnectorPanelPresenter<Undelete> {
 
     private final WSO2EditorLocalizationConstant locale;
     private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          userIdNameSpacesCallBack;
+    private final AddNameSpacesCallBack          subjectNameSpacesCallBack;
+    private final AddNameSpacesCallBack          allOrNoneNameSpacesCallBack;
 
     @Inject
-    public ResetPasswordPropertiesPanelPresenter(WSO2EditorLocalizationConstant locale,
-                                                 NameSpaceEditorPresenter nameSpacePresenter,
-                                                 GeneralConnectorPanelView view,
-                                                 GeneralPropertyManager generalPropertyManager,
-                                                 ParameterPresenter parameterPresenter,
-                                                 PropertyTypeManager propertyTypeManager) {
+    public UndeletePropertiesPanelPresenter(WSO2EditorLocalizationConstant locale,
+                                            NameSpaceEditorPresenter nameSpacePresenter,
+                                            GeneralConnectorPanelView view,
+                                            GeneralPropertyManager generalPropertyManager,
+                                            ParameterPresenter parameterPresenter,
+                                            PropertyTypeManager propertyTypeManager) {
         super(view, generalPropertyManager, parameterPresenter, propertyTypeManager);
 
         this.locale = locale;
 
         this.nameSpacePresenter = nameSpacePresenter;
 
-        this.userIdNameSpacesCallBack = new AddNameSpacesCallBack() {
+        this.subjectNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
             public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setUserIdNameSpaces(nameSpaces);
-                element.setUserIdExpr(expression);
+                element.setSubjectsNameSpaces(nameSpaces);
+                element.setSubjectExpression(expression);
 
-                ResetPasswordPropertiesPanelPresenter.this.view.setSecondTextBoxValue(expression);
+                UndeletePropertiesPanelPresenter.this.view.setSecondTextBoxValue(expression);
+
+                notifyListeners();
+            }
+        };
+
+        this.allOrNoneNameSpacesCallBack = new AddNameSpacesCallBack() {
+            @Override
+            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+                element.setAllOrNoneNameSpaces(nameSpaces);
+                element.setAllOrNoneExpr(expression);
+
+                UndeletePropertiesPanelPresenter.this.view.setFirstTextBoxValue(expression);
 
                 notifyListeners();
             }
         };
     }
 
-    /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
         ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
@@ -82,10 +93,13 @@ public class ResetPasswordPropertiesPanelPresenter extends GeneralConnectorPanel
         boolean isEquals = NamespacedPropertyEditor.equals(editorType);
 
         view.setVisibleFirstButton(isEquals);
+        view.setVisibleSecondButton(isEquals);
 
         view.setEnableFirstTextBox(!isEquals);
+        view.setEnableSecondTextBox(!isEquals);
 
-        view.setFirstTextBoxValue(isEquals ? element.getUserIdExpr() : element.getUserId());
+        view.setFirstTextBoxValue(isEquals ? element.getAllOrNoneExpr() : element.getAllOrNone());
+        view.setSecondTextBoxValue(isEquals ? element.getSubjectExpression() : element.getSubject());
 
         notifyListeners();
     }
@@ -93,7 +107,15 @@ public class ResetPasswordPropertiesPanelPresenter extends GeneralConnectorPanel
     /** {@inheritDoc} */
     @Override
     public void onFirstTextBoxValueChanged() {
-        element.setUserId(view.getFirstTextBoxValue());
+        element.setAllOrNone(view.getFirstTextBoxValue());
+
+        notifyListeners();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSecondTextBoxValueChanged() {
+        element.setSubject(view.getSecondTextBoxValue());
 
         notifyListeners();
     }
@@ -101,16 +123,28 @@ public class ResetPasswordPropertiesPanelPresenter extends GeneralConnectorPanel
     /** {@inheritDoc} */
     @Override
     public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getUserIdNameSpaces(),
-                                                    userIdNameSpacesCallBack,
+        nameSpacePresenter.showWindowWithParameters(element.getAllOrNoneNameSpaces(),
+                                                    allOrNoneNameSpacesCallBack,
                                                     locale.connectorExpression(),
-                                                    element.getUserIdExpr());
+                                                    element.getAllOrNoneExpr());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSecondButtonClicked() {
+        nameSpacePresenter.showWindowWithParameters(element.getSubjectsNameSpaces(),
+                                                    subjectNameSpacesCallBack,
+                                                    locale.connectorExpression(),
+                                                    element.getSubjectExpression());
     }
 
     private void redesignViewToCurrentConnector() {
         view.setVisibleFirstPanel(true);
+        view.setVisibleSecondPanel(true);
 
-        view.setFirstLabelTitle(locale.connectorUserId());
+        view.setFirstLabelTitle(locale.connectorAllOrNone());
+        view.setSecondLabelTitle(locale.connectorSubjects());
+
     }
 
     /** {@inheritDoc} */

@@ -18,6 +18,7 @@ package com.codenvy.ide.client.elements.connectors.salesforce;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -29,8 +30,8 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType
         .NamespacedPropertyEditor;
 
 /**
@@ -40,7 +41,7 @@ import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSale
  *
  * @author Valeriy Svydenko
  */
-public class ResetPassword extends AbstractSalesForceConnector {
+public class ResetPassword extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "ResetPassword";
     public static final String SERIALIZATION_NAME = "salesforce.resetPassword";

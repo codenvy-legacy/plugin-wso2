@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.propertiespanel.connectors.salesforce.resetpassword;
+package com.codenvy.ide.client.propertiespanel.connectors.salesforce.sendemailmessage;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.salesforce.GeneralPropertyManager;
-import com.codenvy.ide.client.elements.connectors.salesforce.ResetPassword;
+import com.codenvy.ide.client.elements.connectors.salesforce.SendEmailMessage;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralConnectorPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralConnectorPanelView;
@@ -34,46 +34,44 @@ import javax.annotation.Nonnull;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
 
-
 /**
- * The class provides the business logic that allows editor to react on user's action and to change state of ResetPassword connector
+ * The class provides the business logic that allows editor to react on user's action and to change state of connector
  * depending on user's changes of properties.
  *
- * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
-public class ResetPasswordPropertiesPanelPresenter extends GeneralConnectorPanelPresenter<ResetPassword> {
+public class SendEmailMessagePropertiesPanelPresenter extends GeneralConnectorPanelPresenter<SendEmailMessage> {
 
     private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          userIdNameSpacesCallBack;
+    private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
+    private final AddNameSpacesCallBack          sendEmailMesCallBack;
 
     @Inject
-    public ResetPasswordPropertiesPanelPresenter(WSO2EditorLocalizationConstant locale,
-                                                 NameSpaceEditorPresenter nameSpacePresenter,
-                                                 GeneralConnectorPanelView view,
-                                                 GeneralPropertyManager generalPropertyManager,
-                                                 ParameterPresenter parameterPresenter,
-                                                 PropertyTypeManager propertyTypeManager) {
+    public SendEmailMessagePropertiesPanelPresenter(WSO2EditorLocalizationConstant locale,
+                                                    NameSpaceEditorPresenter nameSpaceEditorPresenter,
+                                                    GeneralConnectorPanelView view,
+                                                    GeneralPropertyManager generalPropertyManager,
+                                                    ParameterPresenter parameterPresenter,
+                                                    PropertyTypeManager propertyTypeManager) {
         super(view, generalPropertyManager, parameterPresenter, propertyTypeManager);
 
         this.locale = locale;
 
-        this.nameSpacePresenter = nameSpacePresenter;
+        this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
 
-        this.userIdNameSpacesCallBack = new AddNameSpacesCallBack() {
+        this.sendEmailMesCallBack = new AddNameSpacesCallBack() {
             @Override
             public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setUserIdNameSpaces(nameSpaces);
-                element.setUserIdExpr(expression);
+                element.setSendEmailNameSpaces(nameSpaces);
+                element.setSendEmailMessage(expression);
 
-                ResetPasswordPropertiesPanelPresenter.this.view.setSecondTextBoxValue(expression);
+                SendEmailMessagePropertiesPanelPresenter.this.view.setFirstTextBoxValue(expression);
 
                 notifyListeners();
             }
         };
     }
 
-    /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
         ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
@@ -85,7 +83,7 @@ public class ResetPasswordPropertiesPanelPresenter extends GeneralConnectorPanel
 
         view.setEnableFirstTextBox(!isEquals);
 
-        view.setFirstTextBoxValue(isEquals ? element.getUserIdExpr() : element.getUserId());
+        view.setFirstTextBoxValue(isEquals ? element.getSendEmailMessage() : element.getSendEmailMessageInline());
 
         notifyListeners();
     }
@@ -93,7 +91,7 @@ public class ResetPasswordPropertiesPanelPresenter extends GeneralConnectorPanel
     /** {@inheritDoc} */
     @Override
     public void onFirstTextBoxValueChanged() {
-        element.setUserId(view.getFirstTextBoxValue());
+        element.setSendEmailMessageInline(view.getFirstTextBoxValue());
 
         notifyListeners();
     }
@@ -101,16 +99,16 @@ public class ResetPasswordPropertiesPanelPresenter extends GeneralConnectorPanel
     /** {@inheritDoc} */
     @Override
     public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getUserIdNameSpaces(),
-                                                    userIdNameSpacesCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getUserIdExpr());
+        nameSpaceEditorPresenter.showWindowWithParameters(element.getSendEmailMessageNameSpaces(),
+                                                          sendEmailMesCallBack,
+                                                          locale.connectorExpression(),
+                                                          element.getSendEmailMessage());
     }
 
     private void redesignViewToCurrentConnector() {
         view.setVisibleFirstPanel(true);
 
-        view.setFirstLabelTitle(locale.connectorUserId());
+        view.setFirstLabelTitle(locale.connectorSendEmailMessage());
     }
 
     /** {@inheritDoc} */

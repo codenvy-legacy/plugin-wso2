@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.propertiespanel.connectors.salesforce.delete;
+package com.codenvy.ide.client.propertiespanel.connectors.salesforce.retrieve;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.connectors.salesforce.Delete;
 import com.codenvy.ide.client.elements.connectors.salesforce.GeneralPropertyManager;
+import com.codenvy.ide.client.elements.connectors.salesforce.Retrieve;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralConnectorPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralConnectorPanelView;
@@ -35,50 +35,64 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
 
 /**
- * The class provides the business logic that allows editor to react on user's action and to change state of Delete connector
+ * The class provides the business logic that allows editor to react on user's action and to change state of connector
  * depending on user's changes of properties.
  *
  * @author Dmitry Shnurenko
  */
-public class DeletePropertiesPanelPresenter extends GeneralConnectorPanelPresenter<Delete> {
+public class RetrievePropertiesPanelPresenter extends GeneralConnectorPanelPresenter<Retrieve> {
 
     private final WSO2EditorLocalizationConstant locale;
     private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          subjectNameSpacesCallBack;
-    private final AddNameSpacesCallBack          allOrNoneNameSpacesCallBack;
+    private final AddNameSpacesCallBack          fieldListCallBack;
+    private final AddNameSpacesCallBack          objectTypeCallBack;
+    private final AddNameSpacesCallBack          objectIDSCallBack;
+
 
     @Inject
-    public DeletePropertiesPanelPresenter(WSO2EditorLocalizationConstant locale,
-                                          NameSpaceEditorPresenter nameSpacePresenter,
-                                          GeneralConnectorPanelView view,
-                                          GeneralPropertyManager generalPropertyManager,
-                                          ParameterPresenter parameterPresenter,
-                                          PropertyTypeManager propertyTypeManager) {
+    public RetrievePropertiesPanelPresenter(WSO2EditorLocalizationConstant locale,
+                                            NameSpaceEditorPresenter nameSpacePresenter,
+                                            GeneralConnectorPanelView view,
+                                            GeneralPropertyManager generalPropertyManager,
+                                            ParameterPresenter parameterPresenter,
+                                            PropertyTypeManager propertyTypeManager) {
         super(view, generalPropertyManager, parameterPresenter, propertyTypeManager);
 
         this.locale = locale;
 
         this.nameSpacePresenter = nameSpacePresenter;
 
-        this.subjectNameSpacesCallBack = new AddNameSpacesCallBack() {
+        this.fieldListCallBack = new AddNameSpacesCallBack() {
             @Override
             public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setSubjectsNameSpaces(nameSpaces);
-                element.setSubjectExpression(expression);
+                element.setFieldListNameSpaces(nameSpaces);
+                element.setFieldList(expression);
 
-                DeletePropertiesPanelPresenter.this.view.setSecondTextBoxValue(expression);
+                RetrievePropertiesPanelPresenter.this.view.setFirstTextBoxValue(expression);
 
                 notifyListeners();
             }
         };
 
-        this.allOrNoneNameSpacesCallBack = new AddNameSpacesCallBack() {
+        this.objectTypeCallBack = new AddNameSpacesCallBack() {
             @Override
             public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setAllOrNoneNameSpaces(nameSpaces);
-                element.setAllOrNoneExpr(expression);
+                element.setObjectTypeNameSpaces(nameSpaces);
+                element.setObjectType(expression);
 
-                DeletePropertiesPanelPresenter.this.view.setFirstTextBoxValue(expression);
+                RetrievePropertiesPanelPresenter.this.view.setSecondTextBoxValue(expression);
+
+                notifyListeners();
+            }
+        };
+
+        this.objectIDSCallBack = new AddNameSpacesCallBack() {
+            @Override
+            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+                element.setObjectIDSNameSpaces(nameSpaces);
+                element.setObjectIDS(expression);
+
+                RetrievePropertiesPanelPresenter.this.view.setThirdTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -94,12 +108,15 @@ public class DeletePropertiesPanelPresenter extends GeneralConnectorPanelPresent
 
         view.setVisibleFirstButton(isEquals);
         view.setVisibleSecondButton(isEquals);
+        view.setVisibleThirdButton(isEquals);
 
         view.setEnableFirstTextBox(!isEquals);
         view.setEnableSecondTextBox(!isEquals);
+        view.setEnableThirdTextBox(!isEquals);
 
-        view.setFirstTextBoxValue(isEquals ? element.getAllOrNoneExpr() : element.getAllOrNone());
-        view.setSecondTextBoxValue(isEquals ? element.getSubjectExpression() : element.getSubject());
+        view.setFirstTextBoxValue(isEquals ? element.getFieldList() : element.getFieldListInline());
+        view.setSecondTextBoxValue(isEquals ? element.getObjectType() : element.getObjectTypeInline());
+        view.setThirdTextBoxValue(isEquals ? element.getObjectIDS() : element.getObjectIDSInline());
 
         notifyListeners();
     }
@@ -107,7 +124,7 @@ public class DeletePropertiesPanelPresenter extends GeneralConnectorPanelPresent
     /** {@inheritDoc} */
     @Override
     public void onFirstTextBoxValueChanged() {
-        element.setAllOrNone(view.getFirstTextBoxValue());
+        element.setFieldListInline(view.getFirstTextBoxValue());
 
         notifyListeners();
     }
@@ -115,7 +132,15 @@ public class DeletePropertiesPanelPresenter extends GeneralConnectorPanelPresent
     /** {@inheritDoc} */
     @Override
     public void onSecondTextBoxValueChanged() {
-        element.setSubject(view.getSecondTextBoxValue());
+        element.setObjectTypeInline(view.getSecondTextBoxValue());
+
+        notifyListeners();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onThirdTextBoxValueChanged() {
+        element.setObjectIDSInline(view.getThirdTextBoxValue());
 
         notifyListeners();
     }
@@ -123,28 +148,38 @@ public class DeletePropertiesPanelPresenter extends GeneralConnectorPanelPresent
     /** {@inheritDoc} */
     @Override
     public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getAllOrNoneNameSpaces(),
-                                                    allOrNoneNameSpacesCallBack,
+        nameSpacePresenter.showWindowWithParameters(element.getFieldListNameSpaces(),
+                                                    fieldListCallBack,
                                                     locale.connectorExpression(),
-                                                    element.getAllOrNoneExpr());
+                                                    element.getFieldList());
     }
 
     /** {@inheritDoc} */
     @Override
     public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getSubjectsNameSpaces(),
-                                                    subjectNameSpacesCallBack,
+        nameSpacePresenter.showWindowWithParameters(element.getObjectTypeNameSpaces(),
+                                                    objectTypeCallBack,
                                                     locale.connectorExpression(),
-                                                    element.getSubjectExpression());
+                                                    element.getObjectType());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onThirdButtonClicked() {
+        nameSpacePresenter.showWindowWithParameters(element.getObjectIDSNameSpaces(),
+                                                    objectIDSCallBack,
+                                                    locale.connectorExpression(),
+                                                    element.getObjectIDS());
     }
 
     private void redesignViewToCurrentConnector() {
         view.setVisibleFirstPanel(true);
         view.setVisibleSecondPanel(true);
+        view.setVisibleThirdPanel(true);
 
-        view.setFirstLabelTitle(locale.connectorAllOrNone());
-        view.setSecondLabelTitle(locale.connectorSubjects());
-
+        view.setFirstLabelTitle(locale.connectorFieldList());
+        view.setSecondLabelTitle(locale.connectorObjectType());
+        view.setThirdLabelTitle(locale.connectorObjectIDS());
     }
 
     /** {@inheritDoc} */

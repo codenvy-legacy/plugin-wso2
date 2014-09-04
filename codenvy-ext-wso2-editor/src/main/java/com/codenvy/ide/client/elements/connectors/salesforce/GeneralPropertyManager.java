@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.AvailableConfigs.EMPTY;
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.AvailableConfigs.SELECT_FROM_CONFIG;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.AvailableConfigs.EMPTY;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.AvailableConfigs.SELECT_FROM_CONFIG;
 
 /**
  * The Class contains state of available configuration parameter, which is general for all SalesForce connectors.

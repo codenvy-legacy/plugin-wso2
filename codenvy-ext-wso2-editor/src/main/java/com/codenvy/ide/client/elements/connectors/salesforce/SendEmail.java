@@ -16,12 +16,11 @@
 package com.codenvy.ide.client.elements.connectors.salesforce;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.elements.AbstractShape;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -31,8 +30,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
@@ -42,20 +40,17 @@ import static com.codenvy.ide.collections.Collections.createArray;
  *
  * @author Valeriy Svydenko
  */
-public class SendEmail extends AbstractShape {
+public class SendEmail extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "SendEmail";
     public static final String SERIALIZATION_NAME = "salesforce.sendEmail";
     public static final String SEND_EMAIL         = "sendEmail";
-    public static final String CONFIG_KEY         = "configKey";
 
     private static final List<String> PROPERTIES = Arrays.asList(SEND_EMAIL);
 
-    private String              configRef;
-    private String              sendEmail;
-    private String              sendEmailInline;
-    private ParameterEditorType parameterEditorType;
-    private Array<NameSpace>    sendEmailNameSpaces;
+    private String           sendEmail;
+    private String           sendEmailInline;
+    private Array<NameSpace> sendEmailNameSpaces;
 
     @Inject
     public SendEmail(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
@@ -65,15 +60,6 @@ public class SendEmail extends AbstractShape {
         sendEmailInline = "";
 
         sendEmailNameSpaces = createArray();
-
-        parameterEditorType = ParameterEditorType.Inline;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    protected String serializeAttributes() {
-        return configRef == null || configRef.isEmpty() ? "" : CONFIG_KEY + "=\"" + configRef + "\"";
     }
 
     /** {@inheritDoc} */
@@ -84,8 +70,8 @@ public class SendEmail extends AbstractShape {
     }
 
     @Nonnull
-    private String prepareProperties(@Nonnull String subject) {
-        return !subject.isEmpty() ? '<' + SEND_EMAIL + '>' + this.sendEmail + "</" + SEND_EMAIL + '>' : "";
+    private String prepareProperties(@Nonnull String sendEmail) {
+        return !sendEmail.isEmpty() ? '<' + SEND_EMAIL + '>' + sendEmail + "</" + SEND_EMAIL + '>' : "";
     }
 
     /** {@inheritDoc} */
@@ -104,29 +90,6 @@ public class SendEmail extends AbstractShape {
                 }
                 break;
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void applyAttributes(@Nonnull Node node) {
-        if (node.hasAttributes()) {
-            Node attribute = node.getAttributes().item(0);
-
-            configRef = attribute.getNodeValue();
-        }
-    }
-
-    public void setParameterEditorType(@Nonnull ParameterEditorType parameterEditorType) {
-        this.parameterEditorType = parameterEditorType;
-    }
-
-    @Nonnull
-    public String getConfigRef() {
-        return configRef;
-    }
-
-    public void setConfigRef(@Nonnull String configRef) {
-        this.configRef = configRef;
     }
 
     @Nonnull
@@ -148,23 +111,11 @@ public class SendEmail extends AbstractShape {
     }
 
     @Nonnull
-    public ParameterEditorType getParameterEditorType() {
-        return parameterEditorType;
-    }
-
-    @Nonnull
     public Array<NameSpace> getSendEmailNameSpaces() {
         return sendEmailNameSpaces;
     }
 
     public void setSendEmailNameSpaces(@Nonnull Array<NameSpace> searchStringNameSpaces) {
         this.sendEmailNameSpaces = searchStringNameSpaces;
-    }
-
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.salesforce();
     }
 }

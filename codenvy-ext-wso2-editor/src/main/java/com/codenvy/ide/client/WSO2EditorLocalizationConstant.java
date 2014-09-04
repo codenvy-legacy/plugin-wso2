@@ -564,6 +564,27 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("propertiespanel.connector.subject")
     String propertiespanelConnectorSubject();
 
+    @Key("propertiespanel.connector.externalid")
+    String connectorExternalId();
+
+    @Key("propertiespanel.connector.sendEmailMessage")
+    String connectorSendEmailMessage();
+
+    @Key("propertiespanel.connector.sendEmail")
+    String connectorSendEmail();
+
+    @Key("propertiespanel.connector.searchString")
+    String connectroSearchString();
+
+    @Key("propertiespanel.connector.fieldList")
+    String connectorFieldList();
+
+    @Key("propertiespanel.connector.objectType")
+    String connectorObjectType();
+
+    @Key("propertiespanel.connector.objectIDS")
+    String connectorObjectIDS();
+
     @Key("toolbar.connector.salesforceDescribeGlobalConnector.tooltip")
     String toolbarSalesforceDescribeGlobalConnectorTooltip();
 

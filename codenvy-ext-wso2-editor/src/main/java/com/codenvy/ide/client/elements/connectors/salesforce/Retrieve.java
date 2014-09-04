@@ -16,13 +16,11 @@
 package com.codenvy.ide.client.elements.connectors.salesforce;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.elements.AbstractShape;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -32,8 +30,8 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
 import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
@@ -43,28 +41,25 @@ import static com.codenvy.ide.collections.Collections.createArray;
  *
  * @author Valeriy Svydenko
  */
-public class Retrieve extends AbstractShape {
+public class Retrieve extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "Retrieve";
     public static final String SERIALIZATION_NAME = "salesforce.retrieve";
-    public static final String CONFIG_KEY         = "configKey";
     public static final String FIELD_LIST         = "fieldList";
     public static final String OBJECT_TYPE        = "objectType";
     public static final String OBJECT_IDS         = "objectIDS";
 
     private static final List<String> PROPERTIES = Arrays.asList(FIELD_LIST, OBJECT_TYPE, OBJECT_IDS);
 
-    private String              configRef;
-    private String              fieldList;
-    private String              objectType;
-    private String              objectIDS;
-    private String              fieldListInline;
-    private String              objectTypeInline;
-    private String              objectIDSInline;
-    private ParameterEditorType parameterEditorType;
-    private Array<NameSpace>    objectTypeNameSpaces;
-    private Array<NameSpace>    objectIDSNameSpaces;
-    private Array<NameSpace>    fieldListNameSpaces;
+    private String           fieldList;
+    private String           objectType;
+    private String           objectIDS;
+    private String           fieldListInline;
+    private String           objectTypeInline;
+    private String           objectIDSInline;
+    private Array<NameSpace> objectTypeNameSpaces;
+    private Array<NameSpace> objectIDSNameSpaces;
+    private Array<NameSpace> fieldListNameSpaces;
 
     @Inject
     public Retrieve(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
@@ -77,18 +72,9 @@ public class Retrieve extends AbstractShape {
         objectTypeInline = "";
         objectIDSInline = "";
 
-        parameterEditorType = ParameterEditorType.Inline;
-
         fieldListNameSpaces = createArray();
         objectTypeNameSpaces = createArray();
         objectIDSNameSpaces = createArray();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    protected String serializeAttributes() {
-        return configRef == null || configRef.isEmpty() ? "" : CONFIG_KEY + "=\"" + configRef + "\"";
     }
 
     /** {@inheritDoc} */
@@ -133,6 +119,8 @@ public class Retrieve extends AbstractShape {
                     fieldListInline = nodeValue;
                 } else {
                     fieldList = nodeValue;
+
+                    parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
 
@@ -141,6 +129,8 @@ public class Retrieve extends AbstractShape {
                     objectTypeInline = nodeValue;
                 } else {
                     objectType = nodeValue;
+
+                    parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
 
@@ -149,40 +139,11 @@ public class Retrieve extends AbstractShape {
                     objectIDSInline = nodeValue;
                 } else {
                     objectIDS = nodeValue;
+
+                    parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void applyAttributes(@Nonnull Node node) {
-        NamedNodeMap attributeMap = node.getAttributes();
-
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
-
-            String attributeValue = attributeNode.getNodeValue();
-
-            switch (attributeNode.getNodeName()) {
-                case CONFIG_KEY:
-                    configRef = attributeValue;
-                    break;
-            }
-        }
-    }
-
-    public void setParameterEditorType(@Nonnull ParameterEditorType parameterEditorType) {
-        this.parameterEditorType = parameterEditorType;
-    }
-
-    @Nonnull
-    public String getConfigRef() {
-        return configRef;
-    }
-
-    public void setConfigRef(@Nonnull String configRef) {
-        this.configRef = configRef;
     }
 
     @Nonnull
@@ -264,17 +225,5 @@ public class Retrieve extends AbstractShape {
 
     public void setObjectIDSNameSpaces(@Nonnull Array<NameSpace> objectIDSNameSpaces) {
         this.objectIDSNameSpaces = objectIDSNameSpaces;
-    }
-
-    @Nonnull
-    public ParameterEditorType getParameterEditorType() {
-        return parameterEditorType;
-    }
-
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.salesforce();
     }
 }

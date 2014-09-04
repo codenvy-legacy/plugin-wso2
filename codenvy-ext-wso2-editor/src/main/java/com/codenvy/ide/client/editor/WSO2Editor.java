@@ -76,11 +76,18 @@ import com.codenvy.ide.client.propertiespanel.connectors.salesforce.emptyrecycle
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.getuserinformation.GetUserInformationPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.init.InitPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.logout.LogOutPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.retrieve.RetrievePropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.search.SearchPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.sendemail.SendEmailPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.sendemailmessage.SendEmailMessagePropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.setpassword.SetPasswordPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.undelete.UndeletePropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.query.QueryPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.queryall.QueryAllPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.querymore.QueryMorePropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.resetpassword.ResetPasswordPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.update.UpdatePropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.upset.UpsetPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.empty.EmptyPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.enrich.EnrichPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.filter.FilterPropertiesPanelPresenter;
@@ -160,8 +167,8 @@ import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Ti
 import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction.discard;
 import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction.fault;
 import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction.never;
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.AvailableConfigs;
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.AvailableConfigs;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.enrich.Source.InlineType;
 import static com.codenvy.ide.client.elements.enrich.Source.InlineType.RegistryKey;
 import static com.codenvy.ide.client.elements.enrich.Source.InlineType.SourceXML;
@@ -258,6 +265,13 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                  DescribeGlobalPropertiesPanelPresenter describeGlobalPropertiesPanelPresenter,
                                                  DescribeSubjectPropertiesPanelPresenter describeSubjectPropertiesPanelPresenter,
                                                  DescribeSubjectsPropertiesPanelPresenter describeSubjectsPropertiesPanelPresenter,
+                                                 UpsetPropertiesPanelPresenter upsetPropertiesPanelPresenter,
+                                                 UndeletePropertiesPanelPresenter undeletePropertiesPanelPresenter,
+                                                 SetPasswordPropertiesPanelPresenter passwordPropertiesPanelPresenter,
+                                                 SendEmailMessagePropertiesPanelPresenter sendEmailMessagePresenter,
+                                                 SendEmailPropertiesPanelPresenter sendEmailPresenter,
+                                                 SearchPropertiesPanelPresenter searchPresenter,
+                                                 RetrievePropertiesPanelPresenter retrievePresenter,
                                                  QueryPropertiesPanelPresenter queryPropertiesPanelPresenter,
                                                  QueryAllPropertiesPanelPresenter queryAllPropertiesPanelPresenter,
                                                  QueryMorePropertiesPanelPresenter queryMorePropertiesPanelPresenter,
@@ -354,6 +368,27 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
 
         propertiesPanelManager.register(GetUserInformation.class, getUserInformationPresenter);
         getUserInformationPresenter.addListener(this);
+
+        propertiesPanelManager.register(Upset.class, upsetPropertiesPanelPresenter);
+        upsetPropertiesPanelPresenter.addListener(this);
+
+        propertiesPanelManager.register(Undelete.class, undeletePropertiesPanelPresenter);
+        undeletePropertiesPanelPresenter.addListener(this);
+
+        propertiesPanelManager.register(SetPassword.class, passwordPropertiesPanelPresenter);
+        passwordPropertiesPanelPresenter.addListener(this);
+
+        propertiesPanelManager.register(SendEmailMessage.class, sendEmailMessagePresenter);
+        sendEmailMessagePresenter.addListener(this);
+
+        propertiesPanelManager.register(SendEmail.class, sendEmailPresenter);
+        sendEmailPresenter.addListener(this);
+
+        propertiesPanelManager.register(Search.class, searchPresenter);
+        searchPresenter.addListener(this);
+
+        propertiesPanelManager.register(Retrieve.class, retrievePresenter);
+        retrievePresenter.addListener(this);
 
         selectionManager.addListener(propertiesPanelManager);
     }

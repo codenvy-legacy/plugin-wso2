@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.propertiespanel.connectors.salesforce.base;
+package com.codenvy.ide.client.propertiespanel.connectors.base;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
@@ -35,7 +35,7 @@ import com.google.inject.Singleton;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 
 /**
  * Provides a general graphical representation for all SalesForce connectors. The class contains methods which allows
