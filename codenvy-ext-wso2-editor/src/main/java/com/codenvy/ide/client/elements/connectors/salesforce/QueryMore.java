@@ -16,67 +16,53 @@
 package com.codenvy.ide.client.elements.connectors.salesforce;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.elements.AbstractShape;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType
+        .NamespacedPropertyEditor;
 
 /**
  * The Class describes QueryMore connector for Salesforce group connectors. Also the class contains the business logic
  * that allows to display serialization representation depending of the current state of element. Deserelization mechanism allows to
  * restore the condition of the element when you open ESB project after saving.
  *
- * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
-public class QueryMore extends AbstractShape {
+public class QueryMore extends AbstractSalesForceConnector {
 
     public static final String ELEMENT_NAME       = "QueryMore";
-    public static final String SERIALIZATION_NAME = "salesforce.query";
-    public static final String CONFIG_KEY         = "configKey";
+    public static final String SERIALIZATION_NAME = "salesforce.queryMore";
     public static final String BATCH_SIZE         = "batchSize";
 
     private static final List<String> PROPERTIES = Arrays.asList(BATCH_SIZE);
 
-    private String              configKey;
     private String              batchSize;
     private String              batchSizeExpr;
     private ParameterEditorType parameterEditorType;
     private Array<NameSpace>    batchSizeNameSpaces;
-    private Array<NameSpace>    queryStringNameSpaces;
 
     @Inject
     public QueryMore(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
 
-        configKey = "";
         batchSize = "";
         batchSizeExpr = "";
 
         parameterEditorType = Inline;
 
         batchSizeNameSpaces = Collections.createArray();
-        queryStringNameSpaces = Collections.createArray();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    protected String serializeAttributes() {
-        return configKey == null || configKey.isEmpty() ? "" : CONFIG_KEY + "=\"" + configKey + "\"";
     }
 
     /** {@inheritDoc} */
@@ -111,28 +97,11 @@ public class QueryMore extends AbstractShape {
                     batchSize = nodeValue;
                 } else {
                     batchSizeExpr = nodeValue;
+
+                    parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void applyAttributes(@Nonnull Node node) {
-        if (node.hasAttributes()) {
-            Node attribute = node.getAttributes().item(0);
-
-            configKey = attribute.getNodeValue();
-        }
-    }
-
-    @Nonnull
-    public String getConfigRef() {
-        return configKey;
-    }
-
-    public void setConfigRef(@Nonnull String configRef) {
-        this.configKey = configRef;
     }
 
     @Nonnull
@@ -154,15 +123,6 @@ public class QueryMore extends AbstractShape {
     }
 
     @Nonnull
-    public Array<NameSpace> getQueryStringNameSpaces() {
-        return queryStringNameSpaces;
-    }
-
-    public void setQueryStringNameSpaces(@Nonnull Array<NameSpace> queryStringNameSpaces) {
-        this.queryStringNameSpaces = queryStringNameSpaces;
-    }
-
-    @Nonnull
     public ParameterEditorType getParameterEditorType() {
         return parameterEditorType;
     }
@@ -180,10 +140,4 @@ public class QueryMore extends AbstractShape {
         this.batchSizeExpr = batchSizeExpr;
     }
 
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.salesforce();
-    }
 }

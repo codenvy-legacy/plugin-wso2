@@ -615,10 +615,12 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("toolbar.connector.salesforceUpset.tooltip")
     String connectorSalesforceUpsetTooltip();
 
-    @Key("toolbar.connector.salesforceInitConnector.tooltip")
-    String connectorSalesforceInitConnectorTooltip();
+    @Key("propertiespanel.connector.batchSize")
+    String connectorBatchSize();
 
-    @Key("toolbar.connector.salesforceCreateConnector.tooltip")
-    String connectorSalesforceCreateConnectorTooltip();
+    @Key("propertiespanel.connector.queryString")
+    String connectorQueryString();
 
+    @Key("propertiespanel.connector.userId")
+    String connectorUserId();
 }

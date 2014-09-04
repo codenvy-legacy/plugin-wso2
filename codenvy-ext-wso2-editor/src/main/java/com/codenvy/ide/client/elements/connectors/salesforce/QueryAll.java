@@ -16,43 +16,39 @@
 package com.codenvy.ide.client.elements.connectors.salesforce;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.elements.AbstractShape;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSalesForceConnector.ParameterEditorType
+        .NamespacedPropertyEditor;
 
 /**
  * The Class describes Query connector for QueryAll group connectors. Also the class contains the business logic
  * that allows to display serialization representation depending of the current state of element. Deserelization mechanism allows to
  * restore the condition of the element when you open ESB project after saving.
  *
- * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
-public class QueryAll extends AbstractShape {
+public class QueryAll extends AbstractSalesForceConnector {
 
     public static final String ELEMENT_NAME       = "QueryAll";
     public static final String SERIALIZATION_NAME = "salesforce.queryAll";
-    public static final String CONFIG_KEY         = "configKey";
     public static final String BATCH_SIZE         = "batchSize";
     public static final String QUERY_STRING       = "queryString";
 
     private static final List<String> PROPERTIES = Arrays.asList(BATCH_SIZE, QUERY_STRING);
 
-    private String              configKey;
     private String              batchSize;
     private String              queryString;
     private String              batchSizeExpr;
@@ -65,7 +61,6 @@ public class QueryAll extends AbstractShape {
     public QueryAll(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
 
-        configKey = "";
         batchSize = "";
         queryString = "";
         batchSizeExpr = "";
@@ -75,13 +70,6 @@ public class QueryAll extends AbstractShape {
 
         batchSizeNameSpaces = Collections.createArray();
         queryStringNameSpaces = Collections.createArray();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    protected String serializeAttributes() {
-        return configKey == null || configKey.isEmpty() ? "" : CONFIG_KEY + "=\"" + configKey + "\"";
     }
 
     /** {@inheritDoc} */
@@ -120,6 +108,8 @@ public class QueryAll extends AbstractShape {
                     batchSize = nodeValue;
                 } else {
                     batchSizeExpr = nodeValue;
+
+                    parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
 
@@ -128,29 +118,12 @@ public class QueryAll extends AbstractShape {
                     queryString = nodeValue;
                 } else {
                     queryStringExpr = nodeValue;
+
+                    parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
 
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void applyAttributes(@Nonnull Node node) {
-        if (node.hasAttributes()) {
-            Node attribute = node.getAttributes().item(0);
-
-            configKey = attribute.getNodeValue();
-        }
-    }
-
-    @Nonnull
-    public String getConfigRef() {
-        return configKey;
-    }
-
-    public void setConfigRef(@Nonnull String configRef) {
-        this.configKey = configRef;
     }
 
     @Nonnull
@@ -216,10 +189,4 @@ public class QueryAll extends AbstractShape {
         this.queryStringExpr = queryStringExpr;
     }
 
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.salesforce();
-    }
 }

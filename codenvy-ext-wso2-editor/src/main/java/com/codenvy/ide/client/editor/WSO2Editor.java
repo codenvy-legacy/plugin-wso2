@@ -76,6 +76,10 @@ import com.codenvy.ide.client.propertiespanel.connectors.salesforce.emptyrecycle
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.getuserinformation.GetUserInformationPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.init.InitPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.logout.LogOutPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.query.QueryPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.queryall.QueryAllPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.querymore.QueryMorePropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.resetpassword.ResetPasswordPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.update.UpdatePropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.empty.EmptyPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.enrich.EnrichPropertiesPanelPresenter;
@@ -253,7 +257,11 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                  GetUserInformationPresenter getUserInformationPresenter,
                                                  DescribeGlobalPropertiesPanelPresenter describeGlobalPropertiesPanelPresenter,
                                                  DescribeSubjectPropertiesPanelPresenter describeSubjectPropertiesPanelPresenter,
-                                                 DescribeSubjectsPropertiesPanelPresenter describeSubjectsPropertiesPanelPresenter) {
+                                                 DescribeSubjectsPropertiesPanelPresenter describeSubjectsPropertiesPanelPresenter,
+                                                 QueryPropertiesPanelPresenter queryPropertiesPanelPresenter,
+                                                 QueryAllPropertiesPanelPresenter queryAllPropertiesPanelPresenter,
+                                                 QueryMorePropertiesPanelPresenter queryMorePropertiesPanelPresenter,
+                                                 ResetPasswordPropertiesPanelPresenter resetPasswordPropertiesPanelPresenter) {
 
         PropertiesPanelManager propertiesPanelManager = editorFactory.createPropertiesPanelManager(view.getPropertiesPanel());
 
@@ -331,6 +339,18 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
 
         propertiesPanelManager.register(LogOut.class, logOutPresenter);
         logOutPresenter.addListener(this);
+
+        propertiesPanelManager.register(Query.class, queryPropertiesPanelPresenter);
+        queryPropertiesPanelPresenter.addListener(this);
+
+        propertiesPanelManager.register(QueryAll.class, queryAllPropertiesPanelPresenter);
+        queryAllPropertiesPanelPresenter.addListener(this);
+
+        propertiesPanelManager.register(QueryMore.class, queryMorePropertiesPanelPresenter);
+        queryMorePropertiesPanelPresenter.addListener(this);
+
+        propertiesPanelManager.register(ResetPassword.class, resetPasswordPropertiesPanelPresenter);
+        resetPasswordPropertiesPanelPresenter.addListener(this);
 
         propertiesPanelManager.register(GetUserInformation.class, getUserInformationPresenter);
         getUserInformationPresenter.addListener(this);
