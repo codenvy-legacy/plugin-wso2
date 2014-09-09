@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2014 Codenvy, S.A.
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+    Copyright 2014 Codenvy, S.A.
 
-       http://www.apache.org/licenses/LICENSE-2.0
+    Licensed under the Apache  License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-  -->
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -21,11 +23,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>codenvy-ide-parent</artifactId>
-        <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0</version>
+        <artifactId>maven-depmgt-pom</artifactId>
+        <groupId>com.codenvy</groupId>
+        <version>1.8.16</version>
     </parent>
 
+    <groupId>com.codenvy.plugin-wso2</groupId>
     <artifactId>codenvy-ext-wso2-parent</artifactId>
     <version>1.0.0-M1-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -38,23 +41,32 @@
     </modules>
 
     <properties>
+        <license_years>2014</license_years>
         <version.cmf>1.0.0-M1-SNAPSHOT</version.cmf>
-        <version.codenvy>3.0.0</version.codenvy>
         <version.google.findbugs>2.0.2</version.google.findbugs>
         <version.gwt.dnd>3.3.0</version.gwt.dnd>
         <version.gwt.incubator>2.0.1</version.gwt.incubator>
         <version.gwt.links>1.4.3-SNAPSHOT</version.gwt.links>
-        <version.platform-api-gwt-client>0.8.0</version.platform-api-gwt-client>
+        <!--TODO remove this version after updating to 1.18.18 version of parent pom-->
+        <version.license-bundle>3</version.license-bundle>
+        <version.license-header>codenvy-apache2-license-resource-bundle</version.license-header>
     </properties>
 
-    <!--TODO Needs to fix problem with license-->
     <build>
         <plugins>
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
-                    <skip>true</skip>
+                    <excludes>
+                        <exclude>**/*.gif</exclude>
+                        <exclude>**/*.png</exclude>
+                        <exclude>**/*Grammar</exclude>
+                        <exclude>**/*.zip</exclude>
+                        <exclude>**/com/codenvy/ide/ext/wso2/client/xml.js</exclude>
+                        <exclude>**/com/codenvy/ide/ext/wso2/client/esb.xsd</exclude>
+                        <exclude>**/com/codenvy/ide/ext/wso2/client/templates/**</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>

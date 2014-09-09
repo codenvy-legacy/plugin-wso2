@@ -1,11 +1,11 @@
 /*
  * Copyright 2014 Codenvy, S.A.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache  License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,11 +16,12 @@
 package com.codenvy.ide.client;
 
 import com.codenvy.ide.client.elements.Branch;
-import com.codenvy.ide.client.elements.Shape;
+import com.codenvy.ide.client.elements.Element;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -39,22 +40,21 @@ public class MetaModelValidatorTest {
     private static final String ELEMENT2 = "Element2";
 
     @Mock
-    private Branch branch;
+    private Branch  branch;
     @Mock
-    private Shape  shape;
+    private Element element;
     @Mock
-    private Shape  firstShape;
+    private Element firstElement;
     @Mock
-    private Shape  secondShape;
+    private Element secondElement;
     @Mock
-    private Shape  thirdShape;
+    private Element thirdElement;
 
+    @InjectMocks
     private MetaModelValidator validator;
 
     @Before
     public void setUp() throws Exception {
-        validator = new MetaModelValidator();
-
         validator.register(ELEMENT1, Arrays.asList(ELEMENT1));
     }
 
@@ -75,50 +75,50 @@ public class MetaModelValidatorTest {
 
     @Test
     public void elementShouldBeAbleToInsertWhenCurrentElementIsFirst() throws Exception {
-        when(firstShape.getX()).thenReturn(100);
-        when(firstShape.getY()).thenReturn(100);
-        when(firstShape.getElementName()).thenReturn(ELEMENT1);
+        when(firstElement.getX()).thenReturn(100);
+        when(firstElement.getY()).thenReturn(100);
+        when(firstElement.getElementName()).thenReturn(ELEMENT1);
 
-        when(secondShape.getX()).thenReturn(200);
-        when(secondShape.getY()).thenReturn(100);
+        when(secondElement.getX()).thenReturn(200);
+        when(secondElement.getY()).thenReturn(100);
 
-        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
+        when(branch.getElements()).thenReturn(Arrays.asList(firstElement, secondElement));
 
         assertTrue(validator.canInsertElement(branch, ELEMENT1, 0, 100));
     }
 
     @Test
     public void elementShouldBeAbleToInsertWhenCurrentElementIsLast() throws Exception {
-        when(firstShape.getX()).thenReturn(100);
-        when(firstShape.getY()).thenReturn(100);
+        when(firstElement.getX()).thenReturn(100);
+        when(firstElement.getY()).thenReturn(100);
 
-        when(secondShape.getX()).thenReturn(200);
-        when(secondShape.getY()).thenReturn(100);
-        when(secondShape.getElementName()).thenReturn(ELEMENT1);
+        when(secondElement.getX()).thenReturn(200);
+        when(secondElement.getY()).thenReturn(100);
+        when(secondElement.getElementName()).thenReturn(ELEMENT1);
 
-        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
+        when(branch.getElements()).thenReturn(Arrays.asList(firstElement, secondElement));
 
         assertTrue(validator.canInsertElement(branch, ELEMENT1, 300, 100));
     }
 
     @Test
     public void elementShouldBeAbleToInsertWhenContainerHaveNoElement() throws Exception {
-        when(branch.getShapes()).thenReturn(Arrays.<Shape>asList());
+        when(branch.getElements()).thenReturn(Arrays.<Element>asList());
 
         assertTrue(validator.canInsertElement(branch, ELEMENT1, 100, 100));
     }
 
     @Test
     public void elementShouldBeAbleToInsert() throws Exception {
-        when(firstShape.getX()).thenReturn(100);
-        when(firstShape.getY()).thenReturn(100);
-        when(firstShape.getElementName()).thenReturn(ELEMENT1);
+        when(firstElement.getX()).thenReturn(100);
+        when(firstElement.getY()).thenReturn(100);
+        when(firstElement.getElementName()).thenReturn(ELEMENT1);
 
-        when(secondShape.getX()).thenReturn(200);
-        when(secondShape.getY()).thenReturn(100);
-        when(secondShape.getElementName()).thenReturn(ELEMENT1);
+        when(secondElement.getX()).thenReturn(200);
+        when(secondElement.getY()).thenReturn(100);
+        when(secondElement.getElementName()).thenReturn(ELEMENT1);
 
-        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
+        when(branch.getElements()).thenReturn(Arrays.asList(firstElement, secondElement));
 
         assertTrue(validator.canInsertElement(branch, ELEMENT1, 150, 100));
     }
@@ -126,11 +126,11 @@ public class MetaModelValidatorTest {
     @Test
     public void elementShouldBeNotAbleToInsertWhenCurrentElementIsFirstAndItIsImpossibleToCreateConnectionWithSecondElement()
             throws Exception {
-        when(firstShape.getX()).thenReturn(100);
-        when(firstShape.getY()).thenReturn(100);
-        when(firstShape.getElementName()).thenReturn(ELEMENT1);
+        when(firstElement.getX()).thenReturn(100);
+        when(firstElement.getY()).thenReturn(100);
+        when(firstElement.getElementName()).thenReturn(ELEMENT1);
 
-        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape));
+        when(branch.getElements()).thenReturn(Arrays.asList(firstElement));
 
         assertFalse(validator.canInsertElement(branch, ELEMENT2, 0, 100));
     }
@@ -138,63 +138,63 @@ public class MetaModelValidatorTest {
     @Test
     public void elementShouldBeNotAbleToInsertWhenCurrentElementIsFirstAndItIsImpossibleToCreateConnectionWithSecondElement2()
             throws Exception {
-        when(firstShape.getX()).thenReturn(100);
-        when(firstShape.getY()).thenReturn(100);
-        when(firstShape.getElementName()).thenReturn(ELEMENT1);
+        when(firstElement.getX()).thenReturn(100);
+        when(firstElement.getY()).thenReturn(100);
+        when(firstElement.getElementName()).thenReturn(ELEMENT1);
 
-        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape));
+        when(branch.getElements()).thenReturn(Arrays.asList(firstElement));
 
         assertFalse(validator.canInsertElement(branch, ELEMENT2, 100, 50));
     }
 
     @Test
     public void elementShouldBeNotAbleToInsertWhenCurrentElementIsLast() throws Exception {
-        when(firstShape.getX()).thenReturn(100);
-        when(firstShape.getY()).thenReturn(100);
-        when(firstShape.getElementName()).thenReturn(ELEMENT2);
+        when(firstElement.getX()).thenReturn(100);
+        when(firstElement.getY()).thenReturn(100);
+        when(firstElement.getElementName()).thenReturn(ELEMENT2);
 
-        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape));
+        when(branch.getElements()).thenReturn(Arrays.asList(firstElement));
 
         assertFalse(validator.canInsertElement(branch, ELEMENT1, 200, 100));
     }
 
     @Test
     public void elementShouldBeNotAbleToInsertWhenCurrentElementIsLast2() throws Exception {
-        when(firstShape.getX()).thenReturn(100);
-        when(firstShape.getY()).thenReturn(100);
-        when(firstShape.getElementName()).thenReturn(ELEMENT2);
+        when(firstElement.getX()).thenReturn(100);
+        when(firstElement.getY()).thenReturn(100);
+        when(firstElement.getElementName()).thenReturn(ELEMENT2);
 
-        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape));
+        when(branch.getElements()).thenReturn(Arrays.asList(firstElement));
 
         assertFalse(validator.canInsertElement(branch, ELEMENT1, 100, 150));
     }
 
     @Test
     public void elementShouldBeNotAbleToInsertWhenElementBeforeInsertPositionIsNotAbleToCreateConnection() throws Exception {
-        when(firstShape.getX()).thenReturn(100);
-        when(firstShape.getY()).thenReturn(100);
-        when(firstShape.getElementName()).thenReturn(ELEMENT1);
+        when(firstElement.getX()).thenReturn(100);
+        when(firstElement.getY()).thenReturn(100);
+        when(firstElement.getElementName()).thenReturn(ELEMENT1);
 
-        when(secondShape.getX()).thenReturn(200);
-        when(secondShape.getY()).thenReturn(100);
-        when(secondShape.getElementName()).thenReturn(ELEMENT1);
+        when(secondElement.getX()).thenReturn(200);
+        when(secondElement.getY()).thenReturn(100);
+        when(secondElement.getElementName()).thenReturn(ELEMENT1);
 
-        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
+        when(branch.getElements()).thenReturn(Arrays.asList(firstElement, secondElement));
 
         assertFalse(validator.canInsertElement(branch, ELEMENT2, 150, 100));
     }
 
     @Test
     public void elementShouldBeNotAbleToInsertWhenElementAfterInsertPositionIsNotAbleToCreateConnection() throws Exception {
-        when(firstShape.getX()).thenReturn(100);
-        when(firstShape.getY()).thenReturn(100);
-        when(firstShape.getElementName()).thenReturn(ELEMENT1);
+        when(firstElement.getX()).thenReturn(100);
+        when(firstElement.getY()).thenReturn(100);
+        when(firstElement.getElementName()).thenReturn(ELEMENT1);
 
-        when(secondShape.getX()).thenReturn(200);
-        when(secondShape.getY()).thenReturn(100);
-        when(secondShape.getElementName()).thenReturn(ELEMENT2);
+        when(secondElement.getX()).thenReturn(200);
+        when(secondElement.getY()).thenReturn(100);
+        when(secondElement.getElementName()).thenReturn(ELEMENT2);
 
-        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
+        when(branch.getElements()).thenReturn(Arrays.asList(firstElement, secondElement));
 
         assertFalse(validator.canInsertElement(branch, ELEMENT1, 150, 100));
     }
@@ -202,30 +202,30 @@ public class MetaModelValidatorTest {
 
     @Test
     public void elementShouldBeAbleToRemoveWhenItIsFirstElement() throws Exception {
-        when(firstShape.getX()).thenReturn(100);
-        when(firstShape.getY()).thenReturn(100);
-        when(firstShape.getId()).thenReturn(ELEMENT1);
+        when(firstElement.getX()).thenReturn(100);
+        when(firstElement.getY()).thenReturn(100);
+        when(firstElement.getId()).thenReturn(ELEMENT1);
 
-        when(secondShape.getX()).thenReturn(200);
-        when(secondShape.getY()).thenReturn(100);
-        when(secondShape.getId()).thenReturn(ELEMENT2);
+        when(secondElement.getX()).thenReturn(200);
+        when(secondElement.getY()).thenReturn(100);
+        when(secondElement.getId()).thenReturn(ELEMENT2);
 
-        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
+        when(branch.getElements()).thenReturn(Arrays.asList(firstElement, secondElement));
 
         assertTrue(validator.canRemoveElement(branch, ELEMENT1));
     }
 
     @Test
     public void elementShouldBeAbleToRemoveWhenItIsLastElement() throws Exception {
-        when(firstShape.getX()).thenReturn(100);
-        when(firstShape.getY()).thenReturn(100);
-        when(firstShape.getId()).thenReturn(ELEMENT1);
+        when(firstElement.getX()).thenReturn(100);
+        when(firstElement.getY()).thenReturn(100);
+        when(firstElement.getId()).thenReturn(ELEMENT1);
 
-        when(secondShape.getX()).thenReturn(200);
-        when(secondShape.getY()).thenReturn(100);
-        when(secondShape.getId()).thenReturn(ELEMENT2);
+        when(secondElement.getX()).thenReturn(200);
+        when(secondElement.getY()).thenReturn(100);
+        when(secondElement.getId()).thenReturn(ELEMENT2);
 
-        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape));
+        when(branch.getElements()).thenReturn(Arrays.asList(firstElement, secondElement));
 
         assertTrue(validator.canRemoveElement(branch, ELEMENT2));
     }
@@ -237,42 +237,42 @@ public class MetaModelValidatorTest {
 
     @Test
     public void elementShouldBeAbleToRemoveWhenItIsPossibleToCreateConnectionBetweenNearestElements() throws Exception {
-        when(firstShape.getX()).thenReturn(100);
-        when(firstShape.getY()).thenReturn(100);
-        when(firstShape.getElementName()).thenReturn(ELEMENT1);
-        when(firstShape.getId()).thenReturn(ELEMENT1);
+        when(firstElement.getX()).thenReturn(100);
+        when(firstElement.getY()).thenReturn(100);
+        when(firstElement.getElementName()).thenReturn(ELEMENT1);
+        when(firstElement.getId()).thenReturn(ELEMENT1);
 
-        when(secondShape.getX()).thenReturn(200);
-        when(secondShape.getY()).thenReturn(100);
-        when(secondShape.getElementName()).thenReturn(ELEMENT1);
-        when(secondShape.getId()).thenReturn(ELEMENT2);
+        when(secondElement.getX()).thenReturn(200);
+        when(secondElement.getY()).thenReturn(100);
+        when(secondElement.getElementName()).thenReturn(ELEMENT1);
+        when(secondElement.getId()).thenReturn(ELEMENT2);
 
-        when(thirdShape.getX()).thenReturn(300);
-        when(thirdShape.getY()).thenReturn(100);
-        when(thirdShape.getElementName()).thenReturn(ELEMENT1);
+        when(thirdElement.getX()).thenReturn(300);
+        when(thirdElement.getY()).thenReturn(100);
+        when(thirdElement.getElementName()).thenReturn(ELEMENT1);
 
-        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape, thirdShape));
+        when(branch.getElements()).thenReturn(Arrays.asList(firstElement, secondElement, thirdElement));
 
         assertTrue(validator.canRemoveElement(branch, ELEMENT2));
     }
 
     @Test
     public void elementShouldBeAbleToRemoveWhenItIsImpossibleToCreateConnectionBetweenNearestElements() throws Exception {
-        when(firstShape.getX()).thenReturn(100);
-        when(firstShape.getY()).thenReturn(100);
-        when(firstShape.getElementName()).thenReturn(ELEMENT1);
-        when(firstShape.getId()).thenReturn(ELEMENT1);
+        when(firstElement.getX()).thenReturn(100);
+        when(firstElement.getY()).thenReturn(100);
+        when(firstElement.getElementName()).thenReturn(ELEMENT1);
+        when(firstElement.getId()).thenReturn(ELEMENT1);
 
-        when(secondShape.getX()).thenReturn(200);
-        when(secondShape.getY()).thenReturn(100);
-        when(secondShape.getElementName()).thenReturn(ELEMENT1);
-        when(secondShape.getId()).thenReturn(ELEMENT2);
+        when(secondElement.getX()).thenReturn(200);
+        when(secondElement.getY()).thenReturn(100);
+        when(secondElement.getElementName()).thenReturn(ELEMENT1);
+        when(secondElement.getId()).thenReturn(ELEMENT2);
 
-        when(thirdShape.getX()).thenReturn(300);
-        when(thirdShape.getY()).thenReturn(100);
-        when(thirdShape.getElementName()).thenReturn(ELEMENT2);
+        when(thirdElement.getX()).thenReturn(300);
+        when(thirdElement.getY()).thenReturn(100);
+        when(thirdElement.getElementName()).thenReturn(ELEMENT2);
 
-        when(branch.getShapes()).thenReturn(Arrays.asList(firstShape, secondShape, thirdShape));
+        when(branch.getElements()).thenReturn(Arrays.asList(firstElement, secondElement, thirdElement));
 
         assertFalse(validator.canRemoveElement(branch, ELEMENT2));
     }

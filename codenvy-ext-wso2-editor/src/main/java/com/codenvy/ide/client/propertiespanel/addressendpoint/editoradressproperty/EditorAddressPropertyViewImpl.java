@@ -1,11 +1,11 @@
 /*
  * Copyright 2014 Codenvy, S.A.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache  License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,8 +17,8 @@ package com.codenvy.ide.client.propertiespanel.addressendpoint.editoradressprope
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.ValueType;
-import com.codenvy.ide.client.elements.addressendpoint.Property;
+import com.codenvy.ide.client.elements.mediators.ValueType;
+import com.codenvy.ide.client.elements.endpoints.addressendpoint.Property;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;

@@ -1,11 +1,11 @@
 /*
  * Copyright 2014 Codenvy, S.A.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache  License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,7 @@
 package com.codenvy.ide.client.propertiespanel.header;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.Header;
+import com.codenvy.ide.client.elements.mediators.Header;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
@@ -32,12 +32,12 @@ import com.google.inject.Inject;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.codenvy.ide.client.elements.Header.HeaderAction;
-import static com.codenvy.ide.client.elements.Header.HeaderAction.remove;
-import static com.codenvy.ide.client.elements.Header.HeaderAction.set;
-import static com.codenvy.ide.client.elements.Header.HeaderValueType;
-import static com.codenvy.ide.client.elements.Header.HeaderValueType.LITERAL;
-import static com.codenvy.ide.client.elements.Header.ScopeType;
+import static com.codenvy.ide.client.elements.mediators.Header.HeaderAction;
+import static com.codenvy.ide.client.elements.mediators.Header.HeaderAction.remove;
+import static com.codenvy.ide.client.elements.mediators.Header.HeaderAction.set;
+import static com.codenvy.ide.client.elements.mediators.Header.HeaderValueType;
+import static com.codenvy.ide.client.elements.mediators.Header.HeaderValueType.LITERAL;
+import static com.codenvy.ide.client.elements.mediators.Header.ScopeType;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of Header mediator

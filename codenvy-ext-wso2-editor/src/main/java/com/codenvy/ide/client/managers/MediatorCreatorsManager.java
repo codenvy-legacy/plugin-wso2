@@ -1,11 +1,11 @@
 /*
  * Copyright 2014 Codenvy, S.A.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache  License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,7 @@
 package com.codenvy.ide.client.managers;
 
 import com.codenvy.ide.client.State;
-import com.codenvy.ide.client.elements.Shape;
+import com.codenvy.ide.client.elements.Element;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -34,9 +34,9 @@ import java.util.Map;
 @Singleton
 public class MediatorCreatorsManager {
 
-    private final Map<String, Provider<? extends Shape>> nameProviders;
-    private final Map<State, String>                     stateProviders;
-    private final Map<String, String>                    serializeNames;
+    private final Map<String, Provider<? extends Element>> nameProviders;
+    private final Map<State, String>                       stateProviders;
+    private final Map<String, String>                      serializeNames;
 
     @Inject
     public MediatorCreatorsManager() {
@@ -60,7 +60,7 @@ public class MediatorCreatorsManager {
     public void register(@Nonnull String name,
                          @Nonnull String serializationName,
                          @Nonnull State state,
-                         @Nonnull Provider<? extends Shape> provider) {
+                         @Nonnull Provider<? extends Element> provider) {
         nameProviders.put(name, provider);
         serializeNames.put(serializationName, name);
         stateProviders.put(state, name);
@@ -74,7 +74,7 @@ public class MediatorCreatorsManager {
      * @return a mediator creator
      */
     @Nullable
-    public Provider<? extends Shape> getProviderBySerializeName(@Nonnull String serializeName) {
+    public Provider<? extends Element> getProviderBySerializeName(@Nonnull String serializeName) {
         String name = serializeNames.get(serializeName);
 
         return nameProviders.get(name);
@@ -88,7 +88,7 @@ public class MediatorCreatorsManager {
      * @return a mediator creator
      */
     @Nullable
-    public Provider<? extends Shape> getProviderByState(@Nonnull State state) {
+    public Provider<? extends Element> getProviderByState(@Nonnull State state) {
         String name = stateProviders.get(state);
 
         return nameProviders.get(name);

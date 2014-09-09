@@ -1,11 +1,11 @@
 /*
  * Copyright 2014 Codenvy, S.A.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache  License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,56 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
 @CHARSET "UTF-8";
 
 .importErrorFont {
-	cursor: default;
-	font-family: mainFontFamily;
-	font-size: fontSize;
-	font-style: normal;
-	font-weight: normal;
-	color: #d21a1a;
-}
-
-.graphicContainer{
-	z-index: 0;
-	-moz-user-select: -moz-none;
-   	-khtml-user-select: none;
-	-webkit-user-select: none;
-	-o-user-select: none;
-	user-select: none;
-}
- 
-.graphicContainer textarea:focus,
-.graphicContainer input:focus{
-	-webkit-user-select: text;
-	-khtml-user-select: text;
-	-moz-user-select: text;
-	-o-user-select: text;
-	user-select: text;
-}
-
-.graphicContainer canvas:focus, 
-.graphicContainer div:focus{
-	outline: none;
-}
-
-.wso2PropertyPanelTitle{
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	height: 18px;
-	padding: 2px 5px;
-}
-
-.wso2PropertyPanel{
-	position: absolute;
-	top: 20px;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	overflow: auto;
-	clear: both;
+    cursor: default;
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    font-style: normal;
+    font-weight: normal;
+    color: #d21a1a;
 }

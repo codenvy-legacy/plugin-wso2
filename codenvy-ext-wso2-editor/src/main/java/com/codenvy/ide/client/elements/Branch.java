@@ -1,11 +1,11 @@
 /*
  * Copyright 2014 Codenvy, S.A.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache  License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -60,7 +60,7 @@ public interface Branch {
 
     /** @return parent of the branch */
     @Nullable
-    Shape getParent();
+    Element getParent();
 
     /**
      * Set parent of branch.
@@ -68,30 +68,30 @@ public interface Branch {
      * @param parent
      *         parent that needs to be added
      */
-    void setParent(@Nullable Shape parent);
+    void setParent(@Nullable Element parent);
 
     /**
-     * Add an inner shape into this one shape.
+     * Add an inner element into this one element.
      *
-     * @param shape
-     *         shape that need to be added
+     * @param element
+     *         element that need to be added
      */
-    void addShape(@Nonnull Shape shape);
+    void addElement(@Nonnull Element element);
 
     /**
-     * Remove a inner shape from this one shape.
+     * Remove a inner element from this one element.
      *
-     * @param shape
-     *         shape that need to be removed
+     * @param element
+     *         element that need to be removed
      */
-    void removeShape(@Nonnull Shape shape);
+    void removeElement(@Nonnull Element element);
 
-    /** @return a list of inner shapes */
+    /** @return a list of inner elements */
     @Nonnull
-    List<Shape> getShapes();
+    List<Element> getElements();
 
-    /** @return true if branch has shapes */
-    boolean hasShape();
+    /** @return true if branch has elements */
+    boolean hasElements();
 
     /** @return serialized representation of the branch */
     @Nonnull

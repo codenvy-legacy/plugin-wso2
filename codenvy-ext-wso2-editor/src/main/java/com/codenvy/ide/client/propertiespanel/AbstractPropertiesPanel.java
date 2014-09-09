@@ -1,11 +1,11 @@
 /*
  * Copyright 2014 Codenvy, S.A.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache  License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel;
 
-import com.codenvy.ide.client.elements.Shape;
+import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.mvp.AbstractView;
@@ -35,7 +35,7 @@ import java.util.List;
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
-public abstract class AbstractPropertiesPanel<T extends Shape, V extends AbstractView> extends AbstractPresenter<V> {
+public abstract class AbstractPropertiesPanel<T extends Element, V extends AbstractView> extends AbstractPresenter<V> {
 
     protected     T                             element;
     protected     PropertyTypeManager           propertyTypeManager;

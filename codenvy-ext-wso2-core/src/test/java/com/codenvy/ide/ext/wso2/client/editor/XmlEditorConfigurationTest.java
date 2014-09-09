@@ -1,11 +1,11 @@
 /*
  * Copyright 2014 Codenvy, S.A.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache  License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,6 +25,7 @@ import com.codenvy.ide.texteditor.api.AutoEditStrategy;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.parser.CmParser;
+import com.google.inject.Provider;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
@@ -37,7 +38,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Answers.RETURNS_MOCKS;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Here we're testing {@link XmlEditorConfiguration}.
@@ -48,9 +51,12 @@ import static org.mockito.Mockito.verify;
 public class XmlEditorConfigurationTest extends GwtTestWithMockito {
 
     @Mock
-    private TextEditorPartView     view;
+    private TextEditorPartView               view;
     @Mock(answer = RETURNS_MOCKS)
-    private AutoCompleterFactory   autoCompleterFactory;
+    private AutoCompleterFactory             autoCompleterFactory;
+    @Mock
+    private Provider<XmlCodeAssistProcessor> xmlCodeAssistProcessorProvider;
+
     @InjectMocks
     private XmlEditorConfiguration xmlEditorConfiguration;
 
@@ -76,12 +82,17 @@ public class XmlEditorConfigurationTest extends GwtTestWithMockito {
 
     @Test
     public void configurationShouldContainCodeAssistProcessor() {
+        XmlCodeAssistProcessor codeAssistProcessor = mock(XmlCodeAssistProcessor.class);
+        when(xmlCodeAssistProcessorProvider.get()).thenReturn(codeAssistProcessor);
+
         StringMap<CodeAssistProcessor> codeAssistProcessorStringMap = xmlEditorConfiguration.getContentAssistantProcessors(view);
 
         assertNotNull(codeAssistProcessorStringMap);
         assertEquals(1, codeAssistProcessorStringMap.size());
 
         CodeAssistProcessor processor = codeAssistProcessorStringMap.get(Document.DEFAULT_CONTENT_TYPE);
-        assertTrue(processor instanceof XmlCodeAssistProcessor);
+        assertEquals(codeAssistProcessor, processor);
+
+        verify(xmlCodeAssistProcessorProvider).get();
     }
 }

@@ -1,11 +1,11 @@
 /*
  * Copyright 2014 Codenvy, S.A.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache  License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,11 +15,13 @@
  */
 package com.codenvy.ide.client.elements;
 
+import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,19 +39,22 @@ import java.util.Map;
  */
 public class BranchImpl implements Branch {
 
-    private final String              id;
-    private final List<AbstractShape> shapes;
-    private final Map<String, String> attributes;
+    private final String                  id;
+    private final List<AbstractElement>   elements;
+    private final Map<String, String>     attributes;
+    private final MediatorCreatorsManager mediatorCreatorsManager;
 
-    private String title;
-    private String name;
-    private Shape  parent;
+    private String  title;
+    private String  name;
+    private Element parent;
 
     @Inject
-    public BranchImpl() {
+    public BranchImpl(MediatorCreatorsManager mediatorCreatorsManager) {
+        this.mediatorCreatorsManager = mediatorCreatorsManager;
+
         id = UUID.get();
 
-        shapes = new ArrayList<>();
+        elements = new ArrayList<>();
         attributes = new LinkedHashMap<>();
     }
 
@@ -82,45 +87,45 @@ public class BranchImpl implements Branch {
     /** {@inheritDoc} */
     @Nullable
     @Override
-    public Shape getParent() {
+    public Element getParent() {
         return parent;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setParent(@Nullable Shape parent) {
+    public void setParent(@Nullable Element parent) {
         this.parent = parent;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void addShape(@Nonnull Shape shape) {
-        shapes.add((AbstractShape)shape);
+    public void addElement(@Nonnull Element element) {
+        elements.add((AbstractElement)element);
     }
 
     /** {@inheritDoc} */
     @SuppressWarnings("SuspiciousMethodCalls")
     @Override
-    public void removeShape(@Nonnull Shape shape) {
-        shapes.remove(shape);
+    public void removeElement(@Nonnull Element element) {
+        elements.remove(element);
     }
 
     /** {@inheritDoc} */
     @Nonnull
     @Override
-    public List<Shape> getShapes() {
-        Collections.sort(shapes);
+    public List<Element> getElements() {
+        Collections.sort(elements);
 
-        List<Shape> result = new ArrayList<>();
-        result.addAll(shapes);
+        List<Element> result = new ArrayList<>();
+        result.addAll(elements);
 
         return result;
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean hasShape() {
-        return !shapes.isEmpty();
+    public boolean hasElements() {
+        return !elements.isEmpty();
     }
 
     /** {@inheritDoc} */
@@ -133,8 +138,8 @@ public class BranchImpl implements Branch {
             content.append('<').append(name).append(' ').append(convertAttributesToXML()).append('>');
         }
 
-        for (Shape shape : getShapes()) {
-            content.append(shape.serialize());
+        for (Element element : getElements()) {
+            content.append(element.serialize());
         }
 
         if (name != null) {
@@ -171,14 +176,15 @@ public class BranchImpl implements Branch {
             Node item = childNodes.item(i);
             String nodeName = item.getNodeName();
 
-            Shape shape = parent.createElement(nodeName);
+            Provider<? extends Element> elementProvider = mediatorCreatorsManager.getProviderBySerializeName(nodeName);
+            Element element = elementProvider == null ? null : elementProvider.get();
 
-            if (shape == null) {
+            if (element == null) {
                 continue;
             }
 
-            shape.deserialize(item);
-            shapes.add((AbstractShape)shape);
+            element.deserialize(item);
+            elements.add((AbstractElement)element);
         }
     }
 
