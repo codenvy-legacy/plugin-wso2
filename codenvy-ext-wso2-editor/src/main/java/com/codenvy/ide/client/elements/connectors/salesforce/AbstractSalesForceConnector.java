@@ -1,11 +1,11 @@
 /*
  * Copyright 2014 Codenvy, S.A.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache  License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,8 +16,8 @@
 package com.codenvy.ide.client.elements.connectors.salesforce;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.elements.AbstractShape;
 import com.codenvy.ide.client.elements.Branch;
+import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Node;
@@ -31,12 +31,13 @@ import static com.codenvy.ide.client.elements.connectors.salesforce.AbstractSale
 
 /**
  * The class contains state of SalesForce connectors which are general for all connectors.It contains genera logic of serialization
- * representation of attributes of all SalesForce connectors.Deserealizathion mechanism which allows to restore attributes' state of
+ * representation of attributes of all SalesForce connectors. Deserealizathion mechanism which allows to restore attributes' state of
  * element after saving also is same for all SalesForce connectors .
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
-public class AbstractSalesForceConnector extends AbstractShape {
+public class AbstractSalesForceConnector extends AbstractConnector {
 
     public static final String CONFIG_REF = "configRef";
 
@@ -90,11 +91,6 @@ public class AbstractSalesForceConnector extends AbstractShape {
 
     public void setConfigRef(@Nonnull String configRef) {
         this.configRef = configRef;
-    }
-
-    @Nonnull
-    public ParameterEditorType getParameterEditorType() {
-        return parameterEditorType;
     }
 
     public void setParameterEditorType(@Nonnull ParameterEditorType parameterEditorType) {
