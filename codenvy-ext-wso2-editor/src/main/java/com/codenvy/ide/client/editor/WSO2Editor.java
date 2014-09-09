@@ -16,8 +16,9 @@
 package com.codenvy.ide.client.editor;
 
 import com.codenvy.ide.client.EditorState;
-import com.codenvy.ide.client.MetaModelValidator;
 import com.codenvy.ide.client.State;
+import com.codenvy.ide.client.elements.RootElement;
+import com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint;
 import com.codenvy.ide.client.elements.mediators.Call;
 import com.codenvy.ide.client.elements.mediators.CallTemplate;
 import com.codenvy.ide.client.elements.mediators.Filter;
@@ -25,12 +26,10 @@ import com.codenvy.ide.client.elements.mediators.Header;
 import com.codenvy.ide.client.elements.mediators.LoopBack;
 import com.codenvy.ide.client.elements.mediators.Property;
 import com.codenvy.ide.client.elements.mediators.Respond;
-import com.codenvy.ide.client.elements.RootElement;
 import com.codenvy.ide.client.elements.mediators.Send;
 import com.codenvy.ide.client.elements.mediators.Sequence;
 import com.codenvy.ide.client.elements.mediators.Switch;
 import com.codenvy.ide.client.elements.mediators.ValueType;
-import com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint;
 import com.codenvy.ide.client.elements.mediators.enrich.Enrich;
 import com.codenvy.ide.client.elements.mediators.log.Log;
 import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
@@ -60,6 +59,8 @@ import com.codenvy.ide.client.propertiespanel.send.SendPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.sequence.SequencePropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.switchmediator.SwitchPropertiesPanelPresenter;
 import com.codenvy.ide.client.toolbar.ToolbarPresenter;
+import com.codenvy.ide.client.validators.ConnectionsValidator;
+import com.codenvy.ide.client.validators.InnerElementsValidator;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -70,6 +71,23 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.codenvy.ide.client.State.CREATING_NOTHING;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion.FINAL;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion.SUBMISSION;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.LEAVE_AS_IS;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.REST;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.get;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.pox;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.soap11;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.soap12;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Optimize;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Optimize.mtom;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Optimize.swa;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction.discard;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction.fault;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction.never;
 import static com.codenvy.ide.client.elements.mediators.Call.EndpointType;
 import static com.codenvy.ide.client.elements.mediators.Call.EndpointType.INLINE;
 import static com.codenvy.ide.client.elements.mediators.Call.EndpointType.NONE;
@@ -108,23 +126,6 @@ import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType;
 import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType.Dynamic;
 import static com.codenvy.ide.client.elements.mediators.ValueType.EXPRESSION;
 import static com.codenvy.ide.client.elements.mediators.ValueType.LITERAL;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion.FINAL;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion.SUBMISSION;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.LEAVE_AS_IS;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.REST;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.get;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.pox;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.soap11;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.soap12;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Optimize;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Optimize.mtom;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Optimize.swa;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction.discard;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction.fault;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction.never;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType.RegistryKey;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType.SourceXML;
@@ -357,160 +358,64 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
     }
 
     @Inject
-    private void configureMetaModelValidator(MetaModelValidator metaModelValidator) {
-        metaModelValidator.register(Switch.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                       Property.ELEMENT_NAME,
-                                                                       PayloadFactory.ELEMENT_NAME,
-                                                                       Send.ELEMENT_NAME,
-                                                                       Header.ELEMENT_NAME,
-                                                                       Respond.ELEMENT_NAME,
-                                                                       Filter.ELEMENT_NAME,
-                                                                       Switch.ELEMENT_NAME,
-                                                                       Sequence.ELEMENT_NAME,
-                                                                       Enrich.ELEMENT_NAME,
-                                                                       LoopBack.ELEMENT_NAME,
-                                                                       CallTemplate.ELEMENT_NAME,
-                                                                       Call.ELEMENT_NAME));
+    private void configureConnectionsValidator(ConnectionsValidator connectionsValidator) {
+        connectionsValidator.addDisallowRules(Respond.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
+                                                                                  Property.ELEMENT_NAME,
+                                                                                  PayloadFactory.ELEMENT_NAME,
+                                                                                  Send.ELEMENT_NAME,
+                                                                                  Header.ELEMENT_NAME,
+                                                                                  Respond.ELEMENT_NAME,
+                                                                                  Filter.ELEMENT_NAME,
+                                                                                  Switch.ELEMENT_NAME,
+                                                                                  Sequence.ELEMENT_NAME,
+                                                                                  Enrich.ELEMENT_NAME,
+                                                                                  LoopBack.ELEMENT_NAME,
+                                                                                  CallTemplate.ELEMENT_NAME,
+                                                                                  Call.ELEMENT_NAME,
+                                                                                  AddressEndpoint.ELEMENT_NAME));
 
-        metaModelValidator.register(Log.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                    Property.ELEMENT_NAME,
-                                                                    PayloadFactory.ELEMENT_NAME,
-                                                                    Send.ELEMENT_NAME,
-                                                                    Header.ELEMENT_NAME,
-                                                                    Respond.ELEMENT_NAME,
-                                                                    Filter.ELEMENT_NAME,
-                                                                    Switch.ELEMENT_NAME,
-                                                                    Sequence.ELEMENT_NAME,
-                                                                    Enrich.ELEMENT_NAME,
-                                                                    LoopBack.ELEMENT_NAME,
-                                                                    CallTemplate.ELEMENT_NAME,
-                                                                    Call.ELEMENT_NAME));
+        connectionsValidator.addDisallowRules(LoopBack.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
+                                                                                   Property.ELEMENT_NAME,
+                                                                                   PayloadFactory.ELEMENT_NAME,
+                                                                                   Send.ELEMENT_NAME,
+                                                                                   Header.ELEMENT_NAME,
+                                                                                   Respond.ELEMENT_NAME,
+                                                                                   Filter.ELEMENT_NAME,
+                                                                                   Switch.ELEMENT_NAME,
+                                                                                   Sequence.ELEMENT_NAME,
+                                                                                   Enrich.ELEMENT_NAME,
+                                                                                   LoopBack.ELEMENT_NAME,
+                                                                                   CallTemplate.ELEMENT_NAME,
+                                                                                   Call.ELEMENT_NAME,
+                                                                                   AddressEndpoint.ELEMENT_NAME));
 
-        metaModelValidator.register(Call.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                     Property.ELEMENT_NAME,
-                                                                     PayloadFactory.ELEMENT_NAME,
-                                                                     Send.ELEMENT_NAME,
-                                                                     Header.ELEMENT_NAME,
-                                                                     Respond.ELEMENT_NAME,
-                                                                     Filter.ELEMENT_NAME,
-                                                                     Switch.ELEMENT_NAME,
-                                                                     Sequence.ELEMENT_NAME,
-                                                                     Enrich.ELEMENT_NAME,
-                                                                     LoopBack.ELEMENT_NAME,
-                                                                     CallTemplate.ELEMENT_NAME,
-                                                                     Call.ELEMENT_NAME));
+        connectionsValidator.addDisallowRules(AddressEndpoint.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
+                                                                                          Property.ELEMENT_NAME,
+                                                                                          PayloadFactory.ELEMENT_NAME,
+                                                                                          Send.ELEMENT_NAME,
+                                                                                          Header.ELEMENT_NAME,
+                                                                                          Respond.ELEMENT_NAME,
+                                                                                          Filter.ELEMENT_NAME,
+                                                                                          Switch.ELEMENT_NAME,
+                                                                                          Sequence.ELEMENT_NAME,
+                                                                                          Enrich.ELEMENT_NAME,
+                                                                                          LoopBack.ELEMENT_NAME,
+                                                                                          CallTemplate.ELEMENT_NAME,
+                                                                                          Call.ELEMENT_NAME,
+                                                                                          AddressEndpoint.ELEMENT_NAME));
+    }
 
-        metaModelValidator.register(Property.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                         Property.ELEMENT_NAME,
-                                                                         PayloadFactory.ELEMENT_NAME,
-                                                                         Send.ELEMENT_NAME,
-                                                                         Header.ELEMENT_NAME,
-                                                                         Respond.ELEMENT_NAME,
-                                                                         Filter.ELEMENT_NAME,
-                                                                         Switch.ELEMENT_NAME,
-                                                                         Sequence.ELEMENT_NAME,
-                                                                         Enrich.ELEMENT_NAME,
-                                                                         LoopBack.ELEMENT_NAME,
-                                                                         CallTemplate.ELEMENT_NAME,
-                                                                         Call.ELEMENT_NAME));
+    @Inject
+    private void configureInnerElementsValidator(InnerElementsValidator innerElementsValidator) {
+        innerElementsValidator.addAllowRule(Call.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
 
-        metaModelValidator.register(Enrich.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                       Property.ELEMENT_NAME,
-                                                                       PayloadFactory.ELEMENT_NAME,
-                                                                       Send.ELEMENT_NAME,
-                                                                       Header.ELEMENT_NAME,
-                                                                       Respond.ELEMENT_NAME,
-                                                                       Filter.ELEMENT_NAME,
-                                                                       Switch.ELEMENT_NAME,
-                                                                       Sequence.ELEMENT_NAME,
-                                                                       Enrich.ELEMENT_NAME,
-                                                                       LoopBack.ELEMENT_NAME,
-                                                                       CallTemplate.ELEMENT_NAME,
-                                                                       Call.ELEMENT_NAME));
+        innerElementsValidator.addAllowRule(Send.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
+        
+        innerElementsValidator.addDisallowRule(RootElement.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
 
-        metaModelValidator.register(Sequence.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                         Property.ELEMENT_NAME,
-                                                                         PayloadFactory.ELEMENT_NAME,
-                                                                         Send.ELEMENT_NAME,
-                                                                         Header.ELEMENT_NAME,
-                                                                         Respond.ELEMENT_NAME,
-                                                                         Filter.ELEMENT_NAME,
-                                                                         Switch.ELEMENT_NAME,
-                                                                         Sequence.ELEMENT_NAME,
-                                                                         Enrich.ELEMENT_NAME,
-                                                                         LoopBack.ELEMENT_NAME,
-                                                                         CallTemplate.ELEMENT_NAME,
-                                                                         Call.ELEMENT_NAME));
+        innerElementsValidator.addDisallowRule(Filter.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
 
-        metaModelValidator.register(Send.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                     Property.ELEMENT_NAME,
-                                                                     PayloadFactory.ELEMENT_NAME,
-                                                                     Send.ELEMENT_NAME,
-                                                                     Header.ELEMENT_NAME,
-                                                                     Respond.ELEMENT_NAME,
-                                                                     Filter.ELEMENT_NAME,
-                                                                     Switch.ELEMENT_NAME,
-                                                                     Sequence.ELEMENT_NAME,
-                                                                     Enrich.ELEMENT_NAME,
-                                                                     LoopBack.ELEMENT_NAME,
-                                                                     CallTemplate.ELEMENT_NAME,
-                                                                     Call.ELEMENT_NAME));
-
-        metaModelValidator.register(PayloadFactory.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                               Property.ELEMENT_NAME,
-                                                                               PayloadFactory.ELEMENT_NAME,
-                                                                               Send.ELEMENT_NAME,
-                                                                               Header.ELEMENT_NAME,
-                                                                               Respond.ELEMENT_NAME,
-                                                                               Filter.ELEMENT_NAME,
-                                                                               Switch.ELEMENT_NAME,
-                                                                               Sequence.ELEMENT_NAME,
-                                                                               Enrich.ELEMENT_NAME,
-                                                                               LoopBack.ELEMENT_NAME,
-                                                                               CallTemplate.ELEMENT_NAME,
-                                                                               Call.ELEMENT_NAME));
-
-        metaModelValidator.register(Header.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                       Property.ELEMENT_NAME,
-                                                                       PayloadFactory.ELEMENT_NAME,
-                                                                       Send.ELEMENT_NAME,
-                                                                       Header.ELEMENT_NAME,
-                                                                       Respond.ELEMENT_NAME,
-                                                                       Filter.ELEMENT_NAME,
-                                                                       Switch.ELEMENT_NAME,
-                                                                       Sequence.ELEMENT_NAME,
-                                                                       Enrich.ELEMENT_NAME,
-                                                                       LoopBack.ELEMENT_NAME,
-                                                                       CallTemplate.ELEMENT_NAME,
-                                                                       Call.ELEMENT_NAME));
-
-        metaModelValidator.register(CallTemplate.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                             Property.ELEMENT_NAME,
-                                                                             PayloadFactory.ELEMENT_NAME,
-                                                                             Send.ELEMENT_NAME,
-                                                                             Header.ELEMENT_NAME,
-                                                                             Respond.ELEMENT_NAME,
-                                                                             Filter.ELEMENT_NAME,
-                                                                             Switch.ELEMENT_NAME,
-                                                                             Sequence.ELEMENT_NAME,
-                                                                             Enrich.ELEMENT_NAME,
-                                                                             LoopBack.ELEMENT_NAME,
-                                                                             CallTemplate.ELEMENT_NAME,
-                                                                             Call.ELEMENT_NAME));
-
-        metaModelValidator.register(Filter.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                       Property.ELEMENT_NAME,
-                                                                       PayloadFactory.ELEMENT_NAME,
-                                                                       Send.ELEMENT_NAME,
-                                                                       Header.ELEMENT_NAME,
-                                                                       Respond.ELEMENT_NAME,
-                                                                       Filter.ELEMENT_NAME,
-                                                                       Switch.ELEMENT_NAME,
-                                                                       Sequence.ELEMENT_NAME,
-                                                                       Enrich.ELEMENT_NAME,
-                                                                       LoopBack.ELEMENT_NAME,
-                                                                       CallTemplate.ELEMENT_NAME,
-                                                                       Call.ELEMENT_NAME));
+        innerElementsValidator.addDisallowRule(Switch.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
     }
 
     @Inject

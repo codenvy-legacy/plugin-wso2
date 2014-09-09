@@ -17,7 +17,6 @@ package com.codenvy.ide.client.elements.widgets.branch;
 
 import com.codenvy.ide.client.EditorState;
 import com.codenvy.ide.client.HasState;
-import com.codenvy.ide.client.MetaModelValidator;
 import com.codenvy.ide.client.State;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Element;
@@ -27,6 +26,8 @@ import com.codenvy.ide.client.inject.EditorFactory;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
+import com.codenvy.ide.client.validators.ConnectionsValidator;
+import com.codenvy.ide.client.validators.InnerElementsValidator;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
@@ -56,8 +57,9 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
                                                                               ElementPresenter.ElementMoveListener,
                                                                               ElementChangedListener {
 
-    private final MetaModelValidator      metaModelValidator;
+    private final ConnectionsValidator    connectionsValidator;
     private final SelectionManager        selectionManager;
+    private final InnerElementsValidator  innerElementsValidator;
     private final EditorFactory           editorFactory;
     private final MediatorCreatorsManager mediatorCreatorsManager;
     private final EditorState<State>      editorState;
@@ -69,7 +71,8 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
 
     @Inject
     public BranchPresenter(BranchView view,
-                           MetaModelValidator metaModelValidator,
+                           ConnectionsValidator connectionsValidator,
+                           InnerElementsValidator innerElementsValidator,
                            EditorFactory editorFactory,
                            MediatorCreatorsManager mediatorCreatorsManager,
                            @Assisted EditorState<State> editorState,
@@ -77,7 +80,8 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
                            @Assisted Branch branch) {
         super(view);
 
-        this.metaModelValidator = metaModelValidator;
+        this.connectionsValidator = connectionsValidator;
+        this.innerElementsValidator = innerElementsValidator;
         this.editorFactory = editorFactory;
         this.mediatorCreatorsManager = mediatorCreatorsManager;
         this.editorState = editorState;
@@ -153,8 +157,9 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         setState(CREATING_NOTHING);
         view.setDefaultCursor();
 
-        if (newElement == null || !metaModelValidator.canInsertElement(branch, newElement.getElementName(), x, y)
-            || (branchParent != null && !branchParent.hasComponent(newElement.getElementName()))) {
+        if (newElement == null || !connectionsValidator.canInsertElement(branch, newElement.getElementName(), x, y)
+            || (branchParent != null && !innerElementsValidator.canInsertElement(branchParent.getElementName(),
+                                                                                 newElement.getElementName()))) {
             selectionManager.setElement(null);
             return;
         }
@@ -178,7 +183,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
             return;
         }
 
-        if (metaModelValidator.canInsertElement(branch, elementName, x, y)) {
+        if (connectionsValidator.canInsertElement(branch, elementName, x, y)) {
             view.setApplyCursor();
         } else {
             view.setErrorCursor();
@@ -212,8 +217,8 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     /** {@inheritDoc} */
     @Override
     public void onElementMoved(@Nonnull Element element, int x, int y) {
-        if (!metaModelValidator.canRemoveElement(branch, element.getId()) ||
-            !metaModelValidator.canInsertElement(branch, element.getElementName(), x, y)) {
+        if (!connectionsValidator.canRemoveElement(branch, element.getId()) ||
+            !connectionsValidator.canInsertElement(branch, element.getElementName(), x, y)) {
             return;
         }
 
@@ -240,7 +245,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     }
 
     private void removeElement(@Nonnull Element element) {
-        if (!metaModelValidator.canRemoveElement(branch, element.getId())) {
+        if (!connectionsValidator.canRemoveElement(branch, element.getId())) {
             return;
         }
 

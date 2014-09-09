@@ -17,19 +17,6 @@ package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.common.ContentFormatter;
-import com.codenvy.ide.client.elements.mediators.Call;
-import com.codenvy.ide.client.elements.mediators.CallTemplate;
-import com.codenvy.ide.client.elements.mediators.Filter;
-import com.codenvy.ide.client.elements.mediators.Header;
-import com.codenvy.ide.client.elements.mediators.LoopBack;
-import com.codenvy.ide.client.elements.mediators.Property;
-import com.codenvy.ide.client.elements.mediators.Respond;
-import com.codenvy.ide.client.elements.mediators.Send;
-import com.codenvy.ide.client.elements.mediators.Sequence;
-import com.codenvy.ide.client.elements.mediators.Switch;
-import com.codenvy.ide.client.elements.mediators.enrich.Enrich;
-import com.codenvy.ide.client.elements.mediators.log.Log;
-import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
@@ -37,7 +24,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -64,19 +50,6 @@ public class RootElement extends AbstractElement {
     private static final String ON_ERROR_ATTRIBUTE_NAME = "onError";
 
     private static final List<String> PROPERTIES = Collections.emptyList();
-    private static final List<String> COMPONENTS = Arrays.asList(Log.ELEMENT_NAME,
-                                                                 Property.ELEMENT_NAME,
-                                                                 PayloadFactory.ELEMENT_NAME,
-                                                                 Send.ELEMENT_NAME,
-                                                                 Header.ELEMENT_NAME,
-                                                                 Respond.ELEMENT_NAME,
-                                                                 Filter.ELEMENT_NAME,
-                                                                 Switch.ELEMENT_NAME,
-                                                                 Sequence.ELEMENT_NAME,
-                                                                 Enrich.ELEMENT_NAME,
-                                                                 LoopBack.ELEMENT_NAME,
-                                                                 CallTemplate.ELEMENT_NAME,
-                                                                 Call.ELEMENT_NAME);
 
     private String name;
     private String onError;
@@ -87,8 +60,6 @@ public class RootElement extends AbstractElement {
 
         this.name = "";
         this.onError = "";
-
-        components.addAll(COMPONENTS);
 
         branches.add(branchProvider.get());
     }

@@ -19,9 +19,6 @@ import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.mediators.enrich.Enrich;
-import com.codenvy.ide.client.elements.mediators.log.Log;
-import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -35,7 +32,6 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,19 +66,6 @@ public class Switch extends AbstractElement {
     private static final String DEFAULT_SERIALIZATION_NAME = "default";
 
     private static final List<String> PROPERTIES = java.util.Collections.emptyList();
-    private static final List<String> COMPONENTS = Arrays.asList(Log.ELEMENT_NAME,
-                                                                 Property.ELEMENT_NAME,
-                                                                 PayloadFactory.ELEMENT_NAME,
-                                                                 Send.ELEMENT_NAME,
-                                                                 Header.ELEMENT_NAME,
-                                                                 Respond.ELEMENT_NAME,
-                                                                 Filter.ELEMENT_NAME,
-                                                                 Switch.ELEMENT_NAME,
-                                                                 Sequence.ELEMENT_NAME,
-                                                                 Enrich.ELEMENT_NAME,
-                                                                 LoopBack.ELEMENT_NAME,
-                                                                 CallTemplate.ELEMENT_NAME,
-                                                                 Call.ELEMENT_NAME);
 
     private final Provider<NameSpace> nameSpaceProvider;
 
@@ -104,8 +87,6 @@ public class Switch extends AbstractElement {
 
         sourceXpath = "default/xpath";
         nameSpaces = Collections.createArray();
-
-        components.addAll(COMPONENTS);
 
         firstBranch = branchProvider.get();
         firstBranch.setParent(this);

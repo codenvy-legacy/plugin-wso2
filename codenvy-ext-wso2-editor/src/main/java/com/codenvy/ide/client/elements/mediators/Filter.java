@@ -19,9 +19,6 @@ import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.mediators.enrich.Enrich;
-import com.codenvy.ide.client.elements.mediators.log.Log;
-import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -68,19 +65,6 @@ public class Filter extends AbstractElement {
     private static final String ELSE_BRANCH_SERIALIZATION_NAME = "else";
 
     private static final List<String> PROPERTIES = java.util.Collections.emptyList();
-    private static final List<String> COMPONENTS = Arrays.asList(Log.ELEMENT_NAME,
-                                                                 Property.ELEMENT_NAME,
-                                                                 PayloadFactory.ELEMENT_NAME,
-                                                                 Send.ELEMENT_NAME,
-                                                                 Header.ELEMENT_NAME,
-                                                                 Respond.ELEMENT_NAME,
-                                                                 Filter.ELEMENT_NAME,
-                                                                 Switch.ELEMENT_NAME,
-                                                                 Sequence.ELEMENT_NAME,
-                                                                 Enrich.ELEMENT_NAME,
-                                                                 LoopBack.ELEMENT_NAME,
-                                                                 CallTemplate.ELEMENT_NAME,
-                                                                 Call.ELEMENT_NAME);
 
     private final Provider<NameSpace> nameSpaceProvider;
 
@@ -108,8 +92,6 @@ public class Filter extends AbstractElement {
 
         sourceNameSpaces = Collections.createArray();
         xPathNameSpaces = Collections.createArray();
-
-        components.addAll(COMPONENTS);
 
         Branch thenBranch = branchProvider.get();
         thenBranch.setParent(this);

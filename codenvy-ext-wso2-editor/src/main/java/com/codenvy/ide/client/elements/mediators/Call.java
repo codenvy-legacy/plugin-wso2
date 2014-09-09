@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -62,7 +61,6 @@ public class Call extends AbstractElement {
     private static final String ENDPOINT_PROPERTY_NAME        = "endpoint";
 
     private static final List<String> PROPERTIES = Arrays.asList(ENDPOINT_PROPERTY_NAME);
-    private static final List<String> COMPONENTS = Arrays.asList(AddressEndpoint.ELEMENT_NAME);
 
     private final Provider<NameSpace> nameSpaceProvider;
 
@@ -90,8 +88,6 @@ public class Call extends AbstractElement {
         xPath = "/default/expression";
         description = "";
         nameSpaces = Collections.createArray();
-
-        components.addAll(COMPONENTS);
 
         Branch branch = branchProvider.get();
         branch.setParent(this);

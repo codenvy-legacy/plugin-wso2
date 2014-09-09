@@ -25,8 +25,7 @@ import java.util.List;
 
 /**
  * The main presentation of diagram elements. All diagram elements will implement this class. It contains general information for all
- * diagram elements. It can contain and manage inner diagram elements. Inner diagram elements mean that this kind of elements provides an
- * ability to have own diagram inside himself. This ability is optional.
+ * diagram elements.
  *
  * @author Andrey Plotnikov
  */
@@ -118,16 +117,6 @@ public interface Element {
     /** @return list of available branches for the current diagram element */
     @Nonnull
     List<Branch> getBranches();
-
-    /**
-     * @param component
-     *         current component
-     * @return <code>true</code> if components include current component, <code>false</code> it doesn't
-     */
-    boolean hasComponent(@Nonnull String component);
-
-    /** @return <code>true</code> if this element has an ability to have inner components, <code>false</code> it doesn't */
-    boolean isContainer();
 
     /** @return <code>true</code> if this element has an ability to add new branches, <code>false</code> it doesn't */
     boolean isPossibleToAddBranches();

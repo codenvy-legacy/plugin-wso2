@@ -24,6 +24,7 @@ import com.codenvy.ide.client.inject.EditorFactory;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
+import com.codenvy.ide.client.validators.InnerElementsValidator;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -51,10 +52,10 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     private final EditorState<State>      editorState;
     private final MediatorCreatorsManager mediatorCreatorsManager;
     private final Element                 element;
+    private final InnerElementsValidator  innerElementsValidator;
 
-    private final List<ElementDeleteListener> elementDeleteListeners;
-    private final List<ElementMoveListener>   elementMoveListeners;
-
+    private final List<ElementDeleteListener>  elementDeleteListeners;
+    private final List<ElementMoveListener>    elementMoveListeners;
     private final List<ElementChangedListener> elementChangedListeners;
     private final List<BranchPresenter>        branches;
 
@@ -65,6 +66,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     public ElementPresenter(EditorFactory editorFactory,
                             SelectionManager selectionManager,
                             MediatorCreatorsManager mediatorCreatorsManager,
+                            InnerElementsValidator innerElementsValidator,
                             @Assisted EditorState<State> editorState,
                             @Assisted Element element) {
         super(editorFactory.createElementView(element.isPossibleToAddBranches()));
@@ -76,6 +78,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
         this.editorState = editorState;
         this.element = element;
         this.mediatorCreatorsManager = mediatorCreatorsManager;
+        this.innerElementsValidator = innerElementsValidator;
 
         this.elementMoveListeners = new ArrayList<>();
         this.elementDeleteListeners = new ArrayList<>();
@@ -269,7 +272,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
             return;
         }
 
-        view.selectBelowCursor(!element.hasComponent(elementName));
+        view.selectBelowCursor(!innerElementsValidator.canInsertElement(element.getElementName(), elementName));
     }
 
     /** {@inheritDoc} */
