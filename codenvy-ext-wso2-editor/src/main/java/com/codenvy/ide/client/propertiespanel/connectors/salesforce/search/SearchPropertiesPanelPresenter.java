@@ -72,6 +72,7 @@ public class SearchPropertiesPanelPresenter extends GeneralConnectorPanelPresent
         };
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
         AbstractConnector.ParameterEditorType editorType =

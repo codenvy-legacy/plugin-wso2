@@ -182,7 +182,7 @@ public class Upset extends AbstractConnector {
     }
 
     public void setAllOrNone(@Nullable String allOrNone) {
-        this.allOrNone = allOrNone + "¿";
+        this.allOrNone = allOrNone;
     }
 
     @Nonnull

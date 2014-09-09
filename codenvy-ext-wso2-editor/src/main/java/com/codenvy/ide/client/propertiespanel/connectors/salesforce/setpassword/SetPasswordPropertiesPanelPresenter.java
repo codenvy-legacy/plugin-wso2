@@ -39,6 +39,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * depending on user's changes of properties.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class SetPasswordPropertiesPanelPresenter extends GeneralConnectorPanelPresenter<SetPassword> {
 
@@ -85,6 +86,7 @@ public class SetPasswordPropertiesPanelPresenter extends GeneralConnectorPanelPr
         };
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
         ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());

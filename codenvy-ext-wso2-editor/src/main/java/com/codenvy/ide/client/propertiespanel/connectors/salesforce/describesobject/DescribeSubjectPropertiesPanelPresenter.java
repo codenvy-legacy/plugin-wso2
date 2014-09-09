@@ -72,6 +72,7 @@ public class DescribeSubjectPropertiesPanelPresenter extends GeneralConnectorPan
         };
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
         ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());

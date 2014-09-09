@@ -87,6 +87,7 @@ public class QueryPropertiesPanelPresenter extends GeneralConnectorPanelPresente
         };
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
         ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());

@@ -39,6 +39,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * depending on user's changes of properties.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class SendEmailPropertiesPanelPresenter extends GeneralConnectorPanelPresenter<SendEmail> {
 
@@ -72,10 +73,10 @@ public class SendEmailPropertiesPanelPresenter extends GeneralConnectorPanelPres
         };
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
-        AbstractConnector.ParameterEditorType editorType =
-                AbstractConnector.ParameterEditorType.valueOf(view.getParameterEditorType());
+        AbstractConnector.ParameterEditorType editorType = AbstractConnector.ParameterEditorType.valueOf(view.getParameterEditorType());
         element.setParameterEditorType(editorType);
 
         boolean isEquals = NamespacedPropertyEditor.equals(editorType);

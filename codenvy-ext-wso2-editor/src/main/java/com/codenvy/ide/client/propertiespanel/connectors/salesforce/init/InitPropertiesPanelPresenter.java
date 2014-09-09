@@ -111,6 +111,7 @@ public class InitPropertiesPanelPresenter extends GeneralConnectorPanelPresenter
         };
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
         AbstractConnector.ParameterEditorType editorType = AbstractConnector.ParameterEditorType.valueOf(view.getParameterEditorType());

@@ -39,6 +39,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * depending on user's changes of properties.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class DeletePropertiesPanelPresenter extends GeneralConnectorPanelPresenter<Delete> {
 
@@ -85,6 +86,7 @@ public class DeletePropertiesPanelPresenter extends GeneralConnectorPanelPresent
         };
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
         ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
@@ -144,7 +146,6 @@ public class DeletePropertiesPanelPresenter extends GeneralConnectorPanelPresent
 
         view.setFirstLabelTitle(locale.connectorAllOrNone());
         view.setSecondLabelTitle(locale.connectorSubjects());
-
     }
 
     /** {@inheritDoc} */
