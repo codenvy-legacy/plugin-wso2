@@ -24,7 +24,7 @@
 
     <parent>
         <artifactId>codenvy-ext-wso2-parent</artifactId>
-        <groupId>com.codenvy.ide</groupId>
+        <groupId>com.codenvy.plugin-wso2</groupId>
         <version>1.0.0-M1-SNAPSHOT</version>
     </parent>
 
