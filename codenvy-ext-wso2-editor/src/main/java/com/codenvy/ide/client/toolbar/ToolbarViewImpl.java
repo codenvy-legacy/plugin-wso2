@@ -215,4 +215,219 @@ public class ToolbarViewImpl extends ToolbarView {
         delegate.onSalesForceGetUserInfoClicked();
     }
 
+    @UiHandler("jiraAddAttachmentToIssueId")
+    public void onAddAttachmentToIssueIdClicked(ClickEvent event) {
+        delegate.onAddAttachmentToIssueIdClicked();
+    }
+
+    @UiHandler("jiraCreateFilter")
+    public void onCreateFilterClicked(ClickEvent event) {
+        delegate.onCreateFilterClicked();
+    }
+
+    @UiHandler("jiraCreateIssue")
+    public void onCreateIssueClicked(ClickEvent event) {
+        delegate.onCreateIssueClicked();
+    }
+
+    @UiHandler("jiraDeleteAvatarForProject")
+    public void onDeleteAvatarForProjectClicked(ClickEvent event) {
+        delegate.onDeleteAvatarForProjectClicked();
+    }
+
+    @UiHandler("jiraDeleteComment")
+    public void onDeleteCommentClicked(ClickEvent event) {
+        delegate.onDeleteCommentClicked();
+    }
+
+    @UiHandler("jiraDeleteFilter")
+    public void onDeleteFilterClicked(ClickEvent event) {
+        delegate.onDeleteFilterClicked();
+    }
+
+    @UiHandler("jiraGetDashboard")
+    public void onGetDashboardClicked(ClickEvent event) {
+        delegate.onGetDashboardClicked();
+    }
+
+    @UiHandler("jiraDoTransition")
+    public void onDoTransitionClicked(ClickEvent event) {
+        delegate.onDoTransitionClicked();
+    }
+
+    @UiHandler("jiraGetAvatarsForProject")
+    public void onGetAvatarsForProjectClicked(ClickEvent event) {
+        delegate.onGetAvatarsForProjectClicked();
+    }
+
+    @UiHandler("jiraGetComments")
+    public void onGetCommentsClicked(ClickEvent event) {
+        delegate.onGetCommentsClicked();
+    }
+
+    @UiHandler("jiraGetComponentsOfProject")
+    public void onGetComponentsOfProjectClicked(ClickEvent event) {
+        delegate.onGetComponentsOfProjectClicked();
+    }
+
+    @UiHandler("jiraGetDashboardById")
+    public void onGetDashboardByIdClicked(ClickEvent event) {
+        delegate.onGetDashboardByIdClicked();
+    }
+
+    @UiHandler("jiraGetFavouriteFilters")
+    public void onGetFavouritesFilterClicked(ClickEvent event) {
+        delegate.onGetFavouritesFilterClicked();
+    }
+
+    @UiHandler("jiraGetFilterById")
+    public void onGetFilterByIdClicked(ClickEvent event) {
+        delegate.onGetFilterByIdClicked();
+    }
+
+    @UiHandler("jiraGetGroup")
+    public void onGetGroupClicked(ClickEvent event) {
+        delegate.onGetGroupClicked();
+    }
+
+    @UiHandler("jiraGetIssue")
+    public void onGetIssueClicked(ClickEvent event) {
+        delegate.onGetIssueClicked();
+    }
+
+    @UiHandler("jiraGetIssuePriorities")
+    public void onGetIssuePriorityesClicked(ClickEvent event) {
+        delegate.onGetIssuePriorityesClicked();
+    }
+
+    @UiHandler("jiraGetIssuePriorityById")
+    public void onGetIssuePriorityByIdClicked(ClickEvent event) {
+        delegate.onGetIssuePriorityByIdClicked();
+    }
+
+    @UiHandler("jiraGetIssueTypeById")
+    public void onGetIssueTypeByIdClicked(ClickEvent event) {
+        delegate.onGetIssueTypeByIdClicked();
+    }
+
+    @UiHandler("jiraGetIssueTypes")
+    public void onGetIssueTypesClicked(ClickEvent event) {
+        delegate.onGetIssueTypesClicked();
+    }
+
+    @UiHandler("jiraGetIssuesForUser")
+    public void onGetIssuesForUserClicked(ClickEvent event) {
+        delegate.onGetIssuesForUserClicked();
+    }
+
+    @UiHandler("jiraGetProject")
+    public void onGetProjectClicked(ClickEvent event) {
+        delegate.onGetProjectClicked();
+    }
+
+    @UiHandler("jiraGetRolesByIdOfProject")
+    public void onGetRolesByIdOfProjectClicked(ClickEvent event) {
+        delegate.onGetRolesByIdOfProjectClicked();
+    }
+
+    @UiHandler("jiraGetRolesOfProject")
+    public void onGetRolesOfProjectClicked(ClickEvent event) {
+        delegate.onGetRolesOfProjectClicked();
+    }
+
+    @UiHandler("jiraGetStatusesOfProject")
+    public void onGetStatusesOfProjectClicked(ClickEvent event) {
+        delegate.onGetStatusesOfProjectClicked();
+    }
+
+    @UiHandler("jiraGetTransitions")
+    public void onGetTransitionsClicked(ClickEvent event) {
+        delegate.onGetTransitionsClicked();
+    }
+
+    @UiHandler("jiraGetUser")
+    public void onGetUserClicked(ClickEvent event) {
+        delegate.onGetUserClicked();
+    }
+
+    @UiHandler("jiraGetUserAssignableProjects")
+    public void onGetUserAssignableProjectClicked(ClickEvent event) {
+        delegate.onGetUserAssignableProjectClicked();
+    }
+
+    @UiHandler("jiraGetUserPermissions")
+    public void onGetUserPermissionsClicked(ClickEvent event) {
+        delegate.onGetUserPermissionsClicked();
+    }
+
+    @UiHandler("jiraGetVersionsOfProject")
+    public void onGetVersionsOfProjectClicked(ClickEvent event) {
+        delegate.onGetVersionsOfProjectClicked();
+    }
+
+    @UiHandler("jiraGetVotesForIssue")
+    public void onGetVotesForIssueClicked(ClickEvent event) {
+        delegate.onGetVotesForIssueClicked();
+    }
+
+    @UiHandler("jiraInit")
+    public void onInitClicked(ClickEvent event) {
+        delegate.onInitClicked();
+    }
+
+    @UiHandler("jiraPostComment")
+    public void onPostCommentClicked(ClickEvent event) {
+        delegate.onPostCommentClicked();
+    }
+
+    @UiHandler("jiraSearchAssignableUser")
+    public void onSearchAssignableUserClicked(ClickEvent event) {
+        delegate.onSearchAssignableUserClicked();
+    }
+
+    @UiHandler("jiraSearchAssignableUserMultiProject")
+    public void onSearchAssignableUserMultiProjectClicked(ClickEvent event) {
+        delegate.onSearchAssignableUserMultiProjectClicked();
+    }
+
+    @UiHandler("jiraSearchIssueViewableUsers")
+    public void onSearchIssueViewableUsersClicked(ClickEvent event) {
+        delegate.onSearchIssueViewableUsersClicked();
+    }
+
+    @UiHandler("jiraSearchJira")
+    public void onSearchJiraClicked(ClickEvent event) {
+        delegate.onSearchJiraClicked();
+    }
+
+    @UiHandler("jiraSearchUser")
+    public void onSearchUserClicked(ClickEvent event) {
+        delegate.onSearchUserClicked();
+    }
+
+    @UiHandler("jiraSetActorsToRoleOfProject")
+    public void onSetActorsToRoleOfProjectClicked(ClickEvent event) {
+        delegate.onSetActorsToRoleOfProjectClicked();
+    }
+
+    @UiHandler("jiraUpdateComment")
+    public void onUpdateCommentClicked(ClickEvent event) {
+        delegate.onUpdateCommentClicked();
+    }
+
+    @UiHandler("jiraUpdateFilterById")
+    public void onUpdateFilterByIdClicked(ClickEvent event) {
+        delegate.onUpdateFilterByIdClicked();
+    }
+
+    @UiHandler("jiraUpdateIssue")
+    public void onUpdateIssueClicked(ClickEvent event) {
+        delegate.onUpdateIssueClicked();
+    }
+
+    @UiHandler("jiraUpdateIssueAssignee")
+    public void onUpdateIssueAssigneeClicked(ClickEvent event) {
+        delegate.onUpdateIssueAssigneeClicked();
+    }
+
 }

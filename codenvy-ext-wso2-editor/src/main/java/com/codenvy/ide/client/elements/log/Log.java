@@ -173,7 +173,7 @@ public class Log extends AbstractShape {
         attributes.put(SEPARATOR_ATTRIBUTE_NAME, logSeparator);
         attributes.put(DESCRIPTION_ATTRIBUTE_NAME, description);
 
-        return convertPropertiesToXMLFormat(attributes);
+        return convertAttributesToXMLFormat(attributes);
     }
 
     /** {@inheritDoc} */

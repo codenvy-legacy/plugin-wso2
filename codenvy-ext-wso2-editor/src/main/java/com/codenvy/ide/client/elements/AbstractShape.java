@@ -27,7 +27,6 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -41,6 +40,7 @@ import java.util.Set;
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public abstract class AbstractShape extends AbstractElement implements Shape, Comparable<AbstractShape> {
 
@@ -264,7 +264,7 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
      *         element's properties
      * @return XML format of element's attributes
      */
-    protected String convertPropertiesToXMLFormat(@NotNull Map<String, String> attributes) {
+    protected String convertAttributesToXMLFormat(@Nonnull Map<String, String> attributes) {
         StringBuilder content = new StringBuilder();
 
         for (Iterator iterator = attributes.entrySet().iterator(); iterator.hasNext(); ) {
@@ -277,6 +277,25 @@ public abstract class AbstractShape extends AbstractElement implements Shape, Co
 
             if (iterator.hasNext()) {
                 content.append(' ');
+            }
+        }
+
+        return content.toString();
+    }
+
+    protected String convertPropertiesToXMLFormat(@Nonnull Map<String, String> properties) {
+        StringBuilder content = new StringBuilder();
+
+        for (Iterator iterator = properties.entrySet().iterator(); iterator.hasNext(); ) {
+            Map.Entry entry = (Map.Entry)iterator.next();
+            String value = (String)entry.getValue();
+
+            if (value != null && !value.isEmpty()) {
+                content.append('<').append(entry.getKey()).append('>').append(value).append("</").append(entry.getKey()).append('>');
+            }
+
+            if (iterator.hasNext()) {
+                content.append('\n');
             }
         }
 

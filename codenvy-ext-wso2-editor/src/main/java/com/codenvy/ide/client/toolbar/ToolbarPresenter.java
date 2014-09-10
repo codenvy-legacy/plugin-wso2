@@ -30,6 +30,49 @@ import static com.codenvy.ide.client.State.CREATING_CALLTEMPLATE;
 import static com.codenvy.ide.client.State.CREATING_ENRICH;
 import static com.codenvy.ide.client.State.CREATING_FILTER;
 import static com.codenvy.ide.client.State.CREATING_HEADER;
+import static com.codenvy.ide.client.State.CREATING_JIRA_ADD_ATTACHMENT_TO_ISSUE_ID;
+import static com.codenvy.ide.client.State.CREATING_JIRA_CREATE_FILTER;
+import static com.codenvy.ide.client.State.CREATING_JIRA_CREATE_ISSUE;
+import static com.codenvy.ide.client.State.CREATING_JIRA_DELETE_AVATAR_FOR_PROJECT;
+import static com.codenvy.ide.client.State.CREATING_JIRA_DELETE_COMMENT;
+import static com.codenvy.ide.client.State.CREATING_JIRA_DELETE_FILTER;
+import static com.codenvy.ide.client.State.CREATING_JIRA_DO_TRANSITION;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_AVATARS_FOR_PROJECT;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_COMMENTS;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_COMPONENTS_OF_PROJECT;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_DASHBOARD;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_DASHBOARD_BY_ID;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_FAVOURITE_FILTERS;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_FILTER_BY_ID;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_GROUP;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_ISSUE;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_ISSUES_FOR_USER;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_ISSUE_PRIORITIES;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_ISSUE_PRIORITY_BY_ID;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_ISSUE_TYPES;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_ISSUE_TYPE_BY_ID;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_PROJECT;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_ROLES_BY_ID_OF_PROJECT;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_ROLES_OF_PROJECT;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_STATUSES_OF_PROJECT;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_TRANSITIONS;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_USER;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_USER_ASSIGNABLE_PROJECT;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_USER_PERMISSIONS;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_VERSIONS_OF_PROJECT;
+import static com.codenvy.ide.client.State.CREATING_JIRA_GET_VOTES_FOR_ISSUE;
+import static com.codenvy.ide.client.State.CREATING_JIRA_INIT;
+import static com.codenvy.ide.client.State.CREATING_JIRA_POST_COMMENT;
+import static com.codenvy.ide.client.State.CREATING_JIRA_SEARCH_ASSIGNABLE_USER;
+import static com.codenvy.ide.client.State.CREATING_JIRA_SEARCH_ASSIGNABLE_USER_MULTI_PROJECT;
+import static com.codenvy.ide.client.State.CREATING_JIRA_SEARCH_ISSUE_VIEWABLE_USERS;
+import static com.codenvy.ide.client.State.CREATING_JIRA_SEARCH_JIRA;
+import static com.codenvy.ide.client.State.CREATING_JIRA_SEARCH_USER;
+import static com.codenvy.ide.client.State.CREATING_JIRA_SET_ACTORS_TO_ROLE_OF_PROJECT;
+import static com.codenvy.ide.client.State.CREATING_JIRA_UPDATE_COMMENT;
+import static com.codenvy.ide.client.State.CREATING_JIRA_UPDATE_FILTER_BY_ID;
+import static com.codenvy.ide.client.State.CREATING_JIRA_UPDATE_ISSUE;
+import static com.codenvy.ide.client.State.CREATING_JIRA_UPDATE_ISSUE_ASSIGNEE;
 import static com.codenvy.ide.client.State.CREATING_LOG;
 import static com.codenvy.ide.client.State.CREATING_LOOPBACK;
 import static com.codenvy.ide.client.State.CREATING_PAYLOADFACTORY;
@@ -299,6 +342,264 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
     @Override
     public void onSalesForceDescribeSubjectsClicked() {
         setState(CREATING_SALESFORCE_DESCRIBE_SUBJECTS);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onAddAttachmentToIssueIdClicked() {
+        setState(CREATING_JIRA_ADD_ATTACHMENT_TO_ISSUE_ID);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onCreateFilterClicked() {
+        setState(CREATING_JIRA_CREATE_FILTER);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onCreateIssueClicked() {
+        setState(CREATING_JIRA_CREATE_ISSUE);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onDeleteAvatarForProjectClicked() {
+        setState(CREATING_JIRA_DELETE_AVATAR_FOR_PROJECT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onDeleteCommentClicked() {
+        setState(CREATING_JIRA_DELETE_COMMENT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onDeleteFilterClicked() {
+        setState(CREATING_JIRA_DELETE_FILTER);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetDashboardClicked() {
+        setState(CREATING_JIRA_GET_DASHBOARD);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onDoTransitionClicked() {
+        setState(CREATING_JIRA_DO_TRANSITION);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetAvatarsForProjectClicked() {
+        setState(CREATING_JIRA_GET_AVATARS_FOR_PROJECT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetCommentsClicked() {
+        setState(CREATING_JIRA_GET_COMMENTS);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetComponentsOfProjectClicked() {
+        setState(CREATING_JIRA_GET_COMPONENTS_OF_PROJECT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetDashboardByIdClicked() {
+        setState(CREATING_JIRA_GET_DASHBOARD_BY_ID);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetFavouritesFilterClicked() {
+        setState(CREATING_JIRA_GET_FAVOURITE_FILTERS);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetFilterByIdClicked() {
+        setState(CREATING_JIRA_GET_FILTER_BY_ID);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetGroupClicked() {
+        setState(CREATING_JIRA_GET_GROUP);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetIssueClicked() {
+        setState(CREATING_JIRA_GET_ISSUE);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetIssuePriorityesClicked() {
+        setState(CREATING_JIRA_GET_ISSUE_PRIORITIES);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetIssuePriorityByIdClicked() {
+        setState(CREATING_JIRA_GET_ISSUE_PRIORITY_BY_ID);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetIssueTypeByIdClicked() {
+        setState(CREATING_JIRA_GET_ISSUE_TYPE_BY_ID);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetIssueTypesClicked() {
+        setState(CREATING_JIRA_GET_ISSUE_TYPES);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetIssuesForUserClicked() {
+        setState(CREATING_JIRA_GET_ISSUES_FOR_USER);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetProjectClicked() {
+        setState(CREATING_JIRA_GET_PROJECT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetRolesByIdOfProjectClicked() {
+        setState(CREATING_JIRA_GET_ROLES_BY_ID_OF_PROJECT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetRolesOfProjectClicked() {
+        setState(CREATING_JIRA_GET_ROLES_OF_PROJECT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetStatusesOfProjectClicked() {
+        setState(CREATING_JIRA_GET_STATUSES_OF_PROJECT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetTransitionsClicked() {
+        setState(CREATING_JIRA_GET_TRANSITIONS);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetUserClicked() {
+        setState(CREATING_JIRA_GET_USER);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetUserAssignableProjectClicked() {
+        setState(CREATING_JIRA_GET_USER_ASSIGNABLE_PROJECT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetUserPermissionsClicked() {
+        setState(CREATING_JIRA_GET_USER_PERMISSIONS);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetVersionsOfProjectClicked() {
+        setState(CREATING_JIRA_GET_VERSIONS_OF_PROJECT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onGetVotesForIssueClicked() {
+        setState(CREATING_JIRA_GET_VOTES_FOR_ISSUE);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onInitClicked() {
+        setState(CREATING_JIRA_INIT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onPostCommentClicked() {
+        setState(CREATING_JIRA_POST_COMMENT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSearchAssignableUserClicked() {
+        setState(CREATING_JIRA_SEARCH_ASSIGNABLE_USER);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSearchAssignableUserMultiProjectClicked() {
+        setState(CREATING_JIRA_SEARCH_ASSIGNABLE_USER_MULTI_PROJECT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSearchIssueViewableUsersClicked() {
+        setState(CREATING_JIRA_SEARCH_ISSUE_VIEWABLE_USERS);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSearchJiraClicked() {
+        setState(CREATING_JIRA_SEARCH_JIRA);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSearchUserClicked() {
+        setState(CREATING_JIRA_SEARCH_USER);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSetActorsToRoleOfProjectClicked() {
+        setState(CREATING_JIRA_SET_ACTORS_TO_ROLE_OF_PROJECT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onUpdateCommentClicked() {
+        setState(CREATING_JIRA_UPDATE_COMMENT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onUpdateFilterByIdClicked() {
+        setState(CREATING_JIRA_UPDATE_FILTER_BY_ID);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onUpdateIssueClicked() {
+        setState(CREATING_JIRA_UPDATE_ISSUE);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onUpdateIssueAssigneeClicked() {
+        setState(CREATING_JIRA_UPDATE_ISSUE_ASSIGNEE);
     }
 
 }

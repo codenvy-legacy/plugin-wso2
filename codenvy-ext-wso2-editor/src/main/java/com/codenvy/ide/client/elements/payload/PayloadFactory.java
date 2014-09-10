@@ -130,7 +130,7 @@ public class PayloadFactory extends AbstractShape {
         prop.put(MEDIA_TYPE_ATTRIBUTE_NAME, format.getMediaType().name());
         prop.put(DESCRIPTION_ATTRIBUTE_NAME, description);
 
-        return convertPropertiesToXMLFormat(prop);
+        return convertAttributesToXMLFormat(prop);
     }
 
     /** {@inheritDoc} */

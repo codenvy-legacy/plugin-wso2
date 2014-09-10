@@ -28,7 +28,9 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
@@ -46,10 +48,11 @@ public class Init extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "Init";
     public static final String SERIALIZATION_NAME = "salesforce.init";
-    public static final String USERNAME           = "username";
-    public static final String PASSWORD           = "password";
-    public static final String LOGIN_URL          = "loginUrl";
-    public static final String FORCE_LOGIN        = "forceLogin";
+
+    private static final String USERNAME    = "username";
+    private static final String PASSWORD    = "password";
+    private static final String LOGIN_URL   = "loginUrl";
+    private static final String FORCE_LOGIN = "forceLogin";
 
     private static final List<String> PROPERTIES = Arrays.asList(USERNAME, PASSWORD, LOGIN_URL, FORCE_LOGIN);
 
@@ -92,34 +95,16 @@ public class Init extends AbstractConnector {
     @Nonnull
     @Override
     protected String serializeProperties() {
-        return Inline.equals(parameterEditorType) ? convertPropertiesToXml(usernameInline, passwordInline, forceLoginInline, loginUrlInline)
-                                                  : convertPropertiesToXml(username, password, forceLogin, loginUrl);
-    }
+        Map<String, String> properties = new LinkedHashMap<>();
 
-    @Nonnull
-    private String convertPropertiesToXml(@Nonnull String username,
-                                          @Nonnull String password,
-                                          @Nonnull String forceLogin,
-                                          @Nonnull String loginUrl) {
-        StringBuilder result = new StringBuilder();
+        boolean isInline = parameterEditorType.equals(Inline);
 
-        if (!username.isEmpty()) {
-            result.append('<').append(USERNAME).append('>').append(username).append("</").append(USERNAME).append('>');
-        }
+        properties.put(USERNAME, isInline ? usernameInline : username);
+        properties.put(PASSWORD, isInline ? passwordInline : password);
+        properties.put(LOGIN_URL, isInline ? loginUrlInline : loginUrl);
+        properties.put(FORCE_LOGIN, isInline ? forceLoginInline : forceLogin);
 
-        if (!password.isEmpty()) {
-            result.append('<').append(PASSWORD).append('>').append(password).append("</").append(PASSWORD).append('>');
-        }
-
-        if (!loginUrl.isEmpty()) {
-            result.append('<').append(LOGIN_URL).append('>').append(loginUrl).append("</").append(LOGIN_URL).append('>');
-        }
-
-        if (!forceLogin.isEmpty()) {
-            result.append('<').append(FORCE_LOGIN).append('>').append(forceLogin).append("</").append(FORCE_LOGIN).append('>');
-        }
-
-        return result.toString();
+        return convertPropertiesToXMLFormat(properties);
     }
 
     /** {@inheritDoc} */
@@ -127,6 +112,7 @@ public class Init extends AbstractConnector {
     public void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
+
         boolean isInline = Inline.equals(parameterEditorType);
 
         switch (nodeName) {

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<!--
+  Copyright 2014 Codenvy, S.A.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
+    <ui:with field='loc' type='com.codenvy.ide.client.WSO2EditorLocalizationConstant'/>
+
+    <g:ScrollPanel addStyleNames="{res.editorCSS.fullSize}">
+        <g:FlowPanel>
+
+            <g:FlowPanel addStyleNames="{res.editorCSS.property}">
+                <g:Label text="{loc.connectorConfigRef}"/>
+                <g:TextBox ui:field="configRef" width="200px"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel addStyleNames="{res.editorCSS.property}">
+                <g:Label text="{loc.connectorAvailableConfigs}"/>
+                <g:ListBox ui:field="availableConfigs" width="206px"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel addStyleNames="{res.editorCSS.property}">
+                <g:Label text="{loc.connectorNewConfig}"/>
+                <g:TextBox enabled="false" ui:field="newConfig" width="200px" text="{loc.connectorNewConfigValue}"/>
+                <g:Button ui:field="newConfigButton" addStyleNames="{res.editorCSS.propertyButton}" text="..."/>
+            </g:FlowPanel>
+
+            <g:FlowPanel addStyleNames="{res.editorCSS.property}">
+                <g:Label text="{loc.connectorParameterEditorType}"/>
+                <g:ListBox ui:field="parameterEditorType" width="206px"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="firstPanel" addStyleNames="{res.editorCSS.property}" visible="false">
+                <g:Label ui:field="firstLabel"/>
+                <g:TextBox ui:field="firstTextBox" width="200px"/>
+                <g:Button ui:field="firstButton" addStyleNames="{res.editorCSS.propertyButton}" text="..." visible="false"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="secondPanel" addStyleNames="{res.editorCSS.property}" visible="false">
+                <g:Label ui:field="secondLabel"/>
+                <g:TextBox ui:field="secondTextBox" width="200px"/>
+                <g:Button ui:field="secondButton" addStyleNames="{res.editorCSS.propertyButton}" text="..." visible="false"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="thirdPanel" addStyleNames="{res.editorCSS.property}" visible="false">
+                <g:Label ui:field="thirdLabel"/>
+                <g:TextBox ui:field="thirdTextBox" width="200px"/>
+                <g:Button ui:field="thirdButton" addStyleNames="{res.editorCSS.propertyButton}" text="..." visible="false"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="fourthPanel" addStyleNames="{res.editorCSS.property}" visible="false">
+                <g:Label ui:field="fourthLabel"/>
+                <g:TextBox ui:field="fourthTextBox" width="200px"/>
+                <g:Button ui:field="fourthButton" addStyleNames="{res.editorCSS.propertyButton}" text="..." visible="false"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="fifthPanel" addStyleNames="{res.editorCSS.property}" visible="false">
+                <g:Label ui:field="fifthLabel"/>
+                <g:TextBox ui:field="fifthTextBox" width="200px"/>
+                <g:Button ui:field="fifthButton" addStyleNames="{res.editorCSS.propertyButton}" text="..." visible="false"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="sixesPanel" addStyleNames="{res.editorCSS.property}" visible="false">
+                <g:Label ui:field="sixesLabel"/>
+                <g:TextBox ui:field="sixesTextBox" width="200px"/>
+                <g:Button ui:field="sixesButton" addStyleNames="{res.editorCSS.propertyButton}" text="..." visible="false"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="seventhPanel" addStyleNames="{res.editorCSS.property}" visible="false">
+                <g:Label ui:field="seventhLabel"/>
+                <g:TextBox ui:field="seventhTextBox" width="200px"/>
+                <g:Button ui:field="seventhButton" addStyleNames="{res.editorCSS.propertyButton}" text="..." visible="false"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="eighthPanel" addStyleNames="{res.editorCSS.property}" visible="false">
+                <g:Label ui:field="eighthLabel"/>
+                <g:TextBox ui:field="eighthTextBox" width="200px"/>
+                <g:Button ui:field="eighthButton" addStyleNames="{res.editorCSS.propertyButton}" text="..." visible="false"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="ninthPanel" addStyleNames="{res.editorCSS.property}" visible="false">
+                <g:Label ui:field="ninthLabel"/>
+                <g:TextBox ui:field="ninthTextBox" width="200px"/>
+                <g:Button ui:field="ninthButton" addStyleNames="{res.editorCSS.propertyButton}" text="..." visible="false"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="tenthPanel" addStyleNames="{res.editorCSS.property}" visible="false">
+                <g:Label ui:field="tenthLabel"/>
+                <g:TextBox ui:field="tenthTextBox" width="200px"/>
+                <g:Button ui:field="tenthButton" addStyleNames="{res.editorCSS.propertyButton}" text="..." visible="false"/>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="eleventhPanel" addStyleNames="{res.editorCSS.property}" visible="false">
+                <g:Label ui:field="eleventhLabel"/>
+                <g:TextBox ui:field="eleventhTextBox" width="200px"/>
+                <g:Button ui:field="eleventhButton" addStyleNames="{res.editorCSS.propertyButton}" text="..." visible="false"/>
+            </g:FlowPanel>
+
+        </g:FlowPanel>
+    </g:ScrollPanel>
+
+</ui:UiBinder>

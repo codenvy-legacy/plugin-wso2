@@ -387,6 +387,18 @@ public interface EditorResources extends ClientBundle {
     @Source("icons/Salesforce.gif")
     ImageResource salesforce();
 
+    @Source("icons/jiraIconToolbar.gif")
+    ImageResource jiraConnectorToolbar();
+
+    @Source("icons/jiraIcon.gif")
+    ImageResource jiraIcon();
+
+    @Source("icons/twitterIconToolbar.gif")
+    ImageResource twitterToolbar();
+
+    @Source("icons/twitterIcon.gif")
+    ImageResource twitterElement();
+
     @Source("icons/SalesforceToolbar.gif")
     ImageResource salesforceConnectorToolbar();
 

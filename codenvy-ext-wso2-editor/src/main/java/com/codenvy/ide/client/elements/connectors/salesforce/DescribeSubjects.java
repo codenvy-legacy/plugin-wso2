@@ -28,7 +28,9 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
@@ -46,7 +48,8 @@ public class DescribeSubjects extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "describeSobjects";
     public static final String SERIALIZATION_NAME = "salesforce.describeSobjects";
-    public static final String SUBJECTS           = "sobjects";
+
+    private static final String SUBJECTS = "sobjects";
 
     private static final List<String> PROPERTIES = Arrays.asList(SUBJECTS);
 
@@ -68,12 +71,13 @@ public class DescribeSubjects extends AbstractConnector {
     @Nonnull
     @Override
     protected String serializeProperties() {
-        return Inline.equals(parameterEditorType) ? prepareProperties(subjectsInline) : prepareProperties(subjects);
-    }
+        Map<String, String> properties = new LinkedHashMap<>();
 
-    @Nonnull
-    private String prepareProperties(@Nonnull String subjects) {
-        return !subjects.isEmpty() ? '<' + SUBJECTS + '>' + subjects + "</" + SUBJECTS + '>' : "";
+        boolean isInline = parameterEditorType.equals(Inline);
+
+        properties.put(SUBJECTS, isInline ? subjectsInline : subjects);
+
+        return convertPropertiesToXMLFormat(properties);
     }
 
     /** {@inheritDoc} */

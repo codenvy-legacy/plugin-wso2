@@ -28,7 +28,9 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
@@ -40,15 +42,17 @@ import static com.codenvy.ide.collections.Collections.createArray;
  * restore the condition of the element when you open ESB project after saving.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class Upset extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "Upset";
     public static final String SERIALIZATION_NAME = "salesforce.upset";
-    public static final String ALL_OR_NONE        = "allOrNone";
-    public static final String EXTERNAL_ID        = "externalId";
-    public static final String TRUNCATE           = "allowFieldTruncate";
-    public static final String SUBJECTS           = "sobjects";
+
+    private static final String ALL_OR_NONE = "allOrNone";
+    private static final String EXTERNAL_ID = "externalId";
+    private static final String TRUNCATE    = "allowFieldTruncate";
+    private static final String SUBJECTS    = "sobjects";
 
     private static final List<String> PROPERTIES = Arrays.asList(ALL_OR_NONE, TRUNCATE, EXTERNAL_ID, SUBJECTS);
 
@@ -91,37 +95,16 @@ public class Upset extends AbstractConnector {
     @Nonnull
     @Override
     protected String serializeProperties() {
-        return Inline.equals(parameterEditorType) ? convertPropertiesToXml(allOrNoneInline,
-                                                                           truncateInline,
-                                                                           subjectsInline,
-                                                                           externalIdInline)
-                                                  : convertPropertiesToXml(allOrNone, truncate, subjects, externalId);
-    }
+        Map<String, String> properties = new LinkedHashMap<>();
 
-    @Nonnull
-    private String convertPropertiesToXml(@Nonnull String allOrNone,
-                                          @Nonnull String truncate,
-                                          @Nonnull String subjects,
-                                          @Nonnull String externalId) {
-        StringBuilder result = new StringBuilder();
+        boolean isInline = parameterEditorType.equals(Inline);
 
-        if (!allOrNone.isEmpty()) {
-            result.append('<').append(ALL_OR_NONE).append('>').append(allOrNone).append("</").append(ALL_OR_NONE).append('>');
-        }
+        properties.put(ALL_OR_NONE, isInline ? allOrNoneInline : allOrNone);
+        properties.put(EXTERNAL_ID, isInline ? externalIdInline : externalId);
+        properties.put(TRUNCATE, isInline ? truncateInline : truncate);
+        properties.put(SUBJECTS, isInline ? subjectsInline : subjects);
 
-        if (!truncate.isEmpty()) {
-            result.append('<').append(TRUNCATE).append('>').append(truncate).append("</").append(TRUNCATE).append('>');
-        }
-
-        if (!externalId.isEmpty()) {
-            result.append('<').append(EXTERNAL_ID).append('>').append(externalId).append("</").append(EXTERNAL_ID).append('>');
-        }
-
-        if (!subjects.isEmpty()) {
-            result.append('<').append(SUBJECTS).append('>').append(subjects).append("</").append(SUBJECTS).append('>');
-        }
-
-        return result.toString();
+        return convertPropertiesToXMLFormat(properties);
     }
 
     /** {@inheritDoc} */

@@ -501,31 +501,31 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("toolbar.connector.salesforceInitConnector.tooltip")
     String toolbarSalesforceInitConnectorTooltip();
 
-    @Key("propertiespanel.connector.config.ref")
+    @Key("propertiespanel.connector.salesForce.configRef")
     String connectorConfigRef();
 
-    @Key("propertiespanel.connector.available.configs")
+    @Key("propertiespanel.connector.salesForce.availableConfigs")
     String connectorAvailableConfigs();
 
-    @Key("propertiespanel.connector.new.config")
+    @Key("propertiespanel.connector.salesForce.newConfig")
     String connectorNewConfig();
 
-    @Key("propertiespanel.connector.parameter.editor.type")
+    @Key("propertiespanel.connector.salesForce.parameterEditorType")
     String connectorParameterEditorType();
 
-    @Key("propertiespanel.connector.username")
+    @Key("propertiespanel.connector.salesForce.username")
     String connectorUsername();
 
-    @Key("propertiespanel.connector.password")
+    @Key("propertiespanel.connector.salesForce.password")
     String connectorPassword();
 
-    @Key("propertiespanel.connector.login.url")
+    @Key("propertiespanel.connector.salesForce.loginUrl")
     String connectorLoginUrl();
 
-    @Key("propertiespanel.connector.new.config.value")
+    @Key("propertiespanel.connector.salesForce.createNewConfiguration")
     String connectorNewConfigValue();
 
-    @Key("propertiespanel.connector.force.login")
+    @Key("propertiespanel.connector.salesForce.forceLogin")
     String connectorForceLogin();
 
     @Key("propertiespanel.addressEndpoint.table.title")
@@ -537,10 +537,10 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("propertiespanel.error.message")
     String errorMessage();
 
-    @Key("propertiespanel.connector.expression")
+    @Key("propertiespanel.connector.salesForce.parameterExpression")
     String connectorExpression();
 
-    @Key("propertiespanel.connector.configuration.title")
+    @Key("propertiespanel.connector.salesForce.connectorConfiguration")
     String propertiespanelConnectorConfigurationTitle();
 
     @Key("toolbar.connector.salesforceCreateConnector.tooltip")
@@ -549,40 +549,40 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("toolbar.connector.salesforceDelete.tooltip")
     String salesForceDeleteTooltip();
 
-    @Key("propertiespanel.connector.allOrNone")
+    @Key("propertiespanel.connector.salesForce.allOrNone")
     String connectorAllOrNone();
 
-    @Key("propertiespanel.connector.allowFieldTruncate")
+    @Key("propertiespanel.connector.salesForce.allowFieldTruncate")
     String connectorAllowFieldTruncate();
 
-    @Key("propertiespanel.connector.subjects")
+    @Key("propertiespanel.connector.salesForce.subjects")
     String connectorSubjects();
 
     @Key("toolbar.connector.salesforceUpdateConnector.tooltip")
     String toolbarSalesforceUpdateConnectorTooltip();
 
-    @Key("propertiespanel.connector.subject")
+    @Key("propertiespanel.connector.salesForce.subject")
     String propertiespanelConnectorSubject();
 
-    @Key("propertiespanel.connector.externalid")
+    @Key("propertiespanel.connector.salesForce.externalid")
     String connectorExternalId();
 
-    @Key("propertiespanel.connector.sendEmailMessage")
+    @Key("propertiespanel.connector.salesForce.sendEmailMessage")
     String connectorSendEmailMessage();
 
-    @Key("propertiespanel.connector.sendEmail")
+    @Key("propertiespanel.connector.salesForce.sendEmail")
     String connectorSendEmail();
 
-    @Key("propertiespanel.connector.searchString")
+    @Key("propertiespanel.connector.salesForce.searchString")
     String connectroSearchString();
 
-    @Key("propertiespanel.connector.fieldList")
+    @Key("propertiespanel.connector.salesForce.fieldList")
     String connectorFieldList();
 
-    @Key("propertiespanel.connector.objectType")
+    @Key("propertiespanel.connector.salesForce.objectType")
     String connectorObjectType();
 
-    @Key("propertiespanel.connector.objectIDS")
+    @Key("propertiespanel.connector.salesForce.objectIDS")
     String connectorObjectIDS();
 
     @Key("toolbar.connector.salesforceDescribeGlobalConnector.tooltip")
@@ -636,12 +636,288 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("toolbar.connector.salesforceUpset.tooltip")
     String connectorSalesforceUpsetTooltip();
 
-    @Key("propertiespanel.connector.batchSize")
+    @Key("propertiespanel.connector.salesForce.batchSize")
     String connectorBatchSize();
 
-    @Key("propertiespanel.connector.queryString")
+    @Key("propertiespanel.connector.salesForce.queryString")
     String connectorQueryString();
 
-    @Key("propertiespanel.connector.userId")
+    @Key("propertiespanel.connector.salesForce.userId")
     String connectorUserId();
+
+    @Key("propertiespanel.connector.jira.addAttachmentToisseId")
+    String jiraIssueIdOrKey();
+
+    @Key("propertiespanel.connector.jira.createFilter.filterName")
+    String jiraFilterName();
+
+    @Key("propertiespanel.connector.jira.createFilter.jqlType")
+    String jiraJqlType();
+
+    @Key("propertiespanel.connector.jira.createFilter.description")
+    String jiraDescription();
+
+    @Key("propertiespanel.connector.jira.createFilter.favourite")
+    String jiraFavourite();
+
+    @Key("propertiespanel.connector.jira.createIssue.projectKey")
+    String jiraProjectKey();
+
+    @Key("propertiespanel.connector.jira.createIssue.summary")
+    String jiraSummary();
+
+    @Key("propertiespanel.connector.jira.createIssue.issueType")
+    String jiraIssueType();
+
+    @Key("propertiespanel.connector.jira.deleteAvatarForProject.avatarId")
+    String jiraAvatarId();
+
+    @Key("propertiespanel.connector.jira.deleteComment.commentId")
+    String jiraCommentId();
+
+    @Key("propertiespanel.connector.jira.deleteFilter.filterId")
+    String jiraFilterId();
+
+    @Key("propertiespanel.connector.jira.doTransition.updateComment")
+    String jiraUpdateComment();
+
+    @Key("propertiespanel.connector.jira.doTransition.updateAssignee")
+    String jiraUpdateAssignee();
+
+    @Key("propertiespanel.connector.jira.doTransition.resolution")
+    String jiraResolution();
+
+    @Key("propertiespanel.connector.jira.doTransition.transitionId")
+    String jiraTransitionId();
+
+    @Key("propertiespanel.connector.jira.getDashboardById.id")
+    String jiraId();
+
+    @Key("propertiespanel.connector.jira.getGroup.groupName")
+    String jiraGroupName();
+
+    @Key("propertiespanel.connector.jira.getIssuePriorityById.issuePriorityId")
+    String jiraIssuePriorityId();
+
+    @Key("propertiespanel.connector.jira.getIssueTypeById.issueTypeyId")
+    String jiraIssueTypeId();
+
+    @Key("propertiespanel.connector.jira.getRolesByIdOfProject.roleId")
+    String jiraRoleId();
+
+    @Key("propertiespanel.connector.jira.getUserAssignableProjects.maxResult")
+    String jiraMaxResult();
+
+    @Key("propertiespanel.connector.jira.getUserAssignableProjects.startFrom")
+    String jiraStartFrom();
+
+    @Key("propertiespanel.connector.jira.getUserPermissions.projectId")
+    String jiraProjectId();
+
+    @Key("propertiespanel.connector.jira.getUserPermissions.issueKey")
+    String jiraIssueKey();
+
+    @Key("propertiespanel.connector.jira.getUserPermissions.issueId")
+    String jiraIssueId();
+
+    @Key("propertiespanel.connector.jira.init.uri")
+    String jiraUri();
+
+    @Key("propertiespanel.connector.jira.postComment.comment")
+    String jiraComment();
+
+    @Key("propertiespanel.connector.jira.postComment.visibleRole")
+    String jiraVisibleRole();
+
+    @Key("propertiespanel.connector.jira.searchAssignableUser.project")
+    String jiraProject();
+
+    @Key("propertiespanel.connector.jira.searchAssignableUser.startAt")
+    String jiraStartAt();
+
+    @Key("propertiespanel.connector.jira.searchAssignableUser.maxResults")
+    String jiraMaxResults();
+
+    @Key("propertiespanel.connector.jira.searchAssignableUserMultiProject.projectKeys")
+    String jiraProjectKeys();
+
+    @Key("propertiespanel.connector.jira.searchJira.query")
+    String jiraQuery();
+
+    @Key("propertiespanel.connector.jira.searchUser.includeActive")
+    String jiraIncludeActive();
+
+    @Key("propertiespanel.connector.jira.searchUser.includeInactive")
+    String jiraIncludeInactive();
+
+    @Key("toolbar.connector.jira.addAttachmentToIssueId.tooltip")
+    String jiraAddAttachmentToIssueId();
+
+    @Key("toolbar.connector.jira.createFilter.tooltip")
+    String jiraCreateFilter();
+
+    @Key("toolbar.connector.jira.createIssue.tooltip")
+    String jiraCreateIssue();
+
+    @Key("toolbar.connector.jira.deleteAvatarForProject.tooltip")
+    String jiraDeleteAvatarForProject();
+
+    @Key("toolbar.connector.jira.deleteComment.tooltip")
+    String jiraDeleteComment();
+
+    @Key("toolbar.connector.jira.deleteFilter.tooltip")
+    String jiraDeleteFilter();
+
+    @Key("toolbar.connector.jira.getDashboard.tooltip")
+    String jiraGetDashboard();
+
+    @Key("toolbar.connector.jira.doTransition.tooltip")
+    String jiraDoTransition();
+
+    @Key("toolbar.connector.jira.getAvatarsForProject.tooltip")
+    String jiraGetAvatarsForProject();
+
+    @Key("toolbar.connector.jira.getComments.tooltip")
+    String jiraGetComments();
+
+    @Key("toolbar.connector.jira.getComponentsOfProject.tooltip")
+    String jiraGetComponentsOfProject();
+
+    @Key("toolbar.connector.jira.getDashboardById.tooltip")
+    String jiraGetDashboardById();
+
+    @Key("toolbar.connector.jira.getFavouriteFilters.tooltip")
+    String jiraGetFavouriteFilters();
+
+    @Key("toolbar.connector.jira.getFilterById.tooltip")
+    String jiraGetFilterById();
+
+    @Key("toolbar.connector.jira.getGroup.tooltip")
+    String jiraGetGroup();
+
+    @Key("toolbar.connector.jira.getIssue.tooltip")
+    String jiraGetIssue();
+
+    @Key("toolbar.connector.jira.getIssuePriorityes.tooltip")
+    String jiraGetIssuePriorities();
+
+    @Key("toolbar.connector.jira.getIssuePriorityById.tooltip")
+    String jiraGetIssuePriorityById();
+
+    @Key("toolbar.connector.jira.getIssueTypeById.tooltip")
+    String jiraGetIssueTypeById();
+
+    @Key("toolbar.connector.jira.getIssueTypes.tooltip")
+    String jiraGetIssueTypes();
+
+    @Key("toolbar.connector.jira.getIssuesForUser.tooltip")
+    String jiraGetIssuesForUser();
+
+    @Key("toolbar.connector.jira.getProject.tooltip")
+    String jiraGetProject();
+
+    @Key("toolbar.connector.jira.getRolesByIdOfProject.tooltip")
+    String jiraGetRolesByIdOfProject();
+
+    @Key("toolbar.connector.jira.getRolesOfProject.tooltip")
+    String jiraGetRolesOfProject();
+
+    @Key("toolbar.connector.jira.getStatusesOfProject.tooltip")
+    String jiraGetStatusesOfProject();
+
+    @Key("toolbar.connector.jira.getTransitions.tooltip")
+    String jiraGetTransitions();
+
+    @Key("toolbar.connector.jira.getUser.tooltip")
+    String jiraGetUser();
+
+    @Key("toolbar.connector.jira.getUserAssignableProject.tooltip")
+    String jiraGetUserAssignableProjects();
+
+    @Key("toolbar.connector.jira.getUserPermissions.tooltip")
+    String jiraGetUserPermissions();
+
+    @Key("toolbar.connector.jira.getVersionsOfProject.tooltip")
+    String jiraGetVersionsOfProject();
+
+    @Key("toolbar.connector.jira.getVotesForIssue.tooltip")
+    String jiraGetVotesForIssue();
+
+    @Key("toolbar.connector.jira.init.tooltip")
+    String jiraInit();
+
+    @Key("toolbar.connector.jira.postComment.tooltip")
+    String jiraPostComment();
+
+    @Key("toolbar.connector.jira.searchAssignableUser.tooltip")
+    String jiraSearchAssignableUser();
+
+    @Key("toolbar.connector.jira.searchAssignableUserMultiProject.tooltip")
+    String jiraSearchAssignableUserMultiProject();
+
+    @Key("toolbar.connector.jira.searchIssueViewableUsers.tooltip")
+    String jiraSearchIssueViewableUsers();
+
+    @Key("toolbar.connector.jira.searchJira.tooltip")
+    String jiraSearchJira();
+
+    @Key("toolbar.connector.jira.searchUser.tooltip")
+    String jiraSearchUser();
+
+    @Key("toolbar.connector.jira.setActorsToRoleOfProject.tooltip")
+    String jiraSetActorsToRoleOfProject();
+
+    @Key("toolbar.connector.jira.updateComment.tooltip")
+    String jiraUpdateCommentTitle();
+
+    @Key("toolbar.connector.jira.updateFilterById.tooltip")
+    String jiraUpdateFilterById();
+
+    @Key("toolbar.connector.jira.updateIssue.tooltip")
+    String jiraUpdateIssue();
+
+    @Key("toolbar.connector.jira.updateIssueAssignee.tooltip")
+    String jiraUpdateIssueAssignee();
+
+    @Key("propertiespanel.connector.twitter.destroyStatus.consumerKey")
+    String twitterConsumerKey();
+
+    @Key("propertiespanel.connector.twitter.destroyStatus.consumerSecret")
+    String twitterConsumerSecret();
+
+    @Key("propertiespanel.connector.twitter.destroyStatus.accessToken")
+    String twitterAccessToken();
+
+    @Key("propertiespanel.connector.twitter.destroyStatus.accessTokenSecret")
+    String twitterAccessTokenSecret();
+
+    @Key("propertiespanel.connector.twitter.destroyStatus.statusId")
+    String twitterStatusId();
+
+    @Key("propertiespanel.connector.twitter.getClosesTrends.latitude")
+    String twitterLatitude();
+
+    @Key("propertiespanel.connector.twitter.getClosesTrends.longitude")
+    String twitterLongitude();
+
+    @Key("propertiespanel.connector.twitter.getDirectMessages.count")
+    String twitterCount();
+
+    @Key("propertiespanel.connector.twitter.getDirectMessages.page")
+    String twitterPage();
+
+    @Key("propertiespanel.connector.twitter.getDirectMessages.sinceId")
+    String twitterSinceId();
+
+    @Key("propertiespanel.connector.twitter.getDirectMessages.maxId")
+    String twitterMaxId();
+
+    @Key("propertiespanel.connector.twitter.getFollowers.screenName")
+    String twitterScreenName();
+
+    @Key("propertiespanel.connector.twitter.getFollowers.userId")
+    String twitterUserId();
+
+    @Key("propertiespanel.connector.twitter.getFollowers.cursor")
+    String twitterCursor();
 }

@@ -34,7 +34,7 @@ import com.codenvy.ide.client.elements.connectors.salesforce.Search;
 import com.codenvy.ide.client.elements.connectors.salesforce.SendEmail;
 import com.codenvy.ide.client.elements.connectors.salesforce.SendEmailMessage;
 import com.codenvy.ide.client.elements.connectors.salesforce.SetPassword;
-import com.codenvy.ide.client.elements.connectors.salesforce.Undelete;
+import com.codenvy.ide.client.elements.connectors.salesforce.UnDelete;
 import com.codenvy.ide.client.elements.connectors.salesforce.Update;
 import com.codenvy.ide.client.elements.connectors.salesforce.Upset;
 import com.codenvy.ide.client.elements.enrich.Enrich;
@@ -119,7 +119,7 @@ public class Filter extends AbstractShape {
                                                                  SendEmail.ELEMENT_NAME,
                                                                  SendEmailMessage.ELEMENT_NAME,
                                                                  SetPassword.ELEMENT_NAME,
-                                                                 Undelete.ELEMENT_NAME,
+                                                                 UnDelete.ELEMENT_NAME,
                                                                  Upset.ELEMENT_NAME);
 
     private ConditionType    conditionType;
@@ -262,14 +262,14 @@ public class Filter extends AbstractShape {
             case XPATH:
                 attributes.put(XPATH_ATTRIBUTE_NAME, xPath);
 
-                return convertNameSpacesToXMLAttributes(xPathNameSpaces) + convertPropertiesToXMLFormat(attributes);
+                return convertNameSpacesToXMLAttributes(xPathNameSpaces) + convertAttributesToXMLFormat(attributes);
 
             case SOURCE_AND_REGEX:
             default:
                 attributes.put(SOURCE_ATTRIBUTE_NAME, source);
                 attributes.put(REGULAR_EXPRESSION_ATTRIBUTE_NAME, regularExpression);
 
-                return convertNameSpacesToXMLAttributes(sourceNameSpaces) + convertPropertiesToXMLFormat(attributes);
+                return convertNameSpacesToXMLAttributes(sourceNameSpaces) + convertAttributesToXMLFormat(attributes);
         }
     }
 

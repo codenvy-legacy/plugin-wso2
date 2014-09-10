@@ -28,11 +28,12 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType
-        .NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
 
 /**
  * The Class describes ResetPassword connector for Salesforce group connectors. Also the class contains the business logic
@@ -40,12 +41,14 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * restore the condition of the element when you open ESB project after saving.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class ResetPassword extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "ResetPassword";
     public static final String SERIALIZATION_NAME = "salesforce.resetPassword";
-    public static final String USER_ID            = "userId";
+
+    private static final String USER_ID = "userId";
 
     private static final List<String> PROPERTIES = Arrays.asList(USER_ID);
 
@@ -70,18 +73,13 @@ public class ResetPassword extends AbstractConnector {
     @Nonnull
     @Override
     protected String serializeProperties() {
-        return Inline.equals(parameterEditorType) ? convertPropertiesToXml(userId)
-                                                  : convertPropertiesToXml(userIdExpr);
-    }
+        Map<String, String> properties = new LinkedHashMap<>();
 
-    private String convertPropertiesToXml(@Nonnull String userId) {
-        StringBuilder result = new StringBuilder("");
+        boolean isInline = parameterEditorType.equals(Inline);
 
-        if (!userId.isEmpty()) {
-            result.append('<').append(USER_ID).append('>').append(userId).append("</").append(USER_ID).append('>');
-        }
+        properties.put(USER_ID, isInline ? userId : userIdExpr);
 
-        return result.toString();
+        return convertPropertiesToXMLFormat(properties);
     }
 
     /** {@inheritDoc} */

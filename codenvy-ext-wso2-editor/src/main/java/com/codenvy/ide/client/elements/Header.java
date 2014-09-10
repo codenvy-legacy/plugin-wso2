@@ -282,10 +282,10 @@ public class Header extends AbstractShape {
                 attributes.remove(NAME);
                 attributes.remove(EXPRESSION);
 
-                return convertPropertiesToXMLFormat(attributes);
+                return convertAttributesToXMLFormat(attributes);
         }
 
-        return nameSpaces + convertPropertiesToXMLFormat(attributes);
+        return nameSpaces + convertAttributesToXMLFormat(attributes);
     }
 
     /**

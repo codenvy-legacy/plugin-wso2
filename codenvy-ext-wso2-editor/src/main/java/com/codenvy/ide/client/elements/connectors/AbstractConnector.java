@@ -30,7 +30,7 @@ import java.util.List;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 
 /**
- * The class contains state of SalesForce connectors which are general for all connectors.It contains genera logic of serialization
+ * The class contains state of connectors which are general for all connectors.It contains genera logic of serialization
  * representation of attributes of all SalesForce connectors.Deserealizathion mechanism which allows to restore attributes' state of
  * element after saving also is same for all SalesForce connectors .
  *

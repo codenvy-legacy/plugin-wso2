@@ -28,11 +28,12 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType
-        .NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
 
 /**
  * The Class describes QueryMore connector for Salesforce group connectors. Also the class contains the business logic
@@ -40,12 +41,14 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * restore the condition of the element when you open ESB project after saving.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class QueryMore extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "QueryMore";
     public static final String SERIALIZATION_NAME = "salesforce.queryMore";
-    public static final String BATCH_SIZE         = "batchSize";
+
+    private static final String BATCH_SIZE = "batchSize";
 
     private static final List<String> PROPERTIES = Arrays.asList(BATCH_SIZE);
 
@@ -70,18 +73,13 @@ public class QueryMore extends AbstractConnector {
     @Nonnull
     @Override
     protected String serializeProperties() {
-        return Inline.equals(parameterEditorType) ? convertPropertiesToXml(batchSize)
-                                                  : convertPropertiesToXml(batchSizeExpr);
-    }
+        Map<String, String> properties = new LinkedHashMap<>();
 
-    private String convertPropertiesToXml(@Nonnull String batchSize) {
-        StringBuilder result = new StringBuilder("");
+        boolean isInline = parameterEditorType.equals(Inline);
 
-        if (!batchSize.isEmpty()) {
-            result.append('<').append(BATCH_SIZE).append('>').append(batchSize).append("</").append(BATCH_SIZE).append('>');
-        }
+        properties.put(BATCH_SIZE, isInline ? batchSize : batchSizeExpr);
 
-        return result.toString();
+        return convertPropertiesToXMLFormat(properties);
     }
 
     /** {@inheritDoc} */

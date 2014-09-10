@@ -29,7 +29,9 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
@@ -40,12 +42,14 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * restore the condition of the element when you open ESB project after saving.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class SendEmailMessage extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "SendEmailMessage";
     public static final String SERIALIZATION_NAME = "salesforce.sendEmailMessage";
-    public static final String SEND_EMAIL_MESSAGE = "sendEmailMessage";
+
+    private static final String SEND_EMAIL_MESSAGE = "sendEmailMessage";
 
     private static final List<String> PROPERTIES = Arrays.asList(SEND_EMAIL_MESSAGE);
 
@@ -67,12 +71,13 @@ public class SendEmailMessage extends AbstractConnector {
     @Nonnull
     @Override
     protected String serializeProperties() {
-        return Inline.equals(parameterEditorType) ? prepareProperties(sendEmailMessageInline) : prepareProperties(sendEmailMessage);
-    }
+        Map<String, String> properties = new LinkedHashMap<>();
 
-    @Nonnull
-    private String prepareProperties(@Nonnull String sendEmailMessage) {
-        return !sendEmailMessage.isEmpty() ? '<' + SEND_EMAIL_MESSAGE + '>' + sendEmailMessage + "</" + SEND_EMAIL_MESSAGE + '>' : "";
+        boolean isInline = parameterEditorType.equals(Inline);
+
+        properties.put(SEND_EMAIL_MESSAGE, isInline ? sendEmailMessageInline : sendEmailMessage);
+
+        return convertPropertiesToXMLFormat(properties);
     }
 
     /** {@inheritDoc} */

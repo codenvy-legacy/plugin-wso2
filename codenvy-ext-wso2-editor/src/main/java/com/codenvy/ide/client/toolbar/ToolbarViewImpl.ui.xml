@@ -194,6 +194,221 @@
                 <g:upFace image="{res.salesforceConnectorToolbar}"/>
             </g:PushButton>
 
+            <g:PushButton ui:field="jiraAddAttachmentToIssueId" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraAddAttachmentToIssueId}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraCreateFilter" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraCreateFilter}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraCreateIssue" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraCreateIssue}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraDeleteAvatarForProject" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraDeleteAvatarForProject}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraDeleteComment" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraDeleteComment}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraDeleteFilter" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraDeleteFilter}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetDashboard" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetDashboard}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraDoTransition" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraDoTransition}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetAvatarsForProject" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetAvatarsForProject}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetComments" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetComments}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetComponentsOfProject" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetComponentsOfProject}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetDashboardById" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetDashboardById}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetFavouriteFilters" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetFavouriteFilters}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetFilterById" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetFilterById}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetGroup" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetGroup}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetIssue" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetIssue}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetIssuePriorities" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetIssuePriorities}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetIssuePriorityById" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetIssuePriorityById}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetIssueTypeById" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetIssueTypeById}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetIssueTypes" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetIssueTypes}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetIssuesForUser" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetIssuesForUser}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetProject" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetProject}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetRolesByIdOfProject" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetRolesByIdOfProject}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetRolesOfProject" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetRolesOfProject}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetStatusesOfProject" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetStatusesOfProject}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetTransitions" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetTransitions}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetUser" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetUser}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetUserAssignableProjects" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetUserAssignableProjects}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetUserPermissions" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetUserPermissions}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetVersionsOfProject" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetVersionsOfProject}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraGetVotesForIssue" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraGetVotesForIssue}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraInit" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraInit}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraPostComment" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraPostComment}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraSearchAssignableUser" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraSearchAssignableUser}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraSearchAssignableUserMultiProject" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraSearchAssignableUserMultiProject}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraSearchIssueViewableUsers" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraSearchIssueViewableUsers}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraSearchJira" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraSearchJira}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraSearchUser" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraSearchUser}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraSetActorsToRoleOfProject" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraSetActorsToRoleOfProject}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraUpdateComment" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraUpdateCommentTitle}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraUpdateFilterById" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraUpdateFilterById}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraUpdateIssue" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraUpdateIssue}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="jiraUpdateIssueAssignee" addStyleNames="{style.buttonStyle}"
+                          title="{local.jiraUpdateIssueAssignee}">
+                <g:upFace image="{res.jiraConnectorToolbar}"/>
+            </g:PushButton>
+
         </g:FlowPanel>
     </g:ScrollPanel>
 

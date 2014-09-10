@@ -28,7 +28,9 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.collections.Collections.createArray;
@@ -39,13 +41,15 @@ import static com.codenvy.ide.collections.Collections.createArray;
  * restore the condition of the element when you open ESB project after saving.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class SetPassword extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "SetPassword";
     public static final String SERIALIZATION_NAME = "salesforce.setPassword";
-    public static final String USERNAME           = "username";
-    public static final String PASSWORD           = "password";
+
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password";
 
     private static final List<String> PROPERTIES = Arrays.asList(USERNAME, PASSWORD);
 
@@ -73,24 +77,14 @@ public class SetPassword extends AbstractConnector {
     @Nonnull
     @Override
     protected String serializeProperties() {
-        return Inline.equals(parameterEditorType) ? convertPropertiesToXml(usernameInline, passwordInline)
-                                                  : convertPropertiesToXml(username, password);
-    }
+        Map<String, String> properties = new LinkedHashMap<>();
 
-    @Nonnull
-    private String convertPropertiesToXml(@Nonnull String username,
-                                          @Nonnull String password) {
-        StringBuilder result = new StringBuilder();
+        boolean isInline = parameterEditorType.equals(Inline);
 
-        if (!username.isEmpty()) {
-            result.append('<').append(USERNAME).append('>').append(username).append("</").append(USERNAME).append('>');
-        }
+        properties.put(USERNAME, isInline ? usernameInline : username);
+        properties.put(PASSWORD, isInline ? passwordInline : password);
 
-        if (!password.isEmpty()) {
-            result.append('<').append(PASSWORD).append('>').append(password).append("</").append(PASSWORD).append('>');
-        }
-
-        return result.toString();
+        return convertPropertiesToXMLFormat(properties);
     }
 
     /** {@inheritDoc} */

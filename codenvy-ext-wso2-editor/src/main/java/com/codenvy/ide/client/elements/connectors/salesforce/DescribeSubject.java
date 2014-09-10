@@ -28,7 +28,9 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
@@ -46,7 +48,8 @@ public class DescribeSubject extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "describeSobject";
     public static final String SERIALIZATION_NAME = "salesforce.describeSobject";
-    public static final String SUBJECT            = "sobject";
+
+    private static final String SUBJECT = "sobject";
 
     private static final List<String> PROPERTIES = Arrays.asList(SUBJECT);
 
@@ -68,12 +71,13 @@ public class DescribeSubject extends AbstractConnector {
     @Nonnull
     @Override
     protected String serializeProperties() {
-        return Inline.equals(parameterEditorType) ? prepareProperties(subjectsInline) : prepareProperties(subject);
-    }
+        Map<String, String> properties = new LinkedHashMap<>();
 
-    @Nonnull
-    private String prepareProperties(@Nonnull String subject) {
-        return !subject.isEmpty() ? '<' + SUBJECT + '>' + subject + "</" + SUBJECT + '>' : "";
+        boolean isInline = parameterEditorType.equals(Inline);
+
+        properties.put(SUBJECT, isInline ? subjectsInline : subject);
+
+        return convertPropertiesToXMLFormat(properties);
     }
 
     /** {@inheritDoc} */
@@ -81,6 +85,7 @@ public class DescribeSubject extends AbstractConnector {
     public void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
+
         boolean isInline = Inline.equals(parameterEditorType);
 
         switch (nodeName) {

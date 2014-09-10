@@ -28,7 +28,9 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.collections.Collections.createArray;
@@ -39,18 +41,20 @@ import static com.codenvy.ide.collections.Collections.createArray;
  * restore the condition of the element when you open ESB project after saving.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class Search extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "Search";
     public static final String SERIALIZATION_NAME = "salesforce.search";
-    public static final String SEARCH_STRING      = "searchString";
+
+    private static final String SEARCH_STRING = "searchString";
 
     private static final List<String> PROPERTIES = Arrays.asList(SEARCH_STRING);
 
-    private String              searchString;
-    private String              searchStringInline;
-    private Array<NameSpace>    searchStringNameSpaces;
+    private String           searchString;
+    private String           searchStringInline;
+    private Array<NameSpace> searchStringNameSpaces;
 
     @Inject
     public Search(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
@@ -66,12 +70,13 @@ public class Search extends AbstractConnector {
     @Nonnull
     @Override
     protected String serializeProperties() {
-        return Inline.equals(parameterEditorType) ? prepareProperties(searchStringInline) : prepareProperties(searchString);
-    }
+        Map<String, String> properties = new LinkedHashMap<>();
 
-    @Nonnull
-    private String prepareProperties(@Nonnull String searchString) {
-        return !searchString.isEmpty() ? '<' + SEARCH_STRING + '>' + searchString + "</" + SEARCH_STRING + '>' : "";
+        boolean isInline = parameterEditorType.equals(Inline);
+
+        properties.put(SEARCH_STRING, isInline ? searchStringInline : searchString);
+
+        return convertPropertiesToXMLFormat(properties);
     }
 
     /** {@inheritDoc} */

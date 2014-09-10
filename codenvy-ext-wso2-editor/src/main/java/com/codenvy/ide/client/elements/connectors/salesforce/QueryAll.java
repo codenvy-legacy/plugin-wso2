@@ -28,11 +28,12 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType
-        .NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
 
 /**
  * The Class describes Query connector for QueryAll group connectors. Also the class contains the business logic
@@ -40,13 +41,15 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * restore the condition of the element when you open ESB project after saving.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class QueryAll extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "QueryAll";
     public static final String SERIALIZATION_NAME = "salesforce.queryAll";
-    public static final String BATCH_SIZE         = "batchSize";
-    public static final String QUERY_STRING       = "queryString";
+
+    private static final String BATCH_SIZE   = "batchSize";
+    private static final String QUERY_STRING = "queryString";
 
     private static final List<String> PROPERTIES = Arrays.asList(BATCH_SIZE, QUERY_STRING);
 
@@ -77,22 +80,14 @@ public class QueryAll extends AbstractConnector {
     @Nonnull
     @Override
     protected String serializeProperties() {
-        return Inline.equals(parameterEditorType) ? convertPropertiesToXml(batchSize, queryString)
-                                                  : convertPropertiesToXml(batchSizeExpr, queryStringExpr);
-    }
+        Map<String, String> properties = new LinkedHashMap<>();
 
-    private String convertPropertiesToXml(@Nonnull String batchSize, @Nonnull String queryString) {
-        StringBuilder result = new StringBuilder("");
+        boolean isInline = parameterEditorType.equals(Inline);
 
-        if (!batchSize.isEmpty()) {
-            result.append('<').append(BATCH_SIZE).append('>').append(batchSize).append("</").append(BATCH_SIZE).append('>');
-        }
+        properties.put(BATCH_SIZE, isInline ? batchSize : batchSizeExpr);
+        properties.put(QUERY_STRING, isInline ? queryString : queryStringExpr);
 
-        if (!queryString.isEmpty()) {
-            result.append('<').append(QUERY_STRING).append('>').append(queryString).append("</").append(QUERY_STRING).append('>');
-        }
-
-        return result.toString();
+        return convertPropertiesToXMLFormat(properties);
     }
 
     /** {@inheritDoc} */

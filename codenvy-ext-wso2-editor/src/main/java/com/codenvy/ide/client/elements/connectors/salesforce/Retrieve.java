@@ -28,7 +28,9 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
@@ -40,14 +42,16 @@ import static com.codenvy.ide.collections.Collections.createArray;
  * restore the condition of the element when you open ESB project after saving.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class Retrieve extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "Retrieve";
     public static final String SERIALIZATION_NAME = "salesforce.retrieve";
-    public static final String FIELD_LIST         = "fieldList";
-    public static final String OBJECT_TYPE        = "objectType";
-    public static final String OBJECT_IDS         = "objectIDS";
+
+    private static final String FIELD_LIST  = "fieldList";
+    private static final String OBJECT_TYPE = "objectType";
+    private static final String OBJECT_IDS  = "objectIDS";
 
     private static final List<String> PROPERTIES = Arrays.asList(FIELD_LIST, OBJECT_TYPE, OBJECT_IDS);
 
@@ -81,29 +85,15 @@ public class Retrieve extends AbstractConnector {
     @Nonnull
     @Override
     protected String serializeProperties() {
-        return Inline.equals(parameterEditorType) ? convertPropertiesToXml(fieldListInline, objectTypeInline, objectIDSInline)
-                                                  : convertPropertiesToXml(fieldList, objectType, objectIDS);
-    }
+        Map<String, String> properties = new LinkedHashMap<>();
 
-    @Nonnull
-    private String convertPropertiesToXml(@Nonnull String fieldList,
-                                          @Nonnull String objectType,
-                                          @Nonnull String objectIDS) {
-        StringBuilder result = new StringBuilder();
+        boolean isInline = parameterEditorType.equals(Inline);
 
-        if (!fieldList.isEmpty()) {
-            result.append('<').append(FIELD_LIST).append('>').append(fieldList).append("</").append(FIELD_LIST).append('>');
-        }
+        properties.put(FIELD_LIST, isInline ? fieldListInline : fieldList);
+        properties.put(OBJECT_TYPE, isInline ? objectTypeInline : objectType);
+        properties.put(OBJECT_IDS, isInline ? objectIDSInline : objectIDS);
 
-        if (!objectType.isEmpty()) {
-            result.append('<').append(OBJECT_TYPE).append('>').append(objectType).append("</").append(OBJECT_TYPE).append('>');
-        }
-
-        if (!objectIDS.isEmpty()) {
-            result.append('<').append(OBJECT_IDS).append('>').append(objectIDS).append("</").append(OBJECT_IDS).append('>');
-        }
-
-        return result.toString();
+        return convertPropertiesToXMLFormat(properties);
     }
 
     /** {@inheritDoc} */

@@ -292,7 +292,7 @@ public class Property extends AbstractShape {
             attributes.remove(DATA_TYPE_ATTRIBUTE);
         }
 
-        return spaces + convertPropertiesToXMLFormat(attributes);
+        return spaces + convertAttributesToXMLFormat(attributes);
     }
 
     /**

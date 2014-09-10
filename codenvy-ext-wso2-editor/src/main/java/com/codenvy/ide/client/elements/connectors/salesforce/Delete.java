@@ -28,7 +28,9 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
@@ -44,8 +46,9 @@ public class Delete extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "Delete";
     public static final String SERIALIZATION_NAME = "salesforce.delete";
-    public static final String ALL_OR_NONE        = "allOrNone";
-    public static final String SUBJECTS           = "sobjects";
+
+    private static final String ALL_OR_NONE = "allOrNone";
+    private static final String SUBJECTS    = "sobjects";
 
     private static final List<String> PROPERTIES = Arrays.asList(ALL_OR_NONE, SUBJECTS);
 
@@ -73,22 +76,14 @@ public class Delete extends AbstractConnector {
     @Nonnull
     @Override
     protected String serializeProperties() {
-        return Inline.equals(parameterEditorType) ? convertPropertiesToXml(allOrNone, subject)
-                                                  : convertPropertiesToXml(allOrNoneExpr, subjectExpression);
-    }
+        Map<String, String> properties = new LinkedHashMap<>();
 
-    private String convertPropertiesToXml(@Nonnull String allOrNone, @Nonnull String subject) {
-        StringBuilder result = new StringBuilder("");
+        boolean isInline = parameterEditorType.equals(Inline);
 
-        if (!allOrNone.isEmpty()) {
-            result.append('<').append(ALL_OR_NONE).append('>').append(allOrNone).append("</").append(ALL_OR_NONE).append('>');
-        }
+        properties.put(ALL_OR_NONE, isInline ? allOrNone : allOrNoneExpr);
+        properties.put(SUBJECTS, isInline ? subject : subjectExpression);
 
-        if (!subject.isEmpty()) {
-            result.append('<').append(SUBJECTS).append('>').append(subject).append("</").append(SUBJECTS).append('>');
-        }
-
-        return result.toString();
+        return convertPropertiesToXMLFormat(properties);
     }
 
     /** {@inheritDoc} */
@@ -119,7 +114,6 @@ public class Delete extends AbstractConnector {
                     parameterEditorType = NamespacedPropertyEditor;
                 }
                 break;
-
         }
     }
 

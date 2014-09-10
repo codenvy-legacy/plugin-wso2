@@ -81,7 +81,7 @@ public class Respond extends AbstractShape {
 
         prop.put(DESCRIPTION_ATTRIBUTE, description);
 
-        return convertPropertiesToXMLFormat(prop);
+        return convertAttributesToXMLFormat(prop);
     }
 
     /** {@inheritDoc} */

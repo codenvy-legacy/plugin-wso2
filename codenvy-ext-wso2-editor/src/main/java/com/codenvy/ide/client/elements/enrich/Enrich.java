@@ -130,7 +130,7 @@ public class Enrich extends AbstractShape {
 
         attributes.put(DESCRIPTION_ATTRIBUTE_NAME, description);
 
-        return convertPropertiesToXMLFormat(attributes);
+        return convertAttributesToXMLFormat(attributes);
     }
 
     /** {@inheritDoc} */

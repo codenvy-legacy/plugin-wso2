@@ -31,6 +31,49 @@ import com.codenvy.ide.client.elements.Sequence;
 import com.codenvy.ide.client.elements.Switch;
 import com.codenvy.ide.client.elements.ValueType;
 import com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint;
+import com.codenvy.ide.client.elements.connectors.jira.AddAttachmentToIssueId;
+import com.codenvy.ide.client.elements.connectors.jira.CreateFilter;
+import com.codenvy.ide.client.elements.connectors.jira.CreateIssue;
+import com.codenvy.ide.client.elements.connectors.jira.DeleteAvatarForProject;
+import com.codenvy.ide.client.elements.connectors.jira.DeleteComment;
+import com.codenvy.ide.client.elements.connectors.jira.DeleteFilter;
+import com.codenvy.ide.client.elements.connectors.jira.DoTransition;
+import com.codenvy.ide.client.elements.connectors.jira.GetAvatarsForProject;
+import com.codenvy.ide.client.elements.connectors.jira.GetComments;
+import com.codenvy.ide.client.elements.connectors.jira.GetComponentsOfProject;
+import com.codenvy.ide.client.elements.connectors.jira.GetDashboard;
+import com.codenvy.ide.client.elements.connectors.jira.GetDashboardById;
+import com.codenvy.ide.client.elements.connectors.jira.GetFavouriteFilters;
+import com.codenvy.ide.client.elements.connectors.jira.GetFilterById;
+import com.codenvy.ide.client.elements.connectors.jira.GetGroup;
+import com.codenvy.ide.client.elements.connectors.jira.GetIssue;
+import com.codenvy.ide.client.elements.connectors.jira.GetIssuePriorities;
+import com.codenvy.ide.client.elements.connectors.jira.GetIssuePriorityById;
+import com.codenvy.ide.client.elements.connectors.jira.GetIssueTypeById;
+import com.codenvy.ide.client.elements.connectors.jira.GetIssueTypes;
+import com.codenvy.ide.client.elements.connectors.jira.GetIssuesForUser;
+import com.codenvy.ide.client.elements.connectors.jira.GetProject;
+import com.codenvy.ide.client.elements.connectors.jira.GetRolesByIdOfProject;
+import com.codenvy.ide.client.elements.connectors.jira.GetRolesOfProject;
+import com.codenvy.ide.client.elements.connectors.jira.GetStatusesOfProject;
+import com.codenvy.ide.client.elements.connectors.jira.GetTransitions;
+import com.codenvy.ide.client.elements.connectors.jira.GetUser;
+import com.codenvy.ide.client.elements.connectors.jira.GetUserAssignableProjects;
+import com.codenvy.ide.client.elements.connectors.jira.GetUserPermissions;
+import com.codenvy.ide.client.elements.connectors.jira.GetVersionsOfProject;
+import com.codenvy.ide.client.elements.connectors.jira.GetVotesForIssue;
+import com.codenvy.ide.client.elements.connectors.jira.InitJira;
+import com.codenvy.ide.client.elements.connectors.jira.PostComment;
+import com.codenvy.ide.client.elements.connectors.jira.SearchAssignableUser;
+import com.codenvy.ide.client.elements.connectors.jira.SearchAssignableUserMultiProject;
+import com.codenvy.ide.client.elements.connectors.jira.SearchIssueViewableUsers;
+import com.codenvy.ide.client.elements.connectors.jira.SearchJira;
+import com.codenvy.ide.client.elements.connectors.jira.SearchUser;
+import com.codenvy.ide.client.elements.connectors.jira.SetActorsToRoleOfProject;
+import com.codenvy.ide.client.elements.connectors.jira.UpdateComment;
+import com.codenvy.ide.client.elements.connectors.jira.UpdateFilterById;
+import com.codenvy.ide.client.elements.connectors.jira.UpdateIssue;
+import com.codenvy.ide.client.elements.connectors.jira.UpdateIssueAssignee;
 import com.codenvy.ide.client.elements.connectors.salesforce.Create;
 import com.codenvy.ide.client.elements.connectors.salesforce.Delete;
 import com.codenvy.ide.client.elements.connectors.salesforce.DescribeGlobal;
@@ -49,9 +92,23 @@ import com.codenvy.ide.client.elements.connectors.salesforce.Search;
 import com.codenvy.ide.client.elements.connectors.salesforce.SendEmail;
 import com.codenvy.ide.client.elements.connectors.salesforce.SendEmailMessage;
 import com.codenvy.ide.client.elements.connectors.salesforce.SetPassword;
-import com.codenvy.ide.client.elements.connectors.salesforce.Undelete;
+import com.codenvy.ide.client.elements.connectors.salesforce.UnDelete;
 import com.codenvy.ide.client.elements.connectors.salesforce.Update;
 import com.codenvy.ide.client.elements.connectors.salesforce.Upset;
+import com.codenvy.ide.client.elements.connectors.twitter.DestroyStatus;
+import com.codenvy.ide.client.elements.connectors.twitter.GetClosesTrends;
+import com.codenvy.ide.client.elements.connectors.twitter.GetDirectMessages;
+import com.codenvy.ide.client.elements.connectors.twitter.GetFollowers;
+import com.codenvy.ide.client.elements.connectors.twitter.GetFollowersIds;
+import com.codenvy.ide.client.elements.connectors.twitter.GetFriends;
+import com.codenvy.ide.client.elements.connectors.twitter.GetFriendsIds;
+import com.codenvy.ide.client.elements.connectors.twitter.GetHomeTimeLine;
+import com.codenvy.ide.client.elements.connectors.twitter.GetMentionsTimeLine;
+import com.codenvy.ide.client.elements.connectors.twitter.GetRetweetsOfMine;
+import com.codenvy.ide.client.elements.connectors.twitter.GetSentDirectMessages;
+import com.codenvy.ide.client.elements.connectors.twitter.GetTopTrendPlaces;
+import com.codenvy.ide.client.elements.connectors.twitter.GetUserTimeLine;
+import com.codenvy.ide.client.elements.connectors.twitter.InitTwitter;
 import com.codenvy.ide.client.elements.enrich.Enrich;
 import com.codenvy.ide.client.elements.log.Log;
 import com.codenvy.ide.client.elements.payload.PayloadFactory;
@@ -67,27 +124,84 @@ import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.addressendpoint.AddressEndpointPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.call.CallPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.calltemplate.CallTemplatePropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.create.CreatePropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.delete.DeletePropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.describeglobal.DescribeGlobalPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.describesobject.DescribeSubjectPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.describesobjects.DescribeSubjectsPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.emptyrecyclebin.EmptyRecycleBinPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.getuserinformation.GetUserInformationPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.init.InitPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.logout.LogOutPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.retrieve.RetrievePropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.search.SearchPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.sendemail.SendEmailPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.sendemailmessage.SendEmailMessagePropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.setpassword.SetPasswordPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.undelete.UndeletePropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.query.QueryPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.queryall.QueryAllPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.querymore.QueryMorePropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.resetpassword.ResetPasswordPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.update.UpdatePropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.upset.UpsetPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.AddAttachmentConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.CreateFilterConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.CreateIssueConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.DeleteAvatarConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.DeleteCommentConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.DeleteFilterConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.DoTransitionConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetAvatarsConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetCommentsConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetComponentsConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetDashBoardByIdConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetDashboardConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetFavouriteFiltersConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetFilterByIdConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetGroupConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetIssueConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetIssuePrioritiesConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetIssuePriorityByIdConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetIssueTypeByIdConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetIssueTypesConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetIssuesForUserConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetProjectConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetRolesByIdOfProjectConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetRolesOfProjectConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetStatusesOfProjectConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetTransitionsConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetUserAssignableProjectsConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetUserConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetUserPermissionsConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetVersionsOfProjectConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.GetVotesForIssueConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.InitAbstractConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.PostCommentConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchAbstractConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchAssignableUserConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchAssignableUserMultiProjectConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchIssueViewAbleUsersConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchUserConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.SetActorsToRoleOfProjectConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.UpdateCommentConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.UpdateFilterByIdConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.UpdateIssueAssigneeConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.UpdateIssueConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.CreateConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.DeleteConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.DescribeConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.DescribeGlobalConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.DescribeSubjectConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.EmptyRecycleBinConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.GetUserInformationConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.InitConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.LogOutConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.QueryAllConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.QueryConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.QueryMoreConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.ResetPasswordConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.RetrieveConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.SearchConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.SendEmailConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.SendEmailMessageConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.SetPasswordConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.UndeleteConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.UpdateConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.UpsetConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.DestroyStatusConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.GetClosesTrendsConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.GetDirectMessagesConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.GetFollowersConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.GetFollowersIdsConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.GetFriendsConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.GetFriendsIdsConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.GetHomeTimeLineConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.GetMentionsTimeLineConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.GetRetweetsOfMineConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.GetSentDirectMessagesConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.GetTopTrendPlacesConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.GetUserTimeLineConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.InitTwitterConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.empty.EmptyPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.enrich.EnrichPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.filter.FilterPropertiesPanelPresenter;
@@ -255,27 +369,84 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                  CallTemplatePropertiesPanelPresenter callTemplatePropertiesPanelPresenter,
                                                  CallPropertiesPanelPresenter callPropertiesPanelPresenter,
                                                  AddressEndpointPropertiesPanelPresenter addressEndpointPropertiesPanelPresenter,
-                                                 InitPropertiesPanelPresenter initPropertiesPanelPresenter,
-                                                 CreatePropertiesPanelPresenter createPropertiesPanelPresenter,
-                                                 UpdatePropertiesPanelPresenter updatePropertiesPanelPresenter,
-                                                 DeletePropertiesPanelPresenter deletePropertiesPanelPresenter,
-                                                 EmptyRecycleBinPresenter emptyRecycleBinPresenter,
-                                                 LogOutPresenter logOutPresenter,
-                                                 GetUserInformationPresenter getUserInformationPresenter,
-                                                 DescribeGlobalPropertiesPanelPresenter describeGlobalPropertiesPanelPresenter,
-                                                 DescribeSubjectPropertiesPanelPresenter describeSubjectPropertiesPanelPresenter,
-                                                 DescribeSubjectsPropertiesPanelPresenter describeSubjectsPropertiesPanelPresenter,
-                                                 UpsetPropertiesPanelPresenter upsetPropertiesPanelPresenter,
-                                                 UndeletePropertiesPanelPresenter undeletePropertiesPanelPresenter,
-                                                 SetPasswordPropertiesPanelPresenter passwordPropertiesPanelPresenter,
-                                                 SendEmailMessagePropertiesPanelPresenter sendEmailMessagePresenter,
-                                                 SendEmailPropertiesPanelPresenter sendEmailPresenter,
-                                                 SearchPropertiesPanelPresenter searchPresenter,
-                                                 RetrievePropertiesPanelPresenter retrievePresenter,
-                                                 QueryPropertiesPanelPresenter queryPropertiesPanelPresenter,
-                                                 QueryAllPropertiesPanelPresenter queryAllPropertiesPanelPresenter,
-                                                 QueryMorePropertiesPanelPresenter queryMorePropertiesPanelPresenter,
-                                                 ResetPasswordPropertiesPanelPresenter resetPasswordPropertiesPanelPresenter) {
+                                                 InitConnectorPresenter initConnectorPresenter,
+                                                 CreateConnectorPresenter createConnectorPresenter,
+                                                 UpdateConnectorPresenter updateConnectorPresenter,
+                                                 DeleteConnectorPresenter deletePresenter,
+                                                 EmptyRecycleBinConnectorPresenter emptyRecycleBinConnectorPresenter,
+                                                 LogOutConnectorPresenter logOutConnectorPresenter,
+                                                 GetUserInformationConnectorPresenter getUserInformationConnectorPresenter,
+                                                 DescribeGlobalConnectorPresenter describeGlobalConnectorPresenter,
+                                                 DescribeSubjectConnectorPresenter describeSubjectConnectorPresenter,
+                                                 DescribeConnectorPresenter describeConnectorPresenter,
+                                                 UpsetConnectorPresenter upsetConnectorPresenter,
+                                                 UndeleteConnectorPresenter undeleteConnectorPresenter,
+                                                 SetPasswordConnectorPresenter passwordPropertiesPanelPresenter,
+                                                 SendEmailMessageConnectorPresenter sendEmailMessageConnectorPresenter,
+                                                 SendEmailConnectorPresenter sendEmailConnectorPresenter,
+                                                 SearchConnectorPresenter searchConnectorPresenter,
+                                                 RetrieveConnectorPresenter retrieveConnectorPresenter,
+                                                 QueryConnectorPresenter queryConnectorPresenter,
+                                                 QueryAllConnectorPresenter queryAllConnectorPresenter,
+                                                 QueryMoreConnectorPresenter queryMoreConnectorPresenter,
+                                                 ResetPasswordConnectorPresenter resetPasswordConnectorPresenter,
+                                                 AddAttachmentConnectorPresenter addAttachmentConnectorPresenter,
+                                                 CreateFilterConnectorPresenter createFilterConnectorPresenter,
+                                                 CreateIssueConnectorPresenter createIssueConnectorPresenter,
+                                                 DeleteAvatarConnectorPresenter deleteAvatarConnectorPresenter,
+                                                 DeleteCommentConnectorPresenter deleteCommentConnectorPresenter,
+                                                 DeleteFilterConnectorPresenter deleteFilterConnectorPresenter,
+                                                 GetDashboardConnectorPresenter getDashboardConnectorPresenter,
+                                                 DoTransitionConnectorPresenter doTransitionConnectorPresenter,
+                                                 GetAvatarsConnectorPresenter getAvatarsConnectorPresenter,
+                                                 GetCommentsConnectorPresenter getCommentsConnectorPresenter,
+                                                 GetComponentsConnectorPresenter getComponentsConnectorPresenter,
+                                                 GetDashBoardByIdConnectorPresenter getDashBoardByIdConnectorPresenter,
+                                                 GetFavouriteFiltersConnectorPresenter getFavouriteFiltersConnectorPresenter,
+                                                 GetFilterByIdConnectorPresenter getFilterByIdConnectorPresenter,
+                                                 GetGroupConnectorPresenter getGroupConnectorPresenter,
+                                                 GetIssueConnectorPresenter getIssueConnectorPresenter,
+                                                 GetIssuePrioritiesConnectorPresenter getIssuePrioritiesConnectorPresenter,
+                                                 GetIssuePriorityByIdConnectorPresenter getIssuePriorityByIdConnectorPresenter,
+                                                 GetIssueTypeByIdConnectorPresenter getIssueTypeByIdConnectorPresenter,
+                                                 GetIssueTypesConnectorPresenter getIssueTypesConnectorPresenter,
+                                                 GetIssuesForUserConnectorPresenter getIssuesForUserConnectorPresenter,
+                                                 GetProjectConnectorPresenter getProjectConnectorPresenter,
+                                                 GetRolesByIdOfProjectConnectorPresenter getRolesByIdOfProjectConnectorPresenter,
+                                                 GetRolesOfProjectConnectorPresenter getRolesOfProjectConnectorPresenter,
+                                                 GetStatusesOfProjectConnectorPresenter getStatusesOfProjectConnectorPresenter,
+                                                 GetTransitionsConnectorPresenter getTransitionsConnectorPresenter,
+                                                 GetUserConnectorPresenter getUserConnectorPresenter,
+                                                 GetUserAssignableProjectsConnectorPresenter getUserAssignableProjectsConnectorPresenter,
+                                                 GetUserPermissionsConnectorPresenter getUserPermissionsConnectorPresenter,
+                                                 GetVersionsOfProjectConnectorPresenter getVersionsOfProjectConnectorPresenter,
+                                                 GetVotesForIssueConnectorPresenter getVotesForIssueConnectorPresenter,
+                                                 InitAbstractConnectorPresenter initJiraConnectorPresenter,
+                                                 PostCommentConnectorPresenter postCommentConnectorPresenter,
+                                                 SearchAssignableUserConnectorPresenter searchAssignableUserConnectorPresenter,
+                                                 SearchAssignableUserMultiProjectConnectorPresenter searchAssignableUserMultiPresenter,
+                                                 SearchIssueViewAbleUsersConnectorPresenter searchIssueViewAbleUsersConnectorPresenter,
+                                                 SearchAbstractConnectorPresenter searchJiraConnectorPresenter,
+                                                 SearchUserConnectorPresenter searchUserConnectorPresenter,
+                                                 SetActorsToRoleOfProjectConnectorPresenter setActorsToRoleOfProjectConnectorPresenter,
+                                                 UpdateCommentConnectorPresenter updateCommentConnectorPresenter,
+                                                 UpdateFilterByIdConnectorPresenter updateFilterByIdConnectorPresenter,
+                                                 UpdateIssueConnectorPresenter updateIssueConnectorPresenter,
+                                                 UpdateIssueAssigneeConnectorPresenter updateIssueAssigneeConnectorPresenter,
+                                                 DestroyStatusConnectorPresenter destroyStatusConnectorPresenter,
+                                                 GetClosesTrendsConnectorPresenter getClosesTrendsConnectorPresenter,
+                                                 GetDirectMessagesConnectorPresenter getDirectMessagesConnectorPresenter,
+                                                 GetFollowersConnectorPresenter getFollowersConnectorPresenter,
+                                                 GetFollowersIdsConnectorPresenter getFollowersIdsConnectorPresenter,
+                                                 GetFriendsConnectorPresenter getFriendsConnectorPresenter,
+                                                 GetFriendsIdsConnectorPresenter getFriendsIdsConnectorPresenter,
+                                                 GetHomeTimeLineConnectorPresenter getHomeTimeLineConnectorPresenter,
+                                                 GetMentionsTimeLineConnectorPresenter getMentionsTimeLineConnectorPresenter,
+                                                 GetRetweetsOfMineConnectorPresenter getRetweetsOfMineConnectorPresenter,
+                                                 GetSentDirectMessagesConnectorPresenter getSentDirectMessagesConnectorPresenter,
+                                                 GetTopTrendPlacesConnectorPresenter getTopTrendPlacesConnectorPresenter,
+                                                 GetUserTimeLineConnectorPresenter getUserTimeLineConnectorPresenter,
+                                                 InitTwitterConnectorPresenter initTwitterConnectorPresenter) {
 
         PropertiesPanelManager propertiesPanelManager = editorFactory.createPropertiesPanelManager(view.getPropertiesPanel());
 
@@ -321,26 +492,26 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
         propertiesPanelManager.register(AddressEndpoint.class, addressEndpointPropertiesPanelPresenter);
         addressEndpointPropertiesPanelPresenter.addListener(this);
 
-        propertiesPanelManager.register(Init.class, initPropertiesPanelPresenter);
-        initPropertiesPanelPresenter.addListener(this);
+        propertiesPanelManager.register(Init.class, initConnectorPresenter);
+        initConnectorPresenter.addListener(this);
 
-        propertiesPanelManager.register(Create.class, createPropertiesPanelPresenter);
-        createPropertiesPanelPresenter.addListener(this);
+        propertiesPanelManager.register(Create.class, createConnectorPresenter);
+        createConnectorPresenter.addListener(this);
 
-        propertiesPanelManager.register(Update.class, updatePropertiesPanelPresenter);
-        updatePropertiesPanelPresenter.addListener(this);
+        propertiesPanelManager.register(Update.class, updateConnectorPresenter);
+        updateConnectorPresenter.addListener(this);
 
-        propertiesPanelManager.register(Delete.class, deletePropertiesPanelPresenter);
-        deletePropertiesPanelPresenter.addListener(this);
+        propertiesPanelManager.register(Delete.class, deletePresenter);
+        deletePresenter.addListener(this);
 
-        propertiesPanelManager.register(DescribeGlobal.class, describeGlobalPropertiesPanelPresenter);
-        describeGlobalPropertiesPanelPresenter.addListener(this);
+        propertiesPanelManager.register(DescribeGlobal.class, describeGlobalConnectorPresenter);
+        describeGlobalConnectorPresenter.addListener(this);
 
-        propertiesPanelManager.register(DescribeSubject.class, describeSubjectPropertiesPanelPresenter);
-        describeSubjectPropertiesPanelPresenter.addListener(this);
+        propertiesPanelManager.register(DescribeSubject.class, describeSubjectConnectorPresenter);
+        describeSubjectConnectorPresenter.addListener(this);
 
-        propertiesPanelManager.register(DescribeSubjects.class, describeSubjectsPropertiesPanelPresenter);
-        describeSubjectsPropertiesPanelPresenter.addListener(this);
+        propertiesPanelManager.register(DescribeSubjects.class, describeConnectorPresenter);
+        describeConnectorPresenter.addListener(this);
 
         propertiesPanelManager.register(RootElement.class, rootPropertiesPanelPresenter);
         rootPropertiesPanelPresenter.addListener(this);
@@ -348,47 +519,218 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
         propertiesPanelManager.register(null, emptyPropertiesPanelPresenter);
         emptyPropertiesPanelPresenter.addListener(this);
 
-        propertiesPanelManager.register(EmptyRecycleBin.class, emptyRecycleBinPresenter);
-        emptyRecycleBinPresenter.addListener(this);
+        propertiesPanelManager.register(EmptyRecycleBin.class, emptyRecycleBinConnectorPresenter);
+        emptyRecycleBinConnectorPresenter.addListener(this);
 
-        propertiesPanelManager.register(LogOut.class, logOutPresenter);
-        logOutPresenter.addListener(this);
+        propertiesPanelManager.register(LogOut.class, logOutConnectorPresenter);
+        logOutConnectorPresenter.addListener(this);
 
-        propertiesPanelManager.register(Query.class, queryPropertiesPanelPresenter);
-        queryPropertiesPanelPresenter.addListener(this);
+        propertiesPanelManager.register(Query.class, queryConnectorPresenter);
+        queryConnectorPresenter.addListener(this);
 
-        propertiesPanelManager.register(QueryAll.class, queryAllPropertiesPanelPresenter);
-        queryAllPropertiesPanelPresenter.addListener(this);
+        propertiesPanelManager.register(QueryAll.class, queryAllConnectorPresenter);
+        queryAllConnectorPresenter.addListener(this);
 
-        propertiesPanelManager.register(QueryMore.class, queryMorePropertiesPanelPresenter);
-        queryMorePropertiesPanelPresenter.addListener(this);
+        propertiesPanelManager.register(QueryMore.class, queryMoreConnectorPresenter);
+        queryMoreConnectorPresenter.addListener(this);
 
-        propertiesPanelManager.register(ResetPassword.class, resetPasswordPropertiesPanelPresenter);
-        resetPasswordPropertiesPanelPresenter.addListener(this);
+        propertiesPanelManager.register(ResetPassword.class, resetPasswordConnectorPresenter);
+        resetPasswordConnectorPresenter.addListener(this);
 
-        propertiesPanelManager.register(GetUserInformation.class, getUserInformationPresenter);
-        getUserInformationPresenter.addListener(this);
+        propertiesPanelManager.register(GetUserInformation.class, getUserInformationConnectorPresenter);
+        getUserInformationConnectorPresenter.addListener(this);
 
-        propertiesPanelManager.register(Upset.class, upsetPropertiesPanelPresenter);
-        upsetPropertiesPanelPresenter.addListener(this);
+        propertiesPanelManager.register(Upset.class, upsetConnectorPresenter);
+        upsetConnectorPresenter.addListener(this);
 
-        propertiesPanelManager.register(Undelete.class, undeletePropertiesPanelPresenter);
-        undeletePropertiesPanelPresenter.addListener(this);
+        propertiesPanelManager.register(UnDelete.class, undeleteConnectorPresenter);
+        undeleteConnectorPresenter.addListener(this);
 
         propertiesPanelManager.register(SetPassword.class, passwordPropertiesPanelPresenter);
         passwordPropertiesPanelPresenter.addListener(this);
 
-        propertiesPanelManager.register(SendEmailMessage.class, sendEmailMessagePresenter);
-        sendEmailMessagePresenter.addListener(this);
+        propertiesPanelManager.register(SendEmailMessage.class, sendEmailMessageConnectorPresenter);
+        sendEmailMessageConnectorPresenter.addListener(this);
 
-        propertiesPanelManager.register(SendEmail.class, sendEmailPresenter);
-        sendEmailPresenter.addListener(this);
+        propertiesPanelManager.register(SendEmail.class, sendEmailConnectorPresenter);
+        sendEmailConnectorPresenter.addListener(this);
 
-        propertiesPanelManager.register(Search.class, searchPresenter);
-        searchPresenter.addListener(this);
+        propertiesPanelManager.register(Search.class, searchConnectorPresenter);
+        searchConnectorPresenter.addListener(this);
 
-        propertiesPanelManager.register(Retrieve.class, retrievePresenter);
-        retrievePresenter.addListener(this);
+        propertiesPanelManager.register(Retrieve.class, retrieveConnectorPresenter);
+        retrieveConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(AddAttachmentToIssueId.class, addAttachmentConnectorPresenter);
+        addAttachmentConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(CreateFilter.class, createFilterConnectorPresenter);
+        createFilterConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(CreateIssue.class, createIssueConnectorPresenter);
+        createIssueConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(DeleteAvatarForProject.class, deleteAvatarConnectorPresenter);
+        deleteAvatarConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(DeleteComment.class, deleteCommentConnectorPresenter);
+        deleteCommentConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(DeleteFilter.class, deleteFilterConnectorPresenter);
+        deleteFilterConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetDashboard.class, getDashboardConnectorPresenter);
+        getDashboardConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(DoTransition.class, doTransitionConnectorPresenter);
+        doTransitionConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetAvatarsForProject.class, getAvatarsConnectorPresenter);
+        getAvatarsConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetComments.class, getCommentsConnectorPresenter);
+        getCommentsConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetComponentsOfProject.class, getComponentsConnectorPresenter);
+        getComponentsConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetDashboardById.class, getDashBoardByIdConnectorPresenter);
+        getDashBoardByIdConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetFavouriteFilters.class, getFavouriteFiltersConnectorPresenter);
+        getFavouriteFiltersConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetFilterById.class, getFilterByIdConnectorPresenter);
+        getFilterByIdConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetGroup.class, getGroupConnectorPresenter);
+        getGroupConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetIssue.class, getIssueConnectorPresenter);
+        getIssueConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetIssuePriorities.class, getIssuePrioritiesConnectorPresenter);
+        getIssuePrioritiesConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetIssuePriorityById.class, getIssuePriorityByIdConnectorPresenter);
+        getIssuePriorityByIdConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetIssueTypeById.class, getIssueTypeByIdConnectorPresenter);
+        getIssueTypeByIdConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetIssueTypes.class, getIssueTypesConnectorPresenter);
+        getIssueTypesConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetIssuesForUser.class, getIssuesForUserConnectorPresenter);
+        getIssuesForUserConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetProject.class, getProjectConnectorPresenter);
+        getProjectConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetRolesByIdOfProject.class, getRolesByIdOfProjectConnectorPresenter);
+        getRolesByIdOfProjectConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetRolesOfProject.class, getRolesOfProjectConnectorPresenter);
+        getRolesOfProjectConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetStatusesOfProject.class, getStatusesOfProjectConnectorPresenter);
+        getStatusesOfProjectConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetTransitions.class, getTransitionsConnectorPresenter);
+        getTransitionsConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetUser.class, getUserConnectorPresenter);
+        getUserConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetUserAssignableProjects.class, getUserAssignableProjectsConnectorPresenter);
+        getUserAssignableProjectsConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetUserPermissions.class, getUserPermissionsConnectorPresenter);
+        getUserPermissionsConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetVersionsOfProject.class, getVersionsOfProjectConnectorPresenter);
+        getVersionsOfProjectConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetVotesForIssue.class, getVotesForIssueConnectorPresenter);
+        getVotesForIssueConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(InitJira.class, initJiraConnectorPresenter);
+        initJiraConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(PostComment.class, postCommentConnectorPresenter);
+        postCommentConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(SearchAssignableUser.class, searchAssignableUserConnectorPresenter);
+        searchAssignableUserConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(SearchAssignableUserMultiProject.class, searchAssignableUserMultiPresenter);
+        searchAssignableUserMultiPresenter.addListener(this);
+
+        propertiesPanelManager.register(SearchIssueViewableUsers.class, searchIssueViewAbleUsersConnectorPresenter);
+        searchAssignableUserConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(SearchJira.class, searchJiraConnectorPresenter);
+        searchJiraConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(SearchUser.class, searchUserConnectorPresenter);
+        searchUserConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(SetActorsToRoleOfProject.class, setActorsToRoleOfProjectConnectorPresenter);
+        setActorsToRoleOfProjectConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(UpdateComment.class, updateCommentConnectorPresenter);
+        updateCommentConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(UpdateFilterById.class, updateFilterByIdConnectorPresenter);
+        updateFilterByIdConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(UpdateIssue.class, updateIssueConnectorPresenter);
+        updateIssueConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(UpdateIssueAssignee.class, updateIssueAssigneeConnectorPresenter);
+        updateIssueAssigneeConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(DestroyStatus.class, destroyStatusConnectorPresenter);
+        destroyStatusConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetClosesTrends.class, getClosesTrendsConnectorPresenter);
+        getClosesTrendsConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetDirectMessages.class, getDirectMessagesConnectorPresenter);
+        getDirectMessagesConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetFollowers.class, getFollowersConnectorPresenter);
+        getFollowersConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetFollowersIds.class, getFollowersIdsConnectorPresenter);
+        getFollowersIdsConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetFriends.class, getFriendsConnectorPresenter);
+        getFriendsConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetFriendsIds.class, getFriendsIdsConnectorPresenter);
+        getFriendsIdsConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetHomeTimeLine.class, getHomeTimeLineConnectorPresenter);
+        getHomeTimeLineConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetMentionsTimeLine.class, getMentionsTimeLineConnectorPresenter);
+        getMentionsTimeLineConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetRetweetsOfMine.class, getRetweetsOfMineConnectorPresenter);
+        getRetweetsOfMineConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetSentDirectMessages.class, getSentDirectMessagesConnectorPresenter);
+        getSentDirectMessagesConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetTopTrendPlaces.class, getTopTrendPlacesConnectorPresenter);
+        getTopTrendPlacesConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetUserTimeLine.class, getUserTimeLineConnectorPresenter);
+        getUserTimeLineConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(InitTwitter.class, initTwitterConnectorPresenter);
+        initTwitterConnectorPresenter.addListener(this);
 
         selectionManager.addListener(propertiesPanelManager);
     }
@@ -525,8 +867,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        SendEmail.ELEMENT_NAME,
                                                                        SendEmailMessage.ELEMENT_NAME,
                                                                        SetPassword.ELEMENT_NAME,
-                                                                       Undelete.ELEMENT_NAME,
-                                                                       Upset.ELEMENT_NAME));
+                                                                       UnDelete.ELEMENT_NAME,
+                                                                       Upset.ELEMENT_NAME,
+                                                                       DoTransition.ELEMENT_NAME,
+                                                                       SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(Log.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                     Property.ELEMENT_NAME,
@@ -561,8 +905,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                     SendEmail.ELEMENT_NAME,
                                                                     SendEmailMessage.ELEMENT_NAME,
                                                                     SetPassword.ELEMENT_NAME,
-                                                                    Undelete.ELEMENT_NAME,
-                                                                    Upset.ELEMENT_NAME));
+                                                                    UnDelete.ELEMENT_NAME,
+                                                                    Upset.ELEMENT_NAME,
+                                                                    DoTransition.ELEMENT_NAME,
+                                                                    SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(Call.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                      Property.ELEMENT_NAME,
@@ -597,8 +943,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                      SendEmail.ELEMENT_NAME,
                                                                      SendEmailMessage.ELEMENT_NAME,
                                                                      SetPassword.ELEMENT_NAME,
-                                                                     Undelete.ELEMENT_NAME,
-                                                                     Upset.ELEMENT_NAME));
+                                                                     UnDelete.ELEMENT_NAME,
+                                                                     Upset.ELEMENT_NAME,
+                                                                     DoTransition.ELEMENT_NAME,
+                                                                     SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(Property.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                          Property.ELEMENT_NAME,
@@ -633,8 +981,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                          SendEmail.ELEMENT_NAME,
                                                                          SendEmailMessage.ELEMENT_NAME,
                                                                          SetPassword.ELEMENT_NAME,
-                                                                         Undelete.ELEMENT_NAME,
-                                                                         Upset.ELEMENT_NAME));
+                                                                         UnDelete.ELEMENT_NAME,
+                                                                         Upset.ELEMENT_NAME,
+                                                                         DoTransition.ELEMENT_NAME,
+                                                                         SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(Enrich.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                        Property.ELEMENT_NAME,
@@ -669,8 +1019,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        SendEmail.ELEMENT_NAME,
                                                                        SendEmailMessage.ELEMENT_NAME,
                                                                        SetPassword.ELEMENT_NAME,
-                                                                       Undelete.ELEMENT_NAME,
-                                                                       Upset.ELEMENT_NAME));
+                                                                       UnDelete.ELEMENT_NAME,
+                                                                       Upset.ELEMENT_NAME,
+                                                                       DoTransition.ELEMENT_NAME,
+                                                                       SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(Sequence.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                          Property.ELEMENT_NAME,
@@ -705,8 +1057,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                          SendEmail.ELEMENT_NAME,
                                                                          SendEmailMessage.ELEMENT_NAME,
                                                                          SetPassword.ELEMENT_NAME,
-                                                                         Undelete.ELEMENT_NAME,
-                                                                         Upset.ELEMENT_NAME));
+                                                                         UnDelete.ELEMENT_NAME,
+                                                                         Upset.ELEMENT_NAME,
+                                                                         DoTransition.ELEMENT_NAME,
+                                                                         SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(Send.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                      Property.ELEMENT_NAME,
@@ -741,8 +1095,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                      SendEmail.ELEMENT_NAME,
                                                                      SendEmailMessage.ELEMENT_NAME,
                                                                      SetPassword.ELEMENT_NAME,
-                                                                     Undelete.ELEMENT_NAME,
-                                                                     Upset.ELEMENT_NAME));
+                                                                     UnDelete.ELEMENT_NAME,
+                                                                     Upset.ELEMENT_NAME,
+                                                                     DoTransition.ELEMENT_NAME,
+                                                                     SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(PayloadFactory.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                                Property.ELEMENT_NAME,
@@ -777,8 +1133,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                SendEmail.ELEMENT_NAME,
                                                                                SendEmailMessage.ELEMENT_NAME,
                                                                                SetPassword.ELEMENT_NAME,
-                                                                               Undelete.ELEMENT_NAME,
-                                                                               Upset.ELEMENT_NAME));
+                                                                               UnDelete.ELEMENT_NAME,
+                                                                               Upset.ELEMENT_NAME,
+                                                                               DoTransition.ELEMENT_NAME,
+                                                                               SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(Header.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                        Property.ELEMENT_NAME,
@@ -813,8 +1171,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        SendEmail.ELEMENT_NAME,
                                                                        SendEmailMessage.ELEMENT_NAME,
                                                                        SetPassword.ELEMENT_NAME,
-                                                                       Undelete.ELEMENT_NAME,
-                                                                       Upset.ELEMENT_NAME));
+                                                                       UnDelete.ELEMENT_NAME,
+                                                                       Upset.ELEMENT_NAME,
+                                                                       DoTransition.ELEMENT_NAME,
+                                                                       SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(CallTemplate.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                              Property.ELEMENT_NAME,
@@ -849,8 +1209,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                              SendEmail.ELEMENT_NAME,
                                                                              SendEmailMessage.ELEMENT_NAME,
                                                                              SetPassword.ELEMENT_NAME,
-                                                                             Undelete.ELEMENT_NAME,
-                                                                             Upset.ELEMENT_NAME));
+                                                                             UnDelete.ELEMENT_NAME,
+                                                                             Upset.ELEMENT_NAME,
+                                                                             DoTransition.ELEMENT_NAME,
+                                                                             SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(Filter.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                        Property.ELEMENT_NAME,
@@ -885,8 +1247,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        SendEmail.ELEMENT_NAME,
                                                                        SendEmailMessage.ELEMENT_NAME,
                                                                        SetPassword.ELEMENT_NAME,
-                                                                       Undelete.ELEMENT_NAME,
-                                                                       Upset.ELEMENT_NAME));
+                                                                       UnDelete.ELEMENT_NAME,
+                                                                       Upset.ELEMENT_NAME,
+                                                                       DoTransition.ELEMENT_NAME,
+                                                                       SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(Init.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                      Property.ELEMENT_NAME,
@@ -922,8 +1286,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                      SendEmail.ELEMENT_NAME,
                                                                      SendEmailMessage.ELEMENT_NAME,
                                                                      SetPassword.ELEMENT_NAME,
-                                                                     Undelete.ELEMENT_NAME,
-                                                                     Upset.ELEMENT_NAME));
+                                                                     UnDelete.ELEMENT_NAME,
+                                                                     Upset.ELEMENT_NAME,
+                                                                     DoTransition.ELEMENT_NAME,
+                                                                     SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(Create.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                        Property.ELEMENT_NAME,
@@ -960,8 +1326,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        SendEmail.ELEMENT_NAME,
                                                                        SendEmailMessage.ELEMENT_NAME,
                                                                        SetPassword.ELEMENT_NAME,
-                                                                       Undelete.ELEMENT_NAME,
-                                                                       Upset.ELEMENT_NAME));
+                                                                       UnDelete.ELEMENT_NAME,
+                                                                       Upset.ELEMENT_NAME,
+                                                                       DoTransition.ELEMENT_NAME,
+                                                                       SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(Update.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                        Property.ELEMENT_NAME,
@@ -997,8 +1365,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        SendEmail.ELEMENT_NAME,
                                                                        SendEmailMessage.ELEMENT_NAME,
                                                                        SetPassword.ELEMENT_NAME,
-                                                                       Undelete.ELEMENT_NAME,
-                                                                       Upset.ELEMENT_NAME));
+                                                                       UnDelete.ELEMENT_NAME,
+                                                                       Upset.ELEMENT_NAME,
+                                                                       DoTransition.ELEMENT_NAME,
+                                                                       SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(Delete.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                        Property.ELEMENT_NAME,
@@ -1033,8 +1403,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        SendEmail.ELEMENT_NAME,
                                                                        SendEmailMessage.ELEMENT_NAME,
                                                                        SetPassword.ELEMENT_NAME,
-                                                                       Undelete.ELEMENT_NAME,
-                                                                       Upset.ELEMENT_NAME));
+                                                                       UnDelete.ELEMENT_NAME,
+                                                                       Upset.ELEMENT_NAME,
+                                                                       DoTransition.ELEMENT_NAME,
+                                                                       SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(EmptyRecycleBin.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                                 Property.ELEMENT_NAME,
@@ -1069,8 +1441,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                 SendEmail.ELEMENT_NAME,
                                                                                 SendEmailMessage.ELEMENT_NAME,
                                                                                 SetPassword.ELEMENT_NAME,
-                                                                                Undelete.ELEMENT_NAME,
-                                                                                Upset.ELEMENT_NAME));
+                                                                                UnDelete.ELEMENT_NAME,
+                                                                                Upset.ELEMENT_NAME,
+                                                                                DoTransition.ELEMENT_NAME,
+                                                                                SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(LogOut.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                        Property.ELEMENT_NAME,
@@ -1105,8 +1479,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        SendEmail.ELEMENT_NAME,
                                                                        SendEmailMessage.ELEMENT_NAME,
                                                                        SetPassword.ELEMENT_NAME,
-                                                                       Undelete.ELEMENT_NAME,
-                                                                       Upset.ELEMENT_NAME));
+                                                                       UnDelete.ELEMENT_NAME,
+                                                                       Upset.ELEMENT_NAME,
+                                                                       DoTransition.ELEMENT_NAME,
+                                                                       SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(GetUserInformation.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                                    Property.ELEMENT_NAME,
@@ -1141,8 +1517,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                    SendEmail.ELEMENT_NAME,
                                                                                    SendEmailMessage.ELEMENT_NAME,
                                                                                    SetPassword.ELEMENT_NAME,
-                                                                                   Undelete.ELEMENT_NAME,
-                                                                                   Upset.ELEMENT_NAME));
+                                                                                   UnDelete.ELEMENT_NAME,
+                                                                                   Upset.ELEMENT_NAME,
+                                                                                   DoTransition.ELEMENT_NAME,
+                                                                                   SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(DescribeGlobal.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                                Property.ELEMENT_NAME,
@@ -1177,8 +1555,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                SendEmail.ELEMENT_NAME,
                                                                                SendEmailMessage.ELEMENT_NAME,
                                                                                SetPassword.ELEMENT_NAME,
-                                                                               Undelete.ELEMENT_NAME,
-                                                                               Upset.ELEMENT_NAME));
+                                                                               UnDelete.ELEMENT_NAME,
+                                                                               Upset.ELEMENT_NAME,
+                                                                               DoTransition.ELEMENT_NAME,
+                                                                               SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(DescribeSubject.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                                 Property.ELEMENT_NAME,
@@ -1213,8 +1593,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                 SendEmail.ELEMENT_NAME,
                                                                                 SendEmailMessage.ELEMENT_NAME,
                                                                                 SetPassword.ELEMENT_NAME,
-                                                                                Undelete.ELEMENT_NAME,
-                                                                                Upset.ELEMENT_NAME));
+                                                                                UnDelete.ELEMENT_NAME,
+                                                                                Upset.ELEMENT_NAME,
+                                                                                DoTransition.ELEMENT_NAME,
+                                                                                SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(DescribeSubjects.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                                  Property.ELEMENT_NAME,
@@ -1249,8 +1631,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                  SendEmail.ELEMENT_NAME,
                                                                                  SendEmailMessage.ELEMENT_NAME,
                                                                                  SetPassword.ELEMENT_NAME,
-                                                                                 Undelete.ELEMENT_NAME,
-                                                                                 Upset.ELEMENT_NAME));
+                                                                                 UnDelete.ELEMENT_NAME,
+                                                                                 Upset.ELEMENT_NAME,
+                                                                                 DoTransition.ELEMENT_NAME,
+                                                                                 SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(Query.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                       Property.ELEMENT_NAME,
@@ -1285,8 +1669,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                       SendEmail.ELEMENT_NAME,
                                                                       SendEmailMessage.ELEMENT_NAME,
                                                                       SetPassword.ELEMENT_NAME,
-                                                                      Undelete.ELEMENT_NAME,
-                                                                      Upset.ELEMENT_NAME));
+                                                                      UnDelete.ELEMENT_NAME,
+                                                                      Upset.ELEMENT_NAME,
+                                                                      DoTransition.ELEMENT_NAME,
+                                                                      SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(QueryAll.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                          Property.ELEMENT_NAME,
@@ -1321,8 +1707,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                          SendEmail.ELEMENT_NAME,
                                                                          SendEmailMessage.ELEMENT_NAME,
                                                                          SetPassword.ELEMENT_NAME,
-                                                                         Undelete.ELEMENT_NAME,
-                                                                         Upset.ELEMENT_NAME));
+                                                                         UnDelete.ELEMENT_NAME,
+                                                                         Upset.ELEMENT_NAME,
+                                                                         DoTransition.ELEMENT_NAME,
+                                                                         SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(QueryMore.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                           Property.ELEMENT_NAME,
@@ -1357,8 +1745,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                           SendEmail.ELEMENT_NAME,
                                                                           SendEmailMessage.ELEMENT_NAME,
                                                                           SetPassword.ELEMENT_NAME,
-                                                                          Undelete.ELEMENT_NAME,
-                                                                          Upset.ELEMENT_NAME));
+                                                                          UnDelete.ELEMENT_NAME,
+                                                                          Upset.ELEMENT_NAME,
+                                                                          DoTransition.ELEMENT_NAME,
+                                                                          SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(ResetPassword.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                               Property.ELEMENT_NAME,
@@ -1393,8 +1783,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                               SendEmail.ELEMENT_NAME,
                                                                               SendEmailMessage.ELEMENT_NAME,
                                                                               SetPassword.ELEMENT_NAME,
-                                                                              Undelete.ELEMENT_NAME,
-                                                                              Upset.ELEMENT_NAME));
+                                                                              UnDelete.ELEMENT_NAME,
+                                                                              Upset.ELEMENT_NAME,
+                                                                              DoTransition.ELEMENT_NAME,
+                                                                              SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(Retrieve.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                          Property.ELEMENT_NAME,
@@ -1429,8 +1821,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                          SendEmail.ELEMENT_NAME,
                                                                          SendEmailMessage.ELEMENT_NAME,
                                                                          SetPassword.ELEMENT_NAME,
-                                                                         Undelete.ELEMENT_NAME,
-                                                                         Upset.ELEMENT_NAME));
+                                                                         UnDelete.ELEMENT_NAME,
+                                                                         Upset.ELEMENT_NAME,
+                                                                         DoTransition.ELEMENT_NAME,
+                                                                         SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(Search.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                        Property.ELEMENT_NAME,
@@ -1465,8 +1859,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                        SendEmail.ELEMENT_NAME,
                                                                        SendEmailMessage.ELEMENT_NAME,
                                                                        SetPassword.ELEMENT_NAME,
-                                                                       Undelete.ELEMENT_NAME,
-                                                                       Upset.ELEMENT_NAME));
+                                                                       UnDelete.ELEMENT_NAME,
+                                                                       Upset.ELEMENT_NAME,
+                                                                       DoTransition.ELEMENT_NAME,
+                                                                       SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(SendEmail.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                           Property.ELEMENT_NAME,
@@ -1501,8 +1897,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                           SendEmail.ELEMENT_NAME,
                                                                           SendEmailMessage.ELEMENT_NAME,
                                                                           SetPassword.ELEMENT_NAME,
-                                                                          Undelete.ELEMENT_NAME,
-                                                                          Upset.ELEMENT_NAME));
+                                                                          UnDelete.ELEMENT_NAME,
+                                                                          Upset.ELEMENT_NAME,
+                                                                          DoTransition.ELEMENT_NAME,
+                                                                          SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(SendEmailMessage.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                                  Property.ELEMENT_NAME,
@@ -1537,8 +1935,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                  SendEmail.ELEMENT_NAME,
                                                                                  SendEmailMessage.ELEMENT_NAME,
                                                                                  SetPassword.ELEMENT_NAME,
-                                                                                 Undelete.ELEMENT_NAME,
-                                                                                 Upset.ELEMENT_NAME));
+                                                                                 UnDelete.ELEMENT_NAME,
+                                                                                 Upset.ELEMENT_NAME,
+                                                                                 DoTransition.ELEMENT_NAME,
+                                                                                 SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(SetPassword.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                             Property.ELEMENT_NAME,
@@ -1573,10 +1973,12 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                             SendEmail.ELEMENT_NAME,
                                                                             SendEmailMessage.ELEMENT_NAME,
                                                                             SetPassword.ELEMENT_NAME,
-                                                                            Undelete.ELEMENT_NAME,
-                                                                            Upset.ELEMENT_NAME));
+                                                                            UnDelete.ELEMENT_NAME,
+                                                                            Upset.ELEMENT_NAME,
+                                                                            DoTransition.ELEMENT_NAME,
+                                                                            SearchUser.ELEMENT_NAME));
 
-        metaModelValidator.register(Undelete.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
+        metaModelValidator.register(UnDelete.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                          Property.ELEMENT_NAME,
                                                                          PayloadFactory.ELEMENT_NAME,
                                                                          Send.ELEMENT_NAME,
@@ -1609,8 +2011,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                          SendEmail.ELEMENT_NAME,
                                                                          SendEmailMessage.ELEMENT_NAME,
                                                                          SetPassword.ELEMENT_NAME,
-                                                                         Undelete.ELEMENT_NAME,
-                                                                         Upset.ELEMENT_NAME));
+                                                                         UnDelete.ELEMENT_NAME,
+                                                                         Upset.ELEMENT_NAME,
+                                                                         DoTransition.ELEMENT_NAME,
+                                                                         SearchUser.ELEMENT_NAME));
 
         metaModelValidator.register(Upset.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                       Property.ELEMENT_NAME,
@@ -1645,8 +2049,86 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                       SendEmail.ELEMENT_NAME,
                                                                       SendEmailMessage.ELEMENT_NAME,
                                                                       SetPassword.ELEMENT_NAME,
-                                                                      Undelete.ELEMENT_NAME,
-                                                                      Upset.ELEMENT_NAME));
+                                                                      UnDelete.ELEMENT_NAME,
+                                                                      Upset.ELEMENT_NAME,
+                                                                      DoTransition.ELEMENT_NAME,
+                                                                      SearchUser.ELEMENT_NAME));
+
+        metaModelValidator.register(DoTransition.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
+                                                                             Property.ELEMENT_NAME,
+                                                                             PayloadFactory.ELEMENT_NAME,
+                                                                             Send.ELEMENT_NAME,
+                                                                             Header.ELEMENT_NAME,
+                                                                             Respond.ELEMENT_NAME,
+                                                                             Filter.ELEMENT_NAME,
+                                                                             Switch.ELEMENT_NAME,
+                                                                             Sequence.ELEMENT_NAME,
+                                                                             Enrich.ELEMENT_NAME,
+                                                                             LoopBack.ELEMENT_NAME,
+                                                                             CallTemplate.ELEMENT_NAME,
+                                                                             Call.ELEMENT_NAME,
+                                                                             Header.ELEMENT_NAME,
+                                                                             Init.ELEMENT_NAME,
+                                                                             Create.ELEMENT_NAME,
+                                                                             Update.ELEMENT_NAME,
+                                                                             Delete.ELEMENT_NAME,
+                                                                             DescribeGlobal.ELEMENT_NAME,
+                                                                             DescribeSubject.ELEMENT_NAME,
+                                                                             DescribeSubjects.ELEMENT_NAME,
+                                                                             EmptyRecycleBin.ELEMENT_NAME,
+                                                                             LogOut.ELEMENT_NAME,
+                                                                             GetUserInformation.ELEMENT_NAME,
+                                                                             Query.ELEMENT_NAME,
+                                                                             QueryAll.ELEMENT_NAME,
+                                                                             QueryMore.ELEMENT_NAME,
+                                                                             ResetPassword.ELEMENT_NAME,
+                                                                             Retrieve.ELEMENT_NAME,
+                                                                             Search.ELEMENT_NAME,
+                                                                             SendEmail.ELEMENT_NAME,
+                                                                             SendEmailMessage.ELEMENT_NAME,
+                                                                             SetPassword.ELEMENT_NAME,
+                                                                             UnDelete.ELEMENT_NAME,
+                                                                             Upset.ELEMENT_NAME,
+                                                                             DoTransition.ELEMENT_NAME,
+                                                                             SearchUser.ELEMENT_NAME));
+
+        metaModelValidator.register(SearchUser.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
+                                                                           Property.ELEMENT_NAME,
+                                                                           PayloadFactory.ELEMENT_NAME,
+                                                                           Send.ELEMENT_NAME,
+                                                                           Header.ELEMENT_NAME,
+                                                                           Respond.ELEMENT_NAME,
+                                                                           Filter.ELEMENT_NAME,
+                                                                           Switch.ELEMENT_NAME,
+                                                                           Sequence.ELEMENT_NAME,
+                                                                           Enrich.ELEMENT_NAME,
+                                                                           LoopBack.ELEMENT_NAME,
+                                                                           CallTemplate.ELEMENT_NAME,
+                                                                           Call.ELEMENT_NAME,
+                                                                           Header.ELEMENT_NAME,
+                                                                           Init.ELEMENT_NAME,
+                                                                           Create.ELEMENT_NAME,
+                                                                           Update.ELEMENT_NAME,
+                                                                           Delete.ELEMENT_NAME,
+                                                                           DescribeGlobal.ELEMENT_NAME,
+                                                                           DescribeSubject.ELEMENT_NAME,
+                                                                           DescribeSubjects.ELEMENT_NAME,
+                                                                           EmptyRecycleBin.ELEMENT_NAME,
+                                                                           LogOut.ELEMENT_NAME,
+                                                                           GetUserInformation.ELEMENT_NAME,
+                                                                           Query.ELEMENT_NAME,
+                                                                           QueryAll.ELEMENT_NAME,
+                                                                           QueryMore.ELEMENT_NAME,
+                                                                           ResetPassword.ELEMENT_NAME,
+                                                                           Retrieve.ELEMENT_NAME,
+                                                                           Search.ELEMENT_NAME,
+                                                                           SendEmail.ELEMENT_NAME,
+                                                                           SendEmailMessage.ELEMENT_NAME,
+                                                                           SetPassword.ELEMENT_NAME,
+                                                                           UnDelete.ELEMENT_NAME,
+                                                                           Upset.ELEMENT_NAME,
+                                                                           DoTransition.ELEMENT_NAME,
+                                                                           SearchUser.ELEMENT_NAME));
     }
 
     @Inject
@@ -1684,8 +2166,66 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                   Provider<SendEmail> sendEmailProvider,
                                                   Provider<SendEmailMessage> sendEmailMessageProvider,
                                                   Provider<SetPassword> setPasswordProvider,
-                                                  Provider<Undelete> undeleteProvider,
-                                                  Provider<Upset> upsetProvider) {
+                                                  Provider<UnDelete> undeleteProvider,
+                                                  Provider<Upset> upsetProvider,
+                                                  Provider<AddAttachmentToIssueId> addAttachmentToIssueIdProvider,
+                                                  Provider<CreateFilter> createFilterProvider,
+                                                  Provider<CreateIssue> createIssueProvider,
+                                                  Provider<DeleteAvatarForProject> deleteAvatarForProjectProvider,
+                                                  Provider<DeleteComment> deleteCommentProvider,
+                                                  Provider<DeleteFilter> deleteFilterProvider,
+                                                  Provider<GetDashboard> getDashboardProvider,
+                                                  Provider<DoTransition> doTransitionProvider,
+                                                  Provider<GetAvatarsForProject> getAvatarsForProjectProvider,
+                                                  Provider<GetComments> getCommentsProvider,
+                                                  Provider<GetComponentsOfProject> getComponentsOfProjectProvider,
+                                                  Provider<GetDashboardById> getDashboardByIdProvider,
+                                                  Provider<GetFavouriteFilters> getFavouriteFiltersProvider,
+                                                  Provider<GetFilterById> getFilterByIdProvider,
+                                                  Provider<GetGroup> getGroupProvider,
+                                                  Provider<GetIssue> getIssueProvider,
+                                                  Provider<GetIssuePriorities> getIssuePrioritiesProvider,
+                                                  Provider<GetIssuePriorityById> getIssuePriorityByIdProvider,
+                                                  Provider<GetIssueTypeById> getIssueTypeByIdProvider,
+                                                  Provider<GetIssueTypes> getIssueTypesProvider,
+                                                  Provider<GetIssuesForUser> getIssuesForUserProvider,
+                                                  Provider<GetProject> getProjectProvider,
+                                                  Provider<GetRolesByIdOfProject> getRolesByIdOfProjectProvider,
+                                                  Provider<GetRolesOfProject> getRolesOfProjectProvider,
+                                                  Provider<GetStatusesOfProject> getStatusesOfProjectProvider,
+                                                  Provider<GetTransitions> getTransitionsProvider,
+                                                  Provider<GetUser> getUserProvider,
+                                                  Provider<GetUserAssignableProjects> getUserAssignableProjectsProvider,
+                                                  Provider<GetUserPermissions> getUserPermissionsProvider,
+                                                  Provider<GetVersionsOfProject> getVersionsOfProjectProvider,
+                                                  Provider<GetVotesForIssue> getVotesForIssueProvider,
+                                                  Provider<InitJira> initJiraProvider,
+                                                  Provider<PostComment> postCommentProvider,
+                                                  Provider<SearchAssignableUser> searchAssignableUserProvider,
+                                                  Provider<SearchAssignableUserMultiProject> searchAssignableUserMultiProjectProvider,
+                                                  Provider<SearchIssueViewableUsers> searchIssueViewableUsersProvider,
+                                                  Provider<SearchJira> searchJiraProvider,
+                                                  Provider<SearchUser> searchUserProvider,
+                                                  Provider<SetActorsToRoleOfProject> setActorsToRoleOfProjectProvider,
+                                                  Provider<UpdateComment> updateCommentProvider,
+                                                  Provider<UpdateFilterById> updateFilterByIdProvider,
+                                                  Provider<UpdateIssue> updateIssueProvider,
+                                                  Provider<UpdateIssueAssignee> updateIssueAssigneeProvider,
+                                                  Provider<DestroyStatus> destroyStatusProvider,
+                                                  Provider<GetClosesTrends> getClosesTrendsProvider,
+                                                  Provider<GetDirectMessages> getDirectMessagesProvider,
+                                                  Provider<GetFollowers> getFollowersProvider,
+                                                  Provider<GetFollowersIds> getFollowersIdsProvider,
+                                                  Provider<GetFriends> getFriendsProvider,
+                                                  Provider<GetFriendsIds> getFriendsIdsProvider,
+                                                  Provider<GetHomeTimeLine> getHomeTimeLineProvider,
+                                                  Provider<GetMentionsTimeLine> getMentionsTimeLineProvider,
+                                                  Provider<GetRetweetsOfMine> getRetweetsOfMineProvider,
+                                                  Provider<GetSentDirectMessages> getSentDirectMessagesProvider,
+                                                  Provider<GetTopTrendPlaces> getTopTrendPlacesProvider,
+                                                  Provider<GetUserTimeLine> getUserTimeLineProvider,
+                                                  Provider<InitTwitter> initTwitterProvider) {
+
 
         mediatorCreatorsManager.register(Log.ELEMENT_NAME, Log.SERIALIZATION_NAME, State.CREATING_LOG, logProvider);
 
@@ -1820,8 +2360,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                          State.CREATING_SALESFORCE_SET_PASSWORD,
                                          setPasswordProvider);
 
-        mediatorCreatorsManager.register(Undelete.ELEMENT_NAME,
-                                         Undelete.SERIALIZATION_NAME,
+        mediatorCreatorsManager.register(UnDelete.ELEMENT_NAME,
+                                         UnDelete.SERIALIZATION_NAME,
                                          State.CREATING_SALESFORCE_UNDELETE,
                                          undeleteProvider);
 
@@ -1829,6 +2369,291 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                          Upset.SERIALIZATION_NAME,
                                          State.CREATING_SALESFORCE_UPSET,
                                          upsetProvider);
+
+        mediatorCreatorsManager.register(AddAttachmentToIssueId.ELEMENT_NAME,
+                                         AddAttachmentToIssueId.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_ADD_ATTACHMENT_TO_ISSUE_ID,
+                                         addAttachmentToIssueIdProvider);
+
+        mediatorCreatorsManager.register(CreateFilter.ELEMENT_NAME,
+                                         CreateFilter.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_CREATE_FILTER,
+                                         createFilterProvider);
+
+        mediatorCreatorsManager.register(CreateIssue.ELEMENT_NAME,
+                                         CreateIssue.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_CREATE_ISSUE,
+                                         createIssueProvider);
+
+        mediatorCreatorsManager.register(DeleteAvatarForProject.ELEMENT_NAME,
+                                         DeleteAvatarForProject.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_DELETE_AVATAR_FOR_PROJECT,
+                                         deleteAvatarForProjectProvider);
+
+        mediatorCreatorsManager.register(DeleteComment.ELEMENT_NAME,
+                                         DeleteComment.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_DELETE_COMMENT,
+                                         deleteCommentProvider);
+
+        mediatorCreatorsManager.register(DeleteFilter.ELEMENT_NAME,
+                                         DeleteFilter.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_DELETE_FILTER,
+                                         deleteFilterProvider);
+
+        mediatorCreatorsManager.register(GetDashboard.ELEMENT_NAME,
+                                         GetDashboard.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_DASHBOARD,
+                                         getDashboardProvider);
+
+        mediatorCreatorsManager.register(DoTransition.ELEMENT_NAME,
+                                         DoTransition.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_DO_TRANSITION,
+                                         doTransitionProvider);
+
+        mediatorCreatorsManager.register(GetAvatarsForProject.ELEMENT_NAME,
+                                         GetAvatarsForProject.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_AVATARS_FOR_PROJECT,
+                                         getAvatarsForProjectProvider);
+
+        mediatorCreatorsManager.register(GetComments.ELEMENT_NAME,
+                                         GetComments.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_COMMENTS,
+                                         getCommentsProvider);
+
+        mediatorCreatorsManager.register(GetComponentsOfProject.ELEMENT_NAME,
+                                         GetComponentsOfProject.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_COMPONENTS_OF_PROJECT,
+                                         getComponentsOfProjectProvider);
+
+        mediatorCreatorsManager.register(GetDashboardById.ELEMENT_NAME,
+                                         GetDashboardById.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_DASHBOARD_BY_ID,
+                                         getDashboardByIdProvider);
+
+        mediatorCreatorsManager.register(GetFavouriteFilters.ELEMENT_NAME,
+                                         GetFavouriteFilters.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_FAVOURITE_FILTERS,
+                                         getFavouriteFiltersProvider);
+
+        mediatorCreatorsManager.register(GetFilterById.ELEMENT_NAME,
+                                         GetFilterById.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_FILTER_BY_ID,
+                                         getFilterByIdProvider);
+
+        mediatorCreatorsManager.register(GetGroup.ELEMENT_NAME,
+                                         GetGroup.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_GROUP,
+                                         getGroupProvider);
+
+        mediatorCreatorsManager.register(GetIssue.ELEMENT_NAME,
+                                         GetIssue.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_ISSUE,
+                                         getIssueProvider);
+
+        mediatorCreatorsManager.register(GetIssuePriorities.ELEMENT_NAME,
+                                         GetIssuePriorities.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_ISSUE_PRIORITIES,
+                                         getIssuePrioritiesProvider);
+
+        mediatorCreatorsManager.register(GetIssuePriorityById.ELEMENT_NAME,
+                                         GetIssuePriorityById.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_ISSUE_PRIORITY_BY_ID,
+                                         getIssuePriorityByIdProvider);
+
+        mediatorCreatorsManager.register(GetIssueTypeById.ELEMENT_NAME,
+                                         GetIssueTypeById.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_ISSUE_TYPE_BY_ID,
+                                         getIssueTypeByIdProvider);
+
+        mediatorCreatorsManager.register(GetIssueTypes.ELEMENT_NAME,
+                                         GetIssueTypes.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_ISSUE_TYPES,
+                                         getIssueTypesProvider);
+
+        mediatorCreatorsManager.register(GetIssuesForUser.ELEMENT_NAME,
+                                         GetIssuesForUser.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_ISSUES_FOR_USER,
+                                         getIssuesForUserProvider);
+
+        mediatorCreatorsManager.register(GetProject.ELEMENT_NAME,
+                                         GetProject.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_PROJECT,
+                                         getProjectProvider);
+
+        mediatorCreatorsManager.register(GetRolesByIdOfProject.ELEMENT_NAME,
+                                         GetRolesByIdOfProject.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_ROLES_BY_ID_OF_PROJECT,
+                                         getRolesByIdOfProjectProvider);
+
+        mediatorCreatorsManager.register(GetRolesOfProject.ELEMENT_NAME,
+                                         GetRolesOfProject.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_ROLES_OF_PROJECT,
+                                         getRolesOfProjectProvider);
+
+        mediatorCreatorsManager.register(GetStatusesOfProject.ELEMENT_NAME,
+                                         GetStatusesOfProject.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_STATUSES_OF_PROJECT,
+                                         getStatusesOfProjectProvider);
+
+        mediatorCreatorsManager.register(GetTransitions.ELEMENT_NAME,
+                                         GetTransitions.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_TRANSITIONS,
+                                         getTransitionsProvider);
+
+        mediatorCreatorsManager.register(GetUser.ELEMENT_NAME,
+                                         GetUser.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_USER,
+                                         getUserProvider);
+
+        mediatorCreatorsManager.register(GetUserAssignableProjects.ELEMENT_NAME,
+                                         GetUserAssignableProjects.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_USER_ASSIGNABLE_PROJECT,
+                                         getUserAssignableProjectsProvider);
+
+        mediatorCreatorsManager.register(GetUserPermissions.ELEMENT_NAME,
+                                         GetUserPermissions.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_USER_PERMISSIONS,
+                                         getUserPermissionsProvider);
+
+        mediatorCreatorsManager.register(GetVersionsOfProject.ELEMENT_NAME,
+                                         GetVersionsOfProject.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_VERSIONS_OF_PROJECT,
+                                         getVersionsOfProjectProvider);
+
+        mediatorCreatorsManager.register(GetVotesForIssue.ELEMENT_NAME,
+                                         GetVotesForIssue.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_GET_VOTES_FOR_ISSUE,
+                                         getVotesForIssueProvider);
+
+        mediatorCreatorsManager.register(InitJira.ELEMENT_NAME,
+                                         InitJira.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_INIT,
+                                         initJiraProvider);
+
+        mediatorCreatorsManager.register(PostComment.ELEMENT_NAME,
+                                         PostComment.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_POST_COMMENT,
+                                         postCommentProvider);
+
+        mediatorCreatorsManager.register(SearchAssignableUser.ELEMENT_NAME,
+                                         SearchAssignableUser.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_SEARCH_ASSIGNABLE_USER,
+                                         searchAssignableUserProvider);
+
+        mediatorCreatorsManager.register(SearchAssignableUserMultiProject.ELEMENT_NAME,
+                                         SearchAssignableUserMultiProject.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_SEARCH_ASSIGNABLE_USER_MULTI_PROJECT,
+                                         searchAssignableUserMultiProjectProvider);
+
+        mediatorCreatorsManager.register(SearchIssueViewableUsers.ELEMENT_NAME,
+                                         SearchIssueViewableUsers.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_SEARCH_ISSUE_VIEWABLE_USERS,
+                                         searchIssueViewableUsersProvider);
+
+        mediatorCreatorsManager.register(SearchJira.ELEMENT_NAME,
+                                         SearchJira.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_SEARCH_JIRA,
+                                         searchJiraProvider);
+
+        mediatorCreatorsManager.register(SearchUser.ELEMENT_NAME,
+                                         SearchUser.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_SEARCH_USER,
+                                         searchUserProvider);
+
+        mediatorCreatorsManager.register(SetActorsToRoleOfProject.ELEMENT_NAME,
+                                         SetActorsToRoleOfProject.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_SET_ACTORS_TO_ROLE_OF_PROJECT,
+                                         setActorsToRoleOfProjectProvider);
+
+        mediatorCreatorsManager.register(UpdateComment.ELEMENT_NAME,
+                                         UpdateComment.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_UPDATE_COMMENT,
+                                         updateCommentProvider);
+
+        mediatorCreatorsManager.register(UpdateFilterById.ELEMENT_NAME,
+                                         UpdateFilterById.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_UPDATE_FILTER_BY_ID,
+                                         updateFilterByIdProvider);
+
+        mediatorCreatorsManager.register(UpdateIssue.ELEMENT_NAME,
+                                         UpdateIssue.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_UPDATE_ISSUE,
+                                         updateIssueProvider);
+
+        mediatorCreatorsManager.register(UpdateIssueAssignee.ELEMENT_NAME,
+                                         UpdateIssueAssignee.SERIALIZATION_NAME,
+                                         State.CREATING_JIRA_UPDATE_ISSUE_ASSIGNEE,
+                                         updateIssueAssigneeProvider);
+
+        mediatorCreatorsManager.register(DestroyStatus.ELEMENT_NAME,
+                                         DestroyStatus.SERIALIZATION_NAME,
+                                         State.CREATING_TWITTER_DESTROY_STATUS,
+                                         destroyStatusProvider);
+
+        mediatorCreatorsManager.register(GetClosesTrends.ELEMENT_NAME,
+                                         GetClosesTrends.SERIALIZATION_NAME,
+                                         State.CREATING_TWITTER_GET_CLOTHES_TRENDS,
+                                         getClosesTrendsProvider);
+
+        mediatorCreatorsManager.register(GetDirectMessages.ELEMENT_NAME,
+                                         GetDirectMessages.SERIALIZATION_NAME,
+                                         State.CREATING_TWITTER_GET_DIRECT_MESSAGES,
+                                         getDirectMessagesProvider);
+
+        mediatorCreatorsManager.register(GetFollowers.ELEMENT_NAME,
+                                         GetFollowers.SERIALIZATION_NAME,
+                                         State.CREATING_TWITTER_GET_FOLLOWERS,
+                                         getFollowersProvider);
+
+        mediatorCreatorsManager.register(GetFollowersIds.ELEMENT_NAME,
+                                         GetFollowersIds.SERIALIZATION_NAME,
+                                         State.CREATING_TWITTER_GET_FOLLOWERS_IDS,
+                                         getFollowersIdsProvider);
+
+        mediatorCreatorsManager.register(GetFriends.ELEMENT_NAME,
+                                         GetFriends.SERIALIZATION_NAME,
+                                         State.CREATING_TWITTER_GET_FRIENDS,
+                                         getFriendsProvider);
+
+        mediatorCreatorsManager.register(GetFriendsIds.ELEMENT_NAME,
+                                         GetFriendsIds.SERIALIZATION_NAME,
+                                         State.CREATING_TWITTER_GET_FRIENDS_IDS,
+                                         getFriendsIdsProvider);
+
+        mediatorCreatorsManager.register(GetHomeTimeLine.ELEMENT_NAME,
+                                         GetHomeTimeLine.SERIALIZATION_NAME,
+                                         State.CREATING_TWITTER_GET_HOME_TIME_LINE,
+                                         getHomeTimeLineProvider);
+
+        mediatorCreatorsManager.register(GetMentionsTimeLine.ELEMENT_NAME,
+                                         GetMentionsTimeLine.SERIALIZATION_NAME,
+                                         State.CREATING_TWITTER_GET_MENTIONS_TIME_LINE,
+                                         getMentionsTimeLineProvider);
+
+        mediatorCreatorsManager.register(GetRetweetsOfMine.ELEMENT_NAME,
+                                         GetRetweetsOfMine.SERIALIZATION_NAME,
+                                         State.CREATING_TWITTER_GET_RETWEETS_OF_MINE,
+                                         getRetweetsOfMineProvider);
+
+        mediatorCreatorsManager.register(GetSentDirectMessages.ELEMENT_NAME,
+                                         GetSentDirectMessages.SERIALIZATION_NAME,
+                                         State.CREATING_TWITTER_GET_SENT_DIRECT_MESSAGE,
+                                         getSentDirectMessagesProvider);
+
+        mediatorCreatorsManager.register(GetTopTrendPlaces.ELEMENT_NAME,
+                                         GetTopTrendPlaces.SERIALIZATION_NAME,
+                                         State.CREATING_TWITTER_GET_TOP_TREND_PLACES,
+                                         getTopTrendPlacesProvider);
+
+        mediatorCreatorsManager.register(GetUserTimeLine.ELEMENT_NAME,
+                                         GetUserTimeLine.SERIALIZATION_NAME,
+                                         State.CREATING_TWITTER_GET_USER_TIME_LINE,
+                                         getUserTimeLineProvider);
+
+        mediatorCreatorsManager.register(InitTwitter.ELEMENT_NAME,
+                                         InitTwitter.SERIALIZATION_NAME,
+                                         State.CREATING_TWITTER_INIT,
+                                         initTwitterProvider);
     }
 
     /** {@inheritDoc} */

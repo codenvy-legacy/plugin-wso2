@@ -34,7 +34,7 @@ import com.codenvy.ide.client.elements.connectors.salesforce.Search;
 import com.codenvy.ide.client.elements.connectors.salesforce.SendEmail;
 import com.codenvy.ide.client.elements.connectors.salesforce.SendEmailMessage;
 import com.codenvy.ide.client.elements.connectors.salesforce.SetPassword;
-import com.codenvy.ide.client.elements.connectors.salesforce.Undelete;
+import com.codenvy.ide.client.elements.connectors.salesforce.UnDelete;
 import com.codenvy.ide.client.elements.connectors.salesforce.Update;
 import com.codenvy.ide.client.elements.connectors.salesforce.Upset;
 import com.codenvy.ide.client.elements.enrich.Enrich;
@@ -121,7 +121,7 @@ public class Switch extends AbstractShape {
                                                                  SendEmail.ELEMENT_NAME,
                                                                  SendEmailMessage.ELEMENT_NAME,
                                                                  SetPassword.ELEMENT_NAME,
-                                                                 Undelete.ELEMENT_NAME,
+                                                                 UnDelete.ELEMENT_NAME,
                                                                  Upset.ELEMENT_NAME);
 
     private String           sourceXpath;
@@ -231,7 +231,7 @@ public class Switch extends AbstractShape {
         Map<String, String> attributes = new LinkedHashMap<>();
         attributes.put(SOURCE_ATTRIBUTE_NAME, sourceXpath);
 
-        return spaces + convertPropertiesToXMLFormat(attributes);
+        return spaces + convertAttributesToXMLFormat(attributes);
     }
 
     /** {@inheritDoc} */
