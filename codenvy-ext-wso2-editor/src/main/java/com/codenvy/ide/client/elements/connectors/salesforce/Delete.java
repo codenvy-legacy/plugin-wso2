@@ -39,6 +39,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * restore the condition of the element when you open ESB project after saving.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class Delete extends AbstractConnector {
 
@@ -93,7 +94,7 @@ public class Delete extends AbstractConnector {
 
     /** {@inheritDoc} */
     @Override
-    public void applyProperty(@Nonnull Node node) {
+    protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 

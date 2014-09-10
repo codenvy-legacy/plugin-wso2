@@ -78,7 +78,7 @@ public class DescribeSubject extends AbstractConnector {
 
     /** {@inheritDoc} */
     @Override
-    public void applyProperty(@Nonnull Node node) {
+    protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
         boolean isInline = Inline.equals(parameterEditorType);
