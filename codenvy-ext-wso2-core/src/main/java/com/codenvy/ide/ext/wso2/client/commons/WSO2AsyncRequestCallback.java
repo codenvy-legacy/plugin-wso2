@@ -1,11 +1,11 @@
 /*
  * Copyright 2014 Codenvy, S.A.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache  License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,6 +26,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * Class to receive a response from a remote procedure call.
  *
  * @author Valeriy Svydenko
+ * @author Andrey Plotnikov
  */
 public abstract class WSO2AsyncRequestCallback<T> extends AsyncRequestCallback<T> {
     private NotificationManager notificationManager;
@@ -42,7 +43,6 @@ public abstract class WSO2AsyncRequestCallback<T> extends AsyncRequestCallback<T
     /** {@inheritDoc} */
     @Override
     protected void onFailure(Throwable exception) {
-        Notification notification = new Notification(exception.getMessage(), ERROR);
-        notificationManager.showNotification(notification);
+        notificationManager.showNotification(new Notification(exception.getMessage(), ERROR));
     }
 }

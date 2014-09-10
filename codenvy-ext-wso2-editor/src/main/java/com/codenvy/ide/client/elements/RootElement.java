@@ -1,11 +1,11 @@
 /*
  * Copyright 2014 Codenvy, S.A.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache  License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,32 +17,19 @@ package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.common.ContentFormatter;
-import com.codenvy.ide.client.elements.connectors.jira.DoTransition;
-import com.codenvy.ide.client.elements.connectors.jira.SearchUser;
-import com.codenvy.ide.client.elements.connectors.salesforce.Create;
-import com.codenvy.ide.client.elements.connectors.salesforce.Delete;
-import com.codenvy.ide.client.elements.connectors.salesforce.DescribeGlobal;
-import com.codenvy.ide.client.elements.connectors.salesforce.DescribeSubject;
-import com.codenvy.ide.client.elements.connectors.salesforce.DescribeSubjects;
-import com.codenvy.ide.client.elements.connectors.salesforce.EmptyRecycleBin;
-import com.codenvy.ide.client.elements.connectors.salesforce.GetUserInformation;
-import com.codenvy.ide.client.elements.connectors.salesforce.Init;
-import com.codenvy.ide.client.elements.connectors.salesforce.LogOut;
-import com.codenvy.ide.client.elements.connectors.salesforce.Query;
-import com.codenvy.ide.client.elements.connectors.salesforce.QueryAll;
-import com.codenvy.ide.client.elements.connectors.salesforce.QueryMore;
-import com.codenvy.ide.client.elements.connectors.salesforce.ResetPassword;
-import com.codenvy.ide.client.elements.connectors.salesforce.Retrieve;
-import com.codenvy.ide.client.elements.connectors.salesforce.Search;
-import com.codenvy.ide.client.elements.connectors.salesforce.SendEmail;
-import com.codenvy.ide.client.elements.connectors.salesforce.SendEmailMessage;
-import com.codenvy.ide.client.elements.connectors.salesforce.SetPassword;
-import com.codenvy.ide.client.elements.connectors.salesforce.UnDelete;
-import com.codenvy.ide.client.elements.connectors.salesforce.Update;
-import com.codenvy.ide.client.elements.connectors.salesforce.Upset;
-import com.codenvy.ide.client.elements.enrich.Enrich;
-import com.codenvy.ide.client.elements.log.Log;
-import com.codenvy.ide.client.elements.payload.PayloadFactory;
+import com.codenvy.ide.client.elements.mediators.Call;
+import com.codenvy.ide.client.elements.mediators.CallTemplate;
+import com.codenvy.ide.client.elements.mediators.Filter;
+import com.codenvy.ide.client.elements.mediators.Header;
+import com.codenvy.ide.client.elements.mediators.LoopBack;
+import com.codenvy.ide.client.elements.mediators.Property;
+import com.codenvy.ide.client.elements.mediators.Respond;
+import com.codenvy.ide.client.elements.mediators.Send;
+import com.codenvy.ide.client.elements.mediators.Sequence;
+import com.codenvy.ide.client.elements.mediators.Switch;
+import com.codenvy.ide.client.elements.mediators.enrich.Enrich;
+import com.codenvy.ide.client.elements.mediators.log.Log;
+import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
@@ -50,7 +37,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -66,7 +52,7 @@ import java.util.Map;
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
-public class RootElement extends AbstractShape {
+public class RootElement extends AbstractElement {
     public static final String ELEMENT_NAME       = "RootElement";
     public static final String SERIALIZATION_NAME = "sequence";
 
@@ -77,43 +63,6 @@ public class RootElement extends AbstractShape {
     private static final String ON_ERROR_ATTRIBUTE_NAME = "onError";
 
     private static final List<String> PROPERTIES = Collections.emptyList();
-    private static final List<String> COMPONENTS = Arrays.asList(Log.ELEMENT_NAME,
-                                                                 Property.ELEMENT_NAME,
-                                                                 PayloadFactory.ELEMENT_NAME,
-                                                                 Send.ELEMENT_NAME,
-                                                                 Header.ELEMENT_NAME,
-                                                                 Respond.ELEMENT_NAME,
-                                                                 Filter.ELEMENT_NAME,
-                                                                 Switch.ELEMENT_NAME,
-                                                                 Sequence.ELEMENT_NAME,
-                                                                 Enrich.ELEMENT_NAME,
-                                                                 LoopBack.ELEMENT_NAME,
-                                                                 CallTemplate.ELEMENT_NAME,
-                                                                 Call.ELEMENT_NAME,
-                                                                 Init.ELEMENT_NAME,
-                                                                 Create.ELEMENT_NAME,
-                                                                 Delete.ELEMENT_NAME,
-                                                                 Update.ELEMENT_NAME,
-                                                                 DescribeGlobal.ELEMENT_NAME,
-                                                                 DescribeSubject.ELEMENT_NAME,
-                                                                 DescribeSubjects.ELEMENT_NAME,
-                                                                 Update.ELEMENT_NAME,
-                                                                 EmptyRecycleBin.ELEMENT_NAME,
-                                                                 LogOut.ELEMENT_NAME,
-                                                                 GetUserInformation.ELEMENT_NAME,
-                                                                 Query.ELEMENT_NAME,
-                                                                 QueryAll.ELEMENT_NAME,
-                                                                 QueryMore.ELEMENT_NAME,
-                                                                 ResetPassword.ELEMENT_NAME,
-                                                                 Retrieve.ELEMENT_NAME,
-                                                                 Search.ELEMENT_NAME,
-                                                                 SendEmail.ELEMENT_NAME,
-                                                                 SendEmailMessage.ELEMENT_NAME,
-                                                                 SetPassword.ELEMENT_NAME,
-                                                                 UnDelete.ELEMENT_NAME,
-                                                                 Upset.ELEMENT_NAME,
-                                                                 DoTransition.ELEMENT_NAME,
-                                                                 SearchUser.ELEMENT_NAME);
 
     private String name;
     private String onError;
@@ -124,8 +73,6 @@ public class RootElement extends AbstractShape {
 
         this.name = "";
         this.onError = "";
-
-        components.addAll(COMPONENTS);
 
         branches.add(branchProvider.get());
     }

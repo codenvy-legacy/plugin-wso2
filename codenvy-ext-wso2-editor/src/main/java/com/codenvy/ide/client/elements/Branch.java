@@ -1,11 +1,11 @@
 /*
  * Copyright 2014 Codenvy, S.A.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache  License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,28 +15,59 @@
  */
 package com.codenvy.ide.client.elements;
 
+import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.util.StringUtils;
+import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
-import com.google.inject.ImplementedBy;
+import com.google.gwt.xml.client.NodeList;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The entity that represents a diagram element branch. It can have different state. It depends on a mediator. It can be a 'Case' branch of
- * Switch mediator or 'Then' branch of Filter mediator and etc.
+ * Switch mediator or 'Then' branch of Filter mediator and etc. Contains a business logic for changing, serialization, deserialization of
+ * element which is a branch.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
-@ImplementedBy(BranchImpl.class)
-public interface Branch {
+public class Branch {
+
+    private final String                  id;
+    private final List<AbstractElement>   elements;
+    private final Map<String, String>     attributes;
+    private final MediatorCreatorsManager mediatorCreatorsManager;
+
+    private String  title;
+    private String  name;
+    private Element parent;
+
+    @Inject
+    public Branch(MediatorCreatorsManager mediatorCreatorsManager) {
+        this.mediatorCreatorsManager = mediatorCreatorsManager;
+
+        id = UUID.get();
+
+        elements = new ArrayList<>();
+        attributes = new LinkedHashMap<>();
+    }
 
     /**
      * @return an unique branch identifier. All instances of branches will have an unique identifier. This means that anyone can find
      * needed branch.
      */
     @Nonnull
-    String getId();
+    public String getId() {
+        return id;
+    }
 
     /**
      * Set name of branch. The name will be used for serialization and deserialization like a identifier of the branch.
@@ -44,11 +75,15 @@ public interface Branch {
      * @param name
      *         name that needs to be set
      */
-    void setName(@Nullable String name);
+    public void setName(@Nullable String name) {
+        this.name = name;
+    }
 
     /** @return title of the branch */
     @Nullable
-    String getTitle();
+    public String getTitle() {
+        return title;
+    }
 
     /**
      * Set title of the branch. Te title will be shown in the widget.
@@ -56,11 +91,15 @@ public interface Branch {
      * @param title
      *         title that needs to be set
      */
-    void setTitle(@Nullable String title);
+    public void setTitle(@Nullable String title) {
+        this.title = title;
+    }
 
     /** @return parent of the branch */
     @Nullable
-    Shape getParent();
+    public Element getParent() {
+        return parent;
+    }
 
     /**
      * Set parent of branch.
@@ -68,34 +107,78 @@ public interface Branch {
      * @param parent
      *         parent that needs to be added
      */
-    void setParent(@Nullable Shape parent);
+    public void setParent(@Nullable Element parent) {
+        this.parent = parent;
+    }
 
     /**
-     * Add an inner shape into this one shape.
+     * Add an inner element into this one element.
      *
-     * @param shape
-     *         shape that need to be added
+     * @param element
+     *         element that need to be added
      */
-    void addShape(@Nonnull Shape shape);
+    public void addElement(@Nonnull Element element) {
+        elements.add((AbstractElement)element);
+    }
 
     /**
-     * Remove a inner shape from this one shape.
+     * Remove a inner element from this one element.
      *
-     * @param shape
-     *         shape that need to be removed
+     * @param element
+     *         element that need to be removed
      */
-    void removeShape(@Nonnull Shape shape);
+    @SuppressWarnings("SuspiciousMethodCalls")
+    public void removeElement(@Nonnull Element element) {
+        elements.remove(element);
+    }
 
-    /** @return a list of inner shapes */
+    /** @return a list of inner elements */
     @Nonnull
-    List<Shape> getShapes();
+    public List<Element> getElements() {
+        Collections.sort(elements);
 
-    /** @return true if branch has shapes */
-    boolean hasShape();
+        List<Element> result = new ArrayList<>();
+        result.addAll(elements);
+
+        return result;
+    }
+
+    /** @return true if branch has elements */
+    public boolean hasElements() {
+        return !elements.isEmpty();
+    }
 
     /** @return serialized representation of the branch */
     @Nonnull
-    String serialize();
+    public String serialize() {
+        StringBuilder content = new StringBuilder();
+
+        if (name != null) {
+            content.append('<').append(name).append(' ').append(convertAttributesToXML()).append('>');
+        }
+
+        for (Element element : getElements()) {
+            content.append(element.serialize());
+        }
+
+        if (name != null) {
+            content.append("</").append(name).append('>');
+        }
+
+        return content.toString();
+    }
+
+    /** @return xml representation of attributes of element */
+    @Nonnull
+    private String convertAttributesToXML() {
+        StringBuilder result = new StringBuilder();
+
+        for (Map.Entry<String, String> attribute : attributes.entrySet()) {
+            result.append(attribute.getKey()).append("=\"").append(attribute.getValue()).append("\" ");
+        }
+
+        return result.toString();
+    }
 
     /**
      * Deserialize branch.
@@ -103,7 +186,48 @@ public interface Branch {
      * @param node
      *         XML node that need to be deserialized
      */
-    void deserialize(@Nonnull Node node);
+    public void deserialize(@Nonnull Node node) {
+        String name = node.getNodeName();
+        NodeList childNodes = node.getChildNodes();
+
+        this.name = name;
+        this.title = StringUtils.capitalizeFirstLetter(name);
+
+        deserializeAttributes(node);
+
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node item = childNodes.item(i);
+            String nodeName = item.getNodeName();
+
+            Provider<? extends Element> elementProvider = mediatorCreatorsManager.getProviderBySerializeName(nodeName);
+            Element element = elementProvider == null ? null : elementProvider.get();
+
+            if (element == null) {
+                continue;
+            }
+
+            element.deserialize(item);
+            elements.add((AbstractElement)element);
+        }
+    }
+
+    /**
+     * Deserialize attributes of current node.
+     *
+     * @param node
+     *         XML node that need to be deserialized
+     */
+    private void deserializeAttributes(@Nonnull Node node) {
+        attributes.clear();
+
+        NamedNodeMap attributeMap = node.getAttributes();
+
+        for (int i = 0; i < attributeMap.getLength(); i++) {
+            Node attributeNode = attributeMap.item(i);
+
+            attributes.put(attributeNode.getNodeName(), attributeNode.getNodeValue());
+        }
+    }
 
     /**
      * Adds XML attribute.
@@ -113,7 +237,9 @@ public interface Branch {
      * @param value
      *         attribute value
      */
-    void addAttribute(@Nonnull String name, @Nonnull String value);
+    public void addAttribute(@Nonnull String name, @Nonnull String value) {
+        attributes.put(name, value);
+    }
 
     /**
      * Returns attribute value by attribute name or <code>null</code> when attribute with a given name is absent.
@@ -123,6 +249,8 @@ public interface Branch {
      * @return attribute value
      */
     @Nullable
-    String getAttributeByName(@Nonnull String name);
+    public String getAttributeByName(@Nonnull String name) {
+        return attributes.get(name);
+    }
 
 }

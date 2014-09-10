@@ -1,11 +1,11 @@
 /*
  * Copyright 2014 Codenvy, S.A.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache  License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,8 +17,8 @@ package com.codenvy.ide.client.propertiespanel.property;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.Property;
-import com.codenvy.ide.client.elements.ValueType;
+import com.codenvy.ide.client.elements.mediators.Property;
+import com.codenvy.ide.client.elements.mediators.ValueType;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
@@ -30,10 +30,10 @@ import com.google.inject.Inject;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.codenvy.ide.client.elements.Property.Action;
-import static com.codenvy.ide.client.elements.Property.DataType;
-import static com.codenvy.ide.client.elements.Property.Scope;
-import static com.codenvy.ide.client.elements.ValueType.EXPRESSION;
+import static com.codenvy.ide.client.elements.mediators.Property.Action;
+import static com.codenvy.ide.client.elements.mediators.Property.DataType;
+import static com.codenvy.ide.client.elements.mediators.Property.Scope;
+import static com.codenvy.ide.client.elements.mediators.ValueType.EXPRESSION;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of Property mediator

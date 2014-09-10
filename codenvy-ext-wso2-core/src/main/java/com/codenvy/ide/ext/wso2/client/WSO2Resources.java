@@ -1,11 +1,11 @@
 /*
  * Copyright 2014 Codenvy, S.A.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache  License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,70 +31,16 @@ import com.google.inject.Singleton;
 @Singleton
 public interface WSO2Resources extends ClientBundle {
 
-    // TODO: Remove inheritance of ModelWidgetCSS and add inheritance to GMMFResources
     public interface WSO2Style extends CssResource {
 
         String importErrorFont();
 
-        String graphicContainer();
-
-        String wso2PropertyPanelTitle();
-
-        String wso2PropertyPanel();
-
-        String loadingPanel();
-
-        String toolbar();
-
-        String modelWidget();
-
-        String tool();
-
-        String statusToolContainer();
-
-        String selected();
-
-        String pauseLabel();
-
-        String connectedUsers();
-
-        String expand();
-
-        String distributeHorizontal();
-
-        String statusTool();
-
-        String savingLabel();
-
-        String changeModeAnchor();
-
-        String alignVerticalCenters();
-
-        String alignBottomEdges();
-
-        String toolSeparator();
-
-        String distributeVertical();
-
-        String shareButton();
-
-        String alignTopEdges();
-
-        String alignRightEdges();
-
-        String alignLeftEdges();
-
-        String alignHorizontalCenters();
-
-        String statusBar();
-
-        String statusToolSeparator();
     }
 
     @Source("esb.xsd")
     TextResource xmlSchemaDefinition();
 
-    @Source({"WSO2GlobalStyle.css", "WSO2ModelWidgetStyle.css"})
+    @Source({"WSO2GlobalStyle.css"})
     WSO2Style wso2Style();
 
     @Source("xml.js")
@@ -156,32 +102,5 @@ public interface WSO2Resources extends ClientBundle {
 
     @Source("icons/synapse-icon.png")
     ImageResource synapseIcon();
-
-    /* We should find a better solution to reuse the WorkspaceCSS
-     * It implied a refactory, working on it (29-01-2014)
-     */
-    @Source("icons/align-top-edges.png")
-    ImageResource alignTopEdgesIcon();
-
-    @Source("icons/align-vertical-centers.png")
-    ImageResource alignVerticalCentersIcon();
-
-    @Source("icons/align-bottom-edges.png")
-    ImageResource alignBottomEdgesIcon();
-
-    @Source("icons/align-left-edges.png")
-    ImageResource alignLeftEdgesIcon();
-
-    @Source("icons/align-horizontal-centers.png")
-    ImageResource alignHorizontalCentersIcon();
-
-    @Source("icons/align-right-edges.png")
-    ImageResource alignRightEdgesIcon();
-
-    @Source("icons/distribute-vertical.png")
-    ImageResource distributeVerticalIcon();
-
-    @Source("icons/distribute-horizontal.png")
-    ImageResource distributeHorizontalIcon();
 
 }

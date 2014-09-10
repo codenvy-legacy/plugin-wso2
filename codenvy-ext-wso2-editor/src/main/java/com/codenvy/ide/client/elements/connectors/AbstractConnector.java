@@ -1,11 +1,11 @@
 /*
  * Copyright 2014 Codenvy, S.A.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache  License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,7 @@
 package com.codenvy.ide.client.elements.connectors;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.elements.AbstractShape;
+import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.google.gwt.resources.client.ImageResource;
@@ -35,8 +35,9 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * element after saving also is same for all SalesForce connectors .
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
-public class AbstractConnector extends AbstractShape {
+public class AbstractConnector extends AbstractElement {
 
     public static final String CONFIG_REF = "configRef";
 

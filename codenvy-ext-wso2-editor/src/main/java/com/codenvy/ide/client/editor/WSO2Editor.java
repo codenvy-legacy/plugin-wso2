@@ -1,11 +1,11 @@
 /*
  * Copyright 2014 Codenvy, S.A.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache  License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,21 +16,16 @@
 package com.codenvy.ide.client.editor;
 
 import com.codenvy.ide.client.EditorState;
-import com.codenvy.ide.client.MetaModelValidator;
 import com.codenvy.ide.client.State;
-import com.codenvy.ide.client.elements.Call;
-import com.codenvy.ide.client.elements.CallTemplate;
-import com.codenvy.ide.client.elements.Filter;
-import com.codenvy.ide.client.elements.Header;
-import com.codenvy.ide.client.elements.LoopBack;
-import com.codenvy.ide.client.elements.Property;
-import com.codenvy.ide.client.elements.Respond;
 import com.codenvy.ide.client.elements.RootElement;
-import com.codenvy.ide.client.elements.Send;
-import com.codenvy.ide.client.elements.Sequence;
-import com.codenvy.ide.client.elements.Switch;
-import com.codenvy.ide.client.elements.ValueType;
-import com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint;
+import com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint;
+import com.codenvy.ide.client.elements.mediators.Call;
+import com.codenvy.ide.client.elements.mediators.CallTemplate;
+import com.codenvy.ide.client.elements.mediators.Filter;
+import com.codenvy.ide.client.elements.mediators.Header;
+import com.codenvy.ide.client.elements.mediators.LoopBack;
+import com.codenvy.ide.client.elements.mediators.Property;
+import com.codenvy.ide.client.elements.mediators.Respond;
 import com.codenvy.ide.client.elements.connectors.jira.AddAttachmentToIssueId;
 import com.codenvy.ide.client.elements.connectors.jira.CreateFilter;
 import com.codenvy.ide.client.elements.connectors.jira.CreateIssue;
@@ -95,6 +90,15 @@ import com.codenvy.ide.client.elements.connectors.salesforce.SetPassword;
 import com.codenvy.ide.client.elements.connectors.salesforce.UnDelete;
 import com.codenvy.ide.client.elements.connectors.salesforce.Update;
 import com.codenvy.ide.client.elements.connectors.salesforce.Upset;
+import com.codenvy.ide.client.elements.mediators.Send;
+import com.codenvy.ide.client.elements.mediators.Sequence;
+import com.codenvy.ide.client.elements.mediators.Switch;
+import com.codenvy.ide.client.elements.mediators.ValueType;
+import com.codenvy.ide.client.elements.mediators.enrich.Enrich;
+import com.codenvy.ide.client.elements.mediators.log.Log;
+import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
+import com.codenvy.ide.client.elements.widgets.element.ElementChangedListener;
+import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
 import com.codenvy.ide.client.elements.connectors.twitter.DestroyStatus;
 import com.codenvy.ide.client.elements.connectors.twitter.GetClosesTrends;
 import com.codenvy.ide.client.elements.connectors.twitter.GetDirectMessages;
@@ -109,11 +113,6 @@ import com.codenvy.ide.client.elements.connectors.twitter.GetSentDirectMessages;
 import com.codenvy.ide.client.elements.connectors.twitter.GetTopTrendPlaces;
 import com.codenvy.ide.client.elements.connectors.twitter.GetUserTimeLine;
 import com.codenvy.ide.client.elements.connectors.twitter.InitTwitter;
-import com.codenvy.ide.client.elements.enrich.Enrich;
-import com.codenvy.ide.client.elements.log.Log;
-import com.codenvy.ide.client.elements.payload.PayloadFactory;
-import com.codenvy.ide.client.elements.shape.ElementChangedListener;
-import com.codenvy.ide.client.elements.shape.ShapePresenter;
 import com.codenvy.ide.client.inject.EditorFactory;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
@@ -216,6 +215,8 @@ import com.codenvy.ide.client.propertiespanel.send.SendPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.sequence.SequencePropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.switchmediator.SwitchPropertiesPanelPresenter;
 import com.codenvy.ide.client.toolbar.ToolbarPresenter;
+import com.codenvy.ide.client.validators.ConnectionsValidator;
+import com.codenvy.ide.client.validators.InnerElementsValidator;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -226,95 +227,95 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.codenvy.ide.client.State.CREATING_NOTHING;
-import static com.codenvy.ide.client.elements.Call.EndpointType;
-import static com.codenvy.ide.client.elements.Call.EndpointType.INLINE;
-import static com.codenvy.ide.client.elements.Call.EndpointType.NONE;
-import static com.codenvy.ide.client.elements.Call.EndpointType.REGISTRYKEY;
-import static com.codenvy.ide.client.elements.Call.EndpointType.XPATH;
-import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates;
-import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates.EMPTY;
-import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates.SDF;
-import static com.codenvy.ide.client.elements.CallTemplate.AvailableTemplates.SELECT_FROM_TEMPLATE;
-import static com.codenvy.ide.client.elements.Filter.ConditionType.SOURCE_AND_REGEX;
-import static com.codenvy.ide.client.elements.Header.HeaderAction;
-import static com.codenvy.ide.client.elements.Header.HeaderValueType;
-import static com.codenvy.ide.client.elements.Header.ScopeType;
-import static com.codenvy.ide.client.elements.Header.ScopeType.Synapse;
-import static com.codenvy.ide.client.elements.Header.ScopeType.transport;
-import static com.codenvy.ide.client.elements.Property.Action;
-import static com.codenvy.ide.client.elements.Property.Action.remove;
-import static com.codenvy.ide.client.elements.Property.Action.set;
-import static com.codenvy.ide.client.elements.Property.DataType;
-import static com.codenvy.ide.client.elements.Property.DataType.BOOLEAN;
-import static com.codenvy.ide.client.elements.Property.DataType.DOUBLE;
-import static com.codenvy.ide.client.elements.Property.DataType.FLOAT;
-import static com.codenvy.ide.client.elements.Property.DataType.INTEGER;
-import static com.codenvy.ide.client.elements.Property.DataType.LONG;
-import static com.codenvy.ide.client.elements.Property.DataType.OM;
-import static com.codenvy.ide.client.elements.Property.DataType.SHORT;
-import static com.codenvy.ide.client.elements.Property.DataType.STRING;
-import static com.codenvy.ide.client.elements.Property.Scope.AXIS2;
-import static com.codenvy.ide.client.elements.Property.Scope.AXIS2_CLIENT;
-import static com.codenvy.ide.client.elements.Property.Scope.OPERATION;
-import static com.codenvy.ide.client.elements.Property.Scope.SYNAPSE;
-import static com.codenvy.ide.client.elements.Property.Scope.TRANSPORT;
-import static com.codenvy.ide.client.elements.Send.SequenceType.Default;
-import static com.codenvy.ide.client.elements.Send.SequenceType.Static;
-import static com.codenvy.ide.client.elements.Sequence.ReferringType;
-import static com.codenvy.ide.client.elements.Sequence.ReferringType.Dynamic;
-import static com.codenvy.ide.client.elements.ValueType.EXPRESSION;
-import static com.codenvy.ide.client.elements.ValueType.LITERAL;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.AddressingVersion;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.AddressingVersion.FINAL;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.AddressingVersion.SUBMISSION;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Format;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Format.LEAVE_AS_IS;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Format.REST;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Format.get;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Format.pox;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Format.soap11;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Format.soap12;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Optimize;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Optimize.mtom;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.Optimize.swa;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction.discard;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction.fault;
-import static com.codenvy.ide.client.elements.addressendpoint.AddressEndpoint.TimeoutAction.never;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion.FINAL;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion.SUBMISSION;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.LEAVE_AS_IS;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.REST;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.get;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.pox;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.soap11;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.soap12;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Optimize;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Optimize.mtom;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Optimize.swa;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction.discard;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction.fault;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction.never;
+import static com.codenvy.ide.client.elements.mediators.Call.EndpointType;
+import static com.codenvy.ide.client.elements.mediators.Call.EndpointType.INLINE;
+import static com.codenvy.ide.client.elements.mediators.Call.EndpointType.NONE;
+import static com.codenvy.ide.client.elements.mediators.Call.EndpointType.REGISTRYKEY;
+import static com.codenvy.ide.client.elements.mediators.Call.EndpointType.XPATH;
+import static com.codenvy.ide.client.elements.mediators.CallTemplate.AvailableTemplates;
+import static com.codenvy.ide.client.elements.mediators.CallTemplate.AvailableTemplates.EMPTY;
+import static com.codenvy.ide.client.elements.mediators.CallTemplate.AvailableTemplates.SDF;
+import static com.codenvy.ide.client.elements.mediators.CallTemplate.AvailableTemplates.SELECT_FROM_TEMPLATE;
+import static com.codenvy.ide.client.elements.mediators.Filter.ConditionType.SOURCE_AND_REGEX;
+import static com.codenvy.ide.client.elements.mediators.Header.HeaderAction;
+import static com.codenvy.ide.client.elements.mediators.Header.HeaderValueType;
+import static com.codenvy.ide.client.elements.mediators.Header.ScopeType;
+import static com.codenvy.ide.client.elements.mediators.Header.ScopeType.Synapse;
+import static com.codenvy.ide.client.elements.mediators.Header.ScopeType.transport;
+import static com.codenvy.ide.client.elements.mediators.Property.Action;
+import static com.codenvy.ide.client.elements.mediators.Property.Action.remove;
+import static com.codenvy.ide.client.elements.mediators.Property.Action.set;
+import static com.codenvy.ide.client.elements.mediators.Property.DataType;
+import static com.codenvy.ide.client.elements.mediators.Property.DataType.BOOLEAN;
+import static com.codenvy.ide.client.elements.mediators.Property.DataType.DOUBLE;
+import static com.codenvy.ide.client.elements.mediators.Property.DataType.FLOAT;
+import static com.codenvy.ide.client.elements.mediators.Property.DataType.INTEGER;
+import static com.codenvy.ide.client.elements.mediators.Property.DataType.LONG;
+import static com.codenvy.ide.client.elements.mediators.Property.DataType.OM;
+import static com.codenvy.ide.client.elements.mediators.Property.DataType.SHORT;
+import static com.codenvy.ide.client.elements.mediators.Property.DataType.STRING;
+import static com.codenvy.ide.client.elements.mediators.Property.Scope.AXIS2;
+import static com.codenvy.ide.client.elements.mediators.Property.Scope.AXIS2_CLIENT;
+import static com.codenvy.ide.client.elements.mediators.Property.Scope.OPERATION;
+import static com.codenvy.ide.client.elements.mediators.Property.Scope.SYNAPSE;
+import static com.codenvy.ide.client.elements.mediators.Property.Scope.TRANSPORT;
+import static com.codenvy.ide.client.elements.mediators.Send.SequenceType.Default;
+import static com.codenvy.ide.client.elements.mediators.Send.SequenceType.Static;
+import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType;
+import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType.Dynamic;
+import static com.codenvy.ide.client.elements.mediators.ValueType.EXPRESSION;
+import static com.codenvy.ide.client.elements.mediators.ValueType.LITERAL;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.AvailableConfigs;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.enrich.Source.InlineType;
-import static com.codenvy.ide.client.elements.enrich.Source.InlineType.RegistryKey;
-import static com.codenvy.ide.client.elements.enrich.Source.InlineType.SourceXML;
-import static com.codenvy.ide.client.elements.enrich.Source.SourceType;
-import static com.codenvy.ide.client.elements.enrich.Source.SourceType.body;
-import static com.codenvy.ide.client.elements.enrich.Source.SourceType.custom;
-import static com.codenvy.ide.client.elements.enrich.Source.SourceType.envelope;
-import static com.codenvy.ide.client.elements.enrich.Source.SourceType.inline;
-import static com.codenvy.ide.client.elements.enrich.Source.SourceType.property;
-import static com.codenvy.ide.client.elements.enrich.Target.TargetAction;
-import static com.codenvy.ide.client.elements.enrich.Target.TargetAction.child;
-import static com.codenvy.ide.client.elements.enrich.Target.TargetAction.replace;
-import static com.codenvy.ide.client.elements.enrich.Target.TargetAction.sibling;
-import static com.codenvy.ide.client.elements.enrich.Target.TargetType;
-import static com.codenvy.ide.client.elements.log.Log.LogCategory;
-import static com.codenvy.ide.client.elements.log.Log.LogCategory.DEBUG;
-import static com.codenvy.ide.client.elements.log.Log.LogCategory.ERROR;
-import static com.codenvy.ide.client.elements.log.Log.LogCategory.FATAL;
-import static com.codenvy.ide.client.elements.log.Log.LogCategory.INFO;
-import static com.codenvy.ide.client.elements.log.Log.LogCategory.TRACE;
-import static com.codenvy.ide.client.elements.log.Log.LogCategory.WARN;
-import static com.codenvy.ide.client.elements.log.Log.LogLevel;
-import static com.codenvy.ide.client.elements.log.Log.LogLevel.CUSTOM;
-import static com.codenvy.ide.client.elements.log.Log.LogLevel.FULL;
-import static com.codenvy.ide.client.elements.log.Log.LogLevel.HEADERS;
-import static com.codenvy.ide.client.elements.log.Log.LogLevel.SIMPLE;
-import static com.codenvy.ide.client.elements.payload.Format.FormatType;
-import static com.codenvy.ide.client.elements.payload.Format.FormatType.Inline;
-import static com.codenvy.ide.client.elements.payload.Format.FormatType.Registry;
-import static com.codenvy.ide.client.elements.payload.Format.MediaType;
-import static com.codenvy.ide.client.elements.payload.Format.MediaType.json;
-import static com.codenvy.ide.client.elements.payload.Format.MediaType.xml;
+import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType;
+import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType.RegistryKey;
+import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType.SourceXML;
+import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType;
+import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType.body;
+import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType.custom;
+import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType.envelope;
+import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType.inline;
+import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType.property;
+import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetAction;
+import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetAction.child;
+import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetAction.replace;
+import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetAction.sibling;
+import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetType;
+import static com.codenvy.ide.client.elements.mediators.log.Log.LogCategory;
+import static com.codenvy.ide.client.elements.mediators.log.Log.LogCategory.DEBUG;
+import static com.codenvy.ide.client.elements.mediators.log.Log.LogCategory.ERROR;
+import static com.codenvy.ide.client.elements.mediators.log.Log.LogCategory.FATAL;
+import static com.codenvy.ide.client.elements.mediators.log.Log.LogCategory.INFO;
+import static com.codenvy.ide.client.elements.mediators.log.Log.LogCategory.TRACE;
+import static com.codenvy.ide.client.elements.mediators.log.Log.LogCategory.WARN;
+import static com.codenvy.ide.client.elements.mediators.log.Log.LogLevel;
+import static com.codenvy.ide.client.elements.mediators.log.Log.LogLevel.CUSTOM;
+import static com.codenvy.ide.client.elements.mediators.log.Log.LogLevel.FULL;
+import static com.codenvy.ide.client.elements.mediators.log.Log.LogLevel.HEADERS;
+import static com.codenvy.ide.client.elements.mediators.log.Log.LogLevel.SIMPLE;
+import static com.codenvy.ide.client.elements.mediators.payload.Format.FormatType;
+import static com.codenvy.ide.client.elements.mediators.payload.Format.FormatType.Inline;
+import static com.codenvy.ide.client.elements.mediators.payload.Format.FormatType.Registry;
+import static com.codenvy.ide.client.elements.mediators.payload.Format.MediaType;
+import static com.codenvy.ide.client.elements.mediators.payload.Format.MediaType.json;
+import static com.codenvy.ide.client.elements.mediators.payload.Format.MediaType.xml;
 
 /**
  * The presenter that provides a business logic of WSO2Editor. It provides ability to configure the editor.
@@ -331,7 +332,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
 
     private final ToolbarPresenter           toolbar;
     private final RootElement                rootElement;
-    private final ShapePresenter             rootElementPresenter;
+    private final ElementPresenter           rootElementPresenter;
     private final List<EditorChangeListener> listeners;
 
     @Inject
@@ -344,7 +345,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
 
         this.rootElement = rootElement;
 
-        this.rootElementPresenter = editorFactory.createShapePresenter(state, rootElement);
+        this.rootElementPresenter = editorFactory.createElementPresenter(state, rootElement);
         this.rootElementPresenter.addElementChangedListener(this);
 
         this.toolbar = editorFactory.createToolbar(state);
@@ -833,658 +834,45 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
     }
 
     @Inject
-    private void configureMetaModelValidator(MetaModelValidator metaModelValidator) {
-        metaModelValidator.register(Switch.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                       Property.ELEMENT_NAME,
-                                                                       PayloadFactory.ELEMENT_NAME,
-                                                                       Send.ELEMENT_NAME,
-                                                                       Header.ELEMENT_NAME,
-                                                                       Respond.ELEMENT_NAME,
-                                                                       Filter.ELEMENT_NAME,
-                                                                       Switch.ELEMENT_NAME,
-                                                                       Sequence.ELEMENT_NAME,
-                                                                       Enrich.ELEMENT_NAME,
-                                                                       LoopBack.ELEMENT_NAME,
-                                                                       CallTemplate.ELEMENT_NAME,
-                                                                       Call.ELEMENT_NAME,
-                                                                       Init.ELEMENT_NAME,
-                                                                       Create.ELEMENT_NAME,
-                                                                       Update.ELEMENT_NAME,
-                                                                       Delete.ELEMENT_NAME,
-                                                                       EmptyRecycleBin.ELEMENT_NAME,
-                                                                       LogOut.ELEMENT_NAME,
-                                                                       GetUserInformation.ELEMENT_NAME,
-                                                                       Delete.ELEMENT_NAME,
-                                                                       DescribeGlobal.ELEMENT_NAME,
-                                                                       DescribeSubject.ELEMENT_NAME,
-                                                                       DescribeSubjects.ELEMENT_NAME,
-                                                                       Query.ELEMENT_NAME,
-                                                                       QueryAll.ELEMENT_NAME,
-                                                                       QueryMore.ELEMENT_NAME,
-                                                                       ResetPassword.ELEMENT_NAME,
-                                                                       Retrieve.ELEMENT_NAME,
-                                                                       Search.ELEMENT_NAME,
-                                                                       SendEmail.ELEMENT_NAME,
-                                                                       SendEmailMessage.ELEMENT_NAME,
-                                                                       SetPassword.ELEMENT_NAME,
-                                                                       UnDelete.ELEMENT_NAME,
-                                                                       Upset.ELEMENT_NAME,
-                                                                       DoTransition.ELEMENT_NAME,
-                                                                       SearchUser.ELEMENT_NAME));
+    private void configureConnectionsValidator(ConnectionsValidator connectionsValidator) {
+        connectionsValidator.addDisallowRules(Respond.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
+                                                                                  Property.ELEMENT_NAME,
+                                                                                  PayloadFactory.ELEMENT_NAME,
+                                                                                  Send.ELEMENT_NAME,
+                                                                                  Header.ELEMENT_NAME,
+                                                                                  Respond.ELEMENT_NAME,
+                                                                                  Filter.ELEMENT_NAME,
+                                                                                  Switch.ELEMENT_NAME,
+                                                                                  Sequence.ELEMENT_NAME,
+                                                                                  Enrich.ELEMENT_NAME,
+                                                                                  LoopBack.ELEMENT_NAME,
+                                                                                  CallTemplate.ELEMENT_NAME,
+                                                                                  Call.ELEMENT_NAME,
+                                                                                  AddressEndpoint.ELEMENT_NAME,
+                                                                                  Init.ELEMENT_NAME,
+                                                                                  Create.ELEMENT_NAME,
+                                                                                  Update.ELEMENT_NAME,
+                                                                                  Delete.ELEMENT_NAME,
+                                                                                  EmptyRecycleBin.ELEMENT_NAME,
+                                                                                  LogOut.ELEMENT_NAME,
+                                                                                  GetUserInformation.ELEMENT_NAME,
+                                                                                  Delete.ELEMENT_NAME,
+                                                                                  DescribeGlobal.ELEMENT_NAME,
+                                                                                  DescribeSubject.ELEMENT_NAME,
+                                                                                  DescribeSubjects.ELEMENT_NAME,
+                                                                                  Query.ELEMENT_NAME,
+                                                                                  QueryAll.ELEMENT_NAME,
+                                                                                  QueryMore.ELEMENT_NAME,
+                                                                                  ResetPassword.ELEMENT_NAME,
+                                                                                  Retrieve.ELEMENT_NAME,
+                                                                                  Search.ELEMENT_NAME,
+                                                                                  SendEmail.ELEMENT_NAME,
+                                                                                  SendEmailMessage.ELEMENT_NAME,
+                                                                                  SetPassword.ELEMENT_NAME,
+                                                                                  UnDelete.ELEMENT_NAME,
+                                                                                  Upset.ELEMENT_NAME));
 
-        metaModelValidator.register(Log.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                    Property.ELEMENT_NAME,
-                                                                    PayloadFactory.ELEMENT_NAME,
-                                                                    Send.ELEMENT_NAME,
-                                                                    Header.ELEMENT_NAME,
-                                                                    Respond.ELEMENT_NAME,
-                                                                    Filter.ELEMENT_NAME,
-                                                                    Switch.ELEMENT_NAME,
-                                                                    Sequence.ELEMENT_NAME,
-                                                                    Enrich.ELEMENT_NAME,
-                                                                    LoopBack.ELEMENT_NAME,
-                                                                    CallTemplate.ELEMENT_NAME,
-                                                                    Call.ELEMENT_NAME,
-                                                                    Init.ELEMENT_NAME,
-                                                                    Create.ELEMENT_NAME,
-                                                                    Update.ELEMENT_NAME,
-                                                                    Delete.ELEMENT_NAME,
-                                                                    EmptyRecycleBin.ELEMENT_NAME,
-                                                                    LogOut.ELEMENT_NAME,
-                                                                    GetUserInformation.ELEMENT_NAME,
-                                                                    Delete.ELEMENT_NAME,
-                                                                    DescribeGlobal.ELEMENT_NAME,
-                                                                    DescribeSubject.ELEMENT_NAME,
-                                                                    DescribeSubjects.ELEMENT_NAME,
-                                                                    Query.ELEMENT_NAME,
-                                                                    QueryAll.ELEMENT_NAME,
-                                                                    QueryMore.ELEMENT_NAME,
-                                                                    ResetPassword.ELEMENT_NAME,
-                                                                    Retrieve.ELEMENT_NAME,
-                                                                    Search.ELEMENT_NAME,
-                                                                    SendEmail.ELEMENT_NAME,
-                                                                    SendEmailMessage.ELEMENT_NAME,
-                                                                    SetPassword.ELEMENT_NAME,
-                                                                    UnDelete.ELEMENT_NAME,
-                                                                    Upset.ELEMENT_NAME,
-                                                                    DoTransition.ELEMENT_NAME,
-                                                                    SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(Call.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                     Property.ELEMENT_NAME,
-                                                                     PayloadFactory.ELEMENT_NAME,
-                                                                     Send.ELEMENT_NAME,
-                                                                     Header.ELEMENT_NAME,
-                                                                     Respond.ELEMENT_NAME,
-                                                                     Filter.ELEMENT_NAME,
-                                                                     Switch.ELEMENT_NAME,
-                                                                     Sequence.ELEMENT_NAME,
-                                                                     Enrich.ELEMENT_NAME,
-                                                                     LoopBack.ELEMENT_NAME,
-                                                                     CallTemplate.ELEMENT_NAME,
-                                                                     Call.ELEMENT_NAME,
-                                                                     Init.ELEMENT_NAME,
-                                                                     Create.ELEMENT_NAME,
-                                                                     Update.ELEMENT_NAME,
-                                                                     Delete.ELEMENT_NAME,
-                                                                     EmptyRecycleBin.ELEMENT_NAME,
-                                                                     LogOut.ELEMENT_NAME,
-                                                                     GetUserInformation.ELEMENT_NAME,
-                                                                     Delete.ELEMENT_NAME,
-                                                                     DescribeGlobal.ELEMENT_NAME,
-                                                                     DescribeSubject.ELEMENT_NAME,
-                                                                     DescribeSubjects.ELEMENT_NAME,
-                                                                     Query.ELEMENT_NAME,
-                                                                     QueryAll.ELEMENT_NAME,
-                                                                     QueryMore.ELEMENT_NAME,
-                                                                     ResetPassword.ELEMENT_NAME,
-                                                                     Retrieve.ELEMENT_NAME,
-                                                                     Search.ELEMENT_NAME,
-                                                                     SendEmail.ELEMENT_NAME,
-                                                                     SendEmailMessage.ELEMENT_NAME,
-                                                                     SetPassword.ELEMENT_NAME,
-                                                                     UnDelete.ELEMENT_NAME,
-                                                                     Upset.ELEMENT_NAME,
-                                                                     DoTransition.ELEMENT_NAME,
-                                                                     SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(Property.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                         Property.ELEMENT_NAME,
-                                                                         PayloadFactory.ELEMENT_NAME,
-                                                                         Send.ELEMENT_NAME,
-                                                                         Header.ELEMENT_NAME,
-                                                                         Respond.ELEMENT_NAME,
-                                                                         Filter.ELEMENT_NAME,
-                                                                         Switch.ELEMENT_NAME,
-                                                                         Sequence.ELEMENT_NAME,
-                                                                         Enrich.ELEMENT_NAME,
-                                                                         LoopBack.ELEMENT_NAME,
-                                                                         CallTemplate.ELEMENT_NAME,
-                                                                         Call.ELEMENT_NAME,
-                                                                         Init.ELEMENT_NAME,
-                                                                         Create.ELEMENT_NAME,
-                                                                         Update.ELEMENT_NAME,
-                                                                         Delete.ELEMENT_NAME,
-                                                                         EmptyRecycleBin.ELEMENT_NAME,
-                                                                         LogOut.ELEMENT_NAME,
-                                                                         GetUserInformation.ELEMENT_NAME,
-                                                                         Update.ELEMENT_NAME,
-                                                                         DescribeGlobal.ELEMENT_NAME,
-                                                                         DescribeSubject.ELEMENT_NAME,
-                                                                         DescribeSubjects.ELEMENT_NAME,
-                                                                         Query.ELEMENT_NAME,
-                                                                         QueryAll.ELEMENT_NAME,
-                                                                         QueryMore.ELEMENT_NAME,
-                                                                         ResetPassword.ELEMENT_NAME,
-                                                                         Retrieve.ELEMENT_NAME,
-                                                                         Search.ELEMENT_NAME,
-                                                                         SendEmail.ELEMENT_NAME,
-                                                                         SendEmailMessage.ELEMENT_NAME,
-                                                                         SetPassword.ELEMENT_NAME,
-                                                                         UnDelete.ELEMENT_NAME,
-                                                                         Upset.ELEMENT_NAME,
-                                                                         DoTransition.ELEMENT_NAME,
-                                                                         SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(Enrich.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                       Property.ELEMENT_NAME,
-                                                                       PayloadFactory.ELEMENT_NAME,
-                                                                       Send.ELEMENT_NAME,
-                                                                       Header.ELEMENT_NAME,
-                                                                       Respond.ELEMENT_NAME,
-                                                                       Filter.ELEMENT_NAME,
-                                                                       Switch.ELEMENT_NAME,
-                                                                       Sequence.ELEMENT_NAME,
-                                                                       Enrich.ELEMENT_NAME,
-                                                                       LoopBack.ELEMENT_NAME,
-                                                                       CallTemplate.ELEMENT_NAME,
-                                                                       Call.ELEMENT_NAME,
-                                                                       Init.ELEMENT_NAME,
-                                                                       Create.ELEMENT_NAME,
-                                                                       Update.ELEMENT_NAME,
-                                                                       Delete.ELEMENT_NAME,
-                                                                       EmptyRecycleBin.ELEMENT_NAME,
-                                                                       LogOut.ELEMENT_NAME,
-                                                                       GetUserInformation.ELEMENT_NAME,
-                                                                       Delete.ELEMENT_NAME,
-                                                                       DescribeGlobal.ELEMENT_NAME,
-                                                                       DescribeSubject.ELEMENT_NAME,
-                                                                       DescribeSubjects.ELEMENT_NAME,
-                                                                       Query.ELEMENT_NAME,
-                                                                       QueryAll.ELEMENT_NAME,
-                                                                       QueryMore.ELEMENT_NAME,
-                                                                       ResetPassword.ELEMENT_NAME,
-                                                                       Retrieve.ELEMENT_NAME,
-                                                                       Search.ELEMENT_NAME,
-                                                                       SendEmail.ELEMENT_NAME,
-                                                                       SendEmailMessage.ELEMENT_NAME,
-                                                                       SetPassword.ELEMENT_NAME,
-                                                                       UnDelete.ELEMENT_NAME,
-                                                                       Upset.ELEMENT_NAME,
-                                                                       DoTransition.ELEMENT_NAME,
-                                                                       SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(Sequence.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                         Property.ELEMENT_NAME,
-                                                                         PayloadFactory.ELEMENT_NAME,
-                                                                         Send.ELEMENT_NAME,
-                                                                         Header.ELEMENT_NAME,
-                                                                         Respond.ELEMENT_NAME,
-                                                                         Filter.ELEMENT_NAME,
-                                                                         Switch.ELEMENT_NAME,
-                                                                         Sequence.ELEMENT_NAME,
-                                                                         Enrich.ELEMENT_NAME,
-                                                                         LoopBack.ELEMENT_NAME,
-                                                                         CallTemplate.ELEMENT_NAME,
-                                                                         Call.ELEMENT_NAME,
-                                                                         Init.ELEMENT_NAME,
-                                                                         Create.ELEMENT_NAME,
-                                                                         Update.ELEMENT_NAME,
-                                                                         Delete.ELEMENT_NAME,
-                                                                         EmptyRecycleBin.ELEMENT_NAME,
-                                                                         LogOut.ELEMENT_NAME,
-                                                                         GetUserInformation.ELEMENT_NAME,
-                                                                         Update.ELEMENT_NAME,
-                                                                         DescribeGlobal.ELEMENT_NAME,
-                                                                         DescribeSubject.ELEMENT_NAME,
-                                                                         DescribeSubjects.ELEMENT_NAME,
-                                                                         Query.ELEMENT_NAME,
-                                                                         QueryAll.ELEMENT_NAME,
-                                                                         QueryMore.ELEMENT_NAME,
-                                                                         ResetPassword.ELEMENT_NAME,
-                                                                         Retrieve.ELEMENT_NAME,
-                                                                         Search.ELEMENT_NAME,
-                                                                         SendEmail.ELEMENT_NAME,
-                                                                         SendEmailMessage.ELEMENT_NAME,
-                                                                         SetPassword.ELEMENT_NAME,
-                                                                         UnDelete.ELEMENT_NAME,
-                                                                         Upset.ELEMENT_NAME,
-                                                                         DoTransition.ELEMENT_NAME,
-                                                                         SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(Send.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                     Property.ELEMENT_NAME,
-                                                                     PayloadFactory.ELEMENT_NAME,
-                                                                     Send.ELEMENT_NAME,
-                                                                     Header.ELEMENT_NAME,
-                                                                     Respond.ELEMENT_NAME,
-                                                                     Filter.ELEMENT_NAME,
-                                                                     Switch.ELEMENT_NAME,
-                                                                     Sequence.ELEMENT_NAME,
-                                                                     Enrich.ELEMENT_NAME,
-                                                                     LoopBack.ELEMENT_NAME,
-                                                                     CallTemplate.ELEMENT_NAME,
-                                                                     Call.ELEMENT_NAME,
-                                                                     Init.ELEMENT_NAME,
-                                                                     Create.ELEMENT_NAME,
-                                                                     Update.ELEMENT_NAME,
-                                                                     Delete.ELEMENT_NAME,
-                                                                     EmptyRecycleBin.ELEMENT_NAME,
-                                                                     LogOut.ELEMENT_NAME,
-                                                                     GetUserInformation.ELEMENT_NAME,
-                                                                     Update.ELEMENT_NAME,
-                                                                     DescribeGlobal.ELEMENT_NAME,
-                                                                     DescribeSubject.ELEMENT_NAME,
-                                                                     DescribeSubjects.ELEMENT_NAME,
-                                                                     Query.ELEMENT_NAME,
-                                                                     QueryAll.ELEMENT_NAME,
-                                                                     QueryMore.ELEMENT_NAME,
-                                                                     ResetPassword.ELEMENT_NAME,
-                                                                     Retrieve.ELEMENT_NAME,
-                                                                     Search.ELEMENT_NAME,
-                                                                     SendEmail.ELEMENT_NAME,
-                                                                     SendEmailMessage.ELEMENT_NAME,
-                                                                     SetPassword.ELEMENT_NAME,
-                                                                     UnDelete.ELEMENT_NAME,
-                                                                     Upset.ELEMENT_NAME,
-                                                                     DoTransition.ELEMENT_NAME,
-                                                                     SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(PayloadFactory.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                               Property.ELEMENT_NAME,
-                                                                               PayloadFactory.ELEMENT_NAME,
-                                                                               Send.ELEMENT_NAME,
-                                                                               Header.ELEMENT_NAME,
-                                                                               Respond.ELEMENT_NAME,
-                                                                               Filter.ELEMENT_NAME,
-                                                                               Switch.ELEMENT_NAME,
-                                                                               Sequence.ELEMENT_NAME,
-                                                                               Enrich.ELEMENT_NAME,
-                                                                               LoopBack.ELEMENT_NAME,
-                                                                               CallTemplate.ELEMENT_NAME,
-                                                                               Call.ELEMENT_NAME,
-                                                                               Init.ELEMENT_NAME,
-                                                                               Create.ELEMENT_NAME,
-                                                                               Update.ELEMENT_NAME,
-                                                                               Delete.ELEMENT_NAME,
-                                                                               EmptyRecycleBin.ELEMENT_NAME,
-                                                                               LogOut.ELEMENT_NAME,
-                                                                               GetUserInformation.ELEMENT_NAME,
-                                                                               Update.ELEMENT_NAME,
-                                                                               DescribeGlobal.ELEMENT_NAME,
-                                                                               DescribeSubject.ELEMENT_NAME,
-                                                                               DescribeSubjects.ELEMENT_NAME,
-                                                                               Query.ELEMENT_NAME,
-                                                                               QueryAll.ELEMENT_NAME,
-                                                                               QueryMore.ELEMENT_NAME,
-                                                                               ResetPassword.ELEMENT_NAME,
-                                                                               Retrieve.ELEMENT_NAME,
-                                                                               Search.ELEMENT_NAME,
-                                                                               SendEmail.ELEMENT_NAME,
-                                                                               SendEmailMessage.ELEMENT_NAME,
-                                                                               SetPassword.ELEMENT_NAME,
-                                                                               UnDelete.ELEMENT_NAME,
-                                                                               Upset.ELEMENT_NAME,
-                                                                               DoTransition.ELEMENT_NAME,
-                                                                               SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(Header.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                       Property.ELEMENT_NAME,
-                                                                       PayloadFactory.ELEMENT_NAME,
-                                                                       Send.ELEMENT_NAME,
-                                                                       Header.ELEMENT_NAME,
-                                                                       Respond.ELEMENT_NAME,
-                                                                       Filter.ELEMENT_NAME,
-                                                                       Switch.ELEMENT_NAME,
-                                                                       Sequence.ELEMENT_NAME,
-                                                                       Enrich.ELEMENT_NAME,
-                                                                       LoopBack.ELEMENT_NAME,
-                                                                       CallTemplate.ELEMENT_NAME,
-                                                                       Call.ELEMENT_NAME,
-                                                                       Init.ELEMENT_NAME,
-                                                                       Create.ELEMENT_NAME,
-                                                                       Update.ELEMENT_NAME,
-                                                                       Delete.ELEMENT_NAME,
-                                                                       EmptyRecycleBin.ELEMENT_NAME,
-                                                                       LogOut.ELEMENT_NAME,
-                                                                       GetUserInformation.ELEMENT_NAME,
-                                                                       Update.ELEMENT_NAME,
-                                                                       DescribeGlobal.ELEMENT_NAME,
-                                                                       DescribeSubject.ELEMENT_NAME,
-                                                                       DescribeSubjects.ELEMENT_NAME,
-                                                                       Query.ELEMENT_NAME,
-                                                                       QueryAll.ELEMENT_NAME,
-                                                                       QueryMore.ELEMENT_NAME,
-                                                                       ResetPassword.ELEMENT_NAME,
-                                                                       Retrieve.ELEMENT_NAME,
-                                                                       Search.ELEMENT_NAME,
-                                                                       SendEmail.ELEMENT_NAME,
-                                                                       SendEmailMessage.ELEMENT_NAME,
-                                                                       SetPassword.ELEMENT_NAME,
-                                                                       UnDelete.ELEMENT_NAME,
-                                                                       Upset.ELEMENT_NAME,
-                                                                       DoTransition.ELEMENT_NAME,
-                                                                       SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(CallTemplate.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                             Property.ELEMENT_NAME,
-                                                                             PayloadFactory.ELEMENT_NAME,
-                                                                             Send.ELEMENT_NAME,
-                                                                             Header.ELEMENT_NAME,
-                                                                             Respond.ELEMENT_NAME,
-                                                                             Filter.ELEMENT_NAME,
-                                                                             Switch.ELEMENT_NAME,
-                                                                             Sequence.ELEMENT_NAME,
-                                                                             Enrich.ELEMENT_NAME,
-                                                                             LoopBack.ELEMENT_NAME,
-                                                                             CallTemplate.ELEMENT_NAME,
-                                                                             Call.ELEMENT_NAME,
-                                                                             Init.ELEMENT_NAME,
-                                                                             Create.ELEMENT_NAME,
-                                                                             Update.ELEMENT_NAME,
-                                                                             Delete.ELEMENT_NAME,
-                                                                             EmptyRecycleBin.ELEMENT_NAME,
-                                                                             LogOut.ELEMENT_NAME,
-                                                                             GetUserInformation.ELEMENT_NAME,
-                                                                             Update.ELEMENT_NAME,
-                                                                             DescribeGlobal.ELEMENT_NAME,
-                                                                             DescribeSubject.ELEMENT_NAME,
-                                                                             DescribeSubjects.ELEMENT_NAME,
-                                                                             Query.ELEMENT_NAME,
-                                                                             QueryAll.ELEMENT_NAME,
-                                                                             QueryMore.ELEMENT_NAME,
-                                                                             ResetPassword.ELEMENT_NAME,
-                                                                             Retrieve.ELEMENT_NAME,
-                                                                             Search.ELEMENT_NAME,
-                                                                             SendEmail.ELEMENT_NAME,
-                                                                             SendEmailMessage.ELEMENT_NAME,
-                                                                             SetPassword.ELEMENT_NAME,
-                                                                             UnDelete.ELEMENT_NAME,
-                                                                             Upset.ELEMENT_NAME,
-                                                                             DoTransition.ELEMENT_NAME,
-                                                                             SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(Filter.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                       Property.ELEMENT_NAME,
-                                                                       PayloadFactory.ELEMENT_NAME,
-                                                                       Send.ELEMENT_NAME,
-                                                                       Header.ELEMENT_NAME,
-                                                                       Respond.ELEMENT_NAME,
-                                                                       Filter.ELEMENT_NAME,
-                                                                       Switch.ELEMENT_NAME,
-                                                                       Sequence.ELEMENT_NAME,
-                                                                       Enrich.ELEMENT_NAME,
-                                                                       LoopBack.ELEMENT_NAME,
-                                                                       CallTemplate.ELEMENT_NAME,
-                                                                       Call.ELEMENT_NAME,
-                                                                       Init.ELEMENT_NAME,
-                                                                       Create.ELEMENT_NAME,
-                                                                       Update.ELEMENT_NAME,
-                                                                       Delete.ELEMENT_NAME,
-                                                                       EmptyRecycleBin.ELEMENT_NAME,
-                                                                       LogOut.ELEMENT_NAME,
-                                                                       GetUserInformation.ELEMENT_NAME,
-                                                                       Update.ELEMENT_NAME,
-                                                                       DescribeGlobal.ELEMENT_NAME,
-                                                                       DescribeSubject.ELEMENT_NAME,
-                                                                       DescribeSubjects.ELEMENT_NAME,
-                                                                       Query.ELEMENT_NAME,
-                                                                       QueryAll.ELEMENT_NAME,
-                                                                       QueryMore.ELEMENT_NAME,
-                                                                       ResetPassword.ELEMENT_NAME,
-                                                                       Retrieve.ELEMENT_NAME,
-                                                                       Search.ELEMENT_NAME,
-                                                                       SendEmail.ELEMENT_NAME,
-                                                                       SendEmailMessage.ELEMENT_NAME,
-                                                                       SetPassword.ELEMENT_NAME,
-                                                                       UnDelete.ELEMENT_NAME,
-                                                                       Upset.ELEMENT_NAME,
-                                                                       DoTransition.ELEMENT_NAME,
-                                                                       SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(Init.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                     Property.ELEMENT_NAME,
-                                                                     PayloadFactory.ELEMENT_NAME,
-                                                                     Send.ELEMENT_NAME,
-                                                                     Header.ELEMENT_NAME,
-                                                                     Respond.ELEMENT_NAME,
-                                                                     Filter.ELEMENT_NAME,
-                                                                     Switch.ELEMENT_NAME,
-                                                                     Sequence.ELEMENT_NAME,
-                                                                     Enrich.ELEMENT_NAME,
-                                                                     LoopBack.ELEMENT_NAME,
-                                                                     CallTemplate.ELEMENT_NAME,
-                                                                     Call.ELEMENT_NAME,
-                                                                     Header.ELEMENT_NAME,
-                                                                     Init.ELEMENT_NAME,
-                                                                     Create.ELEMENT_NAME,
-                                                                     Update.ELEMENT_NAME,
-                                                                     Delete.ELEMENT_NAME,
-                                                                     EmptyRecycleBin.ELEMENT_NAME,
-                                                                     LogOut.ELEMENT_NAME,
-                                                                     GetUserInformation.ELEMENT_NAME,
-                                                                     Update.ELEMENT_NAME,
-                                                                     DescribeGlobal.ELEMENT_NAME,
-                                                                     DescribeSubject.ELEMENT_NAME,
-                                                                     DescribeSubjects.ELEMENT_NAME,
-                                                                     Query.ELEMENT_NAME,
-                                                                     QueryAll.ELEMENT_NAME,
-                                                                     QueryMore.ELEMENT_NAME,
-                                                                     ResetPassword.ELEMENT_NAME,
-                                                                     Retrieve.ELEMENT_NAME,
-                                                                     Search.ELEMENT_NAME,
-                                                                     SendEmail.ELEMENT_NAME,
-                                                                     SendEmailMessage.ELEMENT_NAME,
-                                                                     SetPassword.ELEMENT_NAME,
-                                                                     UnDelete.ELEMENT_NAME,
-                                                                     Upset.ELEMENT_NAME,
-                                                                     DoTransition.ELEMENT_NAME,
-                                                                     SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(Create.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                       Property.ELEMENT_NAME,
-                                                                       PayloadFactory.ELEMENT_NAME,
-                                                                       Send.ELEMENT_NAME,
-                                                                       Header.ELEMENT_NAME,
-                                                                       Respond.ELEMENT_NAME,
-                                                                       Filter.ELEMENT_NAME,
-                                                                       Switch.ELEMENT_NAME,
-                                                                       Sequence.ELEMENT_NAME,
-                                                                       Enrich.ELEMENT_NAME,
-                                                                       LoopBack.ELEMENT_NAME,
-                                                                       CallTemplate.ELEMENT_NAME,
-                                                                       Call.ELEMENT_NAME,
-                                                                       Header.ELEMENT_NAME,
-                                                                       Init.ELEMENT_NAME,
-                                                                       Create.ELEMENT_NAME,
-                                                                       Update.ELEMENT_NAME,
-                                                                       Delete.ELEMENT_NAME,
-                                                                       EmptyRecycleBin.ELEMENT_NAME,
-                                                                       LogOut.ELEMENT_NAME,
-                                                                       GetUserInformation.ELEMENT_NAME,
-                                                                       Update.ELEMENT_NAME,
-                                                                       Delete.ELEMENT_NAME,
-                                                                       DescribeGlobal.ELEMENT_NAME,
-                                                                       DescribeSubject.ELEMENT_NAME,
-                                                                       DescribeSubjects.ELEMENT_NAME,
-                                                                       Query.ELEMENT_NAME,
-                                                                       QueryAll.ELEMENT_NAME,
-                                                                       QueryMore.ELEMENT_NAME,
-                                                                       ResetPassword.ELEMENT_NAME,
-                                                                       Retrieve.ELEMENT_NAME,
-                                                                       Search.ELEMENT_NAME,
-                                                                       SendEmail.ELEMENT_NAME,
-                                                                       SendEmailMessage.ELEMENT_NAME,
-                                                                       SetPassword.ELEMENT_NAME,
-                                                                       UnDelete.ELEMENT_NAME,
-                                                                       Upset.ELEMENT_NAME,
-                                                                       DoTransition.ELEMENT_NAME,
-                                                                       SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(Update.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                       Property.ELEMENT_NAME,
-                                                                       PayloadFactory.ELEMENT_NAME,
-                                                                       Send.ELEMENT_NAME,
-                                                                       Header.ELEMENT_NAME,
-                                                                       Respond.ELEMENT_NAME,
-                                                                       Filter.ELEMENT_NAME,
-                                                                       Switch.ELEMENT_NAME,
-                                                                       Sequence.ELEMENT_NAME,
-                                                                       Enrich.ELEMENT_NAME,
-                                                                       LoopBack.ELEMENT_NAME,
-                                                                       CallTemplate.ELEMENT_NAME,
-                                                                       Call.ELEMENT_NAME,
-                                                                       Header.ELEMENT_NAME,
-                                                                       Init.ELEMENT_NAME,
-                                                                       Create.ELEMENT_NAME,
-                                                                       Update.ELEMENT_NAME,
-                                                                       Delete.ELEMENT_NAME,
-                                                                       EmptyRecycleBin.ELEMENT_NAME,
-                                                                       LogOut.ELEMENT_NAME,
-                                                                       GetUserInformation.ELEMENT_NAME,
-                                                                       Delete.ELEMENT_NAME,
-                                                                       DescribeGlobal.ELEMENT_NAME,
-                                                                       DescribeSubject.ELEMENT_NAME,
-                                                                       DescribeSubjects.ELEMENT_NAME,
-                                                                       Query.ELEMENT_NAME,
-                                                                       QueryAll.ELEMENT_NAME,
-                                                                       QueryMore.ELEMENT_NAME,
-                                                                       ResetPassword.ELEMENT_NAME,
-                                                                       Retrieve.ELEMENT_NAME,
-                                                                       Search.ELEMENT_NAME,
-                                                                       SendEmail.ELEMENT_NAME,
-                                                                       SendEmailMessage.ELEMENT_NAME,
-                                                                       SetPassword.ELEMENT_NAME,
-                                                                       UnDelete.ELEMENT_NAME,
-                                                                       Upset.ELEMENT_NAME,
-                                                                       DoTransition.ELEMENT_NAME,
-                                                                       SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(Delete.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                       Property.ELEMENT_NAME,
-                                                                       PayloadFactory.ELEMENT_NAME,
-                                                                       Send.ELEMENT_NAME,
-                                                                       Header.ELEMENT_NAME,
-                                                                       Respond.ELEMENT_NAME,
-                                                                       Filter.ELEMENT_NAME,
-                                                                       Switch.ELEMENT_NAME,
-                                                                       Sequence.ELEMENT_NAME,
-                                                                       Enrich.ELEMENT_NAME,
-                                                                       LoopBack.ELEMENT_NAME,
-                                                                       CallTemplate.ELEMENT_NAME,
-                                                                       Call.ELEMENT_NAME,
-                                                                       Header.ELEMENT_NAME,
-                                                                       Init.ELEMENT_NAME,
-                                                                       Create.ELEMENT_NAME,
-                                                                       Update.ELEMENT_NAME,
-                                                                       Delete.ELEMENT_NAME,
-                                                                       EmptyRecycleBin.ELEMENT_NAME,
-                                                                       LogOut.ELEMENT_NAME,
-                                                                       GetUserInformation.ELEMENT_NAME,
-                                                                       DescribeGlobal.ELEMENT_NAME,
-                                                                       DescribeSubject.ELEMENT_NAME,
-                                                                       DescribeSubjects.ELEMENT_NAME,
-                                                                       Query.ELEMENT_NAME,
-                                                                       QueryAll.ELEMENT_NAME,
-                                                                       QueryMore.ELEMENT_NAME,
-                                                                       ResetPassword.ELEMENT_NAME,
-                                                                       Retrieve.ELEMENT_NAME,
-                                                                       Search.ELEMENT_NAME,
-                                                                       SendEmail.ELEMENT_NAME,
-                                                                       SendEmailMessage.ELEMENT_NAME,
-                                                                       SetPassword.ELEMENT_NAME,
-                                                                       UnDelete.ELEMENT_NAME,
-                                                                       Upset.ELEMENT_NAME,
-                                                                       DoTransition.ELEMENT_NAME,
-                                                                       SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(EmptyRecycleBin.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                                Property.ELEMENT_NAME,
-                                                                                PayloadFactory.ELEMENT_NAME,
-                                                                                Send.ELEMENT_NAME,
-                                                                                Header.ELEMENT_NAME,
-                                                                                Respond.ELEMENT_NAME,
-                                                                                Filter.ELEMENT_NAME,
-                                                                                Switch.ELEMENT_NAME,
-                                                                                Sequence.ELEMENT_NAME,
-                                                                                Enrich.ELEMENT_NAME,
-                                                                                LoopBack.ELEMENT_NAME,
-                                                                                CallTemplate.ELEMENT_NAME,
-                                                                                Call.ELEMENT_NAME,
-                                                                                Header.ELEMENT_NAME,
-                                                                                Init.ELEMENT_NAME,
-                                                                                Create.ELEMENT_NAME,
-                                                                                Update.ELEMENT_NAME,
-                                                                                Delete.ELEMENT_NAME,
-                                                                                EmptyRecycleBin.ELEMENT_NAME,
-                                                                                LogOut.ELEMENT_NAME,
-                                                                                GetUserInformation.ELEMENT_NAME,
-                                                                                DescribeGlobal.ELEMENT_NAME,
-                                                                                DescribeSubject.ELEMENT_NAME,
-                                                                                DescribeSubjects.ELEMENT_NAME,
-                                                                                Query.ELEMENT_NAME,
-                                                                                QueryAll.ELEMENT_NAME,
-                                                                                QueryMore.ELEMENT_NAME,
-                                                                                ResetPassword.ELEMENT_NAME,
-                                                                                Retrieve.ELEMENT_NAME,
-                                                                                Search.ELEMENT_NAME,
-                                                                                SendEmail.ELEMENT_NAME,
-                                                                                SendEmailMessage.ELEMENT_NAME,
-                                                                                SetPassword.ELEMENT_NAME,
-                                                                                UnDelete.ELEMENT_NAME,
-                                                                                Upset.ELEMENT_NAME,
-                                                                                DoTransition.ELEMENT_NAME,
-                                                                                SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(LogOut.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                       Property.ELEMENT_NAME,
-                                                                       PayloadFactory.ELEMENT_NAME,
-                                                                       Send.ELEMENT_NAME,
-                                                                       Header.ELEMENT_NAME,
-                                                                       Respond.ELEMENT_NAME,
-                                                                       Filter.ELEMENT_NAME,
-                                                                       Switch.ELEMENT_NAME,
-                                                                       Sequence.ELEMENT_NAME,
-                                                                       Enrich.ELEMENT_NAME,
-                                                                       LoopBack.ELEMENT_NAME,
-                                                                       CallTemplate.ELEMENT_NAME,
-                                                                       Call.ELEMENT_NAME,
-                                                                       Header.ELEMENT_NAME,
-                                                                       Init.ELEMENT_NAME,
-                                                                       Create.ELEMENT_NAME,
-                                                                       Update.ELEMENT_NAME,
-                                                                       Delete.ELEMENT_NAME,
-                                                                       EmptyRecycleBin.ELEMENT_NAME,
-                                                                       LogOut.ELEMENT_NAME,
-                                                                       GetUserInformation.ELEMENT_NAME,
-                                                                       DescribeGlobal.ELEMENT_NAME,
-                                                                       DescribeSubject.ELEMENT_NAME,
-                                                                       DescribeSubjects.ELEMENT_NAME,
-                                                                       Query.ELEMENT_NAME,
-                                                                       QueryAll.ELEMENT_NAME,
-                                                                       QueryMore.ELEMENT_NAME,
-                                                                       ResetPassword.ELEMENT_NAME,
-                                                                       Retrieve.ELEMENT_NAME,
-                                                                       Search.ELEMENT_NAME,
-                                                                       SendEmail.ELEMENT_NAME,
-                                                                       SendEmailMessage.ELEMENT_NAME,
-                                                                       SetPassword.ELEMENT_NAME,
-                                                                       UnDelete.ELEMENT_NAME,
-                                                                       Upset.ELEMENT_NAME,
-                                                                       DoTransition.ELEMENT_NAME,
-                                                                       SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(GetUserInformation.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
+        connectionsValidator.addDisallowRules(LoopBack.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                                    Property.ELEMENT_NAME,
                                                                                    PayloadFactory.ELEMENT_NAME,
                                                                                    Send.ELEMENT_NAME,
@@ -1497,7 +885,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                    LoopBack.ELEMENT_NAME,
                                                                                    CallTemplate.ELEMENT_NAME,
                                                                                    Call.ELEMENT_NAME,
-                                                                                   Header.ELEMENT_NAME,
+                                                                                   AddressEndpoint.ELEMENT_NAME,
                                                                                    Init.ELEMENT_NAME,
                                                                                    Create.ELEMENT_NAME,
                                                                                    Update.ELEMENT_NAME,
@@ -1505,6 +893,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                    EmptyRecycleBin.ELEMENT_NAME,
                                                                                    LogOut.ELEMENT_NAME,
                                                                                    GetUserInformation.ELEMENT_NAME,
+                                                                                   Delete.ELEMENT_NAME,
                                                                                    DescribeGlobal.ELEMENT_NAME,
                                                                                    DescribeSubject.ELEMENT_NAME,
                                                                                    DescribeSubjects.ELEMENT_NAME,
@@ -1518,617 +907,57 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                    SendEmailMessage.ELEMENT_NAME,
                                                                                    SetPassword.ELEMENT_NAME,
                                                                                    UnDelete.ELEMENT_NAME,
-                                                                                   Upset.ELEMENT_NAME,
-                                                                                   DoTransition.ELEMENT_NAME,
-                                                                                   SearchUser.ELEMENT_NAME));
+                                                                                   Upset.ELEMENT_NAME));
 
-        metaModelValidator.register(DescribeGlobal.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                               Property.ELEMENT_NAME,
-                                                                               PayloadFactory.ELEMENT_NAME,
-                                                                               Send.ELEMENT_NAME,
-                                                                               Header.ELEMENT_NAME,
-                                                                               Respond.ELEMENT_NAME,
-                                                                               Filter.ELEMENT_NAME,
-                                                                               Switch.ELEMENT_NAME,
-                                                                               Sequence.ELEMENT_NAME,
-                                                                               Enrich.ELEMENT_NAME,
-                                                                               LoopBack.ELEMENT_NAME,
-                                                                               CallTemplate.ELEMENT_NAME,
-                                                                               Call.ELEMENT_NAME,
-                                                                               Header.ELEMENT_NAME,
-                                                                               Init.ELEMENT_NAME,
-                                                                               Create.ELEMENT_NAME,
-                                                                               Update.ELEMENT_NAME,
-                                                                               Delete.ELEMENT_NAME,
-                                                                               DescribeGlobal.ELEMENT_NAME,
-                                                                               DescribeSubject.ELEMENT_NAME,
-                                                                               DescribeSubjects.ELEMENT_NAME,
-                                                                               EmptyRecycleBin.ELEMENT_NAME,
-                                                                               LogOut.ELEMENT_NAME,
-                                                                               GetUserInformation.ELEMENT_NAME,
-                                                                               Query.ELEMENT_NAME,
-                                                                               QueryAll.ELEMENT_NAME,
-                                                                               QueryMore.ELEMENT_NAME,
-                                                                               ResetPassword.ELEMENT_NAME,
-                                                                               Retrieve.ELEMENT_NAME,
-                                                                               Search.ELEMENT_NAME,
-                                                                               SendEmail.ELEMENT_NAME,
-                                                                               SendEmailMessage.ELEMENT_NAME,
-                                                                               SetPassword.ELEMENT_NAME,
-                                                                               UnDelete.ELEMENT_NAME,
-                                                                               Upset.ELEMENT_NAME,
-                                                                               DoTransition.ELEMENT_NAME,
-                                                                               SearchUser.ELEMENT_NAME));
+        connectionsValidator.addDisallowRules(AddressEndpoint.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
+                                                                                          Property.ELEMENT_NAME,
+                                                                                          PayloadFactory.ELEMENT_NAME,
+                                                                                          Send.ELEMENT_NAME,
+                                                                                          Header.ELEMENT_NAME,
+                                                                                          Respond.ELEMENT_NAME,
+                                                                                          Filter.ELEMENT_NAME,
+                                                                                          Switch.ELEMENT_NAME,
+                                                                                          Sequence.ELEMENT_NAME,
+                                                                                          Enrich.ELEMENT_NAME,
+                                                                                          LoopBack.ELEMENT_NAME,
+                                                                                          CallTemplate.ELEMENT_NAME,
+                                                                                          Call.ELEMENT_NAME,
+                                                                                          AddressEndpoint.ELEMENT_NAME,
+                                                                                          Init.ELEMENT_NAME,
+                                                                                          Create.ELEMENT_NAME,
+                                                                                          Update.ELEMENT_NAME,
+                                                                                          Delete.ELEMENT_NAME,
+                                                                                          EmptyRecycleBin.ELEMENT_NAME,
+                                                                                          LogOut.ELEMENT_NAME,
+                                                                                          GetUserInformation.ELEMENT_NAME,
+                                                                                          Delete.ELEMENT_NAME,
+                                                                                          DescribeGlobal.ELEMENT_NAME,
+                                                                                          DescribeSubject.ELEMENT_NAME,
+                                                                                          DescribeSubjects.ELEMENT_NAME,
+                                                                                          Query.ELEMENT_NAME,
+                                                                                          QueryAll.ELEMENT_NAME,
+                                                                                          QueryMore.ELEMENT_NAME,
+                                                                                          ResetPassword.ELEMENT_NAME,
+                                                                                          Retrieve.ELEMENT_NAME,
+                                                                                          Search.ELEMENT_NAME,
+                                                                                          SendEmail.ELEMENT_NAME,
+                                                                                          SendEmailMessage.ELEMENT_NAME,
+                                                                                          SetPassword.ELEMENT_NAME,
+                                                                                          UnDelete.ELEMENT_NAME,
+                                                                                          Upset.ELEMENT_NAME));
+    }
 
-        metaModelValidator.register(DescribeSubject.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                                Property.ELEMENT_NAME,
-                                                                                PayloadFactory.ELEMENT_NAME,
-                                                                                Send.ELEMENT_NAME,
-                                                                                Header.ELEMENT_NAME,
-                                                                                Respond.ELEMENT_NAME,
-                                                                                Filter.ELEMENT_NAME,
-                                                                                Switch.ELEMENT_NAME,
-                                                                                Sequence.ELEMENT_NAME,
-                                                                                Enrich.ELEMENT_NAME,
-                                                                                LoopBack.ELEMENT_NAME,
-                                                                                CallTemplate.ELEMENT_NAME,
-                                                                                Call.ELEMENT_NAME,
-                                                                                Header.ELEMENT_NAME,
-                                                                                Init.ELEMENT_NAME,
-                                                                                Create.ELEMENT_NAME,
-                                                                                Update.ELEMENT_NAME,
-                                                                                Delete.ELEMENT_NAME,
-                                                                                DescribeGlobal.ELEMENT_NAME,
-                                                                                DescribeSubject.ELEMENT_NAME,
-                                                                                DescribeSubjects.ELEMENT_NAME,
-                                                                                EmptyRecycleBin.ELEMENT_NAME,
-                                                                                LogOut.ELEMENT_NAME,
-                                                                                GetUserInformation.ELEMENT_NAME,
-                                                                                Query.ELEMENT_NAME,
-                                                                                QueryAll.ELEMENT_NAME,
-                                                                                QueryMore.ELEMENT_NAME,
-                                                                                ResetPassword.ELEMENT_NAME,
-                                                                                Retrieve.ELEMENT_NAME,
-                                                                                Search.ELEMENT_NAME,
-                                                                                SendEmail.ELEMENT_NAME,
-                                                                                SendEmailMessage.ELEMENT_NAME,
-                                                                                SetPassword.ELEMENT_NAME,
-                                                                                UnDelete.ELEMENT_NAME,
-                                                                                Upset.ELEMENT_NAME,
-                                                                                DoTransition.ELEMENT_NAME,
-                                                                                SearchUser.ELEMENT_NAME));
+    @Inject
+    private void configureInnerElementsValidator(InnerElementsValidator innerElementsValidator) {
+        innerElementsValidator.addAllowRule(Call.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
 
-        metaModelValidator.register(DescribeSubjects.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                                 Property.ELEMENT_NAME,
-                                                                                 PayloadFactory.ELEMENT_NAME,
-                                                                                 Send.ELEMENT_NAME,
-                                                                                 Header.ELEMENT_NAME,
-                                                                                 Respond.ELEMENT_NAME,
-                                                                                 Filter.ELEMENT_NAME,
-                                                                                 Switch.ELEMENT_NAME,
-                                                                                 Sequence.ELEMENT_NAME,
-                                                                                 Enrich.ELEMENT_NAME,
-                                                                                 LoopBack.ELEMENT_NAME,
-                                                                                 CallTemplate.ELEMENT_NAME,
-                                                                                 Call.ELEMENT_NAME,
-                                                                                 Header.ELEMENT_NAME,
-                                                                                 Init.ELEMENT_NAME,
-                                                                                 Create.ELEMENT_NAME,
-                                                                                 Update.ELEMENT_NAME,
-                                                                                 Delete.ELEMENT_NAME,
-                                                                                 DescribeGlobal.ELEMENT_NAME,
-                                                                                 DescribeSubject.ELEMENT_NAME,
-                                                                                 DescribeSubjects.ELEMENT_NAME,
-                                                                                 EmptyRecycleBin.ELEMENT_NAME,
-                                                                                 LogOut.ELEMENT_NAME,
-                                                                                 GetUserInformation.ELEMENT_NAME,
-                                                                                 Query.ELEMENT_NAME,
-                                                                                 QueryAll.ELEMENT_NAME,
-                                                                                 QueryMore.ELEMENT_NAME,
-                                                                                 ResetPassword.ELEMENT_NAME,
-                                                                                 Retrieve.ELEMENT_NAME,
-                                                                                 Search.ELEMENT_NAME,
-                                                                                 SendEmail.ELEMENT_NAME,
-                                                                                 SendEmailMessage.ELEMENT_NAME,
-                                                                                 SetPassword.ELEMENT_NAME,
-                                                                                 UnDelete.ELEMENT_NAME,
-                                                                                 Upset.ELEMENT_NAME,
-                                                                                 DoTransition.ELEMENT_NAME,
-                                                                                 SearchUser.ELEMENT_NAME));
+        innerElementsValidator.addAllowRule(Send.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
+        
+        innerElementsValidator.addDisallowRule(RootElement.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
 
-        metaModelValidator.register(Query.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                      Property.ELEMENT_NAME,
-                                                                      PayloadFactory.ELEMENT_NAME,
-                                                                      Send.ELEMENT_NAME,
-                                                                      Header.ELEMENT_NAME,
-                                                                      Respond.ELEMENT_NAME,
-                                                                      Filter.ELEMENT_NAME,
-                                                                      Switch.ELEMENT_NAME,
-                                                                      Sequence.ELEMENT_NAME,
-                                                                      Enrich.ELEMENT_NAME,
-                                                                      LoopBack.ELEMENT_NAME,
-                                                                      CallTemplate.ELEMENT_NAME,
-                                                                      Call.ELEMENT_NAME,
-                                                                      Header.ELEMENT_NAME,
-                                                                      Init.ELEMENT_NAME,
-                                                                      Create.ELEMENT_NAME,
-                                                                      Update.ELEMENT_NAME,
-                                                                      Delete.ELEMENT_NAME,
-                                                                      DescribeGlobal.ELEMENT_NAME,
-                                                                      DescribeSubject.ELEMENT_NAME,
-                                                                      DescribeSubjects.ELEMENT_NAME,
-                                                                      EmptyRecycleBin.ELEMENT_NAME,
-                                                                      LogOut.ELEMENT_NAME,
-                                                                      GetUserInformation.ELEMENT_NAME,
-                                                                      Query.ELEMENT_NAME,
-                                                                      QueryAll.ELEMENT_NAME,
-                                                                      QueryMore.ELEMENT_NAME,
-                                                                      ResetPassword.ELEMENT_NAME,
-                                                                      Retrieve.ELEMENT_NAME,
-                                                                      Search.ELEMENT_NAME,
-                                                                      SendEmail.ELEMENT_NAME,
-                                                                      SendEmailMessage.ELEMENT_NAME,
-                                                                      SetPassword.ELEMENT_NAME,
-                                                                      UnDelete.ELEMENT_NAME,
-                                                                      Upset.ELEMENT_NAME,
-                                                                      DoTransition.ELEMENT_NAME,
-                                                                      SearchUser.ELEMENT_NAME));
+        innerElementsValidator.addDisallowRule(Filter.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
 
-        metaModelValidator.register(QueryAll.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                         Property.ELEMENT_NAME,
-                                                                         PayloadFactory.ELEMENT_NAME,
-                                                                         Send.ELEMENT_NAME,
-                                                                         Header.ELEMENT_NAME,
-                                                                         Respond.ELEMENT_NAME,
-                                                                         Filter.ELEMENT_NAME,
-                                                                         Switch.ELEMENT_NAME,
-                                                                         Sequence.ELEMENT_NAME,
-                                                                         Enrich.ELEMENT_NAME,
-                                                                         LoopBack.ELEMENT_NAME,
-                                                                         CallTemplate.ELEMENT_NAME,
-                                                                         Call.ELEMENT_NAME,
-                                                                         Header.ELEMENT_NAME,
-                                                                         Init.ELEMENT_NAME,
-                                                                         Create.ELEMENT_NAME,
-                                                                         Update.ELEMENT_NAME,
-                                                                         Delete.ELEMENT_NAME,
-                                                                         DescribeGlobal.ELEMENT_NAME,
-                                                                         DescribeSubject.ELEMENT_NAME,
-                                                                         DescribeSubjects.ELEMENT_NAME,
-                                                                         EmptyRecycleBin.ELEMENT_NAME,
-                                                                         LogOut.ELEMENT_NAME,
-                                                                         GetUserInformation.ELEMENT_NAME,
-                                                                         Query.ELEMENT_NAME,
-                                                                         QueryAll.ELEMENT_NAME,
-                                                                         QueryMore.ELEMENT_NAME,
-                                                                         ResetPassword.ELEMENT_NAME,
-                                                                         Retrieve.ELEMENT_NAME,
-                                                                         Search.ELEMENT_NAME,
-                                                                         SendEmail.ELEMENT_NAME,
-                                                                         SendEmailMessage.ELEMENT_NAME,
-                                                                         SetPassword.ELEMENT_NAME,
-                                                                         UnDelete.ELEMENT_NAME,
-                                                                         Upset.ELEMENT_NAME,
-                                                                         DoTransition.ELEMENT_NAME,
-                                                                         SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(QueryMore.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                          Property.ELEMENT_NAME,
-                                                                          PayloadFactory.ELEMENT_NAME,
-                                                                          Send.ELEMENT_NAME,
-                                                                          Header.ELEMENT_NAME,
-                                                                          Respond.ELEMENT_NAME,
-                                                                          Filter.ELEMENT_NAME,
-                                                                          Switch.ELEMENT_NAME,
-                                                                          Sequence.ELEMENT_NAME,
-                                                                          Enrich.ELEMENT_NAME,
-                                                                          LoopBack.ELEMENT_NAME,
-                                                                          CallTemplate.ELEMENT_NAME,
-                                                                          Call.ELEMENT_NAME,
-                                                                          Header.ELEMENT_NAME,
-                                                                          Init.ELEMENT_NAME,
-                                                                          Create.ELEMENT_NAME,
-                                                                          Update.ELEMENT_NAME,
-                                                                          Delete.ELEMENT_NAME,
-                                                                          DescribeGlobal.ELEMENT_NAME,
-                                                                          DescribeSubject.ELEMENT_NAME,
-                                                                          DescribeSubjects.ELEMENT_NAME,
-                                                                          EmptyRecycleBin.ELEMENT_NAME,
-                                                                          LogOut.ELEMENT_NAME,
-                                                                          GetUserInformation.ELEMENT_NAME,
-                                                                          Query.ELEMENT_NAME,
-                                                                          QueryAll.ELEMENT_NAME,
-                                                                          QueryMore.ELEMENT_NAME,
-                                                                          ResetPassword.ELEMENT_NAME,
-                                                                          Retrieve.ELEMENT_NAME,
-                                                                          Search.ELEMENT_NAME,
-                                                                          SendEmail.ELEMENT_NAME,
-                                                                          SendEmailMessage.ELEMENT_NAME,
-                                                                          SetPassword.ELEMENT_NAME,
-                                                                          UnDelete.ELEMENT_NAME,
-                                                                          Upset.ELEMENT_NAME,
-                                                                          DoTransition.ELEMENT_NAME,
-                                                                          SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(ResetPassword.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                              Property.ELEMENT_NAME,
-                                                                              PayloadFactory.ELEMENT_NAME,
-                                                                              Send.ELEMENT_NAME,
-                                                                              Header.ELEMENT_NAME,
-                                                                              Respond.ELEMENT_NAME,
-                                                                              Filter.ELEMENT_NAME,
-                                                                              Switch.ELEMENT_NAME,
-                                                                              Sequence.ELEMENT_NAME,
-                                                                              Enrich.ELEMENT_NAME,
-                                                                              LoopBack.ELEMENT_NAME,
-                                                                              CallTemplate.ELEMENT_NAME,
-                                                                              Call.ELEMENT_NAME,
-                                                                              Header.ELEMENT_NAME,
-                                                                              Init.ELEMENT_NAME,
-                                                                              Create.ELEMENT_NAME,
-                                                                              Update.ELEMENT_NAME,
-                                                                              Delete.ELEMENT_NAME,
-                                                                              DescribeGlobal.ELEMENT_NAME,
-                                                                              DescribeSubject.ELEMENT_NAME,
-                                                                              DescribeSubjects.ELEMENT_NAME,
-                                                                              EmptyRecycleBin.ELEMENT_NAME,
-                                                                              LogOut.ELEMENT_NAME,
-                                                                              GetUserInformation.ELEMENT_NAME,
-                                                                              Query.ELEMENT_NAME,
-                                                                              QueryAll.ELEMENT_NAME,
-                                                                              QueryMore.ELEMENT_NAME,
-                                                                              ResetPassword.ELEMENT_NAME,
-                                                                              Retrieve.ELEMENT_NAME,
-                                                                              Search.ELEMENT_NAME,
-                                                                              SendEmail.ELEMENT_NAME,
-                                                                              SendEmailMessage.ELEMENT_NAME,
-                                                                              SetPassword.ELEMENT_NAME,
-                                                                              UnDelete.ELEMENT_NAME,
-                                                                              Upset.ELEMENT_NAME,
-                                                                              DoTransition.ELEMENT_NAME,
-                                                                              SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(Retrieve.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                         Property.ELEMENT_NAME,
-                                                                         PayloadFactory.ELEMENT_NAME,
-                                                                         Send.ELEMENT_NAME,
-                                                                         Header.ELEMENT_NAME,
-                                                                         Respond.ELEMENT_NAME,
-                                                                         Filter.ELEMENT_NAME,
-                                                                         Switch.ELEMENT_NAME,
-                                                                         Sequence.ELEMENT_NAME,
-                                                                         Enrich.ELEMENT_NAME,
-                                                                         LoopBack.ELEMENT_NAME,
-                                                                         CallTemplate.ELEMENT_NAME,
-                                                                         Call.ELEMENT_NAME,
-                                                                         Header.ELEMENT_NAME,
-                                                                         Init.ELEMENT_NAME,
-                                                                         Create.ELEMENT_NAME,
-                                                                         Update.ELEMENT_NAME,
-                                                                         Delete.ELEMENT_NAME,
-                                                                         DescribeGlobal.ELEMENT_NAME,
-                                                                         DescribeSubject.ELEMENT_NAME,
-                                                                         DescribeSubjects.ELEMENT_NAME,
-                                                                         EmptyRecycleBin.ELEMENT_NAME,
-                                                                         LogOut.ELEMENT_NAME,
-                                                                         GetUserInformation.ELEMENT_NAME,
-                                                                         Query.ELEMENT_NAME,
-                                                                         QueryAll.ELEMENT_NAME,
-                                                                         QueryMore.ELEMENT_NAME,
-                                                                         ResetPassword.ELEMENT_NAME,
-                                                                         Retrieve.ELEMENT_NAME,
-                                                                         Search.ELEMENT_NAME,
-                                                                         SendEmail.ELEMENT_NAME,
-                                                                         SendEmailMessage.ELEMENT_NAME,
-                                                                         SetPassword.ELEMENT_NAME,
-                                                                         UnDelete.ELEMENT_NAME,
-                                                                         Upset.ELEMENT_NAME,
-                                                                         DoTransition.ELEMENT_NAME,
-                                                                         SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(Search.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                       Property.ELEMENT_NAME,
-                                                                       PayloadFactory.ELEMENT_NAME,
-                                                                       Send.ELEMENT_NAME,
-                                                                       Header.ELEMENT_NAME,
-                                                                       Respond.ELEMENT_NAME,
-                                                                       Filter.ELEMENT_NAME,
-                                                                       Switch.ELEMENT_NAME,
-                                                                       Sequence.ELEMENT_NAME,
-                                                                       Enrich.ELEMENT_NAME,
-                                                                       LoopBack.ELEMENT_NAME,
-                                                                       CallTemplate.ELEMENT_NAME,
-                                                                       Call.ELEMENT_NAME,
-                                                                       Header.ELEMENT_NAME,
-                                                                       Init.ELEMENT_NAME,
-                                                                       Create.ELEMENT_NAME,
-                                                                       Update.ELEMENT_NAME,
-                                                                       Delete.ELEMENT_NAME,
-                                                                       DescribeGlobal.ELEMENT_NAME,
-                                                                       DescribeSubject.ELEMENT_NAME,
-                                                                       DescribeSubjects.ELEMENT_NAME,
-                                                                       EmptyRecycleBin.ELEMENT_NAME,
-                                                                       LogOut.ELEMENT_NAME,
-                                                                       GetUserInformation.ELEMENT_NAME,
-                                                                       Query.ELEMENT_NAME,
-                                                                       QueryAll.ELEMENT_NAME,
-                                                                       QueryMore.ELEMENT_NAME,
-                                                                       ResetPassword.ELEMENT_NAME,
-                                                                       Retrieve.ELEMENT_NAME,
-                                                                       Search.ELEMENT_NAME,
-                                                                       SendEmail.ELEMENT_NAME,
-                                                                       SendEmailMessage.ELEMENT_NAME,
-                                                                       SetPassword.ELEMENT_NAME,
-                                                                       UnDelete.ELEMENT_NAME,
-                                                                       Upset.ELEMENT_NAME,
-                                                                       DoTransition.ELEMENT_NAME,
-                                                                       SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(SendEmail.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                          Property.ELEMENT_NAME,
-                                                                          PayloadFactory.ELEMENT_NAME,
-                                                                          Send.ELEMENT_NAME,
-                                                                          Header.ELEMENT_NAME,
-                                                                          Respond.ELEMENT_NAME,
-                                                                          Filter.ELEMENT_NAME,
-                                                                          Switch.ELEMENT_NAME,
-                                                                          Sequence.ELEMENT_NAME,
-                                                                          Enrich.ELEMENT_NAME,
-                                                                          LoopBack.ELEMENT_NAME,
-                                                                          CallTemplate.ELEMENT_NAME,
-                                                                          Call.ELEMENT_NAME,
-                                                                          Header.ELEMENT_NAME,
-                                                                          Init.ELEMENT_NAME,
-                                                                          Create.ELEMENT_NAME,
-                                                                          Update.ELEMENT_NAME,
-                                                                          Delete.ELEMENT_NAME,
-                                                                          DescribeGlobal.ELEMENT_NAME,
-                                                                          DescribeSubject.ELEMENT_NAME,
-                                                                          DescribeSubjects.ELEMENT_NAME,
-                                                                          EmptyRecycleBin.ELEMENT_NAME,
-                                                                          LogOut.ELEMENT_NAME,
-                                                                          GetUserInformation.ELEMENT_NAME,
-                                                                          Query.ELEMENT_NAME,
-                                                                          QueryAll.ELEMENT_NAME,
-                                                                          QueryMore.ELEMENT_NAME,
-                                                                          ResetPassword.ELEMENT_NAME,
-                                                                          Retrieve.ELEMENT_NAME,
-                                                                          Search.ELEMENT_NAME,
-                                                                          SendEmail.ELEMENT_NAME,
-                                                                          SendEmailMessage.ELEMENT_NAME,
-                                                                          SetPassword.ELEMENT_NAME,
-                                                                          UnDelete.ELEMENT_NAME,
-                                                                          Upset.ELEMENT_NAME,
-                                                                          DoTransition.ELEMENT_NAME,
-                                                                          SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(SendEmailMessage.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                                 Property.ELEMENT_NAME,
-                                                                                 PayloadFactory.ELEMENT_NAME,
-                                                                                 Send.ELEMENT_NAME,
-                                                                                 Header.ELEMENT_NAME,
-                                                                                 Respond.ELEMENT_NAME,
-                                                                                 Filter.ELEMENT_NAME,
-                                                                                 Switch.ELEMENT_NAME,
-                                                                                 Sequence.ELEMENT_NAME,
-                                                                                 Enrich.ELEMENT_NAME,
-                                                                                 LoopBack.ELEMENT_NAME,
-                                                                                 CallTemplate.ELEMENT_NAME,
-                                                                                 Call.ELEMENT_NAME,
-                                                                                 Header.ELEMENT_NAME,
-                                                                                 Init.ELEMENT_NAME,
-                                                                                 Create.ELEMENT_NAME,
-                                                                                 Update.ELEMENT_NAME,
-                                                                                 Delete.ELEMENT_NAME,
-                                                                                 DescribeGlobal.ELEMENT_NAME,
-                                                                                 DescribeSubject.ELEMENT_NAME,
-                                                                                 DescribeSubjects.ELEMENT_NAME,
-                                                                                 EmptyRecycleBin.ELEMENT_NAME,
-                                                                                 LogOut.ELEMENT_NAME,
-                                                                                 GetUserInformation.ELEMENT_NAME,
-                                                                                 Query.ELEMENT_NAME,
-                                                                                 QueryAll.ELEMENT_NAME,
-                                                                                 QueryMore.ELEMENT_NAME,
-                                                                                 ResetPassword.ELEMENT_NAME,
-                                                                                 Retrieve.ELEMENT_NAME,
-                                                                                 Search.ELEMENT_NAME,
-                                                                                 SendEmail.ELEMENT_NAME,
-                                                                                 SendEmailMessage.ELEMENT_NAME,
-                                                                                 SetPassword.ELEMENT_NAME,
-                                                                                 UnDelete.ELEMENT_NAME,
-                                                                                 Upset.ELEMENT_NAME,
-                                                                                 DoTransition.ELEMENT_NAME,
-                                                                                 SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(SetPassword.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                            Property.ELEMENT_NAME,
-                                                                            PayloadFactory.ELEMENT_NAME,
-                                                                            Send.ELEMENT_NAME,
-                                                                            Header.ELEMENT_NAME,
-                                                                            Respond.ELEMENT_NAME,
-                                                                            Filter.ELEMENT_NAME,
-                                                                            Switch.ELEMENT_NAME,
-                                                                            Sequence.ELEMENT_NAME,
-                                                                            Enrich.ELEMENT_NAME,
-                                                                            LoopBack.ELEMENT_NAME,
-                                                                            CallTemplate.ELEMENT_NAME,
-                                                                            Call.ELEMENT_NAME,
-                                                                            Header.ELEMENT_NAME,
-                                                                            Init.ELEMENT_NAME,
-                                                                            Create.ELEMENT_NAME,
-                                                                            Update.ELEMENT_NAME,
-                                                                            Delete.ELEMENT_NAME,
-                                                                            DescribeGlobal.ELEMENT_NAME,
-                                                                            DescribeSubject.ELEMENT_NAME,
-                                                                            DescribeSubjects.ELEMENT_NAME,
-                                                                            EmptyRecycleBin.ELEMENT_NAME,
-                                                                            LogOut.ELEMENT_NAME,
-                                                                            GetUserInformation.ELEMENT_NAME,
-                                                                            Query.ELEMENT_NAME,
-                                                                            QueryAll.ELEMENT_NAME,
-                                                                            QueryMore.ELEMENT_NAME,
-                                                                            ResetPassword.ELEMENT_NAME,
-                                                                            Retrieve.ELEMENT_NAME,
-                                                                            Search.ELEMENT_NAME,
-                                                                            SendEmail.ELEMENT_NAME,
-                                                                            SendEmailMessage.ELEMENT_NAME,
-                                                                            SetPassword.ELEMENT_NAME,
-                                                                            UnDelete.ELEMENT_NAME,
-                                                                            Upset.ELEMENT_NAME,
-                                                                            DoTransition.ELEMENT_NAME,
-                                                                            SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(UnDelete.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                         Property.ELEMENT_NAME,
-                                                                         PayloadFactory.ELEMENT_NAME,
-                                                                         Send.ELEMENT_NAME,
-                                                                         Header.ELEMENT_NAME,
-                                                                         Respond.ELEMENT_NAME,
-                                                                         Filter.ELEMENT_NAME,
-                                                                         Switch.ELEMENT_NAME,
-                                                                         Sequence.ELEMENT_NAME,
-                                                                         Enrich.ELEMENT_NAME,
-                                                                         LoopBack.ELEMENT_NAME,
-                                                                         CallTemplate.ELEMENT_NAME,
-                                                                         Call.ELEMENT_NAME,
-                                                                         Header.ELEMENT_NAME,
-                                                                         Init.ELEMENT_NAME,
-                                                                         Create.ELEMENT_NAME,
-                                                                         Update.ELEMENT_NAME,
-                                                                         Delete.ELEMENT_NAME,
-                                                                         DescribeGlobal.ELEMENT_NAME,
-                                                                         DescribeSubject.ELEMENT_NAME,
-                                                                         DescribeSubjects.ELEMENT_NAME,
-                                                                         EmptyRecycleBin.ELEMENT_NAME,
-                                                                         LogOut.ELEMENT_NAME,
-                                                                         GetUserInformation.ELEMENT_NAME,
-                                                                         Query.ELEMENT_NAME,
-                                                                         QueryAll.ELEMENT_NAME,
-                                                                         QueryMore.ELEMENT_NAME,
-                                                                         ResetPassword.ELEMENT_NAME,
-                                                                         Retrieve.ELEMENT_NAME,
-                                                                         Search.ELEMENT_NAME,
-                                                                         SendEmail.ELEMENT_NAME,
-                                                                         SendEmailMessage.ELEMENT_NAME,
-                                                                         SetPassword.ELEMENT_NAME,
-                                                                         UnDelete.ELEMENT_NAME,
-                                                                         Upset.ELEMENT_NAME,
-                                                                         DoTransition.ELEMENT_NAME,
-                                                                         SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(Upset.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                      Property.ELEMENT_NAME,
-                                                                      PayloadFactory.ELEMENT_NAME,
-                                                                      Send.ELEMENT_NAME,
-                                                                      Header.ELEMENT_NAME,
-                                                                      Respond.ELEMENT_NAME,
-                                                                      Filter.ELEMENT_NAME,
-                                                                      Switch.ELEMENT_NAME,
-                                                                      Sequence.ELEMENT_NAME,
-                                                                      Enrich.ELEMENT_NAME,
-                                                                      LoopBack.ELEMENT_NAME,
-                                                                      CallTemplate.ELEMENT_NAME,
-                                                                      Call.ELEMENT_NAME,
-                                                                      Header.ELEMENT_NAME,
-                                                                      Init.ELEMENT_NAME,
-                                                                      Create.ELEMENT_NAME,
-                                                                      Update.ELEMENT_NAME,
-                                                                      Delete.ELEMENT_NAME,
-                                                                      DescribeGlobal.ELEMENT_NAME,
-                                                                      DescribeSubject.ELEMENT_NAME,
-                                                                      DescribeSubjects.ELEMENT_NAME,
-                                                                      EmptyRecycleBin.ELEMENT_NAME,
-                                                                      LogOut.ELEMENT_NAME,
-                                                                      GetUserInformation.ELEMENT_NAME,
-                                                                      Query.ELEMENT_NAME,
-                                                                      QueryAll.ELEMENT_NAME,
-                                                                      QueryMore.ELEMENT_NAME,
-                                                                      ResetPassword.ELEMENT_NAME,
-                                                                      Retrieve.ELEMENT_NAME,
-                                                                      Search.ELEMENT_NAME,
-                                                                      SendEmail.ELEMENT_NAME,
-                                                                      SendEmailMessage.ELEMENT_NAME,
-                                                                      SetPassword.ELEMENT_NAME,
-                                                                      UnDelete.ELEMENT_NAME,
-                                                                      Upset.ELEMENT_NAME,
-                                                                      DoTransition.ELEMENT_NAME,
-                                                                      SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(DoTransition.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                             Property.ELEMENT_NAME,
-                                                                             PayloadFactory.ELEMENT_NAME,
-                                                                             Send.ELEMENT_NAME,
-                                                                             Header.ELEMENT_NAME,
-                                                                             Respond.ELEMENT_NAME,
-                                                                             Filter.ELEMENT_NAME,
-                                                                             Switch.ELEMENT_NAME,
-                                                                             Sequence.ELEMENT_NAME,
-                                                                             Enrich.ELEMENT_NAME,
-                                                                             LoopBack.ELEMENT_NAME,
-                                                                             CallTemplate.ELEMENT_NAME,
-                                                                             Call.ELEMENT_NAME,
-                                                                             Header.ELEMENT_NAME,
-                                                                             Init.ELEMENT_NAME,
-                                                                             Create.ELEMENT_NAME,
-                                                                             Update.ELEMENT_NAME,
-                                                                             Delete.ELEMENT_NAME,
-                                                                             DescribeGlobal.ELEMENT_NAME,
-                                                                             DescribeSubject.ELEMENT_NAME,
-                                                                             DescribeSubjects.ELEMENT_NAME,
-                                                                             EmptyRecycleBin.ELEMENT_NAME,
-                                                                             LogOut.ELEMENT_NAME,
-                                                                             GetUserInformation.ELEMENT_NAME,
-                                                                             Query.ELEMENT_NAME,
-                                                                             QueryAll.ELEMENT_NAME,
-                                                                             QueryMore.ELEMENT_NAME,
-                                                                             ResetPassword.ELEMENT_NAME,
-                                                                             Retrieve.ELEMENT_NAME,
-                                                                             Search.ELEMENT_NAME,
-                                                                             SendEmail.ELEMENT_NAME,
-                                                                             SendEmailMessage.ELEMENT_NAME,
-                                                                             SetPassword.ELEMENT_NAME,
-                                                                             UnDelete.ELEMENT_NAME,
-                                                                             Upset.ELEMENT_NAME,
-                                                                             DoTransition.ELEMENT_NAME,
-                                                                             SearchUser.ELEMENT_NAME));
-
-        metaModelValidator.register(SearchUser.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
-                                                                           Property.ELEMENT_NAME,
-                                                                           PayloadFactory.ELEMENT_NAME,
-                                                                           Send.ELEMENT_NAME,
-                                                                           Header.ELEMENT_NAME,
-                                                                           Respond.ELEMENT_NAME,
-                                                                           Filter.ELEMENT_NAME,
-                                                                           Switch.ELEMENT_NAME,
-                                                                           Sequence.ELEMENT_NAME,
-                                                                           Enrich.ELEMENT_NAME,
-                                                                           LoopBack.ELEMENT_NAME,
-                                                                           CallTemplate.ELEMENT_NAME,
-                                                                           Call.ELEMENT_NAME,
-                                                                           Header.ELEMENT_NAME,
-                                                                           Init.ELEMENT_NAME,
-                                                                           Create.ELEMENT_NAME,
-                                                                           Update.ELEMENT_NAME,
-                                                                           Delete.ELEMENT_NAME,
-                                                                           DescribeGlobal.ELEMENT_NAME,
-                                                                           DescribeSubject.ELEMENT_NAME,
-                                                                           DescribeSubjects.ELEMENT_NAME,
-                                                                           EmptyRecycleBin.ELEMENT_NAME,
-                                                                           LogOut.ELEMENT_NAME,
-                                                                           GetUserInformation.ELEMENT_NAME,
-                                                                           Query.ELEMENT_NAME,
-                                                                           QueryAll.ELEMENT_NAME,
-                                                                           QueryMore.ELEMENT_NAME,
-                                                                           ResetPassword.ELEMENT_NAME,
-                                                                           Retrieve.ELEMENT_NAME,
-                                                                           Search.ELEMENT_NAME,
-                                                                           SendEmail.ELEMENT_NAME,
-                                                                           SendEmailMessage.ELEMENT_NAME,
-                                                                           SetPassword.ELEMENT_NAME,
-                                                                           UnDelete.ELEMENT_NAME,
-                                                                           Upset.ELEMENT_NAME,
-                                                                           DoTransition.ELEMENT_NAME,
-                                                                           SearchUser.ELEMENT_NAME));
+        innerElementsValidator.addDisallowRule(Switch.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
     }
 
     @Inject
@@ -2225,7 +1054,6 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                   Provider<GetTopTrendPlaces> getTopTrendPlacesProvider,
                                                   Provider<GetUserTimeLine> getUserTimeLineProvider,
                                                   Provider<InitTwitter> initTwitterProvider) {
-
 
         mediatorCreatorsManager.register(Log.ELEMENT_NAME, Log.SERIALIZATION_NAME, State.CREATING_LOG, logProvider);
 

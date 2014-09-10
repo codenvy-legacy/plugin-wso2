@@ -1,11 +1,11 @@
 /*
  * Copyright 2014 Codenvy, S.A.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache  License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.runners.Parameterized.Parameter;
 import static org.junit.runners.Parameterized.Parameters;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.Answers.RETURNS_MOCKS;
@@ -52,8 +53,11 @@ public class TagAutoCompleterTest {
     private TextEditorPartView editor;
     @InjectMocks
     private TagAutoCompleter   tagAutoCompleter;
-    private String             text;
-    private String             autocomplete;
+
+    @Parameter(0)
+    public String text;
+    @Parameter(1)
+    public String autocomplete;
 
     @Parameters
     public static List<Object[]> parameters() {
@@ -66,11 +70,6 @@ public class TagAutoCompleterTest {
                 {"<tag name=\"name\" ", "></tag>"}});
     }
 
-    public TagAutoCompleterTest(String text, String autocomplete) {
-        this.text = text;
-        this.autocomplete = autocomplete;
-    }
-
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -78,7 +77,6 @@ public class TagAutoCompleterTest {
 
     @Test
     public void textShouldBeCompleted() throws Exception {
-
         when(document.get(anyInt(), anyInt())).thenReturn(text);
 
         DocumentCommand command = new DocumentCommand();
