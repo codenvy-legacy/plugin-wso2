@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class ConnectionsValidatorTest {
 
@@ -45,6 +46,12 @@ public class ConnectionsValidatorTest {
 
         assertTrue(validator.canCreateConnection(ELEMENT1, ELEMENT1));
         assertFalse(validator.canCreateConnection(ELEMENT1, ELEMENT2));
+    }
+
+    @Test
+    public void connectionShouldBeAbleToCreateWhenAllowAndDisallowRulesAreEmpty() throws Exception {
+        assertTrue(validator.canCreateConnection(ELEMENT1, ELEMENT1));
+        assertTrue(validator.canCreateConnection(ELEMENT1, ELEMENT2));
     }
 
     @Test

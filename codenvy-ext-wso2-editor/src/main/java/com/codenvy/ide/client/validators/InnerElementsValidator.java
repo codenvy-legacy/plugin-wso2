@@ -30,6 +30,7 @@ import java.util.Set;
  * give a resolution about a possibility to create a diagram element into a given element.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 @Singleton
 public class InnerElementsValidator {
@@ -129,15 +130,11 @@ public class InnerElementsValidator {
      * @return <code>true</code> if it is possible to create an element, <code>false</code> it isn't
      */
     public boolean canInsertElement(@Nonnull String parentElement, @Nonnull String childElement) {
-        if (hasRules(allowRules, parentElement)) {
+        if (allowRules.containsKey(parentElement)) {
             return isAllowedConnection(parentElement, childElement);
         }
 
-        return hasRules(disallowRules, parentElement) && !isDisallowedConnection(parentElement, childElement);
-    }
-
-    private boolean hasRules(@Nonnull Map<String, Set<String>> rules, @Nonnull String parentElement) {
-        return rules.containsKey(parentElement);
+        return !isDisallowedConnection(parentElement, childElement);
     }
 
     private boolean isAllowedConnection(@Nonnull String parentElement, @Nonnull String childElement) {

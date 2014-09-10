@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class InnerElementsValidatorTest {
 
@@ -37,6 +38,12 @@ public class InnerElementsValidatorTest {
     @Before
     public void setUp() throws Exception {
         validator = new InnerElementsValidator();
+    }
+
+    @Test
+    public void connectionShouldBeAbleToCreateWhenAllowAndDisallowRulesAreEmpty() throws Exception {
+        assertTrue(validator.canInsertElement(ELEMENT1, ELEMENT1));
+        assertTrue(validator.canInsertElement(ELEMENT1, ELEMENT2));
     }
 
     @Test

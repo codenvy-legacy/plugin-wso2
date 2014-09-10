@@ -35,6 +35,7 @@ import java.util.Set;
  * between elements, the same about adding diagram elements).
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 @Singleton
 public class ConnectionsValidator {
@@ -138,7 +139,7 @@ public class ConnectionsValidator {
             return isContainedRule(allowRules, sourceElement, targetElement);
         }
 
-        return disallowRules.containsKey(sourceElement) && !isContainedRule(disallowRules, sourceElement, targetElement);
+        return !isContainedRule(disallowRules, sourceElement, targetElement);
     }
 
     private boolean isContainedRule(@Nonnull Map<String, Set<String>> rules, @Nonnull String sourceElement, @Nonnull String targetElement) {
