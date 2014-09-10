@@ -18,31 +18,7 @@ package com.codenvy.ide.client.elements.mediators;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
-import com.codenvy.ide.client.elements.connectors.salesforce.Create;
-import com.codenvy.ide.client.elements.connectors.salesforce.Delete;
-import com.codenvy.ide.client.elements.connectors.salesforce.DescribeGlobal;
-import com.codenvy.ide.client.elements.connectors.salesforce.DescribeSubject;
-import com.codenvy.ide.client.elements.connectors.salesforce.DescribeSubjects;
-import com.codenvy.ide.client.elements.connectors.salesforce.EmptyRecycleBin;
-import com.codenvy.ide.client.elements.connectors.salesforce.GetUserInformation;
-import com.codenvy.ide.client.elements.connectors.salesforce.Init;
-import com.codenvy.ide.client.elements.connectors.salesforce.LogOut;
-import com.codenvy.ide.client.elements.connectors.salesforce.Query;
-import com.codenvy.ide.client.elements.connectors.salesforce.QueryAll;
-import com.codenvy.ide.client.elements.connectors.salesforce.QueryMore;
-import com.codenvy.ide.client.elements.connectors.salesforce.ResetPassword;
-import com.codenvy.ide.client.elements.connectors.salesforce.Retrieve;
-import com.codenvy.ide.client.elements.connectors.salesforce.Search;
-import com.codenvy.ide.client.elements.connectors.salesforce.SendEmail;
-import com.codenvy.ide.client.elements.connectors.salesforce.SendEmailMessage;
-import com.codenvy.ide.client.elements.connectors.salesforce.SetPassword;
-import com.codenvy.ide.client.elements.connectors.salesforce.Undelete;
-import com.codenvy.ide.client.elements.connectors.salesforce.Update;
-import com.codenvy.ide.client.elements.connectors.salesforce.Upset;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.mediators.enrich.Enrich;
-import com.codenvy.ide.client.elements.mediators.log.Log;
-import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -89,41 +65,6 @@ public class Filter extends AbstractElement {
     private static final String ELSE_BRANCH_SERIALIZATION_NAME = "else";
 
     private static final List<String> PROPERTIES = java.util.Collections.emptyList();
-    private static final List<String> COMPONENTS = Arrays.asList(Log.ELEMENT_NAME,
-                                                                 Property.ELEMENT_NAME,
-                                                                 PayloadFactory.ELEMENT_NAME,
-                                                                 Send.ELEMENT_NAME,
-                                                                 Header.ELEMENT_NAME,
-                                                                 Respond.ELEMENT_NAME,
-                                                                 Filter.ELEMENT_NAME,
-                                                                 Switch.ELEMENT_NAME,
-                                                                 Sequence.ELEMENT_NAME,
-                                                                 Enrich.ELEMENT_NAME,
-                                                                 LoopBack.ELEMENT_NAME,
-                                                                 CallTemplate.ELEMENT_NAME,
-                                                                 Call.ELEMENT_NAME,
-                                                                 Init.ELEMENT_NAME,
-                                                                 Create.ELEMENT_NAME,
-                                                                 Update.ELEMENT_NAME,
-                                                                 Delete.ELEMENT_NAME,
-                                                                 EmptyRecycleBin.ELEMENT_NAME,
-                                                                 LogOut.ELEMENT_NAME,
-                                                                 GetUserInformation.ELEMENT_NAME,
-                                                                 Delete.ELEMENT_NAME,
-                                                                 DescribeGlobal.ELEMENT_NAME,
-                                                                 DescribeSubject.ELEMENT_NAME,
-                                                                 DescribeSubjects.ELEMENT_NAME,
-                                                                 Query.ELEMENT_NAME,
-                                                                 QueryAll.ELEMENT_NAME,
-                                                                 QueryMore.ELEMENT_NAME,
-                                                                 ResetPassword.ELEMENT_NAME,
-                                                                 Retrieve.ELEMENT_NAME,
-                                                                 Search.ELEMENT_NAME,
-                                                                 SendEmail.ELEMENT_NAME,
-                                                                 SendEmailMessage.ELEMENT_NAME,
-                                                                 SetPassword.ELEMENT_NAME,
-                                                                 Undelete.ELEMENT_NAME,
-                                                                 Upset.ELEMENT_NAME);
 
     private final Provider<NameSpace> nameSpaceProvider;
 
@@ -151,8 +92,6 @@ public class Filter extends AbstractElement {
 
         sourceNameSpaces = Collections.createArray();
         xPathNameSpaces = Collections.createArray();
-
-        components.addAll(COMPONENTS);
 
         Branch thenBranch = branchProvider.get();
         thenBranch.setParent(this);

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client;
+package com.codenvy.ide.client.validators;
 
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Element;
@@ -23,8 +23,10 @@ import com.google.inject.Singleton;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The class provides an ability to manage rules which represent the meta model of the diagram. It is possible to analyze use cases and
@@ -35,25 +37,91 @@ import java.util.Map;
  * @author Andrey Plotnikov
  */
 @Singleton
-public class MetaModelValidator {
+public class ConnectionsValidator {
 
-    private final Map<String, List<String>> rules;
+    private final Map<String, Set<String>> allowRules;
+    private final Map<String, Set<String>> disallowRules;
 
     @Inject
-    public MetaModelValidator() {
-        rules = new HashMap<>();
+    public ConnectionsValidator() {
+        allowRules = new HashMap<>();
+        disallowRules = new HashMap<>();
     }
 
     /**
-     * Register new rules of connecting of diagram elements.
+     * Adds new rules of allowing connection of diagram elements.
      *
      * @param sourceElement
      *         element that is a start point of connection
      * @param targetElements
      *         elements which is able to be connected with start point element
      */
-    public void register(@Nonnull String sourceElement, @Nonnull List<String> targetElements) {
-        rules.put(sourceElement, targetElements);
+    public void addAllowRules(@Nonnull String sourceElement, @Nonnull List<String> targetElements) {
+        addRules(allowRules, sourceElement, targetElements);
+    }
+
+    /**
+     * Adds new rules of disallowing connection of diagram elements.
+     *
+     * @param sourceElement
+     *         element that is a start point of connection
+     * @param targetElements
+     *         elements which is able to be connected with start point element
+     */
+    public void addDisallowRules(@Nonnull String sourceElement, @Nonnull List<String> targetElements) {
+        addRules(disallowRules, sourceElement, targetElements);
+    }
+
+    private void addRules(@Nonnull Map<String, Set<String>> rules, @Nonnull String sourceElement, @Nonnull List<String> targetElements) {
+        Set<String> targets = rules.get(sourceElement);
+
+        if (targets == null) {
+            targets = new HashSet<>();
+
+            targets.addAll(targetElements);
+
+            rules.put(sourceElement, targets);
+        } else {
+            targets.addAll(targetElements);
+        }
+    }
+
+    /**
+     * Adds a new rule of allowing connection of diagram elements.
+     *
+     * @param sourceElement
+     *         element that is a start point of connection
+     * @param targetElement
+     *         elements which is able to be connected with start point element
+     */
+    public void addAllowRule(@Nonnull String sourceElement, @Nonnull String targetElement) {
+        addRule(allowRules, sourceElement, targetElement);
+    }
+
+    /**
+     * Adds a new rule of disallowing connection of diagram elements.
+     *
+     * @param sourceElement
+     *         element that is a start point of connection
+     * @param targetElement
+     *         elements which is able to be connected with start point element
+     */
+    public void addDisallowRule(@Nonnull String sourceElement, @Nonnull String targetElement) {
+        addRule(disallowRules, sourceElement, targetElement);
+    }
+
+    private void addRule(@Nonnull Map<String, Set<String>> rules, @Nonnull String sourceElement, @Nonnull String targetElement) {
+        Set<String> targets = rules.get(sourceElement);
+
+        if (targets == null) {
+            targets = new HashSet<>();
+
+            targets.add(targetElement);
+
+            rules.put(sourceElement, targets);
+        } else {
+            targets.add(targetElement);
+        }
     }
 
     /**
@@ -66,11 +134,19 @@ public class MetaModelValidator {
      * @return <code>true</code> if it is possible to create a connection, <code>false</code> it isn't
      */
     public boolean canCreateConnection(@Nonnull String sourceElement, @Nonnull String targetElement) {
+        if (allowRules.containsKey(sourceElement)) {
+            return isContainedRule(allowRules, sourceElement, targetElement);
+        }
+
+        return disallowRules.containsKey(sourceElement) && !isContainedRule(disallowRules, sourceElement, targetElement);
+    }
+
+    private boolean isContainedRule(@Nonnull Map<String, Set<String>> rules, @Nonnull String sourceElement, @Nonnull String targetElement) {
         if (!rules.containsKey(sourceElement)) {
             return false;
         }
 
-        List<String> targetElements = rules.get(sourceElement);
+        Set<String> targetElements = rules.get(sourceElement);
 
         return targetElements != null && targetElements.contains(targetElement);
     }

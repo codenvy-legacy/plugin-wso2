@@ -17,27 +17,6 @@ package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.common.ContentFormatter;
-import com.codenvy.ide.client.elements.connectors.salesforce.Create;
-import com.codenvy.ide.client.elements.connectors.salesforce.Delete;
-import com.codenvy.ide.client.elements.connectors.salesforce.DescribeGlobal;
-import com.codenvy.ide.client.elements.connectors.salesforce.DescribeSubject;
-import com.codenvy.ide.client.elements.connectors.salesforce.DescribeSubjects;
-import com.codenvy.ide.client.elements.connectors.salesforce.EmptyRecycleBin;
-import com.codenvy.ide.client.elements.connectors.salesforce.GetUserInformation;
-import com.codenvy.ide.client.elements.connectors.salesforce.Init;
-import com.codenvy.ide.client.elements.connectors.salesforce.LogOut;
-import com.codenvy.ide.client.elements.connectors.salesforce.Query;
-import com.codenvy.ide.client.elements.connectors.salesforce.QueryAll;
-import com.codenvy.ide.client.elements.connectors.salesforce.QueryMore;
-import com.codenvy.ide.client.elements.connectors.salesforce.ResetPassword;
-import com.codenvy.ide.client.elements.connectors.salesforce.Retrieve;
-import com.codenvy.ide.client.elements.connectors.salesforce.Search;
-import com.codenvy.ide.client.elements.connectors.salesforce.SendEmail;
-import com.codenvy.ide.client.elements.connectors.salesforce.SendEmailMessage;
-import com.codenvy.ide.client.elements.connectors.salesforce.SetPassword;
-import com.codenvy.ide.client.elements.connectors.salesforce.Undelete;
-import com.codenvy.ide.client.elements.connectors.salesforce.Update;
-import com.codenvy.ide.client.elements.connectors.salesforce.Upset;
 import com.codenvy.ide.client.elements.mediators.Call;
 import com.codenvy.ide.client.elements.mediators.CallTemplate;
 import com.codenvy.ide.client.elements.mediators.Filter;
@@ -58,7 +37,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -85,41 +63,6 @@ public class RootElement extends AbstractElement {
     private static final String ON_ERROR_ATTRIBUTE_NAME = "onError";
 
     private static final List<String> PROPERTIES = Collections.emptyList();
-    private static final List<String> COMPONENTS = Arrays.asList(Log.ELEMENT_NAME,
-                                                                 Property.ELEMENT_NAME,
-                                                                 PayloadFactory.ELEMENT_NAME,
-                                                                 Send.ELEMENT_NAME,
-                                                                 Header.ELEMENT_NAME,
-                                                                 Respond.ELEMENT_NAME,
-                                                                 Filter.ELEMENT_NAME,
-                                                                 Switch.ELEMENT_NAME,
-                                                                 Sequence.ELEMENT_NAME,
-                                                                 Enrich.ELEMENT_NAME,
-                                                                 LoopBack.ELEMENT_NAME,
-                                                                 CallTemplate.ELEMENT_NAME,
-                                                                 Call.ELEMENT_NAME,
-                                                                 Init.ELEMENT_NAME,
-                                                                 Create.ELEMENT_NAME,
-                                                                 Delete.ELEMENT_NAME,
-                                                                 Update.ELEMENT_NAME,
-                                                                 DescribeGlobal.ELEMENT_NAME,
-                                                                 DescribeSubject.ELEMENT_NAME,
-                                                                 DescribeSubjects.ELEMENT_NAME,
-                                                                 Update.ELEMENT_NAME,
-                                                                 EmptyRecycleBin.ELEMENT_NAME,
-                                                                 LogOut.ELEMENT_NAME,
-                                                                 GetUserInformation.ELEMENT_NAME,
-                                                                 Query.ELEMENT_NAME,
-                                                                 QueryAll.ELEMENT_NAME,
-                                                                 QueryMore.ELEMENT_NAME,
-                                                                 ResetPassword.ELEMENT_NAME,
-                                                                 Retrieve.ELEMENT_NAME,
-                                                                 Search.ELEMENT_NAME,
-                                                                 SendEmail.ELEMENT_NAME,
-                                                                 SendEmailMessage.ELEMENT_NAME,
-                                                                 SetPassword.ELEMENT_NAME,
-                                                                 Undelete.ELEMENT_NAME,
-                                                                 Upset.ELEMENT_NAME);
 
     private String name;
     private String onError;
@@ -130,8 +73,6 @@ public class RootElement extends AbstractElement {
 
         this.name = "";
         this.onError = "";
-
-        components.addAll(COMPONENTS);
 
         branches.add(branchProvider.get());
     }

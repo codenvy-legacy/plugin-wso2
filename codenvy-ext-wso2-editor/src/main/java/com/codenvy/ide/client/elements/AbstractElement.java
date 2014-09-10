@@ -30,11 +30,9 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * The abstract implementation of {@link Element}. It contains the implementation of general methods which might not be changed.
@@ -43,26 +41,22 @@ import java.util.Set;
  */
 public abstract class AbstractElement implements Element, Comparable<AbstractElement> {
 
-    private       String       id;
-    private       Element      parent;
-    private       String       title;
-    private final String       elementName;
-    private final List<String> properties;
-    private final String       serializationName;
+    private String  id;
+    private Element parent;
+    private String  title;
+    private int     x;
+    private int     y;
 
-    private final boolean isPossibleToAddBranches;
-    private final boolean needsToShowIconAndTitle;
-
+    private final String                  elementName;
+    private final List<String>            properties;
+    private final String                  serializationName;
+    private final boolean                 isPossibleToAddBranches;
+    private final boolean                 needsToShowIconAndTitle;
     private final MediatorCreatorsManager mediatorCreatorsManager;
 
     protected final EditorResources  resources;
     protected final Provider<Branch> branchProvider;
-
-    protected final List<Branch> branches;
-    protected final Set<String>  components;
-
-    private int x;
-    private int y;
+    protected final List<Branch>     branches;
 
     protected AbstractElement(@Nonnull String elementName,
                               @Nonnull String title,
@@ -83,7 +77,6 @@ public abstract class AbstractElement implements Element, Comparable<AbstractEle
         this.isPossibleToAddBranches = isPossibleToAddBranches;
         this.needsToShowIconAndTitle = needsToShowIconAndTitle;
 
-        this.components = new HashSet<>();
         this.branches = new ArrayList<>();
 
         this.resources = resources;
@@ -308,20 +301,8 @@ public abstract class AbstractElement implements Element, Comparable<AbstractEle
 
     /** {@inheritDoc} */
     @Override
-    public boolean isContainer() {
-        return !components.isEmpty();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public boolean needsToShowIconAndTitle() {
         return needsToShowIconAndTitle;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean hasComponent(@Nonnull String component) {
-        return components.contains(component);
     }
 
     /**
