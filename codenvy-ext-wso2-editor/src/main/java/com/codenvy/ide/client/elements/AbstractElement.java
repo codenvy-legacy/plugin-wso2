@@ -335,13 +335,13 @@ public abstract class AbstractElement implements Element, Comparable<AbstractEle
     }
 
     /**
-     * Convert properties of diagram element to XML attribute format.
+     * Convert attributes of diagram element to XML attribute format.
      *
      * @param attributes
      *         element's properties
      * @return XML format of element's attributes
      */
-    protected String convertPropertiesToXMLFormat(@NotNull Map<String, String> attributes) {
+    protected String convertAttributesToXMLFormat(@Nonnull Map<String, String> attributes) {
         StringBuilder content = new StringBuilder();
 
         for (Iterator iterator = attributes.entrySet().iterator(); iterator.hasNext(); ) {
@@ -354,6 +354,32 @@ public abstract class AbstractElement implements Element, Comparable<AbstractEle
 
             if (iterator.hasNext()) {
                 content.append(' ');
+            }
+        }
+
+        return content.toString();
+    }
+
+    /**
+     * Convert properties of diagram element to XML attribute format.
+     *
+     * @param properties
+     *         element's properties
+     * @return XML format of element's attributes
+     */
+    protected String convertPropertiesToXMLFormat(@Nonnull Map<String, String> properties) {
+        StringBuilder content = new StringBuilder();
+
+        for (Iterator iterator = properties.entrySet().iterator(); iterator.hasNext(); ) {
+            Map.Entry entry = (Map.Entry)iterator.next();
+            String value = (String)entry.getValue();
+
+            if (value != null && !value.isEmpty()) {
+                content.append('<').append(entry.getKey()).append('>').append(value).append("</").append(entry.getKey()).append('>');
+            }
+
+            if (iterator.hasNext()) {
+                content.append('\n');
             }
         }
 

@@ -76,7 +76,7 @@ public class AbstractConnector extends AbstractElement {
 
     /** {@inheritDoc} */
     @Override
-    public void applyAttributes(@Nonnull Node node) {
+    protected void applyAttributes(@Nonnull Node node) {
         if (node.hasAttributes()) {
             Node attribute = node.getAttributes().item(0);
 

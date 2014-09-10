@@ -1,7 +1,7 @@
 /*
  * Copyright 2014 Codenvy, S.A.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache  License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -101,7 +101,7 @@ public class GetFriendsIds extends AbstractConnector {
 
     /** {@inheritDoc} */
     @Override
-    public void applyProperty(@Nonnull Node node) {
+    protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
