@@ -101,7 +101,7 @@
 
     <g:DockLayoutPanel unit="PX" addStyleNames="{style.fullSize}">
 
-        <g:west size="53">
+        <g:west size="80">
             <g:SimpleLayoutPanel ui:field="toolbar" addStyleNames="{style.fullSize}"/>
         </g:west>
 

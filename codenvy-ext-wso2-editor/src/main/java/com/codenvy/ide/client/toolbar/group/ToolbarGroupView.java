@@ -13,29 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client;
+
+package com.codenvy.ide.client.toolbar.group;
+
+import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.client.toolbar.item.ToolbarItemPresenter;
+import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
 
 /**
- * The class that implements this interface contains an editor state.
- *
- * @param <T>
- *         type of editor state
  * @author Andrey Plotnikov
  */
-public interface HasState<T> {
+@ImplementedBy(ToolbarGroupViewImpl.class)
+public abstract class ToolbarGroupView extends AbstractView<ToolbarGroupView.ActionDelegate> {
 
-    /** @return a current editor state */
-    @Nonnull
-    T getState();
+    public abstract void setVisibleMainPanel(boolean visible);
 
-    /**
-     * Change current editor state.
-     *
-     * @param state
-     *         state that need to be applied
-     */
-    void setState(@Nonnull T state);
+    public abstract void addItem(@Nonnull ToolbarItemPresenter toolbarItem);
+
+    public interface ActionDelegate extends AbstractView.ActionDelegate {
+        void onButtonClicked();
+    }
 
 }

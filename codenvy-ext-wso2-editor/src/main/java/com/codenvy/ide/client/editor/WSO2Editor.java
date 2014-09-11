@@ -15,17 +15,15 @@
  */
 package com.codenvy.ide.client.editor;
 
-import com.codenvy.ide.client.EditorState;
-import com.codenvy.ide.client.State;
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
+import com.codenvy.ide.client.constants.EndpointCreatingState;
+import com.codenvy.ide.client.constants.JiraConnectorCreatingState;
+import com.codenvy.ide.client.constants.MediatorCreatingState;
+import com.codenvy.ide.client.constants.SalesForceConnectorCreatingState;
+import com.codenvy.ide.client.constants.ToolbarGroupIds;
+import com.codenvy.ide.client.constants.TwitterConnectorCreatingState;
 import com.codenvy.ide.client.elements.RootElement;
-import com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint;
-import com.codenvy.ide.client.elements.mediators.Call;
-import com.codenvy.ide.client.elements.mediators.CallTemplate;
-import com.codenvy.ide.client.elements.mediators.Filter;
-import com.codenvy.ide.client.elements.mediators.Header;
-import com.codenvy.ide.client.elements.mediators.LoopBack;
-import com.codenvy.ide.client.elements.mediators.Property;
-import com.codenvy.ide.client.elements.mediators.Respond;
 import com.codenvy.ide.client.elements.connectors.jira.AddAttachmentToIssueId;
 import com.codenvy.ide.client.elements.connectors.jira.CreateFilter;
 import com.codenvy.ide.client.elements.connectors.jira.CreateIssue;
@@ -90,15 +88,6 @@ import com.codenvy.ide.client.elements.connectors.salesforce.SetPassword;
 import com.codenvy.ide.client.elements.connectors.salesforce.UnDelete;
 import com.codenvy.ide.client.elements.connectors.salesforce.Update;
 import com.codenvy.ide.client.elements.connectors.salesforce.Upset;
-import com.codenvy.ide.client.elements.mediators.Send;
-import com.codenvy.ide.client.elements.mediators.Sequence;
-import com.codenvy.ide.client.elements.mediators.Switch;
-import com.codenvy.ide.client.elements.mediators.ValueType;
-import com.codenvy.ide.client.elements.mediators.enrich.Enrich;
-import com.codenvy.ide.client.elements.mediators.log.Log;
-import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
-import com.codenvy.ide.client.elements.widgets.element.ElementChangedListener;
-import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
 import com.codenvy.ide.client.elements.connectors.twitter.DestroyStatus;
 import com.codenvy.ide.client.elements.connectors.twitter.GetClosesTrends;
 import com.codenvy.ide.client.elements.connectors.twitter.GetDirectMessages;
@@ -113,6 +102,23 @@ import com.codenvy.ide.client.elements.connectors.twitter.GetSentDirectMessages;
 import com.codenvy.ide.client.elements.connectors.twitter.GetTopTrendPlaces;
 import com.codenvy.ide.client.elements.connectors.twitter.GetUserTimeLine;
 import com.codenvy.ide.client.elements.connectors.twitter.InitTwitter;
+import com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint;
+import com.codenvy.ide.client.elements.mediators.Call;
+import com.codenvy.ide.client.elements.mediators.CallTemplate;
+import com.codenvy.ide.client.elements.mediators.Filter;
+import com.codenvy.ide.client.elements.mediators.Header;
+import com.codenvy.ide.client.elements.mediators.LoopBack;
+import com.codenvy.ide.client.elements.mediators.Property;
+import com.codenvy.ide.client.elements.mediators.Respond;
+import com.codenvy.ide.client.elements.mediators.Send;
+import com.codenvy.ide.client.elements.mediators.Sequence;
+import com.codenvy.ide.client.elements.mediators.Switch;
+import com.codenvy.ide.client.elements.mediators.ValueType;
+import com.codenvy.ide.client.elements.mediators.enrich.Enrich;
+import com.codenvy.ide.client.elements.mediators.log.Log;
+import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
+import com.codenvy.ide.client.elements.widgets.element.ElementChangedListener;
+import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
 import com.codenvy.ide.client.inject.EditorFactory;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
@@ -226,7 +232,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.State.CREATING_NOTHING;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.AvailableConfigs;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion.FINAL;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion.SUBMISSION;
@@ -282,8 +289,6 @@ import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType;
 import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType.Dynamic;
 import static com.codenvy.ide.client.elements.mediators.ValueType.EXPRESSION;
 import static com.codenvy.ide.client.elements.mediators.ValueType.LITERAL;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.AvailableConfigs;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType.RegistryKey;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType.SourceXML;
@@ -336,19 +341,15 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
     private final List<EditorChangeListener> listeners;
 
     @Inject
-    public WSO2Editor(WSO2EditorView view, EditorFactory editorFactory, RootElement rootElement) {
+    public WSO2Editor(WSO2EditorView view, EditorFactory editorFactory, ToolbarPresenter toolbar, RootElement rootElement) {
         super(view);
 
         this.listeners = new ArrayList<>();
-
-        EditorState<State> state = new EditorState<>(CREATING_NOTHING);
-
+        this.toolbar = toolbar;
         this.rootElement = rootElement;
 
-        this.rootElementPresenter = editorFactory.createElementPresenter(state, rootElement);
+        this.rootElementPresenter = editorFactory.createElementPresenter(rootElement);
         this.rootElementPresenter.addElementChangedListener(this);
-
-        this.toolbar = editorFactory.createToolbar(state);
     }
 
     @Inject
@@ -952,7 +953,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
         innerElementsValidator.addAllowRule(Call.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
 
         innerElementsValidator.addAllowRule(Send.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
-        
+
         innerElementsValidator.addDisallowRule(RootElement.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
 
         innerElementsValidator.addDisallowRule(Filter.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
@@ -1055,433 +1056,737 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                   Provider<GetUserTimeLine> getUserTimeLineProvider,
                                                   Provider<InitTwitter> initTwitterProvider) {
 
-        mediatorCreatorsManager.register(Log.ELEMENT_NAME, Log.SERIALIZATION_NAME, State.CREATING_LOG, logProvider);
+        mediatorCreatorsManager.register(Log.ELEMENT_NAME,
+                                         Log.SERIALIZATION_NAME,
+                                         MediatorCreatingState.LOG,
+                                         logProvider);
 
-        mediatorCreatorsManager.register(Enrich.ELEMENT_NAME, Enrich.SERIALIZATION_NAME, State.CREATING_ENRICH, enrichProvider);
+        mediatorCreatorsManager.register(Enrich.ELEMENT_NAME,
+                                         Enrich.SERIALIZATION_NAME,
+                                         MediatorCreatingState.ENRICH,
+                                         enrichProvider);
 
-        mediatorCreatorsManager.register(Filter.ELEMENT_NAME, Filter.SERIALIZATION_NAME, State.CREATING_FILTER, filterProvider);
+        mediatorCreatorsManager.register(Filter.ELEMENT_NAME,
+                                         Filter.SERIALIZATION_NAME,
+                                         MediatorCreatingState.FILTER,
+                                         filterProvider);
 
-        mediatorCreatorsManager.register(Header.ELEMENT_NAME, Header.SERIALIZATION_NAME, State.CREATING_HEADER, headerProvider);
+        mediatorCreatorsManager.register(Header.ELEMENT_NAME,
+                                         Header.SERIALIZATION_NAME,
+                                         MediatorCreatingState.HEADER,
+                                         headerProvider);
 
-        mediatorCreatorsManager.register(Call.ELEMENT_NAME, Call.SERIALIZATION_NAME, State.CREATING_CALL, callProvider);
+        mediatorCreatorsManager.register(Call.ELEMENT_NAME,
+                                         Call.SERIALIZATION_NAME,
+                                         MediatorCreatingState.CALL_MEDIATOR,
+                                         callProvider);
 
         mediatorCreatorsManager.register(CallTemplate.ELEMENT_NAME,
                                          CallTemplate.SERIALIZATION_NAME,
-                                         State.CREATING_CALLTEMPLATE,
+                                         MediatorCreatingState.CALLTEMPLATE,
                                          callTemplateProvider);
 
-        mediatorCreatorsManager.register(LoopBack.ELEMENT_NAME, LoopBack.SERIALIZATION_NAME, State.CREATING_LOOPBACK, loopBackProvider);
+        mediatorCreatorsManager.register(LoopBack.ELEMENT_NAME,
+                                         LoopBack.SERIALIZATION_NAME,
+                                         MediatorCreatingState.LOOPBACK,
+                                         loopBackProvider);
 
         mediatorCreatorsManager.register(PayloadFactory.ELEMENT_NAME,
                                          PayloadFactory.SERIALIZATION_NAME,
-                                         State.CREATING_PAYLOADFACTORY,
+                                         MediatorCreatingState.PAYLOAD,
                                          payloadFactoryProvider);
 
-        mediatorCreatorsManager.register(Property.ELEMENT_NAME, Property.SERIALIZATION_NAME, State.CREATING_PROPERTY, propertyProvider);
+        mediatorCreatorsManager.register(Property.ELEMENT_NAME,
+                                         Property.SERIALIZATION_NAME,
+                                         MediatorCreatingState.PROPERTY,
+                                         propertyProvider);
 
-        mediatorCreatorsManager.register(Respond.ELEMENT_NAME, Respond.SERIALIZATION_NAME, State.CREATING_RESPOND, respondProvider);
+        mediatorCreatorsManager.register(Respond.ELEMENT_NAME,
+                                         Respond.SERIALIZATION_NAME,
+                                         MediatorCreatingState.RESPOND,
+                                         respondProvider);
 
-        mediatorCreatorsManager.register(Send.ELEMENT_NAME, Send.SERIALIZATION_NAME, State.CREATING_SEND, sendProvider);
+        mediatorCreatorsManager.register(Send.ELEMENT_NAME,
+                                         Send.SERIALIZATION_NAME,
+                                         MediatorCreatingState.SEND,
+                                         sendProvider);
 
-        mediatorCreatorsManager.register(Sequence.ELEMENT_NAME, Sequence.SERIALIZATION_NAME, State.CREATING_SEQUENCE, sequenceProvider);
+        mediatorCreatorsManager.register(Sequence.ELEMENT_NAME,
+                                         Sequence.SERIALIZATION_NAME,
+                                         MediatorCreatingState.SEQUENCE,
+                                         sequenceProvider);
 
-        mediatorCreatorsManager.register(Switch.ELEMENT_NAME, Switch.SERIALIZATION_NAME, State.CREATING_SWITCH, switchProvider);
+        mediatorCreatorsManager.register(Switch.ELEMENT_NAME,
+                                         Switch.SERIALIZATION_NAME,
+                                         MediatorCreatingState.SWITCH,
+                                         switchProvider);
 
         mediatorCreatorsManager.register(AddressEndpoint.ELEMENT_NAME,
                                          AddressEndpoint.SERIALIZATION_NAME,
-                                         State.CREATING_ADDRESS_ENDPOINT,
+                                         EndpointCreatingState.ADDRESS,
                                          addressEndpointProvider);
 
         mediatorCreatorsManager.register(Init.ELEMENT_NAME,
                                          Init.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_INIT,
+                                         SalesForceConnectorCreatingState.INIT,
                                          initSalesforceProvider);
 
         mediatorCreatorsManager.register(Create.ELEMENT_NAME,
                                          Create.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_CREATE,
+                                         SalesForceConnectorCreatingState.CREATE,
                                          createSalesforceProvider);
 
         mediatorCreatorsManager.register(Update.ELEMENT_NAME,
                                          Update.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_UPDATE,
+                                         SalesForceConnectorCreatingState.UPDATE,
                                          updateSalesforceProvider);
-
 
         mediatorCreatorsManager.register(Delete.ELEMENT_NAME,
                                          Delete.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_DELETE,
+                                         SalesForceConnectorCreatingState.DELETE,
                                          deleteSaleForceProvider);
 
         mediatorCreatorsManager.register(EmptyRecycleBin.ELEMENT_NAME,
                                          EmptyRecycleBin.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_EMPTY_RECYCLE_BIN,
+                                         SalesForceConnectorCreatingState.EMPTY_RECYCLE_BIN,
                                          emptyRecycleBinProvider);
 
         mediatorCreatorsManager.register(LogOut.ELEMENT_NAME,
                                          LogOut.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_LOGOUT,
+                                         SalesForceConnectorCreatingState.LOGOUT,
                                          logOutProvider);
 
         mediatorCreatorsManager.register(GetUserInformation.ELEMENT_NAME,
                                          GetUserInformation.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_GET_USER_INFORMATION,
+                                         SalesForceConnectorCreatingState.GET_USER_INFORMATION,
                                          getUserInformationProvider);
 
         mediatorCreatorsManager.register(DescribeGlobal.ELEMENT_NAME,
                                          DescribeGlobal.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_DESCRIBE_GLOBAL,
+                                         SalesForceConnectorCreatingState.DESCRIBE_GLOBAL,
                                          describeGlobalProvider);
 
         mediatorCreatorsManager.register(DescribeSubject.ELEMENT_NAME,
                                          DescribeSubject.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_DESCRIBE_SUBJECT,
+                                         SalesForceConnectorCreatingState.DESCRIBE_SUBJECT,
                                          describeSobjectProvider);
 
         mediatorCreatorsManager.register(DescribeSubjects.ELEMENT_NAME,
                                          DescribeSubjects.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_DESCRIBE_SUBJECTS,
+                                         SalesForceConnectorCreatingState.DESCRIBE_SUBJECTS,
                                          describeSobjectsProvider);
 
         mediatorCreatorsManager.register(Query.ELEMENT_NAME,
                                          Query.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_QUERY,
+                                         SalesForceConnectorCreatingState.QUERY,
                                          queryProvider);
 
         mediatorCreatorsManager.register(QueryAll.ELEMENT_NAME,
                                          QueryAll.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_QURY_ALL,
+                                         SalesForceConnectorCreatingState.QUERY_ALL,
                                          queryAllProvider);
 
         mediatorCreatorsManager.register(QueryMore.ELEMENT_NAME,
                                          QueryMore.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_QUERY_MORE,
+                                         SalesForceConnectorCreatingState.QUERY_MORE,
                                          queryMoreProvider);
 
         mediatorCreatorsManager.register(ResetPassword.ELEMENT_NAME,
                                          ResetPassword.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_RESET_PASSWORD,
+                                         SalesForceConnectorCreatingState.RESET_PASSWORD,
                                          resetPasswordProvider);
 
         mediatorCreatorsManager.register(Retrieve.ELEMENT_NAME,
                                          Retrieve.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_RETRIVE,
+                                         SalesForceConnectorCreatingState.RETRIVE,
                                          retrieveProvider);
 
         mediatorCreatorsManager.register(Search.ELEMENT_NAME,
                                          Search.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_SEARCH,
+                                         SalesForceConnectorCreatingState.SEARCH,
                                          searchProvider);
 
         mediatorCreatorsManager.register(SendEmail.ELEMENT_NAME,
                                          SendEmail.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_SEND_EMAIL,
+                                         SalesForceConnectorCreatingState.SEND_EMAIL,
                                          sendEmailProvider);
 
         mediatorCreatorsManager.register(SendEmailMessage.ELEMENT_NAME,
                                          SendEmailMessage.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_SEND_EMAIL_MESSAGE,
+                                         SalesForceConnectorCreatingState.SEND_EMAIL_MESSAGE,
                                          sendEmailMessageProvider);
 
         mediatorCreatorsManager.register(SetPassword.ELEMENT_NAME,
                                          SetPassword.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_SET_PASSWORD,
+                                         SalesForceConnectorCreatingState.SET_PASSWORD,
                                          setPasswordProvider);
 
         mediatorCreatorsManager.register(UnDelete.ELEMENT_NAME,
                                          UnDelete.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_UNDELETE,
+                                         SalesForceConnectorCreatingState.UNDELETE,
                                          undeleteProvider);
 
         mediatorCreatorsManager.register(Upset.ELEMENT_NAME,
                                          Upset.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_UPSET,
+                                         SalesForceConnectorCreatingState.UPSET,
                                          upsetProvider);
 
         mediatorCreatorsManager.register(AddAttachmentToIssueId.ELEMENT_NAME,
                                          AddAttachmentToIssueId.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_ADD_ATTACHMENT_TO_ISSUE_ID,
+                                         JiraConnectorCreatingState.ADD_ATTACHMENT_TO_ISSUE_ID,
                                          addAttachmentToIssueIdProvider);
 
         mediatorCreatorsManager.register(CreateFilter.ELEMENT_NAME,
                                          CreateFilter.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_CREATE_FILTER,
+                                         JiraConnectorCreatingState.CREATE_FILTER,
                                          createFilterProvider);
 
         mediatorCreatorsManager.register(CreateIssue.ELEMENT_NAME,
                                          CreateIssue.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_CREATE_ISSUE,
+                                         JiraConnectorCreatingState.CREATE_ISSUE,
                                          createIssueProvider);
 
         mediatorCreatorsManager.register(DeleteAvatarForProject.ELEMENT_NAME,
                                          DeleteAvatarForProject.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_DELETE_AVATAR_FOR_PROJECT,
+                                         JiraConnectorCreatingState.DELETE_AVATAR_FOR_PROJECT,
                                          deleteAvatarForProjectProvider);
 
         mediatorCreatorsManager.register(DeleteComment.ELEMENT_NAME,
                                          DeleteComment.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_DELETE_COMMENT,
+                                         JiraConnectorCreatingState.DELETE_COMMENT,
                                          deleteCommentProvider);
 
         mediatorCreatorsManager.register(DeleteFilter.ELEMENT_NAME,
                                          DeleteFilter.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_DELETE_FILTER,
+                                         JiraConnectorCreatingState.DELETE_FILTER,
                                          deleteFilterProvider);
 
         mediatorCreatorsManager.register(GetDashboard.ELEMENT_NAME,
                                          GetDashboard.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_DASHBOARD,
+                                         JiraConnectorCreatingState.GET_DASHBOARD,
                                          getDashboardProvider);
 
         mediatorCreatorsManager.register(DoTransition.ELEMENT_NAME,
                                          DoTransition.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_DO_TRANSITION,
+                                         JiraConnectorCreatingState.DO_TRANSITION,
                                          doTransitionProvider);
 
         mediatorCreatorsManager.register(GetAvatarsForProject.ELEMENT_NAME,
                                          GetAvatarsForProject.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_AVATARS_FOR_PROJECT,
+                                         JiraConnectorCreatingState.GET_AVATARS_FOR_PROJECT,
                                          getAvatarsForProjectProvider);
 
         mediatorCreatorsManager.register(GetComments.ELEMENT_NAME,
                                          GetComments.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_COMMENTS,
+                                         JiraConnectorCreatingState.GET_COMMENTS,
                                          getCommentsProvider);
 
         mediatorCreatorsManager.register(GetComponentsOfProject.ELEMENT_NAME,
                                          GetComponentsOfProject.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_COMPONENTS_OF_PROJECT,
+                                         JiraConnectorCreatingState.GET_COMPONENTS_OF_PROJECT,
                                          getComponentsOfProjectProvider);
 
         mediatorCreatorsManager.register(GetDashboardById.ELEMENT_NAME,
                                          GetDashboardById.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_DASHBOARD_BY_ID,
+                                         JiraConnectorCreatingState.GET_DASHBOARD_BY_ID,
                                          getDashboardByIdProvider);
 
         mediatorCreatorsManager.register(GetFavouriteFilters.ELEMENT_NAME,
                                          GetFavouriteFilters.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_FAVOURITE_FILTERS,
+                                         JiraConnectorCreatingState.GET_FAVOURITE_FILTERS,
                                          getFavouriteFiltersProvider);
 
         mediatorCreatorsManager.register(GetFilterById.ELEMENT_NAME,
                                          GetFilterById.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_FILTER_BY_ID,
+                                         JiraConnectorCreatingState.GET_FILTER_BY_ID,
                                          getFilterByIdProvider);
 
         mediatorCreatorsManager.register(GetGroup.ELEMENT_NAME,
                                          GetGroup.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_GROUP,
+                                         JiraConnectorCreatingState.GET_GROUP,
                                          getGroupProvider);
 
         mediatorCreatorsManager.register(GetIssue.ELEMENT_NAME,
                                          GetIssue.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_ISSUE,
+                                         JiraConnectorCreatingState.GET_ISSUE,
                                          getIssueProvider);
 
         mediatorCreatorsManager.register(GetIssuePriorities.ELEMENT_NAME,
                                          GetIssuePriorities.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_ISSUE_PRIORITIES,
+                                         JiraConnectorCreatingState.GET_ISSUE_PRIORITIES,
                                          getIssuePrioritiesProvider);
 
         mediatorCreatorsManager.register(GetIssuePriorityById.ELEMENT_NAME,
                                          GetIssuePriorityById.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_ISSUE_PRIORITY_BY_ID,
+                                         JiraConnectorCreatingState.GET_ISSUE_PRIORITY_BY_ID,
                                          getIssuePriorityByIdProvider);
 
         mediatorCreatorsManager.register(GetIssueTypeById.ELEMENT_NAME,
                                          GetIssueTypeById.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_ISSUE_TYPE_BY_ID,
+                                         JiraConnectorCreatingState.GET_ISSUE_TYPE_BY_ID,
                                          getIssueTypeByIdProvider);
 
         mediatorCreatorsManager.register(GetIssueTypes.ELEMENT_NAME,
                                          GetIssueTypes.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_ISSUE_TYPES,
+                                         JiraConnectorCreatingState.GET_ISSUE_TYPES,
                                          getIssueTypesProvider);
 
         mediatorCreatorsManager.register(GetIssuesForUser.ELEMENT_NAME,
                                          GetIssuesForUser.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_ISSUES_FOR_USER,
+                                         JiraConnectorCreatingState.GET_ISSUES_FOR_USER,
                                          getIssuesForUserProvider);
 
         mediatorCreatorsManager.register(GetProject.ELEMENT_NAME,
                                          GetProject.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_PROJECT,
+                                         JiraConnectorCreatingState.GET_PROJECT,
                                          getProjectProvider);
 
         mediatorCreatorsManager.register(GetRolesByIdOfProject.ELEMENT_NAME,
                                          GetRolesByIdOfProject.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_ROLES_BY_ID_OF_PROJECT,
+                                         JiraConnectorCreatingState.GET_ROLES_BY_ID_OF_PROJECT,
                                          getRolesByIdOfProjectProvider);
 
         mediatorCreatorsManager.register(GetRolesOfProject.ELEMENT_NAME,
                                          GetRolesOfProject.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_ROLES_OF_PROJECT,
+                                         JiraConnectorCreatingState.GET_ROLES_OF_PROJECT,
                                          getRolesOfProjectProvider);
 
         mediatorCreatorsManager.register(GetStatusesOfProject.ELEMENT_NAME,
                                          GetStatusesOfProject.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_STATUSES_OF_PROJECT,
+                                         JiraConnectorCreatingState.GET_STATUSES_OF_PROJECT,
                                          getStatusesOfProjectProvider);
 
         mediatorCreatorsManager.register(GetTransitions.ELEMENT_NAME,
                                          GetTransitions.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_TRANSITIONS,
+                                         JiraConnectorCreatingState.GET_TRANSITIONS,
                                          getTransitionsProvider);
 
         mediatorCreatorsManager.register(GetUser.ELEMENT_NAME,
                                          GetUser.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_USER,
+                                         JiraConnectorCreatingState.GET_USER,
                                          getUserProvider);
 
         mediatorCreatorsManager.register(GetUserAssignableProjects.ELEMENT_NAME,
                                          GetUserAssignableProjects.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_USER_ASSIGNABLE_PROJECT,
+                                         JiraConnectorCreatingState.GET_USER_ASSIGNABLE_PROJECT,
                                          getUserAssignableProjectsProvider);
 
         mediatorCreatorsManager.register(GetUserPermissions.ELEMENT_NAME,
                                          GetUserPermissions.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_USER_PERMISSIONS,
+                                         JiraConnectorCreatingState.GET_USER_PERMISSIONS,
                                          getUserPermissionsProvider);
 
         mediatorCreatorsManager.register(GetVersionsOfProject.ELEMENT_NAME,
                                          GetVersionsOfProject.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_VERSIONS_OF_PROJECT,
+                                         JiraConnectorCreatingState.GET_VERSIONS_OF_PROJECT,
                                          getVersionsOfProjectProvider);
 
         mediatorCreatorsManager.register(GetVotesForIssue.ELEMENT_NAME,
                                          GetVotesForIssue.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_VOTES_FOR_ISSUE,
+                                         JiraConnectorCreatingState.GET_VOTES_FOR_ISSUE,
                                          getVotesForIssueProvider);
 
         mediatorCreatorsManager.register(InitJira.ELEMENT_NAME,
                                          InitJira.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_INIT,
+                                         JiraConnectorCreatingState.INIT,
                                          initJiraProvider);
 
         mediatorCreatorsManager.register(PostComment.ELEMENT_NAME,
                                          PostComment.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_POST_COMMENT,
+                                         JiraConnectorCreatingState.POST_COMMENT,
                                          postCommentProvider);
 
         mediatorCreatorsManager.register(SearchAssignableUser.ELEMENT_NAME,
                                          SearchAssignableUser.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_SEARCH_ASSIGNABLE_USER,
+                                         JiraConnectorCreatingState.SEARCH_ASSIGNABLE_USER,
                                          searchAssignableUserProvider);
 
         mediatorCreatorsManager.register(SearchAssignableUserMultiProject.ELEMENT_NAME,
                                          SearchAssignableUserMultiProject.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_SEARCH_ASSIGNABLE_USER_MULTI_PROJECT,
+                                         JiraConnectorCreatingState.SEARCH_ASSIGNABLE_USER_MULTI_PROJECT,
                                          searchAssignableUserMultiProjectProvider);
 
         mediatorCreatorsManager.register(SearchIssueViewableUsers.ELEMENT_NAME,
                                          SearchIssueViewableUsers.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_SEARCH_ISSUE_VIEWABLE_USERS,
+                                         JiraConnectorCreatingState.SEARCH_ISSUE_VIEWABLE_USERS,
                                          searchIssueViewableUsersProvider);
 
         mediatorCreatorsManager.register(SearchJira.ELEMENT_NAME,
                                          SearchJira.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_SEARCH_JIRA,
+                                         JiraConnectorCreatingState.SEARCH_JIRA,
                                          searchJiraProvider);
 
         mediatorCreatorsManager.register(SearchUser.ELEMENT_NAME,
                                          SearchUser.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_SEARCH_USER,
+                                         JiraConnectorCreatingState.SEARCH_USER,
                                          searchUserProvider);
 
         mediatorCreatorsManager.register(SetActorsToRoleOfProject.ELEMENT_NAME,
                                          SetActorsToRoleOfProject.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_SET_ACTORS_TO_ROLE_OF_PROJECT,
+                                         JiraConnectorCreatingState.SET_ACTORS_TO_ROLE_OF_PROJECT,
                                          setActorsToRoleOfProjectProvider);
 
         mediatorCreatorsManager.register(UpdateComment.ELEMENT_NAME,
                                          UpdateComment.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_UPDATE_COMMENT,
+                                         JiraConnectorCreatingState.UPDATE_COMMENT,
                                          updateCommentProvider);
 
         mediatorCreatorsManager.register(UpdateFilterById.ELEMENT_NAME,
                                          UpdateFilterById.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_UPDATE_FILTER_BY_ID,
+                                         JiraConnectorCreatingState.UPDATE_FILTER_BY_ID_JIRA,
                                          updateFilterByIdProvider);
 
         mediatorCreatorsManager.register(UpdateIssue.ELEMENT_NAME,
                                          UpdateIssue.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_UPDATE_ISSUE,
+                                         JiraConnectorCreatingState.UPDATE_ISSUE,
                                          updateIssueProvider);
 
         mediatorCreatorsManager.register(UpdateIssueAssignee.ELEMENT_NAME,
                                          UpdateIssueAssignee.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_UPDATE_ISSUE_ASSIGNEE,
+                                         JiraConnectorCreatingState.UPDATE_ISSUE_ASSIGNEE,
                                          updateIssueAssigneeProvider);
 
         mediatorCreatorsManager.register(DestroyStatus.ELEMENT_NAME,
                                          DestroyStatus.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_DESTROY_STATUS,
+                                         TwitterConnectorCreatingState.DESTROY_STATUS,
                                          destroyStatusProvider);
 
         mediatorCreatorsManager.register(GetClosesTrends.ELEMENT_NAME,
                                          GetClosesTrends.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_CLOTHES_TRENDS,
+                                         TwitterConnectorCreatingState.GET_CLOTHES_TRENDS,
                                          getClosesTrendsProvider);
 
         mediatorCreatorsManager.register(GetDirectMessages.ELEMENT_NAME,
                                          GetDirectMessages.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_DIRECT_MESSAGES,
+                                         TwitterConnectorCreatingState.GET_DIRECT_MESSAGES,
                                          getDirectMessagesProvider);
 
         mediatorCreatorsManager.register(GetFollowers.ELEMENT_NAME,
                                          GetFollowers.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_FOLLOWERS,
+                                         TwitterConnectorCreatingState.GET_FOLLOWERS,
                                          getFollowersProvider);
 
         mediatorCreatorsManager.register(GetFollowersIds.ELEMENT_NAME,
                                          GetFollowersIds.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_FOLLOWERS_IDS,
+                                         TwitterConnectorCreatingState.GET_FOLLOWERS_IDS,
                                          getFollowersIdsProvider);
 
         mediatorCreatorsManager.register(GetFriends.ELEMENT_NAME,
                                          GetFriends.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_FRIENDS,
+                                         TwitterConnectorCreatingState.GET_FRIENDS,
                                          getFriendsProvider);
 
         mediatorCreatorsManager.register(GetFriendsIds.ELEMENT_NAME,
                                          GetFriendsIds.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_FRIENDS_IDS,
+                                         TwitterConnectorCreatingState.GET_FRIENDS_IDS,
                                          getFriendsIdsProvider);
 
         mediatorCreatorsManager.register(GetHomeTimeLine.ELEMENT_NAME,
                                          GetHomeTimeLine.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_HOME_TIME_LINE,
+                                         TwitterConnectorCreatingState.GET_HOME_TIME_LINE,
                                          getHomeTimeLineProvider);
 
         mediatorCreatorsManager.register(GetMentionsTimeLine.ELEMENT_NAME,
                                          GetMentionsTimeLine.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_MENTIONS_TIME_LINE,
+                                         TwitterConnectorCreatingState.GET_MENTIONS_TIME_LINE,
                                          getMentionsTimeLineProvider);
 
         mediatorCreatorsManager.register(GetRetweetsOfMine.ELEMENT_NAME,
                                          GetRetweetsOfMine.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_RETWEETS_OF_MINE,
+                                         TwitterConnectorCreatingState.GET_RETWEETS_OF_MINE,
                                          getRetweetsOfMineProvider);
 
         mediatorCreatorsManager.register(GetSentDirectMessages.ELEMENT_NAME,
                                          GetSentDirectMessages.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_SENT_DIRECT_MESSAGE,
+                                         TwitterConnectorCreatingState.GET_SENT_DIRECT_MESSAGE,
                                          getSentDirectMessagesProvider);
 
         mediatorCreatorsManager.register(GetTopTrendPlaces.ELEMENT_NAME,
                                          GetTopTrendPlaces.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_TOP_TREND_PLACES,
+                                         TwitterConnectorCreatingState.GET_TOP_TREND_PLACES,
                                          getTopTrendPlacesProvider);
 
         mediatorCreatorsManager.register(GetUserTimeLine.ELEMENT_NAME,
                                          GetUserTimeLine.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_USER_TIME_LINE,
+                                         TwitterConnectorCreatingState.GET_USER_TIME_LINE,
                                          getUserTimeLineProvider);
 
         mediatorCreatorsManager.register(InitTwitter.ELEMENT_NAME,
                                          InitTwitter.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_INIT,
+                                         TwitterConnectorCreatingState.INIT,
                                          initTwitterProvider);
+    }
+
+    @Inject
+    private void configureToolbar(ToolbarPresenter toolbar,
+                                  EditorResources resources,
+                                  WSO2EditorLocalizationConstant localizationConstant) {
+        toolbar.addGroup(ToolbarGroupIds.MEDIATORS, "Mediators");
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarLogTooltip(),
+                        localizationConstant.toolbarLogTooltip(),
+                        resources.logToolbar(),
+                        MediatorCreatingState.LOG);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSequenceTooltip(),
+                        localizationConstant.toolbarSequenceTooltip(),
+                        resources.sequenceToolbar(),
+                        MediatorCreatingState.SEQUENCE);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarHeaderTooltip(),
+                        localizationConstant.toolbarHeaderTooltip(),
+                        resources.headerToolbar(),
+                        MediatorCreatingState.HEADER);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarCallTemplateTooltip(),
+                        localizationConstant.toolbarCallTemplateTooltip(),
+                        resources.callTemplateToolbar(),
+                        MediatorCreatingState.CALLTEMPLATE);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarCallTooltip(),
+                        localizationConstant.toolbarCallTooltip(),
+                        resources.callToolbar(),
+                        MediatorCreatingState.CALL_MEDIATOR);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarEnrichTooltip(),
+                        localizationConstant.toolbarEnrichTooltip(),
+                        resources.enrichToolbar(),
+                        MediatorCreatingState.ENRICH);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarFilterTooltip(),
+                        localizationConstant.toolbarFilterTooltip(),
+                        resources.filterToolbar(),
+                        MediatorCreatingState.FILTER);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarPropertyTooltip(),
+                        localizationConstant.toolbarPropertyTooltip(),
+                        resources.propertyToolbar(),
+                        MediatorCreatingState.PROPERTY);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarLoopBackTooltip(),
+                        localizationConstant.toolbarLoopBackTooltip(),
+                        resources.loopBackToolbar(),
+                        MediatorCreatingState.LOOPBACK);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarPayloadFactoryTooltip(),
+                        localizationConstant.toolbarPayloadFactoryTooltip(),
+                        resources.payloadFactoryToolbar(),
+                        MediatorCreatingState.PAYLOAD);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSwitchTooltip(),
+                        localizationConstant.toolbarSwitchTooltip(),
+                        resources.switchToolbar(),
+                        MediatorCreatingState.SWITCH);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSendTooltip(),
+                        localizationConstant.toolbarSendTooltip(),
+                        resources.sendToolbar(),
+                        MediatorCreatingState.SEND);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarRespondTooltip(),
+                        localizationConstant.toolbarRespondTooltip(),
+                        resources.respondToolbar(),
+                        MediatorCreatingState.RESPOND);
+
+        toolbar.addGroup(ToolbarGroupIds.ENDPOINTS, "Endpoints");
+
+        toolbar.addItem(ToolbarGroupIds.ENDPOINTS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarAddressEndpointTooltip(),
+                        localizationConstant.toolbarAddressEndpointTooltip(),
+                        resources.addressToolbar(),
+                        EndpointCreatingState.ADDRESS);
+
+        toolbar.addGroup(ToolbarGroupIds.SALESFORCE_CONNECTORS, "Salesforce Connectors");
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceCreateConnectorTooltip(),
+                        localizationConstant.toolbarSalesforceCreateConnectorTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.CREATE);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesForceDeleteTooltip(),
+                        localizationConstant.toolbarSalesForceDeleteTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.DELETE);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceDescribeGlobalConnectorTooltip(),
+                        localizationConstant.toolbarSalesforceDescribeGlobalConnectorTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.DESCRIBE_GLOBAL);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceDescribeSubjectConnectorTooltip(),
+                        localizationConstant.toolbarSalesforceDescribeSubjectConnectorTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.DESCRIBE_SUBJECT);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceDescribeSubjectsConnectorTooltip(),
+                        localizationConstant.toolbarSalesforceDescribeSubjectsConnectorTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.DESCRIBE_SUBJECTS);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceEmptyRecycleBinConnector(),
+                        localizationConstant.toolbarSalesforceEmptyRecycleBinConnector(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.EMPTY_RECYCLE_BIN);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceGetUserInfoConnector(),
+                        localizationConstant.toolbarSalesforceGetUserInfoConnector(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.GET_USER_INFORMATION);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceInitConnectorTooltip(),
+                        localizationConstant.toolbarSalesforceInitConnectorTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.INIT);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceLogOutConnector(),
+                        localizationConstant.toolbarSalesforceLogOutConnector(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.LOGOUT);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceQueryTooltip(),
+                        localizationConstant.toolbarSalesforceQueryTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.QUERY);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceQueryTooltip(),
+                        localizationConstant.toolbarSalesforceQueryTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.QUERY);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceQueryAllTooltip(),
+                        localizationConstant.toolbarSalesforceQueryAllTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.QUERY_ALL);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceQueryMoreTooltip(),
+                        localizationConstant.toolbarSalesforceQueryMoreTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.QUERY_MORE);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceResetPasswordTooltip(),
+                        localizationConstant.toolbarSalesforceResetPasswordTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.RESET_PASSWORD);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceRetriveTooltip(),
+                        localizationConstant.toolbarSalesforceRetriveTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.RETRIVE);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceSearchTooltip(),
+                        localizationConstant.toolbarSalesforceSearchTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.SEARCH);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceSendEmailTooltip(),
+                        localizationConstant.toolbarSalesforceSendEmailTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.SEND_EMAIL);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceSendEmailMessageTooltip(),
+                        localizationConstant.toolbarSalesforceSendEmailMessageTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.SEND_EMAIL_MESSAGE);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceSetPasswordTooltip(),
+                        localizationConstant.toolbarSalesforceSetPasswordTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.SET_PASSWORD);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceUndeleteTooltip(),
+                        localizationConstant.toolbarSalesforceUndeleteTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.UNDELETE);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceUpdateConnectorTooltip(),
+                        localizationConstant.toolbarSalesforceUpdateConnectorTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.UPDATE);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        // TODO separate title and tooltip
+                        localizationConstant.toolbarSalesforceUpsetTooltip(),
+                        localizationConstant.toolbarSalesforceUpsetTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.UPSET);
+
+        toolbar.addGroup(ToolbarGroupIds.JIRA_CONNECTORS, "Jira Connectors");
+
+        // TODO add items
+
+        toolbar.addGroup(ToolbarGroupIds.TWITTER_CONNECTORS, "Twitter Connectors");
+
+        // TODO add items
+
     }
 
     /** {@inheritDoc} */
@@ -1545,10 +1850,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
     }
 
     public interface EditorChangeListener {
-
         /** Performs some actions when editor was changed. */
         void onChanged();
-
     }
 
 }

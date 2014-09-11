@@ -15,7 +15,6 @@
  */
 package com.codenvy.ide.client.managers;
 
-import com.codenvy.ide.client.State;
 import com.codenvy.ide.client.elements.Element;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -35,7 +34,7 @@ import java.util.Map;
 public class MediatorCreatorsManager {
 
     private final Map<String, Provider<? extends Element>> nameProviders;
-    private final Map<State, String>                       stateProviders;
+    private final Map<String, String>                      stateProviders;
     private final Map<String, String>                      serializeNames;
 
     @Inject
@@ -59,7 +58,7 @@ public class MediatorCreatorsManager {
      */
     public void register(@Nonnull String name,
                          @Nonnull String serializationName,
-                         @Nonnull State state,
+                         @Nonnull String state,
                          @Nonnull Provider<? extends Element> provider) {
         nameProviders.put(name, provider);
         serializeNames.put(serializationName, name);
@@ -88,7 +87,7 @@ public class MediatorCreatorsManager {
      * @return a mediator creator
      */
     @Nullable
-    public Provider<? extends Element> getProviderByState(@Nonnull State state) {
+    public Provider<? extends Element> getProviderByState(@Nonnull String state) {
         String name = stateProviders.get(state);
 
         return nameProviders.get(name);
@@ -102,7 +101,7 @@ public class MediatorCreatorsManager {
      * @return a element name
      */
     @Nullable
-    public String getElementNameByState(@Nonnull State state) {
+    public String getElementNameByState(@Nonnull String state) {
         return stateProviders.get(state);
     }
 

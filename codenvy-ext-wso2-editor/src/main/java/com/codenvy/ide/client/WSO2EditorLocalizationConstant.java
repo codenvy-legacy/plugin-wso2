@@ -547,7 +547,7 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     String toolbarSalesforceCreateConnectorTooltip();
 
     @Key("toolbar.connector.salesforceDelete.tooltip")
-    String salesForceDeleteTooltip();
+    String toolbarSalesForceDeleteTooltip();
 
     @Key("propertiespanel.connector.salesForce.allOrNone")
     String connectorAllOrNone();
@@ -589,52 +589,52 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     String toolbarSalesforceDescribeGlobalConnectorTooltip();
 
     @Key("toolbar.connector.salesforceDescribeSobjectConnector.tooltip")
-    String toolbarSalesforceDescribeSobjectConnectorTooltip();
+    String toolbarSalesforceDescribeSubjectConnectorTooltip();
 
     @Key("toolbar.connector.salesforceDescribeSobjectsConnector.tooltip")
-    String toolbarSalesforceDescribeSobjectsConnectorTooltip();
+    String toolbarSalesforceDescribeSubjectsConnectorTooltip();
 
     @Key("toolbar.connector.salesforceEmptyRecycleBin.tooltip")
-    String toolbarEmptyRecycleBinConnector();
+    String toolbarSalesforceEmptyRecycleBinConnector();
 
     @Key("toolbar.connector.salesforceLogOut.tooltip")
-    String toolbarLogOutConnector();
+    String toolbarSalesforceLogOutConnector();
 
     @Key("toolbar.connector.salesforceGetUserInfo.tooltip")
-    String toolbarGetUserInfoConnector();
+    String toolbarSalesforceGetUserInfoConnector();
 
     @Key("toolbar.connector.salesforceQuery.tooltip")
-    String connectorSalesforceQueryTooltip();
+    String toolbarSalesforceQueryTooltip();
 
     @Key("toolbar.connector.salesforceQueryAll.tooltip")
-    String connectorSalesforceQueryAllTooltip();
+    String toolbarSalesforceQueryAllTooltip();
 
     @Key("toolbar.connector.salesforceQueryMore.tooltip")
-    String connectorSalesforceQueryMoreTooltip();
+    String toolbarSalesforceQueryMoreTooltip();
 
     @Key("toolbar.connector.salesforceResetPassword.tooltip")
-    String connectorSalesforceResetPasswordTooltip();
+    String toolbarSalesforceResetPasswordTooltip();
 
     @Key("toolbar.connector.salesforceRetrive.tooltip")
-    String connectorSalesforceRetriveTooltip();
+    String toolbarSalesforceRetriveTooltip();
 
     @Key("toolbar.connector.salesforceSearch.tooltip")
-    String connectorSalesforceSearchTooltip();
+    String toolbarSalesforceSearchTooltip();
 
     @Key("toolbar.connector.salesforceSendEmail.tooltip")
-    String connectorSalesforceSendEmailTooltip();
+    String toolbarSalesforceSendEmailTooltip();
 
     @Key("toolbar.connector.salesforceSendEmailMessage.tooltip")
-    String connectorSalesforceSendEmailMessageTooltip();
+    String toolbarSalesforceSendEmailMessageTooltip();
 
     @Key("toolbar.connector.salesforceSetPassword.tooltip")
-    String connectorSalesforceSetPasswordTooltip();
+    String toolbarSalesforceSetPasswordTooltip();
 
     @Key("toolbar.connector.salesforceUndelete.tooltip")
-    String connectorSalesforceUndeleteTooltip();
+    String toolbarSalesforceUndeleteTooltip();
 
     @Key("toolbar.connector.salesforceUpset.tooltip")
-    String connectorSalesforceUpsetTooltip();
+    String toolbarSalesforceUpsetTooltip();
 
     @Key("propertiespanel.connector.salesForce.batchSize")
     String connectorBatchSize();

@@ -17,6 +17,10 @@ package com.codenvy.ide.client.inject;
 
 import com.codenvy.ide.client.elements.widgets.element.ElementView;
 import com.codenvy.ide.client.elements.widgets.element.ElementViewImpl;
+import com.codenvy.ide.client.toolbar.group.ToolbarGroupView;
+import com.codenvy.ide.client.toolbar.group.ToolbarGroupViewImpl;
+import com.codenvy.ide.client.toolbar.item.ToolbarItemView;
+import com.codenvy.ide.client.toolbar.item.ToolbarItemViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 
@@ -28,7 +32,10 @@ public class GinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
-        install(new GinFactoryModuleBuilder().implement(ElementView.class, ElementViewImpl.class).build(EditorFactory.class));
+        install(new GinFactoryModuleBuilder().implement(ElementView.class, ElementViewImpl.class)
+                                             .implement(ToolbarGroupView.class, ToolbarGroupViewImpl.class)
+                                             .implement(ToolbarItemView.class, ToolbarItemViewImpl.class)
+                                             .build(EditorFactory.class));
     }
 
 }

@@ -15,19 +15,21 @@
  */
 package com.codenvy.ide.client.inject;
 
-import com.codenvy.ide.client.EditorState;
-import com.codenvy.ide.client.State;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.widgets.branch.BranchPresenter;
 import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
 import com.codenvy.ide.client.elements.widgets.element.ElementView;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
-import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.propertiespanel.switchmediator.branch.BranchFiledPresenter;
-import com.codenvy.ide.client.toolbar.ToolbarPresenter;
+import com.codenvy.ide.client.toolbar.group.ToolbarGroupPresenter;
+import com.codenvy.ide.client.toolbar.group.ToolbarGroupView;
+import com.codenvy.ide.client.toolbar.item.ToolbarItemPresenter;
+import com.codenvy.ide.client.toolbar.item.ToolbarItemView;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Singleton;
+import com.google.inject.assistedinject.Assisted;
 
 import javax.annotation.Nonnull;
 
@@ -40,15 +42,22 @@ import javax.annotation.Nonnull;
 @Singleton
 public interface EditorFactory {
 
-    /**
-     * Create an instance of {@link ToolbarPresenter} with a given state of editor.
-     *
-     * @param editorState
-     *         editor that need to be used
-     * @return an instance of {@link ToolbarPresenter}
-     */
     @Nonnull
-    ToolbarPresenter createToolbar(@Nonnull EditorState<State> editorState);
+    ToolbarItemPresenter createToolbarItemPresenter(@Assisted("title") @Nonnull String title,
+                                                    @Assisted("tooltip") @Nonnull String tooltip,
+                                                    @Nonnull ImageResource icon,
+                                                    @Assisted("newSate") @Nonnull String newState);
+
+    @Nonnull
+    ToolbarItemView createToolbarItemView(@Assisted("title") @Nonnull String title,
+                                          @Assisted("tooltip") @Nonnull String tooltip,
+                                          @Nonnull ImageResource icon);
+
+    @Nonnull
+    ToolbarGroupPresenter createToolbarGroupPresenter(@Nonnull String title);
+
+    @Nonnull
+    ToolbarGroupView createToolbarGroupView(@Nonnull String title);
 
     /**
      * Create an instance of {@link PropertiesPanelManager} with a given widget.
@@ -63,31 +72,22 @@ public interface EditorFactory {
     /**
      * Create an instance of {@link BranchPresenter} with a given state of editor.
      *
-     * @param editorState
-     *         editor that need to be used
-     * @param selectionManager
-     *         selection manager which need to select an element
      * @param branch
      *         element which need to be used
      * @return an instance of {@link BranchPresenter}
      */
     @Nonnull
-    BranchPresenter createContainer(@Nonnull EditorState<State> editorState,
-                                    @Nonnull SelectionManager selectionManager,
-                                    @Nonnull Branch branch);
+    BranchPresenter createContainer(@Nonnull Branch branch);
 
     /**
-     * Create an instance of {@link ElementPresenter} with a given state of editor and for given element.
+     * Create an instance of {@link ElementPresenter} for a given element.
      *
-     * @param editorState
-     *         editor that need to be used
      * @param element
      *         element for which presenter will be created
      * @return an instance of {@link ElementPresenter}
      */
     @Nonnull
-    ElementPresenter createElementPresenter(@Nonnull EditorState<State> editorState,
-                                            @Nonnull Element element);
+    ElementPresenter createElementPresenter(@Nonnull Element element);
 
     /**
      * Create an instance of {@link ElementView} with allow to enhance branches.

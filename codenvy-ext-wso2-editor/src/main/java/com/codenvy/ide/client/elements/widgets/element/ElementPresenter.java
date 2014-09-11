@@ -16,7 +16,6 @@
 package com.codenvy.ide.client.elements.widgets.element;
 
 import com.codenvy.ide.client.EditorState;
-import com.codenvy.ide.client.State;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.widgets.branch.BranchPresenter;
@@ -26,6 +25,7 @@ import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.validators.InnerElementsValidator;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -49,7 +49,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
                                                                                 ElementChangedListener {
     private final SelectionManager        selectionManager;
     private final EditorFactory           editorFactory;
-    private final EditorState<State>      editorState;
+    private final EditorState             editorState;
     private final MediatorCreatorsManager mediatorCreatorsManager;
     private final Element                 element;
     private final InnerElementsValidator  innerElementsValidator;
@@ -67,7 +67,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
                             SelectionManager selectionManager,
                             MediatorCreatorsManager mediatorCreatorsManager,
                             InnerElementsValidator innerElementsValidator,
-                            @Assisted EditorState<State> editorState,
+                            EditorState editorState,
                             @Assisted Element element) {
         super(editorFactory.createElementView(element.isPossibleToAddBranches()));
 
@@ -96,7 +96,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
 
     /** @return the GWT widget that is controlled by the presenter */
     @Nonnull
-    public ElementView getView() {
+    public Widget getView() {
         return view;
     }
 
@@ -172,7 +172,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
         int maxWidth = 0;
 
         for (Branch branch : element.getBranches()) {
-            BranchPresenter branchPresenter = editorFactory.createContainer(editorState, selectionManager, branch);
+            BranchPresenter branchPresenter = editorFactory.createContainer(branch);
             branchPresenter.addElementChangedListener(this);
 
             this.branches.add(branchPresenter);
@@ -242,7 +242,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     /** {@inheritDoc} */
     @Override
     public void onMouseLeftButtonClicked() {
-        editorState.setState(State.CREATING_NOTHING);
+        editorState.resetState();
         selectionManager.setElement(element);
     }
 

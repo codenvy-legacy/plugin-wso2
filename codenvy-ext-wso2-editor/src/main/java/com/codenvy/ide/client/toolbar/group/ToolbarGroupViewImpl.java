@@ -13,43 +13,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.toolbar;
+package com.codenvy.ide.client.toolbar.group;
 
-import com.codenvy.ide.client.toolbar.group.ToolbarGroupPresenter;
+import com.codenvy.ide.client.toolbar.item.ToolbarItemPresenter;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.assistedinject.Assisted;
 
 import javax.annotation.Nonnull;
 
 /**
- * Provides a graphical representation of tool bar.
- *
  * @author Andrey Plotnikov
- * @author Valeriy Svydenko
- * @author Dmitry Shnurenko
  */
-public class ToolbarViewImpl extends ToolbarView {
+public class ToolbarGroupViewImpl extends ToolbarGroupView {
 
     @Singleton
-    interface ToolbarViewImplUiBinder extends UiBinder<Widget, ToolbarViewImpl> {
+    interface ToolbarGroupViewImplUiBinder extends UiBinder<Widget, ToolbarGroupViewImpl> {
     }
 
+    @UiField
+    Button    button;
     @UiField
     FlowPanel mainPanel;
 
     @Inject
-    public ToolbarViewImpl(ToolbarViewImplUiBinder ourUiBinder) {
+    public ToolbarGroupViewImpl(ToolbarGroupViewImplUiBinder ourUiBinder, @Assisted String title) {
         initWidget(ourUiBinder.createAndBindUi(this));
+
+        button.setText(title);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void addGroup(@Nonnull ToolbarGroupPresenter toolbarGroup) {
-        mainPanel.add(toolbarGroup.getView());
+    public void setVisibleMainPanel(boolean visible) {
+        mainPanel.setVisible(visible);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void addItem(@Nonnull ToolbarItemPresenter toolbarItem) {
+        mainPanel.add(toolbarItem.getView());
+    }
+
+    @UiHandler("button")
+    public void onButtonClicked(ClickEvent event) {
+        delegate.onButtonClicked();
     }
 
 }

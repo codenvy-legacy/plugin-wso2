@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.toolbar;
+
+package com.codenvy.ide.client.toolbar.item;
 
 import com.codenvy.ide.client.mvp.AbstractView;
-import com.codenvy.ide.client.toolbar.group.ToolbarGroupPresenter;
 import com.google.inject.ImplementedBy;
 
-import javax.annotation.Nonnull;
-
 /**
- * The abstract view's representation of tool bar. It provides an ability to show all elements which tool bar contains.
- *
  * @author Andrey Plotnikov
- * @author Dmitry Shnurenko
  */
-@ImplementedBy(ToolbarViewImpl.class)
-public abstract class ToolbarView extends AbstractView<AbstractView.ActionDelegate> {
+@ImplementedBy(ToolbarItemViewImpl.class)
+public abstract class ToolbarItemView extends AbstractView<ToolbarItemView.ActionDelegate> {
 
-    public abstract void addGroup(@Nonnull ToolbarGroupPresenter toolbarGroup);
+    public interface ActionDelegate extends AbstractView.ActionDelegate {
+
+        void onButtonClicked();
+
+    }
 
 }

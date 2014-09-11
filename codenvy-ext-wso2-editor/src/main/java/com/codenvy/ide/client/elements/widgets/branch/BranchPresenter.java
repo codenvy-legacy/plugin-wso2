@@ -16,8 +16,6 @@
 package com.codenvy.ide.client.elements.widgets.branch;
 
 import com.codenvy.ide.client.EditorState;
-import com.codenvy.ide.client.HasState;
-import com.codenvy.ide.client.State;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.widgets.element.ElementChangedListener;
@@ -28,6 +26,7 @@ import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.validators.ConnectionsValidator;
 import com.codenvy.ide.client.validators.InnerElementsValidator;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
@@ -38,7 +37,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.codenvy.ide.client.State.CREATING_NOTHING;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.ARROW_PADDING;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_HEIGHT;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_WIDTH;
@@ -52,7 +50,6 @@ import static com.codenvy.ide.client.elements.widgets.branch.BranchView.TITLE_HE
  * @author Dmitry Shnurenko
  */
 public class BranchPresenter extends AbstractPresenter<BranchView> implements BranchView.ActionDelegate,
-                                                                              HasState<State>,
                                                                               ElementPresenter.ElementDeleteListener,
                                                                               ElementPresenter.ElementMoveListener,
                                                                               ElementChangedListener {
@@ -62,7 +59,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     private final InnerElementsValidator  innerElementsValidator;
     private final EditorFactory           editorFactory;
     private final MediatorCreatorsManager mediatorCreatorsManager;
-    private final EditorState<State>      editorState;
+    private final EditorState             editorState;
 
     private final Branch branch;
 
@@ -75,8 +72,8 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
                            InnerElementsValidator innerElementsValidator,
                            EditorFactory editorFactory,
                            MediatorCreatorsManager mediatorCreatorsManager,
-                           @Assisted EditorState<State> editorState,
-                           @Assisted SelectionManager selectionManager,
+                           EditorState editorState,
+                           SelectionManager selectionManager,
                            @Assisted Branch branch) {
         super(view);
 
@@ -97,22 +94,9 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         redrawElements();
     }
 
-    /** {@inheritDoc} */
-    @Nonnull
-    @Override
-    public State getState() {
-        return editorState.getState();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setState(@Nonnull State state) {
-        editorState.setState(state);
-    }
-
     /** @return the GWT widget that is controlled by the presenter */
     @Nonnull
-    public BranchView getView() {
+    public Widget getView() {
         return view;
     }
 
@@ -154,7 +138,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         Element newElement = getCreatingElement();
         Element branchParent = branch.getParent();
 
-        setState(CREATING_NOTHING);
+        editorState.resetState();
         view.setDefaultCursor();
 
         if (newElement == null || !connectionsValidator.canInsertElement(branch, newElement.getElementName(), x, y)
@@ -177,7 +161,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     /** {@inheritDoc} */
     @Override
     public void onMouseMoved(int x, int y) {
-        String elementName = mediatorCreatorsManager.getElementNameByState(getState());
+        String elementName = mediatorCreatorsManager.getElementNameByState(editorState.getState());
 
         if (elementName == null) {
             return;
@@ -239,7 +223,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     /** @return an instance of creating element if new element is creating or <code>null<code/> if it isn't */
     @Nullable
     private Element getCreatingElement() {
-        Provider<? extends Element> provider = mediatorCreatorsManager.getProviderByState(getState());
+        Provider<? extends Element> provider = mediatorCreatorsManager.getProviderByState(editorState.getState());
 
         return provider == null ? null : provider.get();
     }
@@ -280,7 +264,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
             element.setX(x);
             element.setY(y);
 
-            ElementPresenter elementPresenter = editorFactory.createElementPresenter(editorState, element);
+            ElementPresenter elementPresenter = editorFactory.createElementPresenter(element);
 
             elementPresenter.addElementChangedListener(this);
             elementPresenter.addElementMoveListener(this);
