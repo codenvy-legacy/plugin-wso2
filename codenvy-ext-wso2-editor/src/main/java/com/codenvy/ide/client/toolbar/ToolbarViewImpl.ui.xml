@@ -27,7 +27,7 @@
         }
     </ui:style>
 
-    <g:ScrollPanel addStyleNames="{style.fullSize}">
+    <g:ScrollPanel addStyleNames="{style.fullSize}" alwaysShowScrollBars="true">
         <g:FlowPanel ui:field="mainPanel" addStyleNames="{style.fullSize}"/>
     </g:ScrollPanel>
 

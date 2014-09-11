@@ -19,27 +19,39 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:style>
-        .item {
+        @eval backgroundColor com.codenvy.ide.api.ui.theme.Style.getWindowHeaderBackground();
+        @eval selectionBackgroundColor com.codenvy.ide.api.ui.theme.Style.getPartBackground();
+
+        .mainPanel {
             width: 100%;
             height: 30px;
-            margin-left: 12px;
-            margin-top: 6px;
-            margin-bottom: 6px;
+            padding: 1px 0 1px 12px;
+            background: backgroundColor;
+            border-top: 1px groove selectionBackgroundColor;
+            cursor: pointer;
+        }
+
+        .mainPanel:hover {
+            background: selectionBackgroundColor;
+            border-top: 1px groove backgroundColor;
         }
 
         .icon {
             float: left;
+            position: relative;
+            top: 50%;
+            margin-top: -13px;
         }
 
         .title {
             float: left;
             position: relative;
-            top: 5px;
+            top: 7px;
             margin-left: 6px;
         }
     </ui:style>
 
-    <g:FlowPanel ui:field="panel" addStyleNames="{style.item}">
+    <g:FlowPanel ui:field="panel" addStyleNames="{style.mainPanel}">
         <g:Image ui:field="icon" addStyleNames="{style.icon}"/>
         <g:Label ui:field="title" addStyleNames="{style.title}"/>
     </g:FlowPanel>

@@ -19,8 +19,11 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:style>
+        @eval backgroundColor com.codenvy.ide.api.ui.theme.Style.getPartBackground();
+
         .fullWidth {
             width: 100%;
+            background: backgroundColor;
         }
     </ui:style>
 
