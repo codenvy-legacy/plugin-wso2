@@ -54,7 +54,7 @@ public class ToolbarItemPresenter extends AbstractPresenter<ToolbarItemView> imp
 
     /** {@inheritDoc} */
     @Override
-    public void onButtonClicked() {
+    public void onItemClicked() {
         editorState.setState(newState);
     }
 

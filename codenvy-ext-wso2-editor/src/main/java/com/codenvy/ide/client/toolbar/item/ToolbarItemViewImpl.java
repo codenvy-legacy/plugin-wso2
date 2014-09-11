@@ -16,12 +16,13 @@
 package com.codenvy.ide.client.toolbar.item;
 
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Singleton;
 import com.google.inject.assistedinject.Assisted;
@@ -36,24 +37,30 @@ public class ToolbarItemViewImpl extends ToolbarItemView {
     interface ToolbarItemViewImplUiBinder extends UiBinder<Widget, ToolbarItemViewImpl> {
     }
 
-    @UiField(provided = true)
-    PushButton button;
+    @UiField
+    Image     icon;
+    @UiField
+    Label     title;
+    @UiField
+    FlowPanel panel;
 
     @AssistedInject
     public ToolbarItemViewImpl(ToolbarItemViewImplUiBinder ourUiBinder,
                                @Assisted("title") String title,
                                @Assisted("tooltip") String tooltip,
                                @Assisted ImageResource icon) {
-        button = new PushButton(new Image(icon));
-        button.setText(title);
-        button.setTitle(tooltip);
-
         initWidget(ourUiBinder.createAndBindUi(this));
-    }
 
-    @UiHandler("button")
-    public void onButtonClicked(ClickEvent event) {
-        delegate.onButtonClicked();
+        this.icon.setResource(icon);
+        this.title.setText(title);
+        this.panel.setTitle(tooltip);
+
+        this.panel.addDomHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onItemClicked();
+            }
+        }, ClickEvent.getType());
     }
 
 }

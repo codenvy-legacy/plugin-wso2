@@ -101,16 +101,18 @@
 
     <g:DockLayoutPanel unit="PX" addStyleNames="{style.fullSize}">
 
-        <g:west size="80">
+        <g:west size="170">
             <g:SimpleLayoutPanel ui:field="toolbar" addStyleNames="{style.fullSize}"/>
         </g:west>
 
+        <g:south size="20">
+            <g:FlowPanel>
+                <g:Button ui:field="showBtn" addStyleNames="{style.buttonShowStyle}" visible="false"/>
+            </g:FlowPanel>
+        </g:south>
+
         <g:center>
             <g:SplitLayoutPanel ui:field="splitPanel">
-
-                <g:center>
-                    <g:ScrollPanel ui:field="workspace" addStyleNames="{style.fullSize}"/>
-                </g:center>
 
                 <g:south size="300">
                     <g:FlowPanel>
@@ -125,14 +127,12 @@
                     </g:FlowPanel>
                 </g:south>
 
+                <g:center>
+                    <g:ScrollPanel ui:field="workspace" addStyleNames="{style.fullSize}"/>
+                </g:center>
+
             </g:SplitLayoutPanel>
         </g:center>
-
-        <g:south size="20">
-            <g:FlowPanel>
-                <g:Button ui:field="showBtn" addStyleNames="{style.buttonShowStyle}" visible="false"/>
-            </g:FlowPanel>
-        </g:south>
 
     </g:DockLayoutPanel>
 

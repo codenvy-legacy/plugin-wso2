@@ -27,7 +27,7 @@ public abstract class ToolbarItemView extends AbstractView<ToolbarItemView.Actio
 
     public interface ActionDelegate extends AbstractView.ActionDelegate {
 
-        void onButtonClicked();
+        void onItemClicked();
 
     }
 
