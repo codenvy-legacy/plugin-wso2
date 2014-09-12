@@ -920,4 +920,145 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.connector.twitter.getFollowers.cursor")
     String twitterCursor();
+
+    @Key("propertiespanel.connector.spreadsheet.createSpreadsheet.spreadsheetName")
+    String spreadsheetCreateSpreadsheetSpreadsheetName();
+
+    @Key("propertiespanel.connector.spreadsheet.createSpreadsheet.worksheetCount")
+    String spreadsheetCreateSpreadsheetWorksheetCount();
+
+    @Key("toolbar.connector.spreadsheet.create.spreadsheet.tooltip")
+    String spreadsheetCreateSpreadsheet();
+
+    @Key("toolbar.connector.spreadsheet.create.worksheet.tooltip")
+    String spreadsheetCreateWorksheet();
+
+    @Key("toolbar.connector.spreadsheet.delete.worksheet.tooltip")
+    String spreadsheetDeleteWorksheet();
+
+    @Key("toolbar.connector.spreadsheet.getAllCells.tooltip")
+    String spreadsheetGetAllCells();
+
+    @Key("toolbar.connector.spreadsheet.getAllCellsCSV.tooltip")
+    String spreadsheetGetAllCellsCSV();
+
+    @Key("toolbar.connector.spreadsheet.getAllSpreadsheets.tooltip")
+    String spreadsheetGetAllSpreadsheets();
+
+    @Key("toolbar.connector.spreadsheet.getAuthors.tooltip")
+    String spreadsheetGetAuthors();
+
+    @Key("toolbar.connector.spreadsheet.getCellRange.tooltip")
+    String spreadsheetGetCellRange();
+
+    @Key("toolbar.connector.spreadsheet.getCellRangeCSV.tooltip")
+    String spreadsheetGetCellRangeCSV();
+
+    @Key("toolbar.connector.spreadsheet.getColumnHeaders.tooltip")
+    String spreadsheetGetColumnHeaders();
+
+    @Key("toolbar.connector.spreadsheet.getSpreadsheetByTitle.tooltip")
+    String spreadsheetGetSpreadsheetByTitle();
+
+    @Key("toolbar.connector.spreadsheet.getWorksheetByTitle.tooltip")
+    String spreadsheetGetWorksheetByTitle();
+
+    @Key("toolbar.connector.spreadsheet.importCSV.tooltip")
+    String spreadsheetImportCSV();
+
+    @Key("toolbar.connector.spreadsheet.init.tooltip")
+    String spreadsheetInit();
+
+    @Key("toolbar.connector.spreadsheet.purgeWorksheet.tooltip")
+    String spreadsheetPurgeWorksheet();
+
+    @Key("toolbar.connector.spreadsheet.searchCell.tooltip")
+    String spreadsheetSearchCell();
+
+    @Key("toolbar.connector.spreadsheet.setRow.tooltip")
+    String spreadsheetSetRow();
+
+    @Key("toolbar.connector.spreadsheet.updateWorksheetMeta.tooltip")
+    String spreadsheetUpdateWorksheetMeta();
+
+    @Key("toolbar.connector.spreadsheet.usernameLogin.tooltip")
+    String spreadsheetUsernameLogin();
+
+    @Key("propertiespanel.connector.spreadsheet.createWorksheet.worksheetName")
+    String spreadsheetCreateWorksheetWorksheetName();
+
+    @Key("propertiespanel.connector.spreadsheet.createWorksheet.spreadsheetName")
+    String spreadsheetCreateWorksheetSpreadsheetName();
+
+    @Key("propertiespanel.connector.spreadsheet.createWorksheet.worksheetRows")
+    String spreadsheetCreateWorksheetWorksheetRows();
+
+    @Key("propertiespanel.connector.spreadsheet.createWorksheet.worksheetColumns")
+    String spreadsheetCreateWorksheetWorksheetColumns();
+
+    @Key("propertiespanel.connector.spreadsheet.getCellRange.minRow")
+    String spreadsheetGetCellRangeMinRow();
+
+    @Key("propertiespanel.connector.spreadsheet.getCellRange.maxRow")
+    String spreadsheetGetCellRangeMaxRow();
+
+    @Key("propertiespanel.connector.spreadsheet.getCellRange.minColumn")
+    String spreadsheetGetCellRangeMinColumn();
+
+    @Key("propertiespanel.connector.spreadsheet.getCellRange.maxColumn")
+    String spreadsheetGetCellRangeMaxColumn();
+
+    @Key("propertiespanel.connector.spreadsheet.getSpreadsheetsByTitle.title")
+    String spreadsheetGetSpreadsheetsTitle();
+
+    @Key("propertiespanel.connector.spreadsheet.init.oauthConsumerSecret")
+    String spreadsheetInitOauthConsumerSecret();
+
+    @Key("propertiespanel.connector.spreadsheet.init.oauthAccessToken")
+    String spreadsheetInitOauthAccessToken();
+
+    @Key("propertiespanel.connector.spreadsheet.init.oauthConsumerKey")
+    String spreadsheetInitOauthConsumerKey();
+
+    @Key("propertiespanel.connector.spreadsheet.init.oauthAccessTokenSecret")
+    String spreadsheetInitOauthAccessTokenSecret();
+
+    @Key("propertiespanel.connector.spreadsheet.searchCell.searchString")
+    String spreadsheetSearchCellSearchString();
+
+    @Key("propertiespanel.connector.spreadsheet.setRow.rowId")
+    String spreadsheetSetRowRowId();
+
+    @Key("propertiespanel.connector.spreadsheet.setRow.rowData")
+    String spreadsheetSetRowRowData();
+
+    @Key("propertiespanel.connector.spreadsheet.updateWorksheetMetadata.worksheetOldName")
+    String spreadsheetUpdateWorksheetMetadataWorksheetOldName();
+
+    @Key("propertiespanel.connector.spreadsheet.updateWorksheetMetadata.worksheetNewName")
+    String spreadsheetUpdateWorksheetMetadataWorksheetNewName();
+
+    @Key("propertiespanel.connector.spreadsheet.updateWorksheetMetadata.worksheetRows")
+    String spreadsheetUpdateWorksheetMetadataWorksheetRows();
+
+    @Key("propertiespanel.connector.spreadsheet.updateWorksheetMetadata.worksheetColumns")
+    String spreadsheetUpdateWorksheetMetadataWorksheetColumns();
+
+    @Key("propertiespanel.connector.spreadsheet.usernameLogin.username")
+    String spreadsheetUsernameLoginUsername();
+
+    @Key("propertiespanel.connector.spreadsheet.usernameLogin.password")
+    String spreadsheetUsernameLoginPassword();
+
+    @Key("toolbar.connector.spreadsheet.getAllWorksheets.tooltip")
+    String spreadsheetGetAllWorksheets();
+
+    @Key("propertiespanel.connector.spreadsheet.importCSV.filePath")
+    String spreadsheetImportCSVFilePath();
+
+    @Key("propertiespanel.connector.spreadsheet.importCSV.batchEnable")
+    String spreadsheetImportCSVBatchEnable();
+
+    @Key("propertiespanel.connector.spreadsheet.importCSV.batchSize")
+    String spreadsheetImportCSVBatchSize();
 }

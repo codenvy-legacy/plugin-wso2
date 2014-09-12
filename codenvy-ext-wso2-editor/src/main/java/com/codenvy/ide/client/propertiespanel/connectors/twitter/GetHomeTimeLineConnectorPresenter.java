@@ -132,7 +132,7 @@ public class GetHomeTimeLineConnectorPresenter extends AbstractConnectorProperti
                 element.setPageNS(nameSpaces);
                 element.setPageExpr(expression);
 
-                GetHomeTimeLineConnectorPresenter.this.view.setSixesTextBoxValue(expression);
+                GetHomeTimeLineConnectorPresenter.this.view.setSixthTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -176,7 +176,7 @@ public class GetHomeTimeLineConnectorPresenter extends AbstractConnectorProperti
         view.setVisibleThirdButton(isEquals);
         view.setVisibleFourthButton(isEquals);
         view.setVisibleFifthButton(isEquals);
-        view.setVisibleSixesButton(isEquals);
+        view.setVisibleSixthButton(isEquals);
         view.setVisibleSeventhButton(isEquals);
         view.setVisibleEighthButton(isEquals);
 
@@ -185,7 +185,7 @@ public class GetHomeTimeLineConnectorPresenter extends AbstractConnectorProperti
         view.setEnableThirdTextBox(!isEquals);
         view.setEnableFourthTextBox(!isEquals);
         view.setEnableFifthTextBox(!isEquals);
-        view.setEnableSixesTextBox(!isEquals);
+        view.setEnableSixthTextBox(!isEquals);
         view.setEnableSeventhTextBox(!isEquals);
         view.setEnableEighthTextBox(!isEquals);
 
@@ -194,7 +194,7 @@ public class GetHomeTimeLineConnectorPresenter extends AbstractConnectorProperti
         view.setThirdTextBoxValue(isEquals ? element.getAccessTokenExpr() : element.getAccessToken());
         view.setFourthTextBoxValue(isEquals ? element.getAccessTokenSecretExpr() : element.getAccessTokenSecret());
         view.setFifthTextBoxValue(isEquals ? element.getCountExpr() : element.getCount());
-        view.setSixesTextBoxValue(isEquals ? element.getPageExpr() : element.getPage());
+        view.setSixthTextBoxValue(isEquals ? element.getPageExpr() : element.getPage());
         view.setSeventhTextBoxValue(isEquals ? element.getSinceIdExpr() : element.getSinceId());
         view.setEighthTextBoxValue(isEquals ? element.getMaxIdExpr() : element.getMaxId());
 
@@ -244,14 +244,14 @@ public class GetHomeTimeLineConnectorPresenter extends AbstractConnectorProperti
     /** {@inheritDoc} */
     @Override
     public void onSeventhTextBoxValueChanged() {
-        element.setPage(view.getSixesTextBoxValue());
+        element.setPage(view.getSixthTextBoxValue());
 
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onSixesTextBoxValueChanged() {
+    public void onSixthTextBoxValueChanged() {
         element.setSinceId(view.getSeventhTextBoxValue());
 
         notifyListeners();
@@ -312,7 +312,7 @@ public class GetHomeTimeLineConnectorPresenter extends AbstractConnectorProperti
 
     /** {@inheritDoc} */
     @Override
-    public void onSixesButtonClicked() {
+    public void onSixthButtonClicked() {
         nameSpacePresenter.showWindowWithParameters(element.getPageNS(),
                                                     pageCallBack,
                                                     locale.connectorExpression(),
@@ -343,7 +343,7 @@ public class GetHomeTimeLineConnectorPresenter extends AbstractConnectorProperti
         view.setVisibleThirdPanel(true);
         view.setVisibleFourthPanel(true);
         view.setVisibleFifthPanel(true);
-        view.setVisibleSixesPanel(true);
+        view.setVisibleSixthPanel(true);
         view.setVisibleSeventhPanel(true);
         view.setVisibleEighthPanel(true);
 
@@ -352,7 +352,7 @@ public class GetHomeTimeLineConnectorPresenter extends AbstractConnectorProperti
         view.setThirdLabelTitle(locale.twitterAccessToken());
         view.setFourthLabelTitle(locale.twitterAccessTokenSecret());
         view.setFifthLabelTitle(locale.twitterCount());
-        view.setSixesLabelTitle(locale.twitterPage());
+        view.setSixthLabelTitle(locale.twitterPage());
         view.setSeventhLabelTitle(locale.twitterSinceId());
         view.setEighthLabelTitle(locale.twitterMaxId());
     }

@@ -18,14 +18,26 @@ package com.codenvy.ide.client.editor;
 import com.codenvy.ide.client.EditorState;
 import com.codenvy.ide.client.State;
 import com.codenvy.ide.client.elements.RootElement;
-import com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint;
-import com.codenvy.ide.client.elements.mediators.Call;
-import com.codenvy.ide.client.elements.mediators.CallTemplate;
-import com.codenvy.ide.client.elements.mediators.Filter;
-import com.codenvy.ide.client.elements.mediators.Header;
-import com.codenvy.ide.client.elements.mediators.LoopBack;
-import com.codenvy.ide.client.elements.mediators.Property;
-import com.codenvy.ide.client.elements.mediators.Respond;
+import com.codenvy.ide.client.elements.connectors.googlespreadsheet.CreateSpreadsheet;
+import com.codenvy.ide.client.elements.connectors.googlespreadsheet.CreateWorksheet;
+import com.codenvy.ide.client.elements.connectors.googlespreadsheet.DeleteWorksheet;
+import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetAllCells;
+import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetAllCellsCSV;
+import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetAllSpreadsheets;
+import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetAllWorksheets;
+import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetAuthors;
+import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRange;
+import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRangeCSV;
+import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetColumnHeaders;
+import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetSpreadsheetsByTitle;
+import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetWorksheetsByTitle;
+import com.codenvy.ide.client.elements.connectors.googlespreadsheet.ImportCSV;
+import com.codenvy.ide.client.elements.connectors.googlespreadsheet.InitSpreadsheet;
+import com.codenvy.ide.client.elements.connectors.googlespreadsheet.PurgeWorkshet;
+import com.codenvy.ide.client.elements.connectors.googlespreadsheet.SearchCell;
+import com.codenvy.ide.client.elements.connectors.googlespreadsheet.SetRow;
+import com.codenvy.ide.client.elements.connectors.googlespreadsheet.UpdateWorksheetMetadata;
+import com.codenvy.ide.client.elements.connectors.googlespreadsheet.UsernameLogin;
 import com.codenvy.ide.client.elements.connectors.jira.AddAttachmentToIssueId;
 import com.codenvy.ide.client.elements.connectors.jira.CreateFilter;
 import com.codenvy.ide.client.elements.connectors.jira.CreateIssue;
@@ -90,15 +102,6 @@ import com.codenvy.ide.client.elements.connectors.salesforce.SetPassword;
 import com.codenvy.ide.client.elements.connectors.salesforce.UnDelete;
 import com.codenvy.ide.client.elements.connectors.salesforce.Update;
 import com.codenvy.ide.client.elements.connectors.salesforce.Upset;
-import com.codenvy.ide.client.elements.mediators.Send;
-import com.codenvy.ide.client.elements.mediators.Sequence;
-import com.codenvy.ide.client.elements.mediators.Switch;
-import com.codenvy.ide.client.elements.mediators.ValueType;
-import com.codenvy.ide.client.elements.mediators.enrich.Enrich;
-import com.codenvy.ide.client.elements.mediators.log.Log;
-import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
-import com.codenvy.ide.client.elements.widgets.element.ElementChangedListener;
-import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
 import com.codenvy.ide.client.elements.connectors.twitter.DestroyStatus;
 import com.codenvy.ide.client.elements.connectors.twitter.GetClosesTrends;
 import com.codenvy.ide.client.elements.connectors.twitter.GetDirectMessages;
@@ -113,6 +116,23 @@ import com.codenvy.ide.client.elements.connectors.twitter.GetSentDirectMessages;
 import com.codenvy.ide.client.elements.connectors.twitter.GetTopTrendPlaces;
 import com.codenvy.ide.client.elements.connectors.twitter.GetUserTimeLine;
 import com.codenvy.ide.client.elements.connectors.twitter.InitTwitter;
+import com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint;
+import com.codenvy.ide.client.elements.mediators.Call;
+import com.codenvy.ide.client.elements.mediators.CallTemplate;
+import com.codenvy.ide.client.elements.mediators.Filter;
+import com.codenvy.ide.client.elements.mediators.Header;
+import com.codenvy.ide.client.elements.mediators.LoopBack;
+import com.codenvy.ide.client.elements.mediators.Property;
+import com.codenvy.ide.client.elements.mediators.Respond;
+import com.codenvy.ide.client.elements.mediators.Send;
+import com.codenvy.ide.client.elements.mediators.Sequence;
+import com.codenvy.ide.client.elements.mediators.Switch;
+import com.codenvy.ide.client.elements.mediators.ValueType;
+import com.codenvy.ide.client.elements.mediators.enrich.Enrich;
+import com.codenvy.ide.client.elements.mediators.log.Log;
+import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
+import com.codenvy.ide.client.elements.widgets.element.ElementChangedListener;
+import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
 import com.codenvy.ide.client.inject.EditorFactory;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
@@ -123,6 +143,26 @@ import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.addressendpoint.AddressEndpointPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.call.CallPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.calltemplate.CallTemplatePropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.CreateSpreadsheetConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.CreateWorksheetConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.DeleteWorksheetConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.GetAllCellsCSVConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.GetAllCellsConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.GetAllSpreadsheetsConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.GetAllWorksheetsConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.GetAuthorsConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.GetCellCSVRangeConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.GetCellRangeConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.GetColumnHeadersConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.GetSpreadsheetsByTitleConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.GetWorksheetsByTitleConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.ImportCSVConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.InitSpreadsheetConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.PurgeWorksheetConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.SearchCellConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.SetRowConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.UpdateWorksheetMetadataConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.UsernameLoginConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.AddAttachmentConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.CreateFilterConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.CreateIssueConnectorPresenter;
@@ -227,6 +267,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.codenvy.ide.client.State.CREATING_NOTHING;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.AvailableConfigs;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion.FINAL;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion.SUBMISSION;
@@ -282,8 +324,6 @@ import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType;
 import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType.Dynamic;
 import static com.codenvy.ide.client.elements.mediators.ValueType.EXPRESSION;
 import static com.codenvy.ide.client.elements.mediators.ValueType.LITERAL;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.AvailableConfigs;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType.RegistryKey;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType.SourceXML;
@@ -447,7 +487,27 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                  GetSentDirectMessagesConnectorPresenter getSentDirectMessagesConnectorPresenter,
                                                  GetTopTrendPlacesConnectorPresenter getTopTrendPlacesConnectorPresenter,
                                                  GetUserTimeLineConnectorPresenter getUserTimeLineConnectorPresenter,
-                                                 InitTwitterConnectorPresenter initTwitterConnectorPresenter) {
+                                                 InitTwitterConnectorPresenter initTwitterConnectorPresenter,
+                                                 CreateSpreadsheetConnectorPresenter createSpreadsheetConnectorPresenter,
+                                                 CreateWorksheetConnectorPresenter createWorksheetConnectorPresenter,
+                                                 DeleteWorksheetConnectorPresenter deleteWorksheetConnectorPresenter,
+                                                 GetAllCellsConnectorPresenter getAllCellsConnectorPresenter,
+                                                 GetAllCellsCSVConnectorPresenter getAllCellsCSVConnectorPresenter,
+                                                 GetAllSpreadsheetsConnectorPresenter getAllSpreadsheetsConnectorPresenter,
+                                                 GetAuthorsConnectorPresenter getAuthorsConnectorPresenter,
+                                                 GetCellRangeConnectorPresenter getCellRangeConnectorPresenter,
+                                                 GetCellCSVRangeConnectorPresenter getCellCSVRangeConnectorPresenter,
+                                                 GetColumnHeadersConnectorPresenter getColumnHeadersConnectorPresenter,
+                                                 GetSpreadsheetsByTitleConnectorPresenter getSpreadsheetsByTitleConnectorPresenter,
+                                                 GetAllWorksheetsConnectorPresenter getAllWorksheetsConnectorPresenter,
+                                                 GetWorksheetsByTitleConnectorPresenter getWorksheetsByTitleConnectorPresenter,
+                                                 ImportCSVConnectorPresenter importCSVConnectorPresenter,
+                                                 InitSpreadsheetConnectorPresenter initSpreadsheetConnectorPresenter,
+                                                 PurgeWorksheetConnectorPresenter purgeWorksheetConnectorPresenter,
+                                                 SearchCellConnectorPresenter searchCellConnectorPresenter,
+                                                 SetRowConnectorPresenter setRowConnectorPresenter,
+                                                 UpdateWorksheetMetadataConnectorPresenter updateWorksheetMetadataConnectorPresenter,
+                                                 UsernameLoginConnectorPresenter usernameLoginConnectorPresenter) {
 
         PropertiesPanelManager propertiesPanelManager = editorFactory.createPropertiesPanelManager(view.getPropertiesPanel());
 
@@ -733,6 +793,66 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
         propertiesPanelManager.register(InitTwitter.class, initTwitterConnectorPresenter);
         initTwitterConnectorPresenter.addListener(this);
 
+        propertiesPanelManager.register(CreateSpreadsheet.class, createSpreadsheetConnectorPresenter);
+        createSpreadsheetConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(CreateWorksheet.class, createWorksheetConnectorPresenter);
+        createWorksheetConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(DeleteWorksheet.class, deleteWorksheetConnectorPresenter);
+        deleteWorksheetConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetAllCells.class, getAllCellsConnectorPresenter);
+        getAllCellsConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetAllCellsCSV.class, getAllCellsCSVConnectorPresenter);
+        getAllCellsCSVConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetAllWorksheets.class, getAllWorksheetsConnectorPresenter);
+        getAllWorksheetsConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetAllSpreadsheets.class, getAllSpreadsheetsConnectorPresenter);
+        getAllSpreadsheetsConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetAuthors.class, getAuthorsConnectorPresenter);
+        getAuthorsConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetCellRange.class, getCellRangeConnectorPresenter);
+        getCellRangeConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetCellRangeCSV.class, getCellCSVRangeConnectorPresenter);
+        getCellCSVRangeConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetColumnHeaders.class, getColumnHeadersConnectorPresenter);
+        getColumnHeadersConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetSpreadsheetsByTitle.class, getSpreadsheetsByTitleConnectorPresenter);
+        getSpreadsheetsByTitleConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(GetWorksheetsByTitle.class, getWorksheetsByTitleConnectorPresenter);
+        getWorksheetsByTitleConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(ImportCSV.class, importCSVConnectorPresenter);
+        importCSVConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(InitSpreadsheet.class, initSpreadsheetConnectorPresenter);
+        initSpreadsheetConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(PurgeWorkshet.class, purgeWorksheetConnectorPresenter);
+        purgeWorksheetConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(SearchCell.class, searchCellConnectorPresenter);
+        searchCellConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(SetRow.class, setRowConnectorPresenter);
+        setRowConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(UpdateWorksheetMetadata.class, updateWorksheetMetadataConnectorPresenter);
+        updateWorksheetMetadataConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(UsernameLogin.class, usernameLoginConnectorPresenter);
+        usernameLoginConnectorPresenter.addListener(this);
+
         selectionManager.addListener(propertiesPanelManager);
     }
 
@@ -870,7 +990,27 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                   SendEmailMessage.ELEMENT_NAME,
                                                                                   SetPassword.ELEMENT_NAME,
                                                                                   UnDelete.ELEMENT_NAME,
-                                                                                  Upset.ELEMENT_NAME));
+                                                                                  Upset.ELEMENT_NAME,
+                                                                                  CreateSpreadsheet.ELEMENT_NAME,
+                                                                                  CreateWorksheet.ELEMENT_NAME,
+                                                                                  DeleteWorksheet.ELEMENT_NAME,
+                                                                                  GetAllCells.ELEMENT_NAME,
+                                                                                  GetAllCellsCSV.ELEMENT_NAME,
+                                                                                  GetAllSpreadsheets.ELEMENT_NAME,
+                                                                                  GetAllWorksheets.ELEMENT_NAME,
+                                                                                  GetAuthors.ELEMENT_NAME,
+                                                                                  GetCellRange.ELEMENT_NAME,
+                                                                                  GetCellRangeCSV.ELEMENT_NAME,
+                                                                                  GetColumnHeaders.ELEMENT_NAME,
+                                                                                  GetSpreadsheetsByTitle.ELEMENT_NAME,
+                                                                                  GetWorksheetsByTitle.ELEMENT_NAME,
+                                                                                  ImportCSV.ELEMENT_NAME,
+                                                                                  InitSpreadsheet.ELEMENT_NAME,
+                                                                                  PurgeWorkshet.ELEMENT_NAME,
+                                                                                  SearchCell.ELEMENT_NAME,
+                                                                                  SetRow.ELEMENT_NAME,
+                                                                                  UpdateWorksheetMetadata.ELEMENT_NAME,
+                                                                                  UsernameLogin.ELEMENT_NAME));
 
         connectionsValidator.addDisallowRules(LoopBack.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                                    Property.ELEMENT_NAME,
@@ -907,7 +1047,27 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                    SendEmailMessage.ELEMENT_NAME,
                                                                                    SetPassword.ELEMENT_NAME,
                                                                                    UnDelete.ELEMENT_NAME,
-                                                                                   Upset.ELEMENT_NAME));
+                                                                                   Upset.ELEMENT_NAME,
+                                                                                   CreateSpreadsheet.ELEMENT_NAME,
+                                                                                   CreateWorksheet.ELEMENT_NAME,
+                                                                                   DeleteWorksheet.ELEMENT_NAME,
+                                                                                   GetAllCells.ELEMENT_NAME,
+                                                                                   GetAllCellsCSV.ELEMENT_NAME,
+                                                                                   GetAllSpreadsheets.ELEMENT_NAME,
+                                                                                   GetAllWorksheets.ELEMENT_NAME,
+                                                                                   GetAuthors.ELEMENT_NAME,
+                                                                                   GetCellRange.ELEMENT_NAME,
+                                                                                   GetCellRangeCSV.ELEMENT_NAME,
+                                                                                   GetColumnHeaders.ELEMENT_NAME,
+                                                                                   GetSpreadsheetsByTitle.ELEMENT_NAME,
+                                                                                   GetWorksheetsByTitle.ELEMENT_NAME,
+                                                                                   ImportCSV.ELEMENT_NAME,
+                                                                                   InitSpreadsheet.ELEMENT_NAME,
+                                                                                   PurgeWorkshet.ELEMENT_NAME,
+                                                                                   SearchCell.ELEMENT_NAME,
+                                                                                   SetRow.ELEMENT_NAME,
+                                                                                   UpdateWorksheetMetadata.ELEMENT_NAME,
+                                                                                   UsernameLogin.ELEMENT_NAME));
 
         connectionsValidator.addDisallowRules(AddressEndpoint.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                                           Property.ELEMENT_NAME,
@@ -944,7 +1104,27 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                           SendEmailMessage.ELEMENT_NAME,
                                                                                           SetPassword.ELEMENT_NAME,
                                                                                           UnDelete.ELEMENT_NAME,
-                                                                                          Upset.ELEMENT_NAME));
+                                                                                          Upset.ELEMENT_NAME,
+                                                                                          CreateSpreadsheet.ELEMENT_NAME,
+                                                                                          CreateWorksheet.ELEMENT_NAME,
+                                                                                          DeleteWorksheet.ELEMENT_NAME,
+                                                                                          GetAllCells.ELEMENT_NAME,
+                                                                                          GetAllCellsCSV.ELEMENT_NAME,
+                                                                                          GetAllSpreadsheets.ELEMENT_NAME,
+                                                                                          GetAllWorksheets.ELEMENT_NAME,
+                                                                                          GetAuthors.ELEMENT_NAME,
+                                                                                          GetCellRange.ELEMENT_NAME,
+                                                                                          GetCellRangeCSV.ELEMENT_NAME,
+                                                                                          GetColumnHeaders.ELEMENT_NAME,
+                                                                                          GetSpreadsheetsByTitle.ELEMENT_NAME,
+                                                                                          GetWorksheetsByTitle.ELEMENT_NAME,
+                                                                                          ImportCSV.ELEMENT_NAME,
+                                                                                          InitSpreadsheet.ELEMENT_NAME,
+                                                                                          PurgeWorkshet.ELEMENT_NAME,
+                                                                                          SearchCell.ELEMENT_NAME,
+                                                                                          SetRow.ELEMENT_NAME,
+                                                                                          UpdateWorksheetMetadata.ELEMENT_NAME,
+                                                                                          UsernameLogin.ELEMENT_NAME));
     }
 
     @Inject
@@ -952,7 +1132,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
         innerElementsValidator.addAllowRule(Call.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
 
         innerElementsValidator.addAllowRule(Send.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
-        
+
         innerElementsValidator.addDisallowRule(RootElement.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
 
         innerElementsValidator.addDisallowRule(Filter.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
@@ -1053,7 +1233,27 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                   Provider<GetSentDirectMessages> getSentDirectMessagesProvider,
                                                   Provider<GetTopTrendPlaces> getTopTrendPlacesProvider,
                                                   Provider<GetUserTimeLine> getUserTimeLineProvider,
-                                                  Provider<InitTwitter> initTwitterProvider) {
+                                                  Provider<InitTwitter> initTwitterProvider,
+                                                  Provider<CreateSpreadsheet> createSpreadsheetProvider,
+                                                  Provider<CreateWorksheet> createWorksheetProvider,
+                                                  Provider<DeleteWorksheet> deleteWorksheetProvider,
+                                                  Provider<GetAllCells> getAllCellsProvider,
+                                                  Provider<GetAllCellsCSV> getAllCellsCSVProvider,
+                                                  Provider<GetAllSpreadsheets> getAllSpreadsheetsProvider,
+                                                  Provider<GetAllWorksheets> getAllWorksheetsProvider,
+                                                  Provider<GetAuthors> getAuthorsProvider,
+                                                  Provider<GetCellRange> getCellRangeProvider,
+                                                  Provider<GetColumnHeaders> getColumnHeadersProvider,
+                                                  Provider<GetSpreadsheetsByTitle> getSpreadsheetsByTitleProvider,
+                                                  Provider<GetWorksheetsByTitle> getWorksheetsByTitleProvider,
+                                                  Provider<ImportCSV> importCSVProvider,
+                                                  Provider<InitSpreadsheet> initSpreadsheetProvider,
+                                                  Provider<PurgeWorkshet> purgeWorkshetProvider,
+                                                  Provider<SearchCell> searchCellProvider,
+                                                  Provider<SetRow> setRowProvider,
+                                                  Provider<UpdateWorksheetMetadata> updateWorksheetMetadataProvider,
+                                                  Provider<UsernameLogin> usernameLoginProvider,
+                                                  Provider<GetCellRangeCSV> getCellRangeCSVProvider) {
 
         mediatorCreatorsManager.register(Log.ELEMENT_NAME, Log.SERIALIZATION_NAME, State.CREATING_LOG, logProvider);
 
@@ -1482,6 +1682,106 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                          InitTwitter.SERIALIZATION_NAME,
                                          State.CREATING_TWITTER_INIT,
                                          initTwitterProvider);
+
+        mediatorCreatorsManager.register(CreateSpreadsheet.ELEMENT_NAME,
+                                         CreateSpreadsheet.SERIALIZATION_NAME,
+                                         State.CREATING_SPREADSHEET_CREATE_SPREADSHEET,
+                                         createSpreadsheetProvider);
+
+        mediatorCreatorsManager.register(CreateWorksheet.ELEMENT_NAME,
+                                         CreateWorksheet.SERIALIZATION_NAME,
+                                         State.CREATING_SPREADSHEET_CREATE_WORKSHEET,
+                                         createWorksheetProvider);
+
+        mediatorCreatorsManager.register(DeleteWorksheet.ELEMENT_NAME,
+                                         DeleteWorksheet.SERIALIZATION_NAME,
+                                         State.CREATING_SPREADSHEET_DELETE_WORKSHEET,
+                                         deleteWorksheetProvider);
+
+        mediatorCreatorsManager.register(GetAllCells.ELEMENT_NAME,
+                                         GetAllCells.SERIALIZATION_NAME,
+                                         State.CREATING_SPREADSHEET_GET_ALL_CELLS,
+                                         getAllCellsProvider);
+
+        mediatorCreatorsManager.register(GetAllCellsCSV.ELEMENT_NAME,
+                                         GetAllCellsCSV.SERIALIZATION_NAME,
+                                         State.CREATING_SPREADSHEET_GET_ALL_CELLS_CSV,
+                                         getAllCellsCSVProvider);
+
+        mediatorCreatorsManager.register(GetAllWorksheets.ELEMENT_NAME,
+                                         GetAllWorksheets.SERIALIZATION_NAME,
+                                         State.CREATING_SPREADSHEET_GET_ALL_WORKSHEETS,
+                                         getAllWorksheetsProvider);
+
+        mediatorCreatorsManager.register(GetAllSpreadsheets.ELEMENT_NAME,
+                                         GetAllSpreadsheets.SERIALIZATION_NAME,
+                                         State.CREATING_SPREADSHEET_GET_ALL_SPREADSHEETS,
+                                         getAllSpreadsheetsProvider);
+
+        mediatorCreatorsManager.register(GetAuthors.ELEMENT_NAME,
+                                         GetAuthors.SERIALIZATION_NAME,
+                                         State.CREATING_SPREADSHEET_GET_AUTHORS,
+                                         getAuthorsProvider);
+
+        mediatorCreatorsManager.register(GetCellRange.ELEMENT_NAME,
+                                         GetCellRange.SERIALIZATION_NAME,
+                                         State.CREATING_SPREADSHEET_GET_CELL_RANGE,
+                                         getCellRangeProvider);
+
+        mediatorCreatorsManager.register(GetCellRangeCSV.ELEMENT_NAME,
+                                         GetCellRangeCSV.SERIALIZATION_NAME,
+                                         State.CREATING_SPREADSHEET_GET_CELL_RANGE_CSV,
+                                         getCellRangeCSVProvider);
+
+        mediatorCreatorsManager.register(GetColumnHeaders.ELEMENT_NAME,
+                                         GetColumnHeaders.SERIALIZATION_NAME,
+                                         State.CREATING_SPREADSHEET_GET_COLUMN_HEADERS,
+                                         getColumnHeadersProvider);
+
+        mediatorCreatorsManager.register(GetSpreadsheetsByTitle.ELEMENT_NAME,
+                                         GetSpreadsheetsByTitle.SERIALIZATION_NAME,
+                                         State.CREATING_SPREADSHEET_GET_SPREADSHEET_BY_TITLE,
+                                         getSpreadsheetsByTitleProvider);
+
+        mediatorCreatorsManager.register(GetWorksheetsByTitle.ELEMENT_NAME,
+                                         GetWorksheetsByTitle.SERIALIZATION_NAME,
+                                         State.CREATING_SPREADSHEET_GET_WORKSHEET_BY_TITLE,
+                                         getWorksheetsByTitleProvider);
+
+        mediatorCreatorsManager.register(ImportCSV.ELEMENT_NAME,
+                                         ImportCSV.SERIALIZATION_NAME,
+                                         State.CREATING_SPREADSHEET_IMPORT_CSV,
+                                         importCSVProvider);
+
+        mediatorCreatorsManager.register(InitSpreadsheet.ELEMENT_NAME,
+                                         InitSpreadsheet.SERIALIZATION_NAME,
+                                         State.CREATING_SPREADSHEET_INIT,
+                                         initSpreadsheetProvider);
+
+        mediatorCreatorsManager.register(PurgeWorkshet.ELEMENT_NAME,
+                                         PurgeWorkshet.SERIALIZATION_NAME,
+                                         State.CREATING_SPREADSHEET_PURGE_WORKSHEET,
+                                         purgeWorkshetProvider);
+
+        mediatorCreatorsManager.register(SearchCell.ELEMENT_NAME,
+                                         SearchCell.SERIALIZATION_NAME,
+                                         State.CREATING_SPREADSHEET_SEARCH_CELL,
+                                         searchCellProvider);
+
+        mediatorCreatorsManager.register(SetRow.ELEMENT_NAME,
+                                         SetRow.SERIALIZATION_NAME,
+                                         State.CREATING_SPREADSHEET_SET_ROW,
+                                         setRowProvider);
+
+        mediatorCreatorsManager.register(UpdateWorksheetMetadata.ELEMENT_NAME,
+                                         UpdateWorksheetMetadata.SERIALIZATION_NAME,
+                                         State.CREATING_SPREADSHEET_UPDATE_WORKSHEET_META,
+                                         updateWorksheetMetadataProvider);
+
+        mediatorCreatorsManager.register(UsernameLogin.ELEMENT_NAME,
+                                         UsernameLogin.SERIALIZATION_NAME,
+                                         State.CREATING_SPREADSHEET_USERNAME_LOGIN,
+                                         usernameLoginProvider);
     }
 
     /** {@inheritDoc} */

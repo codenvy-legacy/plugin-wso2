@@ -267,6 +267,66 @@ public abstract class ToolbarView extends AbstractView<ToolbarView.ActionDelegat
 
         /** Performs some actions in response to a user clicked on jira update issue assignable icon of tool bar. */
         void onUpdateIssueAssigneeClicked();
+
+        /** Performs some actions in response to a user clicked on create spreadsheet icon of tool bar. */
+        void onCreateSpreadsheetClicked();
+
+        /** Performs some actions in response to a user clicked on create worksheet icon of tool bar. */
+        void onSpreadsheetCreateWorksheetClicked();
+
+        /** Performs some actions in response to a user clicked on delete worksheet icon of tool bar. */
+        void onSpreadsheetDeleteWorksheetClicked();
+
+        /** Performs some actions in response to a user clicked on get all cells icon of tool bar. */
+        void onSpreadsheetGetAllCellsClicked();
+
+        /** Performs some actions in response to a user clicked on get all cells CSV icon of tool bar. */
+        void onSpreadsheetGetAllCellsCSVClicked();
+
+        /** Performs some actions in response to a user clicked on get all spreadsheets icon of tool bar. */
+        void onSpreadsheetGetAllSpreadsheetsClicked();
+
+        /** Performs some actions in response to a user clicked on get all worksheets icon of tool bar. */
+        void onSpreadsheetGetAllWorksheetsClicked();
+
+        /** Performs some actions in response to a user clicked on get authors icon of tool bar. */
+        void onSpreadsheetGetAuthorsClicked();
+
+        /** Performs some actions in response to a user clicked on get cell range icon of tool bar. */
+        void onSpreadsheetGetCellRangeClicked();
+
+        /** Performs some actions in response to a user clicked on get cell range CSV icon of tool bar. */
+        void onSpreadsheetGetCellRangeCSVClicked();
+
+        /** Performs some actions in response to a user clicked on get column headers icon of tool bar. */
+        void onSpreadsheetGetColumnHeadersClicked();
+
+        /** Performs some actions in response to a user clicked on get spreadsheet by title icon of tool bar. */
+        void onSpreadsheetGetSpreadsheetByTitleClicked();
+
+        /** Performs some actions in response to a user clicked on spreadsheet get worksheet by title icon of tool bar. */
+        void onSpreadsheetGetWorksheetByTitleClicked();
+
+        /** Performs some actions in response to a user clicked on spreadsheet import CSV icon of tool bar. */
+        void onSpreadsheetImportCSVClicked();
+
+        /** Performs some actions in response to a user clicked on spreadsheet init icon of tool bar. */
+        void onSpreadsheetInitClicked();
+
+        /** Performs some actions in response to a user clicked on spreadsheet purge worksheet icon of tool bar. */
+        void onSpreadsheetPurgeWorksheetClicked();
+
+        /** Performs some actions in response to a user clicked on spreadsheet search cell icon of tool bar. */
+        void onSpreadsheetSearchCellClicked();
+
+        /** Performs some actions in response to a user clicked on spreadsheet set row icon of tool bar. */
+        void onSpreadsheetSetRowClicked();
+
+        /** Performs some actions in response to a user clicked on update worksheet icon of tool bar. */
+        void onSpreadsheetUpdateWorksheetClicked();
+
+        /** Performs some actions in response to a user clicked on spreadsheet username login icon of tool bar. */
+        void onSpreadsheetUsernameLoginClicked();
     }
 
 }

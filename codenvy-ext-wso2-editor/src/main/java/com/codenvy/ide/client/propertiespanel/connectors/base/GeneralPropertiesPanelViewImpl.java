@@ -294,13 +294,13 @@ public class GeneralPropertiesPanelViewImpl extends GeneralPropertiesPanelView {
     /** {@inheritDoc} */
     @Nonnull
     @Override
-    public String getSixesTextBoxValue() {
+    public String getSixthTextBoxValue() {
         return sixesTextBox.getText();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setSixesTextBoxValue(@Nonnull String value) {
+    public void setSixthTextBoxValue(@Nonnull String value) {
         sixesTextBox.setText(value);
     }
 
@@ -401,7 +401,7 @@ public class GeneralPropertiesPanelViewImpl extends GeneralPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void setVisibleSixesPanel(boolean isVisible) {
+    public void setVisibleSixthPanel(boolean isVisible) {
         sixesPanel.setVisible(isVisible);
     }
 
@@ -467,7 +467,7 @@ public class GeneralPropertiesPanelViewImpl extends GeneralPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void setSixesLabelTitle(@Nonnull String title) {
+    public void setSixthLabelTitle(@Nonnull String title) {
         sixesLabel.setText(title);
     }
 
@@ -533,7 +533,7 @@ public class GeneralPropertiesPanelViewImpl extends GeneralPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void setEnableSixesTextBox(boolean isEnable) {
+    public void setEnableSixthTextBox(boolean isEnable) {
         sixesTextBox.setEnabled(isEnable);
     }
 
@@ -599,7 +599,7 @@ public class GeneralPropertiesPanelViewImpl extends GeneralPropertiesPanelView {
 
     /** {@inheritDoc} */
     @Override
-    public void setVisibleSixesButton(boolean isVisible) {
+    public void setVisibleSixthButton(boolean isVisible) {
         sixesButton.setVisible(isVisible);
     }
 
@@ -705,12 +705,12 @@ public class GeneralPropertiesPanelViewImpl extends GeneralPropertiesPanelView {
 
     @UiHandler("sixesTextBox")
     public void onSixesTextBoxValueChanged(KeyUpEvent event) {
-        delegate.onSixesTextBoxValueChanged();
+        delegate.onSixthTextBoxValueChanged();
     }
 
     @UiHandler("sixesButton")
     public void onSixeshButtonClicked(ClickEvent event) {
-        delegate.onSixesButtonClicked();
+        delegate.onSixthButtonClicked();
     }
 
     @UiHandler("seventhTextBox")

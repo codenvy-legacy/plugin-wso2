@@ -411,6 +411,106 @@
                 <g:upFace image="{res.jiraConnectorToolbar}"/>
             </g:PushButton>
 
+            <g:PushButton ui:field="spreadsheetCreateSpreadsheet" addStyleNames="{style.buttonStyle}"
+                          title="{local.spreadsheetCreateSpreadsheet}">
+                <g:upFace image="{res.googleSpreadsheetToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="spreadsheetCreateWorksheet" addStyleNames="{style.buttonStyle}"
+                          title="{local.spreadsheetCreateWorksheet}">
+                <g:upFace image="{res.googleSpreadsheetToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="spreadsheetDeleteWorksheet" addStyleNames="{style.buttonStyle}"
+                          title="{local.spreadsheetDeleteWorksheet}">
+                <g:upFace image="{res.googleSpreadsheetToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="spreadsheetGetAllCells" addStyleNames="{style.buttonStyle}"
+                          title="{local.spreadsheetGetAllCells}">
+                <g:upFace image="{res.googleSpreadsheetToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="spreadsheetGetAllCellsCSV" addStyleNames="{style.buttonStyle}"
+                          title="{local.spreadsheetGetAllCellsCSV}">
+                <g:upFace image="{res.googleSpreadsheetToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="spreadsheetGetAllSpreadsheets" addStyleNames="{style.buttonStyle}"
+                          title="{local.spreadsheetGetAllSpreadsheets}">
+                <g:upFace image="{res.googleSpreadsheetToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="spreadsheetGetAllWorksheets" addStyleNames="{style.buttonStyle}"
+                          title="{local.spreadsheetGetAllWorksheets}">
+                <g:upFace image="{res.googleSpreadsheetToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="spreadsheetGetAuthors" addStyleNames="{style.buttonStyle}"
+                          title="{local.spreadsheetGetAuthors}">
+                <g:upFace image="{res.googleSpreadsheetToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="spreadsheetGetCellRange" addStyleNames="{style.buttonStyle}"
+                          title="{local.spreadsheetGetCellRange}">
+                <g:upFace image="{res.googleSpreadsheetToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="spreadsheetGetCellRangeCSV" addStyleNames="{style.buttonStyle}"
+                          title="{local.spreadsheetGetCellRangeCSV}">
+                <g:upFace image="{res.googleSpreadsheetToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="spreadsheetGetColumnHeaders" addStyleNames="{style.buttonStyle}"
+                          title="{local.spreadsheetGetColumnHeaders}">
+                <g:upFace image="{res.googleSpreadsheetToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="spreadsheetGetSpreadsheetByTitle" addStyleNames="{style.buttonStyle}"
+                          title="{local.spreadsheetGetSpreadsheetByTitle}">
+                <g:upFace image="{res.googleSpreadsheetToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="spreadsheetGetWorksheetByTitle" addStyleNames="{style.buttonStyle}"
+                          title="{local.spreadsheetGetWorksheetByTitle}">
+                <g:upFace image="{res.googleSpreadsheetToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="spreadsheetImportCSV" addStyleNames="{style.buttonStyle}"
+                          title="{local.spreadsheetImportCSV}">
+                <g:upFace image="{res.googleSpreadsheetToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="spreadsheetInit" addStyleNames="{style.buttonStyle}"
+                          title="{local.spreadsheetInit}">
+                <g:upFace image="{res.googleSpreadsheetToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="spreadsheetPurgeWorksheet" addStyleNames="{style.buttonStyle}"
+                          title="{local.spreadsheetPurgeWorksheet}">
+                <g:upFace image="{res.googleSpreadsheetToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="spreadsheetSearchCell" addStyleNames="{style.buttonStyle}"
+                          title="{local.spreadsheetSearchCell}">
+                <g:upFace image="{res.googleSpreadsheetToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="spreadsheetSetRow" addStyleNames="{style.buttonStyle}"
+                          title="{local.spreadsheetSetRow}">
+                <g:upFace image="{res.googleSpreadsheetToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="spreadsheetUpdateWorksheetMeta" addStyleNames="{style.buttonStyle}"
+                          title="{local.spreadsheetUpdateWorksheetMeta}">
+                <g:upFace image="{res.googleSpreadsheetToolbar}"/>
+            </g:PushButton>
+
+            <g:PushButton ui:field="spreadsheetUsernameLogin" addStyleNames="{style.buttonStyle}"
+                          title="{local.spreadsheetUsernameLogin}">
+                <g:upFace image="{res.googleSpreadsheetToolbar}"/>
+            </g:PushButton>
+
         </g:FlowPanel>
     </g:ScrollPanel>
 

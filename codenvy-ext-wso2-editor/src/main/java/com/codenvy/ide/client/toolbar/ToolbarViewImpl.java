@@ -430,4 +430,104 @@ public class ToolbarViewImpl extends ToolbarView {
         delegate.onUpdateIssueAssigneeClicked();
     }
 
+    @UiHandler("spreadsheetCreateSpreadsheet")
+    public void onCreateSpreadsheetClicked(ClickEvent event) {
+        delegate.onCreateSpreadsheetClicked();
+    }
+
+    @UiHandler("spreadsheetCreateWorksheet")
+    public void onSpreadsheetCreateWorksheetClicked(ClickEvent event) {
+        delegate.onSpreadsheetCreateWorksheetClicked();
+    }
+
+    @UiHandler("spreadsheetDeleteWorksheet")
+    public void onSpreadsheetDeleteWorksheetClicked(ClickEvent event) {
+        delegate.onSpreadsheetDeleteWorksheetClicked();
+    }
+
+    @UiHandler("spreadsheetGetAllCellsCSV")
+    public void onSpreadsheetGetAllCellsCSVClicked(ClickEvent event) {
+        delegate.onSpreadsheetGetAllCellsCSVClicked();
+    }
+
+    @UiHandler("spreadsheetGetAllCells")
+    public void onSpreadsheetGetAllCellsClicked(ClickEvent event) {
+        delegate.onSpreadsheetGetAllCellsClicked();
+    }
+
+    @UiHandler("spreadsheetGetAllWorksheets")
+    public void onSpreadsheetGetAllWorksheetsClicked(ClickEvent event) {
+        delegate.onSpreadsheetGetAllWorksheetsClicked();
+    }
+
+    @UiHandler("spreadsheetGetAllSpreadsheets")
+    public void onSpreadsheetGetAllSpreadsheetsClicked(ClickEvent event) {
+        delegate.onSpreadsheetGetAllSpreadsheetsClicked();
+    }
+
+    @UiHandler("spreadsheetGetAuthors")
+    public void onSpreadsheetGetAuthorsClicked(ClickEvent event) {
+        delegate.onSpreadsheetGetAuthorsClicked();
+    }
+
+    @UiHandler("spreadsheetGetCellRange")
+    public void onSpreadsheetGetCellRangeClicked(ClickEvent event) {
+        delegate.onSpreadsheetGetCellRangeClicked();
+    }
+
+    @UiHandler("spreadsheetGetCellRangeCSV")
+    public void onSpreadsheetGetCellRangeCSVClicked(ClickEvent event) {
+        delegate.onSpreadsheetGetCellRangeCSVClicked();
+    }
+
+    @UiHandler("spreadsheetGetColumnHeaders")
+    public void onSpreadsheetGetColumnHeadersClicked(ClickEvent event) {
+        delegate.onSpreadsheetGetColumnHeadersClicked();
+    }
+
+    @UiHandler("spreadsheetGetSpreadsheetByTitle")
+    public void onSpreadsheetGetSpreadsheetByTitleClicked(ClickEvent event) {
+        delegate.onSpreadsheetGetSpreadsheetByTitleClicked();
+    }
+
+    @UiHandler("spreadsheetGetWorksheetByTitle")
+    public void onSpreadsheetGetWorksheetByTitleClicked(ClickEvent event) {
+        delegate.onSpreadsheetGetWorksheetByTitleClicked();
+    }
+
+    @UiHandler("spreadsheetImportCSV")
+    public void onSpreadsheetImportCSVClicked(ClickEvent event) {
+        delegate.onSpreadsheetImportCSVClicked();
+    }
+
+    @UiHandler("spreadsheetInit")
+    public void onSpreadsheetInitClicked(ClickEvent event) {
+        delegate.onSpreadsheetInitClicked();
+    }
+
+    @UiHandler("spreadsheetPurgeWorksheet")
+    public void onSpreadsheetPurgeWorksheetClicked(ClickEvent event) {
+        delegate.onSpreadsheetPurgeWorksheetClicked();
+    }
+
+    @UiHandler("spreadsheetSearchCell")
+    public void onSpreadsheetSearchCellClicked(ClickEvent event) {
+        delegate.onSpreadsheetSearchCellClicked();
+    }
+
+    @UiHandler("spreadsheetSetRow")
+    public void onSpreadsheetSetRowClicked(ClickEvent event) {
+        delegate.onSpreadsheetSetRowClicked();
+    }
+
+    @UiHandler("spreadsheetUpdateWorksheetMeta")
+    public void onSpreadsheetUpdateWorksheetClicked(ClickEvent event) {
+        delegate.onSpreadsheetUpdateWorksheetClicked();
+    }
+
+    @UiHandler("spreadsheetUsernameLogin")
+    public void onSpreadsheetUsernameLoginClicked(ClickEvent event) {
+        delegate.onSpreadsheetUsernameLoginClicked();
+    }
+
 }

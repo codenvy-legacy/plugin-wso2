@@ -399,6 +399,12 @@ public interface EditorResources extends ClientBundle {
     @Source("icons/twitterIcon.gif")
     ImageResource twitterElement();
 
+    @Source("icons/GoogleSpreadsheetToolbar.gif")
+    ImageResource googleSpreadsheetToolbar();
+
+    @Source("icons/GoogleSpreadsheet.gif")
+    ImageResource googleSpreadsheetElement();
+
     @Source("icons/SalesforceToolbar.gif")
     ImageResource salesforceConnectorToolbar();
 

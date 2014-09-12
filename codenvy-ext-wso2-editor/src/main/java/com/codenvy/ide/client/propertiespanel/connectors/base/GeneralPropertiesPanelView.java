@@ -72,7 +72,7 @@ public abstract class GeneralPropertiesPanelView extends AbstractView<GeneralPro
         void onFifthTextBoxValueChanged();
 
         /** Performs any actions appropriate in response to the user changes value of sixes text box on view. */
-        void onSixesTextBoxValueChanged();
+        void onSixthTextBoxValueChanged();
 
         /** Performs any actions appropriate in response to the user changes value of seventh text box on view. */
         void onSeventhTextBoxValueChanged();
@@ -105,7 +105,7 @@ public abstract class GeneralPropertiesPanelView extends AbstractView<GeneralPro
         void onFifthButtonClicked();
 
         /** Performs any actions appropriate in response to the user clicked button on sixes panel of view. */
-        void onSixesButtonClicked();
+        void onSixthButtonClicked();
 
         /** Performs any actions appropriate in response to the user clicked button on seventh panel of view. */
         void onSeventhButtonClicked();
@@ -237,9 +237,9 @@ public abstract class GeneralPropertiesPanelView extends AbstractView<GeneralPro
     public abstract void setFifthTextBoxValue(@Nonnull String value);
 
     @Nonnull
-    public abstract String getSixesTextBoxValue();
+    public abstract String getSixthTextBoxValue();
 
-    public abstract void setSixesTextBoxValue(@Nonnull String value);
+    public abstract void setSixthTextBoxValue(@Nonnull String value);
 
     @Nonnull
     public abstract String getSeventhTextBoxValue();
@@ -276,7 +276,7 @@ public abstract class GeneralPropertiesPanelView extends AbstractView<GeneralPro
 
     public abstract void setVisibleFifthPanel(boolean isVisible);
 
-    public abstract void setVisibleSixesPanel(boolean isVisible);
+    public abstract void setVisibleSixthPanel(boolean isVisible);
 
     public abstract void setVisibleSeventhPanel(boolean isVisible);
 
@@ -298,7 +298,7 @@ public abstract class GeneralPropertiesPanelView extends AbstractView<GeneralPro
 
     public abstract void setFifthLabelTitle(@Nonnull String title);
 
-    public abstract void setSixesLabelTitle(@Nonnull String title);
+    public abstract void setSixthLabelTitle(@Nonnull String title);
 
     public abstract void setSeventhLabelTitle(@Nonnull String title);
 
@@ -320,7 +320,7 @@ public abstract class GeneralPropertiesPanelView extends AbstractView<GeneralPro
 
     public abstract void setEnableFifthTextBox(boolean isEnable);
 
-    public abstract void setEnableSixesTextBox(boolean isEnable);
+    public abstract void setEnableSixthTextBox(boolean isEnable);
 
     public abstract void setEnableSeventhTextBox(boolean isEnable);
 
@@ -342,7 +342,7 @@ public abstract class GeneralPropertiesPanelView extends AbstractView<GeneralPro
 
     public abstract void setVisibleFifthButton(boolean isVisible);
 
-    public abstract void setVisibleSixesButton(boolean isVisible);
+    public abstract void setVisibleSixthButton(boolean isVisible);
 
     public abstract void setVisibleSeventhButton(boolean isVisible);
 

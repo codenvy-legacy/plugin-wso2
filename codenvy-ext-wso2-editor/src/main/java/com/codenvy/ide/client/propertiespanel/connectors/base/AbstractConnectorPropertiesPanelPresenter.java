@@ -33,6 +33,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * depending on user's changes of properties. This business logic is general for all groups of connectors.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public abstract class AbstractConnectorPropertiesPanelPresenter<T extends AbstractConnector>
         extends AbstractPropertiesPanel<T, GeneralPropertiesPanelView>
@@ -134,7 +135,7 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
 
     /** {@inheritDoc} */
     @Override
-    public void onSixesTextBoxValueChanged() {
+    public void onSixthTextBoxValueChanged() {
 
     }
 
@@ -200,7 +201,7 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
 
     /** {@inheritDoc} */
     @Override
-    public void onSixesButtonClicked() {
+    public void onSixthButtonClicked() {
 
     }
 

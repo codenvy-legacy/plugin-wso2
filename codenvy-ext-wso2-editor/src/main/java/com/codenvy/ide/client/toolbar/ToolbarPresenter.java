@@ -101,6 +101,26 @@ import static com.codenvy.ide.client.State.CREATING_SALESFORCE_UPDATE;
 import static com.codenvy.ide.client.State.CREATING_SALESFORCE_UPSET;
 import static com.codenvy.ide.client.State.CREATING_SEND;
 import static com.codenvy.ide.client.State.CREATING_SEQUENCE;
+import static com.codenvy.ide.client.State.CREATING_SPREADSHEET_CREATE_SPREADSHEET;
+import static com.codenvy.ide.client.State.CREATING_SPREADSHEET_CREATE_WORKSHEET;
+import static com.codenvy.ide.client.State.CREATING_SPREADSHEET_DELETE_WORKSHEET;
+import static com.codenvy.ide.client.State.CREATING_SPREADSHEET_GET_ALL_CELLS;
+import static com.codenvy.ide.client.State.CREATING_SPREADSHEET_GET_ALL_CELLS_CSV;
+import static com.codenvy.ide.client.State.CREATING_SPREADSHEET_GET_ALL_SPREADSHEETS;
+import static com.codenvy.ide.client.State.CREATING_SPREADSHEET_GET_ALL_WORKSHEETS;
+import static com.codenvy.ide.client.State.CREATING_SPREADSHEET_GET_AUTHORS;
+import static com.codenvy.ide.client.State.CREATING_SPREADSHEET_GET_CELL_RANGE;
+import static com.codenvy.ide.client.State.CREATING_SPREADSHEET_GET_CELL_RANGE_CSV;
+import static com.codenvy.ide.client.State.CREATING_SPREADSHEET_GET_COLUMN_HEADERS;
+import static com.codenvy.ide.client.State.CREATING_SPREADSHEET_GET_SPREADSHEET_BY_TITLE;
+import static com.codenvy.ide.client.State.CREATING_SPREADSHEET_GET_WORKSHEET_BY_TITLE;
+import static com.codenvy.ide.client.State.CREATING_SPREADSHEET_IMPORT_CSV;
+import static com.codenvy.ide.client.State.CREATING_SPREADSHEET_INIT;
+import static com.codenvy.ide.client.State.CREATING_SPREADSHEET_PURGE_WORKSHEET;
+import static com.codenvy.ide.client.State.CREATING_SPREADSHEET_SEARCH_CELL;
+import static com.codenvy.ide.client.State.CREATING_SPREADSHEET_SET_ROW;
+import static com.codenvy.ide.client.State.CREATING_SPREADSHEET_UPDATE_WORKSHEET_META;
+import static com.codenvy.ide.client.State.CREATING_SPREADSHEET_USERNAME_LOGIN;
 import static com.codenvy.ide.client.State.CREATING_SWITCH;
 
 /**
@@ -600,6 +620,126 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
     @Override
     public void onUpdateIssueAssigneeClicked() {
         setState(CREATING_JIRA_UPDATE_ISSUE_ASSIGNEE);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onCreateSpreadsheetClicked() {
+        setState(CREATING_SPREADSHEET_CREATE_SPREADSHEET);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSpreadsheetCreateWorksheetClicked() {
+        setState(CREATING_SPREADSHEET_CREATE_WORKSHEET);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSpreadsheetDeleteWorksheetClicked() {
+        setState(CREATING_SPREADSHEET_DELETE_WORKSHEET);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSpreadsheetGetAllCellsClicked() {
+        setState(CREATING_SPREADSHEET_GET_ALL_CELLS);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSpreadsheetGetAllCellsCSVClicked() {
+        setState(CREATING_SPREADSHEET_GET_ALL_CELLS_CSV);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSpreadsheetGetAllSpreadsheetsClicked() {
+        setState(CREATING_SPREADSHEET_GET_ALL_SPREADSHEETS);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSpreadsheetGetAllWorksheetsClicked() {
+        setState(CREATING_SPREADSHEET_GET_ALL_WORKSHEETS);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSpreadsheetGetAuthorsClicked() {
+        setState(CREATING_SPREADSHEET_GET_AUTHORS);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSpreadsheetGetCellRangeClicked() {
+        setState(CREATING_SPREADSHEET_GET_CELL_RANGE);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSpreadsheetGetCellRangeCSVClicked() {
+        setState(CREATING_SPREADSHEET_GET_CELL_RANGE_CSV);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSpreadsheetGetColumnHeadersClicked() {
+        setState(CREATING_SPREADSHEET_GET_COLUMN_HEADERS);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSpreadsheetGetSpreadsheetByTitleClicked() {
+        setState(CREATING_SPREADSHEET_GET_SPREADSHEET_BY_TITLE);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSpreadsheetGetWorksheetByTitleClicked() {
+        setState(CREATING_SPREADSHEET_GET_WORKSHEET_BY_TITLE);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSpreadsheetImportCSVClicked() {
+        setState(CREATING_SPREADSHEET_IMPORT_CSV);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSpreadsheetInitClicked() {
+        setState(CREATING_SPREADSHEET_INIT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSpreadsheetPurgeWorksheetClicked() {
+        setState(CREATING_SPREADSHEET_PURGE_WORKSHEET);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSpreadsheetSearchCellClicked() {
+        setState(CREATING_SPREADSHEET_SEARCH_CELL);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSpreadsheetSetRowClicked() {
+        setState(CREATING_SPREADSHEET_SET_ROW);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSpreadsheetUpdateWorksheetClicked() {
+        setState(CREATING_SPREADSHEET_UPDATE_WORKSHEET_META);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onSpreadsheetUsernameLoginClicked() {
+        setState(CREATING_SPREADSHEET_USERNAME_LOGIN);
     }
 
 }

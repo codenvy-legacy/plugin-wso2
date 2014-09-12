@@ -130,7 +130,7 @@ public class GetRetweetsOfMineConnectorPresenter extends AbstractConnectorProper
                 element.setPageNS(nameSpaces);
                 element.setPageExpr(expression);
 
-                GetRetweetsOfMineConnectorPresenter.this.view.setSixesTextBoxValue(expression);
+                GetRetweetsOfMineConnectorPresenter.this.view.setSixthTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -150,21 +150,21 @@ public class GetRetweetsOfMineConnectorPresenter extends AbstractConnectorProper
         view.setVisibleThirdButton(isEquals);
         view.setVisibleFourthButton(isEquals);
         view.setVisibleFifthButton(isEquals);
-        view.setVisibleSixesButton(isEquals);
+        view.setVisibleSixthButton(isEquals);
 
         view.setEnableFirstTextBox(!isEquals);
         view.setEnableSecondTextBox(!isEquals);
         view.setEnableThirdTextBox(!isEquals);
         view.setEnableFourthTextBox(!isEquals);
         view.setEnableFifthTextBox(!isEquals);
-        view.setEnableSixesTextBox(!isEquals);
+        view.setEnableSixthTextBox(!isEquals);
 
         view.setFirstTextBoxValue(isEquals ? element.getConsumerKeyExpr() : element.getConsumerKey());
         view.setSecondTextBoxValue(isEquals ? element.getConsumerSecretExpr() : element.getConsumerSecret());
         view.setThirdTextBoxValue(isEquals ? element.getAccessTokenExpr() : element.getAccessToken());
         view.setFourthTextBoxValue(isEquals ? element.getAccessTokenSecretExpr() : element.getAccessTokenSecret());
         view.setFifthTextBoxValue(isEquals ? element.getCountExpr() : element.getCount());
-        view.setSixesTextBoxValue(isEquals ? element.getPageExpr() : element.getPage());
+        view.setSixthTextBoxValue(isEquals ? element.getPageExpr() : element.getPage());
 
         notifyListeners();
     }
@@ -212,7 +212,7 @@ public class GetRetweetsOfMineConnectorPresenter extends AbstractConnectorProper
     /** {@inheritDoc} */
     @Override
     public void onSeventhTextBoxValueChanged() {
-        element.setPage(view.getSixesTextBoxValue());
+        element.setPage(view.getSixthTextBoxValue());
 
         notifyListeners();
     }
@@ -264,7 +264,7 @@ public class GetRetweetsOfMineConnectorPresenter extends AbstractConnectorProper
 
     /** {@inheritDoc} */
     @Override
-    public void onSixesButtonClicked() {
+    public void onSixthButtonClicked() {
         nameSpacePresenter.showWindowWithParameters(element.getPageNS(),
                                                     pageCallBack,
                                                     locale.connectorExpression(),
@@ -277,14 +277,14 @@ public class GetRetweetsOfMineConnectorPresenter extends AbstractConnectorProper
         view.setVisibleThirdPanel(true);
         view.setVisibleFourthPanel(true);
         view.setVisibleFifthPanel(true);
-        view.setVisibleSixesPanel(true);
+        view.setVisibleSixthPanel(true);
 
         view.setFirstLabelTitle(locale.twitterConsumerKey());
         view.setSecondLabelTitle(locale.twitterConsumerSecret());
         view.setThirdLabelTitle(locale.twitterAccessToken());
         view.setFourthLabelTitle(locale.twitterAccessTokenSecret());
         view.setFifthLabelTitle(locale.twitterCount());
-        view.setSixesLabelTitle(locale.twitterPage());
+        view.setSixthLabelTitle(locale.twitterPage());
     }
 
     /** {@inheritDoc} */
