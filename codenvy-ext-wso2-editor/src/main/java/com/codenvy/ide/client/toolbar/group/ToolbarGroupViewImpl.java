@@ -15,17 +15,21 @@
  */
 package com.codenvy.ide.client.toolbar.group;
 
+import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.toolbar.item.ToolbarItemPresenter;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.assistedinject.Assisted;
+
+import org.vectomatic.dom.svg.ui.SVGImage;
 
 import javax.annotation.Nonnull;
 
@@ -39,32 +43,60 @@ public class ToolbarGroupViewImpl extends ToolbarGroupView {
     }
 
     @UiField
-    Button    button;
+    FlowPanel         mainPanel;
     @UiField
-    FlowPanel mainPanel;
+    SimpleLayoutPanel icon;
+    @UiField
+    Label             title;
+    @UiField
+    FlowPanel         itemsPanel;
+
+    private final EditorResources resources;
 
     @Inject
-    public ToolbarGroupViewImpl(ToolbarGroupViewImplUiBinder ourUiBinder, @Assisted String title) {
+    public ToolbarGroupViewImpl(ToolbarGroupViewImplUiBinder ourUiBinder, EditorResources resources, @Assisted String title) {
+        this.resources = resources;
+
         initWidget(ourUiBinder.createAndBindUi(this));
 
-        button.setText(title);
+        SVGImage image = new SVGImage(resources.expandIcon());
+        this.icon.getElement().setInnerHTML(image.toString());
+        this.title.setText(title);
+
+        defaultIcon();
+
+        this.mainPanel.addDomHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onItemClicked();
+            }
+        }, ClickEvent.getType());
     }
 
     /** {@inheritDoc} */
     @Override
     public void setVisibleMainPanel(boolean visible) {
-        mainPanel.setVisible(visible);
+        itemsPanel.setVisible(visible);
     }
 
     /** {@inheritDoc} */
     @Override
     public void addItem(@Nonnull ToolbarItemPresenter toolbarItem) {
-        mainPanel.add(toolbarItem.getView());
+        itemsPanel.add(toolbarItem.getView());
     }
 
-    @UiHandler("button")
-    public void onButtonClicked(ClickEvent event) {
-        delegate.onButtonClicked();
+    /** {@inheritDoc} */
+    @Override
+    public void rotateIcon() {
+        icon.removeStyleName(resources.editorCSS().normalImage());
+        icon.addStyleName(resources.editorCSS().expandedImage());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void defaultIcon() {
+        icon.removeStyleName(resources.editorCSS().expandedImage());
+        icon.addStyleName(resources.editorCSS().normalImage());
     }
 
 }

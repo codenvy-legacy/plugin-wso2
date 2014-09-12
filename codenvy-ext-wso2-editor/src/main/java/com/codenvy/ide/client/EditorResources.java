@@ -21,6 +21,8 @@ import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Singleton;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 /**
  * Class contains references to resources which need to correct displaying of WSO2 plugin.
  *
@@ -52,6 +54,11 @@ public interface EditorResources extends ClientBundle {
         String labelStyle();
 
         String fieldStyle();
+
+        String expandedImage();
+
+        String normalImage();
+
     }
 
     @Source("editor.css")
@@ -401,6 +408,9 @@ public interface EditorResources extends ClientBundle {
 
     @Source("icons/SalesforceToolbar.gif")
     ImageResource salesforceConnectorToolbar();
+
+    @Source("icons/toolbar/expansionIcon.svg")
+    SVGResource expandIcon();
 
     @Source("icons/cursors/AddElementCursor.png")
     DataResource applyCursor();

@@ -20,20 +20,22 @@
 
     <ui:style>
         @eval backgroundColor com.codenvy.ide.api.ui.theme.Style.getWindowHeaderBackground();
-        @eval selectionBackgroundColor com.codenvy.ide.api.ui.theme.Style.getPartBackground();
+        @eval borderColor com.codenvy.ide.api.ui.theme.Style.getPartBackground();
+        @eval selectionBackgroundColor com.codenvy.ide.api.ui.theme.Style.getSelectionBackground();
 
         .mainPanel {
-            width: 100%;
+            width: 248px;
             height: 30px;
             padding: 1px 0 1px 12px;
             background: backgroundColor;
-            border-top: 1px groove selectionBackgroundColor;
+            border: 1px groove borderColor;
             cursor: pointer;
+            margin: 1px 0 1px 0;
         }
 
         .mainPanel:hover {
             background: selectionBackgroundColor;
-            border-top: 1px groove backgroundColor;
+            border: 1px groove backgroundColor;
         }
 
         .icon {

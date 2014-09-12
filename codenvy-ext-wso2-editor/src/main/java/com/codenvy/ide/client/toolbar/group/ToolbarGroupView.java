@@ -32,8 +32,12 @@ public abstract class ToolbarGroupView extends AbstractView<ToolbarGroupView.Act
 
     public abstract void addItem(@Nonnull ToolbarItemPresenter toolbarItem);
 
+    public abstract void rotateIcon();
+
+    public abstract void defaultIcon();
+
     public interface ActionDelegate extends AbstractView.ActionDelegate {
-        void onButtonClicked();
+        void onItemClicked();
     }
 
 }

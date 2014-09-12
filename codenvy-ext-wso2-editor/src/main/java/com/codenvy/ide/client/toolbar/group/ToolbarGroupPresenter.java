@@ -44,14 +44,16 @@ public class ToolbarGroupPresenter extends AbstractPresenter<ToolbarGroupView> i
         return view;
     }
 
-    public void fold() {
+    private void fold() {
         isFolded = true;
         view.setVisibleMainPanel(false);
+        view.defaultIcon();
     }
 
-    public void unfold() {
+    private void unfold() {
         isFolded = false;
         view.setVisibleMainPanel(true);
+        view.rotateIcon();
     }
 
     public void addItem(@Nonnull ToolbarItemPresenter toolbarItem) {
@@ -60,7 +62,7 @@ public class ToolbarGroupPresenter extends AbstractPresenter<ToolbarGroupView> i
 
     /** {@inheritDoc} */
     @Override
-    public void onButtonClicked() {
+    public void onItemClicked() {
         if (isFolded) {
             unfold();
         } else {

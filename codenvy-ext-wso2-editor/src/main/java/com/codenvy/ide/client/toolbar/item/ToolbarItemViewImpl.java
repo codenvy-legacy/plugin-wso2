@@ -59,6 +59,8 @@ public class ToolbarItemViewImpl extends ToolbarItemView {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onItemClicked();
+
+                event.stopPropagation();
             }
         }, ClickEvent.getType());
     }
