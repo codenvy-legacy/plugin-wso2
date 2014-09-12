@@ -20,7 +20,7 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.widgets.element.ElementChangedListener;
 import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
-import com.codenvy.ide.client.inject.EditorFactory;
+import com.codenvy.ide.client.inject.factories.ElementWidgetFactory;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
@@ -57,7 +57,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     private final ConnectionsValidator    connectionsValidator;
     private final SelectionManager        selectionManager;
     private final InnerElementsValidator  innerElementsValidator;
-    private final EditorFactory           editorFactory;
+    private final ElementWidgetFactory    elementWidgetFactory;
     private final MediatorCreatorsManager mediatorCreatorsManager;
     private final EditorState             editorState;
 
@@ -70,7 +70,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     public BranchPresenter(BranchView view,
                            ConnectionsValidator connectionsValidator,
                            InnerElementsValidator innerElementsValidator,
-                           EditorFactory editorFactory,
+                           ElementWidgetFactory elementWidgetFactory,
                            MediatorCreatorsManager mediatorCreatorsManager,
                            EditorState editorState,
                            SelectionManager selectionManager,
@@ -79,7 +79,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
 
         this.connectionsValidator = connectionsValidator;
         this.innerElementsValidator = innerElementsValidator;
-        this.editorFactory = editorFactory;
+        this.elementWidgetFactory = elementWidgetFactory;
         this.mediatorCreatorsManager = mediatorCreatorsManager;
         this.editorState = editorState;
         this.selectionManager = selectionManager;
@@ -264,7 +264,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
             element.setX(x);
             element.setY(y);
 
-            ElementPresenter elementPresenter = editorFactory.createElementPresenter(element);
+            ElementPresenter elementPresenter = elementWidgetFactory.createElementPresenter(element);
 
             elementPresenter.addElementChangedListener(this);
             elementPresenter.addElementMoveListener(this);

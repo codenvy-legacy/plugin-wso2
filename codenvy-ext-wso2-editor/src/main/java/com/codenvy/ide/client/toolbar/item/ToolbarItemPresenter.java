@@ -17,7 +17,7 @@
 package com.codenvy.ide.client.toolbar.item;
 
 import com.codenvy.ide.client.EditorState;
-import com.codenvy.ide.client.inject.EditorFactory;
+import com.codenvy.ide.client.inject.factories.ToolbarFactory;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Widget;
@@ -36,12 +36,12 @@ public class ToolbarItemPresenter extends AbstractPresenter<ToolbarItemView> imp
 
     @AssistedInject
     public ToolbarItemPresenter(EditorState editorState,
-                                EditorFactory editorFactory,
+                                ToolbarFactory toolbarFactory,
                                 @Assisted("title") String title,
                                 @Assisted("tooltip") String tooltip,
                                 @Assisted ImageResource icon,
                                 @Assisted("newSate") String newState) {
-        super(editorFactory.createToolbarItemView(title, tooltip, icon));
+        super(toolbarFactory.createToolbarItemView(title, tooltip, icon));
 
         this.editorState = editorState;
         this.newState = newState;

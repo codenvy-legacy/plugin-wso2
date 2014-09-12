@@ -47,17 +47,16 @@
             <artifactId>codenvy-ide-api</artifactId>
             <version>${codenvy.ide-sdk.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>wso2-editor</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
         <!-- Server libraries -->
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-vfs</artifactId>
             <version>${codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.plugin-wso2</groupId>
+            <artifactId>wso2-editor</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
@@ -237,7 +236,7 @@
 
                 <dependencies>
                     <dependency>
-                        <groupId>com.codenvy.ide</groupId>
+                        <groupId>com.codenvy.plugin-wso2</groupId>
                         <artifactId>codenvy-ext-wso2-core</artifactId>
                         <version>${project.version}</version>
                     </dependency>

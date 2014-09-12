@@ -125,16 +125,14 @@ import com.codenvy.ide.client.elements.mediators.log.Log;
 import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
 import com.codenvy.ide.client.elements.widgets.element.ElementChangedListener;
 import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
-import com.codenvy.ide.client.inject.EditorFactory;
+import com.codenvy.ide.client.inject.factories.EditorFactory;
+import com.codenvy.ide.client.inject.factories.ElementWidgetFactory;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
-import com.codenvy.ide.client.propertiespanel.addressendpoint.AddressEndpointPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.call.CallPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.calltemplate.CallTemplatePropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.AddAttachmentConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.CreateFilterConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.CreateIssueConnectorPresenter;
@@ -218,19 +216,22 @@ import com.codenvy.ide.client.propertiespanel.connectors.twitter.SearchTwitterCo
 import com.codenvy.ide.client.propertiespanel.connectors.twitter.SendDirectMessageConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.twitter.ShowStatusConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.twitter.UpdateStatusConnectorPresenter;
-import com.codenvy.ide.client.propertiespanel.empty.EmptyPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.enrich.EnrichPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.filter.FilterPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.header.HeaderPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.log.LogPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.loopback.LoopBackPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.payloadfactory.PayloadFactoryPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.property.PropertyPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.respond.RespondPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.root.RootPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.send.SendPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.sequence.SequencePropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.switchmediator.SwitchPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.endpoints.address.AddressEndpointPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.general.empty.EmptyPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.general.root.RootPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.call.CallPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.calltemplate.CallTemplatePropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.enrich.EnrichPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.filter.FilterPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.header.HeaderPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.log.LogPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.loopback.LoopBackPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.payloadfactory.PayloadFactoryPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.property.PropertyPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.respond.RespondPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.send.SendPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.sequence.SequencePropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.switchmediator.SwitchPropertiesPanelPresenter;
 import com.codenvy.ide.client.toolbar.ToolbarPresenter;
 import com.codenvy.ide.client.validators.ConnectionsValidator;
 import com.codenvy.ide.client.validators.InnerElementsValidator;
@@ -352,14 +353,14 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
     private final List<EditorChangeListener> listeners;
 
     @Inject
-    public WSO2Editor(WSO2EditorView view, EditorFactory editorFactory, ToolbarPresenter toolbar, RootElement rootElement) {
+    public WSO2Editor(WSO2EditorView view, ElementWidgetFactory elementWidgetFactory, ToolbarPresenter toolbar, RootElement rootElement) {
         super(view);
 
         this.listeners = new ArrayList<>();
         this.toolbar = toolbar;
         this.rootElement = rootElement;
 
-        this.rootElementPresenter = editorFactory.createElementPresenter(rootElement);
+        this.rootElementPresenter = elementWidgetFactory.createElementPresenter(rootElement);
         this.rootElementPresenter.addElementChangedListener(this);
     }
 

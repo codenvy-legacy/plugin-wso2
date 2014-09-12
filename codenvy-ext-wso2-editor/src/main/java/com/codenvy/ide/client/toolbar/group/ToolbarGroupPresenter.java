@@ -16,7 +16,7 @@
 
 package com.codenvy.ide.client.toolbar.group;
 
-import com.codenvy.ide.client.inject.EditorFactory;
+import com.codenvy.ide.client.inject.factories.ToolbarFactory;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.toolbar.item.ToolbarItemPresenter;
 import com.google.gwt.user.client.ui.Widget;
@@ -33,8 +33,8 @@ public class ToolbarGroupPresenter extends AbstractPresenter<ToolbarGroupView> i
     private boolean isFolded;
 
     @Inject
-    public ToolbarGroupPresenter(EditorFactory editorFactory, @Assisted String title) {
-        super(editorFactory.createToolbarGroupView(title));
+    public ToolbarGroupPresenter(ToolbarFactory toolbarFactory, @Assisted String title) {
+        super(toolbarFactory.createToolbarGroupView(title));
 
         fold();
     }

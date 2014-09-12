@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.toolbar;
 
-import com.codenvy.ide.client.inject.EditorFactory;
+import com.codenvy.ide.client.inject.factories.ToolbarFactory;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.toolbar.group.ToolbarGroupPresenter;
 import com.codenvy.ide.util.loging.Log;
@@ -40,14 +40,14 @@ import java.util.Set;
 public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements ToolbarView.ActionDelegate {
 
     private final Map<String, ToolbarGroupPresenter> groups;
-    private final EditorFactory                      editorFactory;
+    private final ToolbarFactory                     toolbarFactory;
     private final Set<String>                        states;
 
     @Inject
-    public ToolbarPresenter(ToolbarView view, EditorFactory editorFactory) {
+    public ToolbarPresenter(ToolbarView view, ToolbarFactory toolbarFactory) {
         super(view);
 
-        this.editorFactory = editorFactory;
+        this.toolbarFactory = toolbarFactory;
         this.groups = new LinkedHashMap<>();
         this.states = new HashSet<>();
     }
@@ -58,7 +58,7 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
             return;
         }
 
-        groups.put(groupId, editorFactory.createToolbarGroupPresenter(title));
+        groups.put(groupId, toolbarFactory.createToolbarGroupPresenter(title));
     }
 
     public void addItem(@Nonnull String groupId,
@@ -78,7 +78,7 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
 
         ToolbarGroupPresenter group = groups.get(groupId);
 
-        group.addItem(editorFactory.createToolbarItemPresenter(title, tooltip, icon, editorState));
+        group.addItem(toolbarFactory.createToolbarItemPresenter(title, tooltip, icon, editorState));
     }
 
     /** {@inheritDoc} */

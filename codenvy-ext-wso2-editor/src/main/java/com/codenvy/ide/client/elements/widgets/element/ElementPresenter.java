@@ -19,7 +19,7 @@ import com.codenvy.ide.client.EditorState;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.widgets.branch.BranchPresenter;
-import com.codenvy.ide.client.inject.EditorFactory;
+import com.codenvy.ide.client.inject.factories.ElementWidgetFactory;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
@@ -48,7 +48,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
                                                                                 SelectionManager.SelectionStateListener,
                                                                                 ElementChangedListener {
     private final SelectionManager        selectionManager;
-    private final EditorFactory           editorFactory;
+    private final ElementWidgetFactory    elementWidgetFactory;
     private final EditorState             editorState;
     private final MediatorCreatorsManager mediatorCreatorsManager;
     private final Element                 element;
@@ -63,18 +63,18 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     private int y;
 
     @Inject
-    public ElementPresenter(EditorFactory editorFactory,
+    public ElementPresenter(ElementWidgetFactory elementWidgetFactory,
                             SelectionManager selectionManager,
                             MediatorCreatorsManager mediatorCreatorsManager,
                             InnerElementsValidator innerElementsValidator,
                             EditorState editorState,
                             @Assisted Element element) {
-        super(editorFactory.createElementView(element.isPossibleToAddBranches()));
+        super(elementWidgetFactory.createElementView(element.isPossibleToAddBranches()));
 
         this.view.setVisibleTitleAndIcon(element.needsToShowIconAndTitle());
 
         this.selectionManager = selectionManager;
-        this.editorFactory = editorFactory;
+        this.elementWidgetFactory = elementWidgetFactory;
         this.editorState = editorState;
         this.element = element;
         this.mediatorCreatorsManager = mediatorCreatorsManager;
@@ -172,7 +172,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
         int maxWidth = 0;
 
         for (Branch branch : element.getBranches()) {
-            BranchPresenter branchPresenter = editorFactory.createContainer(branch);
+            BranchPresenter branchPresenter = elementWidgetFactory.createContainer(branch);
             branchPresenter.addElementChangedListener(this);
 
             this.branches.add(branchPresenter);
