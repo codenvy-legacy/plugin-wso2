@@ -40,7 +40,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  *
  * @author Dmitry Shnurenko
  */
-public class SearchAbstractConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<SearchJira> {
+public class SearchConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<SearchJira> {
 
     private final WSO2EditorLocalizationConstant locale;
     private final NameSpaceEditorPresenter       nameSpacePresenter;
@@ -49,12 +49,12 @@ public class SearchAbstractConnectorPresenter extends AbstractConnectorPropertie
     private final AddNameSpacesCallBack          startFromCallBack;
 
     @Inject
-    public SearchAbstractConnectorPresenter(WSO2EditorLocalizationConstant locale,
-                                            NameSpaceEditorPresenter nameSpacePresenter,
-                                            GeneralPropertiesPanelView view,
-                                            JiraPropertyManager jiraPropertyManager,
-                                            ParameterPresenter parameterPresenter,
-                                            PropertyTypeManager propertyTypeManager) {
+    public SearchConnectorPresenter(WSO2EditorLocalizationConstant locale,
+                                    NameSpaceEditorPresenter nameSpacePresenter,
+                                    GeneralPropertiesPanelView view,
+                                    JiraPropertyManager jiraPropertyManager,
+                                    ParameterPresenter parameterPresenter,
+                                    PropertyTypeManager propertyTypeManager) {
         super(view, jiraPropertyManager, parameterPresenter, propertyTypeManager);
 
         this.locale = locale;
@@ -67,7 +67,7 @@ public class SearchAbstractConnectorPresenter extends AbstractConnectorPropertie
                 element.setQueryNS(nameSpaces);
                 element.setQueryExpression(expression);
 
-                SearchAbstractConnectorPresenter.this.view.setFirstTextBoxValue(expression);
+                SearchConnectorPresenter.this.view.setFirstTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -79,7 +79,7 @@ public class SearchAbstractConnectorPresenter extends AbstractConnectorPropertie
                 element.setMaxResultNS(nameSpaces);
                 element.setMaxResultExpression(expression);
 
-                SearchAbstractConnectorPresenter.this.view.setSecondTextBoxValue(expression);
+                SearchConnectorPresenter.this.view.setSecondTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -91,7 +91,7 @@ public class SearchAbstractConnectorPresenter extends AbstractConnectorPropertie
                 element.setStartFromNS(nameSpaces);
                 element.setStartFromExpression(expression);
 
-                SearchAbstractConnectorPresenter.this.view.setThirdTextBoxValue(expression);
+                SearchConnectorPresenter.this.view.setThirdTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -132,7 +132,7 @@ public class SearchAbstractConnectorPresenter extends AbstractConnectorPropertie
     /** {@inheritDoc} */
     @Override
     public void onSecondTextBoxValueChanged() {
-        element.setMaxResult(view.getThirdTextBoxValue());
+        element.setMaxResult(view.getSecondTextBoxValue());
 
         notifyListeners();
     }
@@ -140,7 +140,7 @@ public class SearchAbstractConnectorPresenter extends AbstractConnectorPropertie
     /** {@inheritDoc} */
     @Override
     public void onThirdTextBoxValueChanged() {
-        element.setStartFrom(view.getFourthTextBoxValue());
+        element.setStartFrom(view.getThirdTextBoxValue());
 
         notifyListeners();
     }

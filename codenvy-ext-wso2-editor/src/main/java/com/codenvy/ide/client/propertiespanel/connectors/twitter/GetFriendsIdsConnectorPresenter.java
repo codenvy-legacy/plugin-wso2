@@ -132,7 +132,7 @@ public class GetFriendsIdsConnectorPresenter extends AbstractConnectorProperties
     /** {@inheritDoc} */
     @Override
     public void onSecondTextBoxValueChanged() {
-        element.setUserId(view.getThirdTextBoxValue());
+        element.setUserId(view.getSecondTextBoxValue());
 
         notifyListeners();
     }
@@ -140,7 +140,7 @@ public class GetFriendsIdsConnectorPresenter extends AbstractConnectorProperties
     /** {@inheritDoc} */
     @Override
     public void onThirdTextBoxValueChanged() {
-        element.setCursor(view.getFourthTextBoxValue());
+        element.setCursor(view.getThirdTextBoxValue());
 
         notifyListeners();
     }

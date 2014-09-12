@@ -30,6 +30,48 @@ import javax.annotation.Nonnull;
 @Singleton
 public interface WSO2EditorLocalizationConstant extends Messages {
 
+    @Key("toolbar.log.title")
+    String toolbarLogTitle();
+
+    @Key("toolbar.call.title")
+    String toolbarCallTitle();
+
+    @Key("toolbar.property.title")
+    String toolbarPropertyTitle();
+
+    @Key("toolbar.payloadFactory.title")
+    String toolbarPayloadFactoryTitle();
+
+    @Key("toolbar.send.title")
+    String toolbarSendTitle();
+
+    @Key("toolbar.header.title")
+    String toolbarHeaderTitle();
+
+    @Key("toolbar.respond.title")
+    String toolbarRespondTitle();
+
+    @Key("toolbar.filter.title")
+    String toolbarFilterTitle();
+
+    @Key("toolbar.switch.title")
+    String toolbarSwitchTitle();
+
+    @Key("toolbar.sequence.title")
+    String toolbarSequenceTitle();
+
+    @Key("toolbar.enrich.title")
+    String toolbarEnrichTitle();
+
+    @Key("toolbar.loopBack.title")
+    String toolbarLoopBackTitle();
+
+    @Key("toolbar.callTemplate.title")
+    String toolbarCallTemplateTitle();
+
+    @Key("toolbar.addressEndpoint.title")
+    String toolbarAddressEndpointTitle();
+
     @Key("toolbar.log.tooltip")
     String toolbarLogTooltip();
 
@@ -498,9 +540,6 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("propertiespanel.endpoint.properties.title")
     String endpointPropertiesTitle();
 
-    @Key("toolbar.connector.salesforceInitConnector.tooltip")
-    String toolbarSalesforceInitConnectorTooltip();
-
     @Key("propertiespanel.connector.salesForce.configRef")
     String connectorConfigRef();
 
@@ -543,12 +582,6 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("propertiespanel.connector.salesForce.connectorConfiguration")
     String propertiespanelConnectorConfigurationTitle();
 
-    @Key("toolbar.connector.salesforceCreateConnector.tooltip")
-    String toolbarSalesforceCreateConnectorTooltip();
-
-    @Key("toolbar.connector.salesforceDelete.tooltip")
-    String toolbarSalesForceDeleteTooltip();
-
     @Key("propertiespanel.connector.salesForce.allOrNone")
     String connectorAllOrNone();
 
@@ -557,9 +590,6 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.connector.salesForce.subjects")
     String connectorSubjects();
-
-    @Key("toolbar.connector.salesforceUpdateConnector.tooltip")
-    String toolbarSalesforceUpdateConnectorTooltip();
 
     @Key("propertiespanel.connector.salesForce.subject")
     String propertiespanelConnectorSubject();
@@ -585,23 +615,98 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("propertiespanel.connector.salesForce.objectIDS")
     String connectorObjectIDS();
 
+    @Key("toolbar.connector.salesforceInitConnector.title")
+    String toolbarSalesforceInitConnectorTitle();
+
+    @Key("toolbar.connector.salesforceCreateConnector.title")
+    String toolbarSalesforceCreateConnectorTitle();
+
+    @Key("toolbar.connector.salesforceDelete.title")
+    String toolbarSalesForceDeleteTitle();
+
+    @Key("toolbar.connector.salesforceDescribeGlobalConnector.title")
+    String toolbarSalesforceDescribeGlobalConnectorTitle();
+
+    @Key("toolbar.connector.salesforceDescribeSobjectConnector.title")
+    String toolbarSalesforceDescribeSubjectConnectorTitle();
+
+    @Key("toolbar.connector.salesforceUpdateConnector.title")
+    String toolbarSalesforceUpdateConnectorTitle();
+
+    @Key("toolbar.connector.salesforceDescribeSobjectsConnector.title")
+    String toolbarSalesforceDescribeSubjectsConnectorTitle();
+
+    @Key("toolbar.connector.salesforceEmptyRecycleBin.title")
+    String toolbarSalesforceEmptyRecycleBinConnectorTitle();
+
+    @Key("toolbar.connector.salesforceLogOut.title")
+    String toolbarSalesforceLogOutConnectorTitle();
+
+    @Key("toolbar.connector.salesforceGetUserInfo.title")
+    String toolbarSalesforceGetUserInfoConnectorTitle();
+
+    @Key("toolbar.connector.salesforceQuery.title")
+    String toolbarSalesforceQueryTitle();
+
+    @Key("toolbar.connector.salesforceQueryAll.title")
+    String toolbarSalesforceQueryAllTitle();
+
+    @Key("toolbar.connector.salesforceQueryMore.title")
+    String toolbarSalesforceQueryMoreTitle();
+
+    @Key("toolbar.connector.salesforceResetPassword.title")
+    String toolbarSalesforceResetPasswordTitle();
+
+    @Key("toolbar.connector.salesforceRetrive.title")
+    String toolbarSalesforceRetriveTitle();
+
+    @Key("toolbar.connector.salesforceSearch.title")
+    String toolbarSalesforceSearchTitle();
+
+    @Key("toolbar.connector.salesforceSendEmail.title")
+    String toolbarSalesforceSendEmailTitle();
+
+    @Key("toolbar.connector.salesforceSendEmailMessage.title")
+    String toolbarSalesforceSendEmailMessageTitle();
+
+    @Key("toolbar.connector.salesforceSetPassword.title")
+    String toolbarSalesforceSetPasswordTitle();
+
+    @Key("toolbar.connector.salesforceUndelete.title")
+    String toolbarSalesforceUndeleteTitle();
+
+    @Key("toolbar.connector.salesforceUpset.title")
+    String toolbarSalesforceUpsetTitle();
+
+    @Key("toolbar.connector.salesforceInitConnector.tooltip")
+    String toolbarSalesforceInitConnectorTooltip();
+
+    @Key("toolbar.connector.salesforceCreateConnector.tooltip")
+    String toolbarSalesforceCreateConnectorTooltip();
+
+    @Key("toolbar.connector.salesforceDelete.tooltip")
+    String toolbarSalesForceDeleteTooltip();
+
     @Key("toolbar.connector.salesforceDescribeGlobalConnector.tooltip")
     String toolbarSalesforceDescribeGlobalConnectorTooltip();
 
     @Key("toolbar.connector.salesforceDescribeSobjectConnector.tooltip")
     String toolbarSalesforceDescribeSubjectConnectorTooltip();
 
+    @Key("toolbar.connector.salesforceUpdateConnector.tooltip")
+    String toolbarSalesforceUpdateConnectorTooltip();
+
     @Key("toolbar.connector.salesforceDescribeSobjectsConnector.tooltip")
     String toolbarSalesforceDescribeSubjectsConnectorTooltip();
 
     @Key("toolbar.connector.salesforceEmptyRecycleBin.tooltip")
-    String toolbarSalesforceEmptyRecycleBinConnector();
+    String toolbarSalesforceEmptyRecycleBinConnectorTooltip();
 
     @Key("toolbar.connector.salesforceLogOut.tooltip")
-    String toolbarSalesforceLogOutConnector();
+    String toolbarSalesforceLogOutConnectorTooltip();
 
     @Key("toolbar.connector.salesforceGetUserInfo.tooltip")
-    String toolbarSalesforceGetUserInfoConnector();
+    String toolbarSalesforceGetUserInfoConnectorTooltip();
 
     @Key("toolbar.connector.salesforceQuery.tooltip")
     String toolbarSalesforceQueryTooltip();
@@ -750,134 +855,263 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("propertiespanel.connector.jira.searchUser.includeInactive")
     String jiraIncludeInactive();
 
-    @Key("toolbar.connector.jira.addAttachmentToIssueId.tooltip")
-    String jiraAddAttachmentToIssueId();
+    @Key("toolbar.connector.jira.addAttachmentToIssueId.title")
+    String jiraAddAttachmentToIssueIdTitle();
 
-    @Key("toolbar.connector.jira.createFilter.tooltip")
-    String jiraCreateFilter();
+    @Key("toolbar.connector.jira.createFilter.title")
+    String jiraCreateFilterTitle();
 
-    @Key("toolbar.connector.jira.createIssue.tooltip")
-    String jiraCreateIssue();
+    @Key("toolbar.connector.jira.createIssue.title")
+    String jiraCreateIssueTitle();
 
-    @Key("toolbar.connector.jira.deleteAvatarForProject.tooltip")
-    String jiraDeleteAvatarForProject();
+    @Key("toolbar.connector.jira.deleteAvatarForProject.title")
+    String jiraDeleteAvatarForProjectTitle();
 
-    @Key("toolbar.connector.jira.deleteComment.tooltip")
-    String jiraDeleteComment();
+    @Key("toolbar.connector.jira.deleteComment.title")
+    String jiraDeleteCommentTitle();
 
-    @Key("toolbar.connector.jira.deleteFilter.tooltip")
-    String jiraDeleteFilter();
+    @Key("toolbar.connector.jira.deleteFilter.title")
+    String jiraDeleteFilterTitle();
 
-    @Key("toolbar.connector.jira.getDashboard.tooltip")
-    String jiraGetDashboard();
+    @Key("toolbar.connector.jira.getDashboard.title")
+    String jiraGetDashboardTitle();
 
-    @Key("toolbar.connector.jira.doTransition.tooltip")
-    String jiraDoTransition();
+    @Key("toolbar.connector.jira.doTransition.title")
+    String jiraDoTransitionTitle();
 
-    @Key("toolbar.connector.jira.getAvatarsForProject.tooltip")
-    String jiraGetAvatarsForProject();
+    @Key("toolbar.connector.jira.getAvatarsForProject.title")
+    String jiraGetAvatarsForProjectTitle();
 
-    @Key("toolbar.connector.jira.getComments.tooltip")
-    String jiraGetComments();
+    @Key("toolbar.connector.jira.getComments.title")
+    String jiraGetCommentsTitle();
 
-    @Key("toolbar.connector.jira.getComponentsOfProject.tooltip")
-    String jiraGetComponentsOfProject();
+    @Key("toolbar.connector.jira.getComponentsOfProject.title")
+    String jiraGetComponentsOfProjectTitle();
 
-    @Key("toolbar.connector.jira.getDashboardById.tooltip")
-    String jiraGetDashboardById();
+    @Key("toolbar.connector.jira.getDashboardById.title")
+    String jiraGetDashboardByIdTitle();
 
-    @Key("toolbar.connector.jira.getFavouriteFilters.tooltip")
-    String jiraGetFavouriteFilters();
+    @Key("toolbar.connector.jira.getFavouriteFilters.title")
+    String jiraGetFavouriteFiltersTitle();
 
-    @Key("toolbar.connector.jira.getFilterById.tooltip")
-    String jiraGetFilterById();
+    @Key("toolbar.connector.jira.getFilterById.title")
+    String jiraGetFilterByIdTitle();
 
-    @Key("toolbar.connector.jira.getGroup.tooltip")
-    String jiraGetGroup();
+    @Key("toolbar.connector.jira.getGroup.title")
+    String jiraGetGroupTitle();
 
-    @Key("toolbar.connector.jira.getIssue.tooltip")
-    String jiraGetIssue();
+    @Key("toolbar.connector.jira.getIssue.title")
+    String jiraGetIssueTitle();
 
-    @Key("toolbar.connector.jira.getIssuePriorityes.tooltip")
-    String jiraGetIssuePriorities();
+    @Key("toolbar.connector.jira.getIssuePriorityes.title")
+    String jiraGetIssuePrioritiesTitle();
 
-    @Key("toolbar.connector.jira.getIssuePriorityById.tooltip")
-    String jiraGetIssuePriorityById();
+    @Key("toolbar.connector.jira.getIssuePriorityById.title")
+    String jiraGetIssuePriorityByIdTitle();
 
-    @Key("toolbar.connector.jira.getIssueTypeById.tooltip")
-    String jiraGetIssueTypeById();
+    @Key("toolbar.connector.jira.getIssueTypeById.title")
+    String jiraGetIssueTypeByIdTitle();
 
-    @Key("toolbar.connector.jira.getIssueTypes.tooltip")
-    String jiraGetIssueTypes();
+    @Key("toolbar.connector.jira.getIssueTypes.title")
+    String jiraGetIssueTypesTitle();
 
-    @Key("toolbar.connector.jira.getIssuesForUser.tooltip")
-    String jiraGetIssuesForUser();
+    @Key("toolbar.connector.jira.getIssuesForUser.title")
+    String jiraGetIssuesForUserTitle();
 
-    @Key("toolbar.connector.jira.getProject.tooltip")
-    String jiraGetProject();
+    @Key("toolbar.connector.jira.getProject.title")
+    String jiraGetProjectTitle();
 
-    @Key("toolbar.connector.jira.getRolesByIdOfProject.tooltip")
-    String jiraGetRolesByIdOfProject();
+    @Key("toolbar.connector.jira.getRolesByIdOfProject.title")
+    String jiraGetRolesByIdOfProjectTitle();
 
-    @Key("toolbar.connector.jira.getRolesOfProject.tooltip")
-    String jiraGetRolesOfProject();
+    @Key("toolbar.connector.jira.getRolesOfProject.title")
+    String jiraGetRolesOfProjectTitle();
 
-    @Key("toolbar.connector.jira.getStatusesOfProject.tooltip")
-    String jiraGetStatusesOfProject();
+    @Key("toolbar.connector.jira.getStatusesOfProject.title")
+    String jiraGetStatusesOfProjectTitle();
 
-    @Key("toolbar.connector.jira.getTransitions.tooltip")
-    String jiraGetTransitions();
+    @Key("toolbar.connector.jira.getTransitions.title")
+    String jiraGetTransitionsTitle();
 
-    @Key("toolbar.connector.jira.getUser.tooltip")
-    String jiraGetUser();
+    @Key("toolbar.connector.jira.getUser.title")
+    String jiraGetUserTitle();
 
-    @Key("toolbar.connector.jira.getUserAssignableProject.tooltip")
-    String jiraGetUserAssignableProjects();
+    @Key("toolbar.connector.jira.getUserAssignableProject.title")
+    String jiraGetUserAssignableProjectsTitle();
 
-    @Key("toolbar.connector.jira.getUserPermissions.tooltip")
-    String jiraGetUserPermissions();
+    @Key("toolbar.connector.jira.getUserPermissions.title")
+    String jiraGetUserPermissionsTitle();
 
-    @Key("toolbar.connector.jira.getVersionsOfProject.tooltip")
-    String jiraGetVersionsOfProject();
+    @Key("toolbar.connector.jira.getVersionsOfProject.title")
+    String jiraGetVersionsOfProjectTitle();
 
-    @Key("toolbar.connector.jira.getVotesForIssue.tooltip")
-    String jiraGetVotesForIssue();
+    @Key("toolbar.connector.jira.getVotesForIssue.title")
+    String jiraGetVotesForIssueTitle();
 
-    @Key("toolbar.connector.jira.init.tooltip")
-    String jiraInit();
+    @Key("toolbar.connector.jira.init.title")
+    String jiraInitTitle();
 
-    @Key("toolbar.connector.jira.postComment.tooltip")
-    String jiraPostComment();
+    @Key("toolbar.connector.jira.postComment.title")
+    String jiraPostCommentTitle();
 
-    @Key("toolbar.connector.jira.searchAssignableUser.tooltip")
-    String jiraSearchAssignableUser();
+    @Key("toolbar.connector.jira.searchAssignableUser.title")
+    String jiraSearchAssignableUserTitle();
 
-    @Key("toolbar.connector.jira.searchAssignableUserMultiProject.tooltip")
-    String jiraSearchAssignableUserMultiProject();
+    @Key("toolbar.connector.jira.searchAssignableUserMultiProject.title")
+    String jiraSearchAssignableUserMultiProjectTitle();
 
-    @Key("toolbar.connector.jira.searchIssueViewableUsers.tooltip")
-    String jiraSearchIssueViewableUsers();
+    @Key("toolbar.connector.jira.searchIssueViewableUsers.title")
+    String jiraSearchIssueViewableUsersTitle();
 
-    @Key("toolbar.connector.jira.searchJira.tooltip")
-    String jiraSearchJira();
+    @Key("toolbar.connector.jira.searchJira.title")
+    String jiraSearchJiraTitle();
 
-    @Key("toolbar.connector.jira.searchUser.tooltip")
-    String jiraSearchUser();
+    @Key("toolbar.connector.jira.searchUser.title")
+    String jiraSearchUserTitle();
 
-    @Key("toolbar.connector.jira.setActorsToRoleOfProject.tooltip")
-    String jiraSetActorsToRoleOfProject();
+    @Key("toolbar.connector.jira.setActorsToRoleOfProject.title")
+    String jiraSetActorsToRoleOfProjectTitle();
 
-    @Key("toolbar.connector.jira.updateComment.tooltip")
+    @Key("toolbar.connector.jira.updateComment.title")
     String jiraUpdateCommentTitle();
 
+    @Key("toolbar.connector.jira.updateFilterById.title")
+    String jiraUpdateFilterByIdTitle();
+
+    @Key("toolbar.connector.jira.updateIssue.title")
+    String jiraUpdateIssueTitle();
+
+    @Key("toolbar.connector.jira.updateIssueAssignee.title")
+    String jiraUpdateIssueAssigneeTitle();
+
+    @Key("toolbar.connector.jira.addAttachmentToIssueId.tooltip")
+    String jiraAddAttachmentToIssueIdTooltip();
+
+    @Key("toolbar.connector.jira.createFilter.tooltip")
+    String jiraCreateFilterTooltip();
+
+    @Key("toolbar.connector.jira.createIssue.tooltip")
+    String jiraCreateIssueTooltip();
+
+    @Key("toolbar.connector.jira.deleteAvatarForProject.tooltip")
+    String jiraDeleteAvatarForProjectTooltip();
+
+    @Key("toolbar.connector.jira.deleteComment.tooltip")
+    String jiraDeleteCommentTooltip();
+
+    @Key("toolbar.connector.jira.deleteFilter.tooltip")
+    String jiraDeleteFilterTooltip();
+
+    @Key("toolbar.connector.jira.getDashboard.tooltip")
+    String jiraGetDashboardTooltip();
+
+    @Key("toolbar.connector.jira.doTransition.tooltip")
+    String jiraDoTransitionTooltip();
+
+    @Key("toolbar.connector.jira.getAvatarsForProject.tooltip")
+    String jiraGetAvatarsForProjectTooltip();
+
+    @Key("toolbar.connector.jira.getComments.tooltip")
+    String jiraGetCommentsTooltip();
+
+    @Key("toolbar.connector.jira.getComponentsOfProject.tooltip")
+    String jiraGetComponentsOfProjectTooltip();
+
+    @Key("toolbar.connector.jira.getDashboardById.tooltip")
+    String jiraGetDashboardByIdTooltip();
+
+    @Key("toolbar.connector.jira.getFavouriteFilters.tooltip")
+    String jiraGetFavouriteFiltersTooltip();
+
+    @Key("toolbar.connector.jira.getFilterById.tooltip")
+    String jiraGetFilterByIdTooltip();
+
+    @Key("toolbar.connector.jira.getGroup.tooltip")
+    String jiraGetGroupTooltip();
+
+    @Key("toolbar.connector.jira.getIssue.tooltip")
+    String jiraGetIssueTooltip();
+
+    @Key("toolbar.connector.jira.getIssuePriorityes.tooltip")
+    String jiraGetIssuePrioritiesTooltip();
+
+    @Key("toolbar.connector.jira.getIssuePriorityById.tooltip")
+    String jiraGetIssuePriorityByIdTooltip();
+
+    @Key("toolbar.connector.jira.getIssueTypeById.tooltip")
+    String jiraGetIssueTypeByIdTooltip();
+
+    @Key("toolbar.connector.jira.getIssueTypes.tooltip")
+    String jiraGetIssueTypesTooltip();
+
+    @Key("toolbar.connector.jira.getIssuesForUser.tooltip")
+    String jiraGetIssuesForUserTooltip();
+
+    @Key("toolbar.connector.jira.getProject.tooltip")
+    String jiraGetProjectTooltip();
+
+    @Key("toolbar.connector.jira.getRolesByIdOfProject.tooltip")
+    String jiraGetRolesByIdOfProjectTooltip();
+
+    @Key("toolbar.connector.jira.getRolesOfProject.tooltip")
+    String jiraGetRolesOfProjectTooltip();
+
+    @Key("toolbar.connector.jira.getStatusesOfProject.tooltip")
+    String jiraGetStatusesOfProjectTooltip();
+
+    @Key("toolbar.connector.jira.getTransitions.tooltip")
+    String jiraGetTransitionsTooltip();
+
+    @Key("toolbar.connector.jira.getUser.tooltip")
+    String jiraGetUserTooltip();
+
+    @Key("toolbar.connector.jira.getUserAssignableProject.tooltip")
+    String jiraGetUserAssignableProjectsTooltip();
+
+    @Key("toolbar.connector.jira.getUserPermissions.tooltip")
+    String jiraGetUserPermissionsTooltip();
+
+    @Key("toolbar.connector.jira.getVersionsOfProject.tooltip")
+    String jiraGetVersionsOfProjectTooltip();
+
+    @Key("toolbar.connector.jira.getVotesForIssue.tooltip")
+    String jiraGetVotesForIssueTooltip();
+
+    @Key("toolbar.connector.jira.init.tooltip")
+    String jiraInitTooltip();
+
+    @Key("toolbar.connector.jira.postComment.tooltip")
+    String jiraPostCommentTooltip();
+
+    @Key("toolbar.connector.jira.searchAssignableUser.tooltip")
+    String jiraSearchAssignableUserTooltip();
+
+    @Key("toolbar.connector.jira.searchAssignableUserMultiProject.tooltip")
+    String jiraSearchAssignableUserMultiProjectTooltip();
+
+    @Key("toolbar.connector.jira.searchIssueViewableUsers.tooltip")
+    String jiraSearchIssueViewableUsersTooltip();
+
+    @Key("toolbar.connector.jira.searchJira.tooltip")
+    String jiraSearchJiraTooltip();
+
+    @Key("toolbar.connector.jira.searchUser.tooltip")
+    String jiraSearchUserTooltip();
+
+    @Key("toolbar.connector.jira.setActorsToRoleOfProject.tooltip")
+    String jiraSetActorsToRoleOfProjectTooltip();
+
+    @Key("toolbar.connector.jira.updateComment.tooltip")
+    String jiraUpdateCommentTooltip();
+
     @Key("toolbar.connector.jira.updateFilterById.tooltip")
-    String jiraUpdateFilterById();
+    String jiraUpdateFilterByIdTooltip();
 
     @Key("toolbar.connector.jira.updateIssue.tooltip")
-    String jiraUpdateIssue();
+    String jiraUpdateIssueTooltip();
 
     @Key("toolbar.connector.jira.updateIssueAssignee.tooltip")
-    String jiraUpdateIssueAssignee();
+    String jiraUpdateIssueAssigneeTooltip();
 
     @Key("propertiespanel.connector.twitter.destroyStatus.consumerKey")
     String twitterConsumerKey();
@@ -920,4 +1154,169 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.connector.twitter.getFollowers.cursor")
     String twitterCursor();
+
+    @Key("propertiespanel.connector.twitter.search.search")
+    String twitterSearch();
+
+    @Key("propertiespanel.connector.twitter.search.lang")
+    String twitterLang();
+
+    @Key("propertiespanel.connector.twitter.search.locale")
+    String twitterLocale();
+
+    @Key("propertiespanel.connector.twitter.search.since")
+    String twitterSince();
+
+    @Key("propertiespanel.connector.twitter.search.geocode")
+    String twitterGeocode();
+
+    @Key("propertiespanel.connector.twitter.search.radius")
+    String twitterRadius();
+
+    @Key("propertiespanel.connector.twitter.search.unit")
+    String twitterUnit();
+
+    @Key("propertiespanel.connector.twitter.search.until")
+    String twitterUntil();
+
+    @Key("propertiespanel.connector.twitter.searchPlaces.query")
+    String twitterQuery();
+
+    @Key("propertiespanel.connector.twitter.sendDirectMessages.message")
+    String twitterMessage();
+
+    @Key("toolbar.connector.twitter.destroyStatus.title")
+    String twitterDestroyStatusTitle();
+
+    @Key("toolbar.connector.twitter.getClothesTrends.title")
+    String twitterGetClosesTrendsTitle();
+
+    @Key("toolbar.connector.twitter.getDirectMessages.title")
+    String twitterGetDirectMessagesTitle();
+
+    @Key("toolbar.connector.twitter.getFollowers.title")
+    String twitterGetFollowersTitle();
+
+    @Key("toolbar.connector.twitter.getFollowersIds.title")
+    String twitterGetFollowersIdsTitle();
+
+    @Key("toolbar.connector.twitter.getFriends.title")
+    String twitterGetFriendsTitle();
+
+    @Key("toolbar.connector.twitter.getFriendsIds.title")
+    String twitterGetFriendsIdsTitle();
+
+    @Key("toolbar.connector.twitter.getHomeTimeLine.title")
+    String twitterGetHomeTimeLineTitle();
+
+    @Key("toolbar.connector.twitter.getMentionsTimeLine.title")
+    String twitterGetMentionsTimeLineTitle();
+
+    @Key("toolbar.connector.twitter.getRetweetsOfMine.title")
+    String twitterGetRetweetsOfMineTitle();
+
+    @Key("toolbar.connector.twitter.getSentDirectMessage.title")
+    String twitterGetSentDirectMessageTitle();
+
+    @Key("toolbar.connector.twitter.getTopTrendPlaces.title")
+    String twitterGetTopTrendPlacesTitle();
+
+    @Key("toolbar.connector.twitter.getUserTimeLine.title")
+    String twitterGetUserTimeLineTitle();
+
+    @Key("toolbar.connector.twitter.initTwitter.title")
+    String twitterInitTitle();
+
+    @Key("toolbar.connector.twitter.retweet.title")
+    String twitterRetweetTitle();
+
+    @Key("toolbar.connector.twitter.searchTwitter.title")
+    String twitterSearchTitle();
+
+    @Key("toolbar.connector.twitter.searchPlaces.title")
+    String twitterSearchPlacesTitle();
+
+    @Key("toolbar.connector.twitter.sendDirectMessage.title")
+    String twitterSendDirectMessageTitle();
+
+    @Key("toolbar.connector.twitter.showStatus.title")
+    String twitterShowStatusTitle();
+
+    @Key("toolbar.connector.twitter.updateStatus.title")
+    String twitterUpdateStatusTitle();
+
+    @Key("toolbar.connector.twitter.destroyStatus.tooltip")
+    String twitterDestroyStatusTooltip();
+
+    @Key("toolbar.connector.twitter.getClothesTrends.tooltip")
+    String twitterGetClosesTrendsTooltip();
+
+    @Key("toolbar.connector.twitter.getDirectMessages.tooltip")
+    String twitterGetDirectMessagesTooltip();
+
+    @Key("toolbar.connector.twitter.getFollowers.tooltip")
+    String twitterGetFollowersTooltip();
+
+    @Key("toolbar.connector.twitter.getFollowersIds.tooltip")
+    String twitterGetFollowersIdsTooltip();
+
+    @Key("toolbar.connector.twitter.getFriends.tooltip")
+    String twitterGetFriendsTooltip();
+
+    @Key("toolbar.connector.twitter.getFriendsIds.tooltip")
+    String twitterGetFriendsIdsTooltip();
+
+    @Key("toolbar.connector.twitter.getHomeTimeLine.tooltip")
+    String twitterGetHomeTimeLineTooltip();
+
+    @Key("toolbar.connector.twitter.getMentionsTimeLine.tooltip")
+    String twitterGetMentionsTimeLineTooltip();
+
+    @Key("toolbar.connector.twitter.getRetweetsOfMine.tooltip")
+    String twitterGetRetweetsOfMineTooltip();
+
+    @Key("toolbar.connector.twitter.getSentDirectMessage.tooltip")
+    String twitterGetSentDirectMessageTooltip();
+
+    @Key("toolbar.connector.twitter.getTopTrendPlaces.tooltip")
+    String twitterGetTopTrendPlacesTooltip();
+
+    @Key("toolbar.connector.twitter.getUserTimeLine.tooltip")
+    String twitterGetUserTimeLineTooltip();
+
+    @Key("toolbar.connector.twitter.initTwitter.tooltip")
+    String twitterInitTooltip();
+
+    @Key("toolbar.connector.twitter.retweet.tooltip")
+    String twitterRetweetTooltip();
+
+    @Key("toolbar.connector.twitter.searchTwitter.tooltip")
+    String twitterSearchTooltip();
+
+    @Key("toolbar.connector.twitter.searchPlaces.tooltip")
+    String twitterSearchPlacesTooltip();
+
+    @Key("toolbar.connector.twitter.sendDirectMessage.tooltip")
+    String twitterSendDirectMessageTooltip();
+
+    @Key("toolbar.connector.twitter.showStatus.tooltip")
+    String twitterShowStatusTooltip();
+
+    @Key("toolbar.connector.twitter.updateStatus.tooltip")
+    String twitterUpdateStatusTooltip();
+
+    @Key("toolbar.group.mediators")
+    String toolbarGroupMediators();
+
+    @Key("toolbar.group.endpoints")
+    String toolbarGroupEndpoints();
+
+    @Key("toolbar.group.connector.salesforce")
+    String toolbarGroupSalesforceConnector();
+
+    @Key("toolbar.group.connector.jira")
+    String toolbarGroupJiraConnector();
+
+    @Key("toolbar.group.connector.twitter")
+    String toolbarGroupTwitterConnector();
 }

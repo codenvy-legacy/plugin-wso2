@@ -17,8 +17,8 @@ package com.codenvy.ide.client.propertiespanel.connectors.twitter;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.connectors.twitter.GetDirectMessages;
 import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
+import com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
@@ -40,7 +40,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  *
  * @author Dmitry Shnurenko
  */
-public class GetDirectMessagesConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<GetDirectMessages> {
+public class UpdateStatusConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<UpdateStatus> {
 
     private final WSO2EditorLocalizationConstant locale;
     private final NameSpaceEditorPresenter       nameSpacePresenter;
@@ -48,18 +48,15 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
     private final AddNameSpacesCallBack          consumerSecretCallBack;
     private final AddNameSpacesCallBack          accessTokenCallBack;
     private final AddNameSpacesCallBack          accessTokenSecretCallBack;
-    private final AddNameSpacesCallBack          countCallBack;
-    private final AddNameSpacesCallBack          pageCallBack;
-    private final AddNameSpacesCallBack          sinceIdCallBack;
-    private final AddNameSpacesCallBack          maxIdCallBack;
+    private final AddNameSpacesCallBack          statusCallBack;
 
     @Inject
-    public GetDirectMessagesConnectorPresenter(WSO2EditorLocalizationConstant locale,
-                                               NameSpaceEditorPresenter nameSpacePresenter,
-                                               GeneralPropertiesPanelView view,
-                                               TwitterPropertyManager twitterPropertyManager,
-                                               ParameterPresenter parameterPresenter,
-                                               PropertyTypeManager propertyTypeManager) {
+    public UpdateStatusConnectorPresenter(WSO2EditorLocalizationConstant locale,
+                                          NameSpaceEditorPresenter nameSpacePresenter,
+                                          GeneralPropertiesPanelView view,
+                                          TwitterPropertyManager twitterPropertyManager,
+                                          ParameterPresenter parameterPresenter,
+                                          PropertyTypeManager propertyTypeManager) {
         super(view, twitterPropertyManager, parameterPresenter, propertyTypeManager);
 
         this.locale = locale;
@@ -72,7 +69,7 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
                 element.setConsumerKeyNS(nameSpaces);
                 element.setConsumerKeyExpr(expression);
 
-                GetDirectMessagesConnectorPresenter.this.view.setFirstTextBoxValue(expression);
+                UpdateStatusConnectorPresenter.this.view.setFirstTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -84,7 +81,7 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
                 element.setConsumerSecretNS(nameSpaces);
                 element.setConsumerSecretExpr(expression);
 
-                GetDirectMessagesConnectorPresenter.this.view.setSecondTextBoxValue(expression);
+                UpdateStatusConnectorPresenter.this.view.setSecondTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -96,7 +93,7 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
                 element.setAccessTokenNS(nameSpaces);
                 element.setAccessTokenExpr(expression);
 
-                GetDirectMessagesConnectorPresenter.this.view.setThirdTextBoxValue(expression);
+                UpdateStatusConnectorPresenter.this.view.setThirdTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -108,55 +105,19 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
                 element.setAccessTokenSecretNS(nameSpaces);
                 element.setAccessTokenSecretExpr(expression);
 
-                GetDirectMessagesConnectorPresenter.this.view.setFourthTextBoxValue(expression);
+                UpdateStatusConnectorPresenter.this.view.setFourthTextBoxValue(expression);
 
                 notifyListeners();
             }
         };
 
-        this.countCallBack = new AddNameSpacesCallBack() {
+        this.statusCallBack = new AddNameSpacesCallBack() {
             @Override
             public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setCountNS(nameSpaces);
-                element.setCountExpr(expression);
+                element.setStatusIdNS(nameSpaces);
+                element.setStatusIdExpr(expression);
 
-                GetDirectMessagesConnectorPresenter.this.view.setFifthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.pageCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setPageNS(nameSpaces);
-                element.setPageExpr(expression);
-
-                GetDirectMessagesConnectorPresenter.this.view.setSixesTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.sinceIdCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setSinceIdNS(nameSpaces);
-                element.setSinceIdExpr(expression);
-
-                GetDirectMessagesConnectorPresenter.this.view.setSeventhTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.maxIdCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setMaxIdNS(nameSpaces);
-                element.setMaxIdExpr(expression);
-
-                GetDirectMessagesConnectorPresenter.this.view.setEighthTextBoxValue(expression);
+                UpdateStatusConnectorPresenter.this.view.setFifthTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -176,27 +137,18 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
         view.setVisibleThirdButton(isEquals);
         view.setVisibleFourthButton(isEquals);
         view.setVisibleFifthButton(isEquals);
-        view.setVisibleSixesButton(isEquals);
-        view.setVisibleSeventhButton(isEquals);
-        view.setVisibleEighthButton(isEquals);
 
         view.setEnableFirstTextBox(!isEquals);
         view.setEnableSecondTextBox(!isEquals);
         view.setEnableThirdTextBox(!isEquals);
         view.setEnableFourthTextBox(!isEquals);
         view.setEnableFifthTextBox(!isEquals);
-        view.setEnableSixesTextBox(!isEquals);
-        view.setEnableSeventhTextBox(!isEquals);
-        view.setEnableEighthTextBox(!isEquals);
 
         view.setFirstTextBoxValue(isEquals ? element.getConsumerKeyExpr() : element.getConsumerKey());
         view.setSecondTextBoxValue(isEquals ? element.getConsumerSecretExpr() : element.getConsumerSecret());
         view.setThirdTextBoxValue(isEquals ? element.getAccessTokenExpr() : element.getAccessToken());
         view.setFourthTextBoxValue(isEquals ? element.getAccessTokenSecretExpr() : element.getAccessTokenSecret());
-        view.setFifthTextBoxValue(isEquals ? element.getCountExpr() : element.getCount());
-        view.setSixesTextBoxValue(isEquals ? element.getPageExpr() : element.getPage());
-        view.setSeventhTextBoxValue(isEquals ? element.getSinceIdExpr() : element.getSinceId());
-        view.setEighthTextBoxValue(isEquals ? element.getMaxIdExpr() : element.getMaxId());
+        view.setFifthTextBoxValue(isEquals ? element.getStatusIdExpr() : element.getStatusId());
 
         notifyListeners();
     }
@@ -236,31 +188,7 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
     /** {@inheritDoc} */
     @Override
     public void onFifthTextBoxValueChanged() {
-        element.setCount(view.getFifthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSixesTextBoxValueChanged() {
-        element.setPage(view.getSixesTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSeventhTextBoxValueChanged() {
-        element.setSinceId(view.getSeventhTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onEighthTextBoxValueChanged() {
-        element.setMaxId(view.getEighthTextBoxValue());
+        element.setStatusId(view.getFifthTextBoxValue());
 
         notifyListeners();
     }
@@ -304,37 +232,10 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
     /** {@inheritDoc} */
     @Override
     public void onFifthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getCountNS(),
-                                                    countCallBack,
+        nameSpacePresenter.showWindowWithParameters(element.getStatusIdNS(),
+                                                    statusCallBack,
                                                     locale.connectorExpression(),
-                                                    element.getCountExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSixesButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getPageNS(),
-                                                    pageCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getPageExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSeventhButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getSinceIdNS(),
-                                                    sinceIdCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getSinceIdExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onEighthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getMaxIdNS(),
-                                                    maxIdCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getMaxIdExpr());
+                                                    element.getStatusIdExpr());
     }
 
     private void redesignViewToCurrentConnector() {
@@ -343,18 +244,12 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
         view.setVisibleThirdPanel(true);
         view.setVisibleFourthPanel(true);
         view.setVisibleFifthPanel(true);
-        view.setVisibleSixesPanel(true);
-        view.setVisibleSeventhPanel(true);
-        view.setVisibleEighthPanel(true);
 
         view.setFirstLabelTitle(locale.twitterConsumerKey());
         view.setSecondLabelTitle(locale.twitterConsumerSecret());
         view.setThirdLabelTitle(locale.twitterAccessToken());
         view.setFourthLabelTitle(locale.twitterAccessTokenSecret());
-        view.setFifthLabelTitle(locale.twitterCount());
-        view.setSixesLabelTitle(locale.twitterPage());
-        view.setSeventhLabelTitle(locale.twitterSinceId());
-        view.setEighthLabelTitle(locale.twitterMaxId());
+        view.setFifthLabelTitle(locale.twitterStatusId());
     }
 
     /** {@inheritDoc} */

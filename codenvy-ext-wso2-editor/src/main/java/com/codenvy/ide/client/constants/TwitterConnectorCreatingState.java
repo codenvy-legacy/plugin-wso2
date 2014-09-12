@@ -35,5 +35,11 @@ public interface TwitterConnectorCreatingState {
     String GET_TOP_TREND_PLACES    = "GetTopTrendPlacesTwitterConnectorCreatingState";
     String GET_USER_TIME_LINE      = "GetUserTimeLineTwitterConnectorCreatingState";
     String INIT                    = "InitTwitterConnectorCreatingState";
+    String RETWEET                 = "RetweetTwitterConnectorCreatingState";
+    String SEARCH                  = "SearchTwitterConnectorCreatingState";
+    String SEARCH_PLACES           = "SearchPlacesTwitterConnectorCreatingState";
+    String SEND_DIRECT_MESSAGE     = "SendDirectMessageTwitterConnectorCreatingState";
+    String SHOW_STATUS             = "ShowStatusTwitterConnectorCreatingState";
+    String UPDATE_STATUS           = "UpdateStatusTwitterConnectorCreatingState";
 
 }

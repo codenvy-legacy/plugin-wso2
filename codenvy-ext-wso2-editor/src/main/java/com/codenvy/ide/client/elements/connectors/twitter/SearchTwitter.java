@@ -44,7 +44,7 @@ import static com.codenvy.ide.collections.Collections.createArray;
  *
  * @author Dmitry Shnurenko
  */
-public class Search extends AbstractConnector {
+public class SearchTwitter extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "Search";
     public static final String SERIALIZATION_NAME = "twitter.search";
@@ -101,7 +101,7 @@ public class Search extends AbstractConnector {
     private Array<NameSpace> countNS;
 
     @Inject
-    public Search(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+    public SearchTwitter(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
 
         search = "";

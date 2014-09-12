@@ -102,6 +102,12 @@ import com.codenvy.ide.client.elements.connectors.twitter.GetSentDirectMessages;
 import com.codenvy.ide.client.elements.connectors.twitter.GetTopTrendPlaces;
 import com.codenvy.ide.client.elements.connectors.twitter.GetUserTimeLine;
 import com.codenvy.ide.client.elements.connectors.twitter.InitTwitter;
+import com.codenvy.ide.client.elements.connectors.twitter.Retweet;
+import com.codenvy.ide.client.elements.connectors.twitter.SearchPlaces;
+import com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter;
+import com.codenvy.ide.client.elements.connectors.twitter.SendDirectMessage;
+import com.codenvy.ide.client.elements.connectors.twitter.ShowStatus;
+import com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus;
 import com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint;
 import com.codenvy.ide.client.elements.mediators.Call;
 import com.codenvy.ide.client.elements.mediators.CallTemplate;
@@ -162,9 +168,9 @@ import com.codenvy.ide.client.propertiespanel.connectors.jira.GetVersionsOfProje
 import com.codenvy.ide.client.propertiespanel.connectors.jira.GetVotesForIssueConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.InitAbstractConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.PostCommentConnectorPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchAbstractConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchAssignableUserConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchAssignableUserMultiProjectConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchIssueViewAbleUsersConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchUserConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.SetActorsToRoleOfProjectConnectorPresenter;
@@ -186,7 +192,6 @@ import com.codenvy.ide.client.propertiespanel.connectors.salesforce.QueryConnect
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.QueryMoreConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.ResetPasswordConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.RetrieveConnectorPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.SearchConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.SendEmailConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.SendEmailMessageConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.SetPasswordConnectorPresenter;
@@ -207,6 +212,12 @@ import com.codenvy.ide.client.propertiespanel.connectors.twitter.GetSentDirectMe
 import com.codenvy.ide.client.propertiespanel.connectors.twitter.GetTopTrendPlacesConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.twitter.GetUserTimeLineConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.twitter.InitTwitterConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.RetweetConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.SearchPlacesConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.SearchTwitterConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.SendDirectMessageConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.ShowStatusConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.UpdateStatusConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.empty.EmptyPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.enrich.EnrichPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.filter.FilterPropertiesPanelPresenter;
@@ -428,7 +439,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                  SearchAssignableUserConnectorPresenter searchAssignableUserConnectorPresenter,
                                                  SearchAssignableUserMultiProjectConnectorPresenter searchAssignableUserMultiPresenter,
                                                  SearchIssueViewAbleUsersConnectorPresenter searchIssueViewAbleUsersConnectorPresenter,
-                                                 SearchAbstractConnectorPresenter searchJiraConnectorPresenter,
+                                                 SearchConnectorPresenter searchJiraConnectorPresenter,
                                                  SearchUserConnectorPresenter searchUserConnectorPresenter,
                                                  SetActorsToRoleOfProjectConnectorPresenter setActorsToRoleOfProjectConnectorPresenter,
                                                  UpdateCommentConnectorPresenter updateCommentConnectorPresenter,
@@ -448,7 +459,13 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                  GetSentDirectMessagesConnectorPresenter getSentDirectMessagesConnectorPresenter,
                                                  GetTopTrendPlacesConnectorPresenter getTopTrendPlacesConnectorPresenter,
                                                  GetUserTimeLineConnectorPresenter getUserTimeLineConnectorPresenter,
-                                                 InitTwitterConnectorPresenter initTwitterConnectorPresenter) {
+                                                 InitTwitterConnectorPresenter initTwitterConnectorPresenter,
+                                                 RetweetConnectorPresenter retweetConnectorPresenter,
+                                                 SearchTwitterConnectorPresenter searchTwitterConnectorPresenter,
+                                                 SearchPlacesConnectorPresenter searchPlacesConnectorPresenter,
+                                                 SendDirectMessageConnectorPresenter sendDirectMessageConnectorPresenter,
+                                                 ShowStatusConnectorPresenter showStatusConnectorPresenter,
+                                                 UpdateStatusConnectorPresenter updateStatusConnectorPresenter) {
 
         PropertiesPanelManager propertiesPanelManager = editorFactory.createPropertiesPanelManager(view.getPropertiesPanel());
 
@@ -557,7 +574,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
         propertiesPanelManager.register(SendEmail.class, sendEmailConnectorPresenter);
         sendEmailConnectorPresenter.addListener(this);
 
-        propertiesPanelManager.register(Search.class, searchConnectorPresenter);
+        propertiesPanelManager.register(SearchJira.class, searchConnectorPresenter);
         searchConnectorPresenter.addListener(this);
 
         propertiesPanelManager.register(Retrieve.class, retrieveConnectorPresenter);
@@ -669,7 +686,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
         searchAssignableUserMultiPresenter.addListener(this);
 
         propertiesPanelManager.register(SearchIssueViewableUsers.class, searchIssueViewAbleUsersConnectorPresenter);
-        searchAssignableUserConnectorPresenter.addListener(this);
+        searchIssueViewAbleUsersConnectorPresenter.addListener(this);
 
         propertiesPanelManager.register(SearchJira.class, searchJiraConnectorPresenter);
         searchJiraConnectorPresenter.addListener(this);
@@ -733,6 +750,24 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
 
         propertiesPanelManager.register(InitTwitter.class, initTwitterConnectorPresenter);
         initTwitterConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(Retweet.class, retweetConnectorPresenter);
+        retweetConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(SearchTwitter.class, searchTwitterConnectorPresenter);
+        searchTwitterConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(SearchPlaces.class, searchPlacesConnectorPresenter);
+        searchPlacesConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(SendDirectMessage.class, sendDirectMessageConnectorPresenter);
+        sendDirectMessageConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(ShowStatus.class, showStatusConnectorPresenter);
+        showStatusConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(UpdateStatus.class, updateStatusConnectorPresenter);
+        updateStatusConnectorPresenter.addListener(this);
 
         selectionManager.addListener(propertiesPanelManager);
     }
@@ -871,7 +906,70 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                   SendEmailMessage.ELEMENT_NAME,
                                                                                   SetPassword.ELEMENT_NAME,
                                                                                   UnDelete.ELEMENT_NAME,
-                                                                                  Upset.ELEMENT_NAME));
+                                                                                  Upset.ELEMENT_NAME,
+                                                                                  AddAttachmentToIssueId.ELEMENT_NAME,
+                                                                                  CreateFilter.ELEMENT_NAME,
+                                                                                  CreateIssue.ELEMENT_NAME,
+                                                                                  DeleteAvatarForProject.ELEMENT_NAME,
+                                                                                  DeleteComment.ELEMENT_NAME,
+                                                                                  DeleteFilter.ELEMENT_NAME,
+                                                                                  GetDashboard.ELEMENT_NAME,
+                                                                                  DoTransition.ELEMENT_NAME,
+                                                                                  GetAvatarsForProject.ELEMENT_NAME,
+                                                                                  GetComments.ELEMENT_NAME,
+                                                                                  GetComponentsOfProject.ELEMENT_NAME,
+                                                                                  GetDashboardById.ELEMENT_NAME,
+                                                                                  GetFavouriteFilters.ELEMENT_NAME,
+                                                                                  GetFilterById.ELEMENT_NAME,
+                                                                                  GetGroup.ELEMENT_NAME,
+                                                                                  GetIssue.ELEMENT_NAME,
+                                                                                  GetIssuePriorities.ELEMENT_NAME,
+                                                                                  GetIssuePriorityById.ELEMENT_NAME,
+                                                                                  GetIssueTypeById.ELEMENT_NAME,
+                                                                                  GetIssueTypes.ELEMENT_NAME,
+                                                                                  GetIssuesForUser.ELEMENT_NAME,
+                                                                                  GetProject.ELEMENT_NAME,
+                                                                                  GetRolesByIdOfProject.ELEMENT_NAME,
+                                                                                  GetRolesOfProject.ELEMENT_NAME,
+                                                                                  GetStatusesOfProject.ELEMENT_NAME,
+                                                                                  GetTransitions.ELEMENT_NAME,
+                                                                                  GetUser.ELEMENT_NAME,
+                                                                                  GetUserAssignableProjects.ELEMENT_NAME,
+                                                                                  GetUserPermissions.ELEMENT_NAME,
+                                                                                  GetVersionsOfProject.ELEMENT_NAME,
+                                                                                  GetVotesForIssue.ELEMENT_NAME,
+                                                                                  InitJira.ELEMENT_NAME,
+                                                                                  PostComment.ELEMENT_NAME,
+                                                                                  SearchAssignableUser.ELEMENT_NAME,
+                                                                                  SearchAssignableUserMultiProject.ELEMENT_NAME,
+                                                                                  SearchIssueViewableUsers.ELEMENT_NAME,
+                                                                                  SearchJira.ELEMENT_NAME,
+                                                                                  SearchUser.ELEMENT_NAME,
+                                                                                  SetActorsToRoleOfProject.ELEMENT_NAME,
+                                                                                  UpdateComment.ELEMENT_NAME,
+                                                                                  UpdateFilterById.ELEMENT_NAME,
+                                                                                  UpdateIssue.ELEMENT_NAME,
+                                                                                  UpdateIssueAssignee.ELEMENT_NAME,
+                                                                                  DestroyStatus.ELEMENT_NAME,
+                                                                                  GetClosesTrends.ELEMENT_NAME,
+                                                                                  GetDirectMessages.ELEMENT_NAME,
+                                                                                  GetFollowers.ELEMENT_NAME,
+                                                                                  GetFollowersIds.ELEMENT_NAME,
+                                                                                  GetFriends.ELEMENT_NAME,
+                                                                                  GetFriendsIds.ELEMENT_NAME,
+                                                                                  GetHomeTimeLine.ELEMENT_NAME,
+                                                                                  GetMentionsTimeLine.ELEMENT_NAME,
+                                                                                  GetRetweetsOfMine.ELEMENT_NAME,
+                                                                                  GetSentDirectMessages.ELEMENT_NAME,
+                                                                                  GetTopTrendPlaces.ELEMENT_NAME,
+                                                                                  GetUserTimeLine.ELEMENT_NAME,
+                                                                                  InitTwitter.ELEMENT_NAME,
+                                                                                  Retweet.ELEMENT_NAME,
+                                                                                  SearchTwitter.ELEMENT_NAME,
+                                                                                  SearchPlaces.ELEMENT_NAME,
+                                                                                  SendDirectMessage.ELEMENT_NAME,
+                                                                                  ShowStatus.ELEMENT_NAME,
+                                                                                  UpdateStatus.ELEMENT_NAME));
 
         connectionsValidator.addDisallowRules(LoopBack.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                                    Property.ELEMENT_NAME,
@@ -908,7 +1006,70 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                    SendEmailMessage.ELEMENT_NAME,
                                                                                    SetPassword.ELEMENT_NAME,
                                                                                    UnDelete.ELEMENT_NAME,
-                                                                                   Upset.ELEMENT_NAME));
+                                                                                   Upset.ELEMENT_NAME,
+                                                                                   AddAttachmentToIssueId.ELEMENT_NAME,
+                                                                                   CreateFilter.ELEMENT_NAME,
+                                                                                   CreateIssue.ELEMENT_NAME,
+                                                                                   DeleteAvatarForProject.ELEMENT_NAME,
+                                                                                   DeleteComment.ELEMENT_NAME,
+                                                                                   DeleteFilter.ELEMENT_NAME,
+                                                                                   GetDashboard.ELEMENT_NAME,
+                                                                                   DoTransition.ELEMENT_NAME,
+                                                                                   GetAvatarsForProject.ELEMENT_NAME,
+                                                                                   GetComments.ELEMENT_NAME,
+                                                                                   GetComponentsOfProject.ELEMENT_NAME,
+                                                                                   GetDashboardById.ELEMENT_NAME,
+                                                                                   GetFavouriteFilters.ELEMENT_NAME,
+                                                                                   GetFilterById.ELEMENT_NAME,
+                                                                                   GetGroup.ELEMENT_NAME,
+                                                                                   GetIssue.ELEMENT_NAME,
+                                                                                   GetIssuePriorities.ELEMENT_NAME,
+                                                                                   GetIssuePriorityById.ELEMENT_NAME,
+                                                                                   GetIssueTypeById.ELEMENT_NAME,
+                                                                                   GetIssueTypes.ELEMENT_NAME,
+                                                                                   GetIssuesForUser.ELEMENT_NAME,
+                                                                                   GetProject.ELEMENT_NAME,
+                                                                                   GetRolesByIdOfProject.ELEMENT_NAME,
+                                                                                   GetRolesOfProject.ELEMENT_NAME,
+                                                                                   GetStatusesOfProject.ELEMENT_NAME,
+                                                                                   GetTransitions.ELEMENT_NAME,
+                                                                                   GetUser.ELEMENT_NAME,
+                                                                                   GetUserAssignableProjects.ELEMENT_NAME,
+                                                                                   GetUserPermissions.ELEMENT_NAME,
+                                                                                   GetVersionsOfProject.ELEMENT_NAME,
+                                                                                   GetVotesForIssue.ELEMENT_NAME,
+                                                                                   InitJira.ELEMENT_NAME,
+                                                                                   PostComment.ELEMENT_NAME,
+                                                                                   SearchAssignableUser.ELEMENT_NAME,
+                                                                                   SearchAssignableUserMultiProject.ELEMENT_NAME,
+                                                                                   SearchIssueViewableUsers.ELEMENT_NAME,
+                                                                                   SearchJira.ELEMENT_NAME,
+                                                                                   SearchUser.ELEMENT_NAME,
+                                                                                   SetActorsToRoleOfProject.ELEMENT_NAME,
+                                                                                   UpdateComment.ELEMENT_NAME,
+                                                                                   UpdateFilterById.ELEMENT_NAME,
+                                                                                   UpdateIssue.ELEMENT_NAME,
+                                                                                   UpdateIssueAssignee.ELEMENT_NAME,
+                                                                                   DestroyStatus.ELEMENT_NAME,
+                                                                                   GetClosesTrends.ELEMENT_NAME,
+                                                                                   GetDirectMessages.ELEMENT_NAME,
+                                                                                   GetFollowers.ELEMENT_NAME,
+                                                                                   GetFollowersIds.ELEMENT_NAME,
+                                                                                   GetFriends.ELEMENT_NAME,
+                                                                                   GetFriendsIds.ELEMENT_NAME,
+                                                                                   GetHomeTimeLine.ELEMENT_NAME,
+                                                                                   GetMentionsTimeLine.ELEMENT_NAME,
+                                                                                   GetRetweetsOfMine.ELEMENT_NAME,
+                                                                                   GetSentDirectMessages.ELEMENT_NAME,
+                                                                                   GetTopTrendPlaces.ELEMENT_NAME,
+                                                                                   GetUserTimeLine.ELEMENT_NAME,
+                                                                                   InitTwitter.ELEMENT_NAME,
+                                                                                   Retweet.ELEMENT_NAME,
+                                                                                   SearchTwitter.ELEMENT_NAME,
+                                                                                   SearchPlaces.ELEMENT_NAME,
+                                                                                   SendDirectMessage.ELEMENT_NAME,
+                                                                                   ShowStatus.ELEMENT_NAME,
+                                                                                   UpdateStatus.ELEMENT_NAME));
 
         connectionsValidator.addDisallowRules(AddressEndpoint.ELEMENT_NAME, Arrays.asList(Log.ELEMENT_NAME,
                                                                                           Property.ELEMENT_NAME,
@@ -945,7 +1106,70 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                           SendEmailMessage.ELEMENT_NAME,
                                                                                           SetPassword.ELEMENT_NAME,
                                                                                           UnDelete.ELEMENT_NAME,
-                                                                                          Upset.ELEMENT_NAME));
+                                                                                          Upset.ELEMENT_NAME,
+                                                                                          AddAttachmentToIssueId.ELEMENT_NAME,
+                                                                                          CreateFilter.ELEMENT_NAME,
+                                                                                          CreateIssue.ELEMENT_NAME,
+                                                                                          DeleteAvatarForProject.ELEMENT_NAME,
+                                                                                          DeleteComment.ELEMENT_NAME,
+                                                                                          DeleteFilter.ELEMENT_NAME,
+                                                                                          GetDashboard.ELEMENT_NAME,
+                                                                                          DoTransition.ELEMENT_NAME,
+                                                                                          GetAvatarsForProject.ELEMENT_NAME,
+                                                                                          GetComments.ELEMENT_NAME,
+                                                                                          GetComponentsOfProject.ELEMENT_NAME,
+                                                                                          GetDashboardById.ELEMENT_NAME,
+                                                                                          GetFavouriteFilters.ELEMENT_NAME,
+                                                                                          GetFilterById.ELEMENT_NAME,
+                                                                                          GetGroup.ELEMENT_NAME,
+                                                                                          GetIssue.ELEMENT_NAME,
+                                                                                          GetIssuePriorities.ELEMENT_NAME,
+                                                                                          GetIssuePriorityById.ELEMENT_NAME,
+                                                                                          GetIssueTypeById.ELEMENT_NAME,
+                                                                                          GetIssueTypes.ELEMENT_NAME,
+                                                                                          GetIssuesForUser.ELEMENT_NAME,
+                                                                                          GetProject.ELEMENT_NAME,
+                                                                                          GetRolesByIdOfProject.ELEMENT_NAME,
+                                                                                          GetRolesOfProject.ELEMENT_NAME,
+                                                                                          GetStatusesOfProject.ELEMENT_NAME,
+                                                                                          GetTransitions.ELEMENT_NAME,
+                                                                                          GetUser.ELEMENT_NAME,
+                                                                                          GetUserAssignableProjects.ELEMENT_NAME,
+                                                                                          GetUserPermissions.ELEMENT_NAME,
+                                                                                          GetVersionsOfProject.ELEMENT_NAME,
+                                                                                          GetVotesForIssue.ELEMENT_NAME,
+                                                                                          InitJira.ELEMENT_NAME,
+                                                                                          PostComment.ELEMENT_NAME,
+                                                                                          SearchAssignableUser.ELEMENT_NAME,
+                                                                                          SearchAssignableUserMultiProject.ELEMENT_NAME,
+                                                                                          SearchIssueViewableUsers.ELEMENT_NAME,
+                                                                                          SearchJira.ELEMENT_NAME,
+                                                                                          SearchUser.ELEMENT_NAME,
+                                                                                          SetActorsToRoleOfProject.ELEMENT_NAME,
+                                                                                          UpdateComment.ELEMENT_NAME,
+                                                                                          UpdateFilterById.ELEMENT_NAME,
+                                                                                          UpdateIssue.ELEMENT_NAME,
+                                                                                          UpdateIssueAssignee.ELEMENT_NAME,
+                                                                                          DestroyStatus.ELEMENT_NAME,
+                                                                                          GetClosesTrends.ELEMENT_NAME,
+                                                                                          GetDirectMessages.ELEMENT_NAME,
+                                                                                          GetFollowers.ELEMENT_NAME,
+                                                                                          GetFollowersIds.ELEMENT_NAME,
+                                                                                          GetFriends.ELEMENT_NAME,
+                                                                                          GetFriendsIds.ELEMENT_NAME,
+                                                                                          GetHomeTimeLine.ELEMENT_NAME,
+                                                                                          GetMentionsTimeLine.ELEMENT_NAME,
+                                                                                          GetRetweetsOfMine.ELEMENT_NAME,
+                                                                                          GetSentDirectMessages.ELEMENT_NAME,
+                                                                                          GetTopTrendPlaces.ELEMENT_NAME,
+                                                                                          GetUserTimeLine.ELEMENT_NAME,
+                                                                                          InitTwitter.ELEMENT_NAME,
+                                                                                          Retweet.ELEMENT_NAME,
+                                                                                          SearchTwitter.ELEMENT_NAME,
+                                                                                          SearchPlaces.ELEMENT_NAME,
+                                                                                          SendDirectMessage.ELEMENT_NAME,
+                                                                                          ShowStatus.ELEMENT_NAME,
+                                                                                          UpdateStatus.ELEMENT_NAME));
     }
 
     @Inject
@@ -1054,7 +1278,13 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                   Provider<GetSentDirectMessages> getSentDirectMessagesProvider,
                                                   Provider<GetTopTrendPlaces> getTopTrendPlacesProvider,
                                                   Provider<GetUserTimeLine> getUserTimeLineProvider,
-                                                  Provider<InitTwitter> initTwitterProvider) {
+                                                  Provider<InitTwitter> initTwitterProvider,
+                                                  Provider<Retweet> retweetProvider,
+                                                  Provider<SearchTwitter> searchTwitterProvider,
+                                                  Provider<SearchPlaces> searchPlacesProvider,
+                                                  Provider<SendDirectMessage> sendDirectMessageProvider,
+                                                  Provider<ShowStatus> showStatusProvider,
+                                                  Provider<UpdateStatus> updateStatusProvider) {
 
         mediatorCreatorsManager.register(Log.ELEMENT_NAME,
                                          Log.SERIALIZATION_NAME,
@@ -1515,278 +1745,652 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                          InitTwitter.SERIALIZATION_NAME,
                                          TwitterConnectorCreatingState.INIT,
                                          initTwitterProvider);
+
+        mediatorCreatorsManager.register(Retweet.ELEMENT_NAME,
+                                         Retweet.SERIALIZATION_NAME,
+                                         TwitterConnectorCreatingState.RETWEET,
+                                         retweetProvider);
+
+        mediatorCreatorsManager.register(SearchTwitter.ELEMENT_NAME,
+                                         SearchTwitter.SERIALIZATION_NAME,
+                                         TwitterConnectorCreatingState.SEARCH,
+                                         searchTwitterProvider);
+
+        mediatorCreatorsManager.register(SearchPlaces.ELEMENT_NAME,
+                                         SearchPlaces.SERIALIZATION_NAME,
+                                         TwitterConnectorCreatingState.SEARCH_PLACES,
+                                         searchPlacesProvider);
+
+        mediatorCreatorsManager.register(SendDirectMessage.ELEMENT_NAME,
+                                         SendDirectMessage.SERIALIZATION_NAME,
+                                         TwitterConnectorCreatingState.SEND_DIRECT_MESSAGE,
+                                         sendDirectMessageProvider);
+
+        mediatorCreatorsManager.register(ShowStatus.ELEMENT_NAME,
+                                         ShowStatus.SERIALIZATION_NAME,
+                                         TwitterConnectorCreatingState.SHOW_STATUS,
+                                         showStatusProvider);
+
+        mediatorCreatorsManager.register(UpdateStatus.ELEMENT_NAME,
+                                         UpdateStatus.SERIALIZATION_NAME,
+                                         TwitterConnectorCreatingState.UPDATE_STATUS,
+                                         updateStatusProvider);
     }
 
     @Inject
     private void configureToolbar(ToolbarPresenter toolbar,
                                   EditorResources resources,
                                   WSO2EditorLocalizationConstant localizationConstant) {
-        toolbar.addGroup(ToolbarGroupIds.MEDIATORS, "Mediators");
+
+        toolbar.addGroup(ToolbarGroupIds.MEDIATORS, localizationConstant.toolbarGroupMediators());
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarLogTooltip(),
+                        localizationConstant.toolbarLogTitle(),
                         localizationConstant.toolbarLogTooltip(),
                         resources.logToolbar(),
                         MediatorCreatingState.LOG);
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSequenceTooltip(),
+                        localizationConstant.toolbarSequenceTitle(),
                         localizationConstant.toolbarSequenceTooltip(),
                         resources.sequenceToolbar(),
                         MediatorCreatingState.SEQUENCE);
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarHeaderTooltip(),
+                        localizationConstant.toolbarHeaderTitle(),
                         localizationConstant.toolbarHeaderTooltip(),
                         resources.headerToolbar(),
                         MediatorCreatingState.HEADER);
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarCallTemplateTooltip(),
+                        localizationConstant.toolbarCallTemplateTitle(),
                         localizationConstant.toolbarCallTemplateTooltip(),
                         resources.callTemplateToolbar(),
                         MediatorCreatingState.CALLTEMPLATE);
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarCallTooltip(),
+                        localizationConstant.toolbarCallTitle(),
                         localizationConstant.toolbarCallTooltip(),
                         resources.callToolbar(),
                         MediatorCreatingState.CALL_MEDIATOR);
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarEnrichTooltip(),
+                        localizationConstant.toolbarEnrichTitle(),
                         localizationConstant.toolbarEnrichTooltip(),
                         resources.enrichToolbar(),
                         MediatorCreatingState.ENRICH);
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarFilterTooltip(),
+                        localizationConstant.toolbarFilterTitle(),
                         localizationConstant.toolbarFilterTooltip(),
                         resources.filterToolbar(),
                         MediatorCreatingState.FILTER);
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarPropertyTooltip(),
+                        localizationConstant.toolbarPropertyTitle(),
                         localizationConstant.toolbarPropertyTooltip(),
                         resources.propertyToolbar(),
                         MediatorCreatingState.PROPERTY);
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarLoopBackTooltip(),
+                        localizationConstant.toolbarLoopBackTitle(),
                         localizationConstant.toolbarLoopBackTooltip(),
                         resources.loopBackToolbar(),
                         MediatorCreatingState.LOOPBACK);
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarPayloadFactoryTooltip(),
+                        localizationConstant.toolbarPayloadFactoryTitle(),
                         localizationConstant.toolbarPayloadFactoryTooltip(),
                         resources.payloadFactoryToolbar(),
                         MediatorCreatingState.PAYLOAD);
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSwitchTooltip(),
+                        localizationConstant.toolbarSwitchTitle(),
                         localizationConstant.toolbarSwitchTooltip(),
                         resources.switchToolbar(),
                         MediatorCreatingState.SWITCH);
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSendTooltip(),
+                        localizationConstant.toolbarSendTitle(),
                         localizationConstant.toolbarSendTooltip(),
                         resources.sendToolbar(),
                         MediatorCreatingState.SEND);
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarRespondTooltip(),
+                        localizationConstant.toolbarRespondTitle(),
                         localizationConstant.toolbarRespondTooltip(),
                         resources.respondToolbar(),
                         MediatorCreatingState.RESPOND);
 
-        toolbar.addGroup(ToolbarGroupIds.ENDPOINTS, "Endpoints");
+        toolbar.addGroup(ToolbarGroupIds.ENDPOINTS, localizationConstant.toolbarGroupEndpoints());
 
         toolbar.addItem(ToolbarGroupIds.ENDPOINTS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarAddressEndpointTooltip(),
+                        localizationConstant.toolbarAddressEndpointTitle(),
                         localizationConstant.toolbarAddressEndpointTooltip(),
                         resources.addressToolbar(),
                         EndpointCreatingState.ADDRESS);
 
-        toolbar.addGroup(ToolbarGroupIds.SALESFORCE_CONNECTORS, "Salesforce Connectors");
+        toolbar.addGroup(ToolbarGroupIds.SALESFORCE_CONNECTORS, localizationConstant.toolbarGroupSalesforceConnector());
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceCreateConnectorTooltip(),
+                        localizationConstant.toolbarSalesforceCreateConnectorTitle(),
                         localizationConstant.toolbarSalesforceCreateConnectorTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.CREATE);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesForceDeleteTooltip(),
+                        localizationConstant.toolbarSalesForceDeleteTitle(),
                         localizationConstant.toolbarSalesForceDeleteTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.DELETE);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceDescribeGlobalConnectorTooltip(),
+                        localizationConstant.toolbarSalesforceDescribeGlobalConnectorTitle(),
                         localizationConstant.toolbarSalesforceDescribeGlobalConnectorTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.DESCRIBE_GLOBAL);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceDescribeSubjectConnectorTooltip(),
+                        localizationConstant.toolbarSalesforceDescribeSubjectConnectorTitle(),
                         localizationConstant.toolbarSalesforceDescribeSubjectConnectorTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.DESCRIBE_SUBJECT);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceDescribeSubjectsConnectorTooltip(),
+                        localizationConstant.toolbarSalesforceDescribeSubjectsConnectorTitle(),
                         localizationConstant.toolbarSalesforceDescribeSubjectsConnectorTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.DESCRIBE_SUBJECTS);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceEmptyRecycleBinConnector(),
-                        localizationConstant.toolbarSalesforceEmptyRecycleBinConnector(),
+                        localizationConstant.toolbarSalesforceEmptyRecycleBinConnectorTitle(),
+                        localizationConstant.toolbarSalesforceEmptyRecycleBinConnectorTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.EMPTY_RECYCLE_BIN);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceGetUserInfoConnector(),
-                        localizationConstant.toolbarSalesforceGetUserInfoConnector(),
+                        localizationConstant.toolbarSalesforceGetUserInfoConnectorTitle(),
+                        localizationConstant.toolbarSalesforceGetUserInfoConnectorTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.GET_USER_INFORMATION);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceInitConnectorTooltip(),
+                        localizationConstant.toolbarSalesforceInitConnectorTitle(),
                         localizationConstant.toolbarSalesforceInitConnectorTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.INIT);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceLogOutConnector(),
-                        localizationConstant.toolbarSalesforceLogOutConnector(),
+                        localizationConstant.toolbarSalesforceLogOutConnectorTitle(),
+                        localizationConstant.toolbarSalesforceLogOutConnectorTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.LOGOUT);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceQueryTooltip(),
-                        localizationConstant.toolbarSalesforceQueryTooltip(),
-                        resources.salesforceConnectorToolbar(),
-                        SalesForceConnectorCreatingState.QUERY);
-
-        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceQueryTooltip(),
+                        localizationConstant.toolbarSalesforceQueryTitle(),
                         localizationConstant.toolbarSalesforceQueryTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.QUERY);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceQueryAllTooltip(),
+                        localizationConstant.toolbarSalesforceQueryTitle(),
+                        localizationConstant.toolbarSalesforceQueryTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.QUERY);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceQueryAllTitle(),
                         localizationConstant.toolbarSalesforceQueryAllTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.QUERY_ALL);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceQueryMoreTooltip(),
+                        localizationConstant.toolbarSalesforceQueryMoreTitle(),
                         localizationConstant.toolbarSalesforceQueryMoreTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.QUERY_MORE);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceResetPasswordTooltip(),
+                        localizationConstant.toolbarSalesforceResetPasswordTitle(),
                         localizationConstant.toolbarSalesforceResetPasswordTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.RESET_PASSWORD);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceRetriveTooltip(),
+                        localizationConstant.toolbarSalesforceRetriveTitle(),
                         localizationConstant.toolbarSalesforceRetriveTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.RETRIVE);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceSearchTooltip(),
+                        localizationConstant.toolbarSalesforceSearchTitle(),
                         localizationConstant.toolbarSalesforceSearchTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.SEARCH);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceSendEmailTooltip(),
+                        localizationConstant.toolbarSalesforceSendEmailTitle(),
                         localizationConstant.toolbarSalesforceSendEmailTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.SEND_EMAIL);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceSendEmailMessageTooltip(),
+                        localizationConstant.toolbarSalesforceSendEmailMessageTitle(),
                         localizationConstant.toolbarSalesforceSendEmailMessageTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.SEND_EMAIL_MESSAGE);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceSetPasswordTooltip(),
+                        localizationConstant.toolbarSalesforceSetPasswordTitle(),
                         localizationConstant.toolbarSalesforceSetPasswordTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.SET_PASSWORD);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceUndeleteTooltip(),
+                        localizationConstant.toolbarSalesforceUndeleteTitle(),
                         localizationConstant.toolbarSalesforceUndeleteTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.UNDELETE);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceUpdateConnectorTooltip(),
+                        localizationConstant.toolbarSalesforceUpdateConnectorTitle(),
                         localizationConstant.toolbarSalesforceUpdateConnectorTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.UPDATE);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        // TODO separate title and tooltip
-                        localizationConstant.toolbarSalesforceUpsetTooltip(),
+                        localizationConstant.toolbarSalesforceUpsetTitle(),
                         localizationConstant.toolbarSalesforceUpsetTooltip(),
                         resources.salesforceConnectorToolbar(),
                         SalesForceConnectorCreatingState.UPSET);
 
-        toolbar.addGroup(ToolbarGroupIds.JIRA_CONNECTORS, "Jira Connectors");
+        toolbar.addGroup(ToolbarGroupIds.JIRA_CONNECTORS, localizationConstant.toolbarGroupJiraConnector());
 
-        // TODO add items
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraAddAttachmentToIssueIdTitle(),
+                        localizationConstant.jiraAddAttachmentToIssueIdTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.ADD_ATTACHMENT_TO_ISSUE_ID);
 
-        toolbar.addGroup(ToolbarGroupIds.TWITTER_CONNECTORS, "Twitter Connectors");
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraCreateFilterTitle(),
+                        localizationConstant.jiraCreateFilterTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.CREATE_FILTER);
 
-        // TODO add items
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraCreateIssueTitle(),
+                        localizationConstant.jiraCreateIssueTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.CREATE_ISSUE);
 
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraDeleteAvatarForProjectTitle(),
+                        localizationConstant.jiraDeleteAvatarForProjectTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.DELETE_AVATAR_FOR_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraDeleteCommentTitle(),
+                        localizationConstant.jiraDeleteCommentTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.DELETE_COMMENT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraDeleteFilterTitle(),
+                        localizationConstant.jiraDeleteFilterTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.DELETE_FILTER);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetDashboardTitle(),
+                        localizationConstant.jiraGetDashboardTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_DASHBOARD);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraDoTransitionTitle(),
+                        localizationConstant.jiraDoTransitionTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.DO_TRANSITION);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetAvatarsForProjectTitle(),
+                        localizationConstant.jiraGetAvatarsForProjectTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_AVATARS_FOR_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetCommentsTitle(),
+                        localizationConstant.jiraGetCommentsTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_COMMENTS);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetComponentsOfProjectTitle(),
+                        localizationConstant.jiraGetComponentsOfProjectTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_COMPONENTS_OF_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetDashboardByIdTitle(),
+                        localizationConstant.jiraGetDashboardByIdTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_DASHBOARD_BY_ID);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetFavouriteFiltersTitle(),
+                        localizationConstant.jiraGetFavouriteFiltersTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_FAVOURITE_FILTERS);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetFilterByIdTitle(),
+                        localizationConstant.jiraGetFilterByIdTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_FILTER_BY_ID);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetGroupTitle(),
+                        localizationConstant.jiraGetGroupTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_GROUP);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetIssueTitle(),
+                        localizationConstant.jiraGetIssueTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_ISSUE);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetIssuePrioritiesTitle(),
+                        localizationConstant.jiraGetIssuePrioritiesTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_ISSUE_PRIORITIES);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetIssuePriorityByIdTitle(),
+                        localizationConstant.jiraGetIssuePriorityByIdTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_ISSUE_PRIORITY_BY_ID);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetIssueTypeByIdTitle(),
+                        localizationConstant.jiraGetIssueTypeByIdTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_ISSUE_TYPE_BY_ID);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetIssueTypesTitle(),
+                        localizationConstant.jiraGetIssueTypesTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_ISSUE_TYPES);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetIssuesForUserTitle(),
+                        localizationConstant.jiraGetIssuesForUserTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_ISSUES_FOR_USER);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetProjectTitle(),
+                        localizationConstant.jiraGetProjectTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetRolesByIdOfProjectTitle(),
+                        localizationConstant.jiraGetRolesByIdOfProjectTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_ROLES_BY_ID_OF_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetRolesOfProjectTitle(),
+                        localizationConstant.jiraGetRolesOfProjectTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_ROLES_OF_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetStatusesOfProjectTitle(),
+                        localizationConstant.jiraGetStatusesOfProjectTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_STATUSES_OF_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetTransitionsTitle(),
+                        localizationConstant.jiraGetTransitionsTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_TRANSITIONS);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetUserTitle(),
+                        localizationConstant.jiraGetUserTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_USER);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetUserAssignableProjectsTitle(),
+                        localizationConstant.jiraGetUserAssignableProjectsTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_USER_ASSIGNABLE_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetUserPermissionsTitle(),
+                        localizationConstant.jiraGetUserPermissionsTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_USER_PERMISSIONS);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetVersionsOfProjectTitle(),
+                        localizationConstant.jiraGetVersionsOfProjectTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_VERSIONS_OF_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetVotesForIssueTitle(),
+                        localizationConstant.jiraGetVotesForIssueTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_VOTES_FOR_ISSUE);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraInitTitle(),
+                        localizationConstant.jiraInitTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.INIT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraPostCommentTitle(),
+                        localizationConstant.jiraPostCommentTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.POST_COMMENT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraSearchAssignableUserTitle(),
+                        localizationConstant.jiraSearchAssignableUserTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.SEARCH_ASSIGNABLE_USER);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraSearchAssignableUserMultiProjectTitle(),
+                        localizationConstant.jiraSearchAssignableUserMultiProjectTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.SEARCH_ASSIGNABLE_USER_MULTI_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraSearchIssueViewableUsersTitle(),
+                        localizationConstant.jiraSearchIssueViewableUsersTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.SEARCH_ISSUE_VIEWABLE_USERS);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraSearchJiraTitle(),
+                        localizationConstant.jiraSearchJiraTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.SEARCH_JIRA);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraSearchUserTitle(),
+                        localizationConstant.jiraSearchUserTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.SEARCH_USER);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraSetActorsToRoleOfProjectTitle(),
+                        localizationConstant.jiraSetActorsToRoleOfProjectTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.SET_ACTORS_TO_ROLE_OF_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraUpdateCommentTitle(),
+                        localizationConstant.jiraUpdateCommentTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.ADD_ATTACHMENT_TO_ISSUE_ID);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraUpdateCommentTitle(),
+                        localizationConstant.jiraUpdateCommentTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.UPDATE_COMMENT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraUpdateFilterByIdTitle(),
+                        localizationConstant.jiraUpdateFilterByIdTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.UPDATE_FILTER_BY_ID_JIRA);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraUpdateIssueTitle(),
+                        localizationConstant.jiraUpdateIssueTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.UPDATE_ISSUE);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraUpdateIssueAssigneeTitle(),
+                        localizationConstant.jiraUpdateIssueAssigneeTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.UPDATE_ISSUE_ASSIGNEE);
+
+        toolbar.addGroup(ToolbarGroupIds.TWITTER_CONNECTORS, localizationConstant.toolbarGroupTwitterConnector());
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterDestroyStatusTitle(),
+                        localizationConstant.twitterDestroyStatusTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.DESTROY_STATUS);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetClosesTrendsTitle(),
+                        localizationConstant.twitterGetClosesTrendsTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_CLOTHES_TRENDS);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetDirectMessagesTitle(),
+                        localizationConstant.twitterGetDirectMessagesTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_DIRECT_MESSAGES);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetFollowersTitle(),
+                        localizationConstant.twitterGetFollowersTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_FOLLOWERS);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetFollowersIdsTitle(),
+                        localizationConstant.twitterGetFollowersIdsTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_FOLLOWERS_IDS);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetFriendsTitle(),
+                        localizationConstant.twitterGetFriendsTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_FRIENDS);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetFriendsIdsTitle(),
+                        localizationConstant.twitterGetFriendsIdsTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_FRIENDS_IDS);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetHomeTimeLineTitle(),
+                        localizationConstant.twitterGetHomeTimeLineTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_HOME_TIME_LINE);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetMentionsTimeLineTitle(),
+                        localizationConstant.twitterGetMentionsTimeLineTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_MENTIONS_TIME_LINE);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetRetweetsOfMineTitle(),
+                        localizationConstant.twitterGetRetweetsOfMineTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_RETWEETS_OF_MINE);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetSentDirectMessageTitle(),
+                        localizationConstant.twitterGetSentDirectMessageTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_SENT_DIRECT_MESSAGE);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetTopTrendPlacesTitle(),
+                        localizationConstant.twitterGetTopTrendPlacesTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_TOP_TREND_PLACES);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetUserTimeLineTitle(),
+                        localizationConstant.twitterGetUserTimeLineTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_USER_TIME_LINE);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterInitTitle(),
+                        localizationConstant.twitterInitTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.INIT);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterRetweetTitle(),
+                        localizationConstant.twitterRetweetTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.RETWEET);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterSearchTitle(),
+                        localizationConstant.twitterSearchTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.SEARCH);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterSearchPlacesTitle(),
+                        localizationConstant.twitterSearchPlacesTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.SEARCH_PLACES);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterSendDirectMessageTitle(),
+                        localizationConstant.twitterSendDirectMessageTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.SEND_DIRECT_MESSAGE);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterShowStatusTitle(),
+                        localizationConstant.twitterShowStatusTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.SHOW_STATUS);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterUpdateStatusTitle(),
+                        localizationConstant.twitterUpdateStatusTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.UPDATE_STATUS);
     }
 
     /** {@inheritDoc} */

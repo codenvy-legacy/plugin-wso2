@@ -243,7 +243,7 @@ public class GetMentionsTimeLineConnectorPresenter extends AbstractConnectorProp
 
     /** {@inheritDoc} */
     @Override
-    public void onSeventhTextBoxValueChanged() {
+    public void onSixesTextBoxValueChanged() {
         element.setPage(view.getSixesTextBoxValue());
 
         notifyListeners();
@@ -251,7 +251,7 @@ public class GetMentionsTimeLineConnectorPresenter extends AbstractConnectorProp
 
     /** {@inheritDoc} */
     @Override
-    public void onSixesTextBoxValueChanged() {
+    public void onSeventhTextBoxValueChanged() {
         element.setSinceId(view.getSeventhTextBoxValue());
 
         notifyListeners();

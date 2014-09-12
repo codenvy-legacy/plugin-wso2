@@ -211,7 +211,7 @@ public class GetRetweetsOfMineConnectorPresenter extends AbstractConnectorProper
 
     /** {@inheritDoc} */
     @Override
-    public void onSeventhTextBoxValueChanged() {
+    public void onSixesTextBoxValueChanged() {
         element.setPage(view.getSixesTextBoxValue());
 
         notifyListeners();

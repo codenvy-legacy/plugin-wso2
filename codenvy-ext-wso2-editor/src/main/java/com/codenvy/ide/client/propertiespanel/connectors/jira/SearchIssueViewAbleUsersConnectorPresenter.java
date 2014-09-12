@@ -164,7 +164,7 @@ public class SearchIssueViewAbleUsersConnectorPresenter extends AbstractConnecto
     /** {@inheritDoc} */
     @Override
     public void onSecondTextBoxValueChanged() {
-        element.setProjectKey(view.getSecondTextBoxValue());
+        element.setIssueKey(view.getSecondTextBoxValue());
 
         notifyListeners();
     }
@@ -172,7 +172,7 @@ public class SearchIssueViewAbleUsersConnectorPresenter extends AbstractConnecto
     /** {@inheritDoc} */
     @Override
     public void onThirdTextBoxValueChanged() {
-        element.setIssueKey(view.getThirdTextBoxValue());
+        element.setProjectKey(view.getThirdTextBoxValue());
 
         notifyListeners();
     }

@@ -158,16 +158,16 @@ public class SearchAssignableUserMultiProjectConnectorPresenter
 
     /** {@inheritDoc} */
     @Override
-    public void onFourthTextBoxValueChanged() {
-        element.setStartAt(view.getFourthTextBoxValue());
+    public void onThirdTextBoxValueChanged() {
+        element.setStartAt(view.getThirdTextBoxValue());
 
         notifyListeners();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onFifthTextBoxValueChanged() {
-        element.setMaxResults(view.getFifthTextBoxValue());
+    public void onFourthTextBoxValueChanged() {
+        element.setMaxResults(view.getFourthTextBoxValue());
 
         notifyListeners();
     }
@@ -192,7 +192,7 @@ public class SearchAssignableUserMultiProjectConnectorPresenter
 
     /** {@inheritDoc} */
     @Override
-    public void onFourthButtonClicked() {
+    public void onThirdButtonClicked() {
         nameSpacePresenter.showWindowWithParameters(element.getStartAtNS(),
                                                     startAtCallBack,
                                                     locale.connectorExpression(),
@@ -201,7 +201,7 @@ public class SearchAssignableUserMultiProjectConnectorPresenter
 
     /** {@inheritDoc} */
     @Override
-    public void onFifthButtonClicked() {
+    public void onFourthButtonClicked() {
         nameSpacePresenter.showWindowWithParameters(element.getMaxResultsNS(),
                                                     maxResultsCallBack,
                                                     locale.connectorExpression(),

@@ -45,7 +45,7 @@ public class SearchUserConnectorPresenter extends AbstractConnectorPropertiesPan
     private final WSO2EditorLocalizationConstant locale;
     private final NameSpaceEditorPresenter       nameSpacePresenter;
     private final AddNameSpacesCallBack          userNameCallBack;
-    private final AddNameSpacesCallBack          chartAtCallBack;
+    private final AddNameSpacesCallBack          startAtCallBack;
     private final AddNameSpacesCallBack          maxResultsCallBack;
     private final AddNameSpacesCallBack          includeActiveCallBack;
     private final AddNameSpacesCallBack          includeInactiveCallBack;
@@ -75,7 +75,7 @@ public class SearchUserConnectorPresenter extends AbstractConnectorPropertiesPan
             }
         };
 
-        this.chartAtCallBack = new AddNameSpacesCallBack() {
+        this.startAtCallBack = new AddNameSpacesCallBack() {
             @Override
             public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setStartAtNS(nameSpaces);
@@ -206,7 +206,7 @@ public class SearchUserConnectorPresenter extends AbstractConnectorPropertiesPan
     @Override
     public void onSecondButtonClicked() {
         nameSpacePresenter.showWindowWithParameters(element.getChartAtNS(),
-                                                    maxResultsCallBack,
+                                                    startAtCallBack,
                                                     locale.connectorExpression(),
                                                     element.getStartAtExpression());
     }
@@ -215,7 +215,7 @@ public class SearchUserConnectorPresenter extends AbstractConnectorPropertiesPan
     @Override
     public void onThirdButtonClicked() {
         nameSpacePresenter.showWindowWithParameters(element.getMaxResultsNS(),
-                                                    chartAtCallBack,
+                                                    maxResultsCallBack,
                                                     locale.connectorExpression(),
                                                     element.getMaxResultsExpression());
     }

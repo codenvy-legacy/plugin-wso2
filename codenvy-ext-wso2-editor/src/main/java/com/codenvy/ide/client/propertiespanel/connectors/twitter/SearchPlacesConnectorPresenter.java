@@ -17,7 +17,7 @@ package com.codenvy.ide.client.propertiespanel.connectors.twitter;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.connectors.twitter.GetDirectMessages;
+import com.codenvy.ide.client.elements.connectors.twitter.SearchPlaces;
 import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
@@ -40,7 +40,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  *
  * @author Dmitry Shnurenko
  */
-public class GetDirectMessagesConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<GetDirectMessages> {
+public class SearchPlacesConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<SearchPlaces> {
 
     private final WSO2EditorLocalizationConstant locale;
     private final NameSpaceEditorPresenter       nameSpacePresenter;
@@ -48,18 +48,17 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
     private final AddNameSpacesCallBack          consumerSecretCallBack;
     private final AddNameSpacesCallBack          accessTokenCallBack;
     private final AddNameSpacesCallBack          accessTokenSecretCallBack;
-    private final AddNameSpacesCallBack          countCallBack;
-    private final AddNameSpacesCallBack          pageCallBack;
-    private final AddNameSpacesCallBack          sinceIdCallBack;
-    private final AddNameSpacesCallBack          maxIdCallBack;
+    private final AddNameSpacesCallBack          latitudeCallBack;
+    private final AddNameSpacesCallBack          longitudeCallBack;
+    private final AddNameSpacesCallBack          queryCallBack;
 
     @Inject
-    public GetDirectMessagesConnectorPresenter(WSO2EditorLocalizationConstant locale,
-                                               NameSpaceEditorPresenter nameSpacePresenter,
-                                               GeneralPropertiesPanelView view,
-                                               TwitterPropertyManager twitterPropertyManager,
-                                               ParameterPresenter parameterPresenter,
-                                               PropertyTypeManager propertyTypeManager) {
+    public SearchPlacesConnectorPresenter(WSO2EditorLocalizationConstant locale,
+                                          NameSpaceEditorPresenter nameSpacePresenter,
+                                          GeneralPropertiesPanelView view,
+                                          TwitterPropertyManager twitterPropertyManager,
+                                          ParameterPresenter parameterPresenter,
+                                          PropertyTypeManager propertyTypeManager) {
         super(view, twitterPropertyManager, parameterPresenter, propertyTypeManager);
 
         this.locale = locale;
@@ -72,7 +71,7 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
                 element.setConsumerKeyNS(nameSpaces);
                 element.setConsumerKeyExpr(expression);
 
-                GetDirectMessagesConnectorPresenter.this.view.setFirstTextBoxValue(expression);
+                SearchPlacesConnectorPresenter.this.view.setFirstTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -84,7 +83,7 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
                 element.setConsumerSecretNS(nameSpaces);
                 element.setConsumerSecretExpr(expression);
 
-                GetDirectMessagesConnectorPresenter.this.view.setSecondTextBoxValue(expression);
+                SearchPlacesConnectorPresenter.this.view.setSecondTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -96,7 +95,7 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
                 element.setAccessTokenNS(nameSpaces);
                 element.setAccessTokenExpr(expression);
 
-                GetDirectMessagesConnectorPresenter.this.view.setThirdTextBoxValue(expression);
+                SearchPlacesConnectorPresenter.this.view.setThirdTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -108,55 +107,43 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
                 element.setAccessTokenSecretNS(nameSpaces);
                 element.setAccessTokenSecretExpr(expression);
 
-                GetDirectMessagesConnectorPresenter.this.view.setFourthTextBoxValue(expression);
+                SearchPlacesConnectorPresenter.this.view.setFourthTextBoxValue(expression);
 
                 notifyListeners();
             }
         };
 
-        this.countCallBack = new AddNameSpacesCallBack() {
+        this.latitudeCallBack = new AddNameSpacesCallBack() {
             @Override
             public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setCountNS(nameSpaces);
-                element.setCountExpr(expression);
+                element.setLatitudeNS(nameSpaces);
+                element.setLatitudeExpr(expression);
 
-                GetDirectMessagesConnectorPresenter.this.view.setFifthTextBoxValue(expression);
+                SearchPlacesConnectorPresenter.this.view.setFifthTextBoxValue(expression);
 
                 notifyListeners();
             }
         };
 
-        this.pageCallBack = new AddNameSpacesCallBack() {
+        this.longitudeCallBack = new AddNameSpacesCallBack() {
             @Override
             public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setPageNS(nameSpaces);
-                element.setPageExpr(expression);
+                element.setLongitudeNS(nameSpaces);
+                element.setLongitudeExpr(expression);
 
-                GetDirectMessagesConnectorPresenter.this.view.setSixesTextBoxValue(expression);
+                SearchPlacesConnectorPresenter.this.view.setSixesTextBoxValue(expression);
 
                 notifyListeners();
             }
         };
 
-        this.sinceIdCallBack = new AddNameSpacesCallBack() {
+        this.queryCallBack = new AddNameSpacesCallBack() {
             @Override
             public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setSinceIdNS(nameSpaces);
-                element.setSinceIdExpr(expression);
+                element.setQueryNS(nameSpaces);
+                element.setQueryExpr(expression);
 
-                GetDirectMessagesConnectorPresenter.this.view.setSeventhTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.maxIdCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setMaxIdNS(nameSpaces);
-                element.setMaxIdExpr(expression);
-
-                GetDirectMessagesConnectorPresenter.this.view.setEighthTextBoxValue(expression);
+                SearchPlacesConnectorPresenter.this.view.setSeventhTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -178,7 +165,6 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
         view.setVisibleFifthButton(isEquals);
         view.setVisibleSixesButton(isEquals);
         view.setVisibleSeventhButton(isEquals);
-        view.setVisibleEighthButton(isEquals);
 
         view.setEnableFirstTextBox(!isEquals);
         view.setEnableSecondTextBox(!isEquals);
@@ -187,16 +173,14 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
         view.setEnableFifthTextBox(!isEquals);
         view.setEnableSixesTextBox(!isEquals);
         view.setEnableSeventhTextBox(!isEquals);
-        view.setEnableEighthTextBox(!isEquals);
 
         view.setFirstTextBoxValue(isEquals ? element.getConsumerKeyExpr() : element.getConsumerKey());
         view.setSecondTextBoxValue(isEquals ? element.getConsumerSecretExpr() : element.getConsumerSecret());
         view.setThirdTextBoxValue(isEquals ? element.getAccessTokenExpr() : element.getAccessToken());
         view.setFourthTextBoxValue(isEquals ? element.getAccessTokenSecretExpr() : element.getAccessTokenSecret());
-        view.setFifthTextBoxValue(isEquals ? element.getCountExpr() : element.getCount());
-        view.setSixesTextBoxValue(isEquals ? element.getPageExpr() : element.getPage());
-        view.setSeventhTextBoxValue(isEquals ? element.getSinceIdExpr() : element.getSinceId());
-        view.setEighthTextBoxValue(isEquals ? element.getMaxIdExpr() : element.getMaxId());
+        view.setFifthTextBoxValue(isEquals ? element.getLatitudeExpr() : element.getLatitude());
+        view.setSixesTextBoxValue(isEquals ? element.getLongitudeExpr() : element.getLongitude());
+        view.setSeventhTextBoxValue(isEquals ? element.getQueryExpr() : element.getQuery());
 
         notifyListeners();
     }
@@ -236,7 +220,7 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
     /** {@inheritDoc} */
     @Override
     public void onFifthTextBoxValueChanged() {
-        element.setCount(view.getFifthTextBoxValue());
+        element.setLatitude(view.getFifthTextBoxValue());
 
         notifyListeners();
     }
@@ -244,7 +228,7 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
     /** {@inheritDoc} */
     @Override
     public void onSixesTextBoxValueChanged() {
-        element.setPage(view.getSixesTextBoxValue());
+        element.setLongitude(view.getSixesTextBoxValue());
 
         notifyListeners();
     }
@@ -252,15 +236,7 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
     /** {@inheritDoc} */
     @Override
     public void onSeventhTextBoxValueChanged() {
-        element.setSinceId(view.getSeventhTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onEighthTextBoxValueChanged() {
-        element.setMaxId(view.getEighthTextBoxValue());
+        element.setQuery(view.getSeventhTextBoxValue());
 
         notifyListeners();
     }
@@ -277,19 +253,19 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
     /** {@inheritDoc} */
     @Override
     public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getAccessTokenNS(),
+        nameSpacePresenter.showWindowWithParameters(element.getConsumerSecretNS(),
                                                     consumerSecretCallBack,
                                                     locale.connectorExpression(),
-                                                    element.getAccessTokenExpr());
+                                                    element.getConsumerSecretExpr());
     }
 
     /** {@inheritDoc} */
     @Override
     public void onThirdButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getConsumerSecretNS(),
+        nameSpacePresenter.showWindowWithParameters(element.getAccessTokenNS(),
                                                     accessTokenCallBack,
                                                     locale.connectorExpression(),
-                                                    element.getConsumerSecretExpr());
+                                                    element.getAccessTokenExpr());
     }
 
     /** {@inheritDoc} */
@@ -304,37 +280,28 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
     /** {@inheritDoc} */
     @Override
     public void onFifthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getCountNS(),
-                                                    countCallBack,
+        nameSpacePresenter.showWindowWithParameters(element.getLatitudeNS(),
+                                                    latitudeCallBack,
                                                     locale.connectorExpression(),
-                                                    element.getCountExpr());
+                                                    element.getLatitudeExpr());
     }
 
     /** {@inheritDoc} */
     @Override
     public void onSixesButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getPageNS(),
-                                                    pageCallBack,
+        nameSpacePresenter.showWindowWithParameters(element.getLongitudeNS(),
+                                                    longitudeCallBack,
                                                     locale.connectorExpression(),
-                                                    element.getPageExpr());
+                                                    element.getLongitudeExpr());
     }
 
     /** {@inheritDoc} */
     @Override
     public void onSeventhButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getSinceIdNS(),
-                                                    sinceIdCallBack,
+        nameSpacePresenter.showWindowWithParameters(element.getQueryNS(),
+                                                    queryCallBack,
                                                     locale.connectorExpression(),
-                                                    element.getSinceIdExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onEighthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getMaxIdNS(),
-                                                    maxIdCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getMaxIdExpr());
+                                                    element.getQueryExpr());
     }
 
     private void redesignViewToCurrentConnector() {
@@ -345,16 +312,14 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
         view.setVisibleFifthPanel(true);
         view.setVisibleSixesPanel(true);
         view.setVisibleSeventhPanel(true);
-        view.setVisibleEighthPanel(true);
 
         view.setFirstLabelTitle(locale.twitterConsumerKey());
         view.setSecondLabelTitle(locale.twitterConsumerSecret());
         view.setThirdLabelTitle(locale.twitterAccessToken());
         view.setFourthLabelTitle(locale.twitterAccessTokenSecret());
-        view.setFifthLabelTitle(locale.twitterCount());
-        view.setSixesLabelTitle(locale.twitterPage());
-        view.setSeventhLabelTitle(locale.twitterSinceId());
-        view.setEighthLabelTitle(locale.twitterMaxId());
+        view.setFifthLabelTitle(locale.twitterLatitude());
+        view.setSixesLabelTitle(locale.twitterLongitude());
+        view.setSeventhLabelTitle(locale.twitterQuery());
     }
 
     /** {@inheritDoc} */

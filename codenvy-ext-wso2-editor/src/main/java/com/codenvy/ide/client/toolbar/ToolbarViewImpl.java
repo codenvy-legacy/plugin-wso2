@@ -51,5 +51,4 @@ public class ToolbarViewImpl extends ToolbarView {
     public void addGroup(@Nonnull ToolbarGroupPresenter toolbarGroup) {
         mainPanel.add(toolbarGroup.getView());
     }
-
 }

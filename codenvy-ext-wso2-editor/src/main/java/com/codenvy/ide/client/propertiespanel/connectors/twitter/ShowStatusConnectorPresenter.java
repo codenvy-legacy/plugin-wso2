@@ -17,7 +17,7 @@ package com.codenvy.ide.client.propertiespanel.connectors.twitter;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.connectors.twitter.GetFriends;
+import com.codenvy.ide.client.elements.connectors.twitter.ShowStatus;
 import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
@@ -40,16 +40,14 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  *
  * @author Dmitry Shnurenko
  */
-public class GetFriendsConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<GetFriends> {
+public class ShowStatusConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<ShowStatus> {
 
     private final WSO2EditorLocalizationConstant locale;
     private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          screenNameCallBack;
-    private final AddNameSpacesCallBack          userIdCallBack;
-    private final AddNameSpacesCallBack          cursorCallBack;
+    private final AddNameSpacesCallBack          idCallBack;
 
     @Inject
-    public GetFriendsConnectorPresenter(WSO2EditorLocalizationConstant locale,
+    public ShowStatusConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                         NameSpaceEditorPresenter nameSpacePresenter,
                                         GeneralPropertiesPanelView view,
                                         TwitterPropertyManager twitterPropertyManager,
@@ -61,37 +59,13 @@ public class GetFriendsConnectorPresenter extends AbstractConnectorPropertiesPan
 
         this.nameSpacePresenter = nameSpacePresenter;
 
-        this.screenNameCallBack = new AddNameSpacesCallBack() {
+        this.idCallBack = new AddNameSpacesCallBack() {
             @Override
             public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setScreenNameNS(nameSpaces);
-                element.setScreenNameExpr(expression);
+                element.setIdNS(nameSpaces);
+                element.setIdExpression(expression);
 
-                GetFriendsConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.userIdCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setUserIdNS(nameSpaces);
-                element.setUserIdExpr(expression);
-
-                GetFriendsConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.cursorCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setCursorNS(nameSpaces);
-                element.setCursorExpr(expression);
-
-                GetFriendsConnectorPresenter.this.view.setThirdTextBoxValue(expression);
+                ShowStatusConnectorPresenter.this.view.setFirstTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -107,16 +81,10 @@ public class GetFriendsConnectorPresenter extends AbstractConnectorPropertiesPan
         boolean isEquals = NamespacedPropertyEditor.equals(editorType);
 
         view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
 
         view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
 
-        view.setFirstTextBoxValue(isEquals ? element.getScreenNameExpr() : element.getScreenName());
-        view.setSecondTextBoxValue(isEquals ? element.getUserIdExpr() : element.getUserId());
-        view.setThirdTextBoxValue(isEquals ? element.getCursorExpr() : element.getCursor());
+        view.setFirstTextBoxValue(isEquals ? element.getIdExpression() : element.getId());
 
         notifyListeners();
     }
@@ -124,23 +92,7 @@ public class GetFriendsConnectorPresenter extends AbstractConnectorPropertiesPan
     /** {@inheritDoc} */
     @Override
     public void onFirstTextBoxValueChanged() {
-        element.setScreenName(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setUserId(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdTextBoxValueChanged() {
-        element.setCursor(view.getThirdTextBoxValue());
+        element.setId(view.getFirstTextBoxValue());
 
         notifyListeners();
     }
@@ -148,38 +100,16 @@ public class GetFriendsConnectorPresenter extends AbstractConnectorPropertiesPan
     /** {@inheritDoc} */
     @Override
     public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getScreenNameNS(),
-                                                    screenNameCallBack,
+        nameSpacePresenter.showWindowWithParameters(element.getIdNS(),
+                                                    idCallBack,
                                                     locale.connectorExpression(),
-                                                    element.getScreenNameExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getUserIdNS(),
-                                                    userIdCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getUserIdExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getCursorNS(),
-                                                    cursorCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getCursorExpr());
+                                                    element.getIdExpression());
     }
 
     private void redesignViewToCurrentConnector() {
         view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-        view.setVisibleThirdPanel(true);
 
-        view.setFirstLabelTitle(locale.twitterScreenName());
-        view.setSecondLabelTitle(locale.twitterUserId());
-        view.setThirdLabelTitle(locale.twitterCursor());
+        view.setFirstLabelTitle(locale.jiraId());
     }
 
     /** {@inheritDoc} */
