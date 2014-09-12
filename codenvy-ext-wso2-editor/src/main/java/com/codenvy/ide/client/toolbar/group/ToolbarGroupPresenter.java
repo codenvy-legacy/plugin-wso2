@@ -26,6 +26,8 @@ import com.google.inject.assistedinject.Assisted;
 import javax.annotation.Nonnull;
 
 /**
+ * The class that provides business logic of the toolbar group widget.
+ *
  * @author Andrey Plotnikov
  */
 public class ToolbarGroupPresenter extends AbstractPresenter<ToolbarGroupView> implements ToolbarGroupView.ActionDelegate {
@@ -39,6 +41,7 @@ public class ToolbarGroupPresenter extends AbstractPresenter<ToolbarGroupView> i
         fold();
     }
 
+    /** @return the GWT widget that is controlled by the presenter */
     @Nonnull
     public Widget getView() {
         return view;
@@ -46,16 +49,22 @@ public class ToolbarGroupPresenter extends AbstractPresenter<ToolbarGroupView> i
 
     private void fold() {
         isFolded = true;
-        view.setVisibleMainPanel(false);
+        view.setVisibleItemsPanel(false);
         view.defaultIcon();
     }
 
     private void unfold() {
         isFolded = false;
-        view.setVisibleMainPanel(true);
+        view.setVisibleItemsPanel(true);
         view.rotateIcon();
     }
 
+    /**
+     * Adds a new toolbar item to this group.
+     *
+     * @param toolbarItem
+     *         toolbar item that needs to be added
+     */
     public void addItem(@Nonnull ToolbarItemPresenter toolbarItem) {
         view.addItem(toolbarItem);
     }

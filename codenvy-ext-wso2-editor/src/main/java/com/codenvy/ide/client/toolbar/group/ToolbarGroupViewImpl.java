@@ -34,6 +34,8 @@ import org.vectomatic.dom.svg.ui.SVGImage;
 import javax.annotation.Nonnull;
 
 /**
+ * Provides a graphical representation of the toolbar group.
+ *
  * @author Andrey Plotnikov
  */
 public class ToolbarGroupViewImpl extends ToolbarGroupView {
@@ -75,7 +77,7 @@ public class ToolbarGroupViewImpl extends ToolbarGroupView {
 
     /** {@inheritDoc} */
     @Override
-    public void setVisibleMainPanel(boolean visible) {
+    public void setVisibleItemsPanel(boolean visible) {
         itemsPanel.setVisible(visible);
     }
 

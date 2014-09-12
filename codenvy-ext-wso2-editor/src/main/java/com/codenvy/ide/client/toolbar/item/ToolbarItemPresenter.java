@@ -27,6 +27,8 @@ import com.google.inject.assistedinject.AssistedInject;
 import javax.annotation.Nonnull;
 
 /**
+ * The class that provides business logic of the toolbar item widget.
+ *
  * @author Andrey Plotnikov
  */
 public class ToolbarItemPresenter extends AbstractPresenter<ToolbarItemView> implements ToolbarItemView.ActionDelegate {
@@ -47,6 +49,7 @@ public class ToolbarItemPresenter extends AbstractPresenter<ToolbarItemView> imp
         this.newState = newState;
     }
 
+    /** @return the GWT widget that is controlled by the presenter */
     @Nonnull
     public Widget getView() {
         return view;

@@ -26,7 +26,7 @@ import com.google.inject.Singleton;
 import javax.annotation.Nonnull;
 
 /**
- * Provides a graphical representation of tool bar.
+ * Provides a graphical representation of toolbar.
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko

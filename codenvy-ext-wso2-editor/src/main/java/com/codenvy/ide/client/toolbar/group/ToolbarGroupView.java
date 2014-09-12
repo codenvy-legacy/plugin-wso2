@@ -23,20 +23,37 @@ import com.google.inject.ImplementedBy;
 import javax.annotation.Nonnull;
 
 /**
+ * The abstract view that represents the toolbar group visual part of the widget.
+ *
  * @author Andrey Plotnikov
  */
 @ImplementedBy(ToolbarGroupViewImpl.class)
 public abstract class ToolbarGroupView extends AbstractView<ToolbarGroupView.ActionDelegate> {
 
-    public abstract void setVisibleMainPanel(boolean visible);
+    /**
+     * Changes visible state of item's panel of the view.
+     *
+     * @param visible
+     *         <code>true</code> the panel will be shown, <code>false</code> it will not
+     */
+    public abstract void setVisibleItemsPanel(boolean visible);
 
+    /**
+     * Adds a toolbar item widget on the view.
+     *
+     * @param toolbarItem
+     *         toolbar item that need to be added
+     */
     public abstract void addItem(@Nonnull ToolbarItemPresenter toolbarItem);
 
+    /** Rotate fold/unfold icon on the view. */
     public abstract void rotateIcon();
 
+    /** Reset default view of the fold/unfold icon on the view. */
     public abstract void defaultIcon();
 
     public interface ActionDelegate extends AbstractView.ActionDelegate {
+        /** Performs some actions in response to a user's clicking on the main panel of the view. */
         void onItemClicked();
     }
 

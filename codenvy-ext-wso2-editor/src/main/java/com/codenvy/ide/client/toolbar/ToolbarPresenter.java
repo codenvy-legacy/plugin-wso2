@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * The presenter that provides a business logic of tool bar. It provides an ability to work with all elements which it contains.
+ * The presenter that provides a business logic of toolbar. It provides an ability to add a toolbar item.
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
@@ -52,6 +52,14 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
         this.states = new HashSet<>();
     }
 
+    /**
+     * Adds a new toolbar group. It is impossible to add a few group with the same id.
+     *
+     * @param groupId
+     *         unique id of group
+     * @param title
+     *         title that need to be shown on the toolbar
+     */
     public void addGroup(@Nonnull String groupId, @Nonnull String title) {
         if (groups.containsKey(groupId)) {
             Log.error(getClass(), "Group with the ID " + groupId + " was already registered.");
@@ -61,6 +69,21 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
         groups.put(groupId, toolbarFactory.createToolbarGroupPresenter(title));
     }
 
+    /**
+     * Adds a new toolbar item. It is impossible to add a item when a parent group hasn't been created or when adding editor state has
+     * already added.
+     *
+     * @param groupId
+     *         parent group id
+     * @param title
+     *         title that need to be shown on the toolbar
+     * @param tooltip
+     *         tooltip that need to be shown on the toolbar
+     * @param icon
+     *         icon that need to be shown on the toolbar
+     * @param editorState
+     *         editor state that will be set when one is clicking on this item
+     */
     public void addItem(@Nonnull String groupId,
                         @Nonnull String title,
                         @Nonnull String tooltip,

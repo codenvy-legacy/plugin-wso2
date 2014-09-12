@@ -17,18 +17,17 @@
 package com.codenvy.ide.client.toolbar.item;
 
 import com.codenvy.ide.client.mvp.AbstractView;
-import com.google.inject.ImplementedBy;
 
 /**
+ * The abstract view that represents the toolbar item visual part of the widget.
+ *
  * @author Andrey Plotnikov
  */
-@ImplementedBy(ToolbarItemViewImpl.class)
 public abstract class ToolbarItemView extends AbstractView<ToolbarItemView.ActionDelegate> {
 
     public interface ActionDelegate extends AbstractView.ActionDelegate {
-
+        /** Performs some actions in response to a user's clicking on the main panel of the view. */
         void onItemClicked();
-
     }
 
 }

@@ -22,14 +22,18 @@ import com.google.inject.ImplementedBy;
 import javax.annotation.Nonnull;
 
 /**
- * The abstract view's representation of tool bar. It provides an ability to show all elements which tool bar contains.
+ * The abstract view's representation of tool bar. It provides an ability to a toolbar group.
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
 @ImplementedBy(ToolbarViewImpl.class)
 public abstract class ToolbarView extends AbstractView<AbstractView.ActionDelegate> {
-
+    /**
+     * Adds a toolbar group on the view.
+     *
+     * @param toolbarGroup
+     *         toolbar group that needs to be added
+     */
     public abstract void addGroup(@Nonnull ToolbarGroupPresenter toolbarGroup);
-
 }
