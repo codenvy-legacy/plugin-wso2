@@ -856,262 +856,262 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     String jiraIncludeInactive();
 
     @Key("toolbar.connector.jira.addAttachmentToIssueId.title")
-    String jiraAddAttachmentToIssueIdTitle();
+    String toolbarJiraAddAttachmentToIssueIdTitle();
 
     @Key("toolbar.connector.jira.createFilter.title")
-    String jiraCreateFilterTitle();
+    String toolbarJiraCreateFilterTitle();
 
     @Key("toolbar.connector.jira.createIssue.title")
-    String jiraCreateIssueTitle();
+    String toolbarJiraCreateIssueTitle();
 
     @Key("toolbar.connector.jira.deleteAvatarForProject.title")
-    String jiraDeleteAvatarForProjectTitle();
+    String toolbarJiraDeleteAvatarForProjectTitle();
 
     @Key("toolbar.connector.jira.deleteComment.title")
-    String jiraDeleteCommentTitle();
+    String toolbarJiraDeleteCommentTitle();
 
     @Key("toolbar.connector.jira.deleteFilter.title")
-    String jiraDeleteFilterTitle();
+    String toolbarJiraDeleteFilterTitle();
 
     @Key("toolbar.connector.jira.getDashboard.title")
-    String jiraGetDashboardTitle();
+    String toolbarJiraGetDashboardTitle();
 
     @Key("toolbar.connector.jira.doTransition.title")
-    String jiraDoTransitionTitle();
+    String toolbarJiraDoTransitionTitle();
 
     @Key("toolbar.connector.jira.getAvatarsForProject.title")
-    String jiraGetAvatarsForProjectTitle();
+    String toolbarJiraGetAvatarsForProjectTitle();
 
     @Key("toolbar.connector.jira.getComments.title")
-    String jiraGetCommentsTitle();
+    String toolbarJiraGetCommentsTitle();
 
     @Key("toolbar.connector.jira.getComponentsOfProject.title")
-    String jiraGetComponentsOfProjectTitle();
+    String toolbarJiraGetComponentsOfProjectTitle();
 
     @Key("toolbar.connector.jira.getDashboardById.title")
-    String jiraGetDashboardByIdTitle();
+    String toolbarJiraGetDashboardByIdTitle();
 
     @Key("toolbar.connector.jira.getFavouriteFilters.title")
-    String jiraGetFavouriteFiltersTitle();
+    String toolbarJiraGetFavouriteFiltersTitle();
 
     @Key("toolbar.connector.jira.getFilterById.title")
-    String jiraGetFilterByIdTitle();
+    String toolbarJiraGetFilterByIdTitle();
 
     @Key("toolbar.connector.jira.getGroup.title")
-    String jiraGetGroupTitle();
+    String toolbarJiraGetGroupTitle();
 
     @Key("toolbar.connector.jira.getIssue.title")
-    String jiraGetIssueTitle();
+    String toolbarJiraGetIssueTitle();
 
     @Key("toolbar.connector.jira.getIssuePriorityes.title")
-    String jiraGetIssuePrioritiesTitle();
+    String toolbarJiraGetIssuePrioritiesTitle();
 
     @Key("toolbar.connector.jira.getIssuePriorityById.title")
-    String jiraGetIssuePriorityByIdTitle();
+    String toolbarJiraGetIssuePriorityByIdTitle();
 
     @Key("toolbar.connector.jira.getIssueTypeById.title")
-    String jiraGetIssueTypeByIdTitle();
+    String toolbarJiraGetIssueTypeByIdTitle();
 
     @Key("toolbar.connector.jira.getIssueTypes.title")
-    String jiraGetIssueTypesTitle();
+    String toolbarJiraGetIssueTypesTitle();
 
     @Key("toolbar.connector.jira.getIssuesForUser.title")
-    String jiraGetIssuesForUserTitle();
+    String toolbarJiraGetIssuesForUserTitle();
 
     @Key("toolbar.connector.jira.getProject.title")
-    String jiraGetProjectTitle();
+    String toolbarJiraGetProjectTitle();
 
     @Key("toolbar.connector.jira.getRolesByIdOfProject.title")
-    String jiraGetRolesByIdOfProjectTitle();
+    String toolbarJiraGetRolesByIdOfProjectTitle();
 
     @Key("toolbar.connector.jira.getRolesOfProject.title")
-    String jiraGetRolesOfProjectTitle();
+    String toolbarJiraGetRolesOfProjectTitle();
 
     @Key("toolbar.connector.jira.getStatusesOfProject.title")
-    String jiraGetStatusesOfProjectTitle();
+    String toolbarJiraGetStatusesOfProjectTitle();
 
     @Key("toolbar.connector.jira.getTransitions.title")
-    String jiraGetTransitionsTitle();
+    String toolbarJiraGetTransitionsTitle();
 
     @Key("toolbar.connector.jira.getUser.title")
-    String jiraGetUserTitle();
+    String toolbarJiraGetUserTitle();
 
     @Key("toolbar.connector.jira.getUserAssignableProject.title")
-    String jiraGetUserAssignableProjectsTitle();
+    String toolbarJiraGetUserAssignableProjectsTitle();
 
     @Key("toolbar.connector.jira.getUserPermissions.title")
-    String jiraGetUserPermissionsTitle();
+    String toolbarJiraGetUserPermissionsTitle();
 
     @Key("toolbar.connector.jira.getVersionsOfProject.title")
-    String jiraGetVersionsOfProjectTitle();
+    String toolbarJiraGetVersionsOfProjectTitle();
 
     @Key("toolbar.connector.jira.getVotesForIssue.title")
-    String jiraGetVotesForIssueTitle();
+    String toolbarJiraGetVotesForIssueTitle();
 
     @Key("toolbar.connector.jira.init.title")
-    String jiraInitTitle();
+    String toolbarJiraInitTitle();
 
     @Key("toolbar.connector.jira.postComment.title")
-    String jiraPostCommentTitle();
+    String toolbarJiraPostCommentTitle();
 
     @Key("toolbar.connector.jira.searchAssignableUser.title")
-    String jiraSearchAssignableUserTitle();
+    String toolbarJiraSearchAssignableUserTitle();
 
     @Key("toolbar.connector.jira.searchAssignableUserMultiProject.title")
-    String jiraSearchAssignableUserMultiProjectTitle();
+    String toolbarJiraSearchAssignableUserMultiProjectTitle();
 
     @Key("toolbar.connector.jira.searchIssueViewableUsers.title")
-    String jiraSearchIssueViewableUsersTitle();
+    String toolbarJiraSearchIssueViewableUsersTitle();
 
     @Key("toolbar.connector.jira.searchJira.title")
-    String jiraSearchJiraTitle();
+    String toolbarJiraSearchJiraTitle();
 
     @Key("toolbar.connector.jira.searchUser.title")
-    String jiraSearchUserTitle();
+    String toolbarJiraSearchUserTitle();
 
     @Key("toolbar.connector.jira.setActorsToRoleOfProject.title")
-    String jiraSetActorsToRoleOfProjectTitle();
+    String toolbarJiraSetActorsToRoleOfProjectTitle();
 
     @Key("toolbar.connector.jira.updateComment.title")
-    String jiraUpdateCommentTitle();
+    String toolbarJiraUpdateCommentTitle();
 
     @Key("toolbar.connector.jira.updateFilterById.title")
-    String jiraUpdateFilterByIdTitle();
+    String toolbarJiraUpdateFilterByIdTitle();
 
     @Key("toolbar.connector.jira.updateIssue.title")
-    String jiraUpdateIssueTitle();
+    String toolbarJiraUpdateIssueTitle();
 
     @Key("toolbar.connector.jira.updateIssueAssignee.title")
-    String jiraUpdateIssueAssigneeTitle();
+    String toolbarJiraUpdateIssueAssigneeTitle();
 
     @Key("toolbar.connector.jira.addAttachmentToIssueId.tooltip")
-    String jiraAddAttachmentToIssueIdTooltip();
+    String toolbarJiraAddAttachmentToIssueIdTooltip();
 
     @Key("toolbar.connector.jira.createFilter.tooltip")
-    String jiraCreateFilterTooltip();
+    String toolbarJiraCreateFilterTooltip();
 
     @Key("toolbar.connector.jira.createIssue.tooltip")
-    String jiraCreateIssueTooltip();
+    String toolbarJiraCreateIssueTooltip();
 
     @Key("toolbar.connector.jira.deleteAvatarForProject.tooltip")
-    String jiraDeleteAvatarForProjectTooltip();
+    String toolbarJiraDeleteAvatarForProjectTooltip();
 
     @Key("toolbar.connector.jira.deleteComment.tooltip")
-    String jiraDeleteCommentTooltip();
+    String toolbarJiraDeleteCommentTooltip();
 
     @Key("toolbar.connector.jira.deleteFilter.tooltip")
-    String jiraDeleteFilterTooltip();
+    String toolbarJiraDeleteFilterTooltip();
 
     @Key("toolbar.connector.jira.getDashboard.tooltip")
-    String jiraGetDashboardTooltip();
+    String toolbarJiraGetDashboardTooltip();
 
     @Key("toolbar.connector.jira.doTransition.tooltip")
-    String jiraDoTransitionTooltip();
+    String toolbarJiraDoTransitionTooltip();
 
     @Key("toolbar.connector.jira.getAvatarsForProject.tooltip")
-    String jiraGetAvatarsForProjectTooltip();
+    String toolbarJiraGetAvatarsForProjectTooltip();
 
     @Key("toolbar.connector.jira.getComments.tooltip")
-    String jiraGetCommentsTooltip();
+    String toolbarJiraGetCommentsTooltip();
 
     @Key("toolbar.connector.jira.getComponentsOfProject.tooltip")
-    String jiraGetComponentsOfProjectTooltip();
+    String toolbarJiraGetComponentsOfProjectTooltip();
 
     @Key("toolbar.connector.jira.getDashboardById.tooltip")
-    String jiraGetDashboardByIdTooltip();
+    String toolbarJiraGetDashboardByIdTooltip();
 
     @Key("toolbar.connector.jira.getFavouriteFilters.tooltip")
-    String jiraGetFavouriteFiltersTooltip();
+    String toolbarJiraGetFavouriteFiltersTooltip();
 
     @Key("toolbar.connector.jira.getFilterById.tooltip")
-    String jiraGetFilterByIdTooltip();
+    String toolbarJiraGetFilterByIdTooltip();
 
     @Key("toolbar.connector.jira.getGroup.tooltip")
-    String jiraGetGroupTooltip();
+    String toolbarJiraGetGroupTooltip();
 
     @Key("toolbar.connector.jira.getIssue.tooltip")
-    String jiraGetIssueTooltip();
+    String toolbarJiraGetIssueTooltip();
 
     @Key("toolbar.connector.jira.getIssuePriorityes.tooltip")
-    String jiraGetIssuePrioritiesTooltip();
+    String toolbarJiraGetIssuePrioritiesTooltip();
 
     @Key("toolbar.connector.jira.getIssuePriorityById.tooltip")
-    String jiraGetIssuePriorityByIdTooltip();
+    String toolbarJiraGetIssuePriorityByIdTooltip();
 
     @Key("toolbar.connector.jira.getIssueTypeById.tooltip")
-    String jiraGetIssueTypeByIdTooltip();
+    String toolbarJiraGetIssueTypeByIdTooltip();
 
     @Key("toolbar.connector.jira.getIssueTypes.tooltip")
-    String jiraGetIssueTypesTooltip();
+    String toolbarJiraGetIssueTypesTooltip();
 
     @Key("toolbar.connector.jira.getIssuesForUser.tooltip")
-    String jiraGetIssuesForUserTooltip();
+    String toolbarJiraGetIssuesForUserTooltip();
 
     @Key("toolbar.connector.jira.getProject.tooltip")
-    String jiraGetProjectTooltip();
+    String toolbarJiraGetProjectTooltip();
 
     @Key("toolbar.connector.jira.getRolesByIdOfProject.tooltip")
-    String jiraGetRolesByIdOfProjectTooltip();
+    String toolbarJiraGetRolesByIdOfProjectTooltip();
 
     @Key("toolbar.connector.jira.getRolesOfProject.tooltip")
-    String jiraGetRolesOfProjectTooltip();
+    String toolbarJiraGetRolesOfProjectTooltip();
 
     @Key("toolbar.connector.jira.getStatusesOfProject.tooltip")
-    String jiraGetStatusesOfProjectTooltip();
+    String toolbarJiraGetStatusesOfProjectTooltip();
 
     @Key("toolbar.connector.jira.getTransitions.tooltip")
-    String jiraGetTransitionsTooltip();
+    String toolbarJiraGetTransitionsTooltip();
 
     @Key("toolbar.connector.jira.getUser.tooltip")
-    String jiraGetUserTooltip();
+    String toolbarJiraGetUserTooltip();
 
     @Key("toolbar.connector.jira.getUserAssignableProject.tooltip")
-    String jiraGetUserAssignableProjectsTooltip();
+    String toolbarJiraGetUserAssignableProjectsTooltip();
 
     @Key("toolbar.connector.jira.getUserPermissions.tooltip")
-    String jiraGetUserPermissionsTooltip();
+    String toolbarJiraGetUserPermissionsTooltip();
 
     @Key("toolbar.connector.jira.getVersionsOfProject.tooltip")
-    String jiraGetVersionsOfProjectTooltip();
+    String toolbarJiraGetVersionsOfProjectTooltip();
 
     @Key("toolbar.connector.jira.getVotesForIssue.tooltip")
-    String jiraGetVotesForIssueTooltip();
+    String toolbarJiraGetVotesForIssueTooltip();
 
     @Key("toolbar.connector.jira.init.tooltip")
-    String jiraInitTooltip();
+    String toolbarJiraInitTooltip();
 
     @Key("toolbar.connector.jira.postComment.tooltip")
-    String jiraPostCommentTooltip();
+    String toolbarJiraPostCommentTooltip();
 
     @Key("toolbar.connector.jira.searchAssignableUser.tooltip")
-    String jiraSearchAssignableUserTooltip();
+    String toolbarJiraSearchAssignableUserTooltip();
 
     @Key("toolbar.connector.jira.searchAssignableUserMultiProject.tooltip")
-    String jiraSearchAssignableUserMultiProjectTooltip();
+    String toolbarJiraSearchAssignableUserMultiProjectTooltip();
 
     @Key("toolbar.connector.jira.searchIssueViewableUsers.tooltip")
-    String jiraSearchIssueViewableUsersTooltip();
+    String toolbarJiraSearchIssueViewableUsersTooltip();
 
     @Key("toolbar.connector.jira.searchJira.tooltip")
-    String jiraSearchJiraTooltip();
+    String toolbarJiraSearchJiraTooltip();
 
     @Key("toolbar.connector.jira.searchUser.tooltip")
-    String jiraSearchUserTooltip();
+    String toolbarJiraSearchUserTooltip();
 
     @Key("toolbar.connector.jira.setActorsToRoleOfProject.tooltip")
-    String jiraSetActorsToRoleOfProjectTooltip();
+    String toolbarJiraSetActorsToRoleOfProjectTooltip();
 
     @Key("toolbar.connector.jira.updateComment.tooltip")
-    String jiraUpdateCommentTooltip();
+    String toolbarJiraUpdateCommentTooltip();
 
     @Key("toolbar.connector.jira.updateFilterById.tooltip")
-    String jiraUpdateFilterByIdTooltip();
+    String toolbarJiraUpdateFilterByIdTooltip();
 
     @Key("toolbar.connector.jira.updateIssue.tooltip")
-    String jiraUpdateIssueTooltip();
+    String toolbarJiraUpdateIssueTooltip();
 
     @Key("toolbar.connector.jira.updateIssueAssignee.tooltip")
-    String jiraUpdateIssueAssigneeTooltip();
+    String toolbarJiraUpdateIssueAssigneeTooltip();
 
     @Key("propertiespanel.connector.twitter.destroyStatus.consumerKey")
     String twitterConsumerKey();
@@ -1186,124 +1186,124 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     String twitterMessage();
 
     @Key("toolbar.connector.twitter.destroyStatus.title")
-    String twitterDestroyStatusTitle();
+    String toolbarTwitterDestroyStatusTitle();
 
     @Key("toolbar.connector.twitter.getClothesTrends.title")
-    String twitterGetClosesTrendsTitle();
+    String toolbarTwitterGetClosesTrendsTitle();
 
     @Key("toolbar.connector.twitter.getDirectMessages.title")
-    String twitterGetDirectMessagesTitle();
+    String toolbarTwitterGetDirectMessagesTitle();
 
     @Key("toolbar.connector.twitter.getFollowers.title")
-    String twitterGetFollowersTitle();
+    String toolbarTwitterGetFollowersTitle();
 
     @Key("toolbar.connector.twitter.getFollowersIds.title")
-    String twitterGetFollowersIdsTitle();
+    String toolbarTwitterGetFollowersIdsTitle();
 
     @Key("toolbar.connector.twitter.getFriends.title")
-    String twitterGetFriendsTitle();
+    String toolbarTwitterGetFriendsTitle();
 
     @Key("toolbar.connector.twitter.getFriendsIds.title")
-    String twitterGetFriendsIdsTitle();
+    String toolbarTwitterGetFriendsIdsTitle();
 
     @Key("toolbar.connector.twitter.getHomeTimeLine.title")
-    String twitterGetHomeTimeLineTitle();
+    String toolbarTwitterGetHomeTimeLineTitle();
 
     @Key("toolbar.connector.twitter.getMentionsTimeLine.title")
-    String twitterGetMentionsTimeLineTitle();
+    String toolbarTwitterGetMentionsTimeLineTitle();
 
     @Key("toolbar.connector.twitter.getRetweetsOfMine.title")
-    String twitterGetRetweetsOfMineTitle();
+    String toolbarTwitterGetRetweetsOfMineTitle();
 
     @Key("toolbar.connector.twitter.getSentDirectMessage.title")
-    String twitterGetSentDirectMessageTitle();
+    String toolbarTwitterGetSentDirectMessageTitle();
 
     @Key("toolbar.connector.twitter.getTopTrendPlaces.title")
-    String twitterGetTopTrendPlacesTitle();
+    String toolbarTwitterGetTopTrendPlacesTitle();
 
     @Key("toolbar.connector.twitter.getUserTimeLine.title")
-    String twitterGetUserTimeLineTitle();
+    String toolbarTwitterGetUserTimeLineTitle();
 
     @Key("toolbar.connector.twitter.initTwitter.title")
-    String twitterInitTitle();
+    String toolbarTwitterInitTitle();
 
     @Key("toolbar.connector.twitter.retweet.title")
-    String twitterRetweetTitle();
+    String toolbarTwitterRetweetTitle();
 
     @Key("toolbar.connector.twitter.searchTwitter.title")
-    String twitterSearchTitle();
+    String toolbarTwitterSearchTitle();
 
     @Key("toolbar.connector.twitter.searchPlaces.title")
-    String twitterSearchPlacesTitle();
+    String toolbarTwitterSearchPlacesTitle();
 
     @Key("toolbar.connector.twitter.sendDirectMessage.title")
-    String twitterSendDirectMessageTitle();
+    String toolbarTwitterSendDirectMessageTitle();
 
     @Key("toolbar.connector.twitter.showStatus.title")
-    String twitterShowStatusTitle();
+    String toolbarTwitterShowStatusTitle();
 
     @Key("toolbar.connector.twitter.updateStatus.title")
-    String twitterUpdateStatusTitle();
+    String toolbarTwitterUpdateStatusTitle();
 
     @Key("toolbar.connector.twitter.destroyStatus.tooltip")
-    String twitterDestroyStatusTooltip();
+    String toolbarTwitterDestroyStatusTooltip();
 
     @Key("toolbar.connector.twitter.getClothesTrends.tooltip")
-    String twitterGetClosesTrendsTooltip();
+    String toolbarTwitterGetClosesTrendsTooltip();
 
     @Key("toolbar.connector.twitter.getDirectMessages.tooltip")
-    String twitterGetDirectMessagesTooltip();
+    String toolbarTwitterGetDirectMessagesTooltip();
 
     @Key("toolbar.connector.twitter.getFollowers.tooltip")
-    String twitterGetFollowersTooltip();
+    String toolbarTwitterGetFollowersTooltip();
 
     @Key("toolbar.connector.twitter.getFollowersIds.tooltip")
-    String twitterGetFollowersIdsTooltip();
+    String toolbarTwitterGetFollowersIdsTooltip();
 
     @Key("toolbar.connector.twitter.getFriends.tooltip")
-    String twitterGetFriendsTooltip();
+    String toolbarTwitterGetFriendsTooltip();
 
     @Key("toolbar.connector.twitter.getFriendsIds.tooltip")
-    String twitterGetFriendsIdsTooltip();
+    String toolbarTwitterGetFriendsIdsTooltip();
 
     @Key("toolbar.connector.twitter.getHomeTimeLine.tooltip")
-    String twitterGetHomeTimeLineTooltip();
+    String toolbarTwitterGetHomeTimeLineTooltip();
 
     @Key("toolbar.connector.twitter.getMentionsTimeLine.tooltip")
-    String twitterGetMentionsTimeLineTooltip();
+    String toolbarTwitterGetMentionsTimeLineTooltip();
 
     @Key("toolbar.connector.twitter.getRetweetsOfMine.tooltip")
-    String twitterGetRetweetsOfMineTooltip();
+    String toolbarTwitterGetRetweetsOfMineTooltip();
 
     @Key("toolbar.connector.twitter.getSentDirectMessage.tooltip")
-    String twitterGetSentDirectMessageTooltip();
+    String toolbarTwitterGetSentDirectMessageTooltip();
 
     @Key("toolbar.connector.twitter.getTopTrendPlaces.tooltip")
-    String twitterGetTopTrendPlacesTooltip();
+    String toolbarTwitterGetTopTrendPlacesTooltip();
 
     @Key("toolbar.connector.twitter.getUserTimeLine.tooltip")
-    String twitterGetUserTimeLineTooltip();
+    String toolbarTwitterGetUserTimeLineTooltip();
 
     @Key("toolbar.connector.twitter.initTwitter.tooltip")
-    String twitterInitTooltip();
+    String toolbarTwitterInitTooltip();
 
     @Key("toolbar.connector.twitter.retweet.tooltip")
-    String twitterRetweetTooltip();
+    String toolbarTwitterRetweetTooltip();
 
     @Key("toolbar.connector.twitter.searchTwitter.tooltip")
-    String twitterSearchTooltip();
+    String toolbarTwitterSearchTooltip();
 
     @Key("toolbar.connector.twitter.searchPlaces.tooltip")
-    String twitterSearchPlacesTooltip();
+    String toolbarTwitterSearchPlacesTooltip();
 
     @Key("toolbar.connector.twitter.sendDirectMessage.tooltip")
-    String twitterSendDirectMessageTooltip();
+    String toolbarTwitterSendDirectMessageTooltip();
 
     @Key("toolbar.connector.twitter.showStatus.tooltip")
-    String twitterShowStatusTooltip();
+    String toolbarTwitterShowStatusTooltip();
 
     @Key("toolbar.connector.twitter.updateStatus.tooltip")
-    String twitterUpdateStatusTooltip();
+    String toolbarTwitterUpdateStatusTooltip();
 
     @Key("toolbar.group.mediators")
     String toolbarGroupMediators();
@@ -1327,64 +1327,64 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     String spreadsheetCreateSpreadsheetWorksheetCount();
 
     @Key("toolbar.connector.spreadsheet.create.spreadsheet.tooltip")
-    String spreadsheetCreateSpreadsheetTooltip();
+    String toolbarSpreadsheetCreateSpreadsheetTooltip();
 
     @Key("toolbar.connector.spreadsheet.create.worksheet.tooltip")
-    String spreadsheetCreateWorksheetTooltip();
+    String toolbarSpreadsheetCreateWorksheetTooltip();
 
     @Key("toolbar.connector.spreadsheet.delete.worksheet.tooltip")
-    String spreadsheetDeleteWorksheetTooltip();
+    String toolbarSpreadsheetDeleteWorksheetTooltip();
 
     @Key("toolbar.connector.spreadsheet.getAllCells.tooltip")
-    String spreadsheetGetAllCellsTooltip();
+    String toolbarSpreadsheetGetAllCellsTooltip();
 
     @Key("toolbar.connector.spreadsheet.getAllCellsCSV.tooltip")
-    String spreadsheetGetAllCellsCSVTooltip();
+    String toolbarSpreadsheetGetAllCellsCSVTooltip();
 
     @Key("toolbar.connector.spreadsheet.getAllSpreadsheets.tooltip")
-    String spreadsheetGetAllSpreadsheetsTooltip();
+    String toolbarSpreadsheetGetAllSpreadsheetsTooltip();
 
     @Key("toolbar.connector.spreadsheet.getAuthors.tooltip")
-    String spreadsheetGetAuthorsTooltip();
+    String toolbarSpreadsheetGetAuthorsTooltip();
 
     @Key("toolbar.connector.spreadsheet.getCellRange.tooltip")
-    String spreadsheetGetCellRangeTooltip();
+    String toolbarSpreadsheetGetCellRangeTooltip();
 
     @Key("toolbar.connector.spreadsheet.getCellRangeCSV.tooltip")
-    String spreadsheetGetCellRangeCSVTooltip();
+    String toolbarSpreadsheetGetCellRangeCSVTooltip();
 
     @Key("toolbar.connector.spreadsheet.getColumnHeaders.tooltip")
-    String spreadsheetGetColumnHeadersTooltip();
+    String toolbarSpreadsheetGetColumnHeadersTooltip();
 
     @Key("toolbar.connector.spreadsheet.getSpreadsheetByTitle.tooltip")
-    String spreadsheetGetSpreadsheetByTitleTooltip();
+    String toolbarSpreadsheetGetSpreadsheetByTitleTooltip();
 
     @Key("toolbar.connector.spreadsheet.getWorksheetByTitle.tooltip")
-    String spreadsheetGetWorksheetByTitleTooltip();
+    String toolbarSpreadsheetGetWorksheetByTitleTooltip();
 
     @Key("toolbar.connector.spreadsheet.importCSV.tooltip")
-    String spreadsheetImportCSVTooltip();
+    String toolbarSpreadsheetImportCSVTooltip();
 
     @Key("toolbar.connector.spreadsheet.init.tooltip")
-    String spreadsheetInitTooltip();
+    String toolbarSpreadsheetInitTooltip();
 
     @Key("toolbar.connector.spreadsheet.purgeWorksheet.tooltip")
-    String spreadsheetPurgeWorksheetTooltip();
+    String toolbarSpreadsheetPurgeWorksheetTooltip();
 
     @Key("toolbar.connector.spreadsheet.searchCell.tooltip")
-    String spreadsheetSearchCellTooltip();
+    String toolbarSpreadsheetSearchCellTooltip();
 
     @Key("toolbar.connector.spreadsheet.setRow.tooltip")
-    String spreadsheetSetRowTooltip();
+    String toolbarSpreadsheetSetRowTooltip();
 
     @Key("toolbar.connector.spreadsheet.updateWorksheetMeta.tooltip")
-    String spreadsheetUpdateWorksheetMetaTooltip();
+    String toolbarSpreadsheetUpdateWorksheetMetaTooltip();
 
     @Key("toolbar.connector.spreadsheet.usernameLogin.tooltip")
-    String spreadsheetUsernameLoginTooltip();
+    String toolbarSpreadsheetUsernameLoginTooltip();
 
     @Key("toolbar.connector.spreadsheet.getAllWorksheets.tooltip")
-    String spreadsheetGetAllWorksheetsTooltip();
+    String toolbarSpreadsheetGetAllWorksheetsTooltip();
 
     @Key("propertiespanel.connector.spreadsheet.createWorksheet.worksheetName")
     String spreadsheetCreateWorksheetWorksheetName();
@@ -1465,62 +1465,62 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     String toolbarGroupGoogleSpreadsheetConnector();
 
     @Key("toolbar.connector.spreadsheet.create.spreadsheet.title")
-    String spreadsheetCreateSpreadsheetTitle();
+    String toolbarSpreadsheetCreateSpreadsheetTitle();
 
     @Key("toolbar.connector.spreadsheet.create.worksheet.title")
-    String spreadsheetCreateWorksheetTitle();
+    String toolbarSpreadsheetCreateWorksheetTitle();
 
     @Key("toolbar.connector.spreadsheet.delete.worksheet.title")
-    String spreadsheetDeleteWorksheetTitle();
+    String toolbarSpreadsheetDeleteWorksheetTitle();
 
     @Key("toolbar.connector.spreadsheet.getAllCells.title")
-    String spreadsheetGetAllCellsTitle();
+    String toolbarSpreadsheetGetAllCellsTitle();
 
     @Key("toolbar.connector.spreadsheet.getAllCellsCSV.title")
-    String spreadsheetGetAllCellsCSVTitle();
+    String toolbarSpreadsheetGetAllCellsCSVTitle();
 
     @Key("toolbar.connector.spreadsheet.getAllSpreadsheets.title")
-    String spreadsheetGetAllSpreadsheetsTitle();
+    String toolbarSpreadsheetGetAllSpreadsheetsTitle();
 
     @Key("toolbar.connector.spreadsheet.getAllWorksheets.title")
-    String spreadsheetGetAllWorksheetsTitle();
+    String toolbarSpreadsheetGetAllWorksheetsTitle();
 
     @Key("toolbar.connector.spreadsheet.getAuthors.title")
-    String spreadsheetGetAuthorsTitle();
+    String toolbarSpreadsheetGetAuthorsTitle();
 
     @Key("toolbar.connector.spreadsheet.getCellRange.title")
-    String spreadsheetGetCellRangeTitle();
+    String toolbarSpreadsheetGetCellRangeTitle();
 
     @Key("toolbar.connector.spreadsheet.getCellRangeCSV.title")
-    String spreadsheetGetCellRangeCSVTitle();
+    String toolbarSpreadsheetGetCellRangeCSVTitle();
 
     @Key("toolbar.connector.spreadsheet.getColumnHeaders.title")
-    String spreadsheetGetColumnHeadersTitle();
+    String toolbarSpreadsheetGetColumnHeadersTitle();
 
     @Key("toolbar.connector.spreadsheet.getSpreadsheetByTitle.title")
-    String spreadsheetGetSpreadsheetByTitleTitle();
+    String toolbarSpreadsheetGetSpreadsheetByTitleTitle();
 
     @Key("toolbar.connector.spreadsheet.getWorksheetByTitle.title")
-    String spreadsheetGetWorksheetByTitleTitle();
+    String toolbarSpreadsheetGetWorksheetByTitleTitle();
 
     @Key("toolbar.connector.spreadsheet.importCSV.title")
-    String spreadsheetImportCSVTitle();
+    String toolbarSpreadsheetImportCSVTitle();
 
     @Key("toolbar.connector.spreadsheet.init.title")
-    String spreadsheetInitTitle();
+    String toolbarSpreadsheetInitTitle();
 
     @Key("toolbar.connector.spreadsheet.purgeWorksheet.title")
-    String spreadsheetPurgeWorksheetTitle();
+    String toolbarSpreadsheetPurgeWorksheetTitle();
 
     @Key("toolbar.connector.spreadsheet.searchCell.title")
-    String spreadsheetSearchCellTitle();
+    String toolbarspreadsheetSearchCellTitle();
 
     @Key("toolbar.connector.spreadsheet.setRow.title")
-    String spreadsheetSetRowTitle();
+    String toolbarSpreadsheetSetRowTitle();
 
     @Key("toolbar.connector.spreadsheet.updateWorksheetMeta.title")
-    String spreadsheetUpdateWorksheetMetaTitle();
+    String toolbarSpreadsheetUpdateWorksheetMetaTitle();
 
     @Key("toolbar.connector.spreadsheet.usernameLogin.title")
-    String spreadsheetUsernameLoginTitle();
+    String toolbarSpreadsheetUsernameLoginTitle();
 }

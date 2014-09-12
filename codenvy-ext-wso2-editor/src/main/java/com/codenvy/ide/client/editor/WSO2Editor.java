@@ -2312,510 +2312,510 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
         toolbar.addGroup(ToolbarGroupIds.JIRA_CONNECTORS, localizationConstant.toolbarGroupJiraConnector());
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraAddAttachmentToIssueIdTitle(),
-                        localizationConstant.jiraAddAttachmentToIssueIdTooltip(),
+                        localizationConstant.toolbarJiraAddAttachmentToIssueIdTitle(),
+                        localizationConstant.toolbarJiraAddAttachmentToIssueIdTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.ADD_ATTACHMENT_TO_ISSUE_ID);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraCreateFilterTitle(),
-                        localizationConstant.jiraCreateFilterTooltip(),
+                        localizationConstant.toolbarJiraCreateFilterTitle(),
+                        localizationConstant.toolbarJiraCreateFilterTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.CREATE_FILTER);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraCreateIssueTitle(),
-                        localizationConstant.jiraCreateIssueTooltip(),
+                        localizationConstant.toolbarJiraCreateIssueTitle(),
+                        localizationConstant.toolbarJiraCreateIssueTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.CREATE_ISSUE);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraDeleteAvatarForProjectTitle(),
-                        localizationConstant.jiraDeleteAvatarForProjectTooltip(),
+                        localizationConstant.toolbarJiraDeleteAvatarForProjectTitle(),
+                        localizationConstant.toolbarJiraDeleteAvatarForProjectTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.DELETE_AVATAR_FOR_PROJECT);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraDeleteCommentTitle(),
-                        localizationConstant.jiraDeleteCommentTooltip(),
+                        localizationConstant.toolbarJiraDeleteCommentTitle(),
+                        localizationConstant.toolbarJiraDeleteCommentTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.DELETE_COMMENT);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraDeleteFilterTitle(),
-                        localizationConstant.jiraDeleteFilterTooltip(),
+                        localizationConstant.toolbarJiraDeleteFilterTitle(),
+                        localizationConstant.toolbarJiraDeleteFilterTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.DELETE_FILTER);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetDashboardTitle(),
-                        localizationConstant.jiraGetDashboardTooltip(),
+                        localizationConstant.toolbarJiraGetDashboardTitle(),
+                        localizationConstant.toolbarJiraGetDashboardTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_DASHBOARD);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraDoTransitionTitle(),
-                        localizationConstant.jiraDoTransitionTooltip(),
+                        localizationConstant.toolbarJiraDoTransitionTitle(),
+                        localizationConstant.toolbarJiraDoTransitionTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.DO_TRANSITION);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetAvatarsForProjectTitle(),
-                        localizationConstant.jiraGetAvatarsForProjectTooltip(),
+                        localizationConstant.toolbarJiraGetAvatarsForProjectTitle(),
+                        localizationConstant.toolbarJiraGetAvatarsForProjectTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_AVATARS_FOR_PROJECT);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetCommentsTitle(),
-                        localizationConstant.jiraGetCommentsTooltip(),
+                        localizationConstant.toolbarJiraGetCommentsTitle(),
+                        localizationConstant.toolbarJiraGetCommentsTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_COMMENTS);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetComponentsOfProjectTitle(),
-                        localizationConstant.jiraGetComponentsOfProjectTooltip(),
+                        localizationConstant.toolbarJiraGetComponentsOfProjectTitle(),
+                        localizationConstant.toolbarJiraGetComponentsOfProjectTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_COMPONENTS_OF_PROJECT);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetDashboardByIdTitle(),
-                        localizationConstant.jiraGetDashboardByIdTooltip(),
+                        localizationConstant.toolbarJiraGetDashboardByIdTitle(),
+                        localizationConstant.toolbarJiraGetDashboardByIdTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_DASHBOARD_BY_ID);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetFavouriteFiltersTitle(),
-                        localizationConstant.jiraGetFavouriteFiltersTooltip(),
+                        localizationConstant.toolbarJiraGetFavouriteFiltersTitle(),
+                        localizationConstant.toolbarJiraGetFavouriteFiltersTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_FAVOURITE_FILTERS);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetFilterByIdTitle(),
-                        localizationConstant.jiraGetFilterByIdTooltip(),
+                        localizationConstant.toolbarJiraGetFilterByIdTitle(),
+                        localizationConstant.toolbarJiraGetFilterByIdTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_FILTER_BY_ID);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetGroupTitle(),
-                        localizationConstant.jiraGetGroupTooltip(),
+                        localizationConstant.toolbarJiraGetGroupTitle(),
+                        localizationConstant.toolbarJiraGetGroupTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_GROUP);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetIssueTitle(),
-                        localizationConstant.jiraGetIssueTooltip(),
+                        localizationConstant.toolbarJiraGetIssueTitle(),
+                        localizationConstant.toolbarJiraGetIssueTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_ISSUE);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetIssuePrioritiesTitle(),
-                        localizationConstant.jiraGetIssuePrioritiesTooltip(),
+                        localizationConstant.toolbarJiraGetIssuePrioritiesTitle(),
+                        localizationConstant.toolbarJiraGetIssuePrioritiesTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_ISSUE_PRIORITIES);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetIssuePriorityByIdTitle(),
-                        localizationConstant.jiraGetIssuePriorityByIdTooltip(),
+                        localizationConstant.toolbarJiraGetIssuePriorityByIdTitle(),
+                        localizationConstant.toolbarJiraGetIssuePriorityByIdTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_ISSUE_PRIORITY_BY_ID);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetIssueTypeByIdTitle(),
-                        localizationConstant.jiraGetIssueTypeByIdTooltip(),
+                        localizationConstant.toolbarJiraGetIssueTypeByIdTitle(),
+                        localizationConstant.toolbarJiraGetIssueTypeByIdTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_ISSUE_TYPE_BY_ID);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetIssueTypesTitle(),
-                        localizationConstant.jiraGetIssueTypesTooltip(),
+                        localizationConstant.toolbarJiraGetIssueTypesTitle(),
+                        localizationConstant.toolbarJiraGetIssueTypesTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_ISSUE_TYPES);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetIssuesForUserTitle(),
-                        localizationConstant.jiraGetIssuesForUserTooltip(),
+                        localizationConstant.toolbarJiraGetIssuesForUserTitle(),
+                        localizationConstant.toolbarJiraGetIssuesForUserTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_ISSUES_FOR_USER);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetProjectTitle(),
-                        localizationConstant.jiraGetProjectTooltip(),
+                        localizationConstant.toolbarJiraGetProjectTitle(),
+                        localizationConstant.toolbarJiraGetProjectTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_PROJECT);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetRolesByIdOfProjectTitle(),
-                        localizationConstant.jiraGetRolesByIdOfProjectTooltip(),
+                        localizationConstant.toolbarJiraGetRolesByIdOfProjectTitle(),
+                        localizationConstant.toolbarJiraGetRolesByIdOfProjectTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_ROLES_BY_ID_OF_PROJECT);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetRolesOfProjectTitle(),
-                        localizationConstant.jiraGetRolesOfProjectTooltip(),
+                        localizationConstant.toolbarJiraGetRolesOfProjectTitle(),
+                        localizationConstant.toolbarJiraGetRolesOfProjectTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_ROLES_OF_PROJECT);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetStatusesOfProjectTitle(),
-                        localizationConstant.jiraGetStatusesOfProjectTooltip(),
+                        localizationConstant.toolbarJiraGetStatusesOfProjectTitle(),
+                        localizationConstant.toolbarJiraGetStatusesOfProjectTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_STATUSES_OF_PROJECT);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetTransitionsTitle(),
-                        localizationConstant.jiraGetTransitionsTooltip(),
+                        localizationConstant.toolbarJiraGetTransitionsTitle(),
+                        localizationConstant.toolbarJiraGetTransitionsTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_TRANSITIONS);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetUserTitle(),
-                        localizationConstant.jiraGetUserTooltip(),
+                        localizationConstant.toolbarJiraGetUserTitle(),
+                        localizationConstant.toolbarJiraGetUserTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_USER);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetUserAssignableProjectsTitle(),
-                        localizationConstant.jiraGetUserAssignableProjectsTooltip(),
+                        localizationConstant.toolbarJiraGetUserAssignableProjectsTitle(),
+                        localizationConstant.toolbarJiraGetUserAssignableProjectsTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_USER_ASSIGNABLE_PROJECT);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetUserPermissionsTitle(),
-                        localizationConstant.jiraGetUserPermissionsTooltip(),
+                        localizationConstant.toolbarJiraGetUserPermissionsTitle(),
+                        localizationConstant.toolbarJiraGetUserPermissionsTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_USER_PERMISSIONS);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetVersionsOfProjectTitle(),
-                        localizationConstant.jiraGetVersionsOfProjectTooltip(),
+                        localizationConstant.toolbarJiraGetVersionsOfProjectTitle(),
+                        localizationConstant.toolbarJiraGetVersionsOfProjectTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_VERSIONS_OF_PROJECT);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraGetVotesForIssueTitle(),
-                        localizationConstant.jiraGetVotesForIssueTooltip(),
+                        localizationConstant.toolbarJiraGetVotesForIssueTitle(),
+                        localizationConstant.toolbarJiraGetVotesForIssueTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.GET_VOTES_FOR_ISSUE);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraInitTitle(),
-                        localizationConstant.jiraInitTooltip(),
+                        localizationConstant.toolbarJiraInitTitle(),
+                        localizationConstant.toolbarJiraInitTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.INIT);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraPostCommentTitle(),
-                        localizationConstant.jiraPostCommentTooltip(),
+                        localizationConstant.toolbarJiraPostCommentTitle(),
+                        localizationConstant.toolbarJiraPostCommentTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.POST_COMMENT);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraSearchAssignableUserTitle(),
-                        localizationConstant.jiraSearchAssignableUserTooltip(),
+                        localizationConstant.toolbarJiraSearchAssignableUserTitle(),
+                        localizationConstant.toolbarJiraSearchAssignableUserTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.SEARCH_ASSIGNABLE_USER);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraSearchAssignableUserMultiProjectTitle(),
-                        localizationConstant.jiraSearchAssignableUserMultiProjectTooltip(),
+                        localizationConstant.toolbarJiraSearchAssignableUserMultiProjectTitle(),
+                        localizationConstant.toolbarJiraSearchAssignableUserMultiProjectTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.SEARCH_ASSIGNABLE_USER_MULTI_PROJECT);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraSearchIssueViewableUsersTitle(),
-                        localizationConstant.jiraSearchIssueViewableUsersTooltip(),
+                        localizationConstant.toolbarJiraSearchIssueViewableUsersTitle(),
+                        localizationConstant.toolbarJiraSearchIssueViewableUsersTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.SEARCH_ISSUE_VIEWABLE_USERS);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraSearchJiraTitle(),
-                        localizationConstant.jiraSearchJiraTooltip(),
+                        localizationConstant.toolbarJiraSearchJiraTitle(),
+                        localizationConstant.toolbarJiraSearchJiraTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.SEARCH_JIRA);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraSearchUserTitle(),
-                        localizationConstant.jiraSearchUserTooltip(),
+                        localizationConstant.toolbarJiraSearchUserTitle(),
+                        localizationConstant.toolbarJiraSearchUserTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.SEARCH_USER);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraSetActorsToRoleOfProjectTitle(),
-                        localizationConstant.jiraSetActorsToRoleOfProjectTooltip(),
+                        localizationConstant.toolbarJiraSetActorsToRoleOfProjectTitle(),
+                        localizationConstant.toolbarJiraSetActorsToRoleOfProjectTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.SET_ACTORS_TO_ROLE_OF_PROJECT);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraUpdateCommentTitle(),
-                        localizationConstant.jiraUpdateCommentTooltip(),
+                        localizationConstant.toolbarJiraUpdateCommentTitle(),
+                        localizationConstant.toolbarJiraUpdateCommentTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.ADD_ATTACHMENT_TO_ISSUE_ID);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraUpdateCommentTitle(),
-                        localizationConstant.jiraUpdateCommentTooltip(),
+                        localizationConstant.toolbarJiraUpdateCommentTitle(),
+                        localizationConstant.toolbarJiraUpdateCommentTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.UPDATE_COMMENT);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraUpdateFilterByIdTitle(),
-                        localizationConstant.jiraUpdateFilterByIdTooltip(),
+                        localizationConstant.toolbarJiraUpdateFilterByIdTitle(),
+                        localizationConstant.toolbarJiraUpdateFilterByIdTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.UPDATE_FILTER_BY_ID_JIRA);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraUpdateIssueTitle(),
-                        localizationConstant.jiraUpdateIssueTooltip(),
+                        localizationConstant.toolbarJiraUpdateIssueTitle(),
+                        localizationConstant.toolbarJiraUpdateIssueTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.UPDATE_ISSUE);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        localizationConstant.jiraUpdateIssueAssigneeTitle(),
-                        localizationConstant.jiraUpdateIssueAssigneeTooltip(),
+                        localizationConstant.toolbarJiraUpdateIssueAssigneeTitle(),
+                        localizationConstant.toolbarJiraUpdateIssueAssigneeTooltip(),
                         resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.UPDATE_ISSUE_ASSIGNEE);
 
         toolbar.addGroup(ToolbarGroupIds.TWITTER_CONNECTORS, localizationConstant.toolbarGroupTwitterConnector());
 
         toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
-                        localizationConstant.twitterDestroyStatusTitle(),
-                        localizationConstant.twitterDestroyStatusTooltip(),
+                        localizationConstant.toolbarTwitterDestroyStatusTitle(),
+                        localizationConstant.toolbarTwitterDestroyStatusTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.DESTROY_STATUS);
 
         toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
-                        localizationConstant.twitterGetClosesTrendsTitle(),
-                        localizationConstant.twitterGetClosesTrendsTooltip(),
+                        localizationConstant.toolbarTwitterGetClosesTrendsTitle(),
+                        localizationConstant.toolbarTwitterGetClosesTrendsTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.GET_CLOTHES_TRENDS);
 
         toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
-                        localizationConstant.twitterGetDirectMessagesTitle(),
-                        localizationConstant.twitterGetDirectMessagesTooltip(),
+                        localizationConstant.toolbarTwitterGetDirectMessagesTitle(),
+                        localizationConstant.toolbarTwitterGetDirectMessagesTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.GET_DIRECT_MESSAGES);
 
         toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
-                        localizationConstant.twitterGetFollowersTitle(),
-                        localizationConstant.twitterGetFollowersTooltip(),
+                        localizationConstant.toolbarTwitterGetFollowersTitle(),
+                        localizationConstant.toolbarTwitterGetFollowersTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.GET_FOLLOWERS);
 
         toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
-                        localizationConstant.twitterGetFollowersIdsTitle(),
-                        localizationConstant.twitterGetFollowersIdsTooltip(),
+                        localizationConstant.toolbarTwitterGetFollowersIdsTitle(),
+                        localizationConstant.toolbarTwitterGetFollowersIdsTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.GET_FOLLOWERS_IDS);
 
         toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
-                        localizationConstant.twitterGetFriendsTitle(),
-                        localizationConstant.twitterGetFriendsTooltip(),
+                        localizationConstant.toolbarTwitterGetFriendsTitle(),
+                        localizationConstant.toolbarTwitterGetFriendsTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.GET_FRIENDS);
 
         toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
-                        localizationConstant.twitterGetFriendsIdsTitle(),
-                        localizationConstant.twitterGetFriendsIdsTooltip(),
+                        localizationConstant.toolbarTwitterGetFriendsIdsTitle(),
+                        localizationConstant.toolbarTwitterGetFriendsIdsTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.GET_FRIENDS_IDS);
 
         toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
-                        localizationConstant.twitterGetHomeTimeLineTitle(),
-                        localizationConstant.twitterGetHomeTimeLineTooltip(),
+                        localizationConstant.toolbarTwitterGetHomeTimeLineTitle(),
+                        localizationConstant.toolbarTwitterGetHomeTimeLineTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.GET_HOME_TIME_LINE);
 
         toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
-                        localizationConstant.twitterGetMentionsTimeLineTitle(),
-                        localizationConstant.twitterGetMentionsTimeLineTooltip(),
+                        localizationConstant.toolbarTwitterGetMentionsTimeLineTitle(),
+                        localizationConstant.toolbarTwitterGetMentionsTimeLineTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.GET_MENTIONS_TIME_LINE);
 
         toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
-                        localizationConstant.twitterGetRetweetsOfMineTitle(),
-                        localizationConstant.twitterGetRetweetsOfMineTooltip(),
+                        localizationConstant.toolbarTwitterGetRetweetsOfMineTitle(),
+                        localizationConstant.toolbarTwitterGetRetweetsOfMineTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.GET_RETWEETS_OF_MINE);
 
         toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
-                        localizationConstant.twitterGetSentDirectMessageTitle(),
-                        localizationConstant.twitterGetSentDirectMessageTooltip(),
+                        localizationConstant.toolbarTwitterGetSentDirectMessageTitle(),
+                        localizationConstant.toolbarTwitterGetSentDirectMessageTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.GET_SENT_DIRECT_MESSAGE);
 
         toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
-                        localizationConstant.twitterGetTopTrendPlacesTitle(),
-                        localizationConstant.twitterGetTopTrendPlacesTooltip(),
+                        localizationConstant.toolbarTwitterGetTopTrendPlacesTitle(),
+                        localizationConstant.toolbarTwitterGetTopTrendPlacesTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.GET_TOP_TREND_PLACES);
 
         toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
-                        localizationConstant.twitterGetUserTimeLineTitle(),
-                        localizationConstant.twitterGetUserTimeLineTooltip(),
+                        localizationConstant.toolbarTwitterGetUserTimeLineTitle(),
+                        localizationConstant.toolbarTwitterGetUserTimeLineTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.GET_USER_TIME_LINE);
 
         toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
-                        localizationConstant.twitterInitTitle(),
-                        localizationConstant.twitterInitTooltip(),
+                        localizationConstant.toolbarTwitterInitTitle(),
+                        localizationConstant.toolbarTwitterInitTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.INIT);
 
         toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
-                        localizationConstant.twitterRetweetTitle(),
-                        localizationConstant.twitterRetweetTooltip(),
+                        localizationConstant.toolbarTwitterRetweetTitle(),
+                        localizationConstant.toolbarTwitterRetweetTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.RETWEET);
 
         toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
-                        localizationConstant.twitterSearchTitle(),
-                        localizationConstant.twitterSearchTooltip(),
+                        localizationConstant.toolbarTwitterSearchTitle(),
+                        localizationConstant.toolbarTwitterSearchTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.SEARCH);
 
         toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
-                        localizationConstant.twitterSearchPlacesTitle(),
-                        localizationConstant.twitterSearchPlacesTooltip(),
+                        localizationConstant.toolbarTwitterSearchPlacesTitle(),
+                        localizationConstant.toolbarTwitterSearchPlacesTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.SEARCH_PLACES);
 
         toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
-                        localizationConstant.twitterSendDirectMessageTitle(),
-                        localizationConstant.twitterSendDirectMessageTooltip(),
+                        localizationConstant.toolbarTwitterSendDirectMessageTitle(),
+                        localizationConstant.toolbarTwitterSendDirectMessageTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.SEND_DIRECT_MESSAGE);
 
         toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
-                        localizationConstant.twitterShowStatusTitle(),
-                        localizationConstant.twitterShowStatusTooltip(),
+                        localizationConstant.toolbarTwitterShowStatusTitle(),
+                        localizationConstant.toolbarTwitterShowStatusTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.SHOW_STATUS);
 
         toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
-                        localizationConstant.twitterUpdateStatusTitle(),
-                        localizationConstant.twitterUpdateStatusTooltip(),
+                        localizationConstant.toolbarTwitterUpdateStatusTitle(),
+                        localizationConstant.toolbarTwitterUpdateStatusTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.UPDATE_STATUS);
 
         toolbar.addGroup(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS, localizationConstant.toolbarGroupGoogleSpreadsheetConnector());
 
         toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
-                        localizationConstant.spreadsheetCreateSpreadsheetTitle(),
-                        localizationConstant.spreadsheetCreateSpreadsheetTooltip(),
+                        localizationConstant.toolbarSpreadsheetCreateSpreadsheetTitle(),
+                        localizationConstant.toolbarSpreadsheetCreateSpreadsheetTooltip(),
                         resources.googleSpreadsheetToolbar(),
                         GoogleSpreadsheedConnectorCreatingState.CREATING_SPREADSHEET);
 
         toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
-                        localizationConstant.spreadsheetCreateWorksheetTitle(),
-                        localizationConstant.spreadsheetCreateWorksheetTooltip(),
+                        localizationConstant.toolbarSpreadsheetCreateWorksheetTitle(),
+                        localizationConstant.toolbarSpreadsheetCreateWorksheetTooltip(),
                         resources.googleSpreadsheetToolbar(),
                         GoogleSpreadsheedConnectorCreatingState.CREATING_WORKSHEET);
 
         toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
-                        localizationConstant.spreadsheetDeleteWorksheetTitle(),
-                        localizationConstant.spreadsheetDeleteWorksheetTooltip(),
+                        localizationConstant.toolbarSpreadsheetDeleteWorksheetTitle(),
+                        localizationConstant.toolbarSpreadsheetDeleteWorksheetTooltip(),
                         resources.googleSpreadsheetToolbar(),
                         GoogleSpreadsheedConnectorCreatingState.DELETE_WORKSHEET);
 
         toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
-                        localizationConstant.spreadsheetGetAllCellsTitle(),
-                        localizationConstant.spreadsheetGetAllCellsTooltip(),
+                        localizationConstant.toolbarSpreadsheetGetAllCellsTitle(),
+                        localizationConstant.toolbarSpreadsheetGetAllCellsTooltip(),
                         resources.googleSpreadsheetToolbar(),
                         GoogleSpreadsheedConnectorCreatingState.GET_ALL_CELLS);
 
         toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
-                        localizationConstant.spreadsheetGetAllCellsCSVTitle(),
-                        localizationConstant.spreadsheetGetAllCellsCSVTooltip(),
+                        localizationConstant.toolbarSpreadsheetGetAllCellsCSVTitle(),
+                        localizationConstant.toolbarSpreadsheetGetAllCellsCSVTooltip(),
                         resources.googleSpreadsheetToolbar(),
                         GoogleSpreadsheedConnectorCreatingState.GET_ALL_CELLS_CSV);
 
         toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
-                        localizationConstant.spreadsheetGetAllSpreadsheetsTitle(),
-                        localizationConstant.spreadsheetGetAllSpreadsheetsTooltip(),
+                        localizationConstant.toolbarSpreadsheetGetAllSpreadsheetsTitle(),
+                        localizationConstant.toolbarSpreadsheetGetAllSpreadsheetsTooltip(),
                         resources.googleSpreadsheetToolbar(),
                         GoogleSpreadsheedConnectorCreatingState.GET_ALL_SPREADSHEETS);
 
         toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
-                        localizationConstant.spreadsheetGetAllWorksheetsTitle(),
-                        localizationConstant.spreadsheetGetAllWorksheetsTooltip(),
+                        localizationConstant.toolbarSpreadsheetGetAllWorksheetsTitle(),
+                        localizationConstant.toolbarSpreadsheetGetAllWorksheetsTooltip(),
                         resources.googleSpreadsheetToolbar(),
                         GoogleSpreadsheedConnectorCreatingState.GET_ALL_WORKSHEETS);
 
         toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
-                        localizationConstant.spreadsheetGetAuthorsTitle(),
-                        localizationConstant.spreadsheetGetAuthorsTooltip(),
+                        localizationConstant.toolbarSpreadsheetGetAuthorsTitle(),
+                        localizationConstant.toolbarSpreadsheetGetAuthorsTooltip(),
                         resources.googleSpreadsheetToolbar(),
                         GoogleSpreadsheedConnectorCreatingState.GET_AUTHORS);
 
         toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
-                        localizationConstant.spreadsheetGetCellRangeTitle(),
-                        localizationConstant.spreadsheetGetCellRangeTooltip(),
+                        localizationConstant.toolbarSpreadsheetGetCellRangeTitle(),
+                        localizationConstant.toolbarSpreadsheetGetCellRangeTooltip(),
                         resources.googleSpreadsheetToolbar(),
                         GoogleSpreadsheedConnectorCreatingState.GET_CELL_RANGE);
 
         toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
-                        localizationConstant.spreadsheetGetCellRangeCSVTitle(),
-                        localizationConstant.spreadsheetGetCellRangeCSVTooltip(),
+                        localizationConstant.toolbarSpreadsheetGetCellRangeCSVTitle(),
+                        localizationConstant.toolbarSpreadsheetGetCellRangeCSVTooltip(),
                         resources.googleSpreadsheetToolbar(),
                         GoogleSpreadsheedConnectorCreatingState.GET_CELL_RANGE_CSV);
 
         toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
-                        localizationConstant.spreadsheetGetColumnHeadersTitle(),
-                        localizationConstant.spreadsheetGetColumnHeadersTooltip(),
+                        localizationConstant.toolbarSpreadsheetGetColumnHeadersTitle(),
+                        localizationConstant.toolbarSpreadsheetGetColumnHeadersTooltip(),
                         resources.googleSpreadsheetToolbar(),
                         GoogleSpreadsheedConnectorCreatingState.GET_COLUMN_HEADERS);
 
         toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
-                        localizationConstant.spreadsheetGetSpreadsheetByTitleTitle(),
-                        localizationConstant.spreadsheetGetSpreadsheetByTitleTooltip(),
+                        localizationConstant.toolbarSpreadsheetGetSpreadsheetByTitleTitle(),
+                        localizationConstant.toolbarSpreadsheetGetSpreadsheetByTitleTooltip(),
                         resources.googleSpreadsheetToolbar(),
                         GoogleSpreadsheedConnectorCreatingState.GET_SPREADSHEET_BY_TITLE);
 
         toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
-                        localizationConstant.spreadsheetGetWorksheetByTitleTitle(),
-                        localizationConstant.spreadsheetGetWorksheetByTitleTooltip(),
+                        localizationConstant.toolbarSpreadsheetGetWorksheetByTitleTitle(),
+                        localizationConstant.toolbarSpreadsheetGetWorksheetByTitleTooltip(),
                         resources.googleSpreadsheetToolbar(),
                         GoogleSpreadsheedConnectorCreatingState.GET_WORKSHEET_BY_TITLE);
 
         toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
-                        localizationConstant.spreadsheetImportCSVTitle(),
-                        localizationConstant.spreadsheetImportCSVTooltip(),
+                        localizationConstant.toolbarSpreadsheetImportCSVTitle(),
+                        localizationConstant.toolbarSpreadsheetImportCSVTooltip(),
                         resources.googleSpreadsheetToolbar(),
                         GoogleSpreadsheedConnectorCreatingState.IMPORT_CSV);
 
         toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
-                        localizationConstant.spreadsheetInitTitle(),
-                        localizationConstant.spreadsheetInitTooltip(),
+                        localizationConstant.toolbarSpreadsheetInitTitle(),
+                        localizationConstant.toolbarSpreadsheetInitTooltip(),
                         resources.googleSpreadsheetToolbar(),
                         GoogleSpreadsheedConnectorCreatingState.INIT);
 
         toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
-                        localizationConstant.spreadsheetPurgeWorksheetTitle(),
-                        localizationConstant.spreadsheetPurgeWorksheetTooltip(),
+                        localizationConstant.toolbarSpreadsheetPurgeWorksheetTitle(),
+                        localizationConstant.toolbarSpreadsheetPurgeWorksheetTooltip(),
                         resources.googleSpreadsheetToolbar(),
                         GoogleSpreadsheedConnectorCreatingState.PURGE_WORKSHEET);
 
         toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
-                        localizationConstant.spreadsheetSearchCellTitle(),
-                        localizationConstant.spreadsheetSearchCellTooltip(),
+                        localizationConstant.toolbarspreadsheetSearchCellTitle(),
+                        localizationConstant.toolbarSpreadsheetSearchCellTooltip(),
                         resources.googleSpreadsheetToolbar(),
                         GoogleSpreadsheedConnectorCreatingState.SEARCH_CELL);
 
         toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
-                        localizationConstant.spreadsheetSetRowTitle(),
-                        localizationConstant.spreadsheetSetRowTooltip(),
+                        localizationConstant.toolbarSpreadsheetSetRowTitle(),
+                        localizationConstant.toolbarSpreadsheetSetRowTooltip(),
                         resources.googleSpreadsheetToolbar(),
                         GoogleSpreadsheedConnectorCreatingState.SET_ROW);
 
         toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
-                        localizationConstant.spreadsheetUpdateWorksheetMetaTitle(),
-                        localizationConstant.spreadsheetUpdateWorksheetMetaTooltip(),
+                        localizationConstant.toolbarSpreadsheetUpdateWorksheetMetaTitle(),
+                        localizationConstant.toolbarSpreadsheetUpdateWorksheetMetaTooltip(),
                         resources.googleSpreadsheetToolbar(),
                         GoogleSpreadsheedConnectorCreatingState.UPDATE_WORKSHEET_METADATA);
 
         toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
-                        localizationConstant.spreadsheetUsernameLoginTitle(),
-                        localizationConstant.spreadsheetUsernameLoginTooltip(),
+                        localizationConstant.toolbarSpreadsheetUsernameLoginTitle(),
+                        localizationConstant.toolbarSpreadsheetUsernameLoginTooltip(),
                         resources.googleSpreadsheetToolbar(),
                         GoogleSpreadsheedConnectorCreatingState.USERNAME_LOGIN);
     }
