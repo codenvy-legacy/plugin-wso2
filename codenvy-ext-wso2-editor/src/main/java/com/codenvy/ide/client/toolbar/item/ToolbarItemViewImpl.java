@@ -29,6 +29,8 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
 /**
+ * Provides a graphical representation of the toolbar item.
+ *
  * @author Andrey Plotnikov
  */
 public class ToolbarItemViewImpl extends ToolbarItemView {

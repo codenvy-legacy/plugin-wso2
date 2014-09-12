@@ -53,7 +53,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * The widget that represents a element diagram element on GWT panel.
+ * Provides a graphical representation of the diagram's element.
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
