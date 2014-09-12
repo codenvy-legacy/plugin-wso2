@@ -18,7 +18,6 @@ package com.codenvy.ide.client.elements.widgets.branch;
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
-import com.codenvy.ide.client.elements.widgets.element.ElementView;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
@@ -182,7 +181,7 @@ public class BranchViewImpl extends BranchView {
     }
 
     private void addElementOnView(int x, int y, @Nonnull ElementPresenter element) {
-        ElementView elementView = element.getView();
+        Widget elementView = element.getView();
 
         controller.addWidget(elementView, x, y);
         dragController.makeDraggable(elementView);

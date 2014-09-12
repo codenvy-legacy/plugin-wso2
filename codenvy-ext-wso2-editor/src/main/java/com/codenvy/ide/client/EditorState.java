@@ -15,27 +15,32 @@
  */
 package com.codenvy.ide.client;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import javax.annotation.Nonnull;
 
 /**
  * The class that represents a state of graphical editor. It contains general parameter of available states. The available states will be
  * generated for current graphical editor.
  *
- * @param <T>
- *         type of available editor states
  * @author Andrey Plotnikov
  */
-public class EditorState<T> {
+@Singleton
+public class EditorState {
 
-    private T state;
+    public static final String CREATE_NOTING_STATE = "CREATING_NOTHING";
 
-    public EditorState(T state) {
-        this.state = state;
+    private String state;
+
+    @Inject
+    public EditorState() {
+        resetState();
     }
 
     /** @return current editor state */
     @Nonnull
-    public T getState() {
+    public String getState() {
         return state;
     }
 
@@ -45,8 +50,13 @@ public class EditorState<T> {
      * @param state
      *         state that need to be applied
      */
-    public void setState(@Nonnull T state) {
+    public void setState(@Nonnull String state) {
         this.state = state;
+    }
+
+    /** Reset state of editor to default value. */
+    public void resetState() {
+        this.state = CREATE_NOTING_STATE;
     }
 
 }

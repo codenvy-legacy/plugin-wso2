@@ -23,6 +23,7 @@
 
     <ui:style>
         @eval backgroundColor com.codenvy.ide.api.ui.theme.Style.getPartBackground();
+        @eval tabBackgroundColor com.codenvy.ide.api.ui.theme.Style.getWindowHeaderBackground();
 
         .fullSize {
             width: 100%;
@@ -47,31 +48,31 @@
 
         .buttonHideStyle {
             box-shadow: none;
-            background: #656565;
+            background: tabBackgroundColor;
             float: right;
             margin-right: 5px;
-            border: 0px;
+            border: 0;
         }
 
         .buttonHideStyle:active {
             box-shadow: none;
-            border: 0px;
+            border: 0;
         }
 
         .buttonHideStyle:hover {
-            border-color: #656565;
+            border-color: tabBackgroundColor;
         }
 
         .buttonShowStyle {
             background: backgroundColor;
             float: right;
             margin-right: 5px;
-            border: 0px;
+            border: 0;
         }
 
         .buttonShowStyle:active {
             box-shadow: none;
-            border: 0px;
+            border: 0;
         }
 
         .buttonShowStyle:hover {
@@ -101,16 +102,18 @@
 
     <g:DockLayoutPanel unit="PX" addStyleNames="{style.fullSize}">
 
-        <g:west size="53">
+        <g:west size="275">
             <g:SimpleLayoutPanel ui:field="toolbar" addStyleNames="{style.fullSize}"/>
         </g:west>
 
+        <g:south size="20">
+            <g:FlowPanel>
+                <g:Button ui:field="showBtn" addStyleNames="{style.buttonShowStyle}" visible="false"/>
+            </g:FlowPanel>
+        </g:south>
+
         <g:center>
             <g:SplitLayoutPanel ui:field="splitPanel">
-
-                <g:center>
-                    <g:ScrollPanel ui:field="workspace" addStyleNames="{style.fullSize}"/>
-                </g:center>
 
                 <g:south size="300">
                     <g:FlowPanel>
@@ -125,14 +128,12 @@
                     </g:FlowPanel>
                 </g:south>
 
+                <g:center>
+                    <g:ScrollPanel ui:field="workspace" addStyleNames="{style.fullSize}"/>
+                </g:center>
+
             </g:SplitLayoutPanel>
         </g:center>
-
-        <g:south size="20">
-            <g:FlowPanel>
-                <g:Button ui:field="showBtn" addStyleNames="{style.buttonShowStyle}" visible="false"/>
-            </g:FlowPanel>
-        </g:south>
 
     </g:DockLayoutPanel>
 

@@ -24,8 +24,8 @@ import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
-import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
+import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
+import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -39,6 +39,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * depending on user's changes of properties.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class GetMentionsTimeLineConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<GetMentionsTimeLine> {
 
@@ -243,7 +244,7 @@ public class GetMentionsTimeLineConnectorPresenter extends AbstractConnectorProp
 
     /** {@inheritDoc} */
     @Override
-    public void onSeventhTextBoxValueChanged() {
+    public void onSixthTextBoxValueChanged() {
         element.setPage(view.getSixthTextBoxValue());
 
         notifyListeners();
@@ -251,7 +252,7 @@ public class GetMentionsTimeLineConnectorPresenter extends AbstractConnectorProp
 
     /** {@inheritDoc} */
     @Override
-    public void onSixthTextBoxValueChanged() {
+    public void onSeventhTextBoxValueChanged() {
         element.setSinceId(view.getSeventhTextBoxValue());
 
         notifyListeners();

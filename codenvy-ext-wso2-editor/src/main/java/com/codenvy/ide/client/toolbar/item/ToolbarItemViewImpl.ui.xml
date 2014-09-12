@@ -1,0 +1,61 @@
+<!--
+
+    Copyright 2014 Codenvy, S.A.
+
+    Licensed under the Apache  License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:style>
+        @eval backgroundColor com.codenvy.ide.api.ui.theme.Style.getWindowHeaderBackground();
+        @eval borderColor com.codenvy.ide.api.ui.theme.Style.getPartBackground();
+        @eval selectionBackgroundColor com.codenvy.ide.api.ui.theme.Style.getSelectionBackground();
+
+        .mainPanel {
+            width: 248px;
+            height: 30px;
+            padding: 1px 0 1px 12px;
+            background: backgroundColor;
+            border: 1px groove borderColor;
+            cursor: pointer;
+            margin: 1px 0 1px 0;
+        }
+
+        .mainPanel:hover {
+            background: selectionBackgroundColor;
+            border: 1px groove backgroundColor;
+        }
+
+        .icon {
+            float: left;
+            position: relative;
+            top: 50%;
+            margin-top: -13px;
+        }
+
+        .title {
+            float: left;
+            position: relative;
+            top: 7px;
+            margin-left: 6px;
+        }
+    </ui:style>
+
+    <g:FlowPanel ui:field="panel" addStyleNames="{style.mainPanel}">
+        <g:Image ui:field="icon" addStyleNames="{style.icon}"/>
+        <g:Label ui:field="title" addStyleNames="{style.title}"/>
+    </g:FlowPanel>
+
+</ui:UiBinder>

@@ -17,8 +17,8 @@ package com.codenvy.ide.client.propertiespanel.connectors.base.parameter;
 
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.ValueType;
-import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
+import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
+import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
 import com.google.inject.Inject;
 

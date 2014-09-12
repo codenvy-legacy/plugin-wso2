@@ -15,8 +15,14 @@
  */
 package com.codenvy.ide.client.editor;
 
-import com.codenvy.ide.client.EditorState;
-import com.codenvy.ide.client.State;
+import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
+import com.codenvy.ide.client.constants.EndpointCreatingState;
+import com.codenvy.ide.client.constants.JiraConnectorCreatingState;
+import com.codenvy.ide.client.constants.MediatorCreatingState;
+import com.codenvy.ide.client.constants.SalesForceConnectorCreatingState;
+import com.codenvy.ide.client.constants.ToolbarGroupIds;
+import com.codenvy.ide.client.constants.TwitterConnectorCreatingState;
 import com.codenvy.ide.client.elements.RootElement;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.CreateSpreadsheet;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.CreateWorksheet;
@@ -116,6 +122,12 @@ import com.codenvy.ide.client.elements.connectors.twitter.GetSentDirectMessages;
 import com.codenvy.ide.client.elements.connectors.twitter.GetTopTrendPlaces;
 import com.codenvy.ide.client.elements.connectors.twitter.GetUserTimeLine;
 import com.codenvy.ide.client.elements.connectors.twitter.InitTwitter;
+import com.codenvy.ide.client.elements.connectors.twitter.Retweet;
+import com.codenvy.ide.client.elements.connectors.twitter.SearchPlaces;
+import com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter;
+import com.codenvy.ide.client.elements.connectors.twitter.SendDirectMessage;
+import com.codenvy.ide.client.elements.connectors.twitter.ShowStatus;
+import com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus;
 import com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint;
 import com.codenvy.ide.client.elements.mediators.Call;
 import com.codenvy.ide.client.elements.mediators.CallTemplate;
@@ -133,16 +145,14 @@ import com.codenvy.ide.client.elements.mediators.log.Log;
 import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
 import com.codenvy.ide.client.elements.widgets.element.ElementChangedListener;
 import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
-import com.codenvy.ide.client.inject.EditorFactory;
+import com.codenvy.ide.client.inject.factories.EditorFactory;
+import com.codenvy.ide.client.inject.factories.ElementWidgetFactory;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
-import com.codenvy.ide.client.propertiespanel.addressendpoint.AddressEndpointPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.call.CallPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.calltemplate.CallTemplatePropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.CreateSpreadsheetConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.CreateWorksheetConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.DeleteWorksheetConnectorPresenter;
@@ -196,9 +206,9 @@ import com.codenvy.ide.client.propertiespanel.connectors.jira.GetVersionsOfProje
 import com.codenvy.ide.client.propertiespanel.connectors.jira.GetVotesForIssueConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.InitAbstractConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.PostCommentConnectorPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchAbstractConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchAssignableUserConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchAssignableUserMultiProjectConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchIssueViewAbleUsersConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchUserConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.SetActorsToRoleOfProjectConnectorPresenter;
@@ -220,7 +230,6 @@ import com.codenvy.ide.client.propertiespanel.connectors.salesforce.QueryConnect
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.QueryMoreConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.ResetPasswordConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.RetrieveConnectorPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.SearchConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.SendEmailConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.SendEmailMessageConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.SetPasswordConnectorPresenter;
@@ -241,19 +250,28 @@ import com.codenvy.ide.client.propertiespanel.connectors.twitter.GetSentDirectMe
 import com.codenvy.ide.client.propertiespanel.connectors.twitter.GetTopTrendPlacesConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.twitter.GetUserTimeLineConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.twitter.InitTwitterConnectorPresenter;
-import com.codenvy.ide.client.propertiespanel.empty.EmptyPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.enrich.EnrichPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.filter.FilterPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.header.HeaderPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.log.LogPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.loopback.LoopBackPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.payloadfactory.PayloadFactoryPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.property.PropertyPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.respond.RespondPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.root.RootPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.send.SendPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.sequence.SequencePropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.switchmediator.SwitchPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.RetweetConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.SearchPlacesConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.SearchTwitterConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.SendDirectMessageConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.ShowStatusConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.twitter.UpdateStatusConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.endpoints.address.AddressEndpointPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.general.empty.EmptyPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.general.root.RootPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.call.CallPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.calltemplate.CallTemplatePropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.enrich.EnrichPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.filter.FilterPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.header.HeaderPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.log.LogPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.loopback.LoopBackPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.payloadfactory.PayloadFactoryPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.property.PropertyPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.respond.RespondPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.send.SendPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.sequence.SequencePropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.switchmediator.SwitchPropertiesPanelPresenter;
 import com.codenvy.ide.client.toolbar.ToolbarPresenter;
 import com.codenvy.ide.client.validators.ConnectionsValidator;
 import com.codenvy.ide.client.validators.InnerElementsValidator;
@@ -266,7 +284,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.State.CREATING_NOTHING;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.AvailableConfigs;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion;
@@ -376,19 +393,15 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
     private final List<EditorChangeListener> listeners;
 
     @Inject
-    public WSO2Editor(WSO2EditorView view, EditorFactory editorFactory, RootElement rootElement) {
+    public WSO2Editor(WSO2EditorView view, ElementWidgetFactory elementWidgetFactory, ToolbarPresenter toolbar, RootElement rootElement) {
         super(view);
 
         this.listeners = new ArrayList<>();
-
-        EditorState<State> state = new EditorState<>(CREATING_NOTHING);
-
+        this.toolbar = toolbar;
         this.rootElement = rootElement;
 
-        this.rootElementPresenter = editorFactory.createElementPresenter(state, rootElement);
+        this.rootElementPresenter = elementWidgetFactory.createElementPresenter(rootElement);
         this.rootElementPresenter.addElementChangedListener(this);
-
-        this.toolbar = editorFactory.createToolbar(state);
     }
 
     @Inject
@@ -467,7 +480,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                  SearchAssignableUserConnectorPresenter searchAssignableUserConnectorPresenter,
                                                  SearchAssignableUserMultiProjectConnectorPresenter searchAssignableUserMultiPresenter,
                                                  SearchIssueViewAbleUsersConnectorPresenter searchIssueViewAbleUsersConnectorPresenter,
-                                                 SearchAbstractConnectorPresenter searchJiraConnectorPresenter,
+                                                 SearchConnectorPresenter searchJiraConnectorPresenter,
                                                  SearchUserConnectorPresenter searchUserConnectorPresenter,
                                                  SetActorsToRoleOfProjectConnectorPresenter setActorsToRoleOfProjectConnectorPresenter,
                                                  UpdateCommentConnectorPresenter updateCommentConnectorPresenter,
@@ -487,6 +500,12 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                  GetSentDirectMessagesConnectorPresenter getSentDirectMessagesConnectorPresenter,
                                                  GetTopTrendPlacesConnectorPresenter getTopTrendPlacesConnectorPresenter,
                                                  GetUserTimeLineConnectorPresenter getUserTimeLineConnectorPresenter,
+                                                 RetweetConnectorPresenter retweetConnectorPresenter,
+                                                 SearchTwitterConnectorPresenter searchTwitterConnectorPresenter,
+                                                 SearchPlacesConnectorPresenter searchPlacesConnectorPresenter,
+                                                 SendDirectMessageConnectorPresenter sendDirectMessageConnectorPresenter,
+                                                 ShowStatusConnectorPresenter showStatusConnectorPresenter,
+                                                 UpdateStatusConnectorPresenter updateStatusConnectorPresenter,
                                                  InitTwitterConnectorPresenter initTwitterConnectorPresenter,
                                                  CreateSpreadsheetConnectorPresenter createSpreadsheetConnectorPresenter,
                                                  CreateWorksheetConnectorPresenter createWorksheetConnectorPresenter,
@@ -616,7 +635,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
         propertiesPanelManager.register(SendEmail.class, sendEmailConnectorPresenter);
         sendEmailConnectorPresenter.addListener(this);
 
-        propertiesPanelManager.register(Search.class, searchConnectorPresenter);
+        propertiesPanelManager.register(SearchJira.class, searchConnectorPresenter);
         searchConnectorPresenter.addListener(this);
 
         propertiesPanelManager.register(Retrieve.class, retrieveConnectorPresenter);
@@ -728,7 +747,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
         searchAssignableUserMultiPresenter.addListener(this);
 
         propertiesPanelManager.register(SearchIssueViewableUsers.class, searchIssueViewAbleUsersConnectorPresenter);
-        searchAssignableUserConnectorPresenter.addListener(this);
+        searchIssueViewAbleUsersConnectorPresenter.addListener(this);
 
         propertiesPanelManager.register(SearchJira.class, searchJiraConnectorPresenter);
         searchJiraConnectorPresenter.addListener(this);
@@ -792,6 +811,24 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
 
         propertiesPanelManager.register(InitTwitter.class, initTwitterConnectorPresenter);
         initTwitterConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(Retweet.class, retweetConnectorPresenter);
+        retweetConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(SearchTwitter.class, searchTwitterConnectorPresenter);
+        searchTwitterConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(SearchPlaces.class, searchPlacesConnectorPresenter);
+        searchPlacesConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(SendDirectMessage.class, sendDirectMessageConnectorPresenter);
+        sendDirectMessageConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(ShowStatus.class, showStatusConnectorPresenter);
+        showStatusConnectorPresenter.addListener(this);
+
+        propertiesPanelManager.register(UpdateStatus.class, updateStatusConnectorPresenter);
+        updateStatusConnectorPresenter.addListener(this);
 
         propertiesPanelManager.register(CreateSpreadsheet.class, createSpreadsheetConnectorPresenter);
         createSpreadsheetConnectorPresenter.addListener(this);
@@ -991,6 +1028,70 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                   SetPassword.ELEMENT_NAME,
                                                                                   UnDelete.ELEMENT_NAME,
                                                                                   Upset.ELEMENT_NAME,
+                                                                                  AddAttachmentToIssueId.ELEMENT_NAME,
+                                                                                  CreateFilter.ELEMENT_NAME,
+                                                                                  CreateIssue.ELEMENT_NAME,
+                                                                                  DeleteAvatarForProject.ELEMENT_NAME,
+                                                                                  DeleteComment.ELEMENT_NAME,
+                                                                                  DeleteFilter.ELEMENT_NAME,
+                                                                                  GetDashboard.ELEMENT_NAME,
+                                                                                  DoTransition.ELEMENT_NAME,
+                                                                                  GetAvatarsForProject.ELEMENT_NAME,
+                                                                                  GetComments.ELEMENT_NAME,
+                                                                                  GetComponentsOfProject.ELEMENT_NAME,
+                                                                                  GetDashboardById.ELEMENT_NAME,
+                                                                                  GetFavouriteFilters.ELEMENT_NAME,
+                                                                                  GetFilterById.ELEMENT_NAME,
+                                                                                  GetGroup.ELEMENT_NAME,
+                                                                                  GetIssue.ELEMENT_NAME,
+                                                                                  GetIssuePriorities.ELEMENT_NAME,
+                                                                                  GetIssuePriorityById.ELEMENT_NAME,
+                                                                                  GetIssueTypeById.ELEMENT_NAME,
+                                                                                  GetIssueTypes.ELEMENT_NAME,
+                                                                                  GetIssuesForUser.ELEMENT_NAME,
+                                                                                  GetProject.ELEMENT_NAME,
+                                                                                  GetRolesByIdOfProject.ELEMENT_NAME,
+                                                                                  GetRolesOfProject.ELEMENT_NAME,
+                                                                                  GetStatusesOfProject.ELEMENT_NAME,
+                                                                                  GetTransitions.ELEMENT_NAME,
+                                                                                  GetUser.ELEMENT_NAME,
+                                                                                  GetUserAssignableProjects.ELEMENT_NAME,
+                                                                                  GetUserPermissions.ELEMENT_NAME,
+                                                                                  GetVersionsOfProject.ELEMENT_NAME,
+                                                                                  GetVotesForIssue.ELEMENT_NAME,
+                                                                                  InitJira.ELEMENT_NAME,
+                                                                                  PostComment.ELEMENT_NAME,
+                                                                                  SearchAssignableUser.ELEMENT_NAME,
+                                                                                  SearchAssignableUserMultiProject.ELEMENT_NAME,
+                                                                                  SearchIssueViewableUsers.ELEMENT_NAME,
+                                                                                  SearchJira.ELEMENT_NAME,
+                                                                                  SearchUser.ELEMENT_NAME,
+                                                                                  SetActorsToRoleOfProject.ELEMENT_NAME,
+                                                                                  UpdateComment.ELEMENT_NAME,
+                                                                                  UpdateFilterById.ELEMENT_NAME,
+                                                                                  UpdateIssue.ELEMENT_NAME,
+                                                                                  UpdateIssueAssignee.ELEMENT_NAME,
+                                                                                  DestroyStatus.ELEMENT_NAME,
+                                                                                  GetClosesTrends.ELEMENT_NAME,
+                                                                                  GetDirectMessages.ELEMENT_NAME,
+                                                                                  GetFollowers.ELEMENT_NAME,
+                                                                                  GetFollowersIds.ELEMENT_NAME,
+                                                                                  GetFriends.ELEMENT_NAME,
+                                                                                  GetFriendsIds.ELEMENT_NAME,
+                                                                                  GetHomeTimeLine.ELEMENT_NAME,
+                                                                                  GetMentionsTimeLine.ELEMENT_NAME,
+                                                                                  GetRetweetsOfMine.ELEMENT_NAME,
+                                                                                  GetSentDirectMessages.ELEMENT_NAME,
+                                                                                  GetTopTrendPlaces.ELEMENT_NAME,
+                                                                                  GetUserTimeLine.ELEMENT_NAME,
+                                                                                  InitTwitter.ELEMENT_NAME,
+                                                                                  Retweet.ELEMENT_NAME,
+                                                                                  SearchTwitter.ELEMENT_NAME,
+                                                                                  SearchPlaces.ELEMENT_NAME,
+                                                                                  SendDirectMessage.ELEMENT_NAME,
+                                                                                  ShowStatus.ELEMENT_NAME,
+                                                                                  UpdateStatus.ELEMENT_NAME,
+                                                                                  Upset.ELEMENT_NAME,
                                                                                   CreateSpreadsheet.ELEMENT_NAME,
                                                                                   CreateWorksheet.ELEMENT_NAME,
                                                                                   DeleteWorksheet.ELEMENT_NAME,
@@ -1048,6 +1149,70 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                    SetPassword.ELEMENT_NAME,
                                                                                    UnDelete.ELEMENT_NAME,
                                                                                    Upset.ELEMENT_NAME,
+                                                                                   AddAttachmentToIssueId.ELEMENT_NAME,
+                                                                                   CreateFilter.ELEMENT_NAME,
+                                                                                   CreateIssue.ELEMENT_NAME,
+                                                                                   DeleteAvatarForProject.ELEMENT_NAME,
+                                                                                   DeleteComment.ELEMENT_NAME,
+                                                                                   DeleteFilter.ELEMENT_NAME,
+                                                                                   GetDashboard.ELEMENT_NAME,
+                                                                                   DoTransition.ELEMENT_NAME,
+                                                                                   GetAvatarsForProject.ELEMENT_NAME,
+                                                                                   GetComments.ELEMENT_NAME,
+                                                                                   GetComponentsOfProject.ELEMENT_NAME,
+                                                                                   GetDashboardById.ELEMENT_NAME,
+                                                                                   GetFavouriteFilters.ELEMENT_NAME,
+                                                                                   GetFilterById.ELEMENT_NAME,
+                                                                                   GetGroup.ELEMENT_NAME,
+                                                                                   GetIssue.ELEMENT_NAME,
+                                                                                   GetIssuePriorities.ELEMENT_NAME,
+                                                                                   GetIssuePriorityById.ELEMENT_NAME,
+                                                                                   GetIssueTypeById.ELEMENT_NAME,
+                                                                                   GetIssueTypes.ELEMENT_NAME,
+                                                                                   GetIssuesForUser.ELEMENT_NAME,
+                                                                                   GetProject.ELEMENT_NAME,
+                                                                                   GetRolesByIdOfProject.ELEMENT_NAME,
+                                                                                   GetRolesOfProject.ELEMENT_NAME,
+                                                                                   GetStatusesOfProject.ELEMENT_NAME,
+                                                                                   GetTransitions.ELEMENT_NAME,
+                                                                                   GetUser.ELEMENT_NAME,
+                                                                                   GetUserAssignableProjects.ELEMENT_NAME,
+                                                                                   GetUserPermissions.ELEMENT_NAME,
+                                                                                   GetVersionsOfProject.ELEMENT_NAME,
+                                                                                   GetVotesForIssue.ELEMENT_NAME,
+                                                                                   InitJira.ELEMENT_NAME,
+                                                                                   PostComment.ELEMENT_NAME,
+                                                                                   SearchAssignableUser.ELEMENT_NAME,
+                                                                                   SearchAssignableUserMultiProject.ELEMENT_NAME,
+                                                                                   SearchIssueViewableUsers.ELEMENT_NAME,
+                                                                                   SearchJira.ELEMENT_NAME,
+                                                                                   SearchUser.ELEMENT_NAME,
+                                                                                   SetActorsToRoleOfProject.ELEMENT_NAME,
+                                                                                   UpdateComment.ELEMENT_NAME,
+                                                                                   UpdateFilterById.ELEMENT_NAME,
+                                                                                   UpdateIssue.ELEMENT_NAME,
+                                                                                   UpdateIssueAssignee.ELEMENT_NAME,
+                                                                                   DestroyStatus.ELEMENT_NAME,
+                                                                                   GetClosesTrends.ELEMENT_NAME,
+                                                                                   GetDirectMessages.ELEMENT_NAME,
+                                                                                   GetFollowers.ELEMENT_NAME,
+                                                                                   GetFollowersIds.ELEMENT_NAME,
+                                                                                   GetFriends.ELEMENT_NAME,
+                                                                                   GetFriendsIds.ELEMENT_NAME,
+                                                                                   GetHomeTimeLine.ELEMENT_NAME,
+                                                                                   GetMentionsTimeLine.ELEMENT_NAME,
+                                                                                   GetRetweetsOfMine.ELEMENT_NAME,
+                                                                                   GetSentDirectMessages.ELEMENT_NAME,
+                                                                                   GetTopTrendPlaces.ELEMENT_NAME,
+                                                                                   GetUserTimeLine.ELEMENT_NAME,
+                                                                                   InitTwitter.ELEMENT_NAME,
+                                                                                   Retweet.ELEMENT_NAME,
+                                                                                   SearchTwitter.ELEMENT_NAME,
+                                                                                   SearchPlaces.ELEMENT_NAME,
+                                                                                   SendDirectMessage.ELEMENT_NAME,
+                                                                                   ShowStatus.ELEMENT_NAME,
+                                                                                   UpdateStatus.ELEMENT_NAME,
+                                                                                   Upset.ELEMENT_NAME,
                                                                                    CreateSpreadsheet.ELEMENT_NAME,
                                                                                    CreateWorksheet.ELEMENT_NAME,
                                                                                    DeleteWorksheet.ELEMENT_NAME,
@@ -1104,6 +1269,70 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                           SendEmailMessage.ELEMENT_NAME,
                                                                                           SetPassword.ELEMENT_NAME,
                                                                                           UnDelete.ELEMENT_NAME,
+                                                                                          Upset.ELEMENT_NAME,
+                                                                                          AddAttachmentToIssueId.ELEMENT_NAME,
+                                                                                          CreateFilter.ELEMENT_NAME,
+                                                                                          CreateIssue.ELEMENT_NAME,
+                                                                                          DeleteAvatarForProject.ELEMENT_NAME,
+                                                                                          DeleteComment.ELEMENT_NAME,
+                                                                                          DeleteFilter.ELEMENT_NAME,
+                                                                                          GetDashboard.ELEMENT_NAME,
+                                                                                          DoTransition.ELEMENT_NAME,
+                                                                                          GetAvatarsForProject.ELEMENT_NAME,
+                                                                                          GetComments.ELEMENT_NAME,
+                                                                                          GetComponentsOfProject.ELEMENT_NAME,
+                                                                                          GetDashboardById.ELEMENT_NAME,
+                                                                                          GetFavouriteFilters.ELEMENT_NAME,
+                                                                                          GetFilterById.ELEMENT_NAME,
+                                                                                          GetGroup.ELEMENT_NAME,
+                                                                                          GetIssue.ELEMENT_NAME,
+                                                                                          GetIssuePriorities.ELEMENT_NAME,
+                                                                                          GetIssuePriorityById.ELEMENT_NAME,
+                                                                                          GetIssueTypeById.ELEMENT_NAME,
+                                                                                          GetIssueTypes.ELEMENT_NAME,
+                                                                                          GetIssuesForUser.ELEMENT_NAME,
+                                                                                          GetProject.ELEMENT_NAME,
+                                                                                          GetRolesByIdOfProject.ELEMENT_NAME,
+                                                                                          GetRolesOfProject.ELEMENT_NAME,
+                                                                                          GetStatusesOfProject.ELEMENT_NAME,
+                                                                                          GetTransitions.ELEMENT_NAME,
+                                                                                          GetUser.ELEMENT_NAME,
+                                                                                          GetUserAssignableProjects.ELEMENT_NAME,
+                                                                                          GetUserPermissions.ELEMENT_NAME,
+                                                                                          GetVersionsOfProject.ELEMENT_NAME,
+                                                                                          GetVotesForIssue.ELEMENT_NAME,
+                                                                                          InitJira.ELEMENT_NAME,
+                                                                                          PostComment.ELEMENT_NAME,
+                                                                                          SearchAssignableUser.ELEMENT_NAME,
+                                                                                          SearchAssignableUserMultiProject.ELEMENT_NAME,
+                                                                                          SearchIssueViewableUsers.ELEMENT_NAME,
+                                                                                          SearchJira.ELEMENT_NAME,
+                                                                                          SearchUser.ELEMENT_NAME,
+                                                                                          SetActorsToRoleOfProject.ELEMENT_NAME,
+                                                                                          UpdateComment.ELEMENT_NAME,
+                                                                                          UpdateFilterById.ELEMENT_NAME,
+                                                                                          UpdateIssue.ELEMENT_NAME,
+                                                                                          UpdateIssueAssignee.ELEMENT_NAME,
+                                                                                          DestroyStatus.ELEMENT_NAME,
+                                                                                          GetClosesTrends.ELEMENT_NAME,
+                                                                                          GetDirectMessages.ELEMENT_NAME,
+                                                                                          GetFollowers.ELEMENT_NAME,
+                                                                                          GetFollowersIds.ELEMENT_NAME,
+                                                                                          GetFriends.ELEMENT_NAME,
+                                                                                          GetFriendsIds.ELEMENT_NAME,
+                                                                                          GetHomeTimeLine.ELEMENT_NAME,
+                                                                                          GetMentionsTimeLine.ELEMENT_NAME,
+                                                                                          GetRetweetsOfMine.ELEMENT_NAME,
+                                                                                          GetSentDirectMessages.ELEMENT_NAME,
+                                                                                          GetTopTrendPlaces.ELEMENT_NAME,
+                                                                                          GetUserTimeLine.ELEMENT_NAME,
+                                                                                          InitTwitter.ELEMENT_NAME,
+                                                                                          Retweet.ELEMENT_NAME,
+                                                                                          SearchTwitter.ELEMENT_NAME,
+                                                                                          SearchPlaces.ELEMENT_NAME,
+                                                                                          SendDirectMessage.ELEMENT_NAME,
+                                                                                          ShowStatus.ELEMENT_NAME,
+                                                                                          UpdateStatus.ELEMENT_NAME,
                                                                                           Upset.ELEMENT_NAME,
                                                                                           CreateSpreadsheet.ELEMENT_NAME,
                                                                                           CreateWorksheet.ELEMENT_NAME,
@@ -1234,6 +1463,12 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                   Provider<GetTopTrendPlaces> getTopTrendPlacesProvider,
                                                   Provider<GetUserTimeLine> getUserTimeLineProvider,
                                                   Provider<InitTwitter> initTwitterProvider,
+                                                  Provider<Retweet> retweetProvider,
+                                                  Provider<SearchTwitter> searchTwitterProvider,
+                                                  Provider<SearchPlaces> searchPlacesProvider,
+                                                  Provider<SendDirectMessage> sendDirectMessageProvider,
+                                                  Provider<ShowStatus> showStatusProvider,
+                                                  Provider<UpdateStatus> updateStatusProvider,
                                                   Provider<CreateSpreadsheet> createSpreadsheetProvider,
                                                   Provider<CreateWorksheet> createWorksheetProvider,
                                                   Provider<DeleteWorksheet> deleteWorksheetProvider,
@@ -1255,433 +1490,495 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                   Provider<UsernameLogin> usernameLoginProvider,
                                                   Provider<GetCellRangeCSV> getCellRangeCSVProvider) {
 
-        mediatorCreatorsManager.register(Log.ELEMENT_NAME, Log.SERIALIZATION_NAME, State.CREATING_LOG, logProvider);
+        mediatorCreatorsManager.register(Log.ELEMENT_NAME,
+                                         Log.SERIALIZATION_NAME,
+                                         MediatorCreatingState.LOG,
+                                         logProvider);
 
-        mediatorCreatorsManager.register(Enrich.ELEMENT_NAME, Enrich.SERIALIZATION_NAME, State.CREATING_ENRICH, enrichProvider);
+        mediatorCreatorsManager.register(Enrich.ELEMENT_NAME,
+                                         Enrich.SERIALIZATION_NAME,
+                                         MediatorCreatingState.ENRICH,
+                                         enrichProvider);
 
-        mediatorCreatorsManager.register(Filter.ELEMENT_NAME, Filter.SERIALIZATION_NAME, State.CREATING_FILTER, filterProvider);
+        mediatorCreatorsManager.register(Filter.ELEMENT_NAME,
+                                         Filter.SERIALIZATION_NAME,
+                                         MediatorCreatingState.FILTER,
+                                         filterProvider);
 
-        mediatorCreatorsManager.register(Header.ELEMENT_NAME, Header.SERIALIZATION_NAME, State.CREATING_HEADER, headerProvider);
+        mediatorCreatorsManager.register(Header.ELEMENT_NAME,
+                                         Header.SERIALIZATION_NAME,
+                                         MediatorCreatingState.HEADER,
+                                         headerProvider);
 
-        mediatorCreatorsManager.register(Call.ELEMENT_NAME, Call.SERIALIZATION_NAME, State.CREATING_CALL, callProvider);
+        mediatorCreatorsManager.register(Call.ELEMENT_NAME,
+                                         Call.SERIALIZATION_NAME,
+                                         MediatorCreatingState.CALL_MEDIATOR,
+                                         callProvider);
 
         mediatorCreatorsManager.register(CallTemplate.ELEMENT_NAME,
                                          CallTemplate.SERIALIZATION_NAME,
-                                         State.CREATING_CALLTEMPLATE,
+                                         MediatorCreatingState.CALLTEMPLATE,
                                          callTemplateProvider);
 
-        mediatorCreatorsManager.register(LoopBack.ELEMENT_NAME, LoopBack.SERIALIZATION_NAME, State.CREATING_LOOPBACK, loopBackProvider);
+        mediatorCreatorsManager.register(LoopBack.ELEMENT_NAME,
+                                         LoopBack.SERIALIZATION_NAME,
+                                         MediatorCreatingState.LOOPBACK,
+                                         loopBackProvider);
 
         mediatorCreatorsManager.register(PayloadFactory.ELEMENT_NAME,
                                          PayloadFactory.SERIALIZATION_NAME,
-                                         State.CREATING_PAYLOADFACTORY,
+                                         MediatorCreatingState.PAYLOAD,
                                          payloadFactoryProvider);
 
-        mediatorCreatorsManager.register(Property.ELEMENT_NAME, Property.SERIALIZATION_NAME, State.CREATING_PROPERTY, propertyProvider);
+        mediatorCreatorsManager.register(Property.ELEMENT_NAME,
+                                         Property.SERIALIZATION_NAME,
+                                         MediatorCreatingState.PROPERTY,
+                                         propertyProvider);
 
-        mediatorCreatorsManager.register(Respond.ELEMENT_NAME, Respond.SERIALIZATION_NAME, State.CREATING_RESPOND, respondProvider);
+        mediatorCreatorsManager.register(Respond.ELEMENT_NAME,
+                                         Respond.SERIALIZATION_NAME,
+                                         MediatorCreatingState.RESPOND,
+                                         respondProvider);
 
-        mediatorCreatorsManager.register(Send.ELEMENT_NAME, Send.SERIALIZATION_NAME, State.CREATING_SEND, sendProvider);
+        mediatorCreatorsManager.register(Send.ELEMENT_NAME,
+                                         Send.SERIALIZATION_NAME,
+                                         MediatorCreatingState.SEND,
+                                         sendProvider);
 
-        mediatorCreatorsManager.register(Sequence.ELEMENT_NAME, Sequence.SERIALIZATION_NAME, State.CREATING_SEQUENCE, sequenceProvider);
+        mediatorCreatorsManager.register(Sequence.ELEMENT_NAME,
+                                         Sequence.SERIALIZATION_NAME,
+                                         MediatorCreatingState.SEQUENCE,
+                                         sequenceProvider);
 
-        mediatorCreatorsManager.register(Switch.ELEMENT_NAME, Switch.SERIALIZATION_NAME, State.CREATING_SWITCH, switchProvider);
+        mediatorCreatorsManager.register(Switch.ELEMENT_NAME,
+                                         Switch.SERIALIZATION_NAME,
+                                         MediatorCreatingState.SWITCH,
+                                         switchProvider);
 
         mediatorCreatorsManager.register(AddressEndpoint.ELEMENT_NAME,
                                          AddressEndpoint.SERIALIZATION_NAME,
-                                         State.CREATING_ADDRESS_ENDPOINT,
+                                         EndpointCreatingState.ADDRESS,
                                          addressEndpointProvider);
 
         mediatorCreatorsManager.register(Init.ELEMENT_NAME,
                                          Init.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_INIT,
+                                         SalesForceConnectorCreatingState.INIT,
                                          initSalesforceProvider);
 
         mediatorCreatorsManager.register(Create.ELEMENT_NAME,
                                          Create.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_CREATE,
+                                         SalesForceConnectorCreatingState.CREATE,
                                          createSalesforceProvider);
 
         mediatorCreatorsManager.register(Update.ELEMENT_NAME,
                                          Update.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_UPDATE,
+                                         SalesForceConnectorCreatingState.UPDATE,
                                          updateSalesforceProvider);
-
 
         mediatorCreatorsManager.register(Delete.ELEMENT_NAME,
                                          Delete.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_DELETE,
+                                         SalesForceConnectorCreatingState.DELETE,
                                          deleteSaleForceProvider);
 
         mediatorCreatorsManager.register(EmptyRecycleBin.ELEMENT_NAME,
                                          EmptyRecycleBin.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_EMPTY_RECYCLE_BIN,
+                                         SalesForceConnectorCreatingState.EMPTY_RECYCLE_BIN,
                                          emptyRecycleBinProvider);
 
         mediatorCreatorsManager.register(LogOut.ELEMENT_NAME,
                                          LogOut.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_LOGOUT,
+                                         SalesForceConnectorCreatingState.LOGOUT,
                                          logOutProvider);
 
         mediatorCreatorsManager.register(GetUserInformation.ELEMENT_NAME,
                                          GetUserInformation.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_GET_USER_INFORMATION,
+                                         SalesForceConnectorCreatingState.GET_USER_INFORMATION,
                                          getUserInformationProvider);
 
         mediatorCreatorsManager.register(DescribeGlobal.ELEMENT_NAME,
                                          DescribeGlobal.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_DESCRIBE_GLOBAL,
+                                         SalesForceConnectorCreatingState.DESCRIBE_GLOBAL,
                                          describeGlobalProvider);
 
         mediatorCreatorsManager.register(DescribeSubject.ELEMENT_NAME,
                                          DescribeSubject.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_DESCRIBE_SUBJECT,
+                                         SalesForceConnectorCreatingState.DESCRIBE_SUBJECT,
                                          describeSobjectProvider);
 
         mediatorCreatorsManager.register(DescribeSubjects.ELEMENT_NAME,
                                          DescribeSubjects.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_DESCRIBE_SUBJECTS,
+                                         SalesForceConnectorCreatingState.DESCRIBE_SUBJECTS,
                                          describeSobjectsProvider);
 
         mediatorCreatorsManager.register(Query.ELEMENT_NAME,
                                          Query.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_QUERY,
+                                         SalesForceConnectorCreatingState.QUERY,
                                          queryProvider);
 
         mediatorCreatorsManager.register(QueryAll.ELEMENT_NAME,
                                          QueryAll.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_QURY_ALL,
+                                         SalesForceConnectorCreatingState.QUERY_ALL,
                                          queryAllProvider);
 
         mediatorCreatorsManager.register(QueryMore.ELEMENT_NAME,
                                          QueryMore.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_QUERY_MORE,
+                                         SalesForceConnectorCreatingState.QUERY_MORE,
                                          queryMoreProvider);
 
         mediatorCreatorsManager.register(ResetPassword.ELEMENT_NAME,
                                          ResetPassword.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_RESET_PASSWORD,
+                                         SalesForceConnectorCreatingState.RESET_PASSWORD,
                                          resetPasswordProvider);
 
         mediatorCreatorsManager.register(Retrieve.ELEMENT_NAME,
                                          Retrieve.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_RETRIVE,
+                                         SalesForceConnectorCreatingState.RETRIVE,
                                          retrieveProvider);
 
         mediatorCreatorsManager.register(Search.ELEMENT_NAME,
                                          Search.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_SEARCH,
+                                         SalesForceConnectorCreatingState.SEARCH,
                                          searchProvider);
 
         mediatorCreatorsManager.register(SendEmail.ELEMENT_NAME,
                                          SendEmail.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_SEND_EMAIL,
+                                         SalesForceConnectorCreatingState.SEND_EMAIL,
                                          sendEmailProvider);
 
         mediatorCreatorsManager.register(SendEmailMessage.ELEMENT_NAME,
                                          SendEmailMessage.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_SEND_EMAIL_MESSAGE,
+                                         SalesForceConnectorCreatingState.SEND_EMAIL_MESSAGE,
                                          sendEmailMessageProvider);
 
         mediatorCreatorsManager.register(SetPassword.ELEMENT_NAME,
                                          SetPassword.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_SET_PASSWORD,
+                                         SalesForceConnectorCreatingState.SET_PASSWORD,
                                          setPasswordProvider);
 
         mediatorCreatorsManager.register(UnDelete.ELEMENT_NAME,
                                          UnDelete.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_UNDELETE,
+                                         SalesForceConnectorCreatingState.UNDELETE,
                                          undeleteProvider);
 
         mediatorCreatorsManager.register(Upset.ELEMENT_NAME,
                                          Upset.SERIALIZATION_NAME,
-                                         State.CREATING_SALESFORCE_UPSET,
+                                         SalesForceConnectorCreatingState.UPSET,
                                          upsetProvider);
 
         mediatorCreatorsManager.register(AddAttachmentToIssueId.ELEMENT_NAME,
                                          AddAttachmentToIssueId.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_ADD_ATTACHMENT_TO_ISSUE_ID,
+                                         JiraConnectorCreatingState.ADD_ATTACHMENT_TO_ISSUE_ID,
                                          addAttachmentToIssueIdProvider);
 
         mediatorCreatorsManager.register(CreateFilter.ELEMENT_NAME,
                                          CreateFilter.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_CREATE_FILTER,
+                                         JiraConnectorCreatingState.CREATE_FILTER,
                                          createFilterProvider);
 
         mediatorCreatorsManager.register(CreateIssue.ELEMENT_NAME,
                                          CreateIssue.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_CREATE_ISSUE,
+                                         JiraConnectorCreatingState.CREATE_ISSUE,
                                          createIssueProvider);
 
         mediatorCreatorsManager.register(DeleteAvatarForProject.ELEMENT_NAME,
                                          DeleteAvatarForProject.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_DELETE_AVATAR_FOR_PROJECT,
+                                         JiraConnectorCreatingState.DELETE_AVATAR_FOR_PROJECT,
                                          deleteAvatarForProjectProvider);
 
         mediatorCreatorsManager.register(DeleteComment.ELEMENT_NAME,
                                          DeleteComment.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_DELETE_COMMENT,
+                                         JiraConnectorCreatingState.DELETE_COMMENT,
                                          deleteCommentProvider);
 
         mediatorCreatorsManager.register(DeleteFilter.ELEMENT_NAME,
                                          DeleteFilter.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_DELETE_FILTER,
+                                         JiraConnectorCreatingState.DELETE_FILTER,
                                          deleteFilterProvider);
 
         mediatorCreatorsManager.register(GetDashboard.ELEMENT_NAME,
                                          GetDashboard.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_DASHBOARD,
+                                         JiraConnectorCreatingState.GET_DASHBOARD,
                                          getDashboardProvider);
 
         mediatorCreatorsManager.register(DoTransition.ELEMENT_NAME,
                                          DoTransition.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_DO_TRANSITION,
+                                         JiraConnectorCreatingState.DO_TRANSITION,
                                          doTransitionProvider);
 
         mediatorCreatorsManager.register(GetAvatarsForProject.ELEMENT_NAME,
                                          GetAvatarsForProject.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_AVATARS_FOR_PROJECT,
+                                         JiraConnectorCreatingState.GET_AVATARS_FOR_PROJECT,
                                          getAvatarsForProjectProvider);
 
         mediatorCreatorsManager.register(GetComments.ELEMENT_NAME,
                                          GetComments.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_COMMENTS,
+                                         JiraConnectorCreatingState.GET_COMMENTS,
                                          getCommentsProvider);
 
         mediatorCreatorsManager.register(GetComponentsOfProject.ELEMENT_NAME,
                                          GetComponentsOfProject.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_COMPONENTS_OF_PROJECT,
+                                         JiraConnectorCreatingState.GET_COMPONENTS_OF_PROJECT,
                                          getComponentsOfProjectProvider);
 
         mediatorCreatorsManager.register(GetDashboardById.ELEMENT_NAME,
                                          GetDashboardById.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_DASHBOARD_BY_ID,
+                                         JiraConnectorCreatingState.GET_DASHBOARD_BY_ID,
                                          getDashboardByIdProvider);
 
         mediatorCreatorsManager.register(GetFavouriteFilters.ELEMENT_NAME,
                                          GetFavouriteFilters.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_FAVOURITE_FILTERS,
+                                         JiraConnectorCreatingState.GET_FAVOURITE_FILTERS,
                                          getFavouriteFiltersProvider);
 
         mediatorCreatorsManager.register(GetFilterById.ELEMENT_NAME,
                                          GetFilterById.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_FILTER_BY_ID,
+                                         JiraConnectorCreatingState.GET_FILTER_BY_ID,
                                          getFilterByIdProvider);
 
         mediatorCreatorsManager.register(GetGroup.ELEMENT_NAME,
                                          GetGroup.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_GROUP,
+                                         JiraConnectorCreatingState.GET_GROUP,
                                          getGroupProvider);
 
         mediatorCreatorsManager.register(GetIssue.ELEMENT_NAME,
                                          GetIssue.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_ISSUE,
+                                         JiraConnectorCreatingState.GET_ISSUE,
                                          getIssueProvider);
 
         mediatorCreatorsManager.register(GetIssuePriorities.ELEMENT_NAME,
                                          GetIssuePriorities.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_ISSUE_PRIORITIES,
+                                         JiraConnectorCreatingState.GET_ISSUE_PRIORITIES,
                                          getIssuePrioritiesProvider);
 
         mediatorCreatorsManager.register(GetIssuePriorityById.ELEMENT_NAME,
                                          GetIssuePriorityById.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_ISSUE_PRIORITY_BY_ID,
+                                         JiraConnectorCreatingState.GET_ISSUE_PRIORITY_BY_ID,
                                          getIssuePriorityByIdProvider);
 
         mediatorCreatorsManager.register(GetIssueTypeById.ELEMENT_NAME,
                                          GetIssueTypeById.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_ISSUE_TYPE_BY_ID,
+                                         JiraConnectorCreatingState.GET_ISSUE_TYPE_BY_ID,
                                          getIssueTypeByIdProvider);
 
         mediatorCreatorsManager.register(GetIssueTypes.ELEMENT_NAME,
                                          GetIssueTypes.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_ISSUE_TYPES,
+                                         JiraConnectorCreatingState.GET_ISSUE_TYPES,
                                          getIssueTypesProvider);
 
         mediatorCreatorsManager.register(GetIssuesForUser.ELEMENT_NAME,
                                          GetIssuesForUser.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_ISSUES_FOR_USER,
+                                         JiraConnectorCreatingState.GET_ISSUES_FOR_USER,
                                          getIssuesForUserProvider);
 
         mediatorCreatorsManager.register(GetProject.ELEMENT_NAME,
                                          GetProject.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_PROJECT,
+                                         JiraConnectorCreatingState.GET_PROJECT,
                                          getProjectProvider);
 
         mediatorCreatorsManager.register(GetRolesByIdOfProject.ELEMENT_NAME,
                                          GetRolesByIdOfProject.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_ROLES_BY_ID_OF_PROJECT,
+                                         JiraConnectorCreatingState.GET_ROLES_BY_ID_OF_PROJECT,
                                          getRolesByIdOfProjectProvider);
 
         mediatorCreatorsManager.register(GetRolesOfProject.ELEMENT_NAME,
                                          GetRolesOfProject.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_ROLES_OF_PROJECT,
+                                         JiraConnectorCreatingState.GET_ROLES_OF_PROJECT,
                                          getRolesOfProjectProvider);
 
         mediatorCreatorsManager.register(GetStatusesOfProject.ELEMENT_NAME,
                                          GetStatusesOfProject.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_STATUSES_OF_PROJECT,
+                                         JiraConnectorCreatingState.GET_STATUSES_OF_PROJECT,
                                          getStatusesOfProjectProvider);
 
         mediatorCreatorsManager.register(GetTransitions.ELEMENT_NAME,
                                          GetTransitions.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_TRANSITIONS,
+                                         JiraConnectorCreatingState.GET_TRANSITIONS,
                                          getTransitionsProvider);
 
         mediatorCreatorsManager.register(GetUser.ELEMENT_NAME,
                                          GetUser.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_USER,
+                                         JiraConnectorCreatingState.GET_USER,
                                          getUserProvider);
 
         mediatorCreatorsManager.register(GetUserAssignableProjects.ELEMENT_NAME,
                                          GetUserAssignableProjects.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_USER_ASSIGNABLE_PROJECT,
+                                         JiraConnectorCreatingState.GET_USER_ASSIGNABLE_PROJECT,
                                          getUserAssignableProjectsProvider);
 
         mediatorCreatorsManager.register(GetUserPermissions.ELEMENT_NAME,
                                          GetUserPermissions.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_USER_PERMISSIONS,
+                                         JiraConnectorCreatingState.GET_USER_PERMISSIONS,
                                          getUserPermissionsProvider);
 
         mediatorCreatorsManager.register(GetVersionsOfProject.ELEMENT_NAME,
                                          GetVersionsOfProject.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_VERSIONS_OF_PROJECT,
+                                         JiraConnectorCreatingState.GET_VERSIONS_OF_PROJECT,
                                          getVersionsOfProjectProvider);
 
         mediatorCreatorsManager.register(GetVotesForIssue.ELEMENT_NAME,
                                          GetVotesForIssue.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_GET_VOTES_FOR_ISSUE,
+                                         JiraConnectorCreatingState.GET_VOTES_FOR_ISSUE,
                                          getVotesForIssueProvider);
 
         mediatorCreatorsManager.register(InitJira.ELEMENT_NAME,
                                          InitJira.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_INIT,
+                                         JiraConnectorCreatingState.INIT,
                                          initJiraProvider);
 
         mediatorCreatorsManager.register(PostComment.ELEMENT_NAME,
                                          PostComment.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_POST_COMMENT,
+                                         JiraConnectorCreatingState.POST_COMMENT,
                                          postCommentProvider);
 
         mediatorCreatorsManager.register(SearchAssignableUser.ELEMENT_NAME,
                                          SearchAssignableUser.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_SEARCH_ASSIGNABLE_USER,
+                                         JiraConnectorCreatingState.SEARCH_ASSIGNABLE_USER,
                                          searchAssignableUserProvider);
 
         mediatorCreatorsManager.register(SearchAssignableUserMultiProject.ELEMENT_NAME,
                                          SearchAssignableUserMultiProject.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_SEARCH_ASSIGNABLE_USER_MULTI_PROJECT,
+                                         JiraConnectorCreatingState.SEARCH_ASSIGNABLE_USER_MULTI_PROJECT,
                                          searchAssignableUserMultiProjectProvider);
 
         mediatorCreatorsManager.register(SearchIssueViewableUsers.ELEMENT_NAME,
                                          SearchIssueViewableUsers.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_SEARCH_ISSUE_VIEWABLE_USERS,
+                                         JiraConnectorCreatingState.SEARCH_ISSUE_VIEWABLE_USERS,
                                          searchIssueViewableUsersProvider);
 
         mediatorCreatorsManager.register(SearchJira.ELEMENT_NAME,
                                          SearchJira.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_SEARCH_JIRA,
+                                         JiraConnectorCreatingState.SEARCH_JIRA,
                                          searchJiraProvider);
 
         mediatorCreatorsManager.register(SearchUser.ELEMENT_NAME,
                                          SearchUser.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_SEARCH_USER,
+                                         JiraConnectorCreatingState.SEARCH_USER,
                                          searchUserProvider);
 
         mediatorCreatorsManager.register(SetActorsToRoleOfProject.ELEMENT_NAME,
                                          SetActorsToRoleOfProject.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_SET_ACTORS_TO_ROLE_OF_PROJECT,
+                                         JiraConnectorCreatingState.SET_ACTORS_TO_ROLE_OF_PROJECT,
                                          setActorsToRoleOfProjectProvider);
 
         mediatorCreatorsManager.register(UpdateComment.ELEMENT_NAME,
                                          UpdateComment.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_UPDATE_COMMENT,
+                                         JiraConnectorCreatingState.UPDATE_COMMENT,
                                          updateCommentProvider);
 
         mediatorCreatorsManager.register(UpdateFilterById.ELEMENT_NAME,
                                          UpdateFilterById.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_UPDATE_FILTER_BY_ID,
+                                         JiraConnectorCreatingState.UPDATE_FILTER_BY_ID_JIRA,
                                          updateFilterByIdProvider);
 
         mediatorCreatorsManager.register(UpdateIssue.ELEMENT_NAME,
                                          UpdateIssue.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_UPDATE_ISSUE,
+                                         JiraConnectorCreatingState.UPDATE_ISSUE,
                                          updateIssueProvider);
 
         mediatorCreatorsManager.register(UpdateIssueAssignee.ELEMENT_NAME,
                                          UpdateIssueAssignee.SERIALIZATION_NAME,
-                                         State.CREATING_JIRA_UPDATE_ISSUE_ASSIGNEE,
+                                         JiraConnectorCreatingState.UPDATE_ISSUE_ASSIGNEE,
                                          updateIssueAssigneeProvider);
 
         mediatorCreatorsManager.register(DestroyStatus.ELEMENT_NAME,
                                          DestroyStatus.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_DESTROY_STATUS,
+                                         TwitterConnectorCreatingState.DESTROY_STATUS,
                                          destroyStatusProvider);
 
         mediatorCreatorsManager.register(GetClosesTrends.ELEMENT_NAME,
                                          GetClosesTrends.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_CLOTHES_TRENDS,
+                                         TwitterConnectorCreatingState.GET_CLOTHES_TRENDS,
                                          getClosesTrendsProvider);
 
         mediatorCreatorsManager.register(GetDirectMessages.ELEMENT_NAME,
                                          GetDirectMessages.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_DIRECT_MESSAGES,
+                                         TwitterConnectorCreatingState.GET_DIRECT_MESSAGES,
                                          getDirectMessagesProvider);
 
         mediatorCreatorsManager.register(GetFollowers.ELEMENT_NAME,
                                          GetFollowers.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_FOLLOWERS,
+                                         TwitterConnectorCreatingState.GET_FOLLOWERS,
                                          getFollowersProvider);
 
         mediatorCreatorsManager.register(GetFollowersIds.ELEMENT_NAME,
                                          GetFollowersIds.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_FOLLOWERS_IDS,
+                                         TwitterConnectorCreatingState.GET_FOLLOWERS_IDS,
                                          getFollowersIdsProvider);
 
         mediatorCreatorsManager.register(GetFriends.ELEMENT_NAME,
                                          GetFriends.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_FRIENDS,
+                                         TwitterConnectorCreatingState.GET_FRIENDS,
                                          getFriendsProvider);
 
         mediatorCreatorsManager.register(GetFriendsIds.ELEMENT_NAME,
                                          GetFriendsIds.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_FRIENDS_IDS,
+                                         TwitterConnectorCreatingState.GET_FRIENDS_IDS,
                                          getFriendsIdsProvider);
 
         mediatorCreatorsManager.register(GetHomeTimeLine.ELEMENT_NAME,
                                          GetHomeTimeLine.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_HOME_TIME_LINE,
+                                         TwitterConnectorCreatingState.GET_HOME_TIME_LINE,
                                          getHomeTimeLineProvider);
 
         mediatorCreatorsManager.register(GetMentionsTimeLine.ELEMENT_NAME,
                                          GetMentionsTimeLine.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_MENTIONS_TIME_LINE,
+                                         TwitterConnectorCreatingState.GET_MENTIONS_TIME_LINE,
                                          getMentionsTimeLineProvider);
 
         mediatorCreatorsManager.register(GetRetweetsOfMine.ELEMENT_NAME,
                                          GetRetweetsOfMine.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_RETWEETS_OF_MINE,
+                                         TwitterConnectorCreatingState.GET_RETWEETS_OF_MINE,
                                          getRetweetsOfMineProvider);
 
         mediatorCreatorsManager.register(GetSentDirectMessages.ELEMENT_NAME,
                                          GetSentDirectMessages.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_SENT_DIRECT_MESSAGE,
+                                         TwitterConnectorCreatingState.GET_SENT_DIRECT_MESSAGE,
                                          getSentDirectMessagesProvider);
 
         mediatorCreatorsManager.register(GetTopTrendPlaces.ELEMENT_NAME,
                                          GetTopTrendPlaces.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_TOP_TREND_PLACES,
+                                         TwitterConnectorCreatingState.GET_TOP_TREND_PLACES,
                                          getTopTrendPlacesProvider);
 
         mediatorCreatorsManager.register(GetUserTimeLine.ELEMENT_NAME,
                                          GetUserTimeLine.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_GET_USER_TIME_LINE,
+                                         TwitterConnectorCreatingState.GET_USER_TIME_LINE,
                                          getUserTimeLineProvider);
 
         mediatorCreatorsManager.register(InitTwitter.ELEMENT_NAME,
                                          InitTwitter.SERIALIZATION_NAME,
-                                         State.CREATING_TWITTER_INIT,
+                                         TwitterConnectorCreatingState.INIT,
                                          initTwitterProvider);
+
+        mediatorCreatorsManager.register(Retweet.ELEMENT_NAME,
+                                         Retweet.SERIALIZATION_NAME,
+                                         TwitterConnectorCreatingState.RETWEET,
+                                         retweetProvider);
+
+        mediatorCreatorsManager.register(SearchTwitter.ELEMENT_NAME,
+                                         SearchTwitter.SERIALIZATION_NAME,
+                                         TwitterConnectorCreatingState.SEARCH,
+                                         searchTwitterProvider);
+
+        mediatorCreatorsManager.register(SearchPlaces.ELEMENT_NAME,
+                                         SearchPlaces.SERIALIZATION_NAME,
+                                         TwitterConnectorCreatingState.SEARCH_PLACES,
+                                         searchPlacesProvider);
+
+        mediatorCreatorsManager.register(SendDirectMessage.ELEMENT_NAME,
+                                         SendDirectMessage.SERIALIZATION_NAME,
+                                         TwitterConnectorCreatingState.SEND_DIRECT_MESSAGE,
+                                         sendDirectMessageProvider);
+
+        mediatorCreatorsManager.register(ShowStatus.ELEMENT_NAME,
+                                         ShowStatus.SERIALIZATION_NAME,
+                                         TwitterConnectorCreatingState.SHOW_STATUS,
+                                         showStatusProvider);
+
+        mediatorCreatorsManager.register(UpdateStatus.ELEMENT_NAME,
+                                         UpdateStatus.SERIALIZATION_NAME,
+                                         TwitterConnectorCreatingState.UPDATE_STATUS,
+                                         updateStatusProvider);
 
         mediatorCreatorsManager.register(CreateSpreadsheet.ELEMENT_NAME,
                                          CreateSpreadsheet.SERIALIZATION_NAME,
@@ -1784,6 +2081,622 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                          usernameLoginProvider);
     }
 
+    @Inject
+    private void configureToolbar(ToolbarPresenter toolbar,
+                                  EditorResources resources,
+                                  WSO2EditorLocalizationConstant localizationConstant) {
+
+        toolbar.addGroup(ToolbarGroupIds.MEDIATORS, localizationConstant.toolbarGroupMediators());
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        localizationConstant.toolbarLogTitle(),
+                        localizationConstant.toolbarLogTooltip(),
+                        resources.logToolbar(),
+                        MediatorCreatingState.LOG);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        localizationConstant.toolbarSequenceTitle(),
+                        localizationConstant.toolbarSequenceTooltip(),
+                        resources.sequenceToolbar(),
+                        MediatorCreatingState.SEQUENCE);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        localizationConstant.toolbarHeaderTitle(),
+                        localizationConstant.toolbarHeaderTooltip(),
+                        resources.headerToolbar(),
+                        MediatorCreatingState.HEADER);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        localizationConstant.toolbarCallTemplateTitle(),
+                        localizationConstant.toolbarCallTemplateTooltip(),
+                        resources.callTemplateToolbar(),
+                        MediatorCreatingState.CALLTEMPLATE);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        localizationConstant.toolbarCallTitle(),
+                        localizationConstant.toolbarCallTooltip(),
+                        resources.callToolbar(),
+                        MediatorCreatingState.CALL_MEDIATOR);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        localizationConstant.toolbarEnrichTitle(),
+                        localizationConstant.toolbarEnrichTooltip(),
+                        resources.enrichToolbar(),
+                        MediatorCreatingState.ENRICH);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        localizationConstant.toolbarFilterTitle(),
+                        localizationConstant.toolbarFilterTooltip(),
+                        resources.filterToolbar(),
+                        MediatorCreatingState.FILTER);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        localizationConstant.toolbarPropertyTitle(),
+                        localizationConstant.toolbarPropertyTooltip(),
+                        resources.propertyToolbar(),
+                        MediatorCreatingState.PROPERTY);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        localizationConstant.toolbarLoopBackTitle(),
+                        localizationConstant.toolbarLoopBackTooltip(),
+                        resources.loopBackToolbar(),
+                        MediatorCreatingState.LOOPBACK);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        localizationConstant.toolbarPayloadFactoryTitle(),
+                        localizationConstant.toolbarPayloadFactoryTooltip(),
+                        resources.payloadFactoryToolbar(),
+                        MediatorCreatingState.PAYLOAD);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        localizationConstant.toolbarSwitchTitle(),
+                        localizationConstant.toolbarSwitchTooltip(),
+                        resources.switchToolbar(),
+                        MediatorCreatingState.SWITCH);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        localizationConstant.toolbarSendTitle(),
+                        localizationConstant.toolbarSendTooltip(),
+                        resources.sendToolbar(),
+                        MediatorCreatingState.SEND);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        localizationConstant.toolbarRespondTitle(),
+                        localizationConstant.toolbarRespondTooltip(),
+                        resources.respondToolbar(),
+                        MediatorCreatingState.RESPOND);
+
+        toolbar.addGroup(ToolbarGroupIds.ENDPOINTS, localizationConstant.toolbarGroupEndpoints());
+
+        toolbar.addItem(ToolbarGroupIds.ENDPOINTS,
+                        localizationConstant.toolbarAddressEndpointTitle(),
+                        localizationConstant.toolbarAddressEndpointTooltip(),
+                        resources.addressToolbar(),
+                        EndpointCreatingState.ADDRESS);
+
+        toolbar.addGroup(ToolbarGroupIds.SALESFORCE_CONNECTORS, localizationConstant.toolbarGroupSalesforceConnector());
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceCreateConnectorTitle(),
+                        localizationConstant.toolbarSalesforceCreateConnectorTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.CREATE);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesForceDeleteTitle(),
+                        localizationConstant.toolbarSalesForceDeleteTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.DELETE);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceDescribeGlobalConnectorTitle(),
+                        localizationConstant.toolbarSalesforceDescribeGlobalConnectorTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.DESCRIBE_GLOBAL);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceDescribeSubjectConnectorTitle(),
+                        localizationConstant.toolbarSalesforceDescribeSubjectConnectorTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.DESCRIBE_SUBJECT);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceDescribeSubjectsConnectorTitle(),
+                        localizationConstant.toolbarSalesforceDescribeSubjectsConnectorTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.DESCRIBE_SUBJECTS);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceEmptyRecycleBinConnectorTitle(),
+                        localizationConstant.toolbarSalesforceEmptyRecycleBinConnectorTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.EMPTY_RECYCLE_BIN);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceGetUserInfoConnectorTitle(),
+                        localizationConstant.toolbarSalesforceGetUserInfoConnectorTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.GET_USER_INFORMATION);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceInitConnectorTitle(),
+                        localizationConstant.toolbarSalesforceInitConnectorTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.INIT);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceLogOutConnectorTitle(),
+                        localizationConstant.toolbarSalesforceLogOutConnectorTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.LOGOUT);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceQueryTitle(),
+                        localizationConstant.toolbarSalesforceQueryTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.QUERY);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceQueryTitle(),
+                        localizationConstant.toolbarSalesforceQueryTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.QUERY);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceQueryAllTitle(),
+                        localizationConstant.toolbarSalesforceQueryAllTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.QUERY_ALL);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceQueryMoreTitle(),
+                        localizationConstant.toolbarSalesforceQueryMoreTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.QUERY_MORE);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceResetPasswordTitle(),
+                        localizationConstant.toolbarSalesforceResetPasswordTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.RESET_PASSWORD);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceRetriveTitle(),
+                        localizationConstant.toolbarSalesforceRetriveTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.RETRIVE);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceSearchTitle(),
+                        localizationConstant.toolbarSalesforceSearchTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.SEARCH);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceSendEmailTitle(),
+                        localizationConstant.toolbarSalesforceSendEmailTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.SEND_EMAIL);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceSendEmailMessageTitle(),
+                        localizationConstant.toolbarSalesforceSendEmailMessageTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.SEND_EMAIL_MESSAGE);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceSetPasswordTitle(),
+                        localizationConstant.toolbarSalesforceSetPasswordTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.SET_PASSWORD);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceUndeleteTitle(),
+                        localizationConstant.toolbarSalesforceUndeleteTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.UNDELETE);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceUpdateConnectorTitle(),
+                        localizationConstant.toolbarSalesforceUpdateConnectorTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.UPDATE);
+
+        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
+                        localizationConstant.toolbarSalesforceUpsetTitle(),
+                        localizationConstant.toolbarSalesforceUpsetTooltip(),
+                        resources.salesforceConnectorToolbar(),
+                        SalesForceConnectorCreatingState.UPSET);
+
+        toolbar.addGroup(ToolbarGroupIds.JIRA_CONNECTORS, localizationConstant.toolbarGroupJiraConnector());
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraAddAttachmentToIssueIdTitle(),
+                        localizationConstant.jiraAddAttachmentToIssueIdTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.ADD_ATTACHMENT_TO_ISSUE_ID);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraCreateFilterTitle(),
+                        localizationConstant.jiraCreateFilterTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.CREATE_FILTER);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraCreateIssueTitle(),
+                        localizationConstant.jiraCreateIssueTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.CREATE_ISSUE);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraDeleteAvatarForProjectTitle(),
+                        localizationConstant.jiraDeleteAvatarForProjectTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.DELETE_AVATAR_FOR_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraDeleteCommentTitle(),
+                        localizationConstant.jiraDeleteCommentTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.DELETE_COMMENT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraDeleteFilterTitle(),
+                        localizationConstant.jiraDeleteFilterTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.DELETE_FILTER);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetDashboardTitle(),
+                        localizationConstant.jiraGetDashboardTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_DASHBOARD);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraDoTransitionTitle(),
+                        localizationConstant.jiraDoTransitionTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.DO_TRANSITION);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetAvatarsForProjectTitle(),
+                        localizationConstant.jiraGetAvatarsForProjectTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_AVATARS_FOR_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetCommentsTitle(),
+                        localizationConstant.jiraGetCommentsTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_COMMENTS);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetComponentsOfProjectTitle(),
+                        localizationConstant.jiraGetComponentsOfProjectTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_COMPONENTS_OF_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetDashboardByIdTitle(),
+                        localizationConstant.jiraGetDashboardByIdTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_DASHBOARD_BY_ID);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetFavouriteFiltersTitle(),
+                        localizationConstant.jiraGetFavouriteFiltersTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_FAVOURITE_FILTERS);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetFilterByIdTitle(),
+                        localizationConstant.jiraGetFilterByIdTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_FILTER_BY_ID);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetGroupTitle(),
+                        localizationConstant.jiraGetGroupTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_GROUP);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetIssueTitle(),
+                        localizationConstant.jiraGetIssueTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_ISSUE);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetIssuePrioritiesTitle(),
+                        localizationConstant.jiraGetIssuePrioritiesTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_ISSUE_PRIORITIES);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetIssuePriorityByIdTitle(),
+                        localizationConstant.jiraGetIssuePriorityByIdTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_ISSUE_PRIORITY_BY_ID);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetIssueTypeByIdTitle(),
+                        localizationConstant.jiraGetIssueTypeByIdTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_ISSUE_TYPE_BY_ID);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetIssueTypesTitle(),
+                        localizationConstant.jiraGetIssueTypesTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_ISSUE_TYPES);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetIssuesForUserTitle(),
+                        localizationConstant.jiraGetIssuesForUserTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_ISSUES_FOR_USER);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetProjectTitle(),
+                        localizationConstant.jiraGetProjectTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetRolesByIdOfProjectTitle(),
+                        localizationConstant.jiraGetRolesByIdOfProjectTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_ROLES_BY_ID_OF_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetRolesOfProjectTitle(),
+                        localizationConstant.jiraGetRolesOfProjectTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_ROLES_OF_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetStatusesOfProjectTitle(),
+                        localizationConstant.jiraGetStatusesOfProjectTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_STATUSES_OF_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetTransitionsTitle(),
+                        localizationConstant.jiraGetTransitionsTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_TRANSITIONS);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetUserTitle(),
+                        localizationConstant.jiraGetUserTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_USER);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetUserAssignableProjectsTitle(),
+                        localizationConstant.jiraGetUserAssignableProjectsTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_USER_ASSIGNABLE_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetUserPermissionsTitle(),
+                        localizationConstant.jiraGetUserPermissionsTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_USER_PERMISSIONS);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetVersionsOfProjectTitle(),
+                        localizationConstant.jiraGetVersionsOfProjectTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_VERSIONS_OF_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraGetVotesForIssueTitle(),
+                        localizationConstant.jiraGetVotesForIssueTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.GET_VOTES_FOR_ISSUE);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraInitTitle(),
+                        localizationConstant.jiraInitTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.INIT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraPostCommentTitle(),
+                        localizationConstant.jiraPostCommentTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.POST_COMMENT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraSearchAssignableUserTitle(),
+                        localizationConstant.jiraSearchAssignableUserTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.SEARCH_ASSIGNABLE_USER);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraSearchAssignableUserMultiProjectTitle(),
+                        localizationConstant.jiraSearchAssignableUserMultiProjectTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.SEARCH_ASSIGNABLE_USER_MULTI_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraSearchIssueViewableUsersTitle(),
+                        localizationConstant.jiraSearchIssueViewableUsersTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.SEARCH_ISSUE_VIEWABLE_USERS);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraSearchJiraTitle(),
+                        localizationConstant.jiraSearchJiraTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.SEARCH_JIRA);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraSearchUserTitle(),
+                        localizationConstant.jiraSearchUserTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.SEARCH_USER);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraSetActorsToRoleOfProjectTitle(),
+                        localizationConstant.jiraSetActorsToRoleOfProjectTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.SET_ACTORS_TO_ROLE_OF_PROJECT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraUpdateCommentTitle(),
+                        localizationConstant.jiraUpdateCommentTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.ADD_ATTACHMENT_TO_ISSUE_ID);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraUpdateCommentTitle(),
+                        localizationConstant.jiraUpdateCommentTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.UPDATE_COMMENT);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraUpdateFilterByIdTitle(),
+                        localizationConstant.jiraUpdateFilterByIdTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.UPDATE_FILTER_BY_ID_JIRA);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraUpdateIssueTitle(),
+                        localizationConstant.jiraUpdateIssueTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.UPDATE_ISSUE);
+
+        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
+                        localizationConstant.jiraUpdateIssueAssigneeTitle(),
+                        localizationConstant.jiraUpdateIssueAssigneeTooltip(),
+                        resources.jiraConnectorToolbar(),
+                        JiraConnectorCreatingState.UPDATE_ISSUE_ASSIGNEE);
+
+        toolbar.addGroup(ToolbarGroupIds.TWITTER_CONNECTORS, localizationConstant.toolbarGroupTwitterConnector());
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterDestroyStatusTitle(),
+                        localizationConstant.twitterDestroyStatusTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.DESTROY_STATUS);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetClosesTrendsTitle(),
+                        localizationConstant.twitterGetClosesTrendsTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_CLOTHES_TRENDS);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetDirectMessagesTitle(),
+                        localizationConstant.twitterGetDirectMessagesTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_DIRECT_MESSAGES);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetFollowersTitle(),
+                        localizationConstant.twitterGetFollowersTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_FOLLOWERS);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetFollowersIdsTitle(),
+                        localizationConstant.twitterGetFollowersIdsTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_FOLLOWERS_IDS);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetFriendsTitle(),
+                        localizationConstant.twitterGetFriendsTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_FRIENDS);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetFriendsIdsTitle(),
+                        localizationConstant.twitterGetFriendsIdsTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_FRIENDS_IDS);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetHomeTimeLineTitle(),
+                        localizationConstant.twitterGetHomeTimeLineTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_HOME_TIME_LINE);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetMentionsTimeLineTitle(),
+                        localizationConstant.twitterGetMentionsTimeLineTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_MENTIONS_TIME_LINE);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetRetweetsOfMineTitle(),
+                        localizationConstant.twitterGetRetweetsOfMineTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_RETWEETS_OF_MINE);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetSentDirectMessageTitle(),
+                        localizationConstant.twitterGetSentDirectMessageTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_SENT_DIRECT_MESSAGE);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetTopTrendPlacesTitle(),
+                        localizationConstant.twitterGetTopTrendPlacesTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_TOP_TREND_PLACES);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterGetUserTimeLineTitle(),
+                        localizationConstant.twitterGetUserTimeLineTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.GET_USER_TIME_LINE);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterInitTitle(),
+                        localizationConstant.twitterInitTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.INIT);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterRetweetTitle(),
+                        localizationConstant.twitterRetweetTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.RETWEET);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterSearchTitle(),
+                        localizationConstant.twitterSearchTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.SEARCH);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterSearchPlacesTitle(),
+                        localizationConstant.twitterSearchPlacesTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.SEARCH_PLACES);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterSendDirectMessageTitle(),
+                        localizationConstant.twitterSendDirectMessageTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.SEND_DIRECT_MESSAGE);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterShowStatusTitle(),
+                        localizationConstant.twitterShowStatusTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.SHOW_STATUS);
+
+        toolbar.addItem(ToolbarGroupIds.TWITTER_CONNECTORS,
+                        localizationConstant.twitterUpdateStatusTitle(),
+                        localizationConstant.twitterUpdateStatusTooltip(),
+                        resources.twitterToolbar(),
+                        TwitterConnectorCreatingState.UPDATE_STATUS);
+    }
+
     /** {@inheritDoc} */
     @Override
     public void go(@Nonnull AcceptsOneWidget container) {
@@ -1845,10 +2758,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
     }
 
     public interface EditorChangeListener {
-
         /** Performs some actions when editor was changed. */
         void onChanged();
-
     }
-
 }

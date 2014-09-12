@@ -23,8 +23,8 @@ import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
-import com.codenvy.ide.client.propertiespanel.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.propertyconfig.AddNameSpacesCallBack;
+import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
+import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -132,7 +132,7 @@ public class GetFriendsConnectorPresenter extends AbstractConnectorPropertiesPan
     /** {@inheritDoc} */
     @Override
     public void onSecondTextBoxValueChanged() {
-        element.setUserId(view.getThirdTextBoxValue());
+        element.setUserId(view.getSecondTextBoxValue());
 
         notifyListeners();
     }
@@ -140,7 +140,7 @@ public class GetFriendsConnectorPresenter extends AbstractConnectorPropertiesPan
     /** {@inheritDoc} */
     @Override
     public void onThirdTextBoxValueChanged() {
-        element.setCursor(view.getFourthTextBoxValue());
+        element.setCursor(view.getThirdTextBoxValue());
 
         notifyListeners();
     }

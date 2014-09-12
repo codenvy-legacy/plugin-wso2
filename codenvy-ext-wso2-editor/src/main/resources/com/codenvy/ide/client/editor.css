@@ -62,3 +62,13 @@
 .errorCursor {
     cursor: errorCursorURL, auto !important;
 }
+
+.normalImage {
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+}
+
+.expandedImage {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+}
