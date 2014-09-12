@@ -1327,61 +1327,64 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     String spreadsheetCreateSpreadsheetWorksheetCount();
 
     @Key("toolbar.connector.spreadsheet.create.spreadsheet.tooltip")
-    String spreadsheetCreateSpreadsheet();
+    String spreadsheetCreateSpreadsheetTooltip();
 
     @Key("toolbar.connector.spreadsheet.create.worksheet.tooltip")
-    String spreadsheetCreateWorksheet();
+    String spreadsheetCreateWorksheetTooltip();
 
     @Key("toolbar.connector.spreadsheet.delete.worksheet.tooltip")
-    String spreadsheetDeleteWorksheet();
+    String spreadsheetDeleteWorksheetTooltip();
 
     @Key("toolbar.connector.spreadsheet.getAllCells.tooltip")
-    String spreadsheetGetAllCells();
+    String spreadsheetGetAllCellsTooltip();
 
     @Key("toolbar.connector.spreadsheet.getAllCellsCSV.tooltip")
-    String spreadsheetGetAllCellsCSV();
+    String spreadsheetGetAllCellsCSVTooltip();
 
     @Key("toolbar.connector.spreadsheet.getAllSpreadsheets.tooltip")
-    String spreadsheetGetAllSpreadsheets();
+    String spreadsheetGetAllSpreadsheetsTooltip();
 
     @Key("toolbar.connector.spreadsheet.getAuthors.tooltip")
-    String spreadsheetGetAuthors();
+    String spreadsheetGetAuthorsTooltip();
 
     @Key("toolbar.connector.spreadsheet.getCellRange.tooltip")
-    String spreadsheetGetCellRange();
+    String spreadsheetGetCellRangeTooltip();
 
     @Key("toolbar.connector.spreadsheet.getCellRangeCSV.tooltip")
-    String spreadsheetGetCellRangeCSV();
+    String spreadsheetGetCellRangeCSVTooltip();
 
     @Key("toolbar.connector.spreadsheet.getColumnHeaders.tooltip")
-    String spreadsheetGetColumnHeaders();
+    String spreadsheetGetColumnHeadersTooltip();
 
     @Key("toolbar.connector.spreadsheet.getSpreadsheetByTitle.tooltip")
-    String spreadsheetGetSpreadsheetByTitle();
+    String spreadsheetGetSpreadsheetByTitleTooltip();
 
     @Key("toolbar.connector.spreadsheet.getWorksheetByTitle.tooltip")
-    String spreadsheetGetWorksheetByTitle();
+    String spreadsheetGetWorksheetByTitleTooltip();
 
     @Key("toolbar.connector.spreadsheet.importCSV.tooltip")
-    String spreadsheetImportCSV();
+    String spreadsheetImportCSVTooltip();
 
     @Key("toolbar.connector.spreadsheet.init.tooltip")
-    String spreadsheetInit();
+    String spreadsheetInitTooltip();
 
     @Key("toolbar.connector.spreadsheet.purgeWorksheet.tooltip")
-    String spreadsheetPurgeWorksheet();
+    String spreadsheetPurgeWorksheetTooltip();
 
     @Key("toolbar.connector.spreadsheet.searchCell.tooltip")
-    String spreadsheetSearchCell();
+    String spreadsheetSearchCellTooltip();
 
     @Key("toolbar.connector.spreadsheet.setRow.tooltip")
-    String spreadsheetSetRow();
+    String spreadsheetSetRowTooltip();
 
     @Key("toolbar.connector.spreadsheet.updateWorksheetMeta.tooltip")
-    String spreadsheetUpdateWorksheetMeta();
+    String spreadsheetUpdateWorksheetMetaTooltip();
 
     @Key("toolbar.connector.spreadsheet.usernameLogin.tooltip")
-    String spreadsheetUsernameLogin();
+    String spreadsheetUsernameLoginTooltip();
+
+    @Key("toolbar.connector.spreadsheet.getAllWorksheets.tooltip")
+    String spreadsheetGetAllWorksheetsTooltip();
 
     @Key("propertiespanel.connector.spreadsheet.createWorksheet.worksheetName")
     String spreadsheetCreateWorksheetWorksheetName();
@@ -1449,9 +1452,6 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("propertiespanel.connector.spreadsheet.usernameLogin.password")
     String spreadsheetUsernameLoginPassword();
 
-    @Key("toolbar.connector.spreadsheet.getAllWorksheets.tooltip")
-    String spreadsheetGetAllWorksheets();
-
     @Key("propertiespanel.connector.spreadsheet.importCSV.filePath")
     String spreadsheetImportCSVFilePath();
 
@@ -1460,4 +1460,67 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.connector.spreadsheet.importCSV.batchSize")
     String spreadsheetImportCSVBatchSize();
+
+    @Key("toolbar.group.connector.google.spreadsheet")
+    String toolbarGroupGoogleSpreadsheetConnector();
+
+    @Key("toolbar.connector.spreadsheet.create.spreadsheet.title")
+    String spreadsheetCreateSpreadsheetTitle();
+
+    @Key("toolbar.connector.spreadsheet.create.worksheet.title")
+    String spreadsheetCreateWorksheetTitle();
+
+    @Key("toolbar.connector.spreadsheet.delete.worksheet.title")
+    String spreadsheetDeleteWorksheetTitle();
+
+    @Key("toolbar.connector.spreadsheet.getAllCells.title")
+    String spreadsheetGetAllCellsTitle();
+
+    @Key("toolbar.connector.spreadsheet.getAllCellsCSV.title")
+    String spreadsheetGetAllCellsCSVTitle();
+
+    @Key("toolbar.connector.spreadsheet.getAllSpreadsheets.title")
+    String spreadsheetGetAllSpreadsheetsTitle();
+
+    @Key("toolbar.connector.spreadsheet.getAllWorksheets.title")
+    String spreadsheetGetAllWorksheetsTitle();
+
+    @Key("toolbar.connector.spreadsheet.getAuthors.title")
+    String spreadsheetGetAuthorsTitle();
+
+    @Key("toolbar.connector.spreadsheet.getCellRange.title")
+    String spreadsheetGetCellRangeTitle();
+
+    @Key("toolbar.connector.spreadsheet.getCellRangeCSV.title")
+    String spreadsheetGetCellRangeCSVTitle();
+
+    @Key("toolbar.connector.spreadsheet.getColumnHeaders.title")
+    String spreadsheetGetColumnHeadersTitle();
+
+    @Key("toolbar.connector.spreadsheet.getSpreadsheetByTitle.title")
+    String spreadsheetGetSpreadsheetByTitleTitle();
+
+    @Key("toolbar.connector.spreadsheet.getWorksheetByTitle.title")
+    String spreadsheetGetWorksheetByTitleTitle();
+
+    @Key("toolbar.connector.spreadsheet.importCSV.title")
+    String spreadsheetImportCSVTitle();
+
+    @Key("toolbar.connector.spreadsheet.init.title")
+    String spreadsheetInitTitle();
+
+    @Key("toolbar.connector.spreadsheet.purgeWorksheet.title")
+    String spreadsheetPurgeWorksheetTitle();
+
+    @Key("toolbar.connector.spreadsheet.searchCell.title")
+    String spreadsheetSearchCellTitle();
+
+    @Key("toolbar.connector.spreadsheet.setRow.title")
+    String spreadsheetSetRowTitle();
+
+    @Key("toolbar.connector.spreadsheet.updateWorksheetMeta.title")
+    String spreadsheetUpdateWorksheetMetaTitle();
+
+    @Key("toolbar.connector.spreadsheet.usernameLogin.title")
+    String spreadsheetUsernameLoginTitle();
 }

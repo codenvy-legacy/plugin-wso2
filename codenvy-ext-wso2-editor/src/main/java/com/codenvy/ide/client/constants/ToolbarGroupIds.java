@@ -18,13 +18,15 @@ package com.codenvy.ide.client.constants;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public interface ToolbarGroupIds {
 
-    String MEDIATORS             = "MediatorsGroupId";
-    String ENDPOINTS             = "EndpointsGroupId";
-    String SALESFORCE_CONNECTORS = "SalesForceConnectorsGroupId";
-    String JIRA_CONNECTORS       = "JiraConnectorsGroupId";
-    String TWITTER_CONNECTORS    = "TwitterConnectorsGroupId";
+    String MEDIATORS                     = "MediatorsGroupId";
+    String ENDPOINTS                     = "EndpointsGroupId";
+    String SALESFORCE_CONNECTORS         = "SalesForceConnectorsGroupId";
+    String JIRA_CONNECTORS               = "JiraConnectorsGroupId";
+    String TWITTER_CONNECTORS            = "TwitterConnectorsGroupId";
+    String GOOGLE_SPREADSHEET_CONNECTORS = "GoogleSpreadsheetConnectorsGroupId";
 
 }

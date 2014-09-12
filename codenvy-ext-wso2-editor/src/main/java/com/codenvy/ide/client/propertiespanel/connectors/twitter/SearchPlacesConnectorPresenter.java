@@ -131,7 +131,7 @@ public class SearchPlacesConnectorPresenter extends AbstractConnectorPropertiesP
                 element.setLongitudeNS(nameSpaces);
                 element.setLongitudeExpr(expression);
 
-                SearchPlacesConnectorPresenter.this.view.setSixesTextBoxValue(expression);
+                SearchPlacesConnectorPresenter.this.view.setSixthTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -163,7 +163,7 @@ public class SearchPlacesConnectorPresenter extends AbstractConnectorPropertiesP
         view.setVisibleThirdButton(isEquals);
         view.setVisibleFourthButton(isEquals);
         view.setVisibleFifthButton(isEquals);
-        view.setVisibleSixesButton(isEquals);
+        view.setVisibleSixthButton(isEquals);
         view.setVisibleSeventhButton(isEquals);
 
         view.setEnableFirstTextBox(!isEquals);
@@ -171,7 +171,7 @@ public class SearchPlacesConnectorPresenter extends AbstractConnectorPropertiesP
         view.setEnableThirdTextBox(!isEquals);
         view.setEnableFourthTextBox(!isEquals);
         view.setEnableFifthTextBox(!isEquals);
-        view.setEnableSixesTextBox(!isEquals);
+        view.setEnableSixthTextBox(!isEquals);
         view.setEnableSeventhTextBox(!isEquals);
 
         view.setFirstTextBoxValue(isEquals ? element.getConsumerKeyExpr() : element.getConsumerKey());
@@ -179,7 +179,7 @@ public class SearchPlacesConnectorPresenter extends AbstractConnectorPropertiesP
         view.setThirdTextBoxValue(isEquals ? element.getAccessTokenExpr() : element.getAccessToken());
         view.setFourthTextBoxValue(isEquals ? element.getAccessTokenSecretExpr() : element.getAccessTokenSecret());
         view.setFifthTextBoxValue(isEquals ? element.getLatitudeExpr() : element.getLatitude());
-        view.setSixesTextBoxValue(isEquals ? element.getLongitudeExpr() : element.getLongitude());
+        view.setSixthTextBoxValue(isEquals ? element.getLongitudeExpr() : element.getLongitude());
         view.setSeventhTextBoxValue(isEquals ? element.getQueryExpr() : element.getQuery());
 
         notifyListeners();
@@ -227,8 +227,8 @@ public class SearchPlacesConnectorPresenter extends AbstractConnectorPropertiesP
 
     /** {@inheritDoc} */
     @Override
-    public void onSixesTextBoxValueChanged() {
-        element.setLongitude(view.getSixesTextBoxValue());
+    public void onSixthTextBoxValueChanged() {
+        element.setLongitude(view.getSixthTextBoxValue());
 
         notifyListeners();
     }
@@ -288,7 +288,7 @@ public class SearchPlacesConnectorPresenter extends AbstractConnectorPropertiesP
 
     /** {@inheritDoc} */
     @Override
-    public void onSixesButtonClicked() {
+    public void onSixthButtonClicked() {
         nameSpacePresenter.showWindowWithParameters(element.getLongitudeNS(),
                                                     longitudeCallBack,
                                                     locale.connectorExpression(),
@@ -310,7 +310,7 @@ public class SearchPlacesConnectorPresenter extends AbstractConnectorPropertiesP
         view.setVisibleThirdPanel(true);
         view.setVisibleFourthPanel(true);
         view.setVisibleFifthPanel(true);
-        view.setVisibleSixesPanel(true);
+        view.setVisibleSixthPanel(true);
         view.setVisibleSeventhPanel(true);
 
         view.setFirstLabelTitle(locale.twitterConsumerKey());
@@ -318,7 +318,7 @@ public class SearchPlacesConnectorPresenter extends AbstractConnectorPropertiesP
         view.setThirdLabelTitle(locale.twitterAccessToken());
         view.setFourthLabelTitle(locale.twitterAccessTokenSecret());
         view.setFifthLabelTitle(locale.twitterLatitude());
-        view.setSixesLabelTitle(locale.twitterLongitude());
+        view.setSixthLabelTitle(locale.twitterLongitude());
         view.setSeventhLabelTitle(locale.twitterQuery());
     }
 

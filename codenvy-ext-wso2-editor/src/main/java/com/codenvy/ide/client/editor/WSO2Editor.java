@@ -18,6 +18,7 @@ package com.codenvy.ide.client.editor;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.constants.EndpointCreatingState;
+import com.codenvy.ide.client.constants.GoogleSpreadsheedConnectorCreatingState;
 import com.codenvy.ide.client.constants.JiraConnectorCreatingState;
 import com.codenvy.ide.client.constants.MediatorCreatingState;
 import com.codenvy.ide.client.constants.SalesForceConnectorCreatingState;
@@ -1982,102 +1983,102 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
 
         mediatorCreatorsManager.register(CreateSpreadsheet.ELEMENT_NAME,
                                          CreateSpreadsheet.SERIALIZATION_NAME,
-                                         State.CREATING_SPREADSHEET_CREATE_SPREADSHEET,
+                                         GoogleSpreadsheedConnectorCreatingState.CREATING_SPREADSHEET,
                                          createSpreadsheetProvider);
 
         mediatorCreatorsManager.register(CreateWorksheet.ELEMENT_NAME,
                                          CreateWorksheet.SERIALIZATION_NAME,
-                                         State.CREATING_SPREADSHEET_CREATE_WORKSHEET,
+                                         GoogleSpreadsheedConnectorCreatingState.CREATING_WORKSHEET,
                                          createWorksheetProvider);
 
         mediatorCreatorsManager.register(DeleteWorksheet.ELEMENT_NAME,
                                          DeleteWorksheet.SERIALIZATION_NAME,
-                                         State.CREATING_SPREADSHEET_DELETE_WORKSHEET,
+                                         GoogleSpreadsheedConnectorCreatingState.DELETE_WORKSHEET,
                                          deleteWorksheetProvider);
 
         mediatorCreatorsManager.register(GetAllCells.ELEMENT_NAME,
                                          GetAllCells.SERIALIZATION_NAME,
-                                         State.CREATING_SPREADSHEET_GET_ALL_CELLS,
+                                         GoogleSpreadsheedConnectorCreatingState.GET_ALL_CELLS,
                                          getAllCellsProvider);
 
         mediatorCreatorsManager.register(GetAllCellsCSV.ELEMENT_NAME,
                                          GetAllCellsCSV.SERIALIZATION_NAME,
-                                         State.CREATING_SPREADSHEET_GET_ALL_CELLS_CSV,
+                                         GoogleSpreadsheedConnectorCreatingState.GET_ALL_CELLS_CSV,
                                          getAllCellsCSVProvider);
 
         mediatorCreatorsManager.register(GetAllWorksheets.ELEMENT_NAME,
                                          GetAllWorksheets.SERIALIZATION_NAME,
-                                         State.CREATING_SPREADSHEET_GET_ALL_WORKSHEETS,
+                                         GoogleSpreadsheedConnectorCreatingState.GET_ALL_WORKSHEETS,
                                          getAllWorksheetsProvider);
 
         mediatorCreatorsManager.register(GetAllSpreadsheets.ELEMENT_NAME,
                                          GetAllSpreadsheets.SERIALIZATION_NAME,
-                                         State.CREATING_SPREADSHEET_GET_ALL_SPREADSHEETS,
+                                         GoogleSpreadsheedConnectorCreatingState.GET_ALL_SPREADSHEETS,
                                          getAllSpreadsheetsProvider);
 
         mediatorCreatorsManager.register(GetAuthors.ELEMENT_NAME,
                                          GetAuthors.SERIALIZATION_NAME,
-                                         State.CREATING_SPREADSHEET_GET_AUTHORS,
+                                         GoogleSpreadsheedConnectorCreatingState.GET_AUTHORS,
                                          getAuthorsProvider);
 
         mediatorCreatorsManager.register(GetCellRange.ELEMENT_NAME,
                                          GetCellRange.SERIALIZATION_NAME,
-                                         State.CREATING_SPREADSHEET_GET_CELL_RANGE,
+                                         GoogleSpreadsheedConnectorCreatingState.GET_CELL_RANGE,
                                          getCellRangeProvider);
 
         mediatorCreatorsManager.register(GetCellRangeCSV.ELEMENT_NAME,
                                          GetCellRangeCSV.SERIALIZATION_NAME,
-                                         State.CREATING_SPREADSHEET_GET_CELL_RANGE_CSV,
+                                         GoogleSpreadsheedConnectorCreatingState.GET_CELL_RANGE_CSV,
                                          getCellRangeCSVProvider);
 
         mediatorCreatorsManager.register(GetColumnHeaders.ELEMENT_NAME,
                                          GetColumnHeaders.SERIALIZATION_NAME,
-                                         State.CREATING_SPREADSHEET_GET_COLUMN_HEADERS,
+                                         GoogleSpreadsheedConnectorCreatingState.GET_COLUMN_HEADERS,
                                          getColumnHeadersProvider);
 
         mediatorCreatorsManager.register(GetSpreadsheetsByTitle.ELEMENT_NAME,
                                          GetSpreadsheetsByTitle.SERIALIZATION_NAME,
-                                         State.CREATING_SPREADSHEET_GET_SPREADSHEET_BY_TITLE,
+                                         GoogleSpreadsheedConnectorCreatingState.GET_SPREADSHEET_BY_TITLE,
                                          getSpreadsheetsByTitleProvider);
 
         mediatorCreatorsManager.register(GetWorksheetsByTitle.ELEMENT_NAME,
                                          GetWorksheetsByTitle.SERIALIZATION_NAME,
-                                         State.CREATING_SPREADSHEET_GET_WORKSHEET_BY_TITLE,
+                                         GoogleSpreadsheedConnectorCreatingState.GET_WORKSHEET_BY_TITLE,
                                          getWorksheetsByTitleProvider);
 
         mediatorCreatorsManager.register(ImportCSV.ELEMENT_NAME,
                                          ImportCSV.SERIALIZATION_NAME,
-                                         State.CREATING_SPREADSHEET_IMPORT_CSV,
+                                         GoogleSpreadsheedConnectorCreatingState.IMPORT_CSV,
                                          importCSVProvider);
 
         mediatorCreatorsManager.register(InitSpreadsheet.ELEMENT_NAME,
                                          InitSpreadsheet.SERIALIZATION_NAME,
-                                         State.CREATING_SPREADSHEET_INIT,
+                                         GoogleSpreadsheedConnectorCreatingState.INIT,
                                          initSpreadsheetProvider);
 
         mediatorCreatorsManager.register(PurgeWorkshet.ELEMENT_NAME,
                                          PurgeWorkshet.SERIALIZATION_NAME,
-                                         State.CREATING_SPREADSHEET_PURGE_WORKSHEET,
+                                         GoogleSpreadsheedConnectorCreatingState.PURGE_WORKSHEET,
                                          purgeWorkshetProvider);
 
         mediatorCreatorsManager.register(SearchCell.ELEMENT_NAME,
                                          SearchCell.SERIALIZATION_NAME,
-                                         State.CREATING_SPREADSHEET_SEARCH_CELL,
+                                         GoogleSpreadsheedConnectorCreatingState.SEARCH_CELL,
                                          searchCellProvider);
 
         mediatorCreatorsManager.register(SetRow.ELEMENT_NAME,
                                          SetRow.SERIALIZATION_NAME,
-                                         State.CREATING_SPREADSHEET_SET_ROW,
+                                         GoogleSpreadsheedConnectorCreatingState.SET_ROW,
                                          setRowProvider);
 
         mediatorCreatorsManager.register(UpdateWorksheetMetadata.ELEMENT_NAME,
                                          UpdateWorksheetMetadata.SERIALIZATION_NAME,
-                                         State.CREATING_SPREADSHEET_UPDATE_WORKSHEET_META,
+                                         GoogleSpreadsheedConnectorCreatingState.UPDATE_WORKSHEET_METADATA,
                                          updateWorksheetMetadataProvider);
 
         mediatorCreatorsManager.register(UsernameLogin.ELEMENT_NAME,
                                          UsernameLogin.SERIALIZATION_NAME,
-                                         State.CREATING_SPREADSHEET_USERNAME_LOGIN,
+                                         GoogleSpreadsheedConnectorCreatingState.USERNAME_LOGIN,
                                          usernameLoginProvider);
     }
 
@@ -2695,6 +2696,128 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                         localizationConstant.twitterUpdateStatusTooltip(),
                         resources.twitterToolbar(),
                         TwitterConnectorCreatingState.UPDATE_STATUS);
+
+        toolbar.addGroup(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS, localizationConstant.toolbarGroupGoogleSpreadsheetConnector());
+
+        toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
+                        localizationConstant.spreadsheetCreateSpreadsheetTitle(),
+                        localizationConstant.spreadsheetCreateSpreadsheetTooltip(),
+                        resources.googleSpreadsheetToolbar(),
+                        GoogleSpreadsheedConnectorCreatingState.CREATING_SPREADSHEET);
+
+        toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
+                        localizationConstant.spreadsheetCreateWorksheetTitle(),
+                        localizationConstant.spreadsheetCreateWorksheetTooltip(),
+                        resources.googleSpreadsheetToolbar(),
+                        GoogleSpreadsheedConnectorCreatingState.CREATING_WORKSHEET);
+
+        toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
+                        localizationConstant.spreadsheetDeleteWorksheetTitle(),
+                        localizationConstant.spreadsheetDeleteWorksheetTooltip(),
+                        resources.googleSpreadsheetToolbar(),
+                        GoogleSpreadsheedConnectorCreatingState.DELETE_WORKSHEET);
+
+        toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
+                        localizationConstant.spreadsheetGetAllCellsTitle(),
+                        localizationConstant.spreadsheetGetAllCellsTooltip(),
+                        resources.googleSpreadsheetToolbar(),
+                        GoogleSpreadsheedConnectorCreatingState.GET_ALL_CELLS);
+
+        toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
+                        localizationConstant.spreadsheetGetAllCellsCSVTitle(),
+                        localizationConstant.spreadsheetGetAllCellsCSVTooltip(),
+                        resources.googleSpreadsheetToolbar(),
+                        GoogleSpreadsheedConnectorCreatingState.GET_ALL_CELLS_CSV);
+
+        toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
+                        localizationConstant.spreadsheetGetAllSpreadsheetsTitle(),
+                        localizationConstant.spreadsheetGetAllSpreadsheetsTooltip(),
+                        resources.googleSpreadsheetToolbar(),
+                        GoogleSpreadsheedConnectorCreatingState.GET_ALL_SPREADSHEETS);
+
+        toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
+                        localizationConstant.spreadsheetGetAllWorksheetsTitle(),
+                        localizationConstant.spreadsheetGetAllWorksheetsTooltip(),
+                        resources.googleSpreadsheetToolbar(),
+                        GoogleSpreadsheedConnectorCreatingState.GET_ALL_WORKSHEETS);
+
+        toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
+                        localizationConstant.spreadsheetGetAuthorsTitle(),
+                        localizationConstant.spreadsheetGetAuthorsTooltip(),
+                        resources.googleSpreadsheetToolbar(),
+                        GoogleSpreadsheedConnectorCreatingState.GET_AUTHORS);
+
+        toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
+                        localizationConstant.spreadsheetGetCellRangeTitle(),
+                        localizationConstant.spreadsheetGetCellRangeTooltip(),
+                        resources.googleSpreadsheetToolbar(),
+                        GoogleSpreadsheedConnectorCreatingState.GET_CELL_RANGE);
+
+        toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
+                        localizationConstant.spreadsheetGetCellRangeCSVTitle(),
+                        localizationConstant.spreadsheetGetCellRangeCSVTooltip(),
+                        resources.googleSpreadsheetToolbar(),
+                        GoogleSpreadsheedConnectorCreatingState.GET_CELL_RANGE_CSV);
+
+        toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
+                        localizationConstant.spreadsheetGetColumnHeadersTitle(),
+                        localizationConstant.spreadsheetGetColumnHeadersTooltip(),
+                        resources.googleSpreadsheetToolbar(),
+                        GoogleSpreadsheedConnectorCreatingState.GET_COLUMN_HEADERS);
+
+        toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
+                        localizationConstant.spreadsheetGetSpreadsheetByTitleTitle(),
+                        localizationConstant.spreadsheetGetSpreadsheetByTitleTooltip(),
+                        resources.googleSpreadsheetToolbar(),
+                        GoogleSpreadsheedConnectorCreatingState.GET_SPREADSHEET_BY_TITLE);
+
+        toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
+                        localizationConstant.spreadsheetGetWorksheetByTitleTitle(),
+                        localizationConstant.spreadsheetGetWorksheetByTitleTooltip(),
+                        resources.googleSpreadsheetToolbar(),
+                        GoogleSpreadsheedConnectorCreatingState.GET_WORKSHEET_BY_TITLE);
+
+        toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
+                        localizationConstant.spreadsheetImportCSVTitle(),
+                        localizationConstant.spreadsheetImportCSVTooltip(),
+                        resources.googleSpreadsheetToolbar(),
+                        GoogleSpreadsheedConnectorCreatingState.IMPORT_CSV);
+
+        toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
+                        localizationConstant.spreadsheetInitTitle(),
+                        localizationConstant.spreadsheetInitTooltip(),
+                        resources.googleSpreadsheetToolbar(),
+                        GoogleSpreadsheedConnectorCreatingState.INIT);
+
+        toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
+                        localizationConstant.spreadsheetPurgeWorksheetTitle(),
+                        localizationConstant.spreadsheetPurgeWorksheetTooltip(),
+                        resources.googleSpreadsheetToolbar(),
+                        GoogleSpreadsheedConnectorCreatingState.PURGE_WORKSHEET);
+
+        toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
+                        localizationConstant.spreadsheetSearchCellTitle(),
+                        localizationConstant.spreadsheetSearchCellTooltip(),
+                        resources.googleSpreadsheetToolbar(),
+                        GoogleSpreadsheedConnectorCreatingState.SEARCH_CELL);
+
+        toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
+                        localizationConstant.spreadsheetSetRowTitle(),
+                        localizationConstant.spreadsheetSetRowTooltip(),
+                        resources.googleSpreadsheetToolbar(),
+                        GoogleSpreadsheedConnectorCreatingState.SET_ROW);
+
+        toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
+                        localizationConstant.spreadsheetUpdateWorksheetMetaTitle(),
+                        localizationConstant.spreadsheetUpdateWorksheetMetaTooltip(),
+                        resources.googleSpreadsheetToolbar(),
+                        GoogleSpreadsheedConnectorCreatingState.UPDATE_WORKSHEET_METADATA);
+
+        toolbar.addItem(ToolbarGroupIds.GOOGLE_SPREADSHEET_CONNECTORS,
+                        localizationConstant.spreadsheetUsernameLoginTitle(),
+                        localizationConstant.spreadsheetUsernameLoginTooltip(),
+                        resources.googleSpreadsheetToolbar(),
+                        GoogleSpreadsheedConnectorCreatingState.USERNAME_LOGIN);
     }
 
     /** {@inheritDoc} */

@@ -135,7 +135,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
                 element.setSinceIdNS(nameSpaces);
                 element.setSinceIdExpr(expression);
 
-                SearchTwitterConnectorPresenter.this.view.setSixesTextBoxValue(expression);
+                SearchTwitterConnectorPresenter.this.view.setSixthTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -216,7 +216,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
         view.setVisibleThirdButton(isEquals);
         view.setVisibleFourthButton(isEquals);
         view.setVisibleFifthButton(isEquals);
-        view.setVisibleSixesButton(isEquals);
+        view.setVisibleSixthButton(isEquals);
         view.setVisibleSeventhButton(isEquals);
         view.setVisibleEighthButton(isEquals);
         view.setVisibleNinthButton(isEquals);
@@ -228,7 +228,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
         view.setEnableThirdTextBox(!isEquals);
         view.setEnableFourthTextBox(!isEquals);
         view.setEnableFifthTextBox(!isEquals);
-        view.setEnableSixesTextBox(!isEquals);
+        view.setEnableSixthTextBox(!isEquals);
         view.setEnableSeventhTextBox(!isEquals);
         view.setEnableEighthTextBox(!isEquals);
         view.setEnableNinthTextBox(!isEquals);
@@ -240,7 +240,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
         view.setThirdTextBoxValue(isEquals ? element.getLocaleExpr() : element.getLocale());
         view.setFourthTextBoxValue(isEquals ? element.getMaxIdExpr() : element.getMaxId());
         view.setFifthTextBoxValue(isEquals ? element.getSinceExpr() : element.getSince());
-        view.setSixesTextBoxValue(isEquals ? element.getSinceIdExpr() : element.getSinceId());
+        view.setSixthTextBoxValue(isEquals ? element.getSinceIdExpr() : element.getSinceId());
         view.setSeventhTextBoxValue(isEquals ? element.getGeocodeExpr() : element.getGeocode());
         view.setEighthTextBoxValue(isEquals ? element.getRadiusExpr() : element.getRadius());
         view.setNinthTextBoxValue(isEquals ? element.getUnitExpr() : element.getUnit());
@@ -292,8 +292,8 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
 
     /** {@inheritDoc} */
     @Override
-    public void onSixesTextBoxValueChanged() {
-        element.setSinceId(view.getSixesTextBoxValue());
+    public void onSixthTextBoxValueChanged() {
+        element.setSinceId(view.getSixthTextBoxValue());
 
         notifyListeners();
     }
@@ -385,7 +385,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
 
     /** {@inheritDoc} */
     @Override
-    public void onSixesButtonClicked() {
+    public void onSixthButtonClicked() {
         nameSpacePresenter.showWindowWithParameters(element.getSinceIdNS(),
                                                     sinceIdCallBack,
                                                     locale.connectorExpression(),
@@ -443,7 +443,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
         view.setVisibleThirdPanel(true);
         view.setVisibleFourthPanel(true);
         view.setVisibleFifthPanel(true);
-        view.setVisibleSixesPanel(true);
+        view.setVisibleSixthPanel(true);
         view.setVisibleSeventhPanel(true);
         view.setVisibleEighthPanel(true);
         view.setVisibleNinthPanel(true);
@@ -455,7 +455,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
         view.setThirdLabelTitle(locale.twitterLocale());
         view.setFourthLabelTitle(locale.twitterMaxId());
         view.setFifthLabelTitle(locale.twitterSince());
-        view.setSixesLabelTitle(locale.twitterSinceId());
+        view.setSixthLabelTitle(locale.twitterSinceId());
         view.setSeventhLabelTitle(locale.twitterGeocode());
         view.setEighthLabelTitle(locale.twitterRadius());
         view.setNinthLabelTitle(locale.twitterUnit());

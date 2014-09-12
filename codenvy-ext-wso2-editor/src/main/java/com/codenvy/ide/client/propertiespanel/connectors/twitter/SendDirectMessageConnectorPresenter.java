@@ -131,7 +131,7 @@ public class SendDirectMessageConnectorPresenter extends AbstractConnectorProper
                 element.setScreenNameNS(nameSpaces);
                 element.setScreenNameExpr(expression);
 
-                SendDirectMessageConnectorPresenter.this.view.setSixesTextBoxValue(expression);
+                SendDirectMessageConnectorPresenter.this.view.setSixthTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -163,7 +163,7 @@ public class SendDirectMessageConnectorPresenter extends AbstractConnectorProper
         view.setVisibleThirdButton(isEquals);
         view.setVisibleFourthButton(isEquals);
         view.setVisibleFifthButton(isEquals);
-        view.setVisibleSixesButton(isEquals);
+        view.setVisibleSixthButton(isEquals);
         view.setVisibleSeventhButton(isEquals);
 
         view.setEnableFirstTextBox(!isEquals);
@@ -171,7 +171,7 @@ public class SendDirectMessageConnectorPresenter extends AbstractConnectorProper
         view.setEnableThirdTextBox(!isEquals);
         view.setEnableFourthTextBox(!isEquals);
         view.setEnableFifthTextBox(!isEquals);
-        view.setEnableSixesTextBox(!isEquals);
+        view.setEnableSixthTextBox(!isEquals);
         view.setEnableSeventhTextBox(!isEquals);
 
         view.setFirstTextBoxValue(isEquals ? element.getConsumerKeyExpr() : element.getConsumerKey());
@@ -179,7 +179,7 @@ public class SendDirectMessageConnectorPresenter extends AbstractConnectorProper
         view.setThirdTextBoxValue(isEquals ? element.getAccessTokenExpr() : element.getAccessToken());
         view.setFourthTextBoxValue(isEquals ? element.getAccessTokenSecretExpr() : element.getAccessTokenSecret());
         view.setFifthTextBoxValue(isEquals ? element.getUserIDExpr() : element.getUserID());
-        view.setSixesTextBoxValue(isEquals ? element.getScreenNameExpr() : element.getScreenName());
+        view.setSixthTextBoxValue(isEquals ? element.getScreenNameExpr() : element.getScreenName());
         view.setSeventhTextBoxValue(isEquals ? element.getMessageExpr() : element.getMessage());
 
         notifyListeners();
@@ -227,8 +227,8 @@ public class SendDirectMessageConnectorPresenter extends AbstractConnectorProper
 
     /** {@inheritDoc} */
     @Override
-    public void onSixesTextBoxValueChanged() {
-        element.setScreenName(view.getSixesTextBoxValue());
+    public void onSixthTextBoxValueChanged() {
+        element.setScreenName(view.getSixthTextBoxValue());
 
         notifyListeners();
     }
@@ -288,7 +288,7 @@ public class SendDirectMessageConnectorPresenter extends AbstractConnectorProper
 
     /** {@inheritDoc} */
     @Override
-    public void onSixesButtonClicked() {
+    public void onSixthButtonClicked() {
         nameSpacePresenter.showWindowWithParameters(element.getScreenNameNS(),
                                                     screenNameCallBack,
                                                     locale.connectorExpression(),
@@ -310,7 +310,7 @@ public class SendDirectMessageConnectorPresenter extends AbstractConnectorProper
         view.setVisibleThirdPanel(true);
         view.setVisibleFourthPanel(true);
         view.setVisibleFifthPanel(true);
-        view.setVisibleSixesPanel(true);
+        view.setVisibleSixthPanel(true);
         view.setVisibleSeventhPanel(true);
 
         view.setFirstLabelTitle(locale.twitterConsumerKey());
@@ -318,7 +318,7 @@ public class SendDirectMessageConnectorPresenter extends AbstractConnectorProper
         view.setThirdLabelTitle(locale.twitterAccessToken());
         view.setFourthLabelTitle(locale.twitterAccessTokenSecret());
         view.setFifthLabelTitle(locale.twitterUserId());
-        view.setSixesLabelTitle(locale.twitterScreenName());
+        view.setSixthLabelTitle(locale.twitterScreenName());
         view.setSeventhLabelTitle(locale.twitterMessage());
     }
 
