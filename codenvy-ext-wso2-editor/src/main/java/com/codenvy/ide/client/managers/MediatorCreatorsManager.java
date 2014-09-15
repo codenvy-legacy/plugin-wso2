@@ -15,7 +15,9 @@
  */
 package com.codenvy.ide.client.managers;
 
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.Element;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -29,19 +31,23 @@ import java.util.Map;
  * The manager of mediator creators. It contains all available creator for mediators. One can get needed creator by mediator name.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 @Singleton
 public class MediatorCreatorsManager {
 
-    private final Map<String, Provider<? extends Element>> nameProviders;
-    private final Map<String, String>                      stateProviders;
+    private final Map<String, Provider<? extends Element>> stateProviders;
+    private final Map<String, String>                      elementNames;
     private final Map<String, String>                      serializeNames;
+    private final WSO2EditorLocalizationConstant           locale;
 
     @Inject
-    public MediatorCreatorsManager() {
-        nameProviders = new HashMap<>();
+    public MediatorCreatorsManager(WSO2EditorLocalizationConstant locale) {
         stateProviders = new HashMap<>();
+        elementNames = new HashMap<>();
         serializeNames = new HashMap<>();
+
+        this.locale = locale;
     }
 
     /**
@@ -60,9 +66,14 @@ public class MediatorCreatorsManager {
                          @Nonnull String serializationName,
                          @Nonnull String state,
                          @Nonnull Provider<? extends Element> provider) {
-        nameProviders.put(name, provider);
-        serializeNames.put(serializationName, name);
-        stateProviders.put(state, name);
+        if (stateProviders.containsKey(state)) {
+            Log.error(getClass(), locale.errorToolbarEditorStateWasAlreadyAdded(state));
+            return;
+        }
+
+        stateProviders.put(state, provider);
+        serializeNames.put(serializationName, state);
+        elementNames.put(state, name);
     }
 
     /**
@@ -74,9 +85,7 @@ public class MediatorCreatorsManager {
      */
     @Nullable
     public Provider<? extends Element> getProviderBySerializeName(@Nonnull String serializeName) {
-        String name = serializeNames.get(serializeName);
-
-        return nameProviders.get(name);
+        return stateProviders.get(serializeNames.get(serializeName));
     }
 
     /**
@@ -88,9 +97,7 @@ public class MediatorCreatorsManager {
      */
     @Nullable
     public Provider<? extends Element> getProviderByState(@Nonnull String state) {
-        String name = stateProviders.get(state);
-
-        return nameProviders.get(name);
+        return stateProviders.get(state);
     }
 
     /**
@@ -102,7 +109,7 @@ public class MediatorCreatorsManager {
      */
     @Nullable
     public String getElementNameByState(@Nonnull String state) {
-        return stateProviders.get(state);
+        return elementNames.get(state);
     }
 
 }

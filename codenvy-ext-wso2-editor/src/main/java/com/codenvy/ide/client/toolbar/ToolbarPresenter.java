@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.toolbar;
 
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.inject.factories.ToolbarFactory;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.toolbar.group.ToolbarGroupPresenter;
@@ -35,6 +36,7 @@ import java.util.Set;
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 @Singleton
 public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements ToolbarView.ActionDelegate {
@@ -42,14 +44,16 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
     private final Map<String, ToolbarGroupPresenter> groups;
     private final ToolbarFactory                     toolbarFactory;
     private final Set<String>                        states;
+    private final WSO2EditorLocalizationConstant     locale;
 
     @Inject
-    public ToolbarPresenter(ToolbarView view, ToolbarFactory toolbarFactory) {
+    public ToolbarPresenter(ToolbarView view, ToolbarFactory toolbarFactory, WSO2EditorLocalizationConstant locale) {
         super(view);
 
         this.toolbarFactory = toolbarFactory;
         this.groups = new LinkedHashMap<>();
         this.states = new HashSet<>();
+        this.locale = locale;
     }
 
     /**
@@ -62,7 +66,7 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
      */
     public void addGroup(@Nonnull String groupId, @Nonnull String title) {
         if (groups.containsKey(groupId)) {
-            Log.error(getClass(), "Group with the ID " + groupId + " was already registered.");
+            Log.error(getClass(), locale.errorToolbarGroupWasAlreadyRegistered(groupId));
             return;
         }
 
@@ -90,12 +94,12 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
                         @Nonnull ImageResource icon,
                         @Nonnull String editorState) {
         if (!groups.containsKey(groupId)) {
-            Log.error(getClass(), "Group with the ID " + groupId + " hasn't registered yet.");
+            Log.error(getClass(), locale.errorToolbarGroupHasNotRegisteredYet(groupId));
             return;
         }
 
         if (states.contains(editorState)) {
-            Log.error(getClass(), "State " + editorState + " was already added.");
+            Log.error(getClass(), locale.errorToolbarEditorStateWasAlreadyAdded(editorState));
             return;
         }
 

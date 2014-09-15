@@ -44,7 +44,7 @@ import static com.codenvy.ide.collections.Collections.createArray;
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
-public class Init extends AbstractConnector {
+public class InitSalesforce extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "Init";
     public static final String SERIALIZATION_NAME = "salesforce.init";
@@ -72,7 +72,7 @@ public class Init extends AbstractConnector {
     private Array<NameSpace> usernameNameSpaces;
 
     @Inject
-    public Init(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+    public InitSalesforce(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
 
         username = "";
@@ -265,5 +265,4 @@ public class Init extends AbstractConnector {
     public void setForceLoginNameSpaces(@Nonnull Array<NameSpace> forceLoginNameSpaces) {
         this.forceLoginNameSpaces = forceLoginNameSpaces;
     }
-
 }

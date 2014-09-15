@@ -1523,4 +1523,13 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("toolbar.connector.spreadsheet.usernameLogin.title")
     String toolbarSpreadsheetUsernameLoginTitle();
+
+    @Key("error.toolbar.group.was.already.registered")
+    String errorToolbarGroupWasAlreadyRegistered(@Nonnull String groupId);
+
+    @Key("error.toolbar.editor.state.was.already.added")
+    String errorToolbarEditorStateWasAlreadyAdded(@Nonnull String editorState);
+
+    @Key("error.toolbar.group.has.not.registered.yet")
+    String errorToolbarGroupHasNotRegisteredYet(@Nonnull String groupId);
 }

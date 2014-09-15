@@ -95,7 +95,7 @@ import com.codenvy.ide.client.elements.connectors.salesforce.DescribeSubject;
 import com.codenvy.ide.client.elements.connectors.salesforce.DescribeSubjects;
 import com.codenvy.ide.client.elements.connectors.salesforce.EmptyRecycleBin;
 import com.codenvy.ide.client.elements.connectors.salesforce.GetUserInformation;
-import com.codenvy.ide.client.elements.connectors.salesforce.Init;
+import com.codenvy.ide.client.elements.connectors.salesforce.InitSalesforce;
 import com.codenvy.ide.client.elements.connectors.salesforce.LogOut;
 import com.codenvy.ide.client.elements.connectors.salesforce.Query;
 import com.codenvy.ide.client.elements.connectors.salesforce.QueryAll;
@@ -224,7 +224,7 @@ import com.codenvy.ide.client.propertiespanel.connectors.salesforce.DescribeGlob
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.DescribeSubjectConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.EmptyRecycleBinConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.GetUserInformationConnectorPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.InitConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.InitSalesforceConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.LogOutConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.QueryAllConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.QueryConnectorPresenter;
@@ -424,7 +424,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                  CallTemplatePropertiesPanelPresenter callTemplatePropertiesPanelPresenter,
                                                  CallPropertiesPanelPresenter callPropertiesPanelPresenter,
                                                  AddressEndpointPropertiesPanelPresenter addressEndpointPropertiesPanelPresenter,
-                                                 InitConnectorPresenter initConnectorPresenter,
+                                                 InitSalesforceConnectorPresenter initConnectorPresenter,
                                                  CreateConnectorPresenter createConnectorPresenter,
                                                  UpdateConnectorPresenter updateConnectorPresenter,
                                                  DeleteConnectorPresenter deletePresenter,
@@ -573,7 +573,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
         propertiesPanelManager.register(AddressEndpoint.class, addressEndpointPropertiesPanelPresenter);
         addressEndpointPropertiesPanelPresenter.addListener(this);
 
-        propertiesPanelManager.register(Init.class, initConnectorPresenter);
+        propertiesPanelManager.register(InitSalesforce.class, initConnectorPresenter);
         initConnectorPresenter.addListener(this);
 
         propertiesPanelManager.register(Create.class, createConnectorPresenter);
@@ -1007,7 +1007,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                   CallTemplate.ELEMENT_NAME,
                                                                                   Call.ELEMENT_NAME,
                                                                                   AddressEndpoint.ELEMENT_NAME,
-                                                                                  Init.ELEMENT_NAME,
+                                                                                  InitSalesforce.ELEMENT_NAME,
                                                                                   Create.ELEMENT_NAME,
                                                                                   Update.ELEMENT_NAME,
                                                                                   Delete.ELEMENT_NAME,
@@ -1128,7 +1128,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                    CallTemplate.ELEMENT_NAME,
                                                                                    Call.ELEMENT_NAME,
                                                                                    AddressEndpoint.ELEMENT_NAME,
-                                                                                   Init.ELEMENT_NAME,
+                                                                                   InitSalesforce.ELEMENT_NAME,
                                                                                    Create.ELEMENT_NAME,
                                                                                    Update.ELEMENT_NAME,
                                                                                    Delete.ELEMENT_NAME,
@@ -1249,7 +1249,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                                                           CallTemplate.ELEMENT_NAME,
                                                                                           Call.ELEMENT_NAME,
                                                                                           AddressEndpoint.ELEMENT_NAME,
-                                                                                          Init.ELEMENT_NAME,
+                                                                                          InitSalesforce.ELEMENT_NAME,
                                                                                           Create.ELEMENT_NAME,
                                                                                           Update.ELEMENT_NAME,
                                                                                           Delete.ELEMENT_NAME,
@@ -1386,7 +1386,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                                   Provider<Sequence> sequenceProvider,
                                                   Provider<Switch> switchProvider,
                                                   Provider<AddressEndpoint> addressEndpointProvider,
-                                                  Provider<Init> initSalesforceProvider,
+                                                  Provider<InitSalesforce> initSalesforceProvider,
                                                   Provider<Create> createSalesforceProvider,
                                                   Provider<Update> updateSalesforceProvider,
                                                   Provider<Delete> deleteSaleForceProvider,
@@ -1561,8 +1561,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                                          EndpointCreatingState.ADDRESS,
                                          addressEndpointProvider);
 
-        mediatorCreatorsManager.register(Init.ELEMENT_NAME,
-                                         Init.SERIALIZATION_NAME,
+        mediatorCreatorsManager.register(InitSalesforce.ELEMENT_NAME,
+                                         InitSalesforce.SERIALIZATION_NAME,
                                          SalesForceConnectorCreatingState.INIT,
                                          initSalesforceProvider);
 

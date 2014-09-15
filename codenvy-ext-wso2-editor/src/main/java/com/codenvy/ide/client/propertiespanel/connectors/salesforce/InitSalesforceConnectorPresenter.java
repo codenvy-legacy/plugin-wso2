@@ -18,7 +18,7 @@ package com.codenvy.ide.client.propertiespanel.connectors.salesforce;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
-import com.codenvy.ide.client.elements.connectors.salesforce.Init;
+import com.codenvy.ide.client.elements.connectors.salesforce.InitSalesforce;
 import com.codenvy.ide.client.elements.connectors.salesforce.SalesForcePropertyManager;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
@@ -39,7 +39,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  *
  * @author Valeriy Svydenko
  */
-public class InitConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<Init> {
+public class InitSalesforceConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<InitSalesforce> {
 
     private final WSO2EditorLocalizationConstant locale;
     private final NameSpaceEditorPresenter       nameSpacePresenter;
@@ -50,7 +50,7 @@ public class InitConnectorPresenter extends AbstractConnectorPropertiesPanelPres
 
 
     @Inject
-    public InitConnectorPresenter(WSO2EditorLocalizationConstant locale,
+    public InitSalesforceConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                   NameSpaceEditorPresenter nameSpacePresenter,
                                   GeneralPropertiesPanelView view,
                                   SalesForcePropertyManager salesForcePropertyManager,
@@ -68,7 +68,7 @@ public class InitConnectorPresenter extends AbstractConnectorPropertiesPanelPres
                 element.setUsernameNameSpaces(nameSpaces);
                 element.setUsername(expression);
 
-                InitConnectorPresenter.this.view.setFirstTextBoxValue(expression);
+                InitSalesforceConnectorPresenter.this.view.setFirstTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -80,7 +80,7 @@ public class InitConnectorPresenter extends AbstractConnectorPropertiesPanelPres
                 element.setPasswordNameSpaces(nameSpaces);
                 element.setPassword(expression);
 
-                InitConnectorPresenter.this.view.setSecondTextBoxValue(expression);
+                InitSalesforceConnectorPresenter.this.view.setSecondTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -92,7 +92,7 @@ public class InitConnectorPresenter extends AbstractConnectorPropertiesPanelPres
                 element.setLoginUrlNameSpaces(nameSpaces);
                 element.setLoginUrl(expression);
 
-                InitConnectorPresenter.this.view.setThirdTextBoxValue(expression);
+                InitSalesforceConnectorPresenter.this.view.setThirdTextBoxValue(expression);
 
                 notifyListeners();
             }
@@ -104,7 +104,7 @@ public class InitConnectorPresenter extends AbstractConnectorPropertiesPanelPres
                 element.setForceLoginNameSpaces(nameSpaces);
                 element.setForceLogin(expression);
 
-                InitConnectorPresenter.this.view.setFourthTextBoxValue(expression);
+                InitSalesforceConnectorPresenter.this.view.setFourthTextBoxValue(expression);
 
                 notifyListeners();
             }
