@@ -2090,22 +2090,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
         toolbar.addGroup(ToolbarGroupIds.MEDIATORS, localizationConstant.toolbarGroupMediators());
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        localizationConstant.toolbarLogTitle(),
-                        localizationConstant.toolbarLogTooltip(),
-                        resources.logToolbar(),
-                        MediatorCreatingState.LOG);
-
-        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        localizationConstant.toolbarSequenceTitle(),
-                        localizationConstant.toolbarSequenceTooltip(),
-                        resources.sequenceToolbar(),
-                        MediatorCreatingState.SEQUENCE);
-
-        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        localizationConstant.toolbarHeaderTitle(),
-                        localizationConstant.toolbarHeaderTooltip(),
-                        resources.headerToolbar(),
-                        MediatorCreatingState.HEADER);
+                        localizationConstant.toolbarCallTitle(),
+                        localizationConstant.toolbarCallTooltip(),
+                        resources.callToolbar(),
+                        MediatorCreatingState.CALL_MEDIATOR);
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
                         localizationConstant.toolbarCallTemplateTitle(),
@@ -2114,28 +2102,10 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                         MediatorCreatingState.CALLTEMPLATE);
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        localizationConstant.toolbarCallTitle(),
-                        localizationConstant.toolbarCallTooltip(),
-                        resources.callToolbar(),
-                        MediatorCreatingState.CALL_MEDIATOR);
-
-        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        localizationConstant.toolbarEnrichTitle(),
-                        localizationConstant.toolbarEnrichTooltip(),
-                        resources.enrichToolbar(),
-                        MediatorCreatingState.ENRICH);
-
-        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        localizationConstant.toolbarFilterTitle(),
-                        localizationConstant.toolbarFilterTooltip(),
-                        resources.filterToolbar(),
-                        MediatorCreatingState.FILTER);
-
-        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        localizationConstant.toolbarPropertyTitle(),
-                        localizationConstant.toolbarPropertyTooltip(),
-                        resources.propertyToolbar(),
-                        MediatorCreatingState.PROPERTY);
+                        localizationConstant.toolbarLogTitle(),
+                        localizationConstant.toolbarLogTooltip(),
+                        resources.logToolbar(),
+                        MediatorCreatingState.LOG);
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
                         localizationConstant.toolbarLoopBackTitle(),
@@ -2144,16 +2114,16 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                         MediatorCreatingState.LOOPBACK);
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        localizationConstant.toolbarPayloadFactoryTitle(),
-                        localizationConstant.toolbarPayloadFactoryTooltip(),
-                        resources.payloadFactoryToolbar(),
-                        MediatorCreatingState.PAYLOAD);
+                        localizationConstant.toolbarPropertyTitle(),
+                        localizationConstant.toolbarPropertyTooltip(),
+                        resources.propertyToolbar(),
+                        MediatorCreatingState.PROPERTY);
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        localizationConstant.toolbarSwitchTitle(),
-                        localizationConstant.toolbarSwitchTooltip(),
-                        resources.switchToolbar(),
-                        MediatorCreatingState.SWITCH);
+                        localizationConstant.toolbarRespondTitle(),
+                        localizationConstant.toolbarRespondTooltip(),
+                        resources.respondToolbar(),
+                        MediatorCreatingState.RESPOND);
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
                         localizationConstant.toolbarSendTitle(),
@@ -2162,10 +2132,40 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
                         MediatorCreatingState.SEND);
 
         toolbar.addItem(ToolbarGroupIds.MEDIATORS,
-                        localizationConstant.toolbarRespondTitle(),
-                        localizationConstant.toolbarRespondTooltip(),
-                        resources.respondToolbar(),
-                        MediatorCreatingState.RESPOND);
+                        localizationConstant.toolbarSequenceTitle(),
+                        localizationConstant.toolbarSequenceTooltip(),
+                        resources.sequenceToolbar(),
+                        MediatorCreatingState.SEQUENCE);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        localizationConstant.toolbarFilterTitle(),
+                        localizationConstant.toolbarFilterTooltip(),
+                        resources.filterToolbar(),
+                        MediatorCreatingState.FILTER);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        localizationConstant.toolbarSwitchTitle(),
+                        localizationConstant.toolbarSwitchTooltip(),
+                        resources.switchToolbar(),
+                        MediatorCreatingState.SWITCH);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        localizationConstant.toolbarHeaderTitle(),
+                        localizationConstant.toolbarHeaderTooltip(),
+                        resources.headerToolbar(),
+                        MediatorCreatingState.HEADER);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        localizationConstant.toolbarPayloadFactoryTitle(),
+                        localizationConstant.toolbarPayloadFactoryTooltip(),
+                        resources.payloadFactoryToolbar(),
+                        MediatorCreatingState.PAYLOAD);
+
+        toolbar.addItem(ToolbarGroupIds.MEDIATORS,
+                        localizationConstant.toolbarEnrichTitle(),
+                        localizationConstant.toolbarEnrichTooltip(),
+                        resources.enrichToolbar(),
+                        MediatorCreatingState.ENRICH);
 
         toolbar.addGroup(ToolbarGroupIds.ENDPOINTS, localizationConstant.toolbarGroupEndpoints());
 
