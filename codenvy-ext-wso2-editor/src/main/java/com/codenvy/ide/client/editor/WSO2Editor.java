@@ -2866,7 +2866,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
      */
     public void deserialize(@Nonnull String content) {
         rootElement.deserialize(content);
-        rootElementPresenter.onElementChanged();
+        rootElementPresenter.onElementUpdate();
     }
 
     /** {@inheritDoc} */

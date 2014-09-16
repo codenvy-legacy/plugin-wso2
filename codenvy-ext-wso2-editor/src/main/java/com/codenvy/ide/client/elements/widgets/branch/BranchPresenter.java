@@ -35,7 +35,9 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.ARROW_PADDING;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_HEIGHT;
@@ -64,7 +66,8 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     private final Branch branch;
 
     private final List<ElementChangedListener> elementChangedListeners;
-    private final List<ElementPresenter>       elements;
+
+    private final Map<String, ElementPresenter> widgetElements;
 
     @Inject
     public BranchPresenter(BranchView view,
@@ -85,7 +88,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         this.selectionManager = selectionManager;
 
         this.elementChangedListeners = new ArrayList<>();
-        this.elements = new ArrayList<>();
+        this.widgetElements = new LinkedHashMap<>();
 
         this.branch = branch;
 
@@ -196,6 +199,8 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     @Override
     public void onElementDeleted(@Nonnull Element element) {
         removeElement(element);
+
+        notifyElementChangedListeners();
     }
 
     /** {@inheritDoc} */
@@ -215,9 +220,14 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     /** {@inheritDoc} */
     @Override
     public void onElementChanged() {
-        redrawElements();
+        onElementUpdate();
 
         notifyElementChangedListeners();
+    }
+
+    /** Updates the widget according to the current state of element without notifying of listeners. */
+    public void onElementUpdate() {
+        redrawElements();
     }
 
     /** @return an instance of creating element if new element is creating or <code>null<code/> if it isn't */
@@ -234,28 +244,22 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         }
 
         branch.removeElement(element);
+        widgetElements.remove(element.getId());
         selectionManager.setElement(null);
 
         onElementChanged();
     }
 
     private void redrawElements() {
-        recreateElements();
+        displayElements();
 
         detectWidgetSize();
 
         alignElements();
     }
 
-    private void recreateElements() {
-        for (ElementPresenter element : elements) {
-            element.removeElementChangedListener(this);
-            element.removeElementMoveListener(this);
-            element.removeElementDeleteListener(this);
-        }
-
+    private void displayElements() {
         view.clear();
-        elements.clear();
 
         int x = ARROW_PADDING;
         int y = 0;
@@ -264,13 +268,19 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
             element.setX(x);
             element.setY(y);
 
-            ElementPresenter elementPresenter = elementWidgetFactory.createElementPresenter(element);
+            String elementId = element.getId();
+            ElementPresenter elementPresenter = widgetElements.get(elementId);
 
-            elementPresenter.addElementChangedListener(this);
-            elementPresenter.addElementMoveListener(this);
-            elementPresenter.addElementDeleteListener(this);
+            if (elementPresenter == null) {
+                elementPresenter = elementWidgetFactory.createElementPresenter(element);
 
-            elements.add(elementPresenter);
+                elementPresenter.addElementChangedListener(this);
+                elementPresenter.addElementMoveListener(this);
+                elementPresenter.addElementDeleteListener(this);
+
+                widgetElements.put(elementId, elementPresenter);
+            }
+
             view.addElement(x, y, elementPresenter);
 
             x += ARROW_PADDING + elementPresenter.getWidth();
@@ -285,6 +295,8 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
             height = DEFAULT_HEIGHT;
             width = DEFAULT_WIDTH;
         } else {
+            List<ElementPresenter> elements = new ArrayList<>(widgetElements.values());
+
             width = 0;
             height = elements.get(0).getHeight();
 
@@ -308,9 +320,9 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     }
 
     private void alignElements() {
-        int top = view.getAbsoluteTop() + view.getHeight() / 2 - BranchView.TITLE_HEIGHT;
+        int top = view.getHeight() / 2 - BranchView.TITLE_HEIGHT;
 
-        for (ElementPresenter element : elements) {
+        for (ElementPresenter element : widgetElements.values()) {
             element.setY(top - element.getHeight() / 2);
         }
     }
@@ -323,16 +335,6 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
      */
     public void addElementChangedListener(@Nonnull ElementChangedListener listener) {
         elementChangedListeners.add(listener);
-    }
-
-    /**
-     * Removes listener that listens to changing of the current element.
-     *
-     * @param listener
-     *         listener that needs to be removed
-     */
-    public void removeElementChangedListener(@Nonnull ElementChangedListener listener) {
-        elementChangedListeners.remove(listener);
     }
 
     /** Notify all listeners about changing element. */

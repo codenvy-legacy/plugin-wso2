@@ -17,19 +17,6 @@ package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.common.ContentFormatter;
-import com.codenvy.ide.client.elements.mediators.Call;
-import com.codenvy.ide.client.elements.mediators.CallTemplate;
-import com.codenvy.ide.client.elements.mediators.Filter;
-import com.codenvy.ide.client.elements.mediators.Header;
-import com.codenvy.ide.client.elements.mediators.LoopBack;
-import com.codenvy.ide.client.elements.mediators.Property;
-import com.codenvy.ide.client.elements.mediators.Respond;
-import com.codenvy.ide.client.elements.mediators.Send;
-import com.codenvy.ide.client.elements.mediators.Sequence;
-import com.codenvy.ide.client.elements.mediators.Switch;
-import com.codenvy.ide.client.elements.mediators.enrich.Enrich;
-import com.codenvy.ide.client.elements.mediators.log.Log;
-import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
@@ -73,8 +60,6 @@ public class RootElement extends AbstractElement {
 
         this.name = "";
         this.onError = "";
-
-        branches.add(branchProvider.get());
     }
 
     /** @return name of root element */
