@@ -396,6 +396,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
     @Inject
     public WSO2Editor(WSO2EditorView view, ElementWidgetFactory elementWidgetFactory, ToolbarPresenter toolbar, RootElement rootElement) {
         super(view);
+        onShowPropertyButtonClicked();
 
         this.listeners = new ArrayList<>();
         this.toolbar = toolbar;
@@ -2871,13 +2872,13 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Abs
     /** {@inheritDoc} */
     @Override
     public void onHidePanelButtonClicked() {
-        view.setVisiblePropertyPanel(true);
+        view.setVisiblePropertyPanel(false);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onShowPropertyButtonClicked() {
-        view.setVisiblePropertyPanel(false);
+        view.setVisiblePropertyPanel(true);
     }
 
     public interface EditorChangeListener {

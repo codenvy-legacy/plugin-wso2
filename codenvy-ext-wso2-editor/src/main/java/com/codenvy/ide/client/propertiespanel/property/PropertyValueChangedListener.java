@@ -13,31 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.mvp;
 
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
+package com.codenvy.ide.client.propertiespanel.property;
 
 import javax.annotation.Nonnull;
 
 /**
- * The abstract implementation of presenter. It contains the implementation of general methods which might not be changed.
+ * The listener for detecting the moment when property value is changed.
  *
  * @author Andrey Plotnikov
  */
-public abstract class AbstractPresenter<T extends AbstractView> implements Presenter, AbstractView.ActionDelegate {
-
-    protected final T view;
-
-    protected AbstractPresenter(T view) {
-        this.view = view;
-        //noinspection unchecked
-        this.view.setDelegate(this);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void go(@Nonnull AcceptsOneWidget container) {
-        container.setWidget(view);
-    }
-
+public interface PropertyValueChangedListener {
+    /**
+     * Performs some actions in response to a user's changing property value.
+     *
+     * @param property
+     *         new property value
+     */
+    void onPropertyChanged(@Nonnull String property);
 }

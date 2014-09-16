@@ -13,31 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.mvp;
 
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
+package com.codenvy.ide.client.propertiespanel;
+
+import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
+import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
 
 /**
- * The abstract implementation of presenter. It contains the implementation of general methods which might not be changed.
+ * The general representation of the graphical part of a properties panel.
  *
  * @author Andrey Plotnikov
  */
-public abstract class AbstractPresenter<T extends AbstractView> implements Presenter, AbstractView.ActionDelegate {
-
-    protected final T view;
-
-    protected AbstractPresenter(T view) {
-        this.view = view;
-        //noinspection unchecked
-        this.view.setDelegate(this);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void go(@Nonnull AcceptsOneWidget container) {
-        container.setWidget(view);
-    }
-
+@ImplementedBy(PropertiesPanelViewImpl.class)
+public abstract class PropertiesPanelView extends AbstractView<AbstractView.ActionDelegate> {
+    /**
+     * Adds a property group on the view.
+     *
+     * @param propertyGroup
+     *         property group that needs to be added
+     */
+    public abstract void addGroup(@Nonnull PropertyGroupPresenter propertyGroup);
 }

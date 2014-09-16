@@ -19,12 +19,12 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:style>
-        @eval backgroundColor com.codenvy.ide.api.ui.theme.Style.getPartBackground();
-        @eval borderColor com.codenvy.ide.api.ui.theme.Style.getWindowHeaderBackground();
+        @eval backgroundColor com.codenvy.ide.api.ui.theme.Style.getWindowHeaderBackground();
+        @eval borderColor com.codenvy.ide.api.ui.theme.Style.getPartBackground();
         @eval selectionBackgroundColor com.codenvy.ide.api.ui.theme.Style.getSelectionBackground();
 
         .mainPanel {
-            width: 260px;
+            width: 100%;
             margin: 1px 0 1px 0;
         }
 
@@ -49,13 +49,18 @@
             position: relative;
             top: 50%;
             margin-top: -6px;
-            margin-left: 12px;
+        }
+
+        .iconPanel {
+            position: absolute;
+            right: 20px;
         }
 
         .title {
             position: relative;
             top: 7px;
-            margin-left: 36px;
+            margin-left: 12px;
+            font-size: 12px;
             font-weight: bold;
         }
     </ui:style>
@@ -63,11 +68,14 @@
     <g:FlowPanel ui:field="mainPanel" addStyleNames="{style.mainPanel}">
 
         <g:FlowPanel addStyleNames="{style.headerPanel}">
-            <g:SimpleLayoutPanel ui:field="icon" addStyleNames="{style.icon}"/>
             <g:Label ui:field="title" addStyleNames="{style.title}"/>
+
+            <g:FlowPanel addStyleNames="{style.iconPanel}">
+                <g:SimpleLayoutPanel ui:field="icon" addStyleNames="{style.icon}"/>
+            </g:FlowPanel>
         </g:FlowPanel>
 
-        <g:FlowPanel ui:field="itemsPanel"/>
+        <g:FlowPanel ui:field="propertiesPanel"/>
 
     </g:FlowPanel>
 

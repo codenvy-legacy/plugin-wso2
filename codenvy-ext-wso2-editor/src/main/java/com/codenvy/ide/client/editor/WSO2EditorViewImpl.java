@@ -22,9 +22,10 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
-import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -45,8 +46,6 @@ public class WSO2EditorViewImpl extends WSO2EditorView {
     interface EditorViewImplUiBinder extends UiBinder<Widget, WSO2EditorViewImpl> {
     }
 
-    @UiField(provided = true)
-    SplitLayoutPanel  splitPanel;
     @UiField
     SimpleLayoutPanel toolbar;
     @UiField
@@ -57,17 +56,21 @@ public class WSO2EditorViewImpl extends WSO2EditorView {
     Button            hideBtn;
     @UiField
     Button            showBtn;
+    @UiField
+    FlowPanel         showButtonPanel;
+    @UiField
+    DockLayoutPanel   mainPanel;
+    @UiField
+    FlowPanel         mainPropertiesPanel;
 
     @Inject
     public WSO2EditorViewImpl(EditorViewImplUiBinder ourUiBinder, PartStackUIResources resources) {
-        this.splitPanel = new SplitLayoutPanel(3);
         initWidget(ourUiBinder.createAndBindUi(this));
 
         SVGImage image = new SVGImage(resources.minimize());
         image.getElement().setAttribute("name", "workBenchIconMinimize");
 
         showBtn.getElement().setInnerHTML(image.toString());
-
         hideBtn.getElement().setInnerHTML(image.toString());
     }
 
@@ -95,11 +98,10 @@ public class WSO2EditorViewImpl extends WSO2EditorView {
     /** {@inheritDoc} */
     @Override
     public void setVisiblePropertyPanel(boolean isVisible) {
-        splitPanel.setWidgetHidden(propertiesPanel.getParent(), isVisible);
-        splitPanel.onResize();
+        mainPanel.setWidgetHidden(mainPropertiesPanel, !isVisible);
+        mainPanel.setWidgetHidden(showButtonPanel, isVisible);
 
-        hideBtn.setVisible(!isVisible);
-        showBtn.setVisible(isVisible);
+        mainPanel.onResize();
     }
 
     @UiHandler("hideBtn")

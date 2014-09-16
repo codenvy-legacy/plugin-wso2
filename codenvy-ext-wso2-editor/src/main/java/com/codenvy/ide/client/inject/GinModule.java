@@ -21,6 +21,8 @@ import com.codenvy.ide.client.inject.factories.EditorFactory;
 import com.codenvy.ide.client.inject.factories.ElementWidgetFactory;
 import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.inject.factories.ToolbarFactory;
+import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupView;
+import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupViewImpl;
 import com.codenvy.ide.client.toolbar.group.ToolbarGroupView;
 import com.codenvy.ide.client.toolbar.group.ToolbarGroupViewImpl;
 import com.codenvy.ide.client.toolbar.item.ToolbarItemView;
@@ -44,7 +46,8 @@ public class GinModule extends AbstractGinModule {
                                              .implement(ToolbarItemView.class, ToolbarItemViewImpl.class)
                                              .build(ToolbarFactory.class));
 
-        install(new GinFactoryModuleBuilder().build(PropertiesPanelWidgetFactory.class));
+        install(new GinFactoryModuleBuilder().implement(PropertyGroupView.class, PropertyGroupViewImpl.class)
+                                             .build(PropertiesPanelWidgetFactory.class));
     }
 
 }
