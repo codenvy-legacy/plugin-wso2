@@ -28,7 +28,7 @@
 
     <g:FlowPanel addStyleNames="{res.editorCSS.property}">
         <g:Label ui:field="title" addStyleNames="{res.editorCSS.fieldStyle} {style.title}"/>
-        <g:TextBox enabled="false" ui:field="property" width="200px" addStyleNames="{res.editorCSS.fieldStyle}"/>
+        <g:TextBox enabled="false" ui:field="property" width="235px" addStyleNames="{res.editorCSS.fieldStyle}"/>
         <g:Button ui:field="btnEdit" addStyleNames="{res.editorCSS.propertyButton}" text="..."/>
     </g:FlowPanel>
 

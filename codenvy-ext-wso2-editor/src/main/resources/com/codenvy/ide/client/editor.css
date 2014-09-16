@@ -16,15 +16,21 @@
 @url applyCursorURL applyCursor;
 @url errorCursorURL errorCursor;
 
+@eval borderColor com.codenvy.ide.api.ui.theme.Style.getPartBackground();
+
 .fullSize {
     width: 100%;
     height: 100%;
 }
 
 .property {
-    margin-left: 6px;
-    margin-top: 6px;
-    margin-bottom: 20px;
+    width: 100%;
+    height: 40px;
+    margin: 1px 0 1px 0;
+    padding: 3px 3px 3px 3px;
+
+    border-bottom: 1px groove borderColor;
+    border-top: 1px groove borderColor;
 }
 
 .labelStyle {
@@ -34,7 +40,7 @@
 }
 
 .fieldStyle {
-    margin-left: 12px;
+    margin-left: 6px;
 }
 
 .selectedElement {

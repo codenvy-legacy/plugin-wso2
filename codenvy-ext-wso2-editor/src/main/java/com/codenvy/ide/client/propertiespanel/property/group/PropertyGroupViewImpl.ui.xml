@@ -75,7 +75,7 @@
             </g:FlowPanel>
         </g:FlowPanel>
 
-        <g:FlowPanel ui:field="propertiesPanel"/>
+        <g:FlowPanel ui:field="propertiesPanel" width="100%"/>
 
     </g:FlowPanel>
 

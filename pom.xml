@@ -61,6 +61,7 @@
                     <excludes>
                         <exclude>**/*.gif</exclude>
                         <exclude>**/*.png</exclude>
+                        <exclude>**/*.svg</exclude>
                         <exclude>**/*Grammar</exclude>
                         <exclude>**/*.zip</exclude>
                         <exclude>**/com/codenvy/ide/ext/wso2/client/xml.js</exclude>
