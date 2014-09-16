@@ -75,16 +75,7 @@ public class GetCommentsConnectorPresenter extends AbstractConnectorPropertiesPa
     /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
-
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
-
-        view.setVisibleFirstButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getIssueIdOrKeyExpression() : element.getIssueIdOrKey());
+        redrawPropertiesPanel();
 
         notifyListeners();
     }
@@ -106,6 +97,22 @@ public class GetCommentsConnectorPresenter extends AbstractConnectorPropertiesPa
                                                     element.getIssueIdOrKeyExpression());
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void redrawPropertiesPanel() {
+        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
+        element.setParameterEditorType(editorType);
+
+        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+
+        view.setVisibleFirstButton(isEquals);
+
+        view.setEnableFirstTextBox(!isEquals);
+
+        view.setFirstTextBoxValue(isEquals ? element.getIssueIdOrKeyExpression() : element.getIssueIdOrKey());
+
+    }
+
     private void redesignViewToCurrentConnector() {
         view.setVisibleFirstPanel(true);
 
@@ -118,6 +125,5 @@ public class GetCommentsConnectorPresenter extends AbstractConnectorPropertiesPa
         super.go(container);
 
         redesignViewToCurrentConnector();
-        onParameterEditorTypeChanged();
     }
 }

@@ -235,6 +235,11 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
 
     }
 
+    /** Redraw properties panel of connector depending on user's action. */
+    public void redrawPropertiesPanel() {
+
+    }
+
     /** {@inheritDoc} */
     @Override
     public void go(@Nonnull AcceptsOneWidget container) {
@@ -246,5 +251,7 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
         view.setParameterEditorType(propertyTypeManager.getValuesByName(ParameterEditorType.TYPE_NAME));
 
         view.selectParameterEditorType(element.getParameterEditorType());
+
+        redrawPropertiesPanel();
     }
 }

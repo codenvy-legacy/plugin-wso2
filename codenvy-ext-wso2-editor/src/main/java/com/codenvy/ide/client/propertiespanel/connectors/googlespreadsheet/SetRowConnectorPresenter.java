@@ -20,11 +20,11 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GoogleSpreadsheetPropertyManager;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.SetRow;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
+import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
-import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -114,25 +114,7 @@ public class SetRowConnectorPresenter extends AbstractConnectorPropertiesPanelPr
     /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
-
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
-
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-        view.setVisibleFourthButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-        view.setEnableFourthTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getSpreadsheetNameExpression() : element.getSpreadsheetName());
-        view.setSecondTextBoxValue(isEquals ? element.getWorksheetNameExpression() : element.getWorksheetName());
-        view.setThirdTextBoxValue(isEquals ? element.getRowIdExpression() : element.getRowId());
-        view.setFourthTextBoxValue(isEquals ? element.getRowDataExpression() : element.getRowData());
+        redrawPropertiesPanel();
 
         notifyListeners();
     }
@@ -205,6 +187,30 @@ public class SetRowConnectorPresenter extends AbstractConnectorPropertiesPanelPr
                                                     element.getRowDataExpression());
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void redrawPropertiesPanel() {
+        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
+        element.setParameterEditorType(editorType);
+
+        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+
+        view.setVisibleFirstButton(isEquals);
+        view.setVisibleSecondButton(isEquals);
+        view.setVisibleThirdButton(isEquals);
+        view.setVisibleFourthButton(isEquals);
+
+        view.setEnableFirstTextBox(!isEquals);
+        view.setEnableSecondTextBox(!isEquals);
+        view.setEnableThirdTextBox(!isEquals);
+        view.setEnableFourthTextBox(!isEquals);
+
+        view.setFirstTextBoxValue(isEquals ? element.getSpreadsheetNameExpression() : element.getSpreadsheetName());
+        view.setSecondTextBoxValue(isEquals ? element.getWorksheetNameExpression() : element.getWorksheetName());
+        view.setThirdTextBoxValue(isEquals ? element.getRowIdExpression() : element.getRowId());
+        view.setFourthTextBoxValue(isEquals ? element.getRowDataExpression() : element.getRowData());
+    }
+
     private void redesignViewToCurrentConnector() {
         view.setVisibleFirstPanel(true);
         view.setVisibleSecondPanel(true);
@@ -223,6 +229,5 @@ public class SetRowConnectorPresenter extends AbstractConnectorPropertiesPanelPr
         super.go(container);
 
         redesignViewToCurrentConnector();
-        onParameterEditorTypeChanged();
     }
 }

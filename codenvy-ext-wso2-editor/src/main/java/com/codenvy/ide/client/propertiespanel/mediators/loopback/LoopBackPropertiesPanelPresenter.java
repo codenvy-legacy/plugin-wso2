@@ -52,7 +52,6 @@ public class LoopBackPropertiesPanelPresenter extends AbstractPropertiesPanel<Lo
         super.go(container);
 
         view.setDescription(element.getDescription());
-        onDescriptionChanged();
     }
 
 }

@@ -17,21 +17,21 @@ package com.codenvy.ide.client.propertiespanel.connectors.jira;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.elements.connectors.jira.JiraPropertyManager;
 import com.codenvy.ide.client.elements.connectors.jira.SearchAssignableUserMultiProject;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
+import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
-import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
 
 /**
@@ -115,27 +115,7 @@ public class SearchAssignableUserMultiProjectConnectorPresenter
     /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
-        AbstractConnector.ParameterEditorType editorType = AbstractConnector.ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
-
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
-
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-        view.setVisibleFourthButton(isEquals);
-        view.setVisibleFifthButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-        view.setEnableFourthTextBox(!isEquals);
-        view.setEnableFifthTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getUserNameExpression() : element.getUserName());
-        view.setSecondTextBoxValue(isEquals ? element.getProjectIssueExpression() : element.getProjectIssue());
-        view.setThirdTextBoxValue(isEquals ? element.getStartAtExpression() : element.getStartAt());
-        view.setFourthTextBoxValue(isEquals ? element.getMaxResultsExpression() : element.getMaxResults());
+        redrawPropertiesPanel();
 
         notifyListeners();
     }
@@ -208,6 +188,32 @@ public class SearchAssignableUserMultiProjectConnectorPresenter
                                                     element.getMaxResultsExpression());
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void redrawPropertiesPanel() {
+        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
+        element.setParameterEditorType(editorType);
+
+        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+
+        view.setVisibleFirstButton(isEquals);
+        view.setVisibleSecondButton(isEquals);
+        view.setVisibleThirdButton(isEquals);
+        view.setVisibleFourthButton(isEquals);
+        view.setVisibleFifthButton(isEquals);
+
+        view.setEnableFirstTextBox(!isEquals);
+        view.setEnableSecondTextBox(!isEquals);
+        view.setEnableThirdTextBox(!isEquals);
+        view.setEnableFourthTextBox(!isEquals);
+        view.setEnableFifthTextBox(!isEquals);
+
+        view.setFirstTextBoxValue(isEquals ? element.getUserNameExpression() : element.getUserName());
+        view.setSecondTextBoxValue(isEquals ? element.getProjectIssueExpression() : element.getProjectIssue());
+        view.setThirdTextBoxValue(isEquals ? element.getStartAtExpression() : element.getStartAt());
+        view.setFourthTextBoxValue(isEquals ? element.getMaxResultsExpression() : element.getMaxResults());
+    }
+
     private void redesignViewToCurrentConnector() {
         view.setVisibleFirstPanel(true);
         view.setVisibleSecondPanel(true);
@@ -226,6 +232,5 @@ public class SearchAssignableUserMultiProjectConnectorPresenter
         super.go(container);
 
         redesignViewToCurrentConnector();
-        onParameterEditorTypeChanged();
     }
 }

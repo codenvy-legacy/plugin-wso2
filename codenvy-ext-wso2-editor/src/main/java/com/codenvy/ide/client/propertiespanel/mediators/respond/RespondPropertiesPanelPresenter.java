@@ -52,7 +52,6 @@ public class RespondPropertiesPanelPresenter extends AbstractPropertiesPanel<Res
         super.go(container);
 
         view.setDescription(element.getDescription());
-        onDescriptionChanged();
     }
 
 }

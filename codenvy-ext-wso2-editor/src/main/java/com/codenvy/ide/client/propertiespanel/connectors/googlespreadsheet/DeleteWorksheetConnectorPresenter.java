@@ -39,6 +39,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * depending on user's changes of properties.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class DeleteWorksheetConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<DeleteWorksheet> {
 
@@ -89,19 +90,7 @@ public class DeleteWorksheetConnectorPresenter extends AbstractConnectorProperti
     /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
-
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
-
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-
-        view.setSecondTextBoxValue(isEquals ? element.getSpreadsheetNameExpression() : element.getSpreadsheetName());
-        view.setFirstTextBoxValue(isEquals ? element.getWorksheetNameExpression() : element.getWorksheetName());
+        redrawPropertiesPanel();
 
         notifyListeners();
     }
@@ -150,10 +139,27 @@ public class DeleteWorksheetConnectorPresenter extends AbstractConnectorProperti
 
     /** {@inheritDoc} */
     @Override
+    public void redrawPropertiesPanel(){
+        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
+        element.setParameterEditorType(editorType);
+
+        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+
+        view.setVisibleFirstButton(isEquals);
+        view.setVisibleSecondButton(isEquals);
+
+        view.setEnableFirstTextBox(!isEquals);
+        view.setEnableSecondTextBox(!isEquals);
+
+        view.setSecondTextBoxValue(isEquals ? element.getSpreadsheetNameExpression() : element.getSpreadsheetName());
+        view.setFirstTextBoxValue(isEquals ? element.getWorksheetNameExpression() : element.getWorksheetName());
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
         redesignViewToCurrentConnector();
-        onParameterEditorTypeChanged();
     }
 }

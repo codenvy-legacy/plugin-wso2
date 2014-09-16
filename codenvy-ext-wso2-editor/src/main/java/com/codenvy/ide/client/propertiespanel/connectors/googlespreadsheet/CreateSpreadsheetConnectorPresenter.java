@@ -20,11 +20,11 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.CreateSpreadsheet;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GoogleSpreadsheetPropertyManager;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
+import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
-import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -39,6 +39,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * depending on user's changes of properties.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class CreateSpreadsheetConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<CreateSpreadsheet> {
 
@@ -88,19 +89,7 @@ public class CreateSpreadsheetConnectorPresenter extends AbstractConnectorProper
     /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
-
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
-
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getSpreadsheetNameExpression() : element.getSpreadsheetName());
-        view.setSecondTextBoxValue(isEquals ? element.getWorksheetCountExpression() : element.getWorksheetCount());
+        redrawPropertiesPanel();
 
         notifyListeners();
     }
@@ -149,10 +138,27 @@ public class CreateSpreadsheetConnectorPresenter extends AbstractConnectorProper
 
     /** {@inheritDoc} */
     @Override
+    public void redrawPropertiesPanel() {
+        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
+        element.setParameterEditorType(editorType);
+
+        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+
+        view.setVisibleFirstButton(isEquals);
+        view.setVisibleSecondButton(isEquals);
+
+        view.setEnableFirstTextBox(!isEquals);
+        view.setEnableSecondTextBox(!isEquals);
+
+        view.setFirstTextBoxValue(isEquals ? element.getSpreadsheetNameExpression() : element.getSpreadsheetName());
+        view.setSecondTextBoxValue(isEquals ? element.getWorksheetCountExpression() : element.getWorksheetCount());
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
         redesignViewToCurrentConnector();
-        onParameterEditorTypeChanged();
     }
 }

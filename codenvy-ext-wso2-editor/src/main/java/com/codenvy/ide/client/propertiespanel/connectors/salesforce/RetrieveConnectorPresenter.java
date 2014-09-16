@@ -20,11 +20,11 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.salesforce.Retrieve;
 import com.codenvy.ide.client.elements.connectors.salesforce.SalesForcePropertyManager;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
+import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
-import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -102,22 +102,7 @@ public class RetrieveConnectorPresenter extends AbstractConnectorPropertiesPanel
     /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
-
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
-
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getFieldList() : element.getFieldListInline());
-        view.setSecondTextBoxValue(isEquals ? element.getObjectType() : element.getObjectTypeInline());
-        view.setThirdTextBoxValue(isEquals ? element.getObjectIDS() : element.getObjectIDSInline());
+        redrawPropertiesPanel();
 
         notifyListeners();
     }
@@ -173,6 +158,28 @@ public class RetrieveConnectorPresenter extends AbstractConnectorPropertiesPanel
                                                     element.getObjectIDS());
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void redrawPropertiesPanel() {
+        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
+        element.setParameterEditorType(editorType);
+
+        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+
+        view.setVisibleFirstButton(isEquals);
+        view.setVisibleSecondButton(isEquals);
+        view.setVisibleThirdButton(isEquals);
+
+        view.setEnableFirstTextBox(!isEquals);
+        view.setEnableSecondTextBox(!isEquals);
+        view.setEnableThirdTextBox(!isEquals);
+
+        view.setFirstTextBoxValue(isEquals ? element.getFieldList() : element.getFieldListInline());
+        view.setSecondTextBoxValue(isEquals ? element.getObjectType() : element.getObjectTypeInline());
+        view.setThirdTextBoxValue(isEquals ? element.getObjectIDS() : element.getObjectIDSInline());
+
+    }
+
     private void redesignViewToCurrentConnector() {
         view.setVisibleFirstPanel(true);
         view.setVisibleSecondPanel(true);
@@ -189,6 +196,5 @@ public class RetrieveConnectorPresenter extends AbstractConnectorPropertiesPanel
         super.go(container);
 
         redesignViewToCurrentConnector();
-        onParameterEditorTypeChanged();
     }
 }

@@ -114,25 +114,7 @@ public class CreateIssueConnectorPresenter extends AbstractConnectorPropertiesPa
     /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
-
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
-
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-        view.setVisibleFourthButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-        view.setEnableFourthTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getProjectKeyExpression() : element.getProjectKey());
-        view.setSecondTextBoxValue(isEquals ? element.getSummaryExpression() : element.getSummary());
-        view.setThirdTextBoxValue(isEquals ? element.getDescriptionExpression() : element.getDescription());
-        view.setFourthTextBoxValue(isEquals ? element.getIssueTypeExpression() : element.getIssueType());
+        redrawPropertiesPanel();
 
         notifyListeners();
     }
@@ -205,6 +187,30 @@ public class CreateIssueConnectorPresenter extends AbstractConnectorPropertiesPa
                                                     element.getIssueTypeExpression());
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void redrawPropertiesPanel() {
+        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
+        element.setParameterEditorType(editorType);
+
+        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+
+        view.setVisibleFirstButton(isEquals);
+        view.setVisibleSecondButton(isEquals);
+        view.setVisibleThirdButton(isEquals);
+        view.setVisibleFourthButton(isEquals);
+
+        view.setEnableFirstTextBox(!isEquals);
+        view.setEnableSecondTextBox(!isEquals);
+        view.setEnableThirdTextBox(!isEquals);
+        view.setEnableFourthTextBox(!isEquals);
+
+        view.setFirstTextBoxValue(isEquals ? element.getProjectKeyExpression() : element.getProjectKey());
+        view.setSecondTextBoxValue(isEquals ? element.getSummaryExpression() : element.getSummary());
+        view.setThirdTextBoxValue(isEquals ? element.getDescriptionExpression() : element.getDescription());
+        view.setFourthTextBoxValue(isEquals ? element.getIssueTypeExpression() : element.getIssueType());
+    }
+
     private void redesignViewToCurrentConnector() {
         view.setVisibleFirstPanel(true);
         view.setVisibleSecondPanel(true);
@@ -223,6 +229,5 @@ public class CreateIssueConnectorPresenter extends AbstractConnectorPropertiesPa
         super.go(container);
 
         redesignViewToCurrentConnector();
-        onParameterEditorTypeChanged();
     }
 }

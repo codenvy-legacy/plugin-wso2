@@ -20,11 +20,11 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.jira.JiraPropertyManager;
 import com.codenvy.ide.client.elements.connectors.jira.SearchUser;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
+import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
-import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -127,28 +127,7 @@ public class SearchUserConnectorPresenter extends AbstractConnectorPropertiesPan
     /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
-
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
-
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-        view.setVisibleFourthButton(isEquals);
-        view.setVisibleFifthButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-        view.setEnableFourthTextBox(!isEquals);
-        view.setEnableFifthTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getUserNameExpression() : element.getUserName());
-        view.setSecondTextBoxValue(isEquals ? element.getStartAtExpression() : element.getStartAt());
-        view.setThirdTextBoxValue(isEquals ? element.getMaxResultsExpression() : element.getMaxResults());
-        view.setFourthTextBoxValue(isEquals ? element.getIncludeActiveExpression() : element.getIncludeActive());
-        view.setFifthTextBoxValue(isEquals ? element.getIncludeInactiveExpression() : element.getIncludeInactive());
+        redrawPropertiesPanel();
 
         notifyListeners();
     }
@@ -238,6 +217,33 @@ public class SearchUserConnectorPresenter extends AbstractConnectorPropertiesPan
                                                     element.getIncludeInactiveExpression());
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void redrawPropertiesPanel() {
+        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
+        element.setParameterEditorType(editorType);
+
+        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+
+        view.setVisibleFirstButton(isEquals);
+        view.setVisibleSecondButton(isEquals);
+        view.setVisibleThirdButton(isEquals);
+        view.setVisibleFourthButton(isEquals);
+        view.setVisibleFifthButton(isEquals);
+
+        view.setEnableFirstTextBox(!isEquals);
+        view.setEnableSecondTextBox(!isEquals);
+        view.setEnableThirdTextBox(!isEquals);
+        view.setEnableFourthTextBox(!isEquals);
+        view.setEnableFifthTextBox(!isEquals);
+
+        view.setFirstTextBoxValue(isEquals ? element.getUserNameExpression() : element.getUserName());
+        view.setSecondTextBoxValue(isEquals ? element.getStartAtExpression() : element.getStartAt());
+        view.setThirdTextBoxValue(isEquals ? element.getMaxResultsExpression() : element.getMaxResults());
+        view.setFourthTextBoxValue(isEquals ? element.getIncludeActiveExpression() : element.getIncludeActive());
+        view.setFifthTextBoxValue(isEquals ? element.getIncludeInactiveExpression() : element.getIncludeInactive());
+    }
+
     private void redesignViewToCurrentConnector() {
         view.setVisibleFirstPanel(true);
         view.setVisibleSecondPanel(true);
@@ -258,6 +264,5 @@ public class SearchUserConnectorPresenter extends AbstractConnectorPropertiesPan
         super.go(container);
 
         redesignViewToCurrentConnector();
-        onParameterEditorTypeChanged();
     }
 }

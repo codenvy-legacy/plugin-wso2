@@ -36,6 +36,7 @@ import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType.S
  * of 'Sequence' mediator.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Sequence, SequencePropertiesPanelView>
         implements SequencePropertiesPanelView.ActionDelegate {
@@ -70,19 +71,7 @@ public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Se
     /** {@inheritDoc} */
     @Override
     public void onReferringTypeChanged() {
-        element.setReferringType(Sequence.ReferringType.valueOf(view.getReferringType()));
-
-        if (Static.equals(element.getReferringType())) {
-            view.setStaticReferenceKey(element.getStaticReferenceKey());
-
-            view.setVisibleStaticReferenceKeyPanel(true);
-            view.setVisibleDynamicReferenceKeyPanel(false);
-        } else {
-            view.setDynamicReferenceKey(element.getDynamicReferenceKey());
-
-            view.setVisibleStaticReferenceKeyPanel(false);
-            view.setVisibleDynamicReferenceKeyPanel(true);
-        }
+        redrawPropertiesPanel();
 
         notifyListeners();
     }
@@ -104,6 +93,22 @@ public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Se
                                                           element.getDynamicReferenceKey());
     }
 
+    private void redrawPropertiesPanel() {
+        element.setReferringType(Sequence.ReferringType.valueOf(view.getReferringType()));
+
+        if (Static.equals(element.getReferringType())) {
+            view.setStaticReferenceKey(element.getStaticReferenceKey());
+
+            view.setVisibleStaticReferenceKeyPanel(true);
+            view.setVisibleDynamicReferenceKeyPanel(false);
+        } else {
+            view.setDynamicReferenceKey(element.getDynamicReferenceKey());
+
+            view.setVisibleStaticReferenceKeyPanel(false);
+            view.setVisibleDynamicReferenceKeyPanel(true);
+        }
+    }
+
     /** {@inheritDoc} */
     @Override
     public void go(@Nonnull AcceptsOneWidget container) {
@@ -112,7 +117,7 @@ public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Se
         view.setReferringTypes(propertyTypeManager.getValuesByName(Sequence.ReferringType.TYPE_NAME));
         view.selectReferringType(element.getReferringType().name());
 
-        onReferringTypeChanged();
+        redrawPropertiesPanel();
     }
 
 }

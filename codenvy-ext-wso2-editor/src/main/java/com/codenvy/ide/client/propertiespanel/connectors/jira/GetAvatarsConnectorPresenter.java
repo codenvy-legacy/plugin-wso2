@@ -75,16 +75,7 @@ public class GetAvatarsConnectorPresenter extends AbstractConnectorPropertiesPan
     /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
-
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
-
-        view.setVisibleFirstButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getProjectKeyExpression() : element.getProjectKey());
+        redrawPropertiesPanel();
 
         notifyListeners();
     }
@@ -106,6 +97,21 @@ public class GetAvatarsConnectorPresenter extends AbstractConnectorPropertiesPan
                                                     element.getProjectKeyExpression());
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void redrawPropertiesPanel() {
+        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
+        element.setParameterEditorType(editorType);
+
+        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+
+        view.setVisibleFirstButton(isEquals);
+
+        view.setEnableFirstTextBox(!isEquals);
+
+        view.setFirstTextBoxValue(isEquals ? element.getProjectKeyExpression() : element.getProjectKey());
+    }
+
     private void redesignViewToCurrentConnector() {
         view.setVisibleFirstPanel(true);
 
@@ -118,6 +124,5 @@ public class GetAvatarsConnectorPresenter extends AbstractConnectorPropertiesPan
         super.go(container);
 
         redesignViewToCurrentConnector();
-        onParameterEditorTypeChanged();
     }
 }

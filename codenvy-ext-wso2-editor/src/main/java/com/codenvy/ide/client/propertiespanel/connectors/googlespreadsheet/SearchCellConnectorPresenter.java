@@ -39,6 +39,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * depending on user's changes of properties.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class SearchCellConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<SearchCell> {
 
@@ -101,22 +102,7 @@ public class SearchCellConnectorPresenter extends AbstractConnectorPropertiesPan
     /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
-
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
-
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getSpreadsheetNameExpression() : element.getSpreadsheetName());
-        view.setSecondTextBoxValue(isEquals ? element.getWorksheetNameExpression() : element.getWorksheetName());
-        view.setThirdTextBoxValue(isEquals ? element.getSearchStringExpression() : element.getSearchString());
+        redrawPropertiesPanel();
 
         notifyListeners();
     }
@@ -172,6 +158,27 @@ public class SearchCellConnectorPresenter extends AbstractConnectorPropertiesPan
                                                     element.getSearchStringExpression());
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void redrawPropertiesPanel() {
+        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
+        element.setParameterEditorType(editorType);
+
+        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+
+        view.setVisibleFirstButton(isEquals);
+        view.setVisibleSecondButton(isEquals);
+        view.setVisibleThirdButton(isEquals);
+
+        view.setEnableFirstTextBox(!isEquals);
+        view.setEnableSecondTextBox(!isEquals);
+        view.setEnableThirdTextBox(!isEquals);
+
+        view.setFirstTextBoxValue(isEquals ? element.getSpreadsheetNameExpression() : element.getSpreadsheetName());
+        view.setSecondTextBoxValue(isEquals ? element.getWorksheetNameExpression() : element.getWorksheetName());
+        view.setThirdTextBoxValue(isEquals ? element.getSearchStringExpression() : element.getSearchString());
+    }
+
     private void redesignViewToCurrentConnector() {
         view.setVisibleFirstPanel(true);
         view.setVisibleSecondPanel(true);
@@ -188,6 +195,5 @@ public class SearchCellConnectorPresenter extends AbstractConnectorPropertiesPan
         super.go(container);
 
         redesignViewToCurrentConnector();
-        onParameterEditorTypeChanged();
     }
 }

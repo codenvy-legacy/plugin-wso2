@@ -39,6 +39,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * depending on user's changes of properties.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class ImportCSVConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<ImportCSV> {
 
@@ -128,28 +129,7 @@ public class ImportCSVConnectorPresenter extends AbstractConnectorPropertiesPane
     /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
-
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
-
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-        view.setVisibleFourthButton(isEquals);
-        view.setVisibleFifthButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-        view.setEnableFourthTextBox(!isEquals);
-        view.setEnableFifthTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getSpreadsheetNameExpression() : element.getSpreadsheetName());
-        view.setSecondTextBoxValue(isEquals ? element.getWorksheetNameExpression() : element.getWorksheetName());
-        view.setThirdTextBoxValue(isEquals ? element.getFilePathExpression() : element.getFilePath());
-        view.setFourthTextBoxValue(isEquals ? element.getBatchEnableExpression() : element.getBatchEnable());
-        view.setFifthTextBoxValue(isEquals ? element.getBatchSizeExpression() : element.getBatchSize());
+        redrawPropertiesPanel();
 
         notifyListeners();
     }
@@ -239,6 +219,33 @@ public class ImportCSVConnectorPresenter extends AbstractConnectorPropertiesPane
                                                     element.getBatchSizeExpression());
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void redrawPropertiesPanel() {
+        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
+        element.setParameterEditorType(editorType);
+
+        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+
+        view.setVisibleFirstButton(isEquals);
+        view.setVisibleSecondButton(isEquals);
+        view.setVisibleThirdButton(isEquals);
+        view.setVisibleFourthButton(isEquals);
+        view.setVisibleFifthButton(isEquals);
+
+        view.setEnableFirstTextBox(!isEquals);
+        view.setEnableSecondTextBox(!isEquals);
+        view.setEnableThirdTextBox(!isEquals);
+        view.setEnableFourthTextBox(!isEquals);
+        view.setEnableFifthTextBox(!isEquals);
+
+        view.setFirstTextBoxValue(isEquals ? element.getSpreadsheetNameExpression() : element.getSpreadsheetName());
+        view.setSecondTextBoxValue(isEquals ? element.getWorksheetNameExpression() : element.getWorksheetName());
+        view.setThirdTextBoxValue(isEquals ? element.getFilePathExpression() : element.getFilePath());
+        view.setFourthTextBoxValue(isEquals ? element.getBatchEnableExpression() : element.getBatchEnable());
+        view.setFifthTextBoxValue(isEquals ? element.getBatchSizeExpression() : element.getBatchSize());
+    }
+
     private void redesignViewToCurrentConnector() {
         view.setVisibleFirstPanel(true);
         view.setVisibleSecondPanel(true);
@@ -259,6 +266,5 @@ public class ImportCSVConnectorPresenter extends AbstractConnectorPropertiesPane
         super.go(container);
 
         redesignViewToCurrentConnector();
-        onParameterEditorTypeChanged();
     }
 }

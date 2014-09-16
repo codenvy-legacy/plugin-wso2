@@ -17,27 +17,28 @@ package com.codenvy.ide.client.propertiespanel.connectors.salesforce;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.elements.connectors.salesforce.InitSalesforce;
 import com.codenvy.ide.client.elements.connectors.salesforce.SalesForcePropertyManager;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
+import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
-import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
 
 /**
  * The presenter that provides a business logic of 'Init' connector properties panel for salesforce connectors.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class InitSalesforceConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<InitSalesforce> {
 
@@ -51,11 +52,11 @@ public class InitSalesforceConnectorPresenter extends AbstractConnectorPropertie
 
     @Inject
     public InitSalesforceConnectorPresenter(WSO2EditorLocalizationConstant locale,
-                                  NameSpaceEditorPresenter nameSpacePresenter,
-                                  GeneralPropertiesPanelView view,
-                                  SalesForcePropertyManager salesForcePropertyManager,
-                                  ParameterPresenter parameterPresenter,
-                                  PropertyTypeManager propertyTypeManager) {
+                                            NameSpaceEditorPresenter nameSpacePresenter,
+                                            GeneralPropertiesPanelView view,
+                                            SalesForcePropertyManager salesForcePropertyManager,
+                                            ParameterPresenter parameterPresenter,
+                                            PropertyTypeManager propertyTypeManager) {
         super(view, salesForcePropertyManager, parameterPresenter, propertyTypeManager);
 
         this.locale = locale;
@@ -114,25 +115,7 @@ public class InitSalesforceConnectorPresenter extends AbstractConnectorPropertie
     /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
-        AbstractConnector.ParameterEditorType editorType = AbstractConnector.ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
-
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
-
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-        view.setVisibleFourthButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-        view.setEnableFourthTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getUsername() : element.getUsernameInline());
-        view.setSecondTextBoxValue(isEquals ? element.getPassword() : element.getPasswordInline());
-        view.setThirdTextBoxValue(isEquals ? element.getLoginUrl() : element.getLoginUrlInline());
-        view.setFourthTextBoxValue(isEquals ? element.getForceLogin() : element.getForceLoginInline());
+        redrawPropertiesPanel();
 
         notifyListeners();
     }
@@ -205,6 +188,30 @@ public class InitSalesforceConnectorPresenter extends AbstractConnectorPropertie
                                                     element.getForceLogin());
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void redrawPropertiesPanel() {
+        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
+        element.setParameterEditorType(editorType);
+
+        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+
+        view.setVisibleFirstButton(isEquals);
+        view.setVisibleSecondButton(isEquals);
+        view.setVisibleThirdButton(isEquals);
+        view.setVisibleFourthButton(isEquals);
+
+        view.setEnableFirstTextBox(!isEquals);
+        view.setEnableSecondTextBox(!isEquals);
+        view.setEnableThirdTextBox(!isEquals);
+        view.setEnableFourthTextBox(!isEquals);
+
+        view.setFirstTextBoxValue(isEquals ? element.getUsername() : element.getUsernameInline());
+        view.setSecondTextBoxValue(isEquals ? element.getPassword() : element.getPasswordInline());
+        view.setThirdTextBoxValue(isEquals ? element.getLoginUrl() : element.getLoginUrlInline());
+        view.setFourthTextBoxValue(isEquals ? element.getForceLogin() : element.getForceLoginInline());
+    }
+
     private void redesignViewToCurrentConnector() {
         view.setVisibleFirstPanel(true);
         view.setVisibleSecondPanel(true);
@@ -223,6 +230,5 @@ public class InitSalesforceConnectorPresenter extends AbstractConnectorPropertie
         super.go(container);
 
         redesignViewToCurrentConnector();
-        onParameterEditorTypeChanged();
     }
 }

@@ -20,11 +20,11 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter;
 import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
+import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
-import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -206,46 +206,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
     /** {@inheritDoc} */
     @Override
     public void onParameterEditorTypeChanged() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
-
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
-
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-        view.setVisibleFourthButton(isEquals);
-        view.setVisibleFifthButton(isEquals);
-        view.setVisibleSixthButton(isEquals);
-        view.setVisibleSeventhButton(isEquals);
-        view.setVisibleEighthButton(isEquals);
-        view.setVisibleNinthButton(isEquals);
-        view.setVisibleTenthButton(isEquals);
-        view.setVisibleEleventhButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-        view.setEnableFourthTextBox(!isEquals);
-        view.setEnableFifthTextBox(!isEquals);
-        view.setEnableSixthTextBox(!isEquals);
-        view.setEnableSeventhTextBox(!isEquals);
-        view.setEnableEighthTextBox(!isEquals);
-        view.setEnableNinthTextBox(!isEquals);
-        view.setEnableTenthTextBox(!isEquals);
-        view.setEnableEleventhTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getSearchExpr() : element.getSearch());
-        view.setSecondTextBoxValue(isEquals ? element.getLangExpr() : element.getLang());
-        view.setThirdTextBoxValue(isEquals ? element.getLocaleExpr() : element.getLocale());
-        view.setFourthTextBoxValue(isEquals ? element.getMaxIdExpr() : element.getMaxId());
-        view.setFifthTextBoxValue(isEquals ? element.getSinceExpr() : element.getSince());
-        view.setSixthTextBoxValue(isEquals ? element.getSinceIdExpr() : element.getSinceId());
-        view.setSeventhTextBoxValue(isEquals ? element.getGeocodeExpr() : element.getGeocode());
-        view.setEighthTextBoxValue(isEquals ? element.getRadiusExpr() : element.getRadius());
-        view.setNinthTextBoxValue(isEquals ? element.getUnitExpr() : element.getUnit());
-        view.setFirstTextBoxValue(isEquals ? element.getUntilExpr() : element.getUntil());
-        view.setEleventhTextBoxValue(isEquals ? element.getCountExpr() : element.getCount());
+        redrawPropertiesPanel();
 
         notifyListeners();
     }
@@ -437,6 +398,51 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
                                                     element.getCountExpr());
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void redrawPropertiesPanel() {
+        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
+        element.setParameterEditorType(editorType);
+
+        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+
+        view.setVisibleFirstButton(isEquals);
+        view.setVisibleSecondButton(isEquals);
+        view.setVisibleThirdButton(isEquals);
+        view.setVisibleFourthButton(isEquals);
+        view.setVisibleFifthButton(isEquals);
+        view.setVisibleSixthButton(isEquals);
+        view.setVisibleSeventhButton(isEquals);
+        view.setVisibleEighthButton(isEquals);
+        view.setVisibleNinthButton(isEquals);
+        view.setVisibleTenthButton(isEquals);
+        view.setVisibleEleventhButton(isEquals);
+
+        view.setEnableFirstTextBox(!isEquals);
+        view.setEnableSecondTextBox(!isEquals);
+        view.setEnableThirdTextBox(!isEquals);
+        view.setEnableFourthTextBox(!isEquals);
+        view.setEnableFifthTextBox(!isEquals);
+        view.setEnableSixthTextBox(!isEquals);
+        view.setEnableSeventhTextBox(!isEquals);
+        view.setEnableEighthTextBox(!isEquals);
+        view.setEnableNinthTextBox(!isEquals);
+        view.setEnableTenthTextBox(!isEquals);
+        view.setEnableEleventhTextBox(!isEquals);
+
+        view.setFirstTextBoxValue(isEquals ? element.getSearchExpr() : element.getSearch());
+        view.setSecondTextBoxValue(isEquals ? element.getLangExpr() : element.getLang());
+        view.setThirdTextBoxValue(isEquals ? element.getLocaleExpr() : element.getLocale());
+        view.setFourthTextBoxValue(isEquals ? element.getMaxIdExpr() : element.getMaxId());
+        view.setFifthTextBoxValue(isEquals ? element.getSinceExpr() : element.getSince());
+        view.setSixthTextBoxValue(isEquals ? element.getSinceIdExpr() : element.getSinceId());
+        view.setSeventhTextBoxValue(isEquals ? element.getGeocodeExpr() : element.getGeocode());
+        view.setEighthTextBoxValue(isEquals ? element.getRadiusExpr() : element.getRadius());
+        view.setNinthTextBoxValue(isEquals ? element.getUnitExpr() : element.getUnit());
+        view.setFirstTextBoxValue(isEquals ? element.getUntilExpr() : element.getUntil());
+        view.setEleventhTextBoxValue(isEquals ? element.getCountExpr() : element.getCount());
+    }
+
     private void redesignViewToCurrentConnector() {
         view.setVisibleFirstPanel(true);
         view.setVisibleSecondPanel(true);
@@ -469,6 +475,5 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
         super.go(container);
 
         redesignViewToCurrentConnector();
-        onParameterEditorTypeChanged();
     }
 }

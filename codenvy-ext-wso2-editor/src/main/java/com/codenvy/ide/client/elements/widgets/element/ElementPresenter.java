@@ -33,7 +33,10 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static com.codenvy.ide.client.elements.widgets.element.ElementView.BRANCHES_PADDING;
 import static com.codenvy.ide.client.elements.widgets.element.ElementView.DEFAULT_HEIGHT;
@@ -43,6 +46,7 @@ import static com.codenvy.ide.client.elements.widgets.element.ElementView.DEFAUL
  * The class that provides business logic of the diagram element widget.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class ElementPresenter extends AbstractPresenter<ElementView> implements ElementView.ActionDelegate,
                                                                                 SelectionManager.SelectionStateListener,
@@ -57,7 +61,8 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     private final List<ElementDeleteListener>  elementDeleteListeners;
     private final List<ElementMoveListener>    elementMoveListeners;
     private final List<ElementChangedListener> elementChangedListeners;
-    private final List<BranchPresenter>        branches;
+
+    private final Map<String, BranchPresenter> widgetBranches;
 
     private int x;
     private int y;
@@ -84,7 +89,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
         this.elementDeleteListeners = new ArrayList<>();
         this.elementChangedListeners = new ArrayList<>();
 
-        this.branches = new ArrayList<>();
+        this.widgetBranches = new LinkedHashMap<>();
 
         this.selectionManager.addListener(this);
 
@@ -162,26 +167,30 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     }
 
     private void recreateBranches() {
-        for (BranchPresenter branch : branches) {
-            branch.removeElementChangedListener(this);
-        }
-
-        branches.clear();
         view.removeBranches();
 
-        int maxWidth = 0;
+        Set<String> keys = widgetBranches.keySet();
+        List<String> branchesId = new ArrayList<>();
 
         for (Branch branch : element.getBranches()) {
-            BranchPresenter branchPresenter = elementWidgetFactory.createContainer(branch);
-            branchPresenter.addElementChangedListener(this);
+            String branchId = branch.getId();
+            BranchPresenter branchPresenter = widgetBranches.get(branchId);
 
-            this.branches.add(branchPresenter);
+            if (branchPresenter == null) {
+                branchPresenter = elementWidgetFactory.createContainer(branch);
+                branchPresenter.addElementChangedListener(this);
+
+                widgetBranches.put(branchId, branchPresenter);
+            }
+
+            branchesId.add(branchId);
+
             view.addBranch(branchPresenter);
+        }
 
-            int branchWidth = branchPresenter.getWidth();
-
-            if (branchWidth > maxWidth) {
-                maxWidth = branchWidth;
+        for (String key : keys) {
+            if (!branchesId.contains(key)) {
+                widgetBranches.remove(key);
             }
         }
     }
@@ -196,9 +205,11 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
             height = DEFAULT_HEIGHT;
         } else {
             height = 0;
-            int maxWidth = this.branches.get(0).getWidth();
+            List<BranchPresenter> branchesWidgets = new ArrayList<>(widgetBranches.values());
 
-            for (BranchPresenter branch : this.branches) {
+            int maxWidth = branchesWidgets.get(0).getWidth();
+
+            for (BranchPresenter branch : branchesWidgets) {
                 height += branch.getHeight();
                 int branchWidth = branch.getWidth();
 
@@ -207,7 +218,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
                 }
             }
 
-            for (BranchPresenter branch : this.branches) {
+            for (BranchPresenter branch : branchesWidgets) {
                 branch.setWidth(maxWidth);
             }
 
@@ -315,9 +326,14 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     /** {@inheritDoc} */
     @Override
     public void onElementChanged() {
-        redrawBranches();
+        onElementUpdate();
 
         notifyElementChangedListeners();
+    }
+
+
+    public void onElementUpdate() {
+        redrawBranches();
     }
 
     /**
@@ -328,16 +344,6 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
      */
     public void addElementMoveListener(@Nonnull ElementMoveListener listener) {
         elementMoveListeners.add(listener);
-    }
-
-    /**
-     * Removes listener that listens to moving of the current element.
-     *
-     * @param listener
-     *         listener that needs to be removed
-     */
-    public void removeElementMoveListener(@Nonnull ElementMoveListener listener) {
-        elementMoveListeners.remove(listener);
     }
 
     /** Notify all listeners about moving element. */
@@ -357,16 +363,6 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
         elementDeleteListeners.add(listener);
     }
 
-    /**
-     * Removes listener that listens to deleting of the current element.
-     *
-     * @param listener
-     *         listener that needs to be removed
-     */
-    public void removeElementDeleteListener(@Nonnull ElementDeleteListener listener) {
-        elementDeleteListeners.remove(listener);
-    }
-
     /** Notify all listeners about deleting element. */
     public void notifyElementDeleteListeners() {
         for (ElementDeleteListener listener : elementDeleteListeners) {
@@ -382,16 +378,6 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
      */
     public void addElementChangedListener(@Nonnull ElementChangedListener listener) {
         elementChangedListeners.add(listener);
-    }
-
-    /**
-     * Removes listener that listens to changing of the current element.
-     *
-     * @param listener
-     *         listener that needs to be removed
-     */
-    public void removeElementChangedListener(@Nonnull ElementChangedListener listener) {
-        elementChangedListeners.remove(listener);
     }
 
     /** Notify all listeners about changing element. */
