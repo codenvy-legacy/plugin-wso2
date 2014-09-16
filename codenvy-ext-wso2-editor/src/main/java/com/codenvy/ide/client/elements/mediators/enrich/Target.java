@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.elements.mediators.enrich;
 
+import com.codenvy.ide.client.elements.AbstractEntityElement;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -26,6 +27,8 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 
@@ -36,8 +39,9 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
  *
  * @author Dmitry Shnurenko
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
-public class Target {
+public class Target extends AbstractEntityElement {
 
     public static final String ACTION_ATTRIBUTE_NAME   = "action";
     public static final String TYPE_ATTRIBUTE_NAME     = "type";
@@ -66,33 +70,34 @@ public class Target {
     }
 
     /** Serialization representation attributes of target property of element. */
+    @Nonnull
     private String serializeAttributes() {
-        StringBuilder result = new StringBuilder();
+        Map<String, String> prop = new LinkedHashMap<>();
 
         if (!TargetAction.replace.equals(action)) {
-            result.append(ACTION_ATTRIBUTE_NAME).append("=\"").append(action).append('"').append(" ");
+            prop.put(ACTION_ATTRIBUTE_NAME, action.name());
         }
 
         switch (type) {
             case custom:
-                result.append(XPATH_ATTRIBUTE_NAME).append("=\"").append(xpath).append('"').append(" ");
+                prop.put(XPATH_ATTRIBUTE_NAME, xpath);
                 break;
 
             case property:
-                result.append(TYPE_ATTRIBUTE_NAME).append("=\"").append(type).append('"').append(" ");
-                result.append(PROPERTY_ATTRIBUTE_NAME).append("=\"").append(property).append('"').append(" ");
+                prop.put(TYPE_ATTRIBUTE_NAME, type.name());
+                prop.put(PROPERTY_ATTRIBUTE_NAME, property);
                 break;
 
             case body:
-                result.append(TYPE_ATTRIBUTE_NAME).append("=\"").append(type).append('"').append(" ");
+                prop.put(TYPE_ATTRIBUTE_NAME, type.name());
                 break;
 
             case envelope:
-                result.append(TYPE_ATTRIBUTE_NAME).append("=\"").append(type).append('"').append(" ");
+                prop.put(TYPE_ATTRIBUTE_NAME, type.name());
                 break;
         }
 
-        return result.toString();
+        return convertAttributesToXMLFormat(prop);
     }
 
     /** @return serialized representation of the target element */
@@ -100,13 +105,7 @@ public class Target {
     public String serialize() {
         StringBuilder result = new StringBuilder();
 
-        StringBuilder targetNameSpaces = new StringBuilder();
-
-        for (NameSpace nameSpace : nameSpaces.asIterable()) {
-            targetNameSpaces.append(nameSpace.toString()).append(' ');
-        }
-
-        result.append("<target ").append(targetNameSpaces).append(" ").append(serializeAttributes()).append("/>\n");
+        result.append("<target ").append(convertNameSpaceToXMLFormat(nameSpaces)).append(" ").append(serializeAttributes()).append("/>\n");
 
         return result.toString();
     }

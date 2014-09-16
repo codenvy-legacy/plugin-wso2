@@ -19,7 +19,6 @@ import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -54,7 +53,15 @@ public class Respond extends AbstractElement {
 
     @Inject
     public Respond(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              false,
+              true,
+              resources.respond(),
+              branchProvider,
+              mediatorCreatorsManager);
 
         description = "";
     }
@@ -93,12 +100,4 @@ public class Respond extends AbstractElement {
             description = node.getAttributes().item(0).getNodeValue();
         }
     }
-
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.respond();
-    }
-
 }

@@ -21,13 +21,11 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -67,7 +65,15 @@ public class PurgeWorkshet extends AbstractConnector {
     public PurgeWorkshet(EditorResources resources,
                          Provider<Branch> branchProvider,
                          MediatorCreatorsManager mediatorCreatorsManager) {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              false,
+              true,
+              resources.googleSpreadsheetElement(),
+              branchProvider,
+              mediatorCreatorsManager);
 
         spreadsheetName = "";
         worksheetName = "";
@@ -177,10 +183,4 @@ public class PurgeWorkshet extends AbstractConnector {
         this.worksheetNameNS = worksheetNameNS;
     }
 
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.googleSpreadsheetElement();
-    }
 }

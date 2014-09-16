@@ -23,7 +23,6 @@ import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
@@ -49,6 +48,7 @@ import static com.codenvy.ide.client.elements.mediators.Header.HeaderValueType.L
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class Header extends AbstractElement {
     public static final String ELEMENT_NAME       = "Header";
@@ -80,7 +80,15 @@ public class Header extends AbstractElement {
                   MediatorCreatorsManager mediatorCreatorsManager,
                   Provider<NameSpace> nameSpaceProvider) {
 
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              false,
+              true,
+              resources.header(),
+              branchProvider,
+              mediatorCreatorsManager);
 
         this.nameSpaceProvider = nameSpaceProvider;
 
@@ -262,18 +270,13 @@ public class Header extends AbstractElement {
     @Nonnull
     protected String serializeAttributes() {
         Map<String, String> attributes = new LinkedHashMap<>();
-
-        StringBuilder nameSpaces = new StringBuilder();
-
+        StringBuilder result = new StringBuilder();
         if (!headerNamespaces.isEmpty()) {
             NameSpace nameSpace = headerNamespaces.get(headerNamespaces.size() - 1);
-
-            nameSpaces.append(nameSpace.toString()).append(' ');
+            result.append(nameSpace.toString()).append(' ');
         }
 
-        for (NameSpace nameSpace : expressionNamespaces.asIterable()) {
-            nameSpaces.append(nameSpace.toString()).append(' ');
-        }
+        result.append(convertNameSpaceToXMLFormat(expressionNamespaces));
 
         setDefaultAttributes(attributes);
 
@@ -283,19 +286,15 @@ public class Header extends AbstractElement {
         } else {
             attributes.remove(ACTION);
         }
-
         attributes.remove(valueType.equals(HeaderValueType.EXPRESSION) ? VALUE : EXPRESSION);
-
         switch (valueType) {
             case INLINE:
                 attributes.remove(VALUE);
                 attributes.remove(NAME);
                 attributes.remove(EXPRESSION);
-
                 return convertAttributesToXMLFormat(attributes);
         }
-
-        return nameSpaces + convertAttributesToXMLFormat(attributes);
+        return result + convertAttributesToXMLFormat(attributes);
     }
 
     /**
@@ -385,13 +384,6 @@ public class Header extends AbstractElement {
 
             valueType = INLINE;
         }
-    }
-
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.header();
     }
 
     public enum HeaderAction {

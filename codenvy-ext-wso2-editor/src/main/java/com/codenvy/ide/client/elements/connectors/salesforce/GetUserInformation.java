@@ -44,7 +44,15 @@ public class GetUserInformation extends AbstractConnector {
                               Provider<Branch> branchProvider,
                               MediatorCreatorsManager mediatorCreatorsManager) {
 
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              false,
+              true,
+              resources.salesforce(),
+              branchProvider,
+              mediatorCreatorsManager);
 
     }
 

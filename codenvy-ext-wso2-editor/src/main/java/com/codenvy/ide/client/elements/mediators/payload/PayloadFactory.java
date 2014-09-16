@@ -21,7 +21,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
@@ -71,7 +70,15 @@ public class PayloadFactory extends AbstractElement {
                           MediatorCreatorsManager mediatorCreatorsManager,
                           Provider<Arg> argProvider,
                           Format format) {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              false,
+              true,
+              resources.payloadFactory(),
+              branchProvider,
+              mediatorCreatorsManager);
 
         this.argProvider = argProvider;
 
@@ -216,12 +223,4 @@ public class PayloadFactory extends AbstractElement {
                 break;
         }
     }
-
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.payloadFactory();
-    }
-
 }

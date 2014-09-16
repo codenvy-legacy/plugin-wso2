@@ -15,7 +15,6 @@
  */
 package com.codenvy.ide.client.elements;
 
-import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.common.ContentFormatter;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.google.gwt.resources.client.ImageResource;
@@ -27,19 +26,16 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The abstract implementation of {@link Element}. It contains the implementation of general methods which might not be changed.
  *
  * @author Andrey Plotnikov
  */
-public abstract class AbstractElement implements Element, Comparable<AbstractElement> {
+public abstract class AbstractElement extends AbstractEntityElement implements Element, Comparable<AbstractElement> {
 
     private String  id;
     private Element parent;
@@ -54,7 +50,7 @@ public abstract class AbstractElement implements Element, Comparable<AbstractEle
     private final boolean                 needsToShowIconAndTitle;
     private final MediatorCreatorsManager mediatorCreatorsManager;
 
-    protected final EditorResources  resources;
+    protected final ImageResource    imageResources;
     protected final Provider<Branch> branchProvider;
     protected final List<Branch>     branches;
 
@@ -64,7 +60,7 @@ public abstract class AbstractElement implements Element, Comparable<AbstractEle
                               @Nonnull List<String> properties,
                               boolean isPossibleToAddBranches,
                               boolean needsToShowIconAndTitle,
-                              @Nonnull EditorResources resources,
+                              @Nullable ImageResource resources,
                               @Nonnull Provider<Branch> branchProvider,
                               @Nonnull MediatorCreatorsManager mediatorCreatorsManager) {
         this.elementName = elementName;
@@ -79,7 +75,7 @@ public abstract class AbstractElement implements Element, Comparable<AbstractEle
 
         this.branches = new ArrayList<>();
 
-        this.resources = resources;
+        this.imageResources = resources;
         this.branchProvider = branchProvider;
         this.mediatorCreatorsManager = mediatorCreatorsManager;
     }
@@ -200,7 +196,7 @@ public abstract class AbstractElement implements Element, Comparable<AbstractEle
     @Nullable
     @Override
     public ImageResource getIcon() {
-        return null;
+        return imageResources;
     }
 
     /** {@inheritDoc} */
@@ -233,18 +229,6 @@ public abstract class AbstractElement implements Element, Comparable<AbstractEle
         content.append("</").append(getSerializationName()).append(">\n");
 
         return content.toString();
-    }
-
-    /** @return diagram element properties in text format */
-    @Nonnull
-    protected String serializeProperties() {
-        return "";
-    }
-
-    /** @return serialization representation of element attributes */
-    @Nonnull
-    protected String serializeAttributes() {
-        return "";
     }
 
     /** {@inheritDoc} */
@@ -317,6 +301,20 @@ public abstract class AbstractElement implements Element, Comparable<AbstractEle
     }
 
     /**
+     * Return instance of found element if it is possible or <code>null</code>.
+     *
+     * @param elementName
+     *         name of element that needs to be created
+     * @return ans instance of diagram element or <code>null</code>
+     */
+    @Nullable
+    protected Element createElement(@Nonnull String elementName) {
+        Provider<? extends Element> provider = mediatorCreatorsManager.getProviderBySerializeName(elementName);
+
+        return provider == null ? null : provider.get();
+    }
+
+    /**
      * Apply property from XML node to the diagram element.
      *
      * @param node
@@ -334,70 +332,15 @@ public abstract class AbstractElement implements Element, Comparable<AbstractEle
     protected void applyAttributes(@Nonnull Node node) {
     }
 
-    /**
-     * Convert attributes of diagram element to XML attribute format.
-     *
-     * @param attributes
-     *         element's properties
-     * @return XML format of element's attributes
-     */
-    protected String convertAttributesToXMLFormat(@Nonnull Map<String, String> attributes) {
-        StringBuilder content = new StringBuilder();
-
-        for (Iterator iterator = attributes.entrySet().iterator(); iterator.hasNext(); ) {
-            Map.Entry entry = (Map.Entry)iterator.next();
-            String value = (String)entry.getValue();
-
-            if (value != null && !value.isEmpty()) {
-                content.append(entry.getKey()).append("=\"").append(value).append('"');
-            }
-
-            if (iterator.hasNext()) {
-                content.append(' ');
-            }
-        }
-
-        return content.toString();
+    /** @return diagram element properties in text format */
+    @Nonnull
+    protected String serializeProperties() {
+        return "";
     }
 
-    /**
-     * Convert properties of diagram element to XML attribute format.
-     *
-     * @param properties
-     *         element's properties
-     * @return XML format of element's attributes
-     */
-    protected String convertPropertiesToXMLFormat(@Nonnull Map<String, String> properties) {
-        StringBuilder content = new StringBuilder();
-
-        for (Iterator iterator = properties.entrySet().iterator(); iterator.hasNext(); ) {
-            Map.Entry entry = (Map.Entry)iterator.next();
-            String value = (String)entry.getValue();
-
-            if (value != null && !value.isEmpty()) {
-                content.append('<').append(entry.getKey()).append('>').append(value).append("</").append(entry.getKey()).append('>');
-            }
-
-            if (iterator.hasNext()) {
-                content.append('\n');
-            }
-        }
-
-        return content.toString();
+    /** @return serialization representation of element attributes */
+    @Nonnull
+    protected String serializeAttributes() {
+        return "";
     }
-
-    /**
-     * Return instance of found element if it is possible or <code>null</code>.
-     *
-     * @param elementName
-     *         name of element that needs to be created
-     * @return ans instance of diagram element or <code>null</code>
-     */
-    @Nullable
-    protected Element createElement(@Nonnull String elementName) {
-        Provider<? extends Element> provider = mediatorCreatorsManager.getProviderBySerializeName(elementName);
-
-        return provider == null ? null : provider.get();
-    }
-
 }

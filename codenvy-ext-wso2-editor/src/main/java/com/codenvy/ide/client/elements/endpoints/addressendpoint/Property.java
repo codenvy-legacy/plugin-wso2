@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.elements.endpoints.addressendpoint;
 
+import com.codenvy.ide.client.elements.AbstractEntityElement;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.ValueType;
 import com.codenvy.ide.collections.Array;
@@ -39,8 +40,9 @@ import static com.codenvy.ide.client.elements.mediators.ValueType.LITERAL;
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
-public class Property {
+public class Property extends AbstractEntityElement {
 
     public static final String SERIALIZE_NAME = "property";
 
@@ -196,15 +198,8 @@ public class Property {
                    scope + "/>\n";
         }
 
-        StringBuilder nameSpaces = new StringBuilder();
-
-        for (NameSpace nameSpace : this.nameSpaces.asIterable()) {
-            nameSpaces.append(nameSpace.toString()).append(' ');
-        }
-
-        return startTag + nameSpaces + nameAttr +
-               EXPRESSION_ATTRIBUTE + "=\"" + expression + "\" " +
-               scope + "/>\n";
+        return startTag + convertNameSpaceToXMLFormat(nameSpaces) + nameAttr +
+               EXPRESSION_ATTRIBUTE + "=\"" + expression + "\" " + scope + "/>\n";
     }
 
     /**

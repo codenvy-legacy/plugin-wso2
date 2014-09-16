@@ -23,7 +23,6 @@ import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
@@ -67,7 +66,15 @@ public class Sequence extends AbstractElement {
                     MediatorCreatorsManager mediatorCreatorsManager,
                     Provider<NameSpace> nameSpaceProvider) {
 
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              false,
+              true,
+              resources.sequence(),
+              branchProvider,
+              mediatorCreatorsManager);
 
         this.nameSpaceProvider = nameSpaceProvider;
 
@@ -199,13 +206,6 @@ public class Sequence extends AbstractElement {
                     }
             }
         }
-    }
-
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.sequence();
     }
 
     public enum ReferringType {

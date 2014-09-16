@@ -21,13 +21,11 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -43,6 +41,7 @@ import static com.codenvy.ide.collections.Collections.createArray;
  * restore the condition of the element when you open ESB project after saving.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class UpdateStatus extends AbstractConnector {
 
@@ -81,7 +80,15 @@ public class UpdateStatus extends AbstractConnector {
 
     @Inject
     public UpdateStatus(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              false,
+              true,
+              resources.twitterElement(),
+              branchProvider,
+              mediatorCreatorsManager);
 
         consumerKey = "";
         consumerSecret = "";
@@ -313,12 +320,5 @@ public class UpdateStatus extends AbstractConnector {
 
     public void setStatusIdNS(@Nonnull Array<NameSpace> statusIdNS) {
         this.statusIdNS = statusIdNS;
-    }
-
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.twitterElement();
     }
 }

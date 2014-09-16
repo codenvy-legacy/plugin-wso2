@@ -23,7 +23,6 @@ import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
@@ -81,7 +80,15 @@ public class Switch extends AbstractElement {
                   MediatorCreatorsManager mediatorCreatorsManager,
                   Provider<NameSpace> nameSpaceProvider) {
 
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, true, true, resources, branchProvider, mediatorCreatorsManager);
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              true,
+              true,
+              resources.switchMediator(),
+              branchProvider,
+              mediatorCreatorsManager);
 
         this.nameSpaceProvider = nameSpaceProvider;
 
@@ -171,16 +178,10 @@ public class Switch extends AbstractElement {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        StringBuilder spaces = new StringBuilder();
-
-        for (NameSpace nameSpace : nameSpaces.asIterable()) {
-            spaces.append(nameSpace.toString()).append(' ');
-        }
-
         Map<String, String> attributes = new LinkedHashMap<>();
         attributes.put(SOURCE_ATTRIBUTE_NAME, sourceXpath);
 
-        return spaces + convertAttributesToXMLFormat(attributes);
+        return convertNameSpaceToXMLFormat(nameSpaces) + convertAttributesToXMLFormat(attributes);
     }
 
     /** {@inheritDoc} */
@@ -223,13 +224,6 @@ public class Switch extends AbstractElement {
                     }
             }
         }
-    }
-
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.switchMediator();
     }
 
 }

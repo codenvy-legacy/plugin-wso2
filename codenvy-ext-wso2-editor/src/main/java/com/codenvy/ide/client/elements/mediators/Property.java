@@ -23,7 +23,6 @@ import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
@@ -88,7 +87,15 @@ public class Property extends AbstractElement {
                     MediatorCreatorsManager mediatorCreatorsManager,
                     Provider<NameSpace> nameSpaceProvider) {
 
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              false,
+              true,
+              resources.property(),
+              branchProvider,
+              mediatorCreatorsManager);
 
         this.nameSpaceProvider = nameSpaceProvider;
 
@@ -285,11 +292,6 @@ public class Property extends AbstractElement {
     @Nonnull
     protected String serializeAttributes() {
         Map<String, String> attributes = new LinkedHashMap<>();
-        StringBuilder spaces = new StringBuilder();
-
-        for (NameSpace nameSpace : nameSpaces.asIterable()) {
-            spaces.append(nameSpace.toString()).append(' ');
-        }
 
         setDefaultAttributes(attributes);
 
@@ -303,7 +305,7 @@ public class Property extends AbstractElement {
             attributes.remove(DATA_TYPE_ATTRIBUTE);
         }
 
-        return spaces + convertAttributesToXMLFormat(attributes);
+        return convertNameSpaceToXMLFormat(nameSpaces) + convertAttributesToXMLFormat(attributes);
     }
 
     /**
@@ -386,13 +388,6 @@ public class Property extends AbstractElement {
                     }
             }
         }
-    }
-
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.property();
     }
 
     public enum Action {

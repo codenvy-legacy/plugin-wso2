@@ -21,13 +21,11 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -43,16 +41,17 @@ import static com.codenvy.ide.collections.Collections.createArray;
  * restore the condition of the element when you open ESB project after saving.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class CreateFilter extends AbstractConnector {
 
-    public static final  String ELEMENT_NAME       = "CreateFilter";
-    public static final  String SERIALIZATION_NAME = "jira.createFilter";
+    public static final String ELEMENT_NAME       = "CreateFilter";
+    public static final String SERIALIZATION_NAME = "jira.createFilter";
 
-    private static final String FILTER_NAME        = "filterName";
-    private static final String JQL_TYPE           = "jqlType";
-    private static final String DESCRIPTION        = "description";
-    private static final String FAVOURITE          = "favourite";
+    private static final String FILTER_NAME = "filterName";
+    private static final String JQL_TYPE    = "jqlType";
+    private static final String DESCRIPTION = "description";
+    private static final String FAVOURITE   = "favourite";
 
     private static final List<String> PROPERTIES = Arrays.asList(FILTER_NAME, JQL_TYPE, DESCRIPTION, FAVOURITE);
 
@@ -73,7 +72,15 @@ public class CreateFilter extends AbstractConnector {
 
     @Inject
     public CreateFilter(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              false,
+              true,
+              resources.jiraIcon(),
+              branchProvider,
+              mediatorCreatorsManager);
 
         filterName = "";
         jqlType = "";
@@ -263,12 +270,5 @@ public class CreateFilter extends AbstractConnector {
 
     public void setFavouriteNS(@Nonnull Array<NameSpace> favouriteNS) {
         this.favouriteNS = favouriteNS;
-    }
-
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.jiraIcon();
     }
 }

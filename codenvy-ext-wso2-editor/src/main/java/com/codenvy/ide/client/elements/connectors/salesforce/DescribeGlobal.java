@@ -42,7 +42,15 @@ public class DescribeGlobal extends AbstractConnector {
 
     @Inject
     public DescribeGlobal(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              false,
+              true,
+              resources.salesforce(),
+              branchProvider,
+              mediatorCreatorsManager);
 
         parameterEditorType = ParameterEditorType.Inline;
     }

@@ -21,7 +21,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
@@ -30,9 +29,10 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion.FINAL;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.LEAVE_AS_IS;
@@ -46,6 +46,7 @@ import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressE
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class AddressEndpoint extends AbstractElement {
 
@@ -124,7 +125,15 @@ public class AddressEndpoint extends AbstractElement {
                            Provider<Branch> branchProvider,
                            MediatorCreatorsManager mediatorCreatorsManager,
                            Provider<Property> propertyProvider) {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              false,
+              true,
+              resources.address(),
+              branchProvider,
+              mediatorCreatorsManager);
 
         this.propertyProvider = propertyProvider;
 
@@ -495,9 +504,19 @@ public class AddressEndpoint extends AbstractElement {
     @Nonnull
     @Override
     protected String serializeAttributes() {
-        return URI_ATTRIBUTE + "=\"" + uri + '"' +
-               (LEAVE_AS_IS.equals(format) ? "" : ' ' + FORMAT_ATTRIBUTE + "=\"" + format.name() + '"') +
-               (Optimize.LEAVE_AS_IS.equals(optimize) ? "" : ' ' + OPTIMIZE_ATTRIBUTE + "=\"" + optimize.name() + '"');
+        Map<String, String> attributes = new LinkedHashMap<>();
+
+        attributes.put(URI_ATTRIBUTE, uri);
+
+        if (!Format.LEAVE_AS_IS.equals(format)) {
+            attributes.put(FORMAT_ATTRIBUTE, format.name());
+        }
+
+        if (!Optimize.LEAVE_AS_IS.equals(optimize)) {
+            attributes.put(OPTIMIZE_ATTRIBUTE, optimize.name());
+        }
+
+        return convertAttributesToXMLFormat(attributes);
     }
 
     /** {@inheritDoc} */
@@ -838,13 +857,6 @@ public class AddressEndpoint extends AbstractElement {
                     break;
             }
         }
-    }
-
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.address();
     }
 
     public enum Format {

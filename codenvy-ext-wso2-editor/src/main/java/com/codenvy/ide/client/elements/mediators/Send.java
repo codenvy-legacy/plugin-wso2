@@ -24,7 +24,6 @@ import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
@@ -33,7 +32,9 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 import static com.codenvy.ide.client.elements.mediators.Send.SequenceType.Default;
@@ -75,7 +76,15 @@ public class Send extends AbstractElement {
                 MediatorCreatorsManager mediatorCreatorsManager,
                 Provider<NameSpace> nameSpaceProvider) {
 
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              false,
+              true,
+              resources.send(),
+              branchProvider,
+              mediatorCreatorsManager);
 
         this.nameSpaceProvider = nameSpaceProvider;
 
@@ -197,31 +206,26 @@ public class Send extends AbstractElement {
     @Nonnull
     protected String serializeAttributes() {
         StringBuilder result = new StringBuilder();
-
-        StringBuilder spaces = new StringBuilder();
-
-        for (NameSpace nameSpace : nameSpaces.asIterable()) {
-            spaces.append(nameSpace.toString());
-        }
+        Map<String, String> prop = new LinkedHashMap<>();
 
         switch (sequencerType) {
             case Static:
-                result.append(EXPRESSION_ATTRIBUTE_NAME).append("=\"").append(staticExpression).append("\" ");
+                prop.put(EXPRESSION_ATTRIBUTE_NAME, staticExpression);
                 break;
 
             case Dynamic:
-                result.append(spaces).append(' ')
-                      .append(EXPRESSION_ATTRIBUTE_NAME).append("=\"{").append(dynamicExpression).append("}\" ");
+                prop.put(EXPRESSION_ATTRIBUTE_NAME, dynamicExpression);
+                result.append(convertNameSpaceToXMLFormat(nameSpaces));
                 break;
         }
 
-        result.append(buildMessage
-                      ? BUILD_MESSAGE_ATTRIBUTE_NAME + "=\"true\" "
-                      : ' ');
+        if (buildMessage) {
+            prop.put(BUILD_MESSAGE_ATTRIBUTE_NAME, "true");
+        }
 
-        result.append(description.isEmpty() ? ' ' : DESCRIPTION_ATTRIBUTE_NAME + "=\"" + description + '"');
+        prop.put(DESCRIPTION_ATTRIBUTE_NAME, description);
 
-        return result.toString();
+        return result.append(convertAttributesToXMLFormat(prop)).toString();
     }
 
     /** {@inheritDoc} */
@@ -338,13 +342,6 @@ public class Send extends AbstractElement {
 
             branches.add(branch);
         }
-    }
-
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.send();
     }
 
     public enum SequenceType {

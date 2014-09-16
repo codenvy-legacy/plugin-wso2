@@ -43,6 +43,7 @@ import static com.codenvy.ide.collections.Collections.createArray;
  * restore the condition of the element when you open ESB project after saving.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class GetIssuePriorityById extends AbstractConnector {
 
@@ -61,7 +62,15 @@ public class GetIssuePriorityById extends AbstractConnector {
     public GetIssuePriorityById(EditorResources resources,
                                 Provider<Branch> branchProvider,
                                 MediatorCreatorsManager mediatorCreatorsManager) {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              false,
+              true,
+              resources.jiraIcon(),
+              branchProvider,
+              mediatorCreatorsManager);
 
         issuePriorityId = "";
         issuePriorityExpression = "";
@@ -130,10 +139,4 @@ public class GetIssuePriorityById extends AbstractConnector {
         this.issuePriorityNS = issuePriorityNS;
     }
 
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.jiraIcon();
-    }
 }

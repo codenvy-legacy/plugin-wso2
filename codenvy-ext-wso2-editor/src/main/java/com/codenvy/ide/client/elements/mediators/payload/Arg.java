@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.elements.mediators.payload;
 
+import com.codenvy.ide.client.elements.AbstractEntityElement;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -26,6 +27,8 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 
@@ -38,7 +41,7 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
  * @author Dmitry Shnurenko
  * @author Andrey Plotnikov
  */
-public class Arg {
+public class Arg extends AbstractEntityElement {
     private static final String EVALUATOR_ATTRIBUTE_NAME  = "evaluator";
     private static final String EXPRESSION_ATTRIBUTE_NAME = "expression";
     private static final String VALUE_ATTRIBUTE_NAME      = "value";
@@ -148,20 +151,16 @@ public class Arg {
     /** @return serialization representation of element attributes */
     @Nonnull
     private String serializeAttributes() {
-        StringBuilder result = new StringBuilder();
-
-        for (NameSpace nameSpace : nameSpaces.asIterable()) {
-            result.append(' ').append(nameSpace.toString());
-        }
+        Map<String, String> prop = new LinkedHashMap<>();
 
         if (ArgType.Expression.equals(type)) {
-            result.append(EVALUATOR_ATTRIBUTE_NAME).append("=\"").append(evaluator).append("\" ");
-            result.append(EXPRESSION_ATTRIBUTE_NAME).append("=\"").append(expression).append("\" ");
+            prop.put(EVALUATOR_ATTRIBUTE_NAME, evaluator.name());
+            prop.put(EXPRESSION_ATTRIBUTE_NAME, expression);
         } else {
-            result.append(VALUE_ATTRIBUTE_NAME).append("=\"").append(value).append("\" ");
+            prop.put(VALUE_ATTRIBUTE_NAME, value);
         }
 
-        return result.toString();
+        return convertNameSpaceToXMLFormat(nameSpaces) + convertAttributesToXMLFormat(prop);
     }
 
     /** @return serialization representation of element */

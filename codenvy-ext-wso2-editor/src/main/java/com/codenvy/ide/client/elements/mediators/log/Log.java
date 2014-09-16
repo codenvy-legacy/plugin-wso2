@@ -18,11 +18,9 @@ package com.codenvy.ide.client.elements.mediators.log;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
@@ -73,7 +71,15 @@ public class Log extends AbstractElement {
                MediatorCreatorsManager mediatorCreatorsManager,
                Provider<Property> propertyProvider) {
 
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              false,
+              true,
+              resources.log(),
+              branchProvider,
+              mediatorCreatorsManager);
 
         this.propertyProvider = propertyProvider;
 
@@ -191,11 +197,7 @@ public class Log extends AbstractElement {
         StringBuilder result = new StringBuilder();
 
         for (Property property : properties.asIterable()) {
-            StringBuilder nameSpaces = new StringBuilder();
-
-            for (NameSpace nameSpace : property.getNameSpaces().asIterable()) {
-                nameSpaces.append(nameSpace.toString()).append(' ');
-            }
+            String nameSpaces = convertNameSpaceToXMLFormat(property.getNameSpaces());
 
             result.append("<property ").append(nameSpaces).append("name=\"").append(property.getName()).append("\" value=\"")
                   .append(property.getExpression()).append("\"/>\n");
@@ -248,13 +250,6 @@ public class Log extends AbstractElement {
                     break;
             }
         }
-    }
-
-    /** {@inheritDoc} */
-    @Nonnull
-    @Override
-    public ImageResource getIcon() {
-        return resources.log();
     }
 
     public enum LogCategory {

@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.elements.mediators.payload;
 
+import com.codenvy.ide.client.elements.AbstractEntityElement;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 
@@ -30,8 +31,9 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
  *
  * @author Dmitry Shnurenko
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
-public class Format {
+public class Format extends AbstractEntityElement {
 
     public static final String FORMAT_KEY_ATTRIBUTE_NAME = "key";
 
@@ -85,7 +87,7 @@ public class Format {
 
     /** @return serialization representation of element attributes */
     @Nonnull
-    private String serializeAttributes() {
+    public String serializeAttributes() {
         return FORMAT_KEY_ATTRIBUTE_NAME + "=\"" + formatKey + '"';
     }
 

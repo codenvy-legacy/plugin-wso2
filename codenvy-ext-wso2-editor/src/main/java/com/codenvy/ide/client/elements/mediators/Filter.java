@@ -23,7 +23,6 @@ import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
@@ -81,7 +80,15 @@ public class Filter extends AbstractElement {
                   MediatorCreatorsManager mediatorCreatorsManager,
                   Provider<NameSpace> nameSpaceProvider) {
 
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              false,
+              true,
+              resources.filter(),
+              branchProvider,
+              mediatorCreatorsManager);
 
         this.nameSpaceProvider = nameSpaceProvider;
 
@@ -212,27 +219,15 @@ public class Filter extends AbstractElement {
             case XPATH:
                 attributes.put(XPATH_ATTRIBUTE_NAME, xPath);
 
-                return convertNameSpacesToXMLAttributes(xPathNameSpaces) + convertAttributesToXMLFormat(attributes);
+                return convertNameSpaceToXMLFormat(xPathNameSpaces) + convertAttributesToXMLFormat(attributes);
 
             case SOURCE_AND_REGEX:
             default:
                 attributes.put(SOURCE_ATTRIBUTE_NAME, source);
                 attributes.put(REGULAR_EXPRESSION_ATTRIBUTE_NAME, regularExpression);
 
-                return convertNameSpacesToXMLAttributes(sourceNameSpaces) + convertAttributesToXMLFormat(attributes);
+                return convertNameSpaceToXMLFormat(sourceNameSpaces) + convertAttributesToXMLFormat(attributes);
         }
-    }
-
-    /** @return xml representation of namespaces which presented as attributes of element */
-    @Nonnull
-    private String convertNameSpacesToXMLAttributes(@Nonnull Array<NameSpace> nameSpaces) {
-        StringBuilder result = new StringBuilder();
-
-        for (NameSpace nameSpace : nameSpaces.asIterable()) {
-            result.append(nameSpace.toString()).append(' ');
-        }
-
-        return result.toString();
     }
 
     /** {@inheritDoc} */
@@ -284,13 +279,6 @@ public class Filter extends AbstractElement {
             conditionType = XPATH;
             xPathNameSpaces = nameSpaces;
         }
-    }
-
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.filter();
     }
 
     public enum ConditionType {

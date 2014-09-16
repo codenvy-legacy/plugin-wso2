@@ -19,7 +19,6 @@ import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.inject.Provider;
@@ -40,6 +39,7 @@ import java.util.Map;
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class Enrich extends AbstractElement {
     public static final String ELEMENT_NAME       = "Enrich";
@@ -62,7 +62,15 @@ public class Enrich extends AbstractElement {
                   MediatorCreatorsManager mediatorCreatorsManager,
                   Source source,
                   Target target) {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              false,
+              true,
+              resources.enrich(),
+              branchProvider,
+              mediatorCreatorsManager);
 
         this.description = "";
 
@@ -162,12 +170,5 @@ public class Enrich extends AbstractElement {
 
             description = String.valueOf(attributeNode.getNodeValue());
         }
-    }
-
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.enrich();
     }
 }

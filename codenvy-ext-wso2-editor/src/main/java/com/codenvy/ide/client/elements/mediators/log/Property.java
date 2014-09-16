@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.elements.mediators.log;
 
+import com.codenvy.ide.client.elements.AbstractEntityElement;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -35,8 +36,9 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
  *
  * @author Dmitry Shnurenko
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
-public class Property {
+public class Property extends AbstractEntityElement{
 
     private static final String NAME_ATTRIBUTE  = "name";
     private static final String VALUE_ATTRIBUTE = "value";

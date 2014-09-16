@@ -15,7 +15,6 @@
  */
 package com.codenvy.ide.client.elements.connectors;
 
-import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
@@ -24,7 +23,6 @@ import com.google.gwt.xml.client.Node;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
@@ -50,7 +48,7 @@ public class AbstractConnector extends AbstractElement {
                                 @Nonnull List<String> properties,
                                 boolean isPossibleToAddBranches,
                                 boolean needsToShowIconAndTitle,
-                                @Nonnull EditorResources resources,
+                                @Nonnull ImageResource resources,
                                 @Nonnull Provider<Branch> branchProvider,
                                 @Nonnull MediatorCreatorsManager mediatorCreatorsManager) {
         super(elementName,
@@ -100,13 +98,6 @@ public class AbstractConnector extends AbstractElement {
 
     public void setParameterEditorType(@Nonnull ParameterEditorType parameterEditorType) {
         this.parameterEditorType = parameterEditorType;
-    }
-
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.salesforce();
     }
 
     public enum ParameterEditorType {

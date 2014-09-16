@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.elements.mediators.enrich;
 
+import com.codenvy.ide.client.elements.AbstractEntityElement;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -26,6 +27,8 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType.RegistryKey;
@@ -38,8 +41,9 @@ import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType
  * mechanism allows to restore the condition of the element when you open ESB project after saving.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
-public class Source {
+public class Source extends AbstractEntityElement {
 
     public static final String CLONE_SOURCE_ATTRIBUTE_NAME        = "clone";
     public static final String SOURCE_TYPE_ATTRIBUTE_NAME         = "type";
@@ -75,42 +79,47 @@ public class Source {
     }
 
     /** Serialization representation attributes of source property of element. */
+    @Nonnull
     private String serializeAttributes() {
-        StringBuilder result = new StringBuilder();
+        Map<String, String> prop = new LinkedHashMap<>();
 
         if (clone) {
-            result.append(CLONE_SOURCE_ATTRIBUTE_NAME).append("=\"").append(clone).append("\" ");
+            prop.put(CLONE_SOURCE_ATTRIBUTE_NAME, String.valueOf(clone));
         }
 
         switch (type) {
             case custom:
-                result.append(XPATH_ATTRIBUTE_NAME).append("=\"").append(xpath).append("\" ");
+                prop.put(XPATH_ATTRIBUTE_NAME, xpath);
+
                 break;
 
             case property:
-                result.append(SOURCE_TYPE_ATTRIBUTE_NAME).append("=\"").append(type).append("\" ");
-                result.append(PROPERTY_ATTRIBUTE_NAME).append("=\"").append(property).append("\" ");
+                prop.put(SOURCE_TYPE_ATTRIBUTE_NAME, type.name());
+                prop.put(PROPERTY_ATTRIBUTE_NAME, property);
+
                 break;
 
             case inline:
-                result.append(SOURCE_TYPE_ATTRIBUTE_NAME).append("=\"").append(type).append("\" ");
+                prop.put(SOURCE_TYPE_ATTRIBUTE_NAME, type.name());
 
                 if (inlineType.equals(RegistryKey)) {
-                    result.append(INLINE_REGISTRY_KEY_ATTRIBUTE_NAME).append("=\"").append(inlRegisterKey).append("\" ");
+                    prop.put(INLINE_REGISTRY_KEY_ATTRIBUTE_NAME, inlRegisterKey);
                 }
 
                 break;
 
             case envelope:
-                result.append(SOURCE_TYPE_ATTRIBUTE_NAME).append("=\"").append(type).append("\" ");
+                prop.put(SOURCE_TYPE_ATTRIBUTE_NAME, type.name());
+
                 break;
 
             case body:
-                result.append(SOURCE_TYPE_ATTRIBUTE_NAME).append("=\"").append(type).append("\" ");
+                prop.put(SOURCE_TYPE_ATTRIBUTE_NAME, type.name());
+
                 break;
         }
 
-        return result.toString();
+        return convertAttributesToXMLFormat(prop);
     }
 
     /** @return serialized representation of the source element */
@@ -118,13 +127,7 @@ public class Source {
     public String serialize() {
         StringBuilder result = new StringBuilder();
 
-        StringBuilder sourceNameSpaces = new StringBuilder();
-
-        for (NameSpace nameSpace : nameSpaces.asIterable()) {
-            sourceNameSpaces.append(nameSpace.toString()).append(' ');
-        }
-
-        result.append("<source ").append(sourceNameSpaces).append(serializeAttributes()).append(">\n");
+        result.append("<source ").append(convertNameSpaceToXMLFormat(nameSpaces)).append(serializeAttributes()).append(">\n");
 
         if (type.equals(SourceType.inline) && inlineType.equals(InlineType.SourceXML)) {
 

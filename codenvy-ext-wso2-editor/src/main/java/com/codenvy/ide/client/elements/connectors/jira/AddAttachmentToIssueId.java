@@ -21,13 +21,11 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -43,13 +41,14 @@ import static com.codenvy.ide.collections.Collections.createArray;
  * restore the condition of the element when you open ESB project after saving.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class AddAttachmentToIssueId extends AbstractConnector {
 
-    public static final  String ELEMENT_NAME       = "AddAttachmentToIssueId";
-    public static final  String SERIALIZATION_NAME = "jira.addAttachmentToIssueId";
+    public static final String ELEMENT_NAME       = "AddAttachmentToIssueId";
+    public static final String SERIALIZATION_NAME = "jira.addAttachmentToIssueId";
 
-    private static final String ISSUE_ID_OR_KEY    = "issueIdOrKey";
+    private static final String ISSUE_ID_OR_KEY = "issueIdOrKey";
 
     private static final List<String> PROPERTIES = Arrays.asList(ISSUE_ID_OR_KEY);
 
@@ -61,7 +60,15 @@ public class AddAttachmentToIssueId extends AbstractConnector {
     public AddAttachmentToIssueId(EditorResources resources,
                                   Provider<Branch> branchProvider,
                                   MediatorCreatorsManager mediatorCreatorsManager) {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              false,
+              true,
+              resources.jiraIcon(),
+              branchProvider,
+              mediatorCreatorsManager);
 
         issueIdOrKey = "";
         issueIdOrKeyExpression = "";
@@ -129,10 +136,4 @@ public class AddAttachmentToIssueId extends AbstractConnector {
         this.issueIdOrKeyNameSpaces = issueIdOrKeyNameSpaces;
     }
 
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.jiraIcon();
-    }
 }

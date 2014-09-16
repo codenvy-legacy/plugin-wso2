@@ -18,12 +18,10 @@ package com.codenvy.ide.client.elements.mediators;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.log.Property;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
@@ -32,7 +30,9 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The class which describes state of CallTemplate mediator and also has methods for changing it. Also the class contains the business
@@ -67,7 +67,15 @@ public class CallTemplate extends AbstractElement {
                         MediatorCreatorsManager mediatorCreatorsManager,
                         Provider<Property> propertyProvider) {
 
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, resources, branchProvider, mediatorCreatorsManager);
+        super(ELEMENT_NAME,
+              ELEMENT_NAME,
+              SERIALIZATION_NAME,
+              PROPERTIES,
+              false,
+              true,
+              resources.callTemplate(),
+              branchProvider,
+              mediatorCreatorsManager);
 
         this.propertyProvider = propertyProvider;
 
@@ -145,8 +153,12 @@ public class CallTemplate extends AbstractElement {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        return TARGET_ATTRIBUTE_NAME + "=\"" + targetTemplate + "\" " +
-               (description.isEmpty() ? "" : DESCRIPTION_ATTRIBUTE_NAME + "=\"" + description + "\"");
+        Map<String, String> prop = new LinkedHashMap<>();
+
+        prop.put(TARGET_ATTRIBUTE_NAME, targetTemplate);
+        prop.put(DESCRIPTION_ATTRIBUTE_NAME, description);
+
+        return convertAttributesToXMLFormat(prop);
     }
 
     /** {@inheritDoc} */
@@ -156,14 +168,8 @@ public class CallTemplate extends AbstractElement {
         StringBuilder result = new StringBuilder();
 
         for (Property property : parameters.asIterable()) {
-            StringBuilder nameSpaces = new StringBuilder();
-
-            for (NameSpace nameSpace : property.getNameSpaces().asIterable()) {
-                nameSpaces.append(nameSpace.toString()).append(' ');
-            }
-
-            result.append("<with-param ").append(nameSpaces).append("name=\"").append(property.getName()).append("\" value=\"")
-                  .append(property.getExpression()).append("\"/>");
+            result.append("<with-param ").append(convertNameSpaceToXMLFormat(property.getNameSpaces())).append("name=\"")
+                  .append(property.getName()).append("\" value=\"").append(property.getExpression()).append("\"/>");
         }
 
         return result.toString();
@@ -201,13 +207,6 @@ public class CallTemplate extends AbstractElement {
         }
     }
 
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getIcon() {
-        return resources.callTemplate();
-    }
-
     public enum AvailableTemplates {
         SELECT_FROM_TEMPLATE("Select From Templates"), SDF("sdf"), EMPTY("");
 
@@ -223,6 +222,5 @@ public class CallTemplate extends AbstractElement {
         public String getValue() {
             return value;
         }
-
     }
 }
