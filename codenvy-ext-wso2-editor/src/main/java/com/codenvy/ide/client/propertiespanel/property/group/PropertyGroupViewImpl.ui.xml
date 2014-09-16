@@ -53,7 +53,7 @@
 
         .iconPanel {
             position: absolute;
-            right: 20px;
+            right: 10px;
         }
 
         .title {
