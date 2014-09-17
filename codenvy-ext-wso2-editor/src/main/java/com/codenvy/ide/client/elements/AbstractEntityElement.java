@@ -19,7 +19,6 @@ import com.codenvy.ide.collections.Array;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -47,7 +46,7 @@ public abstract class AbstractEntityElement {
      * @param <T>
      *         type of property
      */
-    public <T> void putProperty(@NotNull Key<T> key, @NotNull T value) {
+    public <T> void putProperty(@Nonnull Key<T> key, @Nonnull T value) {
         //noinspection unchecked
         properties.put((Key<Object>)key, value);
     }
@@ -62,7 +61,7 @@ public abstract class AbstractEntityElement {
      * @return a property that is mapped to this key or <code>null</code> if no value is not mapped
      */
     @Nullable
-    public <T> T getProperty(@NotNull Key<T> key) {
+    public <T> T getProperty(@Nonnull Key<T> key) {
         //noinspection unchecked,SuspiciousMethodCalls
         return (T)properties.get(key);
     }
@@ -78,9 +77,9 @@ public abstract class AbstractEntityElement {
     protected String convertAttributesToXMLFormat(@Nonnull Map<String, String> attributes) {
         StringBuilder content = new StringBuilder();
 
-        for (Iterator iterator = attributes.entrySet().iterator(); iterator.hasNext(); ) {
-            Map.Entry entry = (Map.Entry)iterator.next();
-            String value = (String)entry.getValue();
+        for (Iterator<Map.Entry<String, String>> iterator = attributes.entrySet().iterator(); iterator.hasNext(); ) {
+            Map.Entry<String, String> entry = iterator.next();
+            String value = entry.getValue();
 
             if (value != null && !value.isEmpty()) {
                 content.append(entry.getKey()).append("=\"").append(value).append('"');
@@ -105,9 +104,9 @@ public abstract class AbstractEntityElement {
     protected String convertPropertiesToXMLFormat(@Nonnull Map<String, String> properties) {
         StringBuilder content = new StringBuilder();
 
-        for (Iterator iterator = properties.entrySet().iterator(); iterator.hasNext(); ) {
-            Map.Entry entry = (Map.Entry)iterator.next();
-            String value = (String)entry.getValue();
+        for (Iterator<Map.Entry<String, String>> iterator = properties.entrySet().iterator(); iterator.hasNext(); ) {
+            Map.Entry<String, String> entry = iterator.next();
+            String value = entry.getValue();
 
             if (value != null && !value.isEmpty()) {
                 content.append('<').append(entry.getKey()).append('>').append(value).append("</").append(entry.getKey()).append('>');
