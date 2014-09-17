@@ -20,6 +20,7 @@ import com.codenvy.ide.client.propertiespanel.property.AbstractPropertyPresenter
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class ComplexPropertyPresenter extends AbstractPropertyPresenter<ComplexP
 
     /** {@inheritDoc} */
     @Override
-    public void setTitle(@Nonnull String title) {
+    public void setTitle(@Nullable String title) {
         view.setTitle(title);
     }
 
@@ -54,7 +55,7 @@ public class ComplexPropertyPresenter extends AbstractPropertyPresenter<ComplexP
      * @param property
      *         new property value that need to be set
      */
-    public void setProperty(@Nonnull String property) {
+    public void setProperty(@Nullable String property) {
         view.setProperty(property);
     }
 

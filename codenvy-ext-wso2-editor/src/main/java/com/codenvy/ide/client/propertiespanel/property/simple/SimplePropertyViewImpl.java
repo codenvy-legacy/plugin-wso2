@@ -27,6 +27,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Andrey Plotnikov
@@ -54,7 +55,7 @@ public class SimplePropertyViewImpl extends SimplePropertyView {
 
     /** {@inheritDoc} */
     @Override
-    public void setTitle(@Nonnull String title) {
+    public void setTitle(@Nullable String title) {
         this.title.setText(title);
     }
 
@@ -67,7 +68,7 @@ public class SimplePropertyViewImpl extends SimplePropertyView {
 
     /** {@inheritDoc} */
     @Override
-    public void setProperty(@Nonnull String property) {
+    public void setProperty(@Nullable String property) {
         this.property.setText(property);
     }
 

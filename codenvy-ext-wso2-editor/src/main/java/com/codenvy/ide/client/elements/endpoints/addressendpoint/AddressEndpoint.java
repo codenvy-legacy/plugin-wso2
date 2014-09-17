@@ -27,7 +27,6 @@ import com.google.gwt.xml.client.NodeList;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -53,6 +52,35 @@ public class AddressEndpoint extends AbstractElement {
     public static final String ELEMENT_NAME       = "Address";
     public static final String SERIALIZATION_NAME = "address";
 
+    public static final Key<Format> FORMAT = new Key<>("Format");
+    public static final Key<String> URI    = new Key<>("Uri");
+
+    public static final Key<String>  SUSPEND_ERROR_CODE          = new Key<>("SuspendErrorCode");
+    public static final Key<Integer> SUSPEND_INITIAL_DURATION    = new Key<>("SuspendInitialDuration");
+    public static final Key<Integer> SUSPEND_MAXIMUM_DURATION    = new Key<>("SuspendMaximumDuration");
+    public static final Key<Double>  SUSPEND_PROGRESSION_FACTORY = new Key<>("SuspendProgressionFactory");
+
+    public static final Key<String>  RETRY_ERROR_CODES = new Key<>("RetryErrorCodes");
+    public static final Key<Integer> RETRY_COUNT       = new Key<>("RetryCount");
+    public static final Key<Integer> RETRY_DELAY       = new Key<>("RetryDelay");
+
+    public static final Key<Array<Property>> PROPERTIES  = new Key<>("Properties");
+    public static final Key<Optimize>        OPTIMIZE    = new Key<>("Optimize");
+    public static final Key<String>          DESCRIPTION = new Key<>("Description");
+
+    public static final Key<Boolean> RELIABLE_MESSAGING_ENABLED = new Key<>("ReliableMessagingEnabled");
+    public static final Key<String>  RELIABLE_MESSAGING_POLICY  = new Key<>("ReliableMessagingPolicy");
+
+    public static final Key<Boolean> SECURITY_ENABLED = new Key<>("SecurityEnabled");
+    public static final Key<String>  SECURITY_POLICY  = new Key<>("SecurityPolicy");
+
+    public static final Key<Boolean>           ADDRESSING_ENABLED           = new Key<>("AddressingEnabled");
+    public static final Key<AddressingVersion> ADDRESSING_VERSION           = new Key<>("AddressingVersion");
+    public static final Key<Boolean>           ADDRESSING_SEPARATE_LISTENER = new Key<>("AddressingSeparateListener");
+
+    public static final Key<Integer>       TIMEOUT_DURATION = new Key<>("TimeoutDuration");
+    public static final Key<TimeoutAction> TIMEOUT_ACTION   = new Key<>("TimeoutAction");
+
     private static final String URI_ATTRIBUTE      = "uri";
     private static final String FORMAT_ATTRIBUTE   = "format";
     private static final String OPTIMIZE_ATTRIBUTE = "optimize";
@@ -60,7 +88,6 @@ public class AddressEndpoint extends AbstractElement {
     private static final String POLICY_ATTRIBUTE            = "policy";
     private static final String VERSION_ATTRIBUTE           = "version";
     private static final String SEPARATE_LISTENER_ATTRIBUTE = "separateListener";
-
 
     private static final String ENABLE_RM_PROPERTY         = "enableRM";
     private static final String ENABLE_ADDRESSING_PROPERTY = "enableAddressing";
@@ -82,43 +109,14 @@ public class AddressEndpoint extends AbstractElement {
 
     private static final String DESCRIPTION_PROPERTY = "description";
 
-    private static final List<String> PROPERTIES = Arrays.asList(ENABLE_ADDRESSING_PROPERTY,
-                                                                 ENABLE_RM_PROPERTY,
-                                                                 ENABLE_SEC_PROPERTY,
-                                                                 TIMEOUT_PROPERTY,
-                                                                 SUSPEND_ON_FAILURE_PROPERTY,
-                                                                 MAKE_FOR_SUSPENSION_PROPERTY);
+    private static final List<String> SERIALIZATION_PROPERTIES = Arrays.asList(ENABLE_ADDRESSING_PROPERTY,
+                                                                               ENABLE_RM_PROPERTY,
+                                                                               ENABLE_SEC_PROPERTY,
+                                                                               TIMEOUT_PROPERTY,
+                                                                               SUSPEND_ON_FAILURE_PROPERTY,
+                                                                               MAKE_FOR_SUSPENSION_PROPERTY);
 
     private final Provider<Property> propertyProvider;
-
-    private Format format;
-    private String uri;
-
-    private String suspendErrorCode;
-    private int    suspendInitialDuration;
-    private int    suspendMaximumDuration;
-    private double suspendProgressionFactor;
-
-    private String retryErrorCodes;
-    private int    retryCount;
-    private int    retryDelay;
-
-    private Array<Property> properties;
-    private Optimize        optimize;
-    private String          description;
-
-    private boolean isReliableMessagingEnabled;
-    private String  reliableMessagingPolicy;
-
-    private boolean isSecurityEnabled;
-    private String  securityPolicy;
-
-    private boolean           isAddressingEnabled;
-    private AddressingVersion addressingVersion;
-    private boolean           isAddressingSeparateListener;
-
-    private int           timeoutDuration;
-    private TimeoutAction timeoutAction;
 
     @Inject
     public AddressEndpoint(EditorResources resources,
@@ -128,7 +126,7 @@ public class AddressEndpoint extends AbstractElement {
         super(ELEMENT_NAME,
               ELEMENT_NAME,
               SERIALIZATION_NAME,
-              PROPERTIES,
+              SERIALIZATION_PROPERTIES,
               false,
               true,
               resources.address(),
@@ -137,367 +135,34 @@ public class AddressEndpoint extends AbstractElement {
 
         this.propertyProvider = propertyProvider;
 
-        format = LEAVE_AS_IS;
-        uri = "http://www.example.org/service";
+        putProperty(FORMAT, LEAVE_AS_IS);
+        putProperty(URI, "http://www.example.org/service");
 
-        suspendErrorCode = "";
-        suspendInitialDuration = -1;
-        suspendMaximumDuration = 0;
-        suspendProgressionFactor = -1.0;
+        putProperty(SUSPEND_ERROR_CODE, "");
+        putProperty(SUSPEND_INITIAL_DURATION, -1);
+        putProperty(SUSPEND_MAXIMUM_DURATION, 0);
+        putProperty(SUSPEND_PROGRESSION_FACTORY, -1.0);
 
-        retryErrorCodes = "";
-        retryCount = 0;
-        retryDelay = 0;
+        putProperty(RETRY_ERROR_CODES, "");
+        putProperty(RETRY_COUNT, 0);
+        putProperty(RETRY_DELAY, 0);
 
-        properties = Collections.createArray();
-        optimize = Optimize.LEAVE_AS_IS;
-        description = "";
+        putProperty(PROPERTIES, Collections.<Property>createArray());
+        putProperty(OPTIMIZE, Optimize.LEAVE_AS_IS);
+        putProperty(DESCRIPTION, "");
 
-        isReliableMessagingEnabled = false;
-        reliableMessagingPolicy = "/default/key";
+        putProperty(RELIABLE_MESSAGING_ENABLED, false);
+        putProperty(RELIABLE_MESSAGING_POLICY, "/default/key");
 
-        isSecurityEnabled = false;
-        securityPolicy = "/default/key";
+        putProperty(SECURITY_ENABLED, false);
+        putProperty(SECURITY_POLICY, "/default/key");
 
-        isAddressingEnabled = false;
-        addressingVersion = FINAL;
-        isAddressingSeparateListener = false;
+        putProperty(ADDRESSING_ENABLED, false);
+        putProperty(ADDRESSING_VERSION, FINAL);
+        putProperty(ADDRESSING_SEPARATE_LISTENER, false);
 
-        timeoutDuration = 0;
-        timeoutAction = never;
-    }
-
-    /** @return value of format of address endpoint */
-    @Nonnull
-    public Format getFormat() {
-        return format;
-    }
-
-    /**
-     * Sets value of format to address endpoint.
-     *
-     * @param format
-     *         value that should be set
-     */
-    public void setFormat(@Nonnull Format format) {
-        this.format = format;
-    }
-
-    /** @return value of uri of address endpoint */
-    @Nonnull
-    public String getUri() {
-        return uri;
-    }
-
-    /**
-     * Sets value of uri to address endpoint.
-     *
-     * @param uri
-     *         value that should be set
-     */
-    public void setUri(@Nonnull String uri) {
-        this.uri = uri;
-    }
-
-    /** @return value of suspend error code of address endpoint */
-    @Nonnull
-    public String getSuspendErrorCode() {
-        return suspendErrorCode;
-    }
-
-    /**
-     * Sets value of suspend error to address endpoint.
-     *
-     * @param suspendErrorCode
-     *         value that should be set
-     */
-    public void setSuspendErrorCode(@Nonnull String suspendErrorCode) {
-        this.suspendErrorCode = suspendErrorCode;
-    }
-
-    /** @return value of suspend initial duration of address endpoint */
-    @Nonnegative
-    public int getSuspendInitialDuration() {
-        return suspendInitialDuration;
-    }
-
-    /**
-     * Sets value of suspend initial duration to address endpoint.
-     *
-     * @param suspendInitialDuration
-     *         value that should be set
-     */
-    public void setSuspendInitialDuration(@Nonnegative int suspendInitialDuration) {
-        this.suspendInitialDuration = suspendInitialDuration;
-    }
-
-    /** @return value of suspend maximum duration of address endpoint */
-    @Nonnegative
-    public int getSuspendMaximumDuration() {
-        return suspendMaximumDuration;
-    }
-
-    /**
-     * Sets value of suspend maximum duration to address endpoint.
-     *
-     * @param suspendMaximumDuration
-     *         value that should be set
-     */
-    public void setSuspendMaximumDuration(@Nonnegative int suspendMaximumDuration) {
-        this.suspendMaximumDuration = suspendMaximumDuration;
-    }
-
-    /** @return value of suspend progression factory of address endpoint */
-    @Nonnegative
-    public double getSuspendProgressionFactory() {
-        return suspendProgressionFactor;
-    }
-
-    /**
-     * Sets value of suspend progression factory to address endpoint.
-     *
-     * @param suspendProgressionFactor
-     *         value that should be set
-     */
-    public void setSuspendProgressionFactory(@Nonnegative double suspendProgressionFactor) {
-        this.suspendProgressionFactor = suspendProgressionFactor;
-    }
-
-    /** @return value of retry error code of address endpoint */
-    @Nonnull
-    public String getRetryErrorCodes() {
-        return retryErrorCodes;
-    }
-
-    /**
-     * Sets value of retry error code to address endpoint.
-     *
-     * @param retryErrorCodes
-     *         value that should be set
-     */
-    public void setRetryErrorCodes(@Nonnull String retryErrorCodes) {
-        this.retryErrorCodes = retryErrorCodes;
-    }
-
-    /** @return value of retry count of address endpoint */
-    @Nonnegative
-    public int getRetryCount() {
-        return retryCount;
-    }
-
-    /**
-     * Sets value of retry count to address endpoint.
-     *
-     * @param retryCount
-     *         value that should be set
-     */
-    public void setRetryCount(@Nonnegative int retryCount) {
-        this.retryCount = retryCount;
-    }
-
-    /** @return value of retry delay of address endpoint */
-    @Nonnegative
-    public int getRetryDelay() {
-        return retryDelay;
-    }
-
-    /**
-     * Sets value of retry delay to address endpoint.
-     *
-     * @param retryDelay
-     *         value that should be set
-     */
-    public void setRetryDelay(@Nonnegative int retryDelay) {
-        this.retryDelay = retryDelay;
-    }
-
-    /** @return list of properties of address endpoint */
-    @Nonnull
-    public Array<Property> getProperties() {
-        return properties;
-    }
-
-    /**
-     * Sets list of properties to address endpoint.
-     *
-     * @param properties
-     *         list that should be set
-     */
-    public void setProperties(@Nonnull Array<Property> properties) {
-        this.properties = properties;
-    }
-
-    /** @return value of optimize of address endpoint */
-    @Nonnull
-    public Optimize getOptimize() {
-        return optimize;
-    }
-
-    /**
-     * Sets value of optimize to address endpoint.
-     *
-     * @param optimize
-     *         value that should be set
-     */
-    public void setOptimize(@Nonnull Optimize optimize) {
-        this.optimize = optimize;
-    }
-
-    /** @return description of address endpoint */
-    @Nonnull
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Sets description to address endpoint.
-     *
-     * @param description
-     *         value that should be set
-     */
-    public void setDescription(@Nonnull String description) {
-        this.description = description;
-    }
-
-    /** @return value of reliable messaging of address endpoint */
-    public boolean isReliableMessagingEnabled() {
-        return isReliableMessagingEnabled;
-    }
-
-    /**
-     * Sets value of reliable messaging to address endpoint.
-     *
-     * @param isReliableMessagingEnabled
-     *         value that should be set.<code>true</code> reliable messaging enable,<code>false</code> reliable messaging disable
-     */
-    public void setReliableMessagingEnabled(boolean isReliableMessagingEnabled) {
-        this.isReliableMessagingEnabled = isReliableMessagingEnabled;
-    }
-
-    /** @return value of reliable messaging policy of address endpoint */
-    @Nonnull
-    public String getReliableMessagingPolicy() {
-        return reliableMessagingPolicy;
-    }
-
-    /**
-     * Sets value reliable messaging policy to address endpoint.
-     *
-     * @param reliableMessagingPolicy
-     *         value that should be set.
-     */
-    public void setReliableMessagingPolicy(@Nonnull String reliableMessagingPolicy) {
-        this.reliableMessagingPolicy = reliableMessagingPolicy;
-    }
-
-    /** @return value of security of address endpoint */
-    public boolean isSecurityEnabled() {
-        return isSecurityEnabled;
-    }
-
-    /**
-     * Sets value of security to address endpoint.
-     *
-     * @param isSecurityEnabled
-     *         value that should be set.<code>true</code> security enable,<code>false</code> security disable
-     */
-    public void setSecurityEnabled(boolean isSecurityEnabled) {
-        this.isSecurityEnabled = isSecurityEnabled;
-    }
-
-    /** @return value of security policy of address endpoint */
-    @Nonnull
-    public String getSecurityPolicy() {
-        return securityPolicy;
-    }
-
-    /**
-     * Sets value of security policy to address endpoint.
-     *
-     * @param securityPolicy
-     *         value that should be set
-     */
-    public void setSecurityPolicy(@Nonnull String securityPolicy) {
-        this.securityPolicy = securityPolicy;
-    }
-
-    /** @return value of addressing of address endpoint */
-    public boolean isAddressingEnabled() {
-        return isAddressingEnabled;
-    }
-
-    /**
-     * Sets value of retry delay to address endpoint.
-     *
-     * @param isAddressingEnabled
-     *         value that should be set.<code>true</code> addressing enable,<code>false</code> addressing disable
-     */
-    public void setAddressingEnabled(boolean isAddressingEnabled) {
-        this.isAddressingEnabled = isAddressingEnabled;
-    }
-
-    /** @return value of addressing version of address endpoint */
-    @Nonnull
-    public AddressingVersion getAddressingVersion() {
-        return addressingVersion;
-    }
-
-    /**
-     * Sets value of addressing version to address endpoint.
-     *
-     * @param addressingVersion
-     *         value that should be set
-     */
-    public void setAddressingVersion(@Nonnull AddressingVersion addressingVersion) {
-        this.addressingVersion = addressingVersion;
-    }
-
-    /** @return value of addressing separate listener of address endpoint */
-    public boolean isAddressingSeparateListener() {
-        return isAddressingSeparateListener;
-    }
-
-    /**
-     * Sets value of retry delay to address endpoint.
-     *
-     * @param isAddressingSeparateListener
-     *         value that should be set.<code>true</code> addressing separate listener enable,<code>false</code> addressing separate
-     *         listener disable
-     */
-    public void setAddressingSeparateListener(boolean isAddressingSeparateListener) {
-        this.isAddressingSeparateListener = isAddressingSeparateListener;
-    }
-
-    /** @return value of timeout duration of address endpoint */
-    @Nonnegative
-    public int getTimeoutDuration() {
-        return timeoutDuration;
-    }
-
-    /**
-     * Sets value of timeout duration to address endpoint.
-     *
-     * @param timeoutDuration
-     *         value that should be set
-     */
-    public void setTimeoutDuration(@Nonnegative int timeoutDuration) {
-        this.timeoutDuration = timeoutDuration;
-    }
-
-    /** @return value of timeout action of address endpoint */
-    @Nonnull
-    public TimeoutAction getTimeoutAction() {
-        return timeoutAction;
-    }
-
-    /**
-     * Sets value of timeout action to address endpoint.
-     *
-     * @param timeoutAction
-     *         value that should be set
-     */
-    public void setTimeoutAction(@Nonnull TimeoutAction timeoutAction) {
-        this.timeoutAction = timeoutAction;
+        putProperty(TIMEOUT_DURATION, 0);
+        putProperty(TIMEOUT_ACTION, never);
     }
 
     /** {@inheritDoc} */
@@ -506,13 +171,17 @@ public class AddressEndpoint extends AbstractElement {
     protected String serializeAttributes() {
         Map<String, String> attributes = new LinkedHashMap<>();
 
-        attributes.put(URI_ATTRIBUTE, uri);
+        attributes.put(URI_ATTRIBUTE, getProperty(URI));
 
-        if (!Format.LEAVE_AS_IS.equals(format)) {
+        Format format = getProperty(FORMAT);
+
+        if (format != null && !LEAVE_AS_IS.equals(format)) {
             attributes.put(FORMAT_ATTRIBUTE, format.name());
         }
 
-        if (!Optimize.LEAVE_AS_IS.equals(optimize)) {
+        Optimize optimize = getProperty(OPTIMIZE);
+
+        if (optimize != null && !Optimize.LEAVE_AS_IS.equals(optimize)) {
             attributes.put(OPTIMIZE_ATTRIBUTE, optimize.name());
         }
 
@@ -526,28 +195,49 @@ public class AddressEndpoint extends AbstractElement {
         String content = "";
         String value;
 
-        if (isAddressingEnabled) {
+        Boolean isAddressingEnabled = getProperty(ADDRESSING_ENABLED);
+        AddressingVersion addressingVersion = getProperty(ADDRESSING_VERSION);
+        Boolean isAddressingSeparateListener = getProperty(ADDRESSING_SEPARATE_LISTENER);
+
+        if (isAddressingEnabled != null && addressingVersion != null && isAddressingSeparateListener != null && isAddressingEnabled) {
             content += '<' + ENABLE_ADDRESSING_PROPERTY + ' ' +
                        VERSION_ATTRIBUTE + "=\"" + addressingVersion.getValue() + '"' +
                        (isAddressingSeparateListener ? ' ' + SEPARATE_LISTENER_ATTRIBUTE + "=\"true\"" : "") + "/>\n";
         }
 
-        if (isReliableMessagingEnabled) {
+        Boolean isReliableMessagingEnabled = getProperty(RELIABLE_MESSAGING_ENABLED);
+        String reliableMessagingPolicy = getProperty(RELIABLE_MESSAGING_POLICY);
+
+        if (isReliableMessagingEnabled != null && reliableMessagingPolicy != null && isReliableMessagingEnabled) {
             content += '<' + ENABLE_RM_PROPERTY + ' ' + POLICY_ATTRIBUTE + "=\"" + reliableMessagingPolicy + "\"/>\n";
         }
 
-        if (isSecurityEnabled) {
+        Boolean isSecurityEnabled = getProperty(SECURITY_ENABLED);
+        String securityPolicy = getProperty(SECURITY_POLICY);
+
+        if (isSecurityEnabled != null && securityPolicy != null && isSecurityEnabled) {
             content += '<' + ENABLE_SEC_PROPERTY + ' ' + POLICY_ATTRIBUTE + "=\"" + securityPolicy + "\"/>\n";
         }
 
-        value = convertNumberValueToXMLAttribute(timeoutDuration, 1, DURATION_PROPERTY) +
-                (never.equals(timeoutAction) ?
-                 "" :
-                 convertStringValueToXMLAttribute(timeoutAction.name(), ACTION_PROPERTY));
+        Integer timeoutDuration = getProperty(TIMEOUT_DURATION);
+        TimeoutAction timeoutAction = getProperty(TIMEOUT_ACTION);
 
-        content += convertStringValueToXMLAttribute(value, TIMEOUT_PROPERTY);
+        if (timeoutDuration != null && timeoutAction != null) {
+            value = convertNumberValueToXMLAttribute(timeoutDuration, 1, DURATION_PROPERTY) +
+                    (never.equals(timeoutAction) ?
+                     "" :
+                     convertStringValueToXMLAttribute(timeoutAction.name(), ACTION_PROPERTY));
 
-        if (!suspendErrorCode.isEmpty() || suspendInitialDuration >= 0) {
+            content += convertStringValueToXMLAttribute(value, TIMEOUT_PROPERTY);
+        }
+
+        String suspendErrorCode = getProperty(SUSPEND_ERROR_CODE);
+        Integer suspendInitialDuration = getProperty(SUSPEND_INITIAL_DURATION);
+        Integer suspendMaximumDuration = getProperty(SUSPEND_MAXIMUM_DURATION);
+        Double suspendProgressionFactor = getProperty(SUSPEND_PROGRESSION_FACTORY);
+
+        if (suspendErrorCode != null && suspendInitialDuration != null && suspendMaximumDuration != null &&
+            suspendProgressionFactor != null && (!suspendErrorCode.isEmpty() || suspendInitialDuration >= 0)) {
             value = convertStringValueToXMLAttribute(suspendErrorCode, ERROR_CODES_PROPERTY) +
                     convertNumberValueToXMLAttribute(suspendInitialDuration, 0, INITIAL_DURATION_PROPERTY) +
                     convertNumberValueToXMLAttribute(suspendMaximumDuration, 0, MAXIMUM_DURATION_PROPERTY) +
@@ -556,7 +246,11 @@ public class AddressEndpoint extends AbstractElement {
             content += convertStringValueToXMLAttribute(value, SUSPEND_ON_FAILURE_PROPERTY);
         }
 
-        if (!retryErrorCodes.isEmpty() || retryDelay > 0) {
+        String retryErrorCodes = getProperty(RETRY_ERROR_CODES);
+        Integer retryCount = getProperty(RETRY_COUNT);
+        Integer retryDelay = getProperty(RETRY_DELAY);
+
+        if (retryErrorCodes != null && retryCount != null && retryDelay != null && (!retryErrorCodes.isEmpty() || retryDelay > 0)) {
             value = convertStringValueToXMLAttribute(retryErrorCodes, ERROR_CODES_PROPERTY) +
                     convertNumberValueToXMLAttribute(retryCount, 1, RETRIES_BEFORE_SUSPENSION_PROPERTY) +
                     convertNumberValueToXMLAttribute(retryDelay, 1, RETRY_DELAY_PROPERTY);
@@ -573,11 +267,19 @@ public class AddressEndpoint extends AbstractElement {
     public String serialize() {
         StringBuilder content = new StringBuilder();
 
-        for (Property property : properties.asIterable()) {
-            content.append(property.serialize());
+        Array<Property> properties = getProperty(PROPERTIES);
+
+        if (properties != null) {
+            for (Property property : properties.asIterable()) {
+                content.append(property.serialize());
+            }
         }
 
-        content.append(convertStringValueToXMLAttribute(description, DESCRIPTION_PROPERTY));
+        String description = getProperty(DESCRIPTION);
+
+        if (description != null) {
+            content.append(convertStringValueToXMLAttribute(description, DESCRIPTION_PROPERTY));
+        }
 
         return super.serialize() + content;
     }
@@ -643,16 +345,18 @@ public class AddressEndpoint extends AbstractElement {
 
             switch (nodeName) {
                 case URI_ATTRIBUTE:
-                    uri = nodeValue;
+                    putProperty(URI, nodeValue);
                     break;
 
                 case FORMAT_ATTRIBUTE:
-                    format = Format.valueOf(nodeValue);
+                    putProperty(FORMAT, Format.valueOf(nodeValue));
                     break;
 
                 case OPTIMIZE_ATTRIBUTE:
-                    optimize = Optimize.valueOf(nodeValue);
+                    putProperty(OPTIMIZE, Optimize.valueOf(nodeValue));
                     break;
+
+                default:
             }
         }
     }
@@ -671,12 +375,18 @@ public class AddressEndpoint extends AbstractElement {
                 Property property = propertyProvider.get();
                 property.applyAttributes(node);
 
-                properties.add(property);
+                Array<Property> properties = getProperty(PROPERTIES);
+
+                if (properties != null) {
+                    properties.add(property);
+                }
                 break;
 
             case DESCRIPTION_PROPERTY:
-                description = node.getChildNodes().item(0).getNodeValue();
+                putProperty(DESCRIPTION, node.getChildNodes().item(0).getNodeValue());
                 break;
+
+            default:
         }
     }
 
@@ -701,23 +411,23 @@ public class AddressEndpoint extends AbstractElement {
                     break;
 
                 case ENABLE_RM_PROPERTY: {
-                    isReliableMessagingEnabled = true;
+                    putProperty(RELIABLE_MESSAGING_ENABLED, true);
 
                     if (node.hasAttributes()) {
                         Node attributeNode = node.getAttributes().item(0);
 
-                        reliableMessagingPolicy = attributeNode.getNodeValue();
+                        putProperty(RELIABLE_MESSAGING_POLICY, attributeNode.getNodeValue());
                     }
                 }
                 break;
 
                 case ENABLE_SEC_PROPERTY: {
-                    isSecurityEnabled = true;
+                    putProperty(SECURITY_ENABLED, true);
 
                     if (node.hasAttributes()) {
                         Node attributeNode = node.getAttributes().item(0);
 
-                        securityPolicy = attributeNode.getNodeValue();
+                        putProperty(SECURITY_POLICY, attributeNode.getNodeValue());
                     }
                 }
                 break;
@@ -733,6 +443,8 @@ public class AddressEndpoint extends AbstractElement {
                 case MAKE_FOR_SUSPENSION_PROPERTY:
                     applyRetryProperties(item);
                     break;
+
+                default:
             }
         }
     }
@@ -744,7 +456,7 @@ public class AddressEndpoint extends AbstractElement {
      *         XML node that need to be analyzed
      */
     private void applyAddressingProperties(@Nonnull Node node) {
-        isAddressingEnabled = true;
+        putProperty(ADDRESSING_ENABLED, true);
 
         NamedNodeMap attributeMap = node.getAttributes();
 
@@ -756,12 +468,14 @@ public class AddressEndpoint extends AbstractElement {
 
             switch (attributeName) {
                 case VERSION_ATTRIBUTE:
-                    addressingVersion = AddressingVersion.getItemByValue(attributeValue);
+                    putProperty(ADDRESSING_VERSION, AddressingVersion.getItemByValue(attributeValue));
                     break;
 
                 case SEPARATE_LISTENER_ATTRIBUTE:
-                    isAddressingSeparateListener = true;
+                    putProperty(ADDRESSING_SEPARATE_LISTENER, true);
                     break;
+
+                default:
             }
         }
     }
@@ -783,12 +497,14 @@ public class AddressEndpoint extends AbstractElement {
 
             switch (propertyName) {
                 case DURATION_PROPERTY:
-                    timeoutDuration = Integer.valueOf(propertyValue);
+                    putProperty(TIMEOUT_DURATION, Integer.valueOf(propertyValue));
                     break;
 
                 case ACTION_PROPERTY:
-                    timeoutAction = TimeoutAction.valueOf(propertyValue);
+                    putProperty(TIMEOUT_ACTION, TimeoutAction.valueOf(propertyValue));
                     break;
+
+                default:
             }
         }
     }
@@ -810,20 +526,22 @@ public class AddressEndpoint extends AbstractElement {
 
             switch (propertyName) {
                 case ERROR_CODES_PROPERTY:
-                    suspendErrorCode = propertyValue;
+                    putProperty(SUSPEND_ERROR_CODE, propertyValue);
                     break;
 
                 case INITIAL_DURATION_PROPERTY:
-                    suspendInitialDuration = Integer.valueOf(propertyValue);
+                    putProperty(SUSPEND_INITIAL_DURATION, Integer.valueOf(propertyValue));
                     break;
 
                 case PROGRESSION_FACTOR_PROPERTY:
-                    suspendProgressionFactor = Double.valueOf(propertyValue);
+                    putProperty(SUSPEND_PROGRESSION_FACTORY, Double.valueOf(propertyValue));
                     break;
 
                 case MAXIMUM_DURATION_PROPERTY:
-                    suspendMaximumDuration = Integer.valueOf(propertyValue);
+                    putProperty(SUSPEND_MAXIMUM_DURATION, Integer.valueOf(propertyValue));
                     break;
+
+                default:
             }
         }
     }
@@ -845,16 +563,18 @@ public class AddressEndpoint extends AbstractElement {
 
             switch (propertyName) {
                 case ERROR_CODES_PROPERTY:
-                    retryErrorCodes = propertyValue;
+                    putProperty(RETRY_ERROR_CODES, propertyValue);
                     break;
 
                 case RETRIES_BEFORE_SUSPENSION_PROPERTY:
-                    retryCount = Integer.valueOf(propertyValue);
+                    putProperty(RETRY_COUNT, Integer.valueOf(propertyValue));
                     break;
 
                 case RETRY_DELAY_PROPERTY:
-                    retryDelay = Integer.valueOf(propertyValue);
+                    putProperty(RETRY_DELAY, Integer.valueOf(propertyValue));
                     break;
+
+                default:
             }
         }
     }
