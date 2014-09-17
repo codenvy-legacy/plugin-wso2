@@ -42,11 +42,13 @@ public class ConnectionsValidator {
 
     private final Map<String, Set<String>> allowRules;
     private final Map<String, Set<String>> disallowRules;
+    private final Set<String>              disallowAllRules;
 
     @Inject
     public ConnectionsValidator() {
         allowRules = new HashMap<>();
         disallowRules = new HashMap<>();
+        disallowAllRules = new HashSet<>();
     }
 
     /**
@@ -59,6 +61,16 @@ public class ConnectionsValidator {
      */
     public void addAllowRules(@Nonnull String sourceElement, @Nonnull List<String> targetElements) {
         addRules(allowRules, sourceElement, targetElements);
+    }
+
+    /**
+     * Adds a new rule of disallowing all connection of diagram elements.
+     *
+     * @param sourceElement
+     *         element that is a start point of connection
+     */
+    public void addDisallowAllRule(@Nonnull String sourceElement) {
+        disallowAllRules.add(sourceElement);
     }
 
     /**
@@ -135,6 +147,10 @@ public class ConnectionsValidator {
      * @return <code>true</code> if it is possible to create a connection, <code>false</code> it isn't
      */
     public boolean canCreateConnection(@Nonnull String sourceElement, @Nonnull String targetElement) {
+        if (disallowAllRules.contains(sourceElement)) {
+            return false;
+        }
+
         if (allowRules.containsKey(sourceElement)) {
             return isContainedRule(allowRules, sourceElement, targetElement);
         }

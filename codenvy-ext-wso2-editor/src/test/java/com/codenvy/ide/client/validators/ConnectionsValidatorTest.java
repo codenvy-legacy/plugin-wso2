@@ -83,6 +83,15 @@ public class ConnectionsValidatorTest {
     }
 
     @Test
+    public void connectionShouldBeNotAbleToCreateWhenDisallowAllRuleIsAdded() throws Exception {
+        validator.addDisallowAllRule(ELEMENT1);
+
+        assertFalse(validator.canCreateConnection(ELEMENT1, ELEMENT1));
+        assertFalse(validator.canCreateConnection(ELEMENT1, ELEMENT2));
+        assertFalse(validator.canCreateConnection(ELEMENT1, ELEMENT3));
+    }
+
+    @Test
     public void connectionShouldBeNotAbleToCreateWhenDisallowRuleIsAdded() throws Exception {
         validator.addDisallowRule(ELEMENT1, ELEMENT1);
 
@@ -124,6 +133,24 @@ public class ConnectionsValidatorTest {
         validator.addDisallowRule(ELEMENT1, ELEMENT1);
 
         assertTrue(validator.canCreateConnection(ELEMENT1, ELEMENT1));
+    }
+
+    @Test
+    public void connectionShouldBeAbleToCreateWhenAllowAndDisallowAllRulesAreAdded() throws Exception {
+        validator.addAllowRule(ELEMENT1, ELEMENT2);
+        validator.addDisallowAllRule(ELEMENT1);
+
+        assertFalse(validator.canCreateConnection(ELEMENT1, ELEMENT1));
+        assertFalse(validator.canCreateConnection(ELEMENT1, ELEMENT2));
+    }
+
+    @Test
+    public void connectionShouldBeAbleToCreateWhenDisallowAndDisallowAllRulesAreAdded() throws Exception {
+        validator.addDisallowAllRule(ELEMENT1);
+        validator.addDisallowRule(ELEMENT1, ELEMENT2);
+
+        assertFalse(validator.canCreateConnection(ELEMENT1, ELEMENT3));
+        assertFalse(validator.canCreateConnection(ELEMENT1, ELEMENT2));
     }
 
 }
