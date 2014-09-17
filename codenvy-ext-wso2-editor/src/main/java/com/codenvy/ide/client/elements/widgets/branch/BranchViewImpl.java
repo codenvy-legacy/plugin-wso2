@@ -174,14 +174,14 @@ public class BranchViewImpl extends BranchView {
 
     /** {@inheritDoc} */
     @Override
-    public void addElement(int x, int y, @Nonnull ElementPresenter element) {
-        addElementOnView(x, y, element);
+    public void addElement(int x, int y, @Nonnull ElementPresenter elementPresenter) {
+        addElementOnView(x, y, elementPresenter);
 
-        elements.add(element);
+        elements.add(elementPresenter);
     }
 
-    private void addElementOnView(int x, int y, @Nonnull ElementPresenter element) {
-        Widget elementView = element.getView();
+    private void addElementOnView(int x, int y, @Nonnull ElementPresenter elementPresenter) {
+        Widget elementView = elementPresenter.getView();
 
         controller.addWidget(elementView, x, y);
         dragController.makeDraggable(elementView);

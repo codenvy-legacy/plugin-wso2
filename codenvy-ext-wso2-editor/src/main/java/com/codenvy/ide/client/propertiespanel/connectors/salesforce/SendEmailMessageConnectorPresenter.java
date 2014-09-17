@@ -100,7 +100,7 @@ public class SendEmailMessageConnectorPresenter extends AbstractConnectorPropert
 
     /** {@inheritDoc} */
     @Override
-    public void redrawPropertiesPanel() {
+    protected void redrawPropertiesPanel() {
         ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
         element.setParameterEditorType(editorType);
 

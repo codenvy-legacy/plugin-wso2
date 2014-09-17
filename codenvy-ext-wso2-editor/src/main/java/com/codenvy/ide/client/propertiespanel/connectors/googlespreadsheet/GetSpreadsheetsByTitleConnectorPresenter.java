@@ -17,7 +17,6 @@ package com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetSpreadsheetsByTitle;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GoogleSpreadsheetPropertyManager;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
@@ -32,6 +31,7 @@ import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
 
 /**
@@ -99,8 +99,8 @@ public class GetSpreadsheetsByTitleConnectorPresenter extends AbstractConnectorP
 
     /** {@inheritDoc} */
     @Override
-    public void redrawPropertiesPanel() {
-        AbstractConnector.ParameterEditorType editorType = AbstractConnector.ParameterEditorType.valueOf(view.getParameterEditorType());
+    protected void redrawPropertiesPanel() {
+        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
         element.setParameterEditorType(editorType);
 
         boolean isEquals = NamespacedPropertyEditor.equals(editorType);

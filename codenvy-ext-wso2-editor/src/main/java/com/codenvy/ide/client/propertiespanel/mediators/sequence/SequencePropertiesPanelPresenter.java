@@ -29,6 +29,7 @@ import com.google.inject.Inject;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType;
 import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType.Static;
 
 /**
@@ -94,19 +95,16 @@ public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Se
     }
 
     private void redrawPropertiesPanel() {
-        element.setReferringType(Sequence.ReferringType.valueOf(view.getReferringType()));
+        ReferringType referringType = ReferringType.valueOf(view.getReferringType());
+        element.setReferringType(referringType);
 
-        if (Static.equals(element.getReferringType())) {
-            view.setStaticReferenceKey(element.getStaticReferenceKey());
+        boolean isStatic = Static.equals(referringType);
 
-            view.setVisibleStaticReferenceKeyPanel(true);
-            view.setVisibleDynamicReferenceKeyPanel(false);
-        } else {
-            view.setDynamicReferenceKey(element.getDynamicReferenceKey());
+        view.setVisibleStaticReferenceKeyPanel(isStatic);
+        view.setVisibleDynamicReferenceKeyPanel(!isStatic);
 
-            view.setVisibleStaticReferenceKeyPanel(false);
-            view.setVisibleDynamicReferenceKeyPanel(true);
-        }
+        view.setStaticReferenceKey(element.getStaticReferenceKey());
+        view.setDynamicReferenceKey(element.getDynamicReferenceKey());
     }
 
     /** {@inheritDoc} */
@@ -114,7 +112,7 @@ public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Se
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setReferringTypes(propertyTypeManager.getValuesByName(Sequence.ReferringType.TYPE_NAME));
+        view.setReferringTypes(propertyTypeManager.getValuesByName(ReferringType.TYPE_NAME));
         view.selectReferringType(element.getReferringType().name());
 
         redrawPropertiesPanel();

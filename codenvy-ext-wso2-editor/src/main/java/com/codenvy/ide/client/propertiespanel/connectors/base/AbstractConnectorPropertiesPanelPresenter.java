@@ -236,7 +236,7 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
     }
 
     /** Redraw properties panel of connector depending on user's action. */
-    public void redrawPropertiesPanel() {
+    protected void redrawPropertiesPanel() {
 
     }
 

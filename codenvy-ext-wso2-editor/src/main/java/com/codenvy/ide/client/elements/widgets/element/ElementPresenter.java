@@ -205,12 +205,16 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
             height = DEFAULT_HEIGHT;
         } else {
             height = 0;
+            int maxWidth = 0;
+
             List<BranchPresenter> branchesWidgets = new ArrayList<>(widgetBranches.values());
 
-            int maxWidth = branchesWidgets.get(0).getWidth();
-
             for (BranchPresenter branch : branchesWidgets) {
+                branch.resizeView();
+
+                maxWidth = branchesWidgets.get(0).getWidth();
                 height += branch.getHeight();
+
                 int branchWidth = branch.getWidth();
 
                 if (branchWidth > maxWidth) {
@@ -326,13 +330,13 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     /** {@inheritDoc} */
     @Override
     public void onElementChanged() {
-        onElementUpdate();
+        updateView();
 
         notifyElementChangedListeners();
     }
 
-
-    public void onElementUpdate() {
+    /** Updates the widget according to the current state of element without notifying of listeners. */
+    public void updateView() {
         redrawBranches();
     }
 

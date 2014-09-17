@@ -188,21 +188,9 @@ public class CreateWorksheetConnectorPresenter extends AbstractConnectorProperti
                                                     element.getWorksheetColumnsExpression());
     }
 
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-        view.setVisibleThirdPanel(true);
-        view.setVisibleFourthPanel(true);
-
-        view.setFirstLabelTitle(locale.spreadsheetCreateWorksheetWorksheetName());
-        view.setSecondLabelTitle(locale.spreadsheetCreateWorksheetSpreadsheetName());
-        view.setThirdLabelTitle(locale.spreadsheetCreateWorksheetWorksheetRows());
-        view.setFourthLabelTitle(locale.spreadsheetCreateWorksheetWorksheetColumns());
-    }
-
     /** {@inheritDoc} */
     @Override
-    public void redrawPropertiesPanel() {
+    protected void redrawPropertiesPanel() {
         ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
         element.setParameterEditorType(editorType);
 
@@ -222,6 +210,18 @@ public class CreateWorksheetConnectorPresenter extends AbstractConnectorProperti
         view.setSecondTextBoxValue(isEquals ? element.getWorksheetNameExpression() : element.getWorksheetName());
         view.setThirdTextBoxValue(isEquals ? element.getWorksheetRowsExpression() : element.getWorksheetRows());
         view.setFourthTextBoxValue(isEquals ? element.getWorksheetColumnsExpression() : element.getWorksheetColumns());
+    }
+
+    private void redesignViewToCurrentConnector() {
+        view.setVisibleFirstPanel(true);
+        view.setVisibleSecondPanel(true);
+        view.setVisibleThirdPanel(true);
+        view.setVisibleFourthPanel(true);
+
+        view.setFirstLabelTitle(locale.spreadsheetCreateWorksheetWorksheetName());
+        view.setSecondLabelTitle(locale.spreadsheetCreateWorksheetSpreadsheetName());
+        view.setThirdLabelTitle(locale.spreadsheetCreateWorksheetWorksheetRows());
+        view.setFourthLabelTitle(locale.spreadsheetCreateWorksheetWorksheetColumns());
     }
 
     /** {@inheritDoc} */

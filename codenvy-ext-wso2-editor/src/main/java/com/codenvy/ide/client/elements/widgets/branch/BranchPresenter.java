@@ -199,8 +199,6 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     @Override
     public void onElementDeleted(@Nonnull Element element) {
         removeElement(element);
-
-        notifyElementChangedListeners();
     }
 
     /** {@inheritDoc} */
@@ -220,14 +218,9 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     /** {@inheritDoc} */
     @Override
     public void onElementChanged() {
-        onElementUpdate();
+        redrawElements();
 
         notifyElementChangedListeners();
-    }
-
-    /** Updates the widget according to the current state of element without notifying of listeners. */
-    public void onElementUpdate() {
-        redrawElements();
     }
 
     /** @return an instance of creating element if new element is creating or <code>null<code/> if it isn't */
@@ -253,7 +246,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     private void redrawElements() {
         displayElements();
 
-        detectWidgetSize();
+        resizeView();
 
         alignElements();
     }
@@ -287,7 +280,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         }
     }
 
-    private void detectWidgetSize() {
+    public void resizeView() {
         int height;
         int width;
 

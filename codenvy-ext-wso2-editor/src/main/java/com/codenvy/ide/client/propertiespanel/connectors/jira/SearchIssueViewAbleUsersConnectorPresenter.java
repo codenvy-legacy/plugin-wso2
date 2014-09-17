@@ -218,7 +218,7 @@ public class SearchIssueViewAbleUsersConnectorPresenter extends AbstractConnecto
 
     /** {@inheritDoc} */
     @Override
-    public void redrawPropertiesPanel() {
+    protected void redrawPropertiesPanel() {
         ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
         element.setParameterEditorType(editorType);
 
@@ -241,7 +241,6 @@ public class SearchIssueViewAbleUsersConnectorPresenter extends AbstractConnecto
         view.setThirdTextBoxValue(isEquals ? element.getIssueKeyExpression() : element.getIssueKey());
         view.setFourthTextBoxValue(isEquals ? element.getStartAtExpression() : element.getStartAt());
         view.setFifthTextBoxValue(isEquals ? element.getMaxResultsExpression() : element.getMaxResults());
-
     }
 
     private void redesignViewToCurrentConnector() {

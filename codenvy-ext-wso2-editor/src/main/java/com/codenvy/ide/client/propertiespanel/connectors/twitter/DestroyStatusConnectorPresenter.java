@@ -219,7 +219,7 @@ public class DestroyStatusConnectorPresenter extends AbstractConnectorProperties
 
     /** {@inheritDoc} */
     @Override
-    public void redrawPropertiesPanel() {
+    protected void redrawPropertiesPanel() {
         ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
         element.setParameterEditorType(editorType);
 

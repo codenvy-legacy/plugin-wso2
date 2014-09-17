@@ -189,7 +189,7 @@ public class SetRowConnectorPresenter extends AbstractConnectorPropertiesPanelPr
 
     /** {@inheritDoc} */
     @Override
-    public void redrawPropertiesPanel() {
+    protected void redrawPropertiesPanel() {
         ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
         element.setParameterEditorType(editorType);
 

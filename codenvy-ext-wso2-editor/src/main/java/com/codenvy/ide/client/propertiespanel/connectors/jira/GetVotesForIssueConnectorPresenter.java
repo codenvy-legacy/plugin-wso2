@@ -99,7 +99,7 @@ public class GetVotesForIssueConnectorPresenter extends AbstractConnectorPropert
 
     /** {@inheritDoc} */
     @Override
-    public void redrawPropertiesPanel() {
+    protected void redrawPropertiesPanel() {
         ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
         element.setParameterEditorType(editorType);
 
@@ -110,7 +110,6 @@ public class GetVotesForIssueConnectorPresenter extends AbstractConnectorPropert
         view.setEnableFirstTextBox(!isEquals);
 
         view.setFirstTextBoxValue(isEquals ? element.getIssueIdOrKeyExpression() : element.getIssueIdOrKey());
-
     }
 
     private void redesignViewToCurrentConnector() {
