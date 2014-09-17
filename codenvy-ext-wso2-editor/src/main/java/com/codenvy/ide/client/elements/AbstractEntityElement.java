@@ -16,6 +16,8 @@
 package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.collections.Array;
+import com.google.gwt.xml.client.NamedNodeMap;
+import com.google.gwt.xml.client.Node;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -162,6 +164,38 @@ public abstract class AbstractEntityElement {
             return name.hashCode();
         }
 
+    }
+
+
+    /**
+     * Read all attributes from XML node to the diagram element
+     *
+     * @param node
+     *         XML node that need to be analyzed
+     */
+    protected void readXMLAttributes(@Nonnull Node node) {
+        NamedNodeMap attributeMap = node.getAttributes();
+
+        for (int i = 0; i < attributeMap.getLength(); i++) {
+            Node attributeNode = attributeMap.item(i);
+
+            String nodeName = attributeNode.getNodeName();
+            String nodeValue = attributeNode.getNodeValue();
+
+            applyAttribute(nodeName, nodeValue);
+
+        }
+    }
+
+    /**
+     * Apply attribute from XML node to the diagram element.
+     *
+     * @param attributeName
+     *         name of XML attribute
+     * @param attributeValue
+     *         value of XML attribute
+     */
+    protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
     }
 
 }

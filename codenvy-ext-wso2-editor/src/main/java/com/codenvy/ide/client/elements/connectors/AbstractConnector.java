@@ -19,7 +19,6 @@ import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.xml.client.Node;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
@@ -74,12 +73,8 @@ public class AbstractConnector extends AbstractElement {
 
     /** {@inheritDoc} */
     @Override
-    protected void applyAttributes(@Nonnull Node node) {
-        if (node.hasAttributes()) {
-            Node attribute = node.getAttributes().item(0);
-
-            configRef = attribute.getNodeValue();
-        }
+    protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        configRef = attributeValue;
     }
 
     @Nonnull

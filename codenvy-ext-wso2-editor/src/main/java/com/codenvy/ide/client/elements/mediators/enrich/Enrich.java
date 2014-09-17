@@ -147,7 +147,7 @@ public class Enrich extends AbstractElement {
     /** {@inheritDoc} */
     @Override
     public void deserialize(@Nonnull Node node) {
-        applyAttributes(node);
+        readXMLAttributes(node);
 
         NodeList childNodes = node.getChildNodes();
 
@@ -164,11 +164,7 @@ public class Enrich extends AbstractElement {
 
     /** {@inheritDoc} */
     @Override
-    protected void applyAttributes(@Nonnull Node node) {
-        if (node.hasAttributes()) {
-            Node attributeNode = node.getAttributes().item(0);
-
-            description = String.valueOf(attributeNode.getNodeValue());
-        }
+    protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        description = String.valueOf(attributeValue);
     }
 }

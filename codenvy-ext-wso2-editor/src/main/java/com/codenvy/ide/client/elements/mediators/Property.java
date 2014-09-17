@@ -23,8 +23,6 @@ import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
-import com.google.gwt.xml.client.NamedNodeMap;
-import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -328,65 +326,56 @@ public class Property extends AbstractElement {
 
     /** {@inheritDoc} */
     @Override
-    protected void applyAttributes(@Nonnull Node node) {
-        NamedNodeMap attributeMap = node.getAttributes();
+    protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        switch (attributeName) {
+            case NAME_ATTRIBUTE:
+                propertyName = attributeValue;
+                break;
 
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
+            case ACTION_ATTRIBUTE:
+                propertyAction = Action.valueOf(attributeValue);
+                break;
 
-            String nodeValue = attributeNode.getNodeValue();
-            String nodeName = attributeNode.getNodeName();
+            case DATA_TYPE_ATTRIBUTE:
+                propertyDataType = DataType.valueOf(attributeValue);
+                break;
 
-            switch (nodeName) {
-                case NAME_ATTRIBUTE:
-                    propertyName = nodeValue;
-                    break;
+            case VALUE_LITERAL_ATTRIBUTE:
+                valueLiteral = attributeValue;
+                break;
 
-                case ACTION_ATTRIBUTE:
-                    propertyAction = Action.valueOf(nodeValue);
-                    break;
+            case VALUE_EXPRESSION_ATTRIBUTE:
+                valueExpression = attributeValue;
+                valueType = EXPRESSION;
+                break;
 
-                case DATA_TYPE_ATTRIBUTE:
-                    propertyDataType = DataType.valueOf(nodeValue);
-                    break;
+            case STRING_PATTERN_ATTRIBUTE:
+                valueStringPattern = attributeValue;
+                break;
 
-                case VALUE_LITERAL_ATTRIBUTE:
-                    valueLiteral = nodeValue;
-                    break;
+            case STRING_CAPTURE_GROUP_ATTRIBUTE:
+                valueStringCaptureGroup = attributeValue;
+                break;
 
-                case VALUE_EXPRESSION_ATTRIBUTE:
-                    valueExpression = nodeValue;
-                    valueType = EXPRESSION;
-                    break;
+            case SCOPE_ATTRIBUTE:
+                propertyScope = Scope.getItemByValue(attributeValue);
+                break;
 
-                case STRING_PATTERN_ATTRIBUTE:
-                    valueStringPattern = nodeValue;
-                    break;
+            case DESCRIPTION_ATTRIBUTE:
+                description = attributeValue;
+                break;
 
-                case STRING_CAPTURE_GROUP_ATTRIBUTE:
-                    valueStringCaptureGroup = nodeValue;
-                    break;
+            default:
+                if (StringUtils.startsWith(PREFIX, attributeName, true)) {
+                    String name = StringUtils.trimStart(attributeName, PREFIX + ':');
 
-                case SCOPE_ATTRIBUTE:
-                    propertyScope = Scope.getItemByValue(nodeValue);
-                    break;
+                    NameSpace nameSpace = nameSpaceProvider.get();
 
-                case DESCRIPTION_ATTRIBUTE:
-                    description = nodeValue;
-                    break;
+                    nameSpace.setPrefix(name);
+                    nameSpace.setUri(attributeValue);
 
-                default:
-                    if (StringUtils.startsWith(PREFIX, nodeName, true)) {
-                        String name = StringUtils.trimStart(nodeName, PREFIX + ':');
-
-                        NameSpace nameSpace = nameSpaceProvider.get();
-
-                        nameSpace.setPrefix(name);
-                        nameSpace.setUri(nodeValue);
-
-                        nameSpaces.add(nameSpace);
-                    }
-            }
+                    nameSpaces.add(nameSpace);
+                }
         }
     }
 

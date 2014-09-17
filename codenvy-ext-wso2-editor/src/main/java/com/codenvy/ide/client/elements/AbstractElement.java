@@ -34,6 +34,7 @@ import java.util.List;
  * The abstract implementation of {@link Element}. It contains the implementation of general methods which might not be changed.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public abstract class AbstractElement extends AbstractEntityElement implements Element, Comparable<AbstractElement> {
 
@@ -245,7 +246,7 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
         branches.clear();
         Branch generalBranch = null;
 
-        applyAttributes(node);
+        readXMLAttributes(node);
 
         NodeList childNodes = node.getChildNodes();
 
@@ -321,15 +322,6 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
      *         XML node that need to be analyzed
      */
     protected void applyProperty(@Nonnull Node node) {
-    }
-
-    /**
-     * Apply attributes from XML node to the diagram element
-     *
-     * @param node
-     *         XML node that need to be analyzed
-     */
-    protected void applyAttributes(@Nonnull Node node) {
     }
 
     /** @return diagram element properties in text format */

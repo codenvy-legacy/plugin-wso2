@@ -24,7 +24,6 @@ import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
-import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -245,7 +244,7 @@ public class Call extends AbstractElement {
                 isKeyAttributeFound = false;
                 isKeyExpressionAttributeFound = false;
 
-                applyAttributes(node);
+                readXMLAttributes(node);
 
                 if (isKeyAttributeFound) {
                     endpointType = REGISTRYKEY;
@@ -278,42 +277,33 @@ public class Call extends AbstractElement {
 
     /** {@inheritDoc} */
     @Override
-    protected void applyAttributes(@Nonnull Node node) {
-        NamedNodeMap attributeMap = node.getAttributes();
+    protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        switch (attributeName) {
+            case DESCRIPTION_ATTRIBUTE_NAME:
+                description = attributeValue;
+                break;
 
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
+            case KEY_ATTRIBUTE_NAME:
+                registryKey = attributeValue;
+                isKeyAttributeFound = true;
+                break;
 
-            String nodeValue = attributeNode.getNodeValue();
-            String nodeName = attributeNode.getNodeName();
+            case KEY_EXPRESSION_ATTRIBUTE_NAME:
+                xPath = attributeValue;
+                isKeyExpressionAttributeFound = true;
+                break;
 
-            switch (nodeName) {
-                case DESCRIPTION_ATTRIBUTE_NAME:
-                    description = nodeValue;
-                    break;
+            default:
+                if (StringUtils.startsWith(PREFIX, attributeName, true)) {
+                    String name = StringUtils.trimStart(attributeName, PREFIX + ':');
 
-                case KEY_ATTRIBUTE_NAME:
-                    registryKey = nodeValue;
-                    isKeyAttributeFound = true;
-                    break;
+                    NameSpace nameSpace = nameSpaceProvider.get();
 
-                case KEY_EXPRESSION_ATTRIBUTE_NAME:
-                    xPath = nodeValue;
-                    isKeyExpressionAttributeFound = true;
-                    break;
+                    nameSpace.setPrefix(name);
+                    nameSpace.setUri(attributeValue);
 
-                default:
-                    if (StringUtils.startsWith(PREFIX, nodeName, true)) {
-                        String name = StringUtils.trimStart(nodeName, PREFIX + ':');
-
-                        NameSpace nameSpace = nameSpaceProvider.get();
-
-                        nameSpace.setPrefix(name);
-                        nameSpace.setUri(nodeValue);
-
-                        nameSpaces.add(nameSpace);
-                    }
-            }
+                    nameSpaces.add(nameSpace);
+                }
         }
     }
 

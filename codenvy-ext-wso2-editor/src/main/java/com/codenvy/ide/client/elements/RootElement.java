@@ -17,8 +17,6 @@ package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.common.ContentFormatter;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
-import com.google.gwt.xml.client.NamedNodeMap;
-import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -121,24 +119,17 @@ public class RootElement extends AbstractElement {
 
     /** {@inheritDoc} */
     @Override
-    protected void applyAttributes(@Nonnull Node node) {
-        NamedNodeMap attributeMap = node.getAttributes();
+    protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        switch (attributeName) {
+            case NAME_ATTRIBUTE_NAME:
+                name = attributeValue;
+                break;
 
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
+            case ON_ERROR_ATTRIBUTE_NAME:
+                onError = attributeValue;
+                break;
 
-            String nodeValue = attributeNode.getNodeValue();
-            String nodeName = attributeNode.getNodeName();
-
-            switch (nodeName) {
-                case NAME_ATTRIBUTE_NAME:
-                    name = nodeValue;
-                    break;
-
-                case ON_ERROR_ATTRIBUTE_NAME:
-                    onError = nodeValue;
-                    break;
-            }
+            default:
         }
     }
 

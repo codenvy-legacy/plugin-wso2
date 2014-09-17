@@ -24,7 +24,6 @@ import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
-import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -255,51 +254,39 @@ public class Send extends AbstractElement {
 
     /** {@inheritDoc} */
     @Override
-    protected void applyAttributes(@Nonnull Node node) {
-        if (node.hasAttributes()) {
-            NamedNodeMap attributes = node.getAttributes();
+    protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        switch (attributeName) {
+            case EXPRESSION_ATTRIBUTE_NAME:
+                if (attributeValue.contains("{")) {
+                    dynamicExpression = attributeValue.replace("{", "").replace("}", "");
 
-            for (int i = 0; i < attributes.getLength(); i++) {
-                Node attributeNode = attributes.item(i);
+                    sequencerType = SequenceType.Dynamic;
+                } else {
+                    staticExpression = attributeValue;
 
-                String attributeName = attributeNode.getNodeName();
-                String attributeValue = attributeNode.getNodeValue();
-
-                switch (attributeName) {
-                    case EXPRESSION_ATTRIBUTE_NAME:
-                        if (attributeValue.contains("{")) {
-                            dynamicExpression = attributeValue.replace("{", "").replace("}", "");
-
-                            sequencerType = SequenceType.Dynamic;
-                        } else {
-                            staticExpression = attributeValue;
-
-                            sequencerType = SequenceType.Static;
-                        }
-                        break;
-
-                    case BUILD_MESSAGE_ATTRIBUTE_NAME:
-                        buildMessage = Boolean.valueOf(attributeValue);
-                        break;
-
-                    case DESCRIPTION_ATTRIBUTE_NAME:
-                        description = attributeValue;
-                        break;
-
-                    default:
-                        if (StringUtils.startsWith(PREFIX, attributeName, true)) {
-                            String name = StringUtils.trimStart(attributeName, PREFIX + ':');
-
-                            NameSpace nameSpace = nameSpaceProvider.get();
-
-                            nameSpace.setPrefix(name);
-                            nameSpace.setUri(attributeValue);
-
-                            nameSpaces.add(nameSpace);
-                        }
+                    sequencerType = SequenceType.Static;
                 }
-            }
+                break;
 
+            case BUILD_MESSAGE_ATTRIBUTE_NAME:
+                buildMessage = Boolean.valueOf(attributeValue);
+                break;
+
+            case DESCRIPTION_ATTRIBUTE_NAME:
+                description = attributeValue;
+                break;
+
+            default:
+                if (StringUtils.startsWith(PREFIX, attributeName, true)) {
+                    String name = StringUtils.trimStart(attributeName, PREFIX + ':');
+
+                    NameSpace nameSpace = nameSpaceProvider.get();
+
+                    nameSpace.setPrefix(name);
+                    nameSpace.setUri(attributeValue);
+
+                    nameSpaces.add(nameSpace);
+                }
         }
     }
 

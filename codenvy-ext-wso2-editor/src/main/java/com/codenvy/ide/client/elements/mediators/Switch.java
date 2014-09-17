@@ -23,7 +23,6 @@ import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
-import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -70,8 +69,9 @@ public class Switch extends AbstractElement {
 
     private final Provider<NameSpace> nameSpaceProvider;
 
-    private Branch firstBranch;
-    private Branch defaultBranch;
+    private Branch           firstBranch;
+    private Branch           defaultBranch;
+    private Array<NameSpace> nameSpaces;
 
     @Inject
     public Switch(EditorResources resources,
@@ -156,6 +156,8 @@ public class Switch extends AbstractElement {
     /** {@inheritDoc} */
     @Override
     public void deserialize(@Nonnull Node node) {
+        nameSpaces.clear();
+
         super.deserialize(node);
 
         firstBranch = branches.remove(0);
@@ -164,36 +166,26 @@ public class Switch extends AbstractElement {
 
     /** {@inheritDoc} */
     @Override
-    protected void applyAttributes(@Nonnull Node node) {
-        NamedNodeMap attributeMap = node.getAttributes();
+    protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        switch (attributeName) {
+            case SOURCE_ATTRIBUTE_NAME:
+                putProperty(SOURCE_XPATH, attributeValue);
+                break;
 
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
+            default:
+                if (StringUtils.startsWith(PREFIX, attributeName, true)) {
+                    String name = StringUtils.trimStart(attributeName, PREFIX + ':');
 
-            String nodeValue = attributeNode.getNodeValue();
-            String nodeName = attributeNode.getNodeName();
+                    NameSpace nameSpace = nameSpaceProvider.get();
 
-            switch (nodeName) {
-                case SOURCE_ATTRIBUTE_NAME:
-                    putProperty(SOURCE_XPATH, nodeValue);
-                    break;
+                    nameSpace.setPrefix(name);
+                    nameSpace.setUri(attributeValue);
 
-                default: {
-                    if (StringUtils.startsWith(PREFIX, nodeName, true)) {
-                        String name = StringUtils.trimStart(nodeName, PREFIX + ':');
-
-                        NameSpace nameSpace = nameSpaceProvider.get();
-
-                        nameSpace.setPrefix(name);
-                        nameSpace.setUri(nodeValue);
-
-                        Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
-                        if (nameSpaces != null) {
-                            nameSpaces.add(nameSpace);
-                        }
+                    nameSpaces = getProperty(NAMESPACES);
+                    if (nameSpaces != null) {
+                        nameSpaces.add(nameSpace);
                     }
                 }
-            }
         }
     }
 

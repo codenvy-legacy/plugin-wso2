@@ -19,7 +19,6 @@ import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
-import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -95,9 +94,7 @@ public class LoopBack extends AbstractElement {
 
     /** {@inheritDoc} */
     @Override
-    protected void applyAttributes(@Nonnull Node node) {
-        if (node.hasAttributes()) {
-            description = node.getAttributes().item(0).getNodeValue();
-        }
+    protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        description = String.valueOf(attributeValue);
     }
 }

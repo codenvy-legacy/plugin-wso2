@@ -334,30 +334,21 @@ public class AddressEndpoint extends AbstractElement {
 
     /** {@inheritDoc} */
     @Override
-    protected void applyAttributes(@Nonnull Node node) {
-        NamedNodeMap attributeMap = node.getAttributes();
+    protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        switch (attributeName) {
+            case URI_ATTRIBUTE:
+                putProperty(URI, attributeValue);
+                break;
 
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
+            case FORMAT_ATTRIBUTE:
+                putProperty(FORMAT, Format.valueOf(attributeValue));
+                break;
 
-            String nodeName = attributeNode.getNodeName();
-            String nodeValue = attributeNode.getNodeValue();
+            case OPTIMIZE_ATTRIBUTE:
+                putProperty(OPTIMIZE, Optimize.valueOf(attributeValue));
+                break;
 
-            switch (nodeName) {
-                case URI_ATTRIBUTE:
-                    putProperty(URI, nodeValue);
-                    break;
-
-                case FORMAT_ATTRIBUTE:
-                    putProperty(FORMAT, Format.valueOf(nodeValue));
-                    break;
-
-                case OPTIMIZE_ATTRIBUTE:
-                    putProperty(OPTIMIZE, Optimize.valueOf(nodeValue));
-                    break;
-
-                default:
-            }
+            default:
         }
     }
 
@@ -397,7 +388,7 @@ public class AddressEndpoint extends AbstractElement {
      *         XML node that need to be analyzed
      */
     private void applyElementProperty(@Nonnull Node node) {
-        applyAttributes(node);
+        readXMLAttributes(node);
 
         NodeList childNodes = node.getChildNodes();
 

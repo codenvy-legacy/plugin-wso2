@@ -22,7 +22,6 @@ import com.codenvy.ide.client.elements.mediators.log.Property;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -187,23 +186,17 @@ public class CallTemplate extends AbstractElement {
 
     /** {@inheritDoc} */
     @Override
-    public void applyAttributes(@Nonnull Node node) {
-        NamedNodeMap attributeMap = node.getAttributes();
+    public void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        switch (attributeName) {
+            case TARGET_ATTRIBUTE_NAME:
+                targetTemplate = attributeValue;
+                break;
 
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
+            case DESCRIPTION_ATTRIBUTE_NAME:
+                description = attributeValue;
+                break;
 
-            String attributeValue = attributeNode.getNodeValue();
-
-            switch (attributeNode.getNodeName()) {
-                case TARGET_ATTRIBUTE_NAME:
-                    targetTemplate = attributeValue;
-                    break;
-
-                case DESCRIPTION_ATTRIBUTE_NAME:
-                    description = attributeValue;
-                    break;
-            }
+            default:
         }
     }
 

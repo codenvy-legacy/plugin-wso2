@@ -23,7 +23,6 @@ import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
-import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -165,46 +164,42 @@ public class Sequence extends AbstractElement {
         return spaces + KEY_ATTRIBUTE_NAME + "=\"{" + dynamicReferenceKey + "}\"";
     }
 
-    /** {@inheritDoc} */
     @Override
-    protected void applyAttributes(@Nonnull Node node) {
+    public void deserialize(@Nonnull Node node) {
         nameSpaces.clear();
 
-        NamedNodeMap attributeMap = node.getAttributes();
+        super.deserialize(node);
+    }
 
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
+    /** {@inheritDoc} */
+    @Override
+    protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        switch (attributeName) {
+            case KEY_ATTRIBUTE_NAME:
+                if (StringUtils.startsWith("{", attributeValue, true)) {
+                    referringType = Dynamic;
 
-            String nodeValue = attributeNode.getNodeValue();
-            String nodeName = attributeNode.getNodeName();
+                    int startPosition = attributeValue.indexOf("{") + 1;
+                    int endPosition = attributeValue.lastIndexOf("}");
 
-            switch (nodeName) {
-                case KEY_ATTRIBUTE_NAME:
-                    if (StringUtils.startsWith("{", nodeValue, true)) {
-                        referringType = Dynamic;
+                    dynamicReferenceKey = attributeValue.substring(startPosition, endPosition);
+                } else {
+                    referringType = Static;
+                    staticReferenceKey = attributeValue;
+                }
+                break;
 
-                        int startPosition = nodeValue.indexOf("{") + 1;
-                        int endPosition = nodeValue.lastIndexOf("}");
+            default:
+                if (StringUtils.startsWith(PREFIX, attributeName, true)) {
+                    String name = StringUtils.trimStart(attributeName, PREFIX + ':');
 
-                        dynamicReferenceKey = nodeValue.substring(startPosition, endPosition);
-                    } else {
-                        referringType = Static;
-                        staticReferenceKey = nodeValue;
-                    }
-                    break;
+                    NameSpace nameSpace = nameSpaceProvider.get();
 
-                default:
-                    if (StringUtils.startsWith(PREFIX, nodeName, true)) {
-                        String name = StringUtils.trimStart(nodeName, PREFIX + ':');
+                    nameSpace.setPrefix(name);
+                    nameSpace.setUri(attributeValue);
 
-                        NameSpace nameSpace = nameSpaceProvider.get();
-
-                        nameSpace.setPrefix(name);
-                        nameSpace.setUri(nodeValue);
-
-                        nameSpaces.add(nameSpace);
-                    }
-            }
+                    nameSpaces.add(nameSpace);
+                }
         }
     }
 

@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
-import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -146,57 +145,45 @@ public class Source extends AbstractEntityElement {
         return result.toString();
     }
 
-    /**
-     * Apply attributes from XML node to the diagram element
-     *
-     * @param node
-     *         XML node that need to be analyzed
-     */
-    private void applyAttributes(@Nonnull Node node) {
-        NamedNodeMap attributeMap = node.getAttributes();
 
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
+    /** {@inheritDoc} */
+    @Override
+    protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        switch (attributeName) {
+            case CLONE_SOURCE_ATTRIBUTE_NAME:
+                clone = Boolean.valueOf(attributeValue);
+                break;
 
-            String nodeName = attributeNode.getNodeName();
-            String nodeValue = attributeNode.getNodeValue();
+            case SOURCE_TYPE_ATTRIBUTE_NAME:
+                type = SourceType.valueOf(attributeValue);
+                break;
 
-            switch (nodeName) {
-                case CLONE_SOURCE_ATTRIBUTE_NAME:
-                    clone = Boolean.valueOf(nodeValue);
-                    break;
+            case INLINE_REGISTRY_KEY_ATTRIBUTE_NAME:
+                inlRegisterKey = attributeValue;
 
-                case SOURCE_TYPE_ATTRIBUTE_NAME:
-                    type = SourceType.valueOf(nodeValue);
-                    break;
+                type = SourceType.inline;
+                inlineType = InlineType.RegistryKey;
+                break;
 
-                case INLINE_REGISTRY_KEY_ATTRIBUTE_NAME:
-                    inlRegisterKey = nodeValue;
+            case XPATH_ATTRIBUTE_NAME:
+                xpath = attributeValue;
+                break;
 
-                    type = SourceType.inline;
-                    inlineType = InlineType.RegistryKey;
-                    break;
+            case PROPERTY_ATTRIBUTE_NAME:
+                property = attributeValue;
+                break;
 
-                case XPATH_ATTRIBUTE_NAME:
-                    xpath = nodeValue;
-                    break;
+            default:
+                if (StringUtils.startsWith(PREFIX, attributeName, true)) {
+                    String name = StringUtils.trimStart(attributeName, PREFIX + ':');
 
-                case PROPERTY_ATTRIBUTE_NAME:
-                    property = nodeValue;
-                    break;
+                    NameSpace nameSpace = nameSpaceProvider.get();
 
-                default:
-                    if (StringUtils.startsWith(PREFIX, nodeName, true)) {
-                        String name = StringUtils.trimStart(nodeName, PREFIX + ':');
+                    nameSpace.setPrefix(name);
+                    nameSpace.setUri(attributeValue);
 
-                        NameSpace nameSpace = nameSpaceProvider.get();
-
-                        nameSpace.setPrefix(name);
-                        nameSpace.setUri(nodeValue);
-
-                        nameSpaces.add(nameSpace);
-                    }
-            }
+                    nameSpaces.add(nameSpace);
+                }
         }
     }
 
@@ -207,7 +194,7 @@ public class Source extends AbstractEntityElement {
      *         XML node that need to be analyzed
      */
     public void applyProperty(@Nonnull Node node) {
-        applyAttributes(node);
+        readXMLAttributes(node);
 
         if (node.hasChildNodes()) {
             String item = node.getChildNodes().item(0).toString();

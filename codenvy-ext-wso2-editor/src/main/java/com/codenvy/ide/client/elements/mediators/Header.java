@@ -23,7 +23,6 @@ import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
-import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -70,6 +69,7 @@ public class Header extends AbstractElement {
     private String          value;
     private String          expression;
     private String          inlineXml;
+    private boolean         isFirstNamespace;
 
     private Array<NameSpace> headerNamespaces;
     private Array<NameSpace> expressionNamespaces;
@@ -313,62 +313,54 @@ public class Header extends AbstractElement {
 
     /** {@inheritDoc} */
     @Override
-    protected void applyAttributes(@Nonnull Node node) {
-        NamedNodeMap attributeMap = node.getAttributes();
-        boolean isFirst = true;
+    protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        switch (attributeName) {
+            case HeaderAction.ACTION:
+                action = HeaderAction.valueOf(attributeValue);
+                break;
 
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
+            case ScopeType.SCOPE:
+                scope = ScopeType.valueOf(attributeValue);
+                break;
 
-            String nodeName = attributeNode.getNodeName();
-            String nodeValue = attributeNode.getNodeValue();
+            case VALUE:
+                value = attributeValue;
+                break;
 
-            switch (nodeName) {
-                case HeaderAction.ACTION:
-                    action = HeaderAction.valueOf(nodeValue);
-                    break;
+            case EXPRESSION:
+                expression = attributeValue;
+                valueType = HeaderValueType.EXPRESSION;
+                break;
 
-                case ScopeType.SCOPE:
-                    scope = ScopeType.valueOf(nodeValue);
-                    break;
+            case NAME:
+                headerName = attributeValue;
+                break;
 
-                case VALUE:
-                    value = nodeValue;
-                    break;
+            default:
+                if (StringUtils.startsWith(PREFIX, attributeName, true)) {
+                    String name = StringUtils.trimStart(attributeName, PREFIX + ':');
 
-                case EXPRESSION:
-                    expression = nodeValue;
-                    valueType = HeaderValueType.EXPRESSION;
-                    break;
+                    NameSpace nameSpace = nameSpaceProvider.get();
 
-                case NAME:
-                    headerName = nodeValue;
-                    break;
+                    nameSpace.setPrefix(name);
+                    nameSpace.setUri(attributeValue);
 
-                default:
-                    if (StringUtils.startsWith(PREFIX, nodeName, true)) {
-                        String name = StringUtils.trimStart(nodeName, PREFIX + ':');
-
-                        NameSpace nameSpace = nameSpaceProvider.get();
-
-                        nameSpace.setPrefix(name);
-                        nameSpace.setUri(nodeValue);
-
-                        if (isFirst) {
-                            headerNamespaces.add(nameSpace);
-                            isFirst = false;
-                        } else {
-                            expressionNamespaces.add(nameSpace);
-                        }
+                    if (isFirstNamespace) {
+                        headerNamespaces.add(nameSpace);
+                        isFirstNamespace = false;
+                    } else {
+                        expressionNamespaces.add(nameSpace);
                     }
-            }
+                }
         }
     }
 
     /** {@inheritDoc} */
     @Override
     public void deserialize(@Nonnull Node node) {
-        applyAttributes(node);
+        isFirstNamespace = true;
+
+        readXMLAttributes(node);
 
         if (node.hasChildNodes()) {
             String item = node.getChildNodes().item(0).toString();

@@ -21,7 +21,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.inject.Provider;
@@ -171,26 +170,18 @@ public class PayloadFactory extends AbstractElement {
 
     /** {@inheritDoc} */
     @Override
-    protected void applyAttributes(@Nonnull Node node) {
-        NamedNodeMap attributes = node.getAttributes();
+    protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        switch (attributeName) {
+            case MEDIA_TYPE_ATTRIBUTE_NAME:
+                format.setMediaType(Format.MediaType.valueOf(attributeValue));
+                break;
 
-        for (int i = 0; i < attributes.getLength(); i++) {
-            Node childNode = attributes.item(i);
+            case DESCRIPTION_ATTRIBUTE_NAME:
+                description = attributeValue;
+                break;
 
-            String attributeName = childNode.getNodeName();
-            String attributeValue = childNode.getNodeValue();
-
-            switch (attributeName) {
-                case MEDIA_TYPE_ATTRIBUTE_NAME:
-                    format.setMediaType(Format.MediaType.valueOf(attributeValue));
-                    break;
-
-                case DESCRIPTION_ATTRIBUTE_NAME:
-                    description = attributeValue;
-                    break;
-            }
+            default:
         }
-
     }
 
     /** {@inheritDoc} */
@@ -221,6 +212,8 @@ public class PayloadFactory extends AbstractElement {
                     args.add(arg);
                 }
                 break;
+
+            default:
         }
     }
 }

@@ -21,7 +21,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -219,36 +218,32 @@ public class Log extends AbstractElement {
 
                 properties.add(property);
                 break;
+
+            default:
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void applyAttributes(@Nonnull Node node) {
-        NamedNodeMap attributeMap = node.getAttributes();
+    public void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        switch (attributeName) {
+            case CATEGORY_ATTRIBUTE_NAME:
+                logCategory = LogCategory.valueOf(attributeValue);
+                break;
 
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
+            case LEVEL_ATTRIBUTE_NAME:
+                logLevel = LogLevel.valueOf(attributeValue);
+                break;
 
-            String attributeValue = attributeNode.getNodeValue();
+            case SEPARATOR_ATTRIBUTE_NAME:
+                logSeparator = attributeValue;
+                break;
 
-            switch (attributeNode.getNodeName()) {
-                case CATEGORY_ATTRIBUTE_NAME:
-                    logCategory = LogCategory.valueOf(attributeValue);
-                    break;
+            case DESCRIPTION_ATTRIBUTE_NAME:
+                description = attributeValue;
+                break;
 
-                case LEVEL_ATTRIBUTE_NAME:
-                    logLevel = LogLevel.valueOf(attributeValue);
-                    break;
-
-                case SEPARATOR_ATTRIBUTE_NAME:
-                    logSeparator = attributeNode.getNodeValue();
-                    break;
-
-                case DESCRIPTION_ATTRIBUTE_NAME:
-                    description = attributeNode.getNodeValue();
-                    break;
-            }
+            default:
         }
     }
 

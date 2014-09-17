@@ -23,7 +23,6 @@ import com.codenvy.ide.client.managers.MediatorCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
-import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -73,6 +72,8 @@ public class Filter extends AbstractElement {
     private String           xPath;
     private Array<NameSpace> sourceNameSpaces;
     private Array<NameSpace> xPathNameSpaces;
+    private Array<NameSpace> nameSpaces;
+    boolean isSourceAttributeFound;
 
     @Inject
     public Filter(EditorResources resources,
@@ -232,45 +233,11 @@ public class Filter extends AbstractElement {
 
     /** {@inheritDoc} */
     @Override
-    protected void applyAttributes(@Nonnull Node node) {
-        boolean isSourceAttributeFound = false;
-        Array<NameSpace> nameSpaces = Collections.createArray();
+    public void deserialize(@Nonnull Node node) {
+        isSourceAttributeFound = false;
+        nameSpaces = Collections.createArray();
 
-        NamedNodeMap attributeMap = node.getAttributes();
-
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
-
-            String nodeValue = attributeNode.getNodeValue();
-            String nodeName = attributeNode.getNodeName();
-
-            switch (nodeName) {
-                case REGULAR_EXPRESSION_ATTRIBUTE_NAME:
-                    regularExpression = nodeValue;
-                    break;
-
-                case SOURCE_ATTRIBUTE_NAME:
-                    source = nodeValue;
-                    isSourceAttributeFound = true;
-                    break;
-
-                case XPATH_ATTRIBUTE_NAME:
-                    xPath = nodeValue;
-                    break;
-
-                default:
-                    if (StringUtils.startsWith(PREFIX, nodeName, true)) {
-                        String name = StringUtils.trimStart(nodeName, PREFIX + ':');
-
-                        NameSpace nameSpace = nameSpaceProvider.get();
-
-                        nameSpace.setPrefix(name);
-                        nameSpace.setUri(nodeValue);
-
-                        nameSpaces.add(nameSpace);
-                    }
-            }
-        }
+        super.deserialize(node);
 
         if (isSourceAttributeFound) {
             conditionType = SOURCE_AND_REGEX;
@@ -279,6 +246,39 @@ public class Filter extends AbstractElement {
             conditionType = XPATH;
             xPathNameSpaces = nameSpaces;
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        switch (attributeName) {
+            case REGULAR_EXPRESSION_ATTRIBUTE_NAME:
+                regularExpression = attributeValue;
+                break;
+
+            case SOURCE_ATTRIBUTE_NAME:
+                source = attributeValue;
+                isSourceAttributeFound = true;
+                break;
+
+            case XPATH_ATTRIBUTE_NAME:
+                xPath = attributeValue;
+                break;
+
+            default:
+                if (StringUtils.startsWith(PREFIX, attributeName, true)) {
+                    String name = StringUtils.trimStart(attributeName, PREFIX + ':');
+
+                    NameSpace nameSpace = nameSpaceProvider.get();
+
+                    nameSpace.setPrefix(name);
+                    nameSpace.setUri(attributeValue);
+
+                    nameSpaces.add(nameSpace);
+                }
+        }
+
+
     }
 
     public enum ConditionType {
