@@ -79,6 +79,11 @@ public class SimplePropertyPresenter extends AbstractPropertyPresenter<SimplePro
         listeners.add(listener);
     }
 
+    /** Removes all listeners for detecting the moment when property value is changed. */
+    public void removePropertyValueChangedListeners() {
+        listeners.clear();
+    }
+
     /** Notify all listeners about changing property value. */
     public void notifyPropertyValueChangedListener() {
         String property = view.getProperty();

@@ -1532,4 +1532,7 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("error.toolbar.group.has.not.registered.yet")
     String errorToolbarGroupHasNotRegisteredYet(@Nonnull String groupId);
+
+    @Key("propertiespanel.miscgroup.title")
+    String miscGroupTitle();
 }

@@ -94,6 +94,12 @@ public class PropertyGroupViewImpl extends PropertyGroupView {
 
     /** {@inheritDoc} */
     @Override
+    public void removeProperty(@Nonnull AbstractPropertyPresenter property) {
+        propertiesPanel.remove(property.getView());
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void rotateIcon() {
         icon.removeStyleName(resources.editorCSS().normalImage());
         icon.addStyleName(resources.editorCSS().expandedImage());

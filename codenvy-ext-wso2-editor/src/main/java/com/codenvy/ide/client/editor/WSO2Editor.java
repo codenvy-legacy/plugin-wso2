@@ -272,7 +272,7 @@ import com.codenvy.ide.client.propertiespanel.mediators.property.PropertyPropert
 import com.codenvy.ide.client.propertiespanel.mediators.respond.RespondPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.send.SendPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.sequence.SequencePropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.mediators.switchmediator.SwitchPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.SwitchPropertiesPanelPresenter;
 import com.codenvy.ide.client.toolbar.ToolbarPresenter;
 import com.codenvy.ide.client.validators.ConnectionsValidator;
 import com.codenvy.ide.client.validators.InnerElementsValidator;

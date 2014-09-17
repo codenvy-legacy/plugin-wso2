@@ -29,7 +29,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -53,6 +52,9 @@ public class Switch extends AbstractElement {
     public static final String ELEMENT_NAME       = "Switch";
     public static final String SERIALIZATION_NAME = "switch";
 
+    public static final Key<String>           SOURCE_XPATH = new Key<>("SourceXpath");
+    public static final Key<Array<NameSpace>> NAMESPACES   = new Key<>("NameSpaces");
+
     public static final String REGEXP_ATTRIBUTE_NAME          = "regex";
     public static final String REGEXP_ATTRIBUTE_DEFAULT_VALUE = ".*+";
 
@@ -67,9 +69,6 @@ public class Switch extends AbstractElement {
     private static final List<String> PROPERTIES = java.util.Collections.emptyList();
 
     private final Provider<NameSpace> nameSpaceProvider;
-
-    private String           sourceXpath;
-    private Array<NameSpace> nameSpaces;
 
     private Branch firstBranch;
     private Branch defaultBranch;
@@ -92,8 +91,8 @@ public class Switch extends AbstractElement {
 
         this.nameSpaceProvider = nameSpaceProvider;
 
-        sourceXpath = "default/xpath";
-        nameSpaces = Collections.createArray();
+        putProperty(SOURCE_XPATH, "default/xpath");
+        putProperty(NAMESPACES, Collections.<NameSpace>createArray());
 
         firstBranch = branchProvider.get();
         firstBranch.setParent(this);
@@ -142,46 +141,16 @@ public class Switch extends AbstractElement {
         return branches;
     }
 
-    /** @return source xpath of switch mediator */
-    @Nullable
-    public String getSourceXpath() {
-        return sourceXpath;
-    }
-
-    /**
-     * Sets source xpath parameter to switch mediator.
-     *
-     * @param sourceXpath
-     *         value which need to set to element
-     */
-    public void setSourceXpath(@Nullable String sourceXpath) {
-        this.sourceXpath = sourceXpath;
-    }
-
-    /** @return namespaces which contain in switch */
-    @Nonnull
-    public Array<NameSpace> getNameSpaces() {
-        return nameSpaces;
-    }
-
-    /**
-     * Changes list of name spaces.
-     *
-     * @param nameSpaces
-     *         list of name spaces which needs to set in element
-     */
-    public void setNameSpaces(@Nonnull Array<NameSpace> nameSpaces) {
-        this.nameSpaces = nameSpaces;
-    }
-
     /** {@inheritDoc} */
     @Override
     @Nonnull
     protected String serializeAttributes() {
         Map<String, String> attributes = new LinkedHashMap<>();
-        attributes.put(SOURCE_ATTRIBUTE_NAME, sourceXpath);
+        attributes.put(SOURCE_ATTRIBUTE_NAME, getProperty(SOURCE_XPATH));
 
-        return convertNameSpaceToXMLFormat(nameSpaces) + convertAttributesToXMLFormat(attributes);
+        Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
+
+        return nameSpaces == null ? "" : convertNameSpaceToXMLFormat(nameSpaces) + convertAttributesToXMLFormat(attributes);
     }
 
     /** {@inheritDoc} */
@@ -196,8 +165,6 @@ public class Switch extends AbstractElement {
     /** {@inheritDoc} */
     @Override
     protected void applyAttributes(@Nonnull Node node) {
-        nameSpaces.clear();
-
         NamedNodeMap attributeMap = node.getAttributes();
 
         for (int i = 0; i < attributeMap.getLength(); i++) {
@@ -208,10 +175,10 @@ public class Switch extends AbstractElement {
 
             switch (nodeName) {
                 case SOURCE_ATTRIBUTE_NAME:
-                    sourceXpath = String.valueOf(nodeValue);
+                    putProperty(SOURCE_XPATH, nodeValue);
                     break;
 
-                default:
+                default: {
                     if (StringUtils.startsWith(PREFIX, nodeName, true)) {
                         String name = StringUtils.trimStart(nodeName, PREFIX + ':');
 
@@ -220,8 +187,12 @@ public class Switch extends AbstractElement {
                         nameSpace.setPrefix(name);
                         nameSpace.setUri(nodeValue);
 
-                        nameSpaces.add(nameSpace);
+                        Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
+                        if (nameSpaces != null) {
+                            nameSpaces.add(nameSpace);
+                        }
                     }
+                }
             }
         }
     }

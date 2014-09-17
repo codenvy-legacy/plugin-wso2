@@ -44,6 +44,14 @@ public abstract class PropertyGroupView extends AbstractView<PropertyGroupView.A
      */
     public abstract void addProperty(@Nonnull AbstractPropertyPresenter property);
 
+    /**
+     * Removes a property widget from the view.
+     *
+     * @param property
+     *         property that need to be removed
+     */
+    public abstract void removeProperty(@Nonnull AbstractPropertyPresenter property);
+
     /** Rotate fold/unfold icon on the view. */
     public abstract void rotateIcon();
 

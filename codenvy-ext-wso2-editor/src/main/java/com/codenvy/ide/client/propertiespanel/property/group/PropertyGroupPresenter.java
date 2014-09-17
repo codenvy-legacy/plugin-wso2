@@ -69,6 +69,16 @@ public class PropertyGroupPresenter extends AbstractPresenter<PropertyGroupView>
         view.addProperty(property);
     }
 
+    /**
+     * Removes a property from this group.
+     *
+     * @param property
+     *         property that needs to be removed
+     */
+    public void removeItem(@Nonnull AbstractPropertyPresenter property) {
+        view.removeProperty(property);
+    }
+
     /** {@inheritDoc} */
     @Override
     public void onItemClicked() {
