@@ -19,6 +19,7 @@ import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * The abstract representation of graphical part of the complex property. It provides an ability to change property title and property
@@ -35,7 +36,7 @@ public abstract class ComplexPropertyView extends AbstractView<ComplexPropertyVi
      * @param title
      *         title that needs to be changed
      */
-    public abstract void setTitle(@Nonnull String title);
+    public abstract void setTitle(@Nullable String title);
 
     /**
      * Changes property value on the view.
@@ -43,7 +44,7 @@ public abstract class ComplexPropertyView extends AbstractView<ComplexPropertyVi
      * @param property
      *         property value that need to be set
      */
-    public abstract void setProperty(@Nonnull String property);
+    public abstract void setProperty(@Nullable String property);
 
     public interface ActionDelegate extends AbstractView.ActionDelegate {
         /** Performs some actions in response to a user's clicking on the 'Edit' button. */

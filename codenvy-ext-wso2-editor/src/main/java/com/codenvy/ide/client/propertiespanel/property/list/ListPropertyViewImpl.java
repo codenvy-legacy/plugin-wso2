@@ -27,6 +27,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -55,19 +56,19 @@ public class ListPropertyViewImpl extends ListPropertyView {
 
     /** {@inheritDoc} */
     @Override
-    public void setTitle(@Nonnull String title) {
+    public void setTitle(@Nullable String title) {
         this.title.setText(title);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setPropertyValues(@Nonnull List<String> values) {
+    public void setPropertyValues(@Nullable List<String> values) {
         setTypes(property, values);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void selectPropertyValue(@Nonnull String value) {
+    public void selectPropertyValue(@Nullable String value) {
         selectType(property, value);
     }
 

@@ -21,6 +21,7 @@ import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.user.client.ui.Widget;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * The abstract representation of the general property widget. It contains all important methods which are needed for all kinds of
@@ -46,8 +47,7 @@ public abstract class AbstractPropertyPresenter<T extends AbstractView> extends 
      * @param title
      *         title that needs to be set
      */
-    public abstract void setTitle(@Nonnull String title);
-
+    public abstract void setTitle(@Nullable String title);
 
     /**
      * Changes visible state of the widget.

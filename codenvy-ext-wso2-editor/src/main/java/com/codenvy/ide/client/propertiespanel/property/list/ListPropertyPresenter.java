@@ -21,6 +21,7 @@ import com.codenvy.ide.client.propertiespanel.property.PropertyValueChangedListe
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class ListPropertyPresenter extends AbstractPropertyPresenter<ListPropert
 
     /** {@inheritDoc} */
     @Override
-    public void setTitle(@Nonnull String title) {
+    public void setTitle(@Nullable String title) {
         view.setTitle(title);
     }
 
@@ -54,7 +55,7 @@ public class ListPropertyPresenter extends AbstractPropertyPresenter<ListPropert
      * @param values
      *         values that need to be added to list on the view
      */
-    public void setValues(@Nonnull List<String> values) {
+    public void setValues(@Nullable List<String> values) {
         view.setPropertyValues(values);
     }
 
@@ -64,7 +65,7 @@ public class ListPropertyPresenter extends AbstractPropertyPresenter<ListPropert
      * @param value
      *         value that needs to be selected
      */
-    public void selectValue(@Nonnull String value) {
+    public void selectValue(@Nullable String value) {
         view.selectPropertyValue(value);
     }
 

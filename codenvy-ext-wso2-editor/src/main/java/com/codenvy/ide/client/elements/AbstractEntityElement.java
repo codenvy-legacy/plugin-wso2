@@ -18,6 +18,9 @@ package com.codenvy.ide.client.elements;
 import com.codenvy.ide.collections.Array;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -27,6 +30,42 @@ import java.util.Map;
  * @author Valeriy Svydenko
  */
 public abstract class AbstractEntityElement {
+
+    private final Map<Key<Object>, Object> properties;
+
+    protected AbstractEntityElement() {
+        properties = new HashMap<>();
+    }
+
+    /**
+     * Put a property to available properties list.
+     *
+     * @param key
+     *         key that identifies property
+     * @param value
+     *         value that need to add
+     * @param <T>
+     *         type of property
+     */
+    public <T> void putProperty(@NotNull Key<T> key, @NotNull T value) {
+        //noinspection unchecked
+        properties.put((Key<Object>)key, value);
+    }
+
+    /**
+     * Get a property value from available properties list.
+     *
+     * @param key
+     *         key that identifies a property
+     * @param <T>
+     *         type of a property
+     * @return a property that is mapped to this key or <code>null</code> if no value is not mapped
+     */
+    @Nullable
+    public <T> T getProperty(@NotNull Key<T> key) {
+        //noinspection unchecked,SuspiciousMethodCalls
+        return (T)properties.get(key);
+    }
 
     /**
      * Convert attributes of diagram element to XML attribute format.
@@ -99,4 +138,31 @@ public abstract class AbstractEntityElement {
 
         return result.toString();
     }
+
+    public static class Key<T> {
+
+        private final String name;
+
+        public Key(@Nonnull String name) {
+            this.name = name;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Key)) return false;
+
+            Key key = (Key)o;
+            return name.equals(key.name);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public int hashCode() {
+            return name.hashCode();
+        }
+
+    }
+
 }

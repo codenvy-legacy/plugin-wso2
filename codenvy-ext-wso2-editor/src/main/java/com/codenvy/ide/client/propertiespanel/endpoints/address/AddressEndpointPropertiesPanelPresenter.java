@@ -34,13 +34,35 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.codenvy.ide.client.editor.WSO2Editor.BOOLEAN_TYPE_NAME;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.ADDRESSING_ENABLED;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.ADDRESSING_SEPARATE_LISTENER;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.ADDRESSING_VERSION;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.DESCRIPTION;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.FORMAT;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.OPTIMIZE;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Optimize;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.PROPERTIES;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.RELIABLE_MESSAGING_ENABLED;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.RELIABLE_MESSAGING_POLICY;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.RETRY_COUNT;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.RETRY_DELAY;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.RETRY_ERROR_CODES;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.SECURITY_ENABLED;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.SECURITY_POLICY;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.SUSPEND_ERROR_CODE;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.SUSPEND_INITIAL_DURATION;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.SUSPEND_MAXIMUM_DURATION;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.SUSPEND_PROGRESSION_FACTORY;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TIMEOUT_ACTION;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TIMEOUT_DURATION;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.URI;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of Address endpoint
@@ -101,7 +123,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         this.callback = new PropertyPresenter.PropertiesChangedCallback() {
             @Override
             public void onPropertiesChanged(@Nonnull Array<Property> properties) {
-                element.setProperties(properties);
+                element.putProperty(PROPERTIES, properties);
 
                 showProperties(properties);
 
@@ -119,8 +141,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
                              Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
                              Provider<ListPropertyPresenter> listPropertyPresenterProvider,
                              Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider) {
-        PropertyGroupPresenter basicGroup =
-                propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.addressEndpointBasic());
+        PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.addressEndpointBasic());
         view.addGroup(basicGroup);
 
         format = listPropertyPresenterProvider.get();
@@ -128,7 +149,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         format.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                element.setFormat(Format.valueOf(property));
+                element.putProperty(FORMAT, Format.valueOf(property));
 
                 notifyListeners();
             }
@@ -140,7 +161,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         uri.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                element.setUri(property);
+                element.putProperty(URI, property);
 
                 notifyListeners();
             }
@@ -156,7 +177,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         suspendErrorCode.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                element.setSuspendErrorCode(property);
+                element.putProperty(SUSPEND_ERROR_CODE, property);
 
                 notifyListeners();
             }
@@ -171,11 +192,11 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
                 try {
                     int value = Integer.valueOf(property);
 
-                    element.setSuspendInitialDuration(value);
+                    element.putProperty(SUSPEND_INITIAL_DURATION, value);
 
                     notifyListeners();
                 } catch (NumberFormatException e) {
-                    suspendInitialDuration.setProperty(String.valueOf(element.getSuspendInitialDuration()));
+                    suspendInitialDuration.setProperty(String.valueOf(element.getProperty(SUSPEND_INITIAL_DURATION)));
                 }
             }
         });
@@ -189,11 +210,11 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
                 try {
                     int value = Integer.valueOf(property);
 
-                    element.setSuspendMaximumDuration(value);
+                    element.putProperty(SUSPEND_MAXIMUM_DURATION, value);
 
                     notifyListeners();
                 } catch (NumberFormatException e) {
-                    suspendMaximumDuration.setProperty(String.valueOf(element.getSuspendMaximumDuration()));
+                    suspendMaximumDuration.setProperty(String.valueOf(element.getProperty(SUSPEND_MAXIMUM_DURATION)));
                 }
             }
         });
@@ -207,11 +228,11 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
                 try {
                     double value = Double.valueOf(property);
 
-                    element.setSuspendProgressionFactory(value);
+                    element.putProperty(SUSPEND_PROGRESSION_FACTORY, value);
 
                     notifyListeners();
                 } catch (NumberFormatException e) {
-                    suspendProgressionFactory.setProperty(String.valueOf(element.getSuspendProgressionFactory()));
+                    suspendProgressionFactory.setProperty(String.valueOf(element.getProperty(SUSPEND_PROGRESSION_FACTORY)));
                 }
             }
         });
@@ -226,7 +247,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         retryErrorCode.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                element.setRetryErrorCodes(property);
+                element.putProperty(RETRY_ERROR_CODES, property);
 
                 notifyListeners();
             }
@@ -241,11 +262,11 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
                 try {
                     int value = Integer.valueOf(property);
 
-                    element.setRetryCount(value);
+                    element.putProperty(RETRY_COUNT, value);
 
                     notifyListeners();
                 } catch (NumberFormatException e) {
-                    retryCount.setProperty(String.valueOf(element.getRetryCount()));
+                    retryCount.setProperty(String.valueOf(element.getProperty(RETRY_COUNT)));
                 }
             }
         });
@@ -259,11 +280,11 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
                 try {
                     int value = Integer.valueOf(property);
 
-                    element.setRetryDelay(value);
+                    element.putProperty(RETRY_DELAY, value);
 
                     notifyListeners();
                 } catch (NumberFormatException e) {
-                    retryDelay.setProperty(String.valueOf(element.getRetryDelay()));
+                    retryDelay.setProperty(String.valueOf(element.getProperty(RETRY_DELAY)));
                 }
             }
         });
@@ -277,7 +298,11 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         properties.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
-                propertyPresenter.showDialog(callback, element.getProperties());
+                Array<Property> properties = element.getProperty(PROPERTIES);
+
+                if (properties != null) {
+                    propertyPresenter.showDialog(callback, properties);
+                }
             }
         });
         miscGroup.addItem(properties);
@@ -287,7 +312,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         optimize.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                element.setOptimize(Optimize.valueOf(property));
+                element.putProperty(OPTIMIZE, Optimize.valueOf(property));
 
                 notifyListeners();
             }
@@ -299,7 +324,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         description.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                element.setDescription(property);
+                element.putProperty(DESCRIPTION, property);
 
                 notifyListeners();
             }
@@ -316,7 +341,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
             public void onPropertyChanged(@Nonnull String property) {
                 Boolean visible = Boolean.valueOf(property);
 
-                element.setReliableMessagingEnabled(visible);
+                element.putProperty(RELIABLE_MESSAGING_ENABLED, visible);
 
                 reliableMessagePolicy.setVisible(visible);
 
@@ -330,7 +355,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         reliableMessagePolicy.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                element.setReliableMessagingPolicy(property);
+                element.putProperty(RELIABLE_MESSAGING_POLICY, property);
 
                 notifyListeners();
             }
@@ -344,7 +369,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
             public void onPropertyChanged(@Nonnull String property) {
                 boolean visible = Boolean.valueOf(property);
 
-                element.setSecurityEnabled(visible);
+                element.putProperty(SECURITY_ENABLED, visible);
 
                 securityPolicy.setVisible(visible);
 
@@ -358,7 +383,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         securityPolicy.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                element.setSecurityPolicy(property);
+                element.putProperty(SECURITY_POLICY, property);
 
                 notifyListeners();
             }
@@ -372,7 +397,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
             public void onPropertyChanged(@Nonnull String property) {
                 boolean visible = Boolean.valueOf(property);
 
-                element.setAddressingEnabled(visible);
+                element.putProperty(ADDRESSING_ENABLED, visible);
 
                 addressingVersion.setVisible(visible);
                 addressingSeparateListener.setVisible(visible);
@@ -387,7 +412,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         addressingVersion.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                element.setAddressingVersion(AddressingVersion.getItemByValue(property));
+                element.putProperty(ADDRESSING_VERSION, AddressingVersion.getItemByValue(property));
 
                 notifyListeners();
             }
@@ -399,7 +424,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         addressingSeparateListener.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                element.setAddressingSeparateListener(Boolean.valueOf(property));
+                element.putProperty(ADDRESSING_SEPARATE_LISTENER, Boolean.valueOf(property));
 
                 notifyListeners();
             }
@@ -417,11 +442,11 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
                 try {
                     int value = Integer.valueOf(property);
 
-                    element.setTimeoutDuration(value);
+                    element.putProperty(TIMEOUT_DURATION, value);
 
                     notifyListeners();
                 } catch (NumberFormatException e) {
-                    timeoutDuration.setProperty(String.valueOf(element.getTimeoutDuration()));
+                    timeoutDuration.setProperty(String.valueOf(element.getProperty(TIMEOUT_DURATION)));
                 }
             }
         });
@@ -432,7 +457,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         timeoutAction.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                element.setTimeoutAction(TimeoutAction.valueOf(property));
+                element.putProperty(TIMEOUT_ACTION, TimeoutAction.valueOf(property));
 
                 notifyListeners();
             }
@@ -446,58 +471,80 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         super.go(container);
 
         format.setValues(propertyTypeManager.getValuesByName(Format.TYPE_NAME));
-        format.selectValue(element.getFormat().name());
+        Format format = element.getProperty(FORMAT);
 
-        uri.setProperty(element.getUri());
+        if (format != null) {
+            this.format.selectValue(format.name());
+        }
 
-        suspendErrorCode.setProperty(element.getSuspendErrorCode());
-        suspendInitialDuration.setProperty(String.valueOf(element.getSuspendInitialDuration()));
-        suspendMaximumDuration.setProperty(String.valueOf(element.getSuspendMaximumDuration()));
-        suspendProgressionFactory.setProperty(String.valueOf(element.getSuspendProgressionFactory()));
+        uri.setProperty(element.getProperty(URI));
 
-        retryErrorCode.setProperty(element.getRetryErrorCodes());
-        retryCount.setProperty(String.valueOf(element.getRetryCount()));
-        retryDelay.setProperty(String.valueOf(element.getRetryDelay()));
+        suspendErrorCode.setProperty(element.getProperty(SUSPEND_ERROR_CODE));
+        suspendInitialDuration.setProperty(String.valueOf(element.getProperty(SUSPEND_INITIAL_DURATION)));
+        suspendMaximumDuration.setProperty(String.valueOf(element.getProperty(SUSPEND_MAXIMUM_DURATION)));
+        suspendProgressionFactory.setProperty(String.valueOf(element.getProperty(SUSPEND_PROGRESSION_FACTORY)));
 
-        showProperties(element.getProperties());
+        retryErrorCode.setProperty(element.getProperty(RETRY_ERROR_CODES));
+        retryCount.setProperty(String.valueOf(element.getProperty(RETRY_COUNT)));
+        retryDelay.setProperty(String.valueOf(element.getProperty(RETRY_DELAY)));
+
+        showProperties(element.getProperty(PROPERTIES));
 
         optimize.setValues(propertyTypeManager.getValuesByName(Optimize.TYPE_NAME));
-        optimize.selectValue(element.getOptimize().name());
+        Optimize optimize = element.getProperty(OPTIMIZE);
 
-        description.setProperty(element.getDescription());
+        if (optimize != null) {
+            this.optimize.selectValue(optimize.name());
+        }
+
+        description.setProperty(element.getProperty(DESCRIPTION));
 
         List<String> booleanValues = propertyTypeManager.getValuesByName(BOOLEAN_TYPE_NAME);
 
-        boolean reliableMessagingEnabled = element.isReliableMessagingEnabled();
-        this.reliableMessagingEnabled.setValues(booleanValues);
-        this.reliableMessagingEnabled.selectValue(String.valueOf(reliableMessagingEnabled));
+        Boolean isReliableMessagingEnabled = element.getProperty(RELIABLE_MESSAGING_ENABLED);
+        if (isReliableMessagingEnabled != null) {
+            this.reliableMessagingEnabled.setValues(booleanValues);
+            this.reliableMessagingEnabled.selectValue(isReliableMessagingEnabled.toString());
 
-        reliableMessagePolicy.setVisible(reliableMessagingEnabled);
-        reliableMessagePolicy.setProperty(element.getReliableMessagingPolicy());
+            reliableMessagePolicy.setVisible(isReliableMessagingEnabled);
+            reliableMessagePolicy.setProperty(element.getProperty(RELIABLE_MESSAGING_POLICY));
+        }
 
-        boolean securityEnabled = element.isSecurityEnabled();
-        this.securityEnabled.setValues(booleanValues);
-        this.securityEnabled.selectValue(String.valueOf(securityEnabled));
+        Boolean isSecurityEnabled = element.getProperty(SECURITY_ENABLED);
+        if (isSecurityEnabled != null) {
+            this.securityEnabled.setValues(booleanValues);
+            this.securityEnabled.selectValue(isSecurityEnabled.toString());
 
-        securityPolicy.setVisible(securityEnabled);
-        securityPolicy.setProperty(element.getSecurityPolicy());
+            securityPolicy.setVisible(isSecurityEnabled);
+            securityPolicy.setProperty(element.getProperty(SECURITY_POLICY));
+        }
 
-        boolean addressingEnabled = element.isAddressingEnabled();
-        this.addressingEnabled.setValues(booleanValues);
-        this.addressingEnabled.selectValue(String.valueOf(addressingEnabled));
+        Boolean isAddressingEnabled = element.getProperty(ADDRESSING_ENABLED);
+        if (isAddressingEnabled != null) {
+            addressingEnabled.setValues(booleanValues);
+            addressingEnabled.selectValue(isAddressingEnabled.toString());
 
-        addressingVersion.setVisible(addressingEnabled);
-        addressingVersion.setValues(propertyTypeManager.getValuesByName(AddressingVersion.TYPE_NAME));
-        addressingVersion.selectValue(element.getAddressingVersion().name());
+            addressingVersion.setVisible(isAddressingEnabled);
+            addressingVersion.setValues(propertyTypeManager.getValuesByName(AddressingVersion.TYPE_NAME));
 
-        addressingSeparateListener.setVisible(addressingEnabled);
-        addressingSeparateListener.setValues(booleanValues);
-        addressingSeparateListener.selectValue(String.valueOf(element.isAddressingSeparateListener()));
+            AddressingVersion addressingVersion = element.getProperty(ADDRESSING_VERSION);
+            if (addressingVersion != null) {
+                this.addressingVersion.selectValue(addressingVersion.name());
+            }
 
-        timeoutDuration.setProperty(String.valueOf(element.getTimeoutDuration()));
+            addressingSeparateListener.setVisible(isAddressingEnabled);
+            addressingSeparateListener.setValues(booleanValues);
+            addressingSeparateListener.selectValue(String.valueOf(element.getProperty(ADDRESSING_SEPARATE_LISTENER)));
+        }
+
+        timeoutDuration.setProperty(String.valueOf(element.getProperty(TIMEOUT_DURATION)));
 
         timeoutAction.setValues(propertyTypeManager.getValuesByName(TimeoutAction.TYPE_NAME));
-        timeoutAction.selectValue(element.getTimeoutAction().name());
+        TimeoutAction timeoutAction = element.getProperty(TIMEOUT_ACTION);
+
+        if (timeoutAction != null) {
+            this.timeoutAction.selectValue(timeoutAction.name());
+        }
     }
 
     /**
@@ -506,7 +553,12 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
      * @param properties
      *         list of properties which must to be displayed
      */
-    private void showProperties(@Nonnull Array<Property> properties) {
+    private void showProperties(@Nullable Array<Property> properties) {
+        if (properties == null) {
+            this.properties.setProperty("");
+            return;
+        }
+
         StringBuilder content = new StringBuilder();
         int size = properties.size() - 1;
 

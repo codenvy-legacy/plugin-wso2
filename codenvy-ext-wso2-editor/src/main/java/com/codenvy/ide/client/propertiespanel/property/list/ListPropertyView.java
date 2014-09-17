@@ -20,6 +20,7 @@ import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -37,7 +38,7 @@ public abstract class ListPropertyView extends AbstractView<ListPropertyView.Act
      * @param title
      *         title that needs to be changed
      */
-    public abstract void setTitle(@Nonnull String title);
+    public abstract void setTitle(@Nullable String title);
 
     /**
      * Sets a list of available values on the view.
@@ -45,7 +46,7 @@ public abstract class ListPropertyView extends AbstractView<ListPropertyView.Act
      * @param values
      *         values which need to be set
      */
-    public abstract void setPropertyValues(@Nonnull List<String> values);
+    public abstract void setPropertyValues(@Nullable List<String> values);
 
     /**
      * Selects a value from the list of available values.
@@ -53,7 +54,7 @@ public abstract class ListPropertyView extends AbstractView<ListPropertyView.Act
      * @param value
      *         value that need to be set
      */
-    public abstract void selectPropertyValue(@Nonnull String value);
+    public abstract void selectPropertyValue(@Nullable String value);
 
     /** @return selected property value */
     @Nonnull
