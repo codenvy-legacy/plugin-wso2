@@ -17,7 +17,14 @@ package com.codenvy.ide.client.inject;
 
 import com.codenvy.ide.client.elements.widgets.element.ElementView;
 import com.codenvy.ide.client.elements.widgets.element.ElementViewImpl;
-import com.codenvy.ide.client.inject.factories.EditorFactory;
+import com.codenvy.ide.client.initializers.EndpointsPropertiesPanelInitializer;
+import com.codenvy.ide.client.initializers.GeneralElementsPropertiesPanelInitializer;
+import com.codenvy.ide.client.initializers.GoogleSpreadSheetPropertiesPanelInitializer;
+import com.codenvy.ide.client.initializers.Initializer;
+import com.codenvy.ide.client.initializers.JiraConnectorPropertiesPanelInitializer;
+import com.codenvy.ide.client.initializers.MediatorsPropertiesPanelInitializer;
+import com.codenvy.ide.client.initializers.SalesForceConnectorPropertiesPanelInitializer;
+import com.codenvy.ide.client.initializers.TwitterConnectorPropertiesPanelInitializer;
 import com.codenvy.ide.client.inject.factories.ElementWidgetFactory;
 import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.inject.factories.ToolbarFactory;
@@ -29,6 +36,7 @@ import com.codenvy.ide.client.toolbar.item.ToolbarItemView;
 import com.codenvy.ide.client.toolbar.item.ToolbarItemViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
+import com.google.gwt.inject.client.multibindings.GinMultibinder;
 
 /**
  * @author Andrey Plotnikov
@@ -38,8 +46,6 @@ public class GinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
-        install(new GinFactoryModuleBuilder().build(EditorFactory.class));
-
         install(new GinFactoryModuleBuilder().implement(ElementView.class, ElementViewImpl.class).build(ElementWidgetFactory.class));
 
         install(new GinFactoryModuleBuilder().implement(ToolbarGroupView.class, ToolbarGroupViewImpl.class)
@@ -48,6 +54,16 @@ public class GinModule extends AbstractGinModule {
 
         install(new GinFactoryModuleBuilder().implement(PropertyGroupView.class, PropertyGroupViewImpl.class)
                                              .build(PropertiesPanelWidgetFactory.class));
+
+        GinMultibinder<Initializer> initializers = GinMultibinder.newSetBinder(binder(), Initializer.class);
+
+        initializers.addBinding().to(GeneralElementsPropertiesPanelInitializer.class);
+        initializers.addBinding().to(MediatorsPropertiesPanelInitializer.class);
+        initializers.addBinding().to(EndpointsPropertiesPanelInitializer.class);
+        initializers.addBinding().to(SalesForceConnectorPropertiesPanelInitializer.class);
+        initializers.addBinding().to(JiraConnectorPropertiesPanelInitializer.class);
+        initializers.addBinding().to(TwitterConnectorPropertiesPanelInitializer.class);
+        initializers.addBinding().to(GoogleSpreadSheetPropertiesPanelInitializer.class);
     }
 
 }

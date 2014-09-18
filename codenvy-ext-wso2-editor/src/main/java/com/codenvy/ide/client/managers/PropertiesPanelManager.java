@@ -18,13 +18,16 @@ package com.codenvy.ide.client.managers;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
+import com.codenvy.ide.client.propertiespanel.PropertyChangedListener;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
+import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,15 +36,31 @@ import java.util.Map;
  *
  * @author Andrey Plotnikov
  */
-public class PropertiesPanelManager implements SelectionManager.SelectionStateListener {
+@Singleton
+public class PropertiesPanelManager implements SelectionManager.SelectionStateListener, PropertyChangedListener {
 
     private final Map<Class<?>, AbstractPropertiesPanel<? extends Element, ? extends AbstractView>> panels;
-    private final AcceptsOneWidget                                                                  container;
+    private final List<PropertyChangedListener>                                                     listeners;
+
+    private AcceptsOneWidget        container;
+    private AbstractPropertiesPanel shownPanel;
 
     @Inject
-    public PropertiesPanelManager(@Assisted AcceptsOneWidget container) {
-        this.container = container;
+    public PropertiesPanelManager(SelectionManager selectionManager) {
         this.panels = new HashMap<>();
+        this.listeners = new ArrayList<>();
+
+        selectionManager.addListener(this);
+    }
+
+    /**
+     * Changes container of properties panel.
+     *
+     * @param container
+     *         container which needs to be used
+     */
+    public void setContainer(@Nonnull AcceptsOneWidget container) {
+        this.container = container;
     }
 
     /**
@@ -69,7 +88,12 @@ public class PropertiesPanelManager implements SelectionManager.SelectionStateLi
      */
     @SuppressWarnings("unchecked")
     public <T extends Element> void show(@Nullable T element) {
+        if (shownPanel != null) {
+            shownPanel.removeListener(this);
+        }
+
         AbstractPropertiesPanel value = panels.get(element == null ? null : element.getClass());
+        shownPanel = value;
 
         if (value != null) {
             if (element != null) {
@@ -77,6 +101,7 @@ public class PropertiesPanelManager implements SelectionManager.SelectionStateLi
             }
 
             value.go(container);
+            value.addListener(this);
         }
     }
 
@@ -84,6 +109,22 @@ public class PropertiesPanelManager implements SelectionManager.SelectionStateLi
     @Override
     public void onStateChanged(@Nullable Element element) {
         show(element);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onPropertyChanged() {
+        notifyPropertyChangedListeners();
+    }
+
+    public void addPropertyChangedListener(@Nonnull PropertyChangedListener listener) {
+        listeners.add(listener);
+    }
+
+    public void notifyPropertyChangedListeners() {
+        for (PropertyChangedListener listener : listeners) {
+            listener.onPropertyChanged();
+        }
     }
 
 }

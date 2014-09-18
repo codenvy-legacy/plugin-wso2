@@ -59,13 +59,23 @@ public abstract class AbstractPropertiesPanel<T extends Element, V extends Abstr
     }
 
     /**
-     * Adds listener to list of listeners of property panel
+     * Adds a listener to list of listeners of property panel.
      *
      * @param listener
-     *         listener which need to add
+     *         listener which needs to be added
      */
     public void addListener(@Nonnull PropertyChangedListener listener) {
         listeners.add(listener);
+    }
+
+    /**
+     * Removes a listener from list of listeners of property panel.
+     *
+     * @param listener
+     *         listener which needs to removed
+     */
+    public void removeListener(@Nonnull PropertyChangedListener listener) {
+        listeners.remove(listener);
     }
 
     /** Notify all listeners of property panel when some element on property panel was changed. */
@@ -73,13 +83,6 @@ public abstract class AbstractPropertiesPanel<T extends Element, V extends Abstr
         for (PropertyChangedListener listener : listeners) {
             listener.onPropertyChanged();
         }
-    }
-
-    public interface PropertyChangedListener {
-
-        /** Performs some actions when property was changed. */
-        void onPropertyChanged();
-
     }
 
 }
