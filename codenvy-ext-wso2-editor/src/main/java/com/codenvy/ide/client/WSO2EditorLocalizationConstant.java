@@ -220,7 +220,7 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     String headerValueType();
 
     @Key("propertiespanel.header.valueLiteral")
-    String hHeaderValueLiteral();
+    String headerValueLiteral();
 
     @Key("propertiespanel.header.valueExpression")
     String headerValueExpression();

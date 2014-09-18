@@ -28,7 +28,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +37,7 @@ import static com.codenvy.ide.client.elements.mediators.Header.HeaderAction.remo
 import static com.codenvy.ide.client.elements.mediators.Header.HeaderAction.set;
 import static com.codenvy.ide.client.elements.mediators.Header.HeaderValueType.INLINE;
 import static com.codenvy.ide.client.elements.mediators.Header.HeaderValueType.LITERAL;
+import static com.codenvy.ide.client.elements.mediators.Header.ScopeType.Synapse;
 
 /**
  * The class which describes state of Header mediator and also has methods for changing it. Also the class contains the business
@@ -53,26 +53,26 @@ public class Header extends AbstractElement {
     public static final String ELEMENT_NAME       = "Header";
     public static final String SERIALIZATION_NAME = "header";
 
-    private static final String NAME       = "name";
-    private static final String VALUE      = "value";
-    private static final String EXPRESSION = "expression";
-    private static final String ACTION     = "action";
-    private static final String SCOPE      = "scope";
+    public static final Key<HeaderAction>    ACTION        = new Key<>("HeaderAction");
+    public static final Key<HeaderValueType> VALUE_TYPE    = new Key<>("HeaderValueType");
+    public static final Key<ScopeType>       SCOPE         = new Key<>("HeaderScope");
+    public static final Key<String>          HEADER_NAME   = new Key<>("HeaderName");
+    public static final Key<String>          VALUE_LITERAL = new Key<>("HeaderValue");
+    public static final Key<String>          EXPRESSION    = new Key<>("HeaderExpression");
+    public static final Key<String>          INLINE_XML    = new Key<>("HeaderInlineXml");
+
+    public static final Key<Array<NameSpace>> HEADER_NAMESPACES     = new Key<>("HeaderNameSpaces");
+    public static final Key<Array<NameSpace>> EXPRESSION_NAMESPACES = new Key<>("HeaderExpressionNameSpaces");
+
+    private static final String NAME_ATTRIBUTE       = "name";
+    private static final String VALUE_ATTRIBUTE      = "value";
+    private static final String EXPRESSION_ATTRIBUTE = "expression";
+    private static final String ACTION_ATTRIBUTE     = "action";
+    private static final String SCOPE_ATTRIBUTE      = "scope";
 
     private static final List<String> PROPERTIES = java.util.Collections.emptyList();
     private final Provider<NameSpace> nameSpaceProvider;
-
-    private HeaderAction    action;
-    private HeaderValueType valueType;
-    private ScopeType       scope;
-    private String          headerName;
-    private String          value;
-    private String          expression;
-    private String          inlineXml;
-    private boolean         isFirstNamespace;
-
-    private Array<NameSpace> headerNamespaces;
-    private Array<NameSpace> expressionNamespaces;
+    private       boolean             isFirstNamespace;
 
     @Inject
     public Header(EditorResources resources,
@@ -92,167 +92,25 @@ public class Header extends AbstractElement {
 
         this.nameSpaceProvider = nameSpaceProvider;
 
-        headerNamespaces = Collections.createArray();
-        expressionNamespaces = Collections.createArray();
-
-        action = set;
-        scope = ScopeType.Synapse;
-        valueType = LITERAL;
-        value = "header_Value";
-        headerName = "To";
-        expression = "/default/expression";
-        inlineXml = "";
-    }
-
-    /** @return inline xml of header element */
-    @Nonnull
-    public String getInlineXml() {
-        return inlineXml;
-    }
-
-    /**
-     * Sets inline xml to header
-     *
-     * @param inlineXml
-     *         value which need to set to element
-     */
-    public void setInlineXml(@Nullable String inlineXml) {
-        this.inlineXml = inlineXml;
-    }
-
-    /** @return list of header namespaces of element */
-    @Nonnull
-    public Array<NameSpace> getHeaderNamespaces() {
-        return headerNamespaces;
-    }
-
-    /**
-     * Sets list of header namespaces to element
-     *
-     * @param headerNamespaces
-     *         list of header namespaces which need to set to element
-     */
-    public void setHeaderNamespaces(@Nonnull Array<NameSpace> headerNamespaces) {
-        this.headerNamespaces = headerNamespaces;
-    }
-
-    /** @return list of expression namespaces of element */
-    @Nonnull
-    public Array<NameSpace> getExpressionNamespaces() {
-        return expressionNamespaces;
-    }
-
-    /**
-     * Sets list of expression namespaces to element
-     *
-     * @param expressionNamespaces
-     *         list of expression namespaces which need to set to element
-     */
-    public void setExpressionNamespaces(@Nonnull Array<NameSpace> expressionNamespaces) {
-        this.expressionNamespaces = expressionNamespaces;
-    }
-
-    /** @return value of header */
-    @Nonnull
-    public String getValue() {
-        return value;
-    }
-
-    /**
-     * Sets value to header
-     *
-     * @param value
-     *         value which need to set to element
-     */
-    public void setValue(@Nonnull String value) {
-        this.value = value;
-    }
-
-    /** @return expression of header */
-    @Nullable
-    public String getExpression() {
-        return expression;
-    }
-
-    /**
-     * Sets expression to header
-     *
-     * @param expression
-     *         value of expression which need to set to element
-     */
-    public void setExpression(@Nullable String expression) {
-        this.expression = expression;
-    }
-
-    /** @return action of header */
-    @Nonnull
-    public HeaderAction getAction() {
-        return action;
-    }
-
-    /**
-     * Sets action to header
-     *
-     * @param action
-     *         value of action which need to set to element
-     */
-    public void setAction(@Nonnull HeaderAction action) {
-        this.action = action;
-    }
-
-    /** @return scope of header */
-    @Nonnull
-    public ScopeType getScope() {
-        return scope;
-    }
-
-    /**
-     * Sets scope to header
-     *
-     * @param scope
-     *         value fo scope which need to set to element
-     */
-    public void setScope(@Nonnull ScopeType scope) {
-        this.scope = scope;
-    }
-
-    /** @return type of header */
-    @Nonnull
-    public HeaderValueType getValueType() {
-        return valueType;
-    }
-
-    /**
-     * Sets type to header
-     *
-     * @param valueType
-     *         value of type which need to set to element
-     */
-    public void setValueType(@Nonnull HeaderValueType valueType) {
-        this.valueType = valueType;
-    }
-
-    /** @return name of header */
-    @Nullable
-    public String getHeaderName() {
-        return headerName;
-    }
-
-    /**
-     * Sets name to header
-     *
-     * @param headerName
-     *         value of name which need to set to element
-     */
-    public void setHeaderName(@Nullable String headerName) {
-        this.headerName = headerName;
+        putProperty(ACTION, set);
+        putProperty(SCOPE, Synapse);
+        putProperty(HEADER_NAME, "To");
+        putProperty(VALUE_TYPE, LITERAL);
+        putProperty(VALUE_LITERAL, "header_value");
+        putProperty(EXPRESSION, "/default/expression");
+        putProperty(INLINE_XML, "");
+        putProperty(HEADER_NAMESPACES, Collections.<NameSpace>createArray());
+        putProperty(EXPRESSION_NAMESPACES, Collections.<NameSpace>createArray());
     }
 
     /** {@inheritDoc} */
     @Nonnull
     @Override
     protected String serializeProperties() {
-        if (!valueType.equals(INLINE) || inlineXml.isEmpty()) {
+        HeaderValueType valueType = getProperty(VALUE_TYPE);
+        String inlineXml = getProperty(INLINE_XML);
+
+        if (valueType != null && !valueType.equals(INLINE) || inlineXml != null && inlineXml.isEmpty() || inlineXml == null) {
             return "";
         }
 
@@ -271,29 +129,44 @@ public class Header extends AbstractElement {
     protected String serializeAttributes() {
         Map<String, String> attributes = new LinkedHashMap<>();
         StringBuilder result = new StringBuilder();
-        if (!headerNamespaces.isEmpty()) {
-            NameSpace nameSpace = headerNamespaces.get(headerNamespaces.size() - 1);
+
+        Array<NameSpace> headerNameSpaces = getProperty(HEADER_NAMESPACES);
+
+        if (headerNameSpaces != null && !headerNameSpaces.isEmpty()) {
+            NameSpace nameSpace = headerNameSpaces.get(headerNameSpaces.size() - 1);
             result.append(nameSpace.toString()).append(' ');
         }
 
-        result.append(convertNameSpaceToXMLFormat(expressionNamespaces));
+        Array<NameSpace> expressionNamespaces = getProperty(EXPRESSION_NAMESPACES);
+
+        if (expressionNamespaces != null) {
+            result.append(convertNameSpaceToXMLFormat(expressionNamespaces));
+        }
 
         setDefaultAttributes(attributes);
 
-        if (action.equals(remove)) {
-            attributes.remove(VALUE);
-            attributes.remove(EXPRESSION);
+        HeaderAction action = getProperty(ACTION);
+
+        if (action != null && action.equals(remove)) {
+            attributes.remove(VALUE_ATTRIBUTE);
+            attributes.remove(EXPRESSION_ATTRIBUTE);
         } else {
-            attributes.remove(ACTION);
+            attributes.remove(ACTION_ATTRIBUTE);
         }
-        attributes.remove(valueType.equals(HeaderValueType.EXPRESSION) ? VALUE : EXPRESSION);
-        switch (valueType) {
-            case INLINE:
-                attributes.remove(VALUE);
-                attributes.remove(NAME);
-                attributes.remove(EXPRESSION);
+
+        HeaderValueType valueType = getProperty(VALUE_TYPE);
+
+        if (valueType != null) {
+            attributes.remove(valueType.equals(HeaderValueType.EXPRESSION) ? VALUE_ATTRIBUTE : EXPRESSION_ATTRIBUTE);
+
+            if (INLINE.equals(valueType)) {
+                attributes.remove(VALUE_ATTRIBUTE);
+                attributes.remove(NAME_ATTRIBUTE);
+                attributes.remove(EXPRESSION_ATTRIBUTE);
                 return convertAttributesToXMLFormat(attributes);
+            }
         }
+
         return result + convertAttributesToXMLFormat(attributes);
     }
 
@@ -304,54 +177,77 @@ public class Header extends AbstractElement {
      *         list of attributes which need to set to element by default
      */
     private void setDefaultAttributes(@Nonnull Map<String, String> attributes) {
-        attributes.put(NAME, headerName);
-        attributes.put(SCOPE, scope.name());
-        attributes.put(VALUE, value);
-        attributes.put(EXPRESSION, expression);
-        attributes.put(ACTION, action.name());
+        attributes.put(NAME_ATTRIBUTE, getProperty(HEADER_NAME));
+
+        ScopeType scopeType = getProperty(SCOPE);
+        if (scopeType != null) {
+            attributes.put(SCOPE_ATTRIBUTE, scopeType.name());
+        }
+
+        attributes.put(VALUE_ATTRIBUTE, getProperty(VALUE_LITERAL));
+        attributes.put(EXPRESSION_ATTRIBUTE, getProperty(EXPRESSION));
+
+        HeaderAction action = getProperty(ACTION);
+
+        if (action != null) {
+            attributes.put(ACTION_ATTRIBUTE, action.name());
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
         switch (attributeName) {
-            case HeaderAction.ACTION:
-                action = HeaderAction.valueOf(attributeValue);
+            case NAME_ATTRIBUTE:
+                putProperty(HEADER_NAME, attributeValue);
                 break;
 
-            case ScopeType.SCOPE:
-                scope = ScopeType.valueOf(attributeValue);
+            case SCOPE_ATTRIBUTE:
+                putProperty(SCOPE, ScopeType.valueOf(attributeValue));
                 break;
 
-            case VALUE:
-                value = attributeValue;
+            case VALUE_ATTRIBUTE:
+                putProperty(VALUE_LITERAL, attributeValue);
                 break;
 
-            case EXPRESSION:
-                expression = attributeValue;
-                valueType = HeaderValueType.EXPRESSION;
+            case EXPRESSION_ATTRIBUTE:
+                putProperty(EXPRESSION, attributeValue);
+                putProperty(VALUE_TYPE, HeaderValueType.EXPRESSION);
                 break;
 
-            case NAME:
-                headerName = attributeValue;
+            case ACTION_ATTRIBUTE:
+                putProperty(ACTION, HeaderAction.valueOf(attributeValue));
                 break;
 
             default:
-                if (StringUtils.startsWith(PREFIX, attributeName, true)) {
-                    String name = StringUtils.trimStart(attributeName, PREFIX + ':');
+                applyNameSpaces(attributeName, attributeValue);
+        }
+    }
 
-                    NameSpace nameSpace = nameSpaceProvider.get();
+    private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        if (!StringUtils.startsWith(PREFIX, attributeName, true)) {
+            return;
+        }
 
-                    nameSpace.setPrefix(name);
-                    nameSpace.setUri(attributeValue);
+        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
 
-                    if (isFirstNamespace) {
-                        headerNamespaces.add(nameSpace);
-                        isFirstNamespace = false;
-                    } else {
-                        expressionNamespaces.add(nameSpace);
-                    }
-                }
+        NameSpace nameSpace = nameSpaceProvider.get();
+
+        nameSpace.setPrefix(name);
+        nameSpace.setUri(attributeValue);
+
+        Array<NameSpace> headerNamespaces = getProperty(HEADER_NAMESPACES);
+        Array<NameSpace> expressionNamespaces = getProperty(EXPRESSION_NAMESPACES);
+
+        if (headerNamespaces == null || expressionNamespaces == null) {
+            return;
+        }
+
+        if (isFirstNamespace) {
+            headerNamespaces.add(nameSpace);
+            isFirstNamespace = false;
+        } else {
+            expressionNamespaces.add(nameSpace);
         }
     }
 
@@ -372,9 +268,10 @@ public class Header extends AbstractElement {
 
             String xmlns = tagName.substring(indexFirst, tagName.contains("/") ? indexLast - 1 : indexLast);
 
-            inlineXml = item.replace(xmlns, "");
+            String inlineXml = item.replace(xmlns, "");
 
-            valueType = INLINE;
+            putProperty(INLINE_XML, inlineXml);
+            putProperty(VALUE_TYPE, INLINE);
         }
     }
 
@@ -382,7 +279,6 @@ public class Header extends AbstractElement {
         set, remove;
 
         public static final String TYPE_NAME = "HeaderAction";
-        public static final String ACTION    = "action";
     }
 
     public enum HeaderValueType {
@@ -395,7 +291,6 @@ public class Header extends AbstractElement {
         Synapse, transport;
 
         public static final String TYPE_NAME = "ScopeType";
-        public static final String SCOPE     = "scope";
     }
 
 }

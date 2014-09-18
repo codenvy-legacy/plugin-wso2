@@ -38,7 +38,7 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
-public class Property extends AbstractEntityElement{
+public class Property extends AbstractEntityElement {
 
     private static final String NAME_ATTRIBUTE  = "name";
     private static final String VALUE_ATTRIBUTE = "value";
@@ -55,6 +55,19 @@ public class Property extends AbstractEntityElement{
         this.propertyProvider = propertyProvider;
         this.nameSpaceProvider = nameSpaceProvider;
         this.nameSpaces = Collections.createArray();
+    }
+
+    /** Returns serialization representation CallTemplate element's property. */
+    @Nonnull
+    public String serializeWithParam() {
+        return "<with-param " + convertNameSpaceToXMLFormat(nameSpaces) + "name=\"" + name + "\" value=\"" + expression + "\"/>";
+
+    }
+
+    /** Returns serialization representation element's property. */
+    @Nonnull
+    public String serializeProperty() {
+        return "<property " + convertNameSpaceToXMLFormat(nameSpaces) + "name=\"" + name + "\" value=\"" + expression + "\"/>";
     }
 
     /**
@@ -82,18 +95,24 @@ public class Property extends AbstractEntityElement{
                     break;
 
                 default:
-                    if (StringUtils.startsWith(PREFIX, nodeName, true)) {
-                        String name = StringUtils.trimStart(nodeName, PREFIX + ':');
-
-                        NameSpace nameSpace = nameSpaceProvider.get();
-
-                        nameSpace.setPrefix(name);
-                        nameSpace.setUri(nodeValue);
-
-                        nameSpaces.add(nameSpace);
-                    }
+                    applyNameSpaces(nodeName, nodeValue);
             }
         }
+    }
+
+    private void applyNameSpaces(@Nonnull String nodeName, @Nonnull String nodeValue) {
+        if (!StringUtils.startsWith(PREFIX, nodeName, true)) {
+            return;
+        }
+
+        String name = StringUtils.trimStart(nodeName, PREFIX + ':');
+
+        NameSpace nameSpace = nameSpaceProvider.get();
+
+        nameSpace.setPrefix(name);
+        nameSpace.setUri(nodeValue);
+
+        nameSpaces.add(nameSpace);
     }
 
     /** @return namespaces which contain in property */

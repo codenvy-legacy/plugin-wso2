@@ -130,7 +130,11 @@ public abstract class AbstractEntityElement {
      * @return name spaces parameters as string
      */
     @Nonnull
-    protected String convertNameSpaceToXMLFormat(@Nonnull Array<NameSpace> nameSpaces) {
+    protected String convertNameSpaceToXMLFormat(@Nullable Array<NameSpace> nameSpaces) {
+        if (nameSpaces == null) {
+            return "";
+        }
+
         StringBuilder result = new StringBuilder();
 
         for (NameSpace nameSpace : nameSpaces.asIterable()) {

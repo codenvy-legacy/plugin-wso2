@@ -27,7 +27,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -47,6 +46,11 @@ public class CallTemplate extends AbstractElement {
     public static final String ELEMENT_NAME       = "CallTemplate";
     public static final String SERIALIZATION_NAME = "callTemplate";
 
+    public static final Key<AvailableTemplates> AVAILABLE_TEMPLATES = new Key<>("AvailableTemplates");
+    public static final Key<String>             TARGET_TEMPLATES    = new Key<>("TargetTemplates");
+    public static final Key<String>             DESCRIPTION         = new Key<>("CallTemplateDescription");
+    public static final Key<Array<Property>>    PARAMETERS          = new Key<>("CallTemplateParameters");
+
     private static final String TARGET_ATTRIBUTE_NAME      = "target";
     private static final String DESCRIPTION_ATTRIBUTE_NAME = "description";
     private static final String PARAMETERS_PROPERTY_NAME   = "with-param";
@@ -54,11 +58,6 @@ public class CallTemplate extends AbstractElement {
     private static final List<String> PROPERTIES = Arrays.asList(PARAMETERS_PROPERTY_NAME);
 
     private final Provider<Property> propertyProvider;
-
-    private AvailableTemplates availableTemplates;
-    private String             targetTemplate;
-    private String             description;
-    private Array<Property>    parameters;
 
     @Inject
     public CallTemplate(EditorResources resources,
@@ -78,74 +77,10 @@ public class CallTemplate extends AbstractElement {
 
         this.propertyProvider = propertyProvider;
 
-        availableTemplates = AvailableTemplates.EMPTY;
-        targetTemplate = "";
-        description = "";
-        parameters = Collections.createArray();
-    }
-
-    /** @return value of available template */
-    @Nonnull
-    public AvailableTemplates getAvailableTemplates() {
-        return availableTemplates;
-    }
-
-    /**
-     * Set available template parameter to element.
-     *
-     * @param availableTemplates
-     *         values of available template
-     */
-    public void setAvailableTemplates(@Nullable AvailableTemplates availableTemplates) {
-        this.availableTemplates = availableTemplates;
-    }
-
-    /** @return value of target template */
-    @Nonnull
-    public String getTargetTemplate() {
-        return targetTemplate;
-    }
-
-    /**
-     * Sets target template to element.
-     *
-     * @param targetTemplate
-     *         values of target template
-     */
-    public void setTargetTemplate(@Nullable String targetTemplate) {
-        this.targetTemplate = targetTemplate;
-    }
-
-    /** @return list of parameters of element */
-    @Nonnull
-    public Array<Property> getParameters() {
-        return parameters;
-    }
-
-    /**
-     * Set list of parameters to element.
-     *
-     * @param parameters
-     *         parameters of CallTemplate mediator
-     */
-    public void setParameters(@Nonnull Array<Property> parameters) {
-        this.parameters = parameters;
-    }
-
-    /** @return value of description */
-    @Nullable
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Sets value of description to element.
-     *
-     * @param description
-     *         description of CallTemplate mediator
-     */
-    public void setDescription(@Nullable String description) {
-        this.description = description;
+        putProperty(AVAILABLE_TEMPLATES, AvailableTemplates.EMPTY);
+        putProperty(TARGET_TEMPLATES, "");
+        putProperty(DESCRIPTION, "");
+        putProperty(PARAMETERS, Collections.<Property>createArray());
     }
 
     /** {@inheritDoc} */
@@ -154,8 +89,8 @@ public class CallTemplate extends AbstractElement {
     protected String serializeAttributes() {
         Map<String, String> prop = new LinkedHashMap<>();
 
-        prop.put(TARGET_ATTRIBUTE_NAME, targetTemplate);
-        prop.put(DESCRIPTION_ATTRIBUTE_NAME, description);
+        prop.put(TARGET_ATTRIBUTE_NAME, getProperty(TARGET_TEMPLATES));
+        prop.put(DESCRIPTION_ATTRIBUTE_NAME, getProperty(DESCRIPTION));
 
         return convertAttributesToXMLFormat(prop);
     }
@@ -164,11 +99,16 @@ public class CallTemplate extends AbstractElement {
     @Nonnull
     @Override
     protected String serializeProperties() {
+        Array<Property> parameters = getProperty(PARAMETERS);
+
+        if (parameters == null) {
+            return "";
+        }
+
         StringBuilder result = new StringBuilder();
 
         for (Property property : parameters.asIterable()) {
-            result.append("<with-param ").append(convertNameSpaceToXMLFormat(property.getNameSpaces())).append("name=\"")
-                  .append(property.getName()).append("\" value=\"").append(property.getExpression()).append("\"/>");
+            result.append(property.serializeWithParam());
         }
 
         return result.toString();
@@ -178,25 +118,22 @@ public class CallTemplate extends AbstractElement {
     @Override
     protected void applyProperty(@Nonnull Node node) {
         Property property = propertyProvider.get();
-
         property.applyAttributes(node);
 
-        parameters.add(property);
+        Array<Property> parameters = getProperty(PARAMETERS);
+        if (parameters != null) {
+            parameters.add(property);
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        switch (attributeName) {
-            case TARGET_ATTRIBUTE_NAME:
-                targetTemplate = attributeValue;
-                break;
+        if (TARGET_ATTRIBUTE_NAME.equals(attributeName)) {
+            putProperty(TARGET_TEMPLATES, attributeValue);
 
-            case DESCRIPTION_ATTRIBUTE_NAME:
-                description = attributeValue;
-                break;
-
-            default:
+        } else {
+            putProperty(DESCRIPTION, attributeValue);
         }
     }
 
@@ -216,4 +153,5 @@ public class CallTemplate extends AbstractElement {
             return value;
         }
     }
+
 }

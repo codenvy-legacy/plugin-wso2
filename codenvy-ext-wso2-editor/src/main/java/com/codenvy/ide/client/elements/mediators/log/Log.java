@@ -26,11 +26,13 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.codenvy.ide.client.elements.mediators.log.Log.LogCategory.INFO;
+import static com.codenvy.ide.client.elements.mediators.log.Log.LogLevel.SIMPLE;
 
 /**
  * The class which describes state of Log mediator and also has methods for changing it. Also the class contains the business logic
@@ -47,6 +49,12 @@ public class Log extends AbstractElement {
     public static final String ELEMENT_NAME       = "Log";
     public static final String SERIALIZATION_NAME = "log";
 
+    public static final Key<LogCategory>     LOG_CATEGORY   = new Key<>("LogCategory");
+    public static final Key<LogLevel>        LOG_LEVEL      = new Key<>("LogLevel");
+    public static final Key<String>          LOG_SEPARATOR  = new Key<>("LogSeparator");
+    public static final Key<String>          DESCRIPTION    = new Key<>("LogDescription");
+    public static final Key<Array<Property>> LOG_PROPERTIES = new Key<>("LogProperties");
+
     private static final String CATEGORY_ATTRIBUTE_NAME    = "category";
     private static final String LEVEL_ATTRIBUTE_NAME       = "level";
     private static final String SEPARATOR_ATTRIBUTE_NAME   = "separator";
@@ -57,12 +65,6 @@ public class Log extends AbstractElement {
     private static final List<String> PROPERTIES = Arrays.asList(PROPERTIES_PROPERTY_NAME);
 
     private final Provider<Property> propertyProvider;
-
-    private LogCategory     logCategory;
-    private LogLevel        logLevel;
-    private String          logSeparator;
-    private String          description;
-    private Array<Property> properties;
 
     @Inject
     public Log(EditorResources resources,
@@ -82,91 +84,11 @@ public class Log extends AbstractElement {
 
         this.propertyProvider = propertyProvider;
 
-        logCategory = LogCategory.INFO;
-        logLevel = LogLevel.SIMPLE;
-        logSeparator = "";
-        description = "";
-        properties = Collections.createArray();
-    }
-
-    /** @return category value of element */
-    @Nonnull
-    public LogCategory getLogCategory() {
-        return logCategory;
-    }
-
-    /**
-     * Sets value of category to element
-     *
-     * @param logCategory
-     *         value that should be set
-     */
-    public void setLogCategory(@Nullable LogCategory logCategory) {
-        this.logCategory = logCategory;
-    }
-
-    /** @return level value of element */
-    @Nonnull
-    public LogLevel getLogLevel() {
-        return logLevel;
-    }
-
-    /**
-     * Sets value of level to element
-     *
-     * @param logLevel
-     *         value that should be set
-     */
-    public void setLogLevel(@Nullable LogLevel logLevel) {
-        this.logLevel = logLevel;
-    }
-
-    /** @return separator value of element */
-    @Nullable
-    public String getLogSeparator() {
-        return logSeparator;
-    }
-
-    /**
-     * Sets value of separator to element
-     *
-     * @param logSeparator
-     *         value that should be set
-     */
-    public void setLogSeparator(@Nullable String logSeparator) {
-        this.logSeparator = logSeparator;
-    }
-
-    /** @return list of properties of element */
-    @Nonnull
-    public Array<Property> getLogProperties() {
-        return properties;
-    }
-
-    /**
-     * Sets list of properties to element
-     *
-     * @param logProperties
-     *         list of properties that should be set
-     */
-    public void setLogProperties(@Nonnull Array<Property> logProperties) {
-        this.properties = logProperties;
-    }
-
-    /** @return category value of element */
-    @Nullable
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Sets value of description to element
-     *
-     * @param description
-     *         value that should be set
-     */
-    public void setDescription(@Nullable String description) {
-        this.description = description;
+        putProperty(LOG_CATEGORY, INFO);
+        putProperty(LOG_LEVEL, SIMPLE);
+        putProperty(LOG_SEPARATOR, "");
+        putProperty(DESCRIPTION, "");
+        putProperty(LOG_PROPERTIES, Collections.<Property>createArray());
     }
 
     /** {@inheritDoc} */
@@ -175,16 +97,20 @@ public class Log extends AbstractElement {
     protected String serializeAttributes() {
         Map<String, String> attributes = new LinkedHashMap<>();
 
-        if (!logCategory.equals(LogCategory.INFO)) {
+        LogCategory logCategory = getProperty(LOG_CATEGORY);
+
+        if (logCategory != null && !logCategory.equals(INFO)) {
             attributes.put(CATEGORY_ATTRIBUTE_NAME, logCategory.name());
         }
 
-        if (!logLevel.equals(LogLevel.SIMPLE)) {
+        LogLevel logLevel = getProperty(LOG_LEVEL);
+
+        if (logLevel != null && !logLevel.equals(SIMPLE)) {
             attributes.put(LEVEL_ATTRIBUTE_NAME, logLevel.name());
         }
 
-        attributes.put(SEPARATOR_ATTRIBUTE_NAME, logSeparator);
-        attributes.put(DESCRIPTION_ATTRIBUTE_NAME, description);
+        attributes.put(SEPARATOR_ATTRIBUTE_NAME, getProperty(LOG_SEPARATOR));
+        attributes.put(DESCRIPTION_ATTRIBUTE_NAME, getProperty(DESCRIPTION));
 
         return convertAttributesToXMLFormat(attributes);
     }
@@ -193,13 +119,16 @@ public class Log extends AbstractElement {
     @Nonnull
     @Override
     protected String serializeProperties() {
+        Array<Property> properties = getProperty(LOG_PROPERTIES);
+
+        if (properties == null) {
+            return "";
+        }
+
         StringBuilder result = new StringBuilder();
 
         for (Property property : properties.asIterable()) {
-            String nameSpaces = convertNameSpaceToXMLFormat(property.getNameSpaces());
-
-            result.append("<property ").append(nameSpaces).append("name=\"").append(property.getName()).append("\" value=\"")
-                  .append(property.getExpression()).append("\"/>\n");
+            result.append(property.serializeProperty());
         }
 
         return result.toString();
@@ -210,16 +139,16 @@ public class Log extends AbstractElement {
     protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
 
-        switch (nodeName) {
-            case PROPERTIES_PROPERTY_NAME:
-                Property property = propertyProvider.get();
+        if (PROPERTIES_PROPERTY_NAME.equals(nodeName)) {
+            Property property = propertyProvider.get();
 
-                property.applyAttributes(node);
+            property.applyAttributes(node);
 
+            Array<Property> properties = getProperty(LOG_PROPERTIES);
+
+            if (properties != null) {
                 properties.add(property);
-                break;
-
-            default:
+            }
         }
     }
 
@@ -228,19 +157,19 @@ public class Log extends AbstractElement {
     public void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
         switch (attributeName) {
             case CATEGORY_ATTRIBUTE_NAME:
-                logCategory = LogCategory.valueOf(attributeValue);
+                putProperty(LOG_CATEGORY, LogCategory.valueOf(attributeValue));
                 break;
 
             case LEVEL_ATTRIBUTE_NAME:
-                logLevel = LogLevel.valueOf(attributeValue);
+                putProperty(LOG_LEVEL, LogLevel.valueOf(attributeValue));
                 break;
 
             case SEPARATOR_ATTRIBUTE_NAME:
-                logSeparator = attributeValue;
+                putProperty(LOG_SEPARATOR, attributeValue);
                 break;
 
             case DESCRIPTION_ATTRIBUTE_NAME:
-                description = attributeValue;
+                putProperty(DESCRIPTION, attributeValue);
                 break;
 
             default:
