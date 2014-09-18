@@ -29,7 +29,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,6 +52,12 @@ public class Call extends AbstractElement {
     public static final String ELEMENT_NAME       = "Call";
     public static final String SERIALIZATION_NAME = "call";
 
+    public static final Key<String>           REGISTRY_KEY  = new Key<>("RegistryKey");
+    public static final Key<EndpointType>     ENDPOINT_TYPE = new Key<>("EndpointType");
+    public static final Key<String>           X_PATH        = new Key<>("XPath");
+    public static final Key<String>           DESCRIPTION   = new Key<>("Description");
+    public static final Key<Array<NameSpace>> NAMESPACES    = new Key<>("NameSpaces");
+
     private static final String KEY_ATTRIBUTE_NAME            = "key";
     private static final String KEY_EXPRESSION_ATTRIBUTE_NAME = "key-expression";
     private static final String DESCRIPTION_ATTRIBUTE_NAME    = "description";
@@ -61,12 +66,6 @@ public class Call extends AbstractElement {
     private static final List<String> PROPERTIES = Arrays.asList(ENDPOINT_PROPERTY_NAME);
 
     private final Provider<NameSpace> nameSpaceProvider;
-
-    private EndpointType     endpointType;
-    private String           registryKey;
-    private String           xPath;
-    private String           description;
-    private Array<NameSpace> nameSpaces;
 
     private boolean isKeyAttributeFound;
     private boolean isKeyExpressionAttributeFound;
@@ -89,11 +88,11 @@ public class Call extends AbstractElement {
 
         this.nameSpaceProvider = nameSpaceProvider;
 
-        endpointType = INLINE;
-        registryKey = "/default/key";
-        xPath = "/default/expression";
-        description = "";
-        nameSpaces = Collections.createArray();
+        putProperty(REGISTRY_KEY, "/default/key");
+        putProperty(ENDPOINT_TYPE, INLINE);
+        putProperty(X_PATH, "/default/expression");
+        putProperty(DESCRIPTION, "");
+        putProperty(NAMESPACES, Collections.<NameSpace>createArray());
 
         Branch branch = branchProvider.get();
         branch.setParent(this);
@@ -101,91 +100,21 @@ public class Call extends AbstractElement {
         branches.add(branch);
     }
 
-    /** @return endpoint type of call mediator */
-    @Nonnull
-    public EndpointType getEndpointType() {
-        return endpointType;
-    }
-
-    /**
-     * Sets endpoint type parameter to element
-     *
-     * @param endpointType
-     *         value which need to set to element
-     */
-    public void setEndpointType(@Nonnull EndpointType endpointType) {
-        this.endpointType = endpointType;
-    }
-
-    /** @return registry key of call mediator */
-    @Nonnull
-    public String getRegistryKey() {
-        return registryKey;
-    }
-
-    /**
-     * Sets registry key parameter to element
-     *
-     * @param registryKey
-     *         value which need to set to element
-     */
-    public void setRegistryKey(@Nonnull String registryKey) {
-        this.registryKey = registryKey;
-    }
-
-    /** @return xpath of call mediator */
-    @Nullable
-    public String getXpath() {
-        return xPath;
-    }
-
-    /**
-     * Sets xpath parameter to element
-     *
-     * @param xPath
-     *         value which need to set to element
-     */
-    public void setXpath(@Nullable String xPath) {
-        this.xPath = xPath;
-    }
-
-    /** @return description of call mediator */
-    @Nonnull
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Sets description to element
-     *
-     * @param description
-     *         value which need to set to element
-     */
-    public void setDescription(@Nonnull String description) {
-        this.description = description;
-    }
-
-    /** @return list of namespaces which contain in call */
-    @Nonnull
-    public Array<NameSpace> getNameSpaces() {
-        return nameSpaces;
-    }
-
-    /**
-     * Changes list of name spaces.
-     *
-     * @param nameSpaces
-     *         list of name spaces which needs to set in element
-     */
-    public void setNameSpaces(@Nonnull Array<NameSpace> nameSpaces) {
-        this.nameSpaces = nameSpaces;
-    }
-
     /** {@inheritDoc} */
     @Nonnull
     @Override
     public String serialize() {
-        String content = "<call" + (description.isEmpty() ? "" : ' ' + DESCRIPTION_ATTRIBUTE_NAME + "=\"" + description + '"');
+        String description = getProperty(DESCRIPTION);
+
+        String content = "<call" + ((description != null && description.isEmpty())
+                                    ? ""
+                                    : ' ' + DESCRIPTION_ATTRIBUTE_NAME + "=\"" + description + '"');
+
+        EndpointType endpointType = getProperty(ENDPOINT_TYPE);
+
+        if (endpointType == null) {
+            return "";
+        }
 
         switch (endpointType) {
             case INLINE:
@@ -197,21 +126,20 @@ public class Call extends AbstractElement {
 
             case REGISTRYKEY:
                 return content + ">\n" +
-                       '<' + ENDPOINT_PROPERTY_NAME + ' ' + KEY_ATTRIBUTE_NAME + "=\"" + registryKey + "\"/>\n" +
+                       '<' + ENDPOINT_PROPERTY_NAME + ' ' + KEY_ATTRIBUTE_NAME + "=\"" + getProperty(REGISTRY_KEY) + "\"/>\n" +
                        "</call>";
 
             case XPATH:
-                StringBuilder nameSpaces = new StringBuilder();
 
-                for (NameSpace nameSpace : this.nameSpaces.asIterable()) {
-                    nameSpaces.append(nameSpace.toString()).append(' ');
-                }
+                Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
+                String serializedNameSpaces = nameSpaces != null ? convertNameSpaceToXMLFormat(nameSpaces) : "";
 
                 return content + ">\n" +
-                       '<' + ENDPOINT_PROPERTY_NAME + ' ' + nameSpaces + KEY_EXPRESSION_ATTRIBUTE_NAME + "=\"" + xPath + "\"/>\n" +
-                       "</call>";
+                       '<' + ENDPOINT_PROPERTY_NAME + ' ' + serializedNameSpaces +
+                       KEY_EXPRESSION_ATTRIBUTE_NAME + "=\"" + getProperty(X_PATH) + "\"/>\n" + "</call>";
 
             case NONE:
+
             default:
                 return content + "/>";
         }
@@ -223,7 +151,7 @@ public class Call extends AbstractElement {
         super.deserialize(node);
 
         if (!node.hasChildNodes()) {
-            endpointType = NONE;
+            putProperty(ENDPOINT_TYPE, NONE);
         }
 
         if (branches.isEmpty()) {
@@ -247,11 +175,11 @@ public class Call extends AbstractElement {
                 readXMLAttributes(node);
 
                 if (isKeyAttributeFound) {
-                    endpointType = REGISTRYKEY;
+                    putProperty(ENDPOINT_TYPE, REGISTRYKEY);
                 } else if (isKeyExpressionAttributeFound) {
-                    endpointType = XPATH;
+                    putProperty(ENDPOINT_TYPE, XPATH);
                 } else {
-                    endpointType = INLINE;
+                    putProperty(ENDPOINT_TYPE, INLINE);
                 }
 
                 Branch branch = branchProvider.get();
@@ -280,16 +208,16 @@ public class Call extends AbstractElement {
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
         switch (attributeName) {
             case DESCRIPTION_ATTRIBUTE_NAME:
-                description = attributeValue;
+                putProperty(DESCRIPTION, attributeValue);
                 break;
 
             case KEY_ATTRIBUTE_NAME:
-                registryKey = attributeValue;
+                putProperty(REGISTRY_KEY, attributeValue);
                 isKeyAttributeFound = true;
                 break;
 
             case KEY_EXPRESSION_ATTRIBUTE_NAME:
-                xPath = attributeValue;
+                putProperty(X_PATH, attributeValue);
                 isKeyExpressionAttributeFound = true;
                 break;
 
@@ -302,7 +230,10 @@ public class Call extends AbstractElement {
                     nameSpace.setPrefix(name);
                     nameSpace.setUri(attributeValue);
 
-                    nameSpaces.add(nameSpace);
+                    Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
+                    if (nameSpaces != null) {
+                        nameSpaces.add(nameSpace);
+                    }
                 }
         }
     }
