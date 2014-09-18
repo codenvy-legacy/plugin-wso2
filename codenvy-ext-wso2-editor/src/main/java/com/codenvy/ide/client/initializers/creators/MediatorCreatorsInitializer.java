@@ -30,7 +30,6 @@ import com.codenvy.ide.client.elements.mediators.Switch;
 import com.codenvy.ide.client.elements.mediators.enrich.Enrich;
 import com.codenvy.ide.client.elements.mediators.log.Log;
 import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
-import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -38,9 +37,8 @@ import com.google.inject.Provider;
 /**
  * @author Andrey Plotnikov
  */
-public class MediatorCreatorsInitializer implements Initializer {
+public class MediatorCreatorsInitializer extends AbstractCreatorsInitializer {
 
-    private final ElementCreatorsManager   manager;
     private final Provider<Log>            logProvider;
     private final Provider<Enrich>         enrichProvider;
     private final Provider<Filter>         filterProvider;
@@ -70,7 +68,7 @@ public class MediatorCreatorsInitializer implements Initializer {
                                        Provider<Send> sendProvider,
                                        Provider<Sequence> sequenceProvider,
                                        Provider<Switch> switchProvider) {
-        this.manager = manager;
+        super(manager);
         this.logProvider = logProvider;
         this.enrichProvider = enrichProvider;
         this.filterProvider = filterProvider;

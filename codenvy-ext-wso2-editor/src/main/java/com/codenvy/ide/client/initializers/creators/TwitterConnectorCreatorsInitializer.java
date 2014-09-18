@@ -37,7 +37,6 @@ import com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter;
 import com.codenvy.ide.client.elements.connectors.twitter.SendDirectMessage;
 import com.codenvy.ide.client.elements.connectors.twitter.ShowStatus;
 import com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus;
-import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -45,9 +44,8 @@ import com.google.inject.Provider;
 /**
  * @author Andrey Plotnikov
  */
-public class TwitterConnectorCreatorsInitializer implements Initializer {
+public class TwitterConnectorCreatorsInitializer extends AbstractCreatorsInitializer {
 
-    private final ElementCreatorsManager          manager;
     private final Provider<DestroyStatus>         destroyStatusProvider;
     private final Provider<GetClosesTrends>       getClosesTrendsProvider;
     private final Provider<GetDirectMessages>     getDirectMessagesProvider;
@@ -91,7 +89,7 @@ public class TwitterConnectorCreatorsInitializer implements Initializer {
                                                Provider<SendDirectMessage> sendDirectMessageProvider,
                                                Provider<ShowStatus> showStatusProvider,
                                                Provider<UpdateStatus> updateStatusProvider) {
-        this.manager = manager;
+        super(manager);
         this.destroyStatusProvider = destroyStatusProvider;
         this.getClosesTrendsProvider = getClosesTrendsProvider;
         this.getDirectMessagesProvider = getDirectMessagesProvider;

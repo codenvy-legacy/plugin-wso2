@@ -31,7 +31,6 @@ import com.codenvy.ide.client.elements.connectors.salesforce.SetPassword;
 import com.codenvy.ide.client.elements.connectors.salesforce.UnDelete;
 import com.codenvy.ide.client.elements.connectors.salesforce.Update;
 import com.codenvy.ide.client.elements.connectors.salesforce.Upset;
-import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.CreateConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.DeleteConnectorPresenter;
@@ -53,9 +52,8 @@ import com.google.inject.Inject;
 /**
  * @author Andrey Plotnikov
  */
-public class SalesForceConnectorPropertiesPanelInitializer implements Initializer {
+public class SalesForceConnectorPropertiesPanelInitializer extends AbstractPropertiesPanelInitializer {
 
-    private final PropertiesPanelManager               manager;
     private final InitSalesforceConnectorPresenter     initPropertiesPanel;
     private final CreateConnectorPresenter             createPropertiesPanel;
     private final UpdateConnectorPresenter             updatePropertiesPanel;
@@ -89,7 +87,7 @@ public class SalesForceConnectorPropertiesPanelInitializer implements Initialize
                                                          SetPasswordConnectorPresenter passwordPropertiesPanel,
                                                          SendEmailMessageConnectorPresenter sendEmailMessagePropertiesPanel,
                                                          SendEmailConnectorPresenter sendEmailPropertiesPanel) {
-        this.manager = manager;
+        super(manager);
         this.initPropertiesPanel = initPropertiesPanel;
         this.createPropertiesPanel = createPropertiesPanel;
         this.updatePropertiesPanel = updatePropertiesPanel;

@@ -16,27 +16,20 @@
 
 package com.codenvy.ide.client.initializers.propertytype;
 
+import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
-import com.google.inject.Inject;
 
-import java.util.Arrays;
+import javax.annotation.Nonnull;
 
 /**
  * @author Andrey Plotnikov
  */
-public class CommonPropertyTypeInitializer extends AbstractPropertyTypeInitializer {
+public abstract class AbstractPropertyTypeInitializer implements Initializer {
 
-    public static final String BOOLEAN_TYPE_NAME = "Boolean";
+    protected final PropertyTypeManager manager;
 
-    @Inject
-    public CommonPropertyTypeInitializer(PropertyTypeManager manager) {
-        super(manager);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void initialize() {
-        manager.register(BOOLEAN_TYPE_NAME, Arrays.asList(Boolean.FALSE.toString(), Boolean.TRUE.toString()));
+    protected AbstractPropertyTypeInitializer(@Nonnull PropertyTypeManager manager) {
+        this.manager = manager;
     }
 
 }

@@ -37,7 +37,6 @@ import com.codenvy.ide.client.elements.connectors.googlespreadsheet.SearchCell;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.SetRow;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.UpdateWorksheetMetadata;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.UsernameLogin;
-import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -45,9 +44,8 @@ import com.google.inject.Provider;
 /**
  * @author Andrey Plotnikov
  */
-public class GoogleSpreadSheetConnectorCreatorsInitializer implements Initializer {
+public class GoogleSpreadSheetConnectorCreatorsInitializer extends AbstractCreatorsInitializer {
 
-    private final ElementCreatorsManager            manager;
     private final Provider<CreateSpreadsheet>       createSpreadsheetProvider;
     private final Provider<CreateWorksheet>         createWorksheetProvider;
     private final Provider<DeleteWorksheet>         deleteWorksheetProvider;
@@ -91,7 +89,7 @@ public class GoogleSpreadSheetConnectorCreatorsInitializer implements Initialize
                                                          Provider<UpdateWorksheetMetadata> updateWorksheetMetadataProvider,
                                                          Provider<UsernameLogin> usernameLoginProvider,
                                                          Provider<GetCellRangeCSV> getCellRangeCSVProvider) {
-        this.manager = manager;
+        super(manager);
         this.createSpreadsheetProvider = createSpreadsheetProvider;
         this.createWorksheetProvider = createWorksheetProvider;
         this.deleteWorksheetProvider = deleteWorksheetProvider;

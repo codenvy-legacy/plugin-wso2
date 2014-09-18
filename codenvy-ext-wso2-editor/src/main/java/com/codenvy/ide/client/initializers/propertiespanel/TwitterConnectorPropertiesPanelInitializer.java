@@ -36,7 +36,6 @@ import com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter;
 import com.codenvy.ide.client.elements.connectors.twitter.SendDirectMessage;
 import com.codenvy.ide.client.elements.connectors.twitter.ShowStatus;
 import com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus;
-import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
 import com.codenvy.ide.client.propertiespanel.connectors.twitter.DestroyStatusConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.twitter.GetClosesTrendsConnectorPresenter;
@@ -63,9 +62,8 @@ import com.google.inject.Inject;
 /**
  * @author Andrey Plotnikov
  */
-public class TwitterConnectorPropertiesPanelInitializer implements Initializer {
+public class TwitterConnectorPropertiesPanelInitializer extends AbstractPropertiesPanelInitializer {
 
-    private final PropertiesPanelManager                  manager;
     private final DestroyStatusConnectorPresenter         destroyStatusPropertiesPanel;
     private final GetClosesTrendsConnectorPresenter       getClosesTrendsPropertiesPanel;
     private final GetDirectMessagesConnectorPresenter     getDirectMessagesPropertiesPanel;
@@ -109,7 +107,7 @@ public class TwitterConnectorPropertiesPanelInitializer implements Initializer {
                                                       ShowStatusConnectorPresenter showStatusPropertiesPanel,
                                                       UpdateStatusConnectorPresenter updateStatusPropertiesPanel,
                                                       InitTwitterConnectorPresenter initTwitterPropertiesPanel) {
-        this.manager = manager;
+        super(manager);
         this.destroyStatusPropertiesPanel = destroyStatusPropertiesPanel;
         this.getClosesTrendsPropertiesPanel = getClosesTrendsPropertiesPanel;
         this.getDirectMessagesPropertiesPanel = getDirectMessagesPropertiesPanel;

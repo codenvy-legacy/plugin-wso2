@@ -60,7 +60,6 @@ import com.codenvy.ide.client.elements.connectors.jira.UpdateComment;
 import com.codenvy.ide.client.elements.connectors.jira.UpdateFilterById;
 import com.codenvy.ide.client.elements.connectors.jira.UpdateIssue;
 import com.codenvy.ide.client.elements.connectors.jira.UpdateIssueAssignee;
-import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -68,9 +67,8 @@ import com.google.inject.Provider;
 /**
  * @author Andrey Plotnikov
  */
-public class JiraConnectorCreatorsInitializer implements Initializer {
+public class JiraConnectorCreatorsInitializer extends AbstractCreatorsInitializer {
 
-    private final ElementCreatorsManager                     manager;
     private final Provider<AddAttachmentToIssueId>           addAttachmentToIssueIdProvider;
     private final Provider<CreateFilter>                     createFilterProvider;
     private final Provider<CreateIssue>                      createIssueProvider;
@@ -160,7 +158,7 @@ public class JiraConnectorCreatorsInitializer implements Initializer {
                                             Provider<UpdateFilterById> updateFilterByIdProvider,
                                             Provider<UpdateIssue> updateIssueProvider,
                                             Provider<UpdateIssueAssignee> updateIssueAssigneeProvider) {
-        this.manager = manager;
+        super(manager);
         this.addAttachmentToIssueIdProvider = addAttachmentToIssueIdProvider;
         this.createFilterProvider = createFilterProvider;
         this.createIssueProvider = createIssueProvider;

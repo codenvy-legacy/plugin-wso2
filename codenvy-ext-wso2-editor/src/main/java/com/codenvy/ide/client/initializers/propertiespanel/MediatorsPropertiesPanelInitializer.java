@@ -29,10 +29,9 @@ import com.codenvy.ide.client.elements.mediators.Switch;
 import com.codenvy.ide.client.elements.mediators.enrich.Enrich;
 import com.codenvy.ide.client.elements.mediators.log.Log;
 import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
-import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
-import com.codenvy.ide.client.propertiespanel.mediators.SwitchPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.CallPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.SwitchPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.calltemplate.CallTemplatePropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.enrich.EnrichPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.filter.FilterPropertiesPanelPresenter;
@@ -49,9 +48,8 @@ import com.google.inject.Inject;
 /**
  * @author Andrey Plotnikov
  */
-public class MediatorsPropertiesPanelInitializer implements Initializer {
+public class MediatorsPropertiesPanelInitializer extends AbstractPropertiesPanelInitializer {
 
-    private final PropertiesPanelManager                 manager;
     private final LogPropertiesPanelPresenter            logPropertiesPanel;
     private final PropertyPropertiesPanelPresenter       propertyPropertiesPanel;
     private final PayloadFactoryPropertiesPanelPresenter payloadFactoryPropertiesPanel;
@@ -81,7 +79,7 @@ public class MediatorsPropertiesPanelInitializer implements Initializer {
                                                LoopBackPropertiesPanelPresenter loopBackPropertiesPanel,
                                                CallTemplatePropertiesPanelPresenter callTemplatePropertiesPanel,
                                                CallPropertiesPanelPresenter callPropertiesPanel) {
-        this.manager = manager;
+        super(manager);
         this.logPropertiesPanel = logPropertiesPanel;
         this.propertyPropertiesPanel = propertyPropertiesPanel;
         this.payloadFactoryPropertiesPanel = payloadFactoryPropertiesPanel;

@@ -38,7 +38,6 @@ import com.codenvy.ide.client.elements.connectors.salesforce.SetPassword;
 import com.codenvy.ide.client.elements.connectors.salesforce.UnDelete;
 import com.codenvy.ide.client.elements.connectors.salesforce.Update;
 import com.codenvy.ide.client.elements.connectors.salesforce.Upset;
-import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -46,9 +45,8 @@ import com.google.inject.Provider;
 /**
  * @author Andrey Plotnikov
  */
-public class SalesForceConnectorCreatorsInitializer implements Initializer {
+public class SalesForceConnectorCreatorsInitializer extends AbstractCreatorsInitializer {
 
-    private final ElementCreatorsManager       manager;
     private final Provider<InitSalesforce>     initSalesforceProvider;
     private final Provider<Create>             createSalesforceProvider;
     private final Provider<Update>             updateSalesforceProvider;
@@ -94,7 +92,7 @@ public class SalesForceConnectorCreatorsInitializer implements Initializer {
                                                   Provider<SetPassword> setPasswordProvider,
                                                   Provider<UnDelete> undeleteProvider,
                                                   Provider<Upset> upsetProvider) {
-        this.manager = manager;
+        super(manager);
         this.initSalesforceProvider = initSalesforceProvider;
         this.createSalesforceProvider = createSalesforceProvider;
         this.updateSalesforceProvider = updateSalesforceProvider;

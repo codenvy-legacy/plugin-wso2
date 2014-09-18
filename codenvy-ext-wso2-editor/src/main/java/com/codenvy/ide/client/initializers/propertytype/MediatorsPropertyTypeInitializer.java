@@ -17,7 +17,6 @@
 package com.codenvy.ide.client.initializers.propertytype;
 
 import com.codenvy.ide.client.elements.mediators.ValueType;
-import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.google.inject.Inject;
 
@@ -46,13 +45,11 @@ import static com.codenvy.ide.client.elements.mediators.payload.Format.MediaType
 /**
  * @author Andrey Plotnikov
  */
-public class MediatorsPropertyTypeInitializer implements Initializer {
-
-    private final PropertyTypeManager manager;
+public class MediatorsPropertyTypeInitializer extends AbstractPropertyTypeInitializer {
 
     @Inject
     public MediatorsPropertyTypeInitializer(PropertyTypeManager manager) {
-        this.manager = manager;
+        super(manager);
     }
 
     /** {@inheritDoc} */

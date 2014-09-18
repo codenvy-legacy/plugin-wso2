@@ -17,7 +17,6 @@
 package com.codenvy.ide.client.initializers.propertiespanel;
 
 import com.codenvy.ide.client.elements.RootElement;
-import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
 import com.codenvy.ide.client.propertiespanel.general.empty.EmptyPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.general.root.RootPropertiesPanelPresenter;
@@ -26,9 +25,8 @@ import com.google.inject.Inject;
 /**
  * @author Andrey Plotnikov
  */
-public class GeneralElementsPropertiesPanelInitializer implements Initializer {
+public class GeneralElementsPropertiesPanelInitializer extends AbstractPropertiesPanelInitializer {
 
-    private final PropertiesPanelManager        manager;
     private final EmptyPropertiesPanelPresenter emptyPropertiesPanel;
     private final RootPropertiesPanelPresenter  rootPropertiesPanel;
 
@@ -36,7 +34,7 @@ public class GeneralElementsPropertiesPanelInitializer implements Initializer {
     public GeneralElementsPropertiesPanelInitializer(PropertiesPanelManager manager,
                                                      EmptyPropertiesPanelPresenter emptyPropertiesPanel,
                                                      RootPropertiesPanelPresenter rootPropertiesPanel) {
-        this.manager = manager;
+        super(manager);
         this.emptyPropertiesPanel = emptyPropertiesPanel;
         this.rootPropertiesPanel = rootPropertiesPanel;
     }

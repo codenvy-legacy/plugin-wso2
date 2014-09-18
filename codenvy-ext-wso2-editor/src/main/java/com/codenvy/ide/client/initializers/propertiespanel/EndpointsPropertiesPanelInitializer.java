@@ -17,7 +17,6 @@
 package com.codenvy.ide.client.initializers.propertiespanel;
 
 import com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint;
-import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
 import com.codenvy.ide.client.propertiespanel.endpoints.address.AddressEndpointPropertiesPanelPresenter;
 import com.google.inject.Inject;
@@ -25,15 +24,14 @@ import com.google.inject.Inject;
 /**
  * @author Andrey Plotnikov
  */
-public class EndpointsPropertiesPanelInitializer implements Initializer {
+public class EndpointsPropertiesPanelInitializer extends AbstractPropertiesPanelInitializer {
 
-    private final PropertiesPanelManager                  manager;
     private final AddressEndpointPropertiesPanelPresenter addressEndpointPropertiesPanel;
 
     @Inject
     public EndpointsPropertiesPanelInitializer(PropertiesPanelManager manager,
                                                AddressEndpointPropertiesPanelPresenter addressEndpointPropertiesPanel) {
-        this.manager = manager;
+        super(manager);
         this.addressEndpointPropertiesPanel = addressEndpointPropertiesPanel;
     }
 

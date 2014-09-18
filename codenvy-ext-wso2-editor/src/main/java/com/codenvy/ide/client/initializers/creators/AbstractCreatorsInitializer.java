@@ -14,29 +14,22 @@
  * limitations under the License.
  */
 
-package com.codenvy.ide.client.initializers.propertytype;
+package com.codenvy.ide.client.initializers.creators;
 
-import com.codenvy.ide.client.managers.PropertyTypeManager;
-import com.google.inject.Inject;
+import com.codenvy.ide.client.initializers.Initializer;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 
-import java.util.Arrays;
+import javax.annotation.Nonnull;
 
 /**
  * @author Andrey Plotnikov
  */
-public class CommonPropertyTypeInitializer extends AbstractPropertyTypeInitializer {
+public abstract class AbstractCreatorsInitializer implements Initializer {
 
-    public static final String BOOLEAN_TYPE_NAME = "Boolean";
+    protected final ElementCreatorsManager manager;
 
-    @Inject
-    public CommonPropertyTypeInitializer(PropertyTypeManager manager) {
-        super(manager);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void initialize() {
-        manager.register(BOOLEAN_TYPE_NAME, Arrays.asList(Boolean.FALSE.toString(), Boolean.TRUE.toString()));
+    protected AbstractCreatorsInitializer(@Nonnull ElementCreatorsManager manager) {
+        this.manager = manager;
     }
 
 }

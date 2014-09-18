@@ -35,6 +35,12 @@ import com.codenvy.ide.client.initializers.propertytype.CommonPropertyTypeInitia
 import com.codenvy.ide.client.initializers.propertytype.ConnectorPropertyTypeInitializer;
 import com.codenvy.ide.client.initializers.propertytype.EndpointsPropertyTypeInitializer;
 import com.codenvy.ide.client.initializers.propertytype.MediatorsPropertyTypeInitializer;
+import com.codenvy.ide.client.initializers.toolbar.EndpointToolbarInitializer;
+import com.codenvy.ide.client.initializers.toolbar.GoogleSpreadSheetToolbarInitializer;
+import com.codenvy.ide.client.initializers.toolbar.JiraConnectorToolbarInitializer;
+import com.codenvy.ide.client.initializers.toolbar.MediatorToolbarInitializer;
+import com.codenvy.ide.client.initializers.toolbar.SalesForceConnectorToolbarInitializer;
+import com.codenvy.ide.client.initializers.toolbar.TwitterToolbarInitializer;
 import com.codenvy.ide.client.initializers.validators.ConnectionsValidatorInitializer;
 import com.codenvy.ide.client.initializers.validators.InnerElementsValidatorInitializer;
 import com.codenvy.ide.client.inject.factories.ElementWidgetFactory;
@@ -69,6 +75,14 @@ public class GinModule extends AbstractGinModule {
 
         GinMultibinder<Initializer> initializers = GinMultibinder.newSetBinder(binder(), Initializer.class);
 
+        configurePropertiesPanels(initializers);
+        configurePropertyTypes(initializers);
+        configureValidators(initializers);
+        configureCreators(initializers);
+        configureToolbar(initializers);
+    }
+
+    private void configurePropertiesPanels(GinMultibinder<Initializer> initializers) {
         initializers.addBinding().to(GeneralElementsPropertiesPanelInitializer.class);
         initializers.addBinding().to(MediatorsPropertiesPanelInitializer.class);
         initializers.addBinding().to(EndpointsPropertiesPanelInitializer.class);
@@ -76,21 +90,36 @@ public class GinModule extends AbstractGinModule {
         initializers.addBinding().to(JiraConnectorPropertiesPanelInitializer.class);
         initializers.addBinding().to(TwitterConnectorPropertiesPanelInitializer.class);
         initializers.addBinding().to(GoogleSpreadSheetPropertiesPanelInitializer.class);
+    }
 
+    private void configurePropertyTypes(GinMultibinder<Initializer> initializers) {
         initializers.addBinding().to(MediatorsPropertyTypeInitializer.class);
         initializers.addBinding().to(EndpointsPropertyTypeInitializer.class);
         initializers.addBinding().to(ConnectorPropertyTypeInitializer.class);
         initializers.addBinding().to(CommonPropertyTypeInitializer.class);
+    }
 
+    private void configureValidators(GinMultibinder<Initializer> initializers) {
         initializers.addBinding().to(ConnectionsValidatorInitializer.class);
         initializers.addBinding().to(InnerElementsValidatorInitializer.class);
+    }
 
+    private void configureCreators(GinMultibinder<Initializer> initializers) {
         initializers.addBinding().to(MediatorCreatorsInitializer.class);
         initializers.addBinding().to(EndpointCreatorsInitializer.class);
         initializers.addBinding().to(SalesForceConnectorCreatorsInitializer.class);
         initializers.addBinding().to(JiraConnectorCreatorsInitializer.class);
         initializers.addBinding().to(TwitterConnectorCreatorsInitializer.class);
         initializers.addBinding().to(GoogleSpreadSheetConnectorCreatorsInitializer.class);
+    }
+
+    private void configureToolbar(GinMultibinder<Initializer> initializers) {
+        initializers.addBinding().to(MediatorToolbarInitializer.class);
+        initializers.addBinding().to(EndpointToolbarInitializer.class);
+        initializers.addBinding().to(SalesForceConnectorToolbarInitializer.class);
+        initializers.addBinding().to(JiraConnectorToolbarInitializer.class);
+        initializers.addBinding().to(TwitterToolbarInitializer.class);
+        initializers.addBinding().to(GoogleSpreadSheetToolbarInitializer.class);
     }
 
 }

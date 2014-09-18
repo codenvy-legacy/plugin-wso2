@@ -16,7 +16,6 @@
 
 package com.codenvy.ide.client.initializers.propertytype;
 
-import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.google.inject.Inject;
 
@@ -28,13 +27,11 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
 /**
  * @author Andrey Plotnikov
  */
-public class ConnectorPropertyTypeInitializer implements Initializer {
-
-    private final PropertyTypeManager manager;
+public class ConnectorPropertyTypeInitializer extends AbstractPropertyTypeInitializer {
 
     @Inject
     public ConnectorPropertyTypeInitializer(PropertyTypeManager manager) {
-        this.manager = manager;
+        super(manager);
     }
 
     /** {@inheritDoc} */

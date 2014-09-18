@@ -36,7 +36,6 @@ import com.codenvy.ide.client.elements.connectors.googlespreadsheet.SearchCell;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.SetRow;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.UpdateWorksheetMetadata;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.UsernameLogin;
-import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
 import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.CreateSpreadsheetConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.CreateWorksheetConnectorPresenter;
@@ -63,9 +62,8 @@ import com.google.inject.Inject;
 /**
  * @author Andrey Plotnikov
  */
-public class GoogleSpreadSheetPropertiesPanelInitializer implements Initializer {
+public class GoogleSpreadSheetPropertiesPanelInitializer extends AbstractPropertiesPanelInitializer {
 
-    private final PropertiesPanelManager                    manager;
     private final CreateSpreadsheetConnectorPresenter       createSpreadsheetPropertiesPanel;
     private final CreateWorksheetConnectorPresenter         createWorksheetPropertiesPanel;
     private final DeleteWorksheetConnectorPresenter         deleteWorksheetPropertiesPanel;
@@ -109,7 +107,7 @@ public class GoogleSpreadSheetPropertiesPanelInitializer implements Initializer 
                                                        SetRowConnectorPresenter setRowPropertiesPanel,
                                                        UpdateWorksheetMetadataConnectorPresenter updateWorksheetMetadataPropertiesPanel,
                                                        UsernameLoginConnectorPresenter usernameLoginPropertiesPanel) {
-        this.manager = manager;
+        super(manager);
         this.createSpreadsheetPropertiesPanel = createSpreadsheetPropertiesPanel;
         this.createWorksheetPropertiesPanel = createWorksheetPropertiesPanel;
         this.deleteWorksheetPropertiesPanel = deleteWorksheetPropertiesPanel;

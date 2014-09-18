@@ -64,7 +64,6 @@ import com.codenvy.ide.client.elements.connectors.salesforce.QueryAll;
 import com.codenvy.ide.client.elements.connectors.salesforce.QueryMore;
 import com.codenvy.ide.client.elements.connectors.salesforce.ResetPassword;
 import com.codenvy.ide.client.elements.connectors.salesforce.Retrieve;
-import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.AddAttachmentConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.CreateFilterConnectorPresenter;
@@ -119,9 +118,8 @@ import com.google.inject.Inject;
 /**
  * @author Andrey Plotnikov
  */
-public class JiraConnectorPropertiesPanelInitializer implements Initializer {
+public class JiraConnectorPropertiesPanelInitializer extends AbstractPropertiesPanelInitializer {
 
-    private final PropertiesPanelManager                             manager;
     private final SearchConnectorPresenter                           searchPropertiesPanel;
     private final RetrieveConnectorPresenter                         retrievePropertiesPanel;
     private final QueryConnectorPresenter                            queryPropertiesPanel;
@@ -223,7 +221,7 @@ public class JiraConnectorPropertiesPanelInitializer implements Initializer {
                                                    UpdateFilterByIdConnectorPresenter updateFilterByIdPropertiesPanel,
                                                    UpdateIssueConnectorPresenter updateIssuePropertiesPanel,
                                                    UpdateIssueAssigneeConnectorPresenter updateIssueAssigneePropertiesPanel) {
-        this.manager = manager;
+        super(manager);
         this.searchPropertiesPanel = searchPropertiesPanel;
         this.retrievePropertiesPanel = retrievePropertiesPanel;
         this.queryPropertiesPanel = queryPropertiesPanel;

@@ -18,7 +18,6 @@ package com.codenvy.ide.client.initializers.creators;
 
 import com.codenvy.ide.client.constants.EndpointCreatingState;
 import com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint;
-import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -26,15 +25,13 @@ import com.google.inject.Provider;
 /**
  * @author Andrey Plotnikov
  */
-public class EndpointCreatorsInitializer implements Initializer {
+public class EndpointCreatorsInitializer extends AbstractCreatorsInitializer {
 
-    private final ElementCreatorsManager    manager;
     private final Provider<AddressEndpoint> addressEndpointProvider;
 
     @Inject
-    public EndpointCreatorsInitializer(ElementCreatorsManager manager,
-                                       Provider<AddressEndpoint> addressEndpointProvider) {
-        this.manager = manager;
+    public EndpointCreatorsInitializer(ElementCreatorsManager manager, Provider<AddressEndpoint> addressEndpointProvider) {
+        super(manager);
         this.addressEndpointProvider = addressEndpointProvider;
     }
 

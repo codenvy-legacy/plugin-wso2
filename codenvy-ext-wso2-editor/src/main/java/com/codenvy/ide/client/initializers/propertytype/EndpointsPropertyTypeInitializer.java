@@ -16,7 +16,6 @@
 
 package com.codenvy.ide.client.initializers.propertytype;
 
-import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.google.inject.Inject;
 
@@ -30,13 +29,11 @@ import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressE
 /**
  * @author Andrey Plotnikov
  */
-public class EndpointsPropertyTypeInitializer implements Initializer {
-
-    private final PropertyTypeManager manager;
+public class EndpointsPropertyTypeInitializer extends AbstractPropertyTypeInitializer {
 
     @Inject
     public EndpointsPropertyTypeInitializer(PropertyTypeManager manager) {
-        this.manager = manager;
+        super(manager);
     }
 
     /** {@inheritDoc} */
