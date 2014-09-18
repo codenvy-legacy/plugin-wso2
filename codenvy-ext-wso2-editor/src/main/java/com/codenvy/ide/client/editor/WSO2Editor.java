@@ -152,8 +152,6 @@ import com.codenvy.ide.client.managers.PropertiesPanelManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.propertiespanel.PropertyChangedListener;
 import com.codenvy.ide.client.toolbar.ToolbarPresenter;
-import com.codenvy.ide.client.validators.ConnectionsValidator;
-import com.codenvy.ide.client.validators.InnerElementsValidator;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -202,28 +200,6 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Pro
         for (Initializer initializer : initializers) {
             initializer.initialize();
         }
-    }
-
-    @Inject
-    private void configureConnectionsValidator(ConnectionsValidator connectionsValidator) {
-        connectionsValidator.addDisallowAllRule(Respond.ELEMENT_NAME);
-
-        connectionsValidator.addDisallowAllRule(LoopBack.ELEMENT_NAME);
-
-        connectionsValidator.addDisallowAllRule(AddressEndpoint.ELEMENT_NAME);
-    }
-
-    @Inject
-    private void configureInnerElementsValidator(InnerElementsValidator innerElementsValidator) {
-        innerElementsValidator.addAllowRule(Call.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
-
-        innerElementsValidator.addAllowRule(Send.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
-
-        innerElementsValidator.addDisallowRule(RootElement.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
-
-        innerElementsValidator.addDisallowRule(Filter.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
-
-        innerElementsValidator.addDisallowRule(Switch.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
     }
 
     @Inject

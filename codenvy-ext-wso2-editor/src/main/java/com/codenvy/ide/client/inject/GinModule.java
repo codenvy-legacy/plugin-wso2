@@ -29,6 +29,8 @@ import com.codenvy.ide.client.initializers.propertytype.CommonPropertyTypeInitia
 import com.codenvy.ide.client.initializers.propertytype.ConnectorPropertyTypeInitializer;
 import com.codenvy.ide.client.initializers.propertytype.EndpointsPropertyTypeInitializer;
 import com.codenvy.ide.client.initializers.propertytype.MediatorsPropertyTypeInitializer;
+import com.codenvy.ide.client.initializers.validators.ConnectionsValidatorInitializer;
+import com.codenvy.ide.client.initializers.validators.InnerElementsValidatorInitializer;
 import com.codenvy.ide.client.inject.factories.ElementWidgetFactory;
 import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.inject.factories.ToolbarFactory;
@@ -73,6 +75,9 @@ public class GinModule extends AbstractGinModule {
         initializers.addBinding().to(EndpointsPropertyTypeInitializer.class);
         initializers.addBinding().to(ConnectorPropertyTypeInitializer.class);
         initializers.addBinding().to(CommonPropertyTypeInitializer.class);
+
+        initializers.addBinding().to(ConnectionsValidatorInitializer.class);
+        initializers.addBinding().to(InnerElementsValidatorInitializer.class);
     }
 
 }
