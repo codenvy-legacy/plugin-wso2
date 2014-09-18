@@ -27,7 +27,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +52,18 @@ public class Property extends AbstractElement {
     public static final String ELEMENT_NAME       = "Property";
     public static final String SERIALIZATION_NAME = "property";
 
+    public static final Key<String>           PROPERTY_NAME              = new Key<>("PropertyName");
+    public static final Key<Action>           PROPERTY_ACTION            = new Key<>("PropertyAction");
+    public static final Key<ValueType>        VALUE_TYPE                 = new Key<>("ValueType");
+    public static final Key<DataType>         PROPERTY_DATA_TYPE         = new Key<>("PropertyDataType");
+    public static final Key<String>           VALUE_LITERAL              = new Key<>("ValueLiteral");
+    public static final Key<String>           VALUE_EXPRESSION           = new Key<>("ValueExpression");
+    public static final Key<String>           VALUE_STRING_PATTERN       = new Key<>("ValueStringPattern");
+    public static final Key<Scope>            PROPERTY_SCOPE             = new Key<>("PropertyScope");
+    public static final Key<String>           VALUE_STRING_CAPTURE_GROUP = new Key<>("ValueStringCaptureGroup");
+    public static final Key<String>           DESCRIPTION                = new Key<>("Description");
+    public static final Key<Array<NameSpace>> NAMESPACES                 = new Key<>("NameSpaces");
+
     private static final String NAME_ATTRIBUTE                 = "name";
     private static final String ACTION_ATTRIBUTE               = "action";
     private static final String DATA_TYPE_ATTRIBUTE            = "type";
@@ -66,18 +77,6 @@ public class Property extends AbstractElement {
     private static final List<String> PROPERTIES = java.util.Collections.emptyList();
 
     private final Provider<NameSpace> nameSpaceProvider;
-
-    private String           propertyName;
-    private Action           propertyAction;
-    private ValueType        valueType;
-    private DataType         propertyDataType;
-    private String           valueLiteral;
-    private String           valueExpression;
-    private String           valueStringPattern;
-    private String           valueStringCaptureGroup;
-    private Scope            propertyScope;
-    private String           description;
-    private Array<NameSpace> nameSpaces;
 
     @Inject
     public Property(EditorResources resources,
@@ -97,192 +96,17 @@ public class Property extends AbstractElement {
 
         this.nameSpaceProvider = nameSpaceProvider;
 
-        propertyAction = set;
-        valueType = LITERAL;
-        propertyDataType = STRING;
-        propertyScope = SYNAPSE;
-        propertyName = "property_name";
-        valueLiteral = "value";
-        valueExpression = "/default/expression";
-        valueStringPattern = "";
-        valueStringCaptureGroup = "";
-        nameSpaces = Collections.createArray();
-    }
-
-    /** @return namespaces which contain in property */
-    @Nonnull
-    public Array<NameSpace> getNameSpaces() {
-        return nameSpaces;
-    }
-
-    /**
-     * Sets name spaces to element
-     *
-     * @param nameSpaces
-     *         list which need to set to element
-     */
-    public void setNameSpaces(@Nonnull Array<NameSpace> nameSpaces) {
-        this.nameSpaces = nameSpaces;
-    }
-
-    /** @return name of property */
-    @Nullable
-    public String getPropertyName() {
-        return propertyName;
-    }
-
-    /**
-     * Sets property name to element
-     *
-     * @param propertyName
-     *         value which need to set to element
-     */
-    public void setPropertyName(@Nullable String propertyName) {
-        this.propertyName = propertyName;
-    }
-
-    /** @return action of property */
-    @Nonnull
-    public Action getPropertyAction() {
-        return propertyAction;
-    }
-
-    /**
-     * Sets action to element
-     *
-     * @param propertyAction
-     *         value which need to set to element
-     */
-    public void setPropertyAction(@Nullable Action propertyAction) {
-        this.propertyAction = propertyAction;
-    }
-
-    /** @return value type of property */
-    @Nonnull
-    public ValueType getValueType() {
-        return valueType;
-    }
-
-    /**
-     * Sets value type to element
-     *
-     * @param valueType
-     *         value which need to set to element
-     */
-    public void setValueType(@Nullable ValueType valueType) {
-        this.valueType = valueType;
-    }
-
-    /** @return data type of property */
-    @Nonnull
-    public DataType getPropertyDataType() {
-        return propertyDataType;
-    }
-
-    /**
-     * Sets data type to element
-     *
-     * @param propertyDataType
-     *         value which need to set to element
-     */
-    public void setPropertyDataType(@Nullable DataType propertyDataType) {
-        this.propertyDataType = propertyDataType;
-    }
-
-    /** @return value literal of property */
-    @Nullable
-    public String getValueLiteral() {
-        return valueLiteral;
-    }
-
-    /**
-     * Sets value literal to element
-     *
-     * @param valueLiteral
-     *         value which need to set to element
-     */
-    public void setValueLiteral(@Nullable String valueLiteral) {
-        this.valueLiteral = valueLiteral;
-    }
-
-    /** @return value expression of property */
-    @Nullable
-    public String getValueExpression() {
-        return valueExpression;
-    }
-
-    /**
-     * Sets value expression to element
-     *
-     * @param valueExpression
-     *         value which need to set to element
-     */
-    public void setValueExpression(@Nullable String valueExpression) {
-        this.valueExpression = valueExpression;
-    }
-
-    /** @return value of string pattern of property */
-    @Nullable
-    public String getValueStringPattern() {
-        return valueStringPattern;
-    }
-
-    /**
-     * Sets string pattern to element
-     *
-     * @param valueStringPattern
-     *         value which need to set to element
-     */
-    public void setValueStringPattern(@Nullable String valueStringPattern) {
-        this.valueStringPattern = valueStringPattern;
-    }
-
-    /** @return capture group of property */
-    @Nullable
-    public String getValueStringCaptureGroup() {
-        return valueStringCaptureGroup;
-    }
-
-    /**
-     * Sets capture group to element
-     *
-     * @param valueStringCaptureGroup
-     *         value which need to set to element
-     */
-    public void setValueStringCaptureGroup(@Nullable String valueStringCaptureGroup) {
-        this.valueStringCaptureGroup = valueStringCaptureGroup;
-    }
-
-    /** @return scope of property */
-    @Nonnull
-    public Scope getPropertyScope() {
-        return propertyScope;
-    }
-
-    /**
-     * Sets scope to element
-     *
-     * @param propertyScope
-     *         value which need to set to element
-     */
-    public void setPropertyScope(@Nullable Scope propertyScope) {
-        this.propertyScope = propertyScope;
-    }
-
-    /** @return description of property */
-    @Nullable
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Sets description to element
-     *
-     * @param description
-     *         value which need to set to element
-     */
-    public void setDescription(@Nullable String description) {
-        this.description = description;
+        putProperty(PROPERTY_ACTION, set);
+        putProperty(VALUE_TYPE, LITERAL);
+        putProperty(PROPERTY_DATA_TYPE, STRING);
+        putProperty(PROPERTY_SCOPE, SYNAPSE);
+        putProperty(PROPERTY_NAME, "property_name");
+        putProperty(VALUE_LITERAL, "value");
+        putProperty(VALUE_EXPRESSION, "/default/expression");
+        putProperty(VALUE_STRING_PATTERN, "");
+        putProperty(VALUE_STRING_PATTERN, "");
+        putProperty(VALUE_STRING_CAPTURE_GROUP, "");
+        putProperty(NAMESPACES, Collections.<NameSpace>createArray());
     }
 
     /** {@inheritDoc} */
@@ -293,9 +117,12 @@ public class Property extends AbstractElement {
 
         setDefaultAttributes(attributes);
 
-        attributes.remove(valueType.equals(EXPRESSION) ? VALUE_LITERAL_ATTRIBUTE : VALUE_EXPRESSION_ATTRIBUTE);
+        ValueType vType = getProperty(VALUE_TYPE);
+        Action propAction = getProperty(PROPERTY_ACTION);
 
-        if (propertyAction.equals(set)) {
+        attributes.remove((vType != null && vType.equals(EXPRESSION)) ? VALUE_LITERAL_ATTRIBUTE : VALUE_EXPRESSION_ATTRIBUTE);
+
+        if (propAction != null && propAction.equals(set)) {
             attributes.remove(ACTION_ATTRIBUTE);
         } else {
             attributes.remove(VALUE_EXPRESSION_ATTRIBUTE);
@@ -303,7 +130,7 @@ public class Property extends AbstractElement {
             attributes.remove(DATA_TYPE_ATTRIBUTE);
         }
 
-        return convertNameSpaceToXMLFormat(nameSpaces) + convertAttributesToXMLFormat(attributes);
+        return convertNameSpaceToXMLFormat(getProperty(NAMESPACES)) + convertAttributesToXMLFormat(attributes);
     }
 
     /**
@@ -313,15 +140,19 @@ public class Property extends AbstractElement {
      *         list of default attributes
      */
     private void setDefaultAttributes(@Nonnull Map<String, String> attributes) {
-        attributes.put(NAME_ATTRIBUTE, propertyName);
-        attributes.put(VALUE_EXPRESSION_ATTRIBUTE, valueExpression);
-        attributes.put(VALUE_LITERAL_ATTRIBUTE, valueLiteral);
-        attributes.put(SCOPE_ATTRIBUTE, propertyScope.getValue());
-        attributes.put(ACTION_ATTRIBUTE, propertyAction.name());
-        attributes.put(DATA_TYPE_ATTRIBUTE, propertyDataType.name());
-        attributes.put(STRING_CAPTURE_GROUP_ATTRIBUTE, valueStringCaptureGroup);
-        attributes.put(STRING_PATTERN_ATTRIBUTE, valueStringPattern);
-        attributes.put(DESCRIPTION_ATTRIBUTE, description);
+        Scope scope = getProperty(PROPERTY_SCOPE);
+        Action propAction = getProperty(PROPERTY_ACTION);
+        DataType dataType = getProperty(PROPERTY_DATA_TYPE);
+
+        attributes.put(NAME_ATTRIBUTE, getProperty(PROPERTY_NAME));
+        attributes.put(VALUE_EXPRESSION_ATTRIBUTE, getProperty(VALUE_EXPRESSION));
+        attributes.put(VALUE_LITERAL_ATTRIBUTE, getProperty(VALUE_LITERAL));
+        attributes.put(SCOPE_ATTRIBUTE, scope != null ? scope.getValue() : "");
+        attributes.put(ACTION_ATTRIBUTE, propAction != null ? propAction.name() : "");
+        attributes.put(DATA_TYPE_ATTRIBUTE, dataType != null ? dataType.name() : "");
+        attributes.put(STRING_CAPTURE_GROUP_ATTRIBUTE, getProperty(VALUE_STRING_CAPTURE_GROUP));
+        attributes.put(STRING_PATTERN_ATTRIBUTE, getProperty(VALUE_STRING_PATTERN));
+        attributes.put(DESCRIPTION_ATTRIBUTE, getProperty(DESCRIPTION));
     }
 
     /** {@inheritDoc} */
@@ -329,53 +160,62 @@ public class Property extends AbstractElement {
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
         switch (attributeName) {
             case NAME_ATTRIBUTE:
-                propertyName = attributeValue;
+                putProperty(PROPERTY_NAME, attributeValue);
                 break;
 
             case ACTION_ATTRIBUTE:
-                propertyAction = Action.valueOf(attributeValue);
+                putProperty(PROPERTY_ACTION, Action.valueOf(attributeValue));
                 break;
 
             case DATA_TYPE_ATTRIBUTE:
-                propertyDataType = DataType.valueOf(attributeValue);
+                putProperty(PROPERTY_DATA_TYPE, DataType.valueOf(attributeValue));
                 break;
 
             case VALUE_LITERAL_ATTRIBUTE:
-                valueLiteral = attributeValue;
+                putProperty(VALUE_LITERAL, attributeValue);
                 break;
 
             case VALUE_EXPRESSION_ATTRIBUTE:
-                valueExpression = attributeValue;
-                valueType = EXPRESSION;
+                putProperty(VALUE_LITERAL, attributeValue);
+                putProperty(VALUE_TYPE, EXPRESSION);
                 break;
 
             case STRING_PATTERN_ATTRIBUTE:
-                valueStringPattern = attributeValue;
+                putProperty(VALUE_STRING_PATTERN, attributeValue);
                 break;
 
             case STRING_CAPTURE_GROUP_ATTRIBUTE:
-                valueStringCaptureGroup = attributeValue;
+                putProperty(VALUE_STRING_CAPTURE_GROUP, attributeValue);
                 break;
 
             case SCOPE_ATTRIBUTE:
-                propertyScope = Scope.getItemByValue(attributeValue);
+                putProperty(PROPERTY_SCOPE, Scope.getItemByValue(attributeValue));
                 break;
 
             case DESCRIPTION_ATTRIBUTE:
-                description = attributeValue;
+                putProperty(DESCRIPTION, attributeValue);
                 break;
 
             default:
-                if (StringUtils.startsWith(PREFIX, attributeName, true)) {
-                    String name = StringUtils.trimStart(attributeName, PREFIX + ':');
+                applyNameSpaces(attributeName, attributeValue);
+        }
+    }
 
-                    NameSpace nameSpace = nameSpaceProvider.get();
+    private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        if (!StringUtils.startsWith(PREFIX, attributeName, true)) {
+            return;
+        }
 
-                    nameSpace.setPrefix(name);
-                    nameSpace.setUri(attributeValue);
+        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
 
-                    nameSpaces.add(nameSpace);
-                }
+        NameSpace nameSpace = nameSpaceProvider.get();
+
+        nameSpace.setPrefix(name);
+        nameSpace.setUri(attributeValue);
+
+        Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
+        if (nameSpaces != null) {
+            nameSpaces.add(nameSpace);
         }
     }
 

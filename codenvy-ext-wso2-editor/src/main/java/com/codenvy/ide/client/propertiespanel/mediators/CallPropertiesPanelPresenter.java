@@ -18,7 +18,6 @@ package com.codenvy.ide.client.propertiespanel.mediators;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.Call;
-import com.codenvy.ide.client.elements.mediators.Switch;
 import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
@@ -81,10 +80,10 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, 
                     endpointXpathPanel);
     }
 
-    private void prepareView(PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                             Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
-                             ListPropertyPresenter endpointType,
-                             final ComplexPropertyPresenter endpointXpathPanel) {
+    private void prepareView(@Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                             @Nonnull Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
+                             @Nonnull ListPropertyPresenter endpointType,
+                             @Nonnull final ComplexPropertyPresenter endpointXpathPanel) {
 
         PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
         this.view.addGroup(basicGroup);
@@ -130,7 +129,7 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, 
         this.endpointXpathPanel.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
-                Array<NameSpace> nameSpaces = element.getProperty(Switch.NAMESPACES);
+                Array<NameSpace> nameSpaces = element.getProperty(NAMESPACES);
                 String xPath = element.getProperty(X_PATH);
 
                 if (xPath != null && nameSpaces != null) {

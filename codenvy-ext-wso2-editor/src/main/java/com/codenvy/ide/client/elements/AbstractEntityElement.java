@@ -131,11 +131,11 @@ public abstract class AbstractEntityElement {
      */
     @Nonnull
     protected String convertNameSpaceToXMLFormat(@Nullable Array<NameSpace> nameSpaces) {
+        StringBuilder result = new StringBuilder();
+
         if (nameSpaces == null) {
             return "";
         }
-
-        StringBuilder result = new StringBuilder();
 
         for (NameSpace nameSpace : nameSpaces.asIterable()) {
             result.append(nameSpace.toString()).append(' ');

@@ -37,9 +37,9 @@ import com.codenvy.ide.client.propertiespanel.mediators.LogPropertiesPanelPresen
 import com.codenvy.ide.client.propertiespanel.mediators.SwitchPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.enrich.EnrichPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.filter.FilterPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.mediators.loopback.LoopBackPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.LoopBackPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.payloadfactory.PayloadFactoryPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.mediators.property.PropertyPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.PropertyPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.respond.RespondPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.send.SendPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.sequence.SequencePropertiesPanelPresenter;

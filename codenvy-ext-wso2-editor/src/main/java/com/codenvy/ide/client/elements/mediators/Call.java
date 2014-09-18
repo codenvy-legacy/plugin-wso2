@@ -130,9 +130,8 @@ public class Call extends AbstractElement {
                        "</call>";
 
             case XPATH:
-
                 Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
-                String serializedNameSpaces = nameSpaces != null ? convertNameSpaceToXMLFormat(nameSpaces) : "";
+                String serializedNameSpaces = convertNameSpaceToXMLFormat(nameSpaces);
 
                 return content + ">\n" +
                        '<' + ENDPOINT_PROPERTY_NAME + ' ' + serializedNameSpaces +
@@ -222,19 +221,25 @@ public class Call extends AbstractElement {
                 break;
 
             default:
-                if (StringUtils.startsWith(PREFIX, attributeName, true)) {
-                    String name = StringUtils.trimStart(attributeName, PREFIX + ':');
+                applyNameSpaces(attributeName, attributeValue);
+        }
+    }
 
-                    NameSpace nameSpace = nameSpaceProvider.get();
+    private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        if (!StringUtils.startsWith(PREFIX, attributeName, true)) {
+            return;
+        }
 
-                    nameSpace.setPrefix(name);
-                    nameSpace.setUri(attributeValue);
+        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
 
-                    Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
-                    if (nameSpaces != null) {
-                        nameSpaces.add(nameSpace);
-                    }
-                }
+        NameSpace nameSpace = nameSpaceProvider.get();
+
+        nameSpace.setPrefix(name);
+        nameSpace.setUri(attributeValue);
+
+        Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
+        if (nameSpaces != null) {
+            nameSpaces.add(nameSpace);
         }
     }
 
