@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codenvy.ide.client.initializers;
+package com.codenvy.ide.client.initializers.propertiespanel;
 
 import com.codenvy.ide.client.elements.connectors.salesforce.Create;
 import com.codenvy.ide.client.elements.connectors.salesforce.Delete;
@@ -31,6 +31,7 @@ import com.codenvy.ide.client.elements.connectors.salesforce.SetPassword;
 import com.codenvy.ide.client.elements.connectors.salesforce.UnDelete;
 import com.codenvy.ide.client.elements.connectors.salesforce.Update;
 import com.codenvy.ide.client.elements.connectors.salesforce.Upset;
+import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.CreateConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.DeleteConnectorPresenter;

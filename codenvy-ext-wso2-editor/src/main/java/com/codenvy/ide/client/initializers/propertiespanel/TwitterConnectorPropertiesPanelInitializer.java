@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codenvy.ide.client.initializers;
+package com.codenvy.ide.client.initializers.propertiespanel;
 
 import com.codenvy.ide.client.elements.connectors.twitter.DestroyStatus;
 import com.codenvy.ide.client.elements.connectors.twitter.GetClosesTrends;
@@ -36,6 +36,7 @@ import com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter;
 import com.codenvy.ide.client.elements.connectors.twitter.SendDirectMessage;
 import com.codenvy.ide.client.elements.connectors.twitter.ShowStatus;
 import com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus;
+import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
 import com.codenvy.ide.client.propertiespanel.connectors.twitter.DestroyStatusConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.twitter.GetClosesTrendsConnectorPresenter;

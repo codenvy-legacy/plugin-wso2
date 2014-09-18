@@ -17,14 +17,18 @@ package com.codenvy.ide.client.inject;
 
 import com.codenvy.ide.client.elements.widgets.element.ElementView;
 import com.codenvy.ide.client.elements.widgets.element.ElementViewImpl;
-import com.codenvy.ide.client.initializers.EndpointsPropertiesPanelInitializer;
-import com.codenvy.ide.client.initializers.GeneralElementsPropertiesPanelInitializer;
-import com.codenvy.ide.client.initializers.GoogleSpreadSheetPropertiesPanelInitializer;
 import com.codenvy.ide.client.initializers.Initializer;
-import com.codenvy.ide.client.initializers.JiraConnectorPropertiesPanelInitializer;
-import com.codenvy.ide.client.initializers.MediatorsPropertiesPanelInitializer;
-import com.codenvy.ide.client.initializers.SalesForceConnectorPropertiesPanelInitializer;
-import com.codenvy.ide.client.initializers.TwitterConnectorPropertiesPanelInitializer;
+import com.codenvy.ide.client.initializers.propertiespanel.EndpointsPropertiesPanelInitializer;
+import com.codenvy.ide.client.initializers.propertiespanel.GeneralElementsPropertiesPanelInitializer;
+import com.codenvy.ide.client.initializers.propertiespanel.GoogleSpreadSheetPropertiesPanelInitializer;
+import com.codenvy.ide.client.initializers.propertiespanel.JiraConnectorPropertiesPanelInitializer;
+import com.codenvy.ide.client.initializers.propertiespanel.MediatorsPropertiesPanelInitializer;
+import com.codenvy.ide.client.initializers.propertiespanel.SalesForceConnectorPropertiesPanelInitializer;
+import com.codenvy.ide.client.initializers.propertiespanel.TwitterConnectorPropertiesPanelInitializer;
+import com.codenvy.ide.client.initializers.propertytype.CommonPropertyTypeInitializer;
+import com.codenvy.ide.client.initializers.propertytype.ConnectorPropertyTypeInitializer;
+import com.codenvy.ide.client.initializers.propertytype.EndpointsPropertyTypeInitializer;
+import com.codenvy.ide.client.initializers.propertytype.MediatorsPropertyTypeInitializer;
 import com.codenvy.ide.client.inject.factories.ElementWidgetFactory;
 import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.inject.factories.ToolbarFactory;
@@ -64,6 +68,11 @@ public class GinModule extends AbstractGinModule {
         initializers.addBinding().to(JiraConnectorPropertiesPanelInitializer.class);
         initializers.addBinding().to(TwitterConnectorPropertiesPanelInitializer.class);
         initializers.addBinding().to(GoogleSpreadSheetPropertiesPanelInitializer.class);
+
+        initializers.addBinding().to(MediatorsPropertyTypeInitializer.class);
+        initializers.addBinding().to(EndpointsPropertyTypeInitializer.class);
+        initializers.addBinding().to(ConnectorPropertyTypeInitializer.class);
+        initializers.addBinding().to(CommonPropertyTypeInitializer.class);
     }
 
 }

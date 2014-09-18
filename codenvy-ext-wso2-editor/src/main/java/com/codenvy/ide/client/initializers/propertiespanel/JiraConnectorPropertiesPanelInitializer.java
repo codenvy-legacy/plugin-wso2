@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codenvy.ide.client.initializers;
+package com.codenvy.ide.client.initializers.propertiespanel;
 
 import com.codenvy.ide.client.elements.connectors.jira.AddAttachmentToIssueId;
 import com.codenvy.ide.client.elements.connectors.jira.CreateFilter;
@@ -64,6 +64,7 @@ import com.codenvy.ide.client.elements.connectors.salesforce.QueryAll;
 import com.codenvy.ide.client.elements.connectors.salesforce.QueryMore;
 import com.codenvy.ide.client.elements.connectors.salesforce.ResetPassword;
 import com.codenvy.ide.client.elements.connectors.salesforce.Retrieve;
+import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.AddAttachmentConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.CreateFilterConnectorPresenter;

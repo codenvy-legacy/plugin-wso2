@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.codenvy.ide.client.initializers;
+package com.codenvy.ide.client.initializers.propertiespanel;
 
 import com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint;
+import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
 import com.codenvy.ide.client.propertiespanel.endpoints.address.AddressEndpointPropertiesPanelPresenter;
 import com.google.inject.Inject;

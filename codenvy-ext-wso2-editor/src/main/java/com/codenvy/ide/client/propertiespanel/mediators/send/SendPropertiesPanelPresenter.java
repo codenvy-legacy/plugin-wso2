@@ -18,6 +18,7 @@ package com.codenvy.ide.client.propertiespanel.mediators.send;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.Send;
+import com.codenvy.ide.client.initializers.propertytype.CommonPropertyTypeInitializer;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
@@ -29,8 +30,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
-
-import static com.codenvy.ide.client.editor.WSO2Editor.BOOLEAN_TYPE_NAME;
+import java.util.List;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of Send mediator
@@ -187,13 +187,15 @@ public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send, 
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setSkipSerializationStates(propertyTypeManager.getValuesByName(BOOLEAN_TYPE_NAME));
+        List<String> booleanValues = propertyTypeManager.getValuesByName(CommonPropertyTypeInitializer.BOOLEAN_TYPE_NAME);
+
+        view.setSkipSerializationStates(booleanValues);
 
         view.setReceivingSequencerTypes(propertyTypeManager.getValuesByName(Send.SequenceType.TYPE_NAME));
         view.selectReceivingSequencerType(element.getSequencerType().name());
         applySequenceType();
 
-        view.setBuildMessageBeforeSending(propertyTypeManager.getValuesByName(BOOLEAN_TYPE_NAME));
+        view.setBuildMessageBeforeSending(booleanValues);
         view.selectBuildMessageBeforeSending(String.valueOf(element.getBuildMessage()));
 
         view.setDescription(element.getDescription());

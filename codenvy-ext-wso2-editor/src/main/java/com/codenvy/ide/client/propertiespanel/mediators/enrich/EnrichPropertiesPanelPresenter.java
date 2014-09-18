@@ -21,10 +21,10 @@ import com.codenvy.ide.client.elements.mediators.enrich.Enrich;
 import com.codenvy.ide.client.elements.mediators.enrich.Target;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
-import com.codenvy.ide.client.propertiespanel.mediators.inline.ChangeInlineFormatCallBack;
-import com.codenvy.ide.client.propertiespanel.mediators.inline.InlineConfigurationPresenter;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
+import com.codenvy.ide.client.propertiespanel.mediators.inline.ChangeInlineFormatCallBack;
+import com.codenvy.ide.client.propertiespanel.mediators.inline.InlineConfigurationPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.resourcekeyeditor.ChangeResourceKeyCallBack;
 import com.codenvy.ide.client.propertiespanel.mediators.resourcekeyeditor.ResourceKeyEditorPresenter;
 import com.codenvy.ide.collections.Array;
@@ -34,12 +34,12 @@ import com.google.inject.Inject;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.codenvy.ide.client.editor.WSO2Editor.BOOLEAN_TYPE_NAME;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType.SourceXML;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType.custom;
 import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetType;
+import static com.codenvy.ide.client.initializers.propertytype.CommonPropertyTypeInitializer.BOOLEAN_TYPE_NAME;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of Call mediator

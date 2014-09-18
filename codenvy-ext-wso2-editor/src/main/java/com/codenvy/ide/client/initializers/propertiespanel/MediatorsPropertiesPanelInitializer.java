@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codenvy.ide.client.initializers;
+package com.codenvy.ide.client.initializers.propertiespanel;
 
 import com.codenvy.ide.client.elements.mediators.Call;
 import com.codenvy.ide.client.elements.mediators.CallTemplate;
@@ -29,6 +29,7 @@ import com.codenvy.ide.client.elements.mediators.Switch;
 import com.codenvy.ide.client.elements.mediators.enrich.Enrich;
 import com.codenvy.ide.client.elements.mediators.log.Log;
 import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
+import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
 import com.codenvy.ide.client.propertiespanel.mediators.SwitchPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.CallPropertiesPanelPresenter;

@@ -37,7 +37,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import static com.codenvy.ide.client.editor.WSO2Editor.BOOLEAN_TYPE_NAME;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.ADDRESSING_ENABLED;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.ADDRESSING_SEPARATE_LISTENER;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.ADDRESSING_VERSION;
@@ -63,6 +62,7 @@ import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressE
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TIMEOUT_DURATION;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.URI;
+import static com.codenvy.ide.client.initializers.propertytype.CommonPropertyTypeInitializer.BOOLEAN_TYPE_NAME;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of Address endpoint

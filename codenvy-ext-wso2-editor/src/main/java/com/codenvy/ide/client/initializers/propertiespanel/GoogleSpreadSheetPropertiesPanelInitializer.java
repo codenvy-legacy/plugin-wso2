@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codenvy.ide.client.initializers;
+package com.codenvy.ide.client.initializers.propertiespanel;
 
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.CreateSpreadsheet;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.CreateWorksheet;
@@ -36,6 +36,7 @@ import com.codenvy.ide.client.elements.connectors.googlespreadsheet.SearchCell;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.SetRow;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.UpdateWorksheetMetadata;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.UsernameLogin;
+import com.codenvy.ide.client.initializers.Initializer;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
 import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.CreateSpreadsheetConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet.CreateWorksheetConnectorPresenter;
