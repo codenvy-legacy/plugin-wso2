@@ -19,7 +19,7 @@ import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
@@ -84,7 +84,7 @@ public class GetRetweetsOfMine extends AbstractConnector {
     private Array<NameSpace> pageNS;
 
     @Inject
-    public GetRetweetsOfMine(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+    public GetRetweetsOfMine(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
         super(ELEMENT_NAME,
               ELEMENT_NAME,
               SERIALIZATION_NAME,
@@ -93,7 +93,7 @@ public class GetRetweetsOfMine extends AbstractConnector {
               true,
               resources.twitterElement(),
               branchProvider,
-              mediatorCreatorsManager);
+              elementCreatorsManager);
 
         consumerKey = "";
         consumerSecret = "";

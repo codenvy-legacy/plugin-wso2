@@ -65,7 +65,7 @@ import com.google.inject.Inject;
  */
 public class GoogleSpreadSheetPropertiesPanelInitializer implements Initializer {
 
-    private final PropertiesPanelManager                    propertiesPanelManager;
+    private final PropertiesPanelManager                    manager;
     private final CreateSpreadsheetConnectorPresenter       createSpreadsheetPropertiesPanel;
     private final CreateWorksheetConnectorPresenter         createWorksheetPropertiesPanel;
     private final DeleteWorksheetConnectorPresenter         deleteWorksheetPropertiesPanel;
@@ -88,7 +88,7 @@ public class GoogleSpreadSheetPropertiesPanelInitializer implements Initializer 
     private final UsernameLoginConnectorPresenter           usernameLoginPropertiesPanel;
 
     @Inject
-    public GoogleSpreadSheetPropertiesPanelInitializer(PropertiesPanelManager propertiesPanelManager,
+    public GoogleSpreadSheetPropertiesPanelInitializer(PropertiesPanelManager manager,
                                                        CreateSpreadsheetConnectorPresenter createSpreadsheetPropertiesPanel,
                                                        CreateWorksheetConnectorPresenter createWorksheetPropertiesPanel,
                                                        DeleteWorksheetConnectorPresenter deleteWorksheetPropertiesPanel,
@@ -109,7 +109,7 @@ public class GoogleSpreadSheetPropertiesPanelInitializer implements Initializer 
                                                        SetRowConnectorPresenter setRowPropertiesPanel,
                                                        UpdateWorksheetMetadataConnectorPresenter updateWorksheetMetadataPropertiesPanel,
                                                        UsernameLoginConnectorPresenter usernameLoginPropertiesPanel) {
-        this.propertiesPanelManager = propertiesPanelManager;
+        this.manager = manager;
         this.createSpreadsheetPropertiesPanel = createSpreadsheetPropertiesPanel;
         this.createWorksheetPropertiesPanel = createWorksheetPropertiesPanel;
         this.deleteWorksheetPropertiesPanel = deleteWorksheetPropertiesPanel;
@@ -135,26 +135,26 @@ public class GoogleSpreadSheetPropertiesPanelInitializer implements Initializer 
     /** {@inheritDoc} */
     @Override
     public void initialize() {
-        propertiesPanelManager.register(CreateSpreadsheet.class, createSpreadsheetPropertiesPanel);
-        propertiesPanelManager.register(CreateWorksheet.class, createWorksheetPropertiesPanel);
-        propertiesPanelManager.register(DeleteWorksheet.class, deleteWorksheetPropertiesPanel);
-        propertiesPanelManager.register(GetAllCells.class, getAllCellsPropertiesPanel);
-        propertiesPanelManager.register(GetAllCellsCSV.class, getAllCellsCSVPropertiesPanel);
-        propertiesPanelManager.register(GetAllWorksheets.class, getAllWorksheetsPropertiesPanel);
-        propertiesPanelManager.register(GetAllSpreadsheets.class, getAllSpreadsheetsPropertiesPanel);
-        propertiesPanelManager.register(GetAuthors.class, getAuthorsPropertiesPanel);
-        propertiesPanelManager.register(GetCellRange.class, getCellRangePropertiesPanel);
-        propertiesPanelManager.register(GetCellRangeCSV.class, getCellCSVRangePropertiesPanel);
-        propertiesPanelManager.register(GetColumnHeaders.class, getColumnHeadersPropertiesPanel);
-        propertiesPanelManager.register(GetSpreadsheetsByTitle.class, getSpreadsheetsByTitlePropertiesPanel);
-        propertiesPanelManager.register(GetWorksheetsByTitle.class, getWorksheetsByTitlePropertiesPanel);
-        propertiesPanelManager.register(ImportCSV.class, importCSVPropertiesPanel);
-        propertiesPanelManager.register(InitSpreadsheet.class, initSpreadsheetPropertiesPanel);
-        propertiesPanelManager.register(PurgeWorkshet.class, purgeWorksheetPropertiesPanel);
-        propertiesPanelManager.register(SearchCell.class, searchCellPropertiesPanel);
-        propertiesPanelManager.register(SetRow.class, setRowPropertiesPanel);
-        propertiesPanelManager.register(UpdateWorksheetMetadata.class, updateWorksheetMetadataPropertiesPanel);
-        propertiesPanelManager.register(UsernameLogin.class, usernameLoginPropertiesPanel);
+        manager.register(CreateSpreadsheet.class, createSpreadsheetPropertiesPanel);
+        manager.register(CreateWorksheet.class, createWorksheetPropertiesPanel);
+        manager.register(DeleteWorksheet.class, deleteWorksheetPropertiesPanel);
+        manager.register(GetAllCells.class, getAllCellsPropertiesPanel);
+        manager.register(GetAllCellsCSV.class, getAllCellsCSVPropertiesPanel);
+        manager.register(GetAllWorksheets.class, getAllWorksheetsPropertiesPanel);
+        manager.register(GetAllSpreadsheets.class, getAllSpreadsheetsPropertiesPanel);
+        manager.register(GetAuthors.class, getAuthorsPropertiesPanel);
+        manager.register(GetCellRange.class, getCellRangePropertiesPanel);
+        manager.register(GetCellRangeCSV.class, getCellCSVRangePropertiesPanel);
+        manager.register(GetColumnHeaders.class, getColumnHeadersPropertiesPanel);
+        manager.register(GetSpreadsheetsByTitle.class, getSpreadsheetsByTitlePropertiesPanel);
+        manager.register(GetWorksheetsByTitle.class, getWorksheetsByTitlePropertiesPanel);
+        manager.register(ImportCSV.class, importCSVPropertiesPanel);
+        manager.register(InitSpreadsheet.class, initSpreadsheetPropertiesPanel);
+        manager.register(PurgeWorkshet.class, purgeWorksheetPropertiesPanel);
+        manager.register(SearchCell.class, searchCellPropertiesPanel);
+        manager.register(SetRow.class, setRowPropertiesPanel);
+        manager.register(UpdateWorksheetMetadata.class, updateWorksheetMetadataPropertiesPanel);
+        manager.register(UsernameLogin.class, usernameLoginPropertiesPanel);
     }
 
 }

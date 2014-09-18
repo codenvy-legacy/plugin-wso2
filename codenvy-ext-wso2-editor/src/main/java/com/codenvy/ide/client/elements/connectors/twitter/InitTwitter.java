@@ -19,7 +19,7 @@ import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
@@ -71,7 +71,7 @@ public class InitTwitter extends AbstractConnector {
     private Array<NameSpace> accessTokenSecretNS;
 
     @Inject
-    public InitTwitter(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+    public InitTwitter(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
         super(ELEMENT_NAME,
               ELEMENT_NAME,
               SERIALIZATION_NAME,
@@ -80,7 +80,7 @@ public class InitTwitter extends AbstractConnector {
               true,
               resources.twitterElement(),
               branchProvider,
-              mediatorCreatorsManager);
+              elementCreatorsManager);
 
         consumerKey = "";
         consumerSecret = "";

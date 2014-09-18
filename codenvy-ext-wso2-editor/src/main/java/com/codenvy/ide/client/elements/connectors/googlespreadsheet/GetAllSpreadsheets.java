@@ -18,7 +18,7 @@ package com.codenvy.ide.client.elements.connectors.googlespreadsheet;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -41,7 +41,7 @@ public class GetAllSpreadsheets extends AbstractConnector {
     private static final List<String> PROPERTIES = Arrays.asList();
 
     @Inject
-    public GetAllSpreadsheets(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+    public GetAllSpreadsheets(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
         super(ELEMENT_NAME,
               ELEMENT_NAME,
               SERIALIZATION_NAME,
@@ -50,7 +50,7 @@ public class GetAllSpreadsheets extends AbstractConnector {
               true,
               resources.googleSpreadsheetElement(),
               branchProvider,
-              mediatorCreatorsManager);
+              elementCreatorsManager);
 
         parameterEditorType = ParameterEditorType.Inline;
     }

@@ -19,15 +19,13 @@ import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.codenvy.ide.collections.Array;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -61,7 +59,7 @@ public class GetIssuePriorityById extends AbstractConnector {
     @Inject
     public GetIssuePriorityById(EditorResources resources,
                                 Provider<Branch> branchProvider,
-                                MediatorCreatorsManager mediatorCreatorsManager) {
+                                ElementCreatorsManager elementCreatorsManager) {
         super(ELEMENT_NAME,
               ELEMENT_NAME,
               SERIALIZATION_NAME,
@@ -70,7 +68,7 @@ public class GetIssuePriorityById extends AbstractConnector {
               true,
               resources.jiraIcon(),
               branchProvider,
-              mediatorCreatorsManager);
+              elementCreatorsManager);
 
         issuePriorityId = "";
         issuePriorityExpression = "";

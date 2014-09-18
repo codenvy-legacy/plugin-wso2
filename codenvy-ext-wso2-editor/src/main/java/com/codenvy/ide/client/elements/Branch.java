@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.elements;
 
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
@@ -41,18 +41,18 @@ import java.util.Map;
  */
 public class Branch {
 
-    private final String                  id;
-    private final List<AbstractElement>   elements;
-    private final Map<String, String>     attributes;
-    private final MediatorCreatorsManager mediatorCreatorsManager;
+    private final String                 id;
+    private final List<AbstractElement>  elements;
+    private final Map<String, String>    attributes;
+    private final ElementCreatorsManager elementCreatorsManager;
 
     private String  title;
     private String  name;
     private Element parent;
 
     @Inject
-    public Branch(MediatorCreatorsManager mediatorCreatorsManager) {
-        this.mediatorCreatorsManager = mediatorCreatorsManager;
+    public Branch(ElementCreatorsManager elementCreatorsManager) {
+        this.elementCreatorsManager = elementCreatorsManager;
 
         id = UUID.get();
 
@@ -199,7 +199,7 @@ public class Branch {
             Node item = childNodes.item(i);
             String nodeName = item.getNodeName();
 
-            Provider<? extends Element> elementProvider = mediatorCreatorsManager.getProviderBySerializeName(nodeName);
+            Provider<? extends Element> elementProvider = elementCreatorsManager.getProviderBySerializeName(nodeName);
             Element element = elementProvider == null ? null : elementProvider.get();
 
             if (element == null) {

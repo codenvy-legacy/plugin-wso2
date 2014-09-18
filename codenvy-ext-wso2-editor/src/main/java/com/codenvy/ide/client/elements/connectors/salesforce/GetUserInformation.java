@@ -18,7 +18,7 @@ package com.codenvy.ide.client.elements.connectors.salesforce;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -42,7 +42,7 @@ public class GetUserInformation extends AbstractConnector {
     @Inject
     public GetUserInformation(EditorResources resources,
                               Provider<Branch> branchProvider,
-                              MediatorCreatorsManager mediatorCreatorsManager) {
+                              ElementCreatorsManager elementCreatorsManager) {
 
         super(ELEMENT_NAME,
               ELEMENT_NAME,
@@ -52,7 +52,7 @@ public class GetUserInformation extends AbstractConnector {
               true,
               resources.salesforce(),
               branchProvider,
-              mediatorCreatorsManager);
+              elementCreatorsManager);
 
     }
 

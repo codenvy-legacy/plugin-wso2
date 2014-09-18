@@ -18,7 +18,7 @@ package com.codenvy.ide.client.elements.endpoints.addressendpoint;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.gwt.xml.client.NamedNodeMap;
@@ -121,7 +121,7 @@ public class AddressEndpoint extends AbstractElement {
     @Inject
     public AddressEndpoint(EditorResources resources,
                            Provider<Branch> branchProvider,
-                           MediatorCreatorsManager mediatorCreatorsManager,
+                           ElementCreatorsManager elementCreatorsManager,
                            Provider<Property> propertyProvider) {
         super(ELEMENT_NAME,
               ELEMENT_NAME,
@@ -131,7 +131,7 @@ public class AddressEndpoint extends AbstractElement {
               true,
               resources.address(),
               branchProvider,
-              mediatorCreatorsManager);
+              elementCreatorsManager);
 
         this.propertyProvider = propertyProvider;
 

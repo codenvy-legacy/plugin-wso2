@@ -18,7 +18,7 @@ package com.codenvy.ide.client.elements.mediators;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -51,7 +51,7 @@ public class Respond extends AbstractElement {
     private String description;
 
     @Inject
-    public Respond(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+    public Respond(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
         super(ELEMENT_NAME,
               ELEMENT_NAME,
               SERIALIZATION_NAME,
@@ -60,7 +60,7 @@ public class Respond extends AbstractElement {
               true,
               resources.respond(),
               branchProvider,
-              mediatorCreatorsManager);
+              elementCreatorsManager);
 
         description = "";
     }

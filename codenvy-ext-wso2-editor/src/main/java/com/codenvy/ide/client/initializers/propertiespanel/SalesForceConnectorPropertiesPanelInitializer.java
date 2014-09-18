@@ -55,7 +55,7 @@ import com.google.inject.Inject;
  */
 public class SalesForceConnectorPropertiesPanelInitializer implements Initializer {
 
-    private final PropertiesPanelManager               propertiesPanelManager;
+    private final PropertiesPanelManager               manager;
     private final InitSalesforceConnectorPresenter     initPropertiesPanel;
     private final CreateConnectorPresenter             createPropertiesPanel;
     private final UpdateConnectorPresenter             updatePropertiesPanel;
@@ -73,7 +73,7 @@ public class SalesForceConnectorPropertiesPanelInitializer implements Initialize
     private final SendEmailConnectorPresenter          sendEmailPropertiesPanel;
 
     @Inject
-    public SalesForceConnectorPropertiesPanelInitializer(PropertiesPanelManager propertiesPanelManager,
+    public SalesForceConnectorPropertiesPanelInitializer(PropertiesPanelManager manager,
                                                          InitSalesforceConnectorPresenter initPropertiesPanel,
                                                          CreateConnectorPresenter createPropertiesPanel,
                                                          UpdateConnectorPresenter updatePropertiesPanel,
@@ -89,7 +89,7 @@ public class SalesForceConnectorPropertiesPanelInitializer implements Initialize
                                                          SetPasswordConnectorPresenter passwordPropertiesPanel,
                                                          SendEmailMessageConnectorPresenter sendEmailMessagePropertiesPanel,
                                                          SendEmailConnectorPresenter sendEmailPropertiesPanel) {
-        this.propertiesPanelManager = propertiesPanelManager;
+        this.manager = manager;
         this.initPropertiesPanel = initPropertiesPanel;
         this.createPropertiesPanel = createPropertiesPanel;
         this.updatePropertiesPanel = updatePropertiesPanel;
@@ -110,21 +110,21 @@ public class SalesForceConnectorPropertiesPanelInitializer implements Initialize
     /** {@inheritDoc} */
     @Override
     public void initialize() {
-        propertiesPanelManager.register(InitSalesforce.class, initPropertiesPanel);
-        propertiesPanelManager.register(Create.class, createPropertiesPanel);
-        propertiesPanelManager.register(Update.class, updatePropertiesPanel);
-        propertiesPanelManager.register(Delete.class, deletePropertiesPanel);
-        propertiesPanelManager.register(DescribeGlobal.class, describeGlobalPropertiesPanel);
-        propertiesPanelManager.register(DescribeSubject.class, describeSubjectPropertiesPanel);
-        propertiesPanelManager.register(DescribeSubjects.class, describePropertiesPanel);
-        propertiesPanelManager.register(EmptyRecycleBin.class, emptyRecycleBinPropertiesPanel);
-        propertiesPanelManager.register(LogOut.class, logOutPropertiesPanel);
-        propertiesPanelManager.register(GetUserInformation.class, getUserInformationPropertiesPanel);
-        propertiesPanelManager.register(Upset.class, upsetPropertiesPanel);
-        propertiesPanelManager.register(UnDelete.class, undeletePropertiesPanel);
-        propertiesPanelManager.register(SetPassword.class, passwordPropertiesPanel);
-        propertiesPanelManager.register(SendEmailMessage.class, sendEmailMessagePropertiesPanel);
-        propertiesPanelManager.register(SendEmail.class, sendEmailPropertiesPanel);
+        manager.register(InitSalesforce.class, initPropertiesPanel);
+        manager.register(Create.class, createPropertiesPanel);
+        manager.register(Update.class, updatePropertiesPanel);
+        manager.register(Delete.class, deletePropertiesPanel);
+        manager.register(DescribeGlobal.class, describeGlobalPropertiesPanel);
+        manager.register(DescribeSubject.class, describeSubjectPropertiesPanel);
+        manager.register(DescribeSubjects.class, describePropertiesPanel);
+        manager.register(EmptyRecycleBin.class, emptyRecycleBinPropertiesPanel);
+        manager.register(LogOut.class, logOutPropertiesPanel);
+        manager.register(GetUserInformation.class, getUserInformationPropertiesPanel);
+        manager.register(Upset.class, upsetPropertiesPanel);
+        manager.register(UnDelete.class, undeletePropertiesPanel);
+        manager.register(SetPassword.class, passwordPropertiesPanel);
+        manager.register(SendEmailMessage.class, sendEmailMessagePropertiesPanel);
+        manager.register(SendEmail.class, sendEmailPropertiesPanel);
     }
 
 }

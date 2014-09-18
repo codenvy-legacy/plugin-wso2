@@ -30,21 +30,21 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  */
 public class ConnectorPropertyTypeInitializer implements Initializer {
 
-    private final PropertyTypeManager propertyTypeManager;
+    private final PropertyTypeManager manager;
 
     @Inject
-    public ConnectorPropertyTypeInitializer(PropertyTypeManager propertyTypeManager) {
-        this.propertyTypeManager = propertyTypeManager;
+    public ConnectorPropertyTypeInitializer(PropertyTypeManager manager) {
+        this.manager = manager;
     }
 
     /** {@inheritDoc} */
     @Override
     public void initialize() {
-        propertyTypeManager.register(ParameterEditorType.TYPE_NAME, Arrays.asList(ParameterEditorType.Inline.name(),
-                                                                                  ParameterEditorType.NamespacedPropertyEditor.name()));
+        manager.register(ParameterEditorType.TYPE_NAME, Arrays.asList(ParameterEditorType.Inline.name(),
+                                                                      ParameterEditorType.NamespacedPropertyEditor.name()));
 
-        propertyTypeManager.register(AvailableConfigs.TYPE_NAME, Arrays.asList(AvailableConfigs.EMPTY.getValue(),
-                                                                               AvailableConfigs.SELECT_FROM_CONFIG.getValue()));
+        manager.register(AvailableConfigs.TYPE_NAME, Arrays.asList(AvailableConfigs.EMPTY.getValue(),
+                                                                   AvailableConfigs.SELECT_FROM_CONFIG.getValue()));
     }
 
 }

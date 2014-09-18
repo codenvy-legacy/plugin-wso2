@@ -121,7 +121,7 @@ import com.google.inject.Inject;
  */
 public class JiraConnectorPropertiesPanelInitializer implements Initializer {
 
-    private final PropertiesPanelManager                             propertiesPanelManager;
+    private final PropertiesPanelManager                             manager;
     private final SearchConnectorPresenter                           searchPropertiesPanel;
     private final RetrieveConnectorPresenter                         retrievePropertiesPanel;
     private final QueryConnectorPresenter                            queryPropertiesPanel;
@@ -173,7 +173,7 @@ public class JiraConnectorPropertiesPanelInitializer implements Initializer {
     private final UpdateIssueAssigneeConnectorPresenter              updateIssueAssigneePropertiesPanel;
 
     @Inject
-    public JiraConnectorPropertiesPanelInitializer(PropertiesPanelManager propertiesPanelManager,
+    public JiraConnectorPropertiesPanelInitializer(PropertiesPanelManager manager,
                                                    SearchConnectorPresenter searchPropertiesPanel,
                                                    RetrieveConnectorPresenter retrievePropertiesPanel,
                                                    QueryConnectorPresenter queryPropertiesPanel,
@@ -223,7 +223,7 @@ public class JiraConnectorPropertiesPanelInitializer implements Initializer {
                                                    UpdateFilterByIdConnectorPresenter updateFilterByIdPropertiesPanel,
                                                    UpdateIssueConnectorPresenter updateIssuePropertiesPanel,
                                                    UpdateIssueAssigneeConnectorPresenter updateIssueAssigneePropertiesPanel) {
-        this.propertiesPanelManager = propertiesPanelManager;
+        this.manager = manager;
         this.searchPropertiesPanel = searchPropertiesPanel;
         this.retrievePropertiesPanel = retrievePropertiesPanel;
         this.queryPropertiesPanel = queryPropertiesPanel;
@@ -278,55 +278,55 @@ public class JiraConnectorPropertiesPanelInitializer implements Initializer {
     /** {@inheritDoc} */
     @Override
     public void initialize() {
-        propertiesPanelManager.register(Query.class, queryPropertiesPanel);
-        propertiesPanelManager.register(QueryAll.class, queryAllPropertiesPanel);
-        propertiesPanelManager.register(QueryMore.class, queryMorePropertiesPanel);
-        propertiesPanelManager.register(ResetPassword.class, resetPasswordPropertiesPanel);
-        propertiesPanelManager.register(SearchJira.class, searchPropertiesPanel);
-        propertiesPanelManager.register(Retrieve.class, retrievePropertiesPanel);
-        propertiesPanelManager.register(AddAttachmentToIssueId.class, addAttachmentPropertiesPanel);
-        propertiesPanelManager.register(CreateFilter.class, createFilterPropertiesPanel);
-        propertiesPanelManager.register(CreateIssue.class, createIssuePropertiesPanel);
-        propertiesPanelManager.register(DeleteAvatarForProject.class, deleteAvatarPropertiesPanel);
-        propertiesPanelManager.register(DeleteComment.class, deleteCommentPropertiesPanel);
-        propertiesPanelManager.register(DeleteFilter.class, deleteFilterPropertiesPanel);
-        propertiesPanelManager.register(GetDashboard.class, getDashboardPropertiesPanel);
-        propertiesPanelManager.register(DoTransition.class, doTransitionPropertiesPanel);
-        propertiesPanelManager.register(GetAvatarsForProject.class, getAvatarsPropertiesPanel);
-        propertiesPanelManager.register(GetComments.class, getCommentsPropertiesPanel);
-        propertiesPanelManager.register(GetComponentsOfProject.class, getComponentsPropertiesPanel);
-        propertiesPanelManager.register(GetDashboardById.class, getDashBoardByIdPropertiesPanel);
-        propertiesPanelManager.register(GetFavouriteFilters.class, getFavouriteFiltersPropertiesPanel);
-        propertiesPanelManager.register(GetFilterById.class, getFilterByIdPropertiesPanel);
-        propertiesPanelManager.register(GetGroup.class, getGroupPropertiesPanel);
-        propertiesPanelManager.register(GetIssue.class, getIssuePropertiesPanel);
-        propertiesPanelManager.register(GetIssuePriorities.class, getIssuePrioritiesPropertiesPanel);
-        propertiesPanelManager.register(GetIssuePriorityById.class, getIssuePriorityByIdPropertiesPanel);
-        propertiesPanelManager.register(GetIssueTypeById.class, getIssueTypeByIdPropertiesPanel);
-        propertiesPanelManager.register(GetIssueTypes.class, getIssueTypesPropertiesPanel);
-        propertiesPanelManager.register(GetIssuesForUser.class, getIssuesForUserPropertiesPanel);
-        propertiesPanelManager.register(GetProject.class, getProjectPropertiesPanel);
-        propertiesPanelManager.register(GetRolesByIdOfProject.class, getRolesByIdOfProjectPropertiesPanel);
-        propertiesPanelManager.register(GetRolesOfProject.class, getRolesOfProjectPropertiesPanel);
-        propertiesPanelManager.register(GetStatusesOfProject.class, getStatusesOfProjectPropertiesPanel);
-        propertiesPanelManager.register(GetTransitions.class, getTransitionsPropertiesPanel);
-        propertiesPanelManager.register(GetUser.class, getUserPropertiesPanel);
-        propertiesPanelManager.register(GetUserAssignableProjects.class, getUserAssignableProjectsPropertiesPanel);
-        propertiesPanelManager.register(GetUserPermissions.class, getUserPermissionsPropertiesPanel);
-        propertiesPanelManager.register(GetVersionsOfProject.class, getVersionsOfProjectPropertiesPanel);
-        propertiesPanelManager.register(GetVotesForIssue.class, getVotesForIssuePropertiesPanel);
-        propertiesPanelManager.register(InitJira.class, initJiraPropertiesPanel);
-        propertiesPanelManager.register(PostComment.class, postCommentPropertiesPanel);
-        propertiesPanelManager.register(SearchAssignableUser.class, searchAssignableUserPropertiesPanel);
-        propertiesPanelManager.register(SearchAssignableUserMultiProject.class, searchAssignableUserMultiPropertiesPanel);
-        propertiesPanelManager.register(SearchIssueViewableUsers.class, searchIssueViewAbleUsersPropertiesPanel);
-        propertiesPanelManager.register(SearchJira.class, searchJiraPropertiesPanel);
-        propertiesPanelManager.register(SearchUser.class, searchUserPropertiesPanel);
-        propertiesPanelManager.register(SetActorsToRoleOfProject.class, setActorsToRoleOfProjectPropertiesPanel);
-        propertiesPanelManager.register(UpdateComment.class, updateCommentPropertiesPanel);
-        propertiesPanelManager.register(UpdateFilterById.class, updateFilterByIdPropertiesPanel);
-        propertiesPanelManager.register(UpdateIssue.class, updateIssuePropertiesPanel);
-        propertiesPanelManager.register(UpdateIssueAssignee.class, updateIssueAssigneePropertiesPanel);
+        manager.register(Query.class, queryPropertiesPanel);
+        manager.register(QueryAll.class, queryAllPropertiesPanel);
+        manager.register(QueryMore.class, queryMorePropertiesPanel);
+        manager.register(ResetPassword.class, resetPasswordPropertiesPanel);
+        manager.register(SearchJira.class, searchPropertiesPanel);
+        manager.register(Retrieve.class, retrievePropertiesPanel);
+        manager.register(AddAttachmentToIssueId.class, addAttachmentPropertiesPanel);
+        manager.register(CreateFilter.class, createFilterPropertiesPanel);
+        manager.register(CreateIssue.class, createIssuePropertiesPanel);
+        manager.register(DeleteAvatarForProject.class, deleteAvatarPropertiesPanel);
+        manager.register(DeleteComment.class, deleteCommentPropertiesPanel);
+        manager.register(DeleteFilter.class, deleteFilterPropertiesPanel);
+        manager.register(GetDashboard.class, getDashboardPropertiesPanel);
+        manager.register(DoTransition.class, doTransitionPropertiesPanel);
+        manager.register(GetAvatarsForProject.class, getAvatarsPropertiesPanel);
+        manager.register(GetComments.class, getCommentsPropertiesPanel);
+        manager.register(GetComponentsOfProject.class, getComponentsPropertiesPanel);
+        manager.register(GetDashboardById.class, getDashBoardByIdPropertiesPanel);
+        manager.register(GetFavouriteFilters.class, getFavouriteFiltersPropertiesPanel);
+        manager.register(GetFilterById.class, getFilterByIdPropertiesPanel);
+        manager.register(GetGroup.class, getGroupPropertiesPanel);
+        manager.register(GetIssue.class, getIssuePropertiesPanel);
+        manager.register(GetIssuePriorities.class, getIssuePrioritiesPropertiesPanel);
+        manager.register(GetIssuePriorityById.class, getIssuePriorityByIdPropertiesPanel);
+        manager.register(GetIssueTypeById.class, getIssueTypeByIdPropertiesPanel);
+        manager.register(GetIssueTypes.class, getIssueTypesPropertiesPanel);
+        manager.register(GetIssuesForUser.class, getIssuesForUserPropertiesPanel);
+        manager.register(GetProject.class, getProjectPropertiesPanel);
+        manager.register(GetRolesByIdOfProject.class, getRolesByIdOfProjectPropertiesPanel);
+        manager.register(GetRolesOfProject.class, getRolesOfProjectPropertiesPanel);
+        manager.register(GetStatusesOfProject.class, getStatusesOfProjectPropertiesPanel);
+        manager.register(GetTransitions.class, getTransitionsPropertiesPanel);
+        manager.register(GetUser.class, getUserPropertiesPanel);
+        manager.register(GetUserAssignableProjects.class, getUserAssignableProjectsPropertiesPanel);
+        manager.register(GetUserPermissions.class, getUserPermissionsPropertiesPanel);
+        manager.register(GetVersionsOfProject.class, getVersionsOfProjectPropertiesPanel);
+        manager.register(GetVotesForIssue.class, getVotesForIssuePropertiesPanel);
+        manager.register(InitJira.class, initJiraPropertiesPanel);
+        manager.register(PostComment.class, postCommentPropertiesPanel);
+        manager.register(SearchAssignableUser.class, searchAssignableUserPropertiesPanel);
+        manager.register(SearchAssignableUserMultiProject.class, searchAssignableUserMultiPropertiesPanel);
+        manager.register(SearchIssueViewableUsers.class, searchIssueViewAbleUsersPropertiesPanel);
+        manager.register(SearchJira.class, searchJiraPropertiesPanel);
+        manager.register(SearchUser.class, searchUserPropertiesPanel);
+        manager.register(SetActorsToRoleOfProject.class, setActorsToRoleOfProjectPropertiesPanel);
+        manager.register(UpdateComment.class, updateCommentPropertiesPanel);
+        manager.register(UpdateFilterById.class, updateFilterByIdPropertiesPanel);
+        manager.register(UpdateIssue.class, updateIssuePropertiesPanel);
+        manager.register(UpdateIssueAssignee.class, updateIssueAssigneePropertiesPanel);
     }
 
 }

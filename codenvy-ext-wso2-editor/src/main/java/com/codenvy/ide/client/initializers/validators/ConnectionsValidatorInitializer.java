@@ -28,19 +28,19 @@ import com.google.inject.Inject;
  */
 public class ConnectionsValidatorInitializer implements Initializer {
 
-    private final ConnectionsValidator connectionsValidator;
+    private final ConnectionsValidator validator;
 
     @Inject
-    public ConnectionsValidatorInitializer(ConnectionsValidator connectionsValidator) {
-        this.connectionsValidator = connectionsValidator;
+    public ConnectionsValidatorInitializer(ConnectionsValidator validator) {
+        this.validator = validator;
     }
 
     /** {@inheritDoc} */
     @Override
     public void initialize() {
-        connectionsValidator.addDisallowAllRule(Respond.ELEMENT_NAME);
-        connectionsValidator.addDisallowAllRule(LoopBack.ELEMENT_NAME);
-        connectionsValidator.addDisallowAllRule(AddressEndpoint.ELEMENT_NAME);
+        validator.addDisallowAllRule(Respond.ELEMENT_NAME);
+        validator.addDisallowAllRule(LoopBack.ELEMENT_NAME);
+        validator.addDisallowAllRule(AddressEndpoint.ELEMENT_NAME);
     }
 
 }

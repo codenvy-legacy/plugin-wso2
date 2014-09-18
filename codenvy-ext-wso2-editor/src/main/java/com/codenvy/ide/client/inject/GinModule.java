@@ -18,6 +18,12 @@ package com.codenvy.ide.client.inject;
 import com.codenvy.ide.client.elements.widgets.element.ElementView;
 import com.codenvy.ide.client.elements.widgets.element.ElementViewImpl;
 import com.codenvy.ide.client.initializers.Initializer;
+import com.codenvy.ide.client.initializers.creators.EndpointCreatorsInitializer;
+import com.codenvy.ide.client.initializers.creators.GoogleSpreadSheetConnectorCreatorsInitializer;
+import com.codenvy.ide.client.initializers.creators.JiraConnectorCreatorsInitializer;
+import com.codenvy.ide.client.initializers.creators.MediatorCreatorsInitializer;
+import com.codenvy.ide.client.initializers.creators.SalesForceConnectorCreatorsInitializer;
+import com.codenvy.ide.client.initializers.creators.TwitterConnectorCreatorsInitializer;
 import com.codenvy.ide.client.initializers.propertiespanel.EndpointsPropertiesPanelInitializer;
 import com.codenvy.ide.client.initializers.propertiespanel.GeneralElementsPropertiesPanelInitializer;
 import com.codenvy.ide.client.initializers.propertiespanel.GoogleSpreadSheetPropertiesPanelInitializer;
@@ -78,6 +84,13 @@ public class GinModule extends AbstractGinModule {
 
         initializers.addBinding().to(ConnectionsValidatorInitializer.class);
         initializers.addBinding().to(InnerElementsValidatorInitializer.class);
+
+        initializers.addBinding().to(MediatorCreatorsInitializer.class);
+        initializers.addBinding().to(EndpointCreatorsInitializer.class);
+        initializers.addBinding().to(SalesForceConnectorCreatorsInitializer.class);
+        initializers.addBinding().to(JiraConnectorCreatorsInitializer.class);
+        initializers.addBinding().to(TwitterConnectorCreatorsInitializer.class);
+        initializers.addBinding().to(GoogleSpreadSheetConnectorCreatorsInitializer.class);
     }
 
 }

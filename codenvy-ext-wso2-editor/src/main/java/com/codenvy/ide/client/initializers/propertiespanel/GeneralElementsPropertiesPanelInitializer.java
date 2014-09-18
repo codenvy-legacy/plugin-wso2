@@ -28,15 +28,15 @@ import com.google.inject.Inject;
  */
 public class GeneralElementsPropertiesPanelInitializer implements Initializer {
 
+    private final PropertiesPanelManager        manager;
     private final EmptyPropertiesPanelPresenter emptyPropertiesPanel;
     private final RootPropertiesPanelPresenter  rootPropertiesPanel;
-    private final PropertiesPanelManager        propertiesPanelManager;
 
     @Inject
-    public GeneralElementsPropertiesPanelInitializer(PropertiesPanelManager propertiesPanelManager,
+    public GeneralElementsPropertiesPanelInitializer(PropertiesPanelManager manager,
                                                      EmptyPropertiesPanelPresenter emptyPropertiesPanel,
                                                      RootPropertiesPanelPresenter rootPropertiesPanel) {
-        this.propertiesPanelManager = propertiesPanelManager;
+        this.manager = manager;
         this.emptyPropertiesPanel = emptyPropertiesPanel;
         this.rootPropertiesPanel = rootPropertiesPanel;
     }
@@ -44,8 +44,8 @@ public class GeneralElementsPropertiesPanelInitializer implements Initializer {
     /** {@inheritDoc} */
     @Override
     public void initialize() {
-        propertiesPanelManager.register(RootElement.class, rootPropertiesPanel);
-        propertiesPanelManager.register(null, emptyPropertiesPanel);
+        manager.register(RootElement.class, rootPropertiesPanel);
+        manager.register(null, emptyPropertiesPanel);
     }
 
 }

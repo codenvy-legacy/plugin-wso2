@@ -65,7 +65,7 @@ import com.google.inject.Inject;
  */
 public class TwitterConnectorPropertiesPanelInitializer implements Initializer {
 
-    private final PropertiesPanelManager                  propertiesPanelManager;
+    private final PropertiesPanelManager                  manager;
     private final DestroyStatusConnectorPresenter         destroyStatusPropertiesPanel;
     private final GetClosesTrendsConnectorPresenter       getClosesTrendsPropertiesPanel;
     private final GetDirectMessagesConnectorPresenter     getDirectMessagesPropertiesPanel;
@@ -88,7 +88,7 @@ public class TwitterConnectorPropertiesPanelInitializer implements Initializer {
     private final InitTwitterConnectorPresenter           initTwitterPropertiesPanel;
 
     @Inject
-    public TwitterConnectorPropertiesPanelInitializer(PropertiesPanelManager propertiesPanelManager,
+    public TwitterConnectorPropertiesPanelInitializer(PropertiesPanelManager manager,
                                                       DestroyStatusConnectorPresenter destroyStatusPropertiesPanel,
                                                       GetClosesTrendsConnectorPresenter getClosesTrendsPropertiesPanel,
                                                       GetDirectMessagesConnectorPresenter getDirectMessagesPropertiesPanel,
@@ -109,7 +109,7 @@ public class TwitterConnectorPropertiesPanelInitializer implements Initializer {
                                                       ShowStatusConnectorPresenter showStatusPropertiesPanel,
                                                       UpdateStatusConnectorPresenter updateStatusPropertiesPanel,
                                                       InitTwitterConnectorPresenter initTwitterPropertiesPanel) {
-        this.propertiesPanelManager = propertiesPanelManager;
+        this.manager = manager;
         this.destroyStatusPropertiesPanel = destroyStatusPropertiesPanel;
         this.getClosesTrendsPropertiesPanel = getClosesTrendsPropertiesPanel;
         this.getDirectMessagesPropertiesPanel = getDirectMessagesPropertiesPanel;
@@ -135,26 +135,26 @@ public class TwitterConnectorPropertiesPanelInitializer implements Initializer {
     /** {@inheritDoc} */
     @Override
     public void initialize() {
-        propertiesPanelManager.register(DestroyStatus.class, destroyStatusPropertiesPanel);
-        propertiesPanelManager.register(GetClosesTrends.class, getClosesTrendsPropertiesPanel);
-        propertiesPanelManager.register(GetDirectMessages.class, getDirectMessagesPropertiesPanel);
-        propertiesPanelManager.register(GetFollowers.class, getFollowersPropertiesPanel);
-        propertiesPanelManager.register(GetFollowersIds.class, getFollowersIdsPropertiesPanel);
-        propertiesPanelManager.register(GetFriends.class, getFriendsPropertiesPanel);
-        propertiesPanelManager.register(GetFriendsIds.class, getFriendsIdsPropertiesPanel);
-        propertiesPanelManager.register(GetHomeTimeLine.class, getHomeTimeLinePropertiesPanel);
-        propertiesPanelManager.register(GetMentionsTimeLine.class, getMentionsTimeLinePropertiesPanel);
-        propertiesPanelManager.register(GetRetweetsOfMine.class, getRetweetsOfMinePropertiesPanel);
-        propertiesPanelManager.register(GetSentDirectMessages.class, getSentDirectMessagesPropertiesPanel);
-        propertiesPanelManager.register(GetTopTrendPlaces.class, getTopTrendPlacesPropertiesPanel);
-        propertiesPanelManager.register(GetUserTimeLine.class, getUserTimeLinePropertiesPanel);
-        propertiesPanelManager.register(InitTwitter.class, initTwitterPropertiesPanel);
-        propertiesPanelManager.register(Retweet.class, retweetPropertiesPanel);
-        propertiesPanelManager.register(SearchTwitter.class, searchTwitterPropertiesPanel);
-        propertiesPanelManager.register(SearchPlaces.class, searchPlacesPropertiesPanel);
-        propertiesPanelManager.register(SendDirectMessage.class, sendDirectMessagePropertiesPanel);
-        propertiesPanelManager.register(ShowStatus.class, showStatusPropertiesPanel);
-        propertiesPanelManager.register(UpdateStatus.class, updateStatusPropertiesPanel);
+        manager.register(DestroyStatus.class, destroyStatusPropertiesPanel);
+        manager.register(GetClosesTrends.class, getClosesTrendsPropertiesPanel);
+        manager.register(GetDirectMessages.class, getDirectMessagesPropertiesPanel);
+        manager.register(GetFollowers.class, getFollowersPropertiesPanel);
+        manager.register(GetFollowersIds.class, getFollowersIdsPropertiesPanel);
+        manager.register(GetFriends.class, getFriendsPropertiesPanel);
+        manager.register(GetFriendsIds.class, getFriendsIdsPropertiesPanel);
+        manager.register(GetHomeTimeLine.class, getHomeTimeLinePropertiesPanel);
+        manager.register(GetMentionsTimeLine.class, getMentionsTimeLinePropertiesPanel);
+        manager.register(GetRetweetsOfMine.class, getRetweetsOfMinePropertiesPanel);
+        manager.register(GetSentDirectMessages.class, getSentDirectMessagesPropertiesPanel);
+        manager.register(GetTopTrendPlaces.class, getTopTrendPlacesPropertiesPanel);
+        manager.register(GetUserTimeLine.class, getUserTimeLinePropertiesPanel);
+        manager.register(InitTwitter.class, initTwitterPropertiesPanel);
+        manager.register(Retweet.class, retweetPropertiesPanel);
+        manager.register(SearchTwitter.class, searchTwitterPropertiesPanel);
+        manager.register(SearchPlaces.class, searchPlacesPropertiesPanel);
+        manager.register(SendDirectMessage.class, sendDirectMessagePropertiesPanel);
+        manager.register(ShowStatus.class, showStatusPropertiesPanel);
+        manager.register(UpdateStatus.class, updateStatusPropertiesPanel);
     }
 
 }

@@ -19,7 +19,7 @@ import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.gwt.xml.client.Node;
@@ -62,7 +62,7 @@ public class Query extends AbstractConnector {
     private Array<NameSpace>    queryStringNameSpaces;
 
     @Inject
-    public Query(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+    public Query(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
         super(ELEMENT_NAME,
               ELEMENT_NAME,
               SERIALIZATION_NAME,
@@ -71,7 +71,7 @@ public class Query extends AbstractConnector {
               true,
               resources.salesforce(),
               branchProvider,
-              mediatorCreatorsManager);
+              elementCreatorsManager);
 
         batchSize = "";
         queryString = "";

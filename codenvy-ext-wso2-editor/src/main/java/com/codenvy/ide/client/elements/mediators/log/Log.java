@@ -18,7 +18,7 @@ package com.codenvy.ide.client.elements.mediators.log;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.gwt.xml.client.Node;
@@ -67,7 +67,7 @@ public class Log extends AbstractElement {
     @Inject
     public Log(EditorResources resources,
                Provider<Branch> branchProvider,
-               MediatorCreatorsManager mediatorCreatorsManager,
+               ElementCreatorsManager elementCreatorsManager,
                Provider<Property> propertyProvider) {
 
         super(ELEMENT_NAME,
@@ -78,7 +78,7 @@ public class Log extends AbstractElement {
               true,
               resources.log(),
               branchProvider,
-              mediatorCreatorsManager);
+              elementCreatorsManager);
 
         this.propertyProvider = propertyProvider;
 

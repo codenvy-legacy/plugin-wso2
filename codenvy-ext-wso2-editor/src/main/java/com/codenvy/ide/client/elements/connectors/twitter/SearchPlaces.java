@@ -19,7 +19,7 @@ import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
@@ -83,7 +83,7 @@ public class SearchPlaces extends AbstractConnector {
     private Array<NameSpace> queryNS;
 
     @Inject
-    public SearchPlaces(EditorResources resources, Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
+    public SearchPlaces(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
         super(ELEMENT_NAME,
               ELEMENT_NAME,
               SERIALIZATION_NAME,
@@ -92,7 +92,7 @@ public class SearchPlaces extends AbstractConnector {
               true,
               resources.twitterElement(),
               branchProvider,
-              mediatorCreatorsManager);
+              elementCreatorsManager);
 
         consumerKey = "";
         consumerSecret = "";

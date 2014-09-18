@@ -18,7 +18,7 @@ package com.codenvy.ide.client.elements.mediators.enrich;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.inject.Provider;
@@ -59,7 +59,7 @@ public class Enrich extends AbstractElement {
     @Inject
     public Enrich(EditorResources resources,
                   Provider<Branch> branchProvider,
-                  MediatorCreatorsManager mediatorCreatorsManager,
+                  ElementCreatorsManager elementCreatorsManager,
                   Source source,
                   Target target) {
         super(ELEMENT_NAME,
@@ -70,7 +70,7 @@ public class Enrich extends AbstractElement {
               true,
               resources.enrich(),
               branchProvider,
-              mediatorCreatorsManager);
+              elementCreatorsManager);
 
         this.description = "";
 

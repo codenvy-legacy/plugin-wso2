@@ -51,7 +51,7 @@ import com.google.inject.Inject;
  */
 public class MediatorsPropertiesPanelInitializer implements Initializer {
 
-    private final PropertiesPanelManager                 propertiesPanelManager;
+    private final PropertiesPanelManager                 manager;
     private final LogPropertiesPanelPresenter            logPropertiesPanel;
     private final PropertyPropertiesPanelPresenter       propertyPropertiesPanel;
     private final PayloadFactoryPropertiesPanelPresenter payloadFactoryPropertiesPanel;
@@ -67,7 +67,7 @@ public class MediatorsPropertiesPanelInitializer implements Initializer {
     private final CallPropertiesPanelPresenter           callPropertiesPanel;
 
     @Inject
-    public MediatorsPropertiesPanelInitializer(PropertiesPanelManager propertiesPanelManager,
+    public MediatorsPropertiesPanelInitializer(PropertiesPanelManager manager,
                                                LogPropertiesPanelPresenter logPropertiesPanel,
                                                PropertyPropertiesPanelPresenter propertyPropertiesPanel,
                                                PayloadFactoryPropertiesPanelPresenter payloadFactoryPropertiesPanel,
@@ -81,7 +81,7 @@ public class MediatorsPropertiesPanelInitializer implements Initializer {
                                                LoopBackPropertiesPanelPresenter loopBackPropertiesPanel,
                                                CallTemplatePropertiesPanelPresenter callTemplatePropertiesPanel,
                                                CallPropertiesPanelPresenter callPropertiesPanel) {
-        this.propertiesPanelManager = propertiesPanelManager;
+        this.manager = manager;
         this.logPropertiesPanel = logPropertiesPanel;
         this.propertyPropertiesPanel = propertyPropertiesPanel;
         this.payloadFactoryPropertiesPanel = payloadFactoryPropertiesPanel;
@@ -100,19 +100,19 @@ public class MediatorsPropertiesPanelInitializer implements Initializer {
     /** {@inheritDoc} */
     @Override
     public void initialize() {
-        propertiesPanelManager.register(Log.class, logPropertiesPanel);
-        propertiesPanelManager.register(Property.class, propertyPropertiesPanel);
-        propertiesPanelManager.register(PayloadFactory.class, payloadFactoryPropertiesPanel);
-        propertiesPanelManager.register(Send.class, sendPropertiesPanel);
-        propertiesPanelManager.register(Header.class, headerPropertiesPanel);
-        propertiesPanelManager.register(Respond.class, respondPropertiesPanel);
-        propertiesPanelManager.register(Filter.class, filterPropertiesPanel);
-        propertiesPanelManager.register(Switch.class, switchPropertiesPanel);
-        propertiesPanelManager.register(Sequence.class, sequencePropertiesPanel);
-        propertiesPanelManager.register(Enrich.class, enrichPropertiesPanel);
-        propertiesPanelManager.register(LoopBack.class, loopBackPropertiesPanel);
-        propertiesPanelManager.register(CallTemplate.class, callTemplatePropertiesPanel);
-        propertiesPanelManager.register(Call.class, callPropertiesPanel);
+        manager.register(Log.class, logPropertiesPanel);
+        manager.register(Property.class, propertyPropertiesPanel);
+        manager.register(PayloadFactory.class, payloadFactoryPropertiesPanel);
+        manager.register(Send.class, sendPropertiesPanel);
+        manager.register(Header.class, headerPropertiesPanel);
+        manager.register(Respond.class, respondPropertiesPanel);
+        manager.register(Filter.class, filterPropertiesPanel);
+        manager.register(Switch.class, switchPropertiesPanel);
+        manager.register(Sequence.class, sequencePropertiesPanel);
+        manager.register(Enrich.class, enrichPropertiesPanel);
+        manager.register(LoopBack.class, loopBackPropertiesPanel);
+        manager.register(CallTemplate.class, callTemplatePropertiesPanel);
+        manager.register(Call.class, callPropertiesPanel);
     }
 
 }

@@ -20,7 +20,7 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.widgets.branch.BranchPresenter;
 import com.codenvy.ide.client.inject.factories.ElementWidgetFactory;
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.validators.InnerElementsValidator;
@@ -51,12 +51,12 @@ import static com.codenvy.ide.client.elements.widgets.element.ElementView.DEFAUL
 public class ElementPresenter extends AbstractPresenter<ElementView> implements ElementView.ActionDelegate,
                                                                                 SelectionManager.SelectionStateListener,
                                                                                 ElementChangedListener {
-    private final SelectionManager        selectionManager;
-    private final ElementWidgetFactory    elementWidgetFactory;
-    private final EditorState             editorState;
-    private final MediatorCreatorsManager mediatorCreatorsManager;
-    private final Element                 element;
-    private final InnerElementsValidator  innerElementsValidator;
+    private final SelectionManager       selectionManager;
+    private final ElementWidgetFactory   elementWidgetFactory;
+    private final EditorState            editorState;
+    private final ElementCreatorsManager elementCreatorsManager;
+    private final Element                element;
+    private final InnerElementsValidator innerElementsValidator;
 
     private final List<ElementDeleteListener>  elementDeleteListeners;
     private final List<ElementMoveListener>    elementMoveListeners;
@@ -70,7 +70,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     @Inject
     public ElementPresenter(ElementWidgetFactory elementWidgetFactory,
                             SelectionManager selectionManager,
-                            MediatorCreatorsManager mediatorCreatorsManager,
+                            ElementCreatorsManager elementCreatorsManager,
                             InnerElementsValidator innerElementsValidator,
                             EditorState editorState,
                             @Assisted Element element) {
@@ -82,7 +82,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
         this.elementWidgetFactory = elementWidgetFactory;
         this.editorState = editorState;
         this.element = element;
-        this.mediatorCreatorsManager = mediatorCreatorsManager;
+        this.elementCreatorsManager = elementCreatorsManager;
         this.innerElementsValidator = innerElementsValidator;
 
         this.elementMoveListeners = new ArrayList<>();
@@ -281,7 +281,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     /** {@inheritDoc} */
     @Override
     public void onMouseOver() {
-        String elementName = mediatorCreatorsManager.getElementNameByState(editorState.getState());
+        String elementName = elementCreatorsManager.getElementNameByState(editorState.getState());
 
         if (elementName == null) {
             return;

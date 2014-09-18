@@ -21,7 +21,7 @@ import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.widgets.element.ElementChangedListener;
 import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
 import com.codenvy.ide.client.inject.factories.ElementWidgetFactory;
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.validators.ConnectionsValidator;
@@ -56,12 +56,12 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
                                                                               ElementPresenter.ElementMoveListener,
                                                                               ElementChangedListener {
 
-    private final ConnectionsValidator    connectionsValidator;
-    private final SelectionManager        selectionManager;
-    private final InnerElementsValidator  innerElementsValidator;
-    private final ElementWidgetFactory    elementWidgetFactory;
-    private final MediatorCreatorsManager mediatorCreatorsManager;
-    private final EditorState             editorState;
+    private final ConnectionsValidator   connectionsValidator;
+    private final SelectionManager       selectionManager;
+    private final InnerElementsValidator innerElementsValidator;
+    private final ElementWidgetFactory   elementWidgetFactory;
+    private final ElementCreatorsManager elementCreatorsManager;
+    private final EditorState            editorState;
 
     private final Branch branch;
 
@@ -74,7 +74,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
                            ConnectionsValidator connectionsValidator,
                            InnerElementsValidator innerElementsValidator,
                            ElementWidgetFactory elementWidgetFactory,
-                           MediatorCreatorsManager mediatorCreatorsManager,
+                           ElementCreatorsManager elementCreatorsManager,
                            EditorState editorState,
                            SelectionManager selectionManager,
                            @Assisted Branch branch) {
@@ -83,7 +83,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         this.connectionsValidator = connectionsValidator;
         this.innerElementsValidator = innerElementsValidator;
         this.elementWidgetFactory = elementWidgetFactory;
-        this.mediatorCreatorsManager = mediatorCreatorsManager;
+        this.elementCreatorsManager = elementCreatorsManager;
         this.editorState = editorState;
         this.selectionManager = selectionManager;
 
@@ -164,7 +164,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     /** {@inheritDoc} */
     @Override
     public void onMouseMoved(int x, int y) {
-        String elementName = mediatorCreatorsManager.getElementNameByState(editorState.getState());
+        String elementName = elementCreatorsManager.getElementNameByState(editorState.getState());
 
         if (elementName == null) {
             return;
@@ -226,7 +226,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     /** @return an instance of creating element if new element is creating or <code>null<code/> if it isn't */
     @Nullable
     private Element getCreatingElement() {
-        Provider<? extends Element> provider = mediatorCreatorsManager.getProviderByState(editorState.getState());
+        Provider<? extends Element> provider = elementCreatorsManager.getProviderByState(editorState.getState());
 
         return provider == null ? null : provider.get();
     }

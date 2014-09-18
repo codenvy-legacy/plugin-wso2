@@ -19,7 +19,7 @@ import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
@@ -60,7 +60,7 @@ public class GetAllWorksheets extends AbstractConnector {
     @Inject
     public GetAllWorksheets(EditorResources resources,
                             Provider<Branch> branchProvider,
-                            MediatorCreatorsManager mediatorCreatorsManager) {
+                            ElementCreatorsManager elementCreatorsManager) {
         super(ELEMENT_NAME,
               ELEMENT_NAME,
               SERIALIZATION_NAME,
@@ -69,7 +69,7 @@ public class GetAllWorksheets extends AbstractConnector {
               true,
               resources.googleSpreadsheetElement(),
               branchProvider,
-              mediatorCreatorsManager);
+              elementCreatorsManager);
 
         spreadsheetName = "";
 

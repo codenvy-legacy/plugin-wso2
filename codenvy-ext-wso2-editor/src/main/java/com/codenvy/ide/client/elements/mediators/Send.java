@@ -20,7 +20,7 @@ import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
@@ -72,7 +72,7 @@ public class Send extends AbstractElement {
     @Inject
     public Send(EditorResources resources,
                 Provider<Branch> branchProvider,
-                MediatorCreatorsManager mediatorCreatorsManager,
+                ElementCreatorsManager elementCreatorsManager,
                 Provider<NameSpace> nameSpaceProvider) {
 
         super(ELEMENT_NAME,
@@ -83,7 +83,7 @@ public class Send extends AbstractElement {
               true,
               resources.send(),
               branchProvider,
-              mediatorCreatorsManager);
+              elementCreatorsManager);
 
         this.nameSpaceProvider = nameSpaceProvider;
 

@@ -16,7 +16,7 @@
 package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.common.ContentFormatter;
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
@@ -44,12 +44,12 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
     private int     x;
     private int     y;
 
-    private final String                  elementName;
-    private final List<String>            properties;
-    private final String                  serializationName;
-    private final boolean                 isPossibleToAddBranches;
-    private final boolean                 needsToShowIconAndTitle;
-    private final MediatorCreatorsManager mediatorCreatorsManager;
+    private final String                 elementName;
+    private final List<String>           properties;
+    private final String                 serializationName;
+    private final boolean                isPossibleToAddBranches;
+    private final boolean                needsToShowIconAndTitle;
+    private final ElementCreatorsManager elementCreatorsManager;
 
     protected final ImageResource    imageResources;
     protected final Provider<Branch> branchProvider;
@@ -63,7 +63,7 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
                               boolean needsToShowIconAndTitle,
                               @Nullable ImageResource resources,
                               @Nonnull Provider<Branch> branchProvider,
-                              @Nonnull MediatorCreatorsManager mediatorCreatorsManager) {
+                              @Nonnull ElementCreatorsManager elementCreatorsManager) {
         this.elementName = elementName;
         this.title = title;
         this.serializationName = serializationName;
@@ -78,7 +78,7 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
 
         this.imageResources = resources;
         this.branchProvider = branchProvider;
-        this.mediatorCreatorsManager = mediatorCreatorsManager;
+        this.elementCreatorsManager = elementCreatorsManager;
     }
 
     /** {@inheritDoc} */
@@ -310,7 +310,7 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
      */
     @Nullable
     protected Element createElement(@Nonnull String elementName) {
-        Provider<? extends Element> provider = mediatorCreatorsManager.getProviderBySerializeName(elementName);
+        Provider<? extends Element> provider = elementCreatorsManager.getProviderBySerializeName(elementName);
 
         return provider == null ? null : provider.get();
     }

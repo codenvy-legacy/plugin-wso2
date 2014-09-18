@@ -29,17 +29,17 @@ public class CommonPropertyTypeInitializer implements Initializer {
 
     public static final String BOOLEAN_TYPE_NAME = "Boolean";
 
-    private final PropertyTypeManager propertyTypeManager;
+    private final PropertyTypeManager manager;
 
     @Inject
-    public CommonPropertyTypeInitializer(PropertyTypeManager propertyTypeManager) {
-        this.propertyTypeManager = propertyTypeManager;
+    public CommonPropertyTypeInitializer(PropertyTypeManager manager) {
+        this.manager = manager;
     }
 
     /** {@inheritDoc} */
     @Override
     public void initialize() {
-        propertyTypeManager.register(BOOLEAN_TYPE_NAME, Arrays.asList(Boolean.FALSE.toString(), Boolean.TRUE.toString()));
+        manager.register(BOOLEAN_TYPE_NAME, Arrays.asList(Boolean.FALSE.toString(), Boolean.TRUE.toString()));
     }
 
 }

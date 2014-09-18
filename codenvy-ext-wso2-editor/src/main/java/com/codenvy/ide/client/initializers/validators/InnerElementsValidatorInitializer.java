@@ -31,21 +31,21 @@ import com.google.inject.Inject;
  */
 public class InnerElementsValidatorInitializer implements Initializer {
 
-    private final InnerElementsValidator innerElementsValidator;
+    private final InnerElementsValidator validator;
 
     @Inject
-    public InnerElementsValidatorInitializer(InnerElementsValidator innerElementsValidator) {
-        this.innerElementsValidator = innerElementsValidator;
+    public InnerElementsValidatorInitializer(InnerElementsValidator validator) {
+        this.validator = validator;
     }
 
     /** {@inheritDoc} */
     @Override
     public void initialize() {
-        innerElementsValidator.addAllowRule(Call.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
-        innerElementsValidator.addAllowRule(Send.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
-        innerElementsValidator.addDisallowRule(RootElement.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
-        innerElementsValidator.addDisallowRule(Filter.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
-        innerElementsValidator.addDisallowRule(Switch.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
+        validator.addAllowRule(Call.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
+        validator.addAllowRule(Send.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
+        validator.addDisallowRule(RootElement.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
+        validator.addDisallowRule(Filter.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
+        validator.addDisallowRule(Switch.ELEMENT_NAME, AddressEndpoint.ELEMENT_NAME);
     }
 
 }

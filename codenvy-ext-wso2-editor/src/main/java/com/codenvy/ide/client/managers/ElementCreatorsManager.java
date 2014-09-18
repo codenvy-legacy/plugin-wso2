@@ -28,13 +28,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The manager of mediator creators. It contains all available creator for mediators. One can get needed creator by mediator name.
+ * The manager of element creators. It contains all available creator for elements. One can get needed creator by element name.
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
 @Singleton
-public class MediatorCreatorsManager {
+public class ElementCreatorsManager {
 
     private final Map<String, Provider<? extends Element>> stateProviders;
     private final Map<String, String>                      elementNames;
@@ -42,7 +42,7 @@ public class MediatorCreatorsManager {
     private final WSO2EditorLocalizationConstant           locale;
 
     @Inject
-    public MediatorCreatorsManager(WSO2EditorLocalizationConstant locale) {
+    public ElementCreatorsManager(WSO2EditorLocalizationConstant locale) {
         stateProviders = new HashMap<>();
         elementNames = new HashMap<>();
         serializeNames = new HashMap<>();

@@ -17,7 +17,7 @@ package com.codenvy.ide.client.elements.connectors;
 
 import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Provider;
 
@@ -49,7 +49,7 @@ public class AbstractConnector extends AbstractElement {
                                 boolean needsToShowIconAndTitle,
                                 @Nonnull ImageResource resources,
                                 @Nonnull Provider<Branch> branchProvider,
-                                @Nonnull MediatorCreatorsManager mediatorCreatorsManager) {
+                                @Nonnull ElementCreatorsManager elementCreatorsManager) {
         super(elementName,
               title,
               serializationName,
@@ -58,7 +58,7 @@ public class AbstractConnector extends AbstractElement {
               needsToShowIconAndTitle,
               resources,
               branchProvider,
-              mediatorCreatorsManager);
+              elementCreatorsManager);
 
         configRef = "";
         parameterEditorType = Inline;

@@ -14,33 +14,37 @@
  * limitations under the License.
  */
 
-package com.codenvy.ide.client.initializers.propertiespanel;
+package com.codenvy.ide.client.initializers.creators;
 
+import com.codenvy.ide.client.constants.EndpointCreatingState;
 import com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint;
 import com.codenvy.ide.client.initializers.Initializer;
-import com.codenvy.ide.client.managers.PropertiesPanelManager;
-import com.codenvy.ide.client.propertiespanel.endpoints.address.AddressEndpointPropertiesPanelPresenter;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 /**
  * @author Andrey Plotnikov
  */
-public class EndpointsPropertiesPanelInitializer implements Initializer {
+public class EndpointCreatorsInitializer implements Initializer {
 
-    private final PropertiesPanelManager                  manager;
-    private final AddressEndpointPropertiesPanelPresenter addressEndpointPropertiesPanel;
+    private final ElementCreatorsManager    manager;
+    private final Provider<AddressEndpoint> addressEndpointProvider;
 
     @Inject
-    public EndpointsPropertiesPanelInitializer(PropertiesPanelManager manager,
-                                               AddressEndpointPropertiesPanelPresenter addressEndpointPropertiesPanel) {
+    public EndpointCreatorsInitializer(ElementCreatorsManager manager,
+                                       Provider<AddressEndpoint> addressEndpointProvider) {
         this.manager = manager;
-        this.addressEndpointPropertiesPanel = addressEndpointPropertiesPanel;
+        this.addressEndpointProvider = addressEndpointProvider;
     }
 
     /** {@inheritDoc} */
     @Override
     public void initialize() {
-        manager.register(AddressEndpoint.class, addressEndpointPropertiesPanel);
+        manager.register(AddressEndpoint.ELEMENT_NAME,
+                         AddressEndpoint.SERIALIZATION_NAME,
+                         EndpointCreatingState.ADDRESS,
+                         addressEndpointProvider);
     }
 
 }

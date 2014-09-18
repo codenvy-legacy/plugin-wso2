@@ -18,7 +18,7 @@ package com.codenvy.ide.client.elements.mediators.payload;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.gwt.xml.client.Node;
@@ -66,7 +66,7 @@ public class PayloadFactory extends AbstractElement {
     @Inject
     public PayloadFactory(EditorResources resources,
                           Provider<Branch> branchProvider,
-                          MediatorCreatorsManager mediatorCreatorsManager,
+                          ElementCreatorsManager elementCreatorsManager,
                           Provider<Arg> argProvider,
                           Format format) {
         super(ELEMENT_NAME,
@@ -77,7 +77,7 @@ public class PayloadFactory extends AbstractElement {
               true,
               resources.payloadFactory(),
               branchProvider,
-              mediatorCreatorsManager);
+              elementCreatorsManager);
 
         this.argProvider = argProvider;
 

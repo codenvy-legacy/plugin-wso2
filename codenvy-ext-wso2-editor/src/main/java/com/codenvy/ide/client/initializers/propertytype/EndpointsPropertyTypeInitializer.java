@@ -32,33 +32,33 @@ import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressE
  */
 public class EndpointsPropertyTypeInitializer implements Initializer {
 
-    private final PropertyTypeManager propertyTypeManager;
+    private final PropertyTypeManager manager;
 
     @Inject
-    public EndpointsPropertyTypeInitializer(PropertyTypeManager propertyTypeManager) {
-        this.propertyTypeManager = propertyTypeManager;
+    public EndpointsPropertyTypeInitializer(PropertyTypeManager manager) {
+        this.manager = manager;
     }
 
     /** {@inheritDoc} */
     @Override
     public void initialize() {
-        propertyTypeManager.register(Format.TYPE_NAME, Arrays.asList(Format.LEAVE_AS_IS.name(),
-                                                                     Format.soap11.name(),
-                                                                     Format.soap12.name(),
-                                                                     Format.pox.name(),
-                                                                     Format.get.name(),
-                                                                     Format.REST.name()));
+        manager.register(Format.TYPE_NAME, Arrays.asList(Format.LEAVE_AS_IS.name(),
+                                                         Format.soap11.name(),
+                                                         Format.soap12.name(),
+                                                         Format.pox.name(),
+                                                         Format.get.name(),
+                                                         Format.REST.name()));
 
-        propertyTypeManager.register(Optimize.TYPE_NAME, Arrays.asList(Optimize.LEAVE_AS_IS.name(),
-                                                                       Optimize.mtom.name(),
-                                                                       Optimize.swa.name()));
+        manager.register(Optimize.TYPE_NAME, Arrays.asList(Optimize.LEAVE_AS_IS.name(),
+                                                           Optimize.mtom.name(),
+                                                           Optimize.swa.name()));
 
-        propertyTypeManager.register(AddressingVersion.TYPE_NAME, Arrays.asList(AddressingVersion.FINAL.getValue(),
-                                                                                AddressingVersion.SUBMISSION.getValue()));
+        manager.register(AddressingVersion.TYPE_NAME, Arrays.asList(AddressingVersion.FINAL.getValue(),
+                                                                    AddressingVersion.SUBMISSION.getValue()));
 
-        propertyTypeManager.register(TimeoutAction.TYPE_NAME, Arrays.asList(TimeoutAction.never.name(),
-                                                                            TimeoutAction.discard.name(),
-                                                                            TimeoutAction.fault.name()));
+        manager.register(TimeoutAction.TYPE_NAME, Arrays.asList(TimeoutAction.never.name(),
+                                                                TimeoutAction.discard.name(),
+                                                                TimeoutAction.fault.name()));
     }
 
 }

@@ -16,7 +16,7 @@
 package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.common.ContentFormatter;
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -52,8 +52,8 @@ public class RootElement extends AbstractElement {
     private String onError;
 
     @Inject
-    public RootElement(Provider<Branch> branchProvider, MediatorCreatorsManager mediatorCreatorsManager) {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, false, null, branchProvider, mediatorCreatorsManager);
+    public RootElement(Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
+        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, false, null, branchProvider, elementCreatorsManager);
 
         this.name = "";
         this.onError = "";

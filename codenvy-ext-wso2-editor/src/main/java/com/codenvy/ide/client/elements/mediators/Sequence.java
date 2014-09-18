@@ -19,7 +19,7 @@ import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.managers.MediatorCreatorsManager;
+import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
@@ -62,7 +62,7 @@ public class Sequence extends AbstractElement {
     @Inject
     public Sequence(EditorResources resources,
                     Provider<Branch> branchProvider,
-                    MediatorCreatorsManager mediatorCreatorsManager,
+                    ElementCreatorsManager elementCreatorsManager,
                     Provider<NameSpace> nameSpaceProvider) {
 
         super(ELEMENT_NAME,
@@ -73,7 +73,7 @@ public class Sequence extends AbstractElement {
               true,
               resources.sequence(),
               branchProvider,
-              mediatorCreatorsManager);
+              elementCreatorsManager);
 
         this.nameSpaceProvider = nameSpaceProvider;
 
