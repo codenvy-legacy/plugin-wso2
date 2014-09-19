@@ -55,7 +55,6 @@ public class SwitchPropertiesPanelPresenter extends AbstractPropertiesPanel<Swit
     private final NameSpaceEditorPresenter          nameSpaceEditorPresenter;
     private final Provider<SimplePropertyPresenter> simplePropertyPresenterProvider;
     private final List<SimplePropertyPresenter>     regExpFields;
-    private final WSO2EditorLocalizationConstant    locale;
 
     private PropertyGroupPresenter   basicGroup;
     private ComplexPropertyPresenter sourceXPath;
@@ -71,7 +70,6 @@ public class SwitchPropertiesPanelPresenter extends AbstractPropertiesPanel<Swit
         super(view, propertyTypeManager);
         this.propertyTypeManager = propertyTypeManager;
         this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
-        this.locale = locale;
 
         this.simplePropertyPresenterProvider = simplePropertyPresenterProvider;
         this.regExpFields = new ArrayList<>();
@@ -88,11 +86,12 @@ public class SwitchPropertiesPanelPresenter extends AbstractPropertiesPanel<Swit
             }
         };
 
-        prepareView(propertiesPanelWidgetFactory, complexPropertyPresenterProvider);
+        prepareView(propertiesPanelWidgetFactory, complexPropertyPresenterProvider, locale);
     }
 
-    private void prepareView(PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                             Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider) {
+    private void prepareView(@Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                             @Nonnull Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                             @Nonnull final WSO2EditorLocalizationConstant locale) {
         basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
         view.addGroup(basicGroup);
 
