@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.mediators.respond;
 
-import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nullable;
@@ -28,22 +28,20 @@ import javax.annotation.Nullable;
  * @author Dmitry Shnurenko
  */
 @ImplementedBy(RespondPropertiesPanelViewImpl.class)
-public abstract class RespondPropertiesPanelView extends AbstractView<RespondPropertiesPanelView.ActionDelegate> {
+public interface RespondPropertiesPanelView extends View<RespondPropertiesPanelView.ActionDelegate> {
 
     /**
      * Interface defines methods of {@link RespondPropertiesPanelPresenter} which calls from view. These methods defines
      * some actions when user changes properties of Respond mediator.
      */
-    public interface ActionDelegate extends AbstractView.ActionDelegate {
-
+    public interface ActionDelegate {
         /** Performs some actions in response to user's changing description field. */
         void onDescriptionChanged();
-
     }
 
     /** @return description value from special view's place */
     @Nullable
-    public abstract String getDescription();
+    String getDescription();
 
     /**
      * Sets description value to special place on view.
@@ -51,6 +49,6 @@ public abstract class RespondPropertiesPanelView extends AbstractView<RespondPro
      * @param description
      *         description value which need to set to special place on view
      */
-    public abstract void setDescription(@Nullable String description);
+    void setDescription(@Nullable String description);
 
 }

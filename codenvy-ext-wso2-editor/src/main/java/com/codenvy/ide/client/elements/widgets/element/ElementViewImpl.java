@@ -17,6 +17,7 @@ package com.codenvy.ide.client.elements.widgets.element;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.widgets.branch.BranchPresenter;
+import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -58,7 +59,8 @@ import javax.annotation.Nullable;
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
-public class ElementViewImpl extends ElementView implements HasAllMouseHandlers, HasClickHandlers {
+public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
+        implements ElementView, HasAllMouseHandlers, HasClickHandlers {
 
     @Singleton
     interface ElementViewImplUiBinder extends UiBinder<Widget, ElementViewImpl> {

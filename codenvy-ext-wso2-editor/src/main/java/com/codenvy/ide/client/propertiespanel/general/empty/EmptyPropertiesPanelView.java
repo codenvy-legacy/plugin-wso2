@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.general.empty;
 
-import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
 
 /**
@@ -24,6 +24,9 @@ import com.google.inject.ImplementedBy;
  * @author Andrey Plotnikov
  */
 @ImplementedBy(EmptyPropertiesPanelViewImpl.class)
-public abstract class EmptyPropertiesPanelView extends AbstractView<AbstractView.ActionDelegate> {
+public interface EmptyPropertiesPanelView extends View<EmptyPropertiesPanelView.ActionDelegate> {
+
+    public interface ActionDelegate {
+    }
 
 }

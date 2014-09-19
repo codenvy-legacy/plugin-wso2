@@ -16,7 +16,7 @@
 
 package com.codenvy.ide.client.propertiespanel.property.group;
 
-import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.client.propertiespanel.property.AbstractPropertyPresenter;
 
 import javax.annotation.Nonnull;
@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  *
  * @author Andrey Plotnikov
  */
-public abstract class PropertyGroupView extends AbstractView<PropertyGroupView.ActionDelegate> {
+public interface PropertyGroupView extends View<PropertyGroupView.ActionDelegate> {
 
     /**
      * Changes visible state of item's panel of the view.
@@ -34,7 +34,7 @@ public abstract class PropertyGroupView extends AbstractView<PropertyGroupView.A
      * @param visible
      *         <code>true</code> the panel will be shown, <code>false</code> it will not
      */
-    public abstract void setVisibleItemsPanel(boolean visible);
+    void setVisibleItemsPanel(boolean visible);
 
     /**
      * Adds a property widget on the view.
@@ -42,7 +42,7 @@ public abstract class PropertyGroupView extends AbstractView<PropertyGroupView.A
      * @param property
      *         property that need to be added
      */
-    public abstract void addProperty(@Nonnull AbstractPropertyPresenter property);
+    void addProperty(@Nonnull AbstractPropertyPresenter property);
 
     /**
      * Removes a property widget from the view.
@@ -50,15 +50,15 @@ public abstract class PropertyGroupView extends AbstractView<PropertyGroupView.A
      * @param property
      *         property that need to be removed
      */
-    public abstract void removeProperty(@Nonnull AbstractPropertyPresenter property);
+    void removeProperty(@Nonnull AbstractPropertyPresenter property);
 
     /** Rotate fold/unfold icon on the view. */
-    public abstract void rotateIcon();
+    void rotateIcon();
 
     /** Reset default view of the fold/unfold icon on the view. */
-    public abstract void defaultIcon();
+    void defaultIcon();
 
-    public interface ActionDelegate extends AbstractView.ActionDelegate {
+    public interface ActionDelegate {
         /** Performs some actions in response to a user's clicking on the main panel of the view. */
         void onItemClicked();
     }

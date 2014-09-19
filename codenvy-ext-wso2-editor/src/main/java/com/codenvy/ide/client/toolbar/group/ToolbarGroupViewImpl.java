@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.toolbar.group;
 
 import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.mvp.AbstractView;
 import com.codenvy.ide.client.toolbar.item.ToolbarItemPresenter;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -38,7 +39,7 @@ import javax.annotation.Nonnull;
  *
  * @author Andrey Plotnikov
  */
-public class ToolbarGroupViewImpl extends ToolbarGroupView {
+public class ToolbarGroupViewImpl extends AbstractView<ToolbarGroupView.ActionDelegate> implements ToolbarGroupView {
 
     @Singleton
     interface ToolbarGroupViewImplUiBinder extends UiBinder<Widget, ToolbarGroupViewImpl> {

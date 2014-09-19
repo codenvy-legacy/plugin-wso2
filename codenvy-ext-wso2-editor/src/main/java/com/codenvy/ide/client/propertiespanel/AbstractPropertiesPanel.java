@@ -15,10 +15,10 @@
  */
 package com.codenvy.ide.client.propertiespanel;
 
+import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
-import com.codenvy.ide.client.mvp.AbstractView;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -35,17 +35,19 @@ import java.util.List;
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
-public abstract class AbstractPropertiesPanel<T extends Element, V extends AbstractView> extends AbstractPresenter<V> {
+public abstract class AbstractPropertiesPanel<T extends Element, V extends View> extends AbstractPresenter<V> {
 
-    protected     T                             element;
-    protected     PropertyTypeManager           propertyTypeManager;
+    protected T element;
+
+    protected final PropertyTypeManager propertyTypeManager;
+
     private final List<PropertyChangedListener> listeners;
 
     protected AbstractPropertiesPanel(@Nonnull V view, @Nonnull PropertyTypeManager propertyTypeManager) {
         super(view);
 
-        listeners = new ArrayList<>();
         this.propertyTypeManager = propertyTypeManager;
+        this.listeners = new ArrayList<>();
     }
 
     /**

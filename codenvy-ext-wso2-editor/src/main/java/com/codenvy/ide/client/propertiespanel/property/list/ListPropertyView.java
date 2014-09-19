@@ -16,7 +16,7 @@
 
 package com.codenvy.ide.client.propertiespanel.property.list;
 
-import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
@@ -30,7 +30,7 @@ import java.util.List;
  * @author Andrey Plotnikov
  */
 @ImplementedBy(ListPropertyViewImpl.class)
-public abstract class ListPropertyView extends AbstractView<ListPropertyView.ActionDelegate> {
+public interface ListPropertyView extends View<ListPropertyView.ActionDelegate> {
 
     /**
      * Changes title of property on the view.
@@ -38,7 +38,7 @@ public abstract class ListPropertyView extends AbstractView<ListPropertyView.Act
      * @param title
      *         title that needs to be changed
      */
-    public abstract void setTitle(@Nullable String title);
+    void setTitle(@Nullable String title);
 
     /**
      * Sets a list of available values on the view.
@@ -46,7 +46,7 @@ public abstract class ListPropertyView extends AbstractView<ListPropertyView.Act
      * @param values
      *         values which need to be set
      */
-    public abstract void setPropertyValues(@Nullable List<String> values);
+    void setPropertyValues(@Nullable List<String> values);
 
     /**
      * Selects a value from the list of available values.
@@ -54,13 +54,21 @@ public abstract class ListPropertyView extends AbstractView<ListPropertyView.Act
      * @param value
      *         value that need to be set
      */
-    public abstract void selectPropertyValue(@Nullable String value);
+    void selectPropertyValue(@Nullable String value);
 
     /** @return selected property value */
     @Nonnull
-    public abstract String getProperty();
+    String getProperty();
 
-    public interface ActionDelegate extends AbstractView.ActionDelegate {
+    /**
+     * Changes visible state of the main panel.
+     *
+     * @param visible
+     *         <code>true</code> the panel will be shown, <code>false</code> it will not
+     */
+    void setVisible(boolean visible);
+
+    public interface ActionDelegate {
         /** Performs some actions in response to a user's changing property value. */
         void onPropertyChanged();
     }

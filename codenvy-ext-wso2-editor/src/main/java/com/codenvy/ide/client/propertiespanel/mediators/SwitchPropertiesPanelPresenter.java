@@ -68,7 +68,6 @@ public class SwitchPropertiesPanelPresenter extends AbstractPropertiesPanel<Swit
                                           Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
                                           Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
         super(view, propertyTypeManager);
-        this.propertyTypeManager = propertyTypeManager;
         this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
 
         this.simplePropertyPresenterProvider = simplePropertyPresenterProvider;

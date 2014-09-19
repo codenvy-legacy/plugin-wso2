@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.editor;
 
 import com.codenvy.ide.api.parts.PartStackUIResources;
+import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -40,7 +41,7 @@ import javax.annotation.Nonnull;
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
-public class WSO2EditorViewImpl extends WSO2EditorView {
+public class WSO2EditorViewImpl extends AbstractView<WSO2EditorView.ActionDelegate> implements WSO2EditorView {
 
     @Singleton
     interface EditorViewImplUiBinder extends UiBinder<Widget, WSO2EditorViewImpl> {

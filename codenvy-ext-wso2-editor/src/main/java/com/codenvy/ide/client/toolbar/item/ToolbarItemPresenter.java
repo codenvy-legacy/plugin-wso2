@@ -20,7 +20,7 @@ import com.codenvy.ide.client.EditorState;
 import com.codenvy.ide.client.inject.factories.ToolbarFactory;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
@@ -51,7 +51,7 @@ public class ToolbarItemPresenter extends AbstractPresenter<ToolbarItemView> imp
 
     /** @return the GWT widget that is controlled by the presenter */
     @Nonnull
-    public Widget getView() {
+    public IsWidget getView() {
         return view;
     }
 

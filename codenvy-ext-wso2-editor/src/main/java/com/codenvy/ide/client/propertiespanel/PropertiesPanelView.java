@@ -16,7 +16,7 @@
 
 package com.codenvy.ide.client.propertiespanel;
 
-import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.google.inject.ImplementedBy;
 
@@ -28,12 +28,17 @@ import javax.annotation.Nonnull;
  * @author Andrey Plotnikov
  */
 @ImplementedBy(PropertiesPanelViewImpl.class)
-public abstract class PropertiesPanelView extends AbstractView<AbstractView.ActionDelegate> {
+public interface PropertiesPanelView extends View<PropertiesPanelView.ActionDelegate> {
+
     /**
      * Adds a property group on the view.
      *
      * @param propertyGroup
      *         property group that needs to be added
      */
-    public abstract void addGroup(@Nonnull PropertyGroupPresenter propertyGroup);
+    void addGroup(@Nonnull PropertyGroupPresenter propertyGroup);
+
+    public interface ActionDelegate {
+    }
+
 }

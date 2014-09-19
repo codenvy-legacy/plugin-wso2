@@ -17,6 +17,7 @@ package com.codenvy.ide.client.propertiespanel.general.root;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
+import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -34,7 +35,7 @@ import javax.annotation.Nonnull;
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
-public class RootPropertiesPanelViewImpl extends RootPropertiesPanelView {
+public class RootPropertiesPanelViewImpl extends AbstractView<RootPropertiesPanelView.ActionDelegate> implements RootPropertiesPanelView {
 
     @Singleton
     interface RootPropertiesPanelViewImplUiBinder extends UiBinder<Widget, RootPropertiesPanelViewImpl> {

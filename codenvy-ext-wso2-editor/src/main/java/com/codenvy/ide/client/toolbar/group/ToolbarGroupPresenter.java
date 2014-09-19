@@ -19,7 +19,7 @@ package com.codenvy.ide.client.toolbar.group;
 import com.codenvy.ide.client.inject.factories.ToolbarFactory;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.toolbar.item.ToolbarItemPresenter;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -43,7 +43,7 @@ public class ToolbarGroupPresenter extends AbstractPresenter<ToolbarGroupView> i
 
     /** @return the GWT widget that is controlled by the presenter */
     @Nonnull
-    public Widget getView() {
+    public IsWidget getView() {
         return view;
     }
 

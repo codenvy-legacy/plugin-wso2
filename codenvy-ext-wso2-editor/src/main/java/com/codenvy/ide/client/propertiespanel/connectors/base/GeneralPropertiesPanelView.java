@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.connectors.base;
 
-import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
@@ -36,13 +36,13 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * @author Dmitry Shnurenko
  */
 @ImplementedBy(GeneralPropertiesPanelViewImpl.class)
-public abstract class GeneralPropertiesPanelView extends AbstractView<GeneralPropertiesPanelView.ActionDelegate> {
+public interface GeneralPropertiesPanelView extends View<GeneralPropertiesPanelView.ActionDelegate> {
 
     /**
      * Interface defines methods of general presenter of current type of connectors which
      * calls from the view. These methods defines some actions when user change properties of connector.
      */
-    public interface ActionDelegate extends AbstractView.ActionDelegate {
+    public interface ActionDelegate {
 
         /** Performs any actions appropriate in response to the user having changed parameter editor type field. */
         void onParameterEditorTypeChanged();
@@ -126,11 +126,11 @@ public abstract class GeneralPropertiesPanelView extends AbstractView<GeneralPro
 
     /** @return parameter editor type value from the special place on the view */
     @Nonnull
-    public abstract String getParameterEditorType();
+    String getParameterEditorType();
 
     /** @return parameter available config from the special place on the view */
     @Nonnull
-    public abstract String getAvailableConfig();
+    String getAvailableConfig();
 
     /**
      * Set parameter editor types value.
@@ -138,7 +138,7 @@ public abstract class GeneralPropertiesPanelView extends AbstractView<GeneralPro
      * @param states
      *         values of parameter editor type
      */
-    public abstract void setParameterEditorType(@Nonnull List<String> states);
+    void setParameterEditorType(@Nonnull List<String> states);
 
     /**
      * Sets available configs to the special place on the view which uses for showing Available Config parameter.
@@ -146,7 +146,7 @@ public abstract class GeneralPropertiesPanelView extends AbstractView<GeneralPro
      * @param configs
      *         all available configs
      */
-    public abstract void setAvailableConfigs(@Nonnull List<String> configs);
+    void setAvailableConfigs(@Nonnull List<String> configs);
 
     /**
      * Add available config.
@@ -154,11 +154,11 @@ public abstract class GeneralPropertiesPanelView extends AbstractView<GeneralPro
      * @param state
      *         value of available config
      */
-    public abstract void addAvailableConfigs(@Nonnull String state);
+    void addAvailableConfigs(@Nonnull String state);
 
     /** @return configuration reference value from the special place on the view which uses for showing configRef parameter */
     @Nonnull
-    public abstract String getConfigRef();
+    String getConfigRef();
 
     /**
      * Sets configuration reference value to the special place on the view which uses for showing password parameter.
@@ -166,7 +166,7 @@ public abstract class GeneralPropertiesPanelView extends AbstractView<GeneralPro
      * @param configRef
      *         value of configuration reference
      */
-    public abstract void setConfigRef(@Nonnull String configRef);
+    void setConfigRef(@Nonnull String configRef);
 
     /**
      * Select parameter editor type to the special place on the view.
@@ -174,11 +174,11 @@ public abstract class GeneralPropertiesPanelView extends AbstractView<GeneralPro
      * @param parameterEditorType
      *         parameter value
      */
-    public abstract void selectParameterEditorType(@Nonnull ParameterEditorType parameterEditorType);
+    void selectParameterEditorType(@Nonnull ParameterEditorType parameterEditorType);
 
     /** @return value of parameter from first panel's text box view */
     @Nonnull
-    public abstract String getFirstTextBoxValue();
+    String getFirstTextBoxValue();
 
     /**
      * Sets value of parameter to first panel's text box on view.
@@ -186,11 +186,11 @@ public abstract class GeneralPropertiesPanelView extends AbstractView<GeneralPro
      * @param value
      *         value of parameter which need to set
      */
-    public abstract void setFirstTextBoxValue(@Nonnull String value);
+    void setFirstTextBoxValue(@Nonnull String value);
 
     /** @return value of parameter from second panel's text box view */
     @Nonnull
-    public abstract String getSecondTextBoxValue();
+    String getSecondTextBoxValue();
 
     /**
      * Sets value of parameter to second panel's text box on view.
@@ -198,11 +198,11 @@ public abstract class GeneralPropertiesPanelView extends AbstractView<GeneralPro
      * @param value
      *         value of parameter which need to set
      */
-    public abstract void setSecondTextBoxValue(@Nonnull String value);
+    void setSecondTextBoxValue(@Nonnull String value);
 
     /** @return value of parameter from third panel's text box view */
     @Nonnull
-    public abstract String getThirdTextBoxValue();
+    String getThirdTextBoxValue();
 
     /**
      * Sets value of parameter to third panel's text box on view.
@@ -210,11 +210,11 @@ public abstract class GeneralPropertiesPanelView extends AbstractView<GeneralPro
      * @param value
      *         value of parameter which need to set
      */
-    public abstract void setThirdTextBoxValue(@Nonnull String value);
+    void setThirdTextBoxValue(@Nonnull String value);
 
     /** @return value of parameter from fourth panel's text box view */
     @Nonnull
-    public abstract String getFourthTextBoxValue();
+    String getFourthTextBoxValue();
 
     /**
      * Sets value of parameter to fourth panel's text box on view.
@@ -222,11 +222,11 @@ public abstract class GeneralPropertiesPanelView extends AbstractView<GeneralPro
      * @param value
      *         value of parameter which need to set
      */
-    public abstract void setFourthTextBoxValue(@Nonnull String value);
+    void setFourthTextBoxValue(@Nonnull String value);
 
     /** @return value of parameter from fifth panel's text box view */
     @Nonnull
-    public abstract String getFifthTextBoxValue();
+    String getFifthTextBoxValue();
 
     /**
      * Sets value of parameter to fifth panel's text box on view.
@@ -234,124 +234,124 @@ public abstract class GeneralPropertiesPanelView extends AbstractView<GeneralPro
      * @param value
      *         value of parameter which need to set
      */
-    public abstract void setFifthTextBoxValue(@Nonnull String value);
+    void setFifthTextBoxValue(@Nonnull String value);
 
     @Nonnull
-    public abstract String getSixthTextBoxValue();
+    String getSixthTextBoxValue();
 
-    public abstract void setSixthTextBoxValue(@Nonnull String value);
-
-    @Nonnull
-    public abstract String getSeventhTextBoxValue();
-
-    public abstract void setSeventhTextBoxValue(@Nonnull String value);
+    void setSixthTextBoxValue(@Nonnull String value);
 
     @Nonnull
-    public abstract String getEighthTextBoxValue();
+    String getSeventhTextBoxValue();
 
-    public abstract void setEighthTextBoxValue(@Nonnull String value);
-
-    @Nonnull
-    public abstract String getNinthTextBoxValue();
-
-    public abstract void setNinthTextBoxValue(@Nonnull String value);
+    void setSeventhTextBoxValue(@Nonnull String value);
 
     @Nonnull
-    public abstract String getTenthTextBoxValue();
+    String getEighthTextBoxValue();
 
-    public abstract void setTenthTextBoxValue(@Nonnull String value);
+    void setEighthTextBoxValue(@Nonnull String value);
 
     @Nonnull
-    public abstract String getEleventhTextBoxValue();
+    String getNinthTextBoxValue();
 
-    public abstract void setEleventhTextBoxValue(@Nonnull String value);
+    void setNinthTextBoxValue(@Nonnull String value);
 
-    public abstract void setVisibleFirstPanel(boolean isVisible);
+    @Nonnull
+    String getTenthTextBoxValue();
 
-    public abstract void setVisibleSecondPanel(boolean isVisible);
+    void setTenthTextBoxValue(@Nonnull String value);
 
-    public abstract void setVisibleThirdPanel(boolean isVisible);
+    @Nonnull
+    String getEleventhTextBoxValue();
 
-    public abstract void setVisibleFourthPanel(boolean isVisible);
+    void setEleventhTextBoxValue(@Nonnull String value);
 
-    public abstract void setVisibleFifthPanel(boolean isVisible);
+    void setVisibleFirstPanel(boolean isVisible);
 
-    public abstract void setVisibleSixthPanel(boolean isVisible);
+    void setVisibleSecondPanel(boolean isVisible);
 
-    public abstract void setVisibleSeventhPanel(boolean isVisible);
+    void setVisibleThirdPanel(boolean isVisible);
 
-    public abstract void setVisibleEighthPanel(boolean isVisible);
+    void setVisibleFourthPanel(boolean isVisible);
 
-    public abstract void setVisibleNinthPanel(boolean isVisible);
+    void setVisibleFifthPanel(boolean isVisible);
 
-    public abstract void setVisibleTenthPanel(boolean isVisible);
+    void setVisibleSixthPanel(boolean isVisible);
 
-    public abstract void setVisibleEleventhPanel(boolean isVisible);
+    void setVisibleSeventhPanel(boolean isVisible);
 
-    public abstract void setFirstLabelTitle(@Nonnull String title);
+    void setVisibleEighthPanel(boolean isVisible);
 
-    public abstract void setSecondLabelTitle(@Nonnull String title);
+    void setVisibleNinthPanel(boolean isVisible);
 
-    public abstract void setThirdLabelTitle(@Nonnull String title);
+    void setVisibleTenthPanel(boolean isVisible);
 
-    public abstract void setFourthLabelTitle(@Nonnull String title);
+    void setVisibleEleventhPanel(boolean isVisible);
 
-    public abstract void setFifthLabelTitle(@Nonnull String title);
+    void setFirstLabelTitle(@Nonnull String title);
 
-    public abstract void setSixthLabelTitle(@Nonnull String title);
+    void setSecondLabelTitle(@Nonnull String title);
 
-    public abstract void setSeventhLabelTitle(@Nonnull String title);
+    void setThirdLabelTitle(@Nonnull String title);
 
-    public abstract void setEighthLabelTitle(@Nonnull String title);
+    void setFourthLabelTitle(@Nonnull String title);
 
-    public abstract void setNinthLabelTitle(@Nonnull String title);
+    void setFifthLabelTitle(@Nonnull String title);
 
-    public abstract void setTenthLabelTitle(@Nonnull String title);
+    void setSixthLabelTitle(@Nonnull String title);
 
-    public abstract void setEleventhLabelTitle(@Nonnull String title);
+    void setSeventhLabelTitle(@Nonnull String title);
 
-    public abstract void setEnableFirstTextBox(boolean isEnable);
+    void setEighthLabelTitle(@Nonnull String title);
 
-    public abstract void setEnableSecondTextBox(boolean isEnable);
+    void setNinthLabelTitle(@Nonnull String title);
 
-    public abstract void setEnableThirdTextBox(boolean isEnable);
+    void setTenthLabelTitle(@Nonnull String title);
 
-    public abstract void setEnableFourthTextBox(boolean isEnable);
+    void setEleventhLabelTitle(@Nonnull String title);
 
-    public abstract void setEnableFifthTextBox(boolean isEnable);
+    void setEnableFirstTextBox(boolean isEnable);
 
-    public abstract void setEnableSixthTextBox(boolean isEnable);
+    void setEnableSecondTextBox(boolean isEnable);
 
-    public abstract void setEnableSeventhTextBox(boolean isEnable);
+    void setEnableThirdTextBox(boolean isEnable);
 
-    public abstract void setEnableEighthTextBox(boolean isEnable);
+    void setEnableFourthTextBox(boolean isEnable);
 
-    public abstract void setEnableNinthTextBox(boolean isEnable);
+    void setEnableFifthTextBox(boolean isEnable);
 
-    public abstract void setEnableTenthTextBox(boolean isEnable);
+    void setEnableSixthTextBox(boolean isEnable);
 
-    public abstract void setEnableEleventhTextBox(boolean isEnable);
+    void setEnableSeventhTextBox(boolean isEnable);
 
-    public abstract void setVisibleFirstButton(boolean isVisible);
+    void setEnableEighthTextBox(boolean isEnable);
 
-    public abstract void setVisibleSecondButton(boolean isVisible);
+    void setEnableNinthTextBox(boolean isEnable);
 
-    public abstract void setVisibleThirdButton(boolean isVisible);
+    void setEnableTenthTextBox(boolean isEnable);
 
-    public abstract void setVisibleFourthButton(boolean isVisible);
+    void setEnableEleventhTextBox(boolean isEnable);
 
-    public abstract void setVisibleFifthButton(boolean isVisible);
+    void setVisibleFirstButton(boolean isVisible);
 
-    public abstract void setVisibleSixthButton(boolean isVisible);
+    void setVisibleSecondButton(boolean isVisible);
 
-    public abstract void setVisibleSeventhButton(boolean isVisible);
+    void setVisibleThirdButton(boolean isVisible);
 
-    public abstract void setVisibleEighthButton(boolean isVisible);
+    void setVisibleFourthButton(boolean isVisible);
 
-    public abstract void setVisibleNinthButton(boolean isVisible);
+    void setVisibleFifthButton(boolean isVisible);
 
-    public abstract void setVisibleTenthButton(boolean isVisible);
+    void setVisibleSixthButton(boolean isVisible);
 
-    public abstract void setVisibleEleventhButton(boolean isVisible);
+    void setVisibleSeventhButton(boolean isVisible);
+
+    void setVisibleEighthButton(boolean isVisible);
+
+    void setVisibleNinthButton(boolean isVisible);
+
+    void setVisibleTenthButton(boolean isVisible);
+
+    void setVisibleEleventhButton(boolean isVisible);
 
 }

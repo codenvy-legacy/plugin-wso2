@@ -18,6 +18,7 @@ package com.codenvy.ide.client.elements.widgets.branch;
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
+import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
@@ -52,7 +53,7 @@ import java.util.List;
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
-public class BranchViewImpl extends BranchView {
+public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> implements BranchView {
 
     @Singleton
     interface CaseWidgetUiBinder extends UiBinder<Widget, BranchViewImpl> {
@@ -96,7 +97,7 @@ public class BranchViewImpl extends BranchView {
             controller.removeDragController();
 
             for (ElementPresenter element : elements) {
-                dragController.makeNotDraggable(element.getView());
+                dragController.makeNotDraggable(element.getView().asWidget());
             }
         }
 
@@ -181,7 +182,7 @@ public class BranchViewImpl extends BranchView {
     }
 
     private void addElementOnView(int x, int y, @Nonnull ElementPresenter elementPresenter) {
-        Widget elementView = elementPresenter.getView();
+        Widget elementView = elementPresenter.getView().asWidget();
 
         controller.addWidget(elementView, x, y);
         dragController.makeDraggable(elementView);

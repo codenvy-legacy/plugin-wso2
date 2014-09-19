@@ -16,9 +16,9 @@
 
 package com.codenvy.ide.client.propertiespanel.property;
 
+import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
-import com.codenvy.ide.client.mvp.AbstractView;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.IsWidget;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  *
  * @author Andrey Plotnikov
  */
-public abstract class AbstractPropertyPresenter<T extends AbstractView> extends AbstractPresenter<T> {
+public abstract class AbstractPropertyPresenter<T extends View> extends AbstractPresenter<T> {
 
     protected AbstractPropertyPresenter(T view) {
         super(view);
@@ -37,7 +37,7 @@ public abstract class AbstractPropertyPresenter<T extends AbstractView> extends 
 
     /** @return the GWT widget that is controlled by the presenter */
     @Nonnull
-    public Widget getView() {
+    public IsWidget getView() {
         return view;
     }
 

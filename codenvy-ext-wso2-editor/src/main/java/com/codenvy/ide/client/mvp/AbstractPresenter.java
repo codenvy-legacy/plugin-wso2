@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.mvp;
 
+import com.codenvy.ide.api.mvp.View;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import javax.annotation.Nonnull;
@@ -24,7 +25,7 @@ import javax.annotation.Nonnull;
  *
  * @author Andrey Plotnikov
  */
-public abstract class AbstractPresenter<T extends AbstractView> implements Presenter, AbstractView.ActionDelegate {
+public abstract class AbstractPresenter<T extends View> {
 
     protected final T view;
 
@@ -34,8 +35,12 @@ public abstract class AbstractPresenter<T extends AbstractView> implements Prese
         this.view.setDelegate(this);
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Show view on a given container.
+     *
+     * @param container
+     *         container where view must be contained
+     */
     public void go(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
     }

@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.mediators.resourcekeyeditor;
 
-import com.codenvy.ide.client.mvp.View;
+import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
@@ -51,4 +51,5 @@ public interface ResourceKeyEditorView extends View<ResourceKeyEditorView.Action
 
     /** Close dialog. */
     void closeDialog();
+
 }

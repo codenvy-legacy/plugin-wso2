@@ -17,6 +17,7 @@ package com.codenvy.ide.client.propertiespanel.mediators.payloadfactory;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
+import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -40,7 +41,8 @@ import java.util.List;
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
-public class PayloadFactoryPropertiesPanelViewImpl extends PayloadFactoryPropertiesPanelView {
+public class PayloadFactoryPropertiesPanelViewImpl extends AbstractView<PayloadFactoryPropertiesPanelView.ActionDelegate>
+        implements PayloadFactoryPropertiesPanelView {
 
     @Singleton
     interface PayloadFactoryPropertiesPanelViewImplUiBinder extends UiBinder<Widget, PayloadFactoryPropertiesPanelViewImpl> {

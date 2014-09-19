@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.propertiespanel.property.complex;
 
 import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -32,7 +33,7 @@ import javax.annotation.Nullable;
 /**
  * @author Andrey Plotnikov
  */
-public class ComplexPropertyViewImpl extends ComplexPropertyView {
+public class ComplexPropertyViewImpl extends AbstractView<ComplexPropertyView.ActionDelegate> implements ComplexPropertyView {
 
     @Singleton
     interface ComplexPropertyViewImplUiBinder extends UiBinder<Widget, ComplexPropertyViewImpl> {

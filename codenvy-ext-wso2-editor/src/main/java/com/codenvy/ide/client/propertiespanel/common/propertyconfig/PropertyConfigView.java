@@ -15,8 +15,8 @@
  */
 package com.codenvy.ide.client.propertiespanel.common.propertyconfig;
 
+import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.client.elements.mediators.log.Property;
-import com.codenvy.ide.client.mvp.View;
 import com.codenvy.ide.collections.Array;
 import com.google.inject.ImplementedBy;
 

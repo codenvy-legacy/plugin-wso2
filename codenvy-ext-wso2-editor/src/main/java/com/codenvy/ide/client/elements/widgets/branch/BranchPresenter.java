@@ -26,7 +26,7 @@ import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.validators.ConnectionsValidator;
 import com.codenvy.ide.client.validators.InnerElementsValidator;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
@@ -99,7 +99,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
 
     /** @return the GWT widget that is controlled by the presenter */
     @Nonnull
-    public Widget getView() {
+    public IsWidget getView() {
         return view;
     }
 

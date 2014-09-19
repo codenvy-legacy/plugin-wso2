@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.toolbar;
 
+import com.codenvy.ide.client.mvp.AbstractView;
 import com.codenvy.ide.client.toolbar.group.ToolbarGroupPresenter;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -32,7 +33,7 @@ import javax.annotation.Nonnull;
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
-public class ToolbarViewImpl extends ToolbarView {
+public class ToolbarViewImpl extends AbstractView<ToolbarView.ActionDelegate> implements ToolbarView {
 
     @Singleton
     interface ToolbarViewImplUiBinder extends UiBinder<Widget, ToolbarViewImpl> {

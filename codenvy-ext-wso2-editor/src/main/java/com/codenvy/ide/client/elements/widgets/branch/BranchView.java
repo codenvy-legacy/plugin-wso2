@@ -15,8 +15,8 @@
  */
 package com.codenvy.ide.client.elements.widgets.branch;
 
+import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
-import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnegative;
@@ -29,13 +29,13 @@ import javax.annotation.Nullable;
  * @author Andrey Plotnikov
  */
 @ImplementedBy(BranchViewImpl.class)
-public abstract class BranchView extends AbstractView<BranchView.ActionDelegate> {
+public interface BranchView extends View<BranchView.ActionDelegate> {
 
-    public static final int ELEMENTS_PADDING = 20;
-    public static final int ARROW_PADDING    = 20;
-    public static final int DEFAULT_HEIGHT   = 100;
-    public static final int DEFAULT_WIDTH    = 90;
-    public static final int TITLE_HEIGHT     = 20;
+    int ELEMENTS_PADDING = 20;
+    int ARROW_PADDING    = 20;
+    int DEFAULT_HEIGHT   = 100;
+    int DEFAULT_WIDTH    = 90;
+    int TITLE_HEIGHT     = 20;
 
     /**
      * Changes title on the view.
@@ -43,7 +43,7 @@ public abstract class BranchView extends AbstractView<BranchView.ActionDelegate>
      * @param title
      *         title that needs to be set
      */
-    public abstract void setTitle(@Nullable String title);
+    void setTitle(@Nullable String title);
 
     /**
      * Adds a diagram element in the container in a given place.
@@ -55,23 +55,23 @@ public abstract class BranchView extends AbstractView<BranchView.ActionDelegate>
      * @param element
      *         the diagram element that needs to be added in container
      */
-    public abstract void addElement(int x, int y, @Nonnull ElementPresenter element);
+    void addElement(int x, int y, @Nonnull ElementPresenter element);
 
     /** Clear container's content. Removes all inner diagram elements. */
-    public abstract void clear();
+    void clear();
 
     /** Set default cursor for branch. */
-    public abstract void setDefaultCursor();
+    void setDefaultCursor();
 
     /** Set apply cursor for branch. */
-    public abstract void setApplyCursor();
+    void setApplyCursor();
 
     /** Set error cursor for branch. */
-    public abstract void setErrorCursor();
+    void setErrorCursor();
 
     /** @return the width of the view */
     @Nonnegative
-    public abstract int getWidth();
+    int getWidth();
 
     /**
      * Changes width of the view.
@@ -79,11 +79,11 @@ public abstract class BranchView extends AbstractView<BranchView.ActionDelegate>
      * @param width
      *         new width of the view
      */
-    public abstract void setWidth(@Nonnegative int width);
+    void setWidth(@Nonnegative int width);
 
     /** @return the height of the view */
     @Nonnegative
-    public abstract int getHeight();
+    int getHeight();
 
     /**
      * Changes height of the view.
@@ -91,9 +91,9 @@ public abstract class BranchView extends AbstractView<BranchView.ActionDelegate>
      * @param height
      *         new height of the view
      */
-    public abstract void setHeight(@Nonnegative int height);
+    void setHeight(@Nonnegative int height);
 
-    public interface ActionDelegate extends AbstractView.ActionDelegate {
+    public interface ActionDelegate {
 
         /**
          * Performs some actions in response to a user's doing left mouse click.

@@ -15,8 +15,8 @@
  */
 package com.codenvy.ide.client.elements.widgets.element;
 
+import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.client.elements.widgets.branch.BranchPresenter;
-import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.resources.client.ImageResource;
 
 import javax.annotation.Nonnegative;
@@ -28,11 +28,11 @@ import javax.annotation.Nullable;
  *
  * @author Andrey Plotnikov
  */
-public abstract class ElementView extends AbstractView<ElementView.ActionDelegate> {
+public interface ElementView extends View<ElementView.ActionDelegate> {
 
-    public static final int BRANCHES_PADDING = 12;
-    public static final int DEFAULT_HEIGHT   = 80;
-    public static final int DEFAULT_WIDTH    = 70;
+    int BRANCHES_PADDING = 12;
+    int DEFAULT_HEIGHT   = 80;
+    int DEFAULT_WIDTH    = 70;
 
     /**
      * Change content of title visual element.
@@ -40,7 +40,7 @@ public abstract class ElementView extends AbstractView<ElementView.ActionDelegat
      * @param title
      *         content that need to be applied
      */
-    public abstract void setTitle(@Nonnull String title);
+    void setTitle(@Nonnull String title);
 
     /**
      * Change icon of element.
@@ -48,7 +48,7 @@ public abstract class ElementView extends AbstractView<ElementView.ActionDelegat
      * @param icon
      *         icon that need to be applied
      */
-    public abstract void setIcon(@Nullable ImageResource icon);
+    void setIcon(@Nullable ImageResource icon);
 
     /**
      * Adds a new branch on the view.
@@ -56,18 +56,18 @@ public abstract class ElementView extends AbstractView<ElementView.ActionDelegat
      * @param branchPresenter
      *         branch that needs to be added
      */
-    public abstract void addBranch(@Nonnull BranchPresenter branchPresenter);
+    void addBranch(@Nonnull BranchPresenter branchPresenter);
 
     /**
      * Removes all branches for the view.
      */
-    public abstract void removeBranches();
+    void removeBranches();
 
     /** Changes the visual style of element that makes understandable that the element is selected. */
-    public abstract void select();
+    void select();
 
     /** Changes the visual style of element that makes understandable that the element is unselected. */
-    public abstract void unselect();
+    void unselect();
 
     /**
      * Changes the visual style of element that makes understandable that the element is selected by the mouse cursor over.
@@ -77,10 +77,10 @@ public abstract class ElementView extends AbstractView<ElementView.ActionDelegat
      *         impossible to create a connection or etc)
      *         <code>false</code> if it isn't.
      */
-    public abstract void selectBelowCursor(boolean isError);
+    void selectBelowCursor(boolean isError);
 
     /** Unselect widget when mouse cursor is moved out. */
-    public abstract void unselectBelowCursor();
+    void unselectBelowCursor();
 
     /**
      * Shows context menu that is needed for the current element.
@@ -90,10 +90,10 @@ public abstract class ElementView extends AbstractView<ElementView.ActionDelegat
      * @param y
      *         the y-position where the menu should be opened
      */
-    public abstract void showContextMenu(@Nonnegative int x, @Nonnegative int y);
+    void showContextMenu(@Nonnegative int x, @Nonnegative int y);
 
     /** Hides context menu. */
-    public abstract void hideContextMenu();
+    void hideContextMenu();
 
     /**
      * Changes visible state of title and icon panel of the view.
@@ -101,11 +101,11 @@ public abstract class ElementView extends AbstractView<ElementView.ActionDelegat
      * @param visible
      *         <code>true</code> the panel will be shown, <code>false</code> it will not
      */
-    public abstract void setVisibleTitleAndIcon(boolean visible);
+    void setVisibleTitleAndIcon(boolean visible);
 
     /** @return the width of the view */
     @Nonnegative
-    public abstract int getWidth();
+    int getWidth();
 
     /**
      * Changes width of the view.
@@ -113,11 +113,11 @@ public abstract class ElementView extends AbstractView<ElementView.ActionDelegat
      * @param width
      *         new width of the view
      */
-    public abstract void setWidth(@Nonnegative int width);
+    void setWidth(@Nonnegative int width);
 
     /** @return the height of the view */
     @Nonnegative
-    public abstract int getHeight();
+    int getHeight();
 
     /**
      * Changes height of the view.
@@ -125,7 +125,7 @@ public abstract class ElementView extends AbstractView<ElementView.ActionDelegat
      * @param height
      *         new height of the view
      */
-    public abstract void setHeight(@Nonnegative int height);
+    void setHeight(@Nonnegative int height);
 
     /**
      * Changes y-position of the view on the parent container.
@@ -133,9 +133,9 @@ public abstract class ElementView extends AbstractView<ElementView.ActionDelegat
      * @param y
      *         new y-position of the view
      */
-    public abstract void setY(@Nonnegative int y);
+    void setY(@Nonnegative int y);
 
-    public interface ActionDelegate extends AbstractView.ActionDelegate {
+    public interface ActionDelegate {
 
         /** Performs some actions in response to a user's clicking on diagram element. */
         void onMouseLeftButtonClicked();

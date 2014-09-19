@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.propertiespanel.mediators.respond;
 
 import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -33,7 +34,8 @@ import javax.annotation.Nullable;
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
-public class RespondPropertiesPanelViewImpl extends RespondPropertiesPanelView {
+public class RespondPropertiesPanelViewImpl extends AbstractView<RespondPropertiesPanelView.ActionDelegate>
+        implements RespondPropertiesPanelView {
 
     @Singleton
     interface RespondPropertiesPanelViewImplUiBinder extends UiBinder<Widget, RespondPropertiesPanelViewImpl> {

@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.mediators.sequence;
 
-import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
@@ -29,13 +29,13 @@ import java.util.List;
  * @author Andrey Plotnikov
  */
 @ImplementedBy(SequencePropertiesPanelViewImpl.class)
-public abstract class SequencePropertiesPanelView extends AbstractView<SequencePropertiesPanelView.ActionDelegate> {
+public interface SequencePropertiesPanelView extends View<SequencePropertiesPanelView.ActionDelegate> {
 
     /**
      * Interface defines methods of {@link SequencePropertiesPanelPresenter} which calls from view. These methods defines
      * some actions when user changes properties of Sequence mediator.
      */
-    public interface ActionDelegate extends AbstractView.ActionDelegate {
+    public interface ActionDelegate {
 
         /** Performs some actions in response to user's changing referring type field. */
         void onReferringTypeChanged();
@@ -50,7 +50,7 @@ public abstract class SequencePropertiesPanelView extends AbstractView<SequenceP
 
     /** @return content of the referring type field */
     @Nonnull
-    public abstract String getReferringType();
+    String getReferringType();
 
     /**
      * Changes content of the referring type field.
@@ -58,7 +58,7 @@ public abstract class SequencePropertiesPanelView extends AbstractView<SequenceP
      * @param referringTypes
      *         new content of the field
      */
-    public abstract void setReferringTypes(@Nullable List<String> referringTypes);
+    void setReferringTypes(@Nullable List<String> referringTypes);
 
     /**
      * Selects an item from list of referring types in the referring type field.
@@ -66,11 +66,11 @@ public abstract class SequencePropertiesPanelView extends AbstractView<SequenceP
      * @param referringType
      *         new selected type
      */
-    public abstract void selectReferringType(@Nonnull String referringType);
+    void selectReferringType(@Nonnull String referringType);
 
     /** @return content of the static reference key field */
     @Nonnull
-    public abstract String getStaticReferenceKey();
+    String getStaticReferenceKey();
 
     /**
      * Changes content of the static reference key field.
@@ -78,7 +78,7 @@ public abstract class SequencePropertiesPanelView extends AbstractView<SequenceP
      * @param staticReferenceKey
      *         new content of the static reference key field
      */
-    public abstract void setStaticReferenceKey(@Nullable String staticReferenceKey);
+    void setStaticReferenceKey(@Nullable String staticReferenceKey);
 
     /**
      * Changes content of the dynamic reference key field.
@@ -86,7 +86,7 @@ public abstract class SequencePropertiesPanelView extends AbstractView<SequenceP
      * @param dynamicReferenceKey
      *         new content of the dynamic reference key field
      */
-    public abstract void setDynamicReferenceKey(@Nullable String dynamicReferenceKey);
+    void setDynamicReferenceKey(@Nullable String dynamicReferenceKey);
 
     /**
      * Changes visible state of the dynamic reference key panel.
@@ -94,7 +94,7 @@ public abstract class SequencePropertiesPanelView extends AbstractView<SequenceP
      * @param visible
      *         <code>true</code> the panel will be shown, <code>false</code> it will not
      */
-    public abstract void setVisibleDynamicReferenceKeyPanel(boolean visible);
+    void setVisibleDynamicReferenceKeyPanel(boolean visible);
 
     /**
      * Changes visible state of the static reference key panel.
@@ -102,6 +102,6 @@ public abstract class SequencePropertiesPanelView extends AbstractView<SequenceP
      * @param visible
      *         <code>true</code> the panel will be shown, <code>false</code> it will not
      */
-    public abstract void setVisibleStaticReferenceKeyPanel(boolean visible);
+    void setVisibleStaticReferenceKeyPanel(boolean visible);
 
 }

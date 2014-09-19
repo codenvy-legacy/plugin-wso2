@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.mediators.send;
 
-import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
@@ -30,13 +30,13 @@ import java.util.List;
  * @author Dmitry Shnurenko
  */
 @ImplementedBy(SendPropertiesPanelViewImpl.class)
-public abstract class SendPropertiesPanelView extends AbstractView<SendPropertiesPanelView.ActionDelegate> {
+public interface SendPropertiesPanelView extends View<SendPropertiesPanelView.ActionDelegate> {
 
     /**
      * Interface defines methods of {@link SendPropertiesPanelPresenter} which calls from view. These methods defines
      * some actions when user changes properties of Send mediator.
      */
-    public interface ActionDelegate extends AbstractView.ActionDelegate {
+    public interface ActionDelegate {
 
         /** Performs any actions appropriate in response to the user having changed skip serialization parameter. */
         void onSkipSerializationChanged();
@@ -64,7 +64,7 @@ public abstract class SendPropertiesPanelView extends AbstractView<SendPropertie
      * @param sequence
      *         value which need to set to special place of view
      */
-    public abstract void setStaticSequence(@Nullable String sequence);
+    void setStaticSequence(@Nullable String sequence);
 
     /**
      * Sets dynamic sequence to the special place on the view which uses for showing dynamic sequence parameter.
@@ -72,11 +72,11 @@ public abstract class SendPropertiesPanelView extends AbstractView<SendPropertie
      * @param sequence
      *         value which need to set to special place of view
      */
-    public abstract void setDynamicSequence(@Nullable String sequence);
+    void setDynamicSequence(@Nullable String sequence);
 
     /** @return skip serialization value from the special place on the view which uses for showing skip serialization parameter */
     @Nonnull
-    public abstract String getSkipSerialization();
+    String getSkipSerialization();
 
     /**
      * Sets skip serialization value to the special place on the view which uses for showing skip serialization parameter.
@@ -84,11 +84,11 @@ public abstract class SendPropertiesPanelView extends AbstractView<SendPropertie
      * @param states
      *         list types of skip serialization which need to set to special list box
      */
-    public abstract void setSkipSerializationStates(@Nullable List<String> states);
+    void setSkipSerializationStates(@Nullable List<String> states);
 
     /** @return receiving sequence type value from the special place on the view which uses for showing receiving sequence type parameter */
     @Nonnull
-    public abstract String getReceivingSequencerType();
+    String getReceivingSequencerType();
 
     /**
      * Select receiving sequence type in place on view.
@@ -96,7 +96,7 @@ public abstract class SendPropertiesPanelView extends AbstractView<SendPropertie
      * @param receivingSequencerType
      *         receiving sequence type
      */
-    public abstract void selectReceivingSequencerType(@Nullable String receivingSequencerType);
+    void selectReceivingSequencerType(@Nullable String receivingSequencerType);
 
     /**
      * Sets receiving sequence type to the special place on the view which uses for showing receiving sequence type parameter.
@@ -104,14 +104,14 @@ public abstract class SendPropertiesPanelView extends AbstractView<SendPropertie
      * @param receivingSequencerTypes
      *         list receiving sequence types which need to set to special list box
      */
-    public abstract void setReceivingSequencerTypes(@Nullable List<String> receivingSequencerTypes);
+    void setReceivingSequencerTypes(@Nullable List<String> receivingSequencerTypes);
 
     /**
      * @return build message before sending parameter from the special place on the view which uses for showing build message before
      * sending parameter
      */
     @Nonnull
-    public abstract String getBuildMessage();
+    String getBuildMessage();
 
     /**
      * Select build message before sending parameter in place on view.
@@ -119,7 +119,7 @@ public abstract class SendPropertiesPanelView extends AbstractView<SendPropertie
      * @param buildMessageBeforeSending
      *         build message before sending value
      */
-    public abstract void selectBuildMessageBeforeSending(@Nullable String buildMessageBeforeSending);
+    void selectBuildMessageBeforeSending(@Nullable String buildMessageBeforeSending);
 
     /**
      * Sets build message before sending type to the special place on the view which uses for showing build message before sending type
@@ -128,11 +128,11 @@ public abstract class SendPropertiesPanelView extends AbstractView<SendPropertie
      * @param buildMessageBeforeSending
      *         list build message before sending types which need to set to special list box
      */
-    public abstract void setBuildMessageBeforeSending(@Nonnull List<String> buildMessageBeforeSending);
+    void setBuildMessageBeforeSending(@Nonnull List<String> buildMessageBeforeSending);
 
     /** @return description value from the special place on the view which uses for showing description parameter */
     @Nonnull
-    public abstract String getDescription();
+    String getDescription();
 
     /**
      * Sets description to the special place on the view which uses for showing description parameter.
@@ -140,7 +140,7 @@ public abstract class SendPropertiesPanelView extends AbstractView<SendPropertie
      * @param description
      *         description value
      */
-    public abstract void setDescription(@Nullable String description);
+    void setDescription(@Nullable String description);
 
     /**
      * Set receiving sequence type panel on view.
@@ -148,7 +148,7 @@ public abstract class SendPropertiesPanelView extends AbstractView<SendPropertie
      * @param isVisible
      *         <code>true</code> to show panel, <code>false</code> not to show
      */
-    public abstract void setVisibleRecSeqTypePanel(boolean isVisible);
+    void setVisibleRecSeqTypePanel(boolean isVisible);
 
     /**
      * Set build message before sending panel on view.
@@ -156,7 +156,7 @@ public abstract class SendPropertiesPanelView extends AbstractView<SendPropertie
      * @param isVisible
      *         <code>true</code> to show panel, <code>false</code> not to show
      */
-    public abstract void setVisibleBuildMessagePanel(boolean isVisible);
+    void setVisibleBuildMessagePanel(boolean isVisible);
 
     /**
      * Set dynamic receiving sequence panel on view.
@@ -164,7 +164,7 @@ public abstract class SendPropertiesPanelView extends AbstractView<SendPropertie
      * @param isVisible
      *         <code>true</code> to show panel, <code>false</code> not to show
      */
-    public abstract void setVisibleDynamicPanel(boolean isVisible);
+    void setVisibleDynamicPanel(boolean isVisible);
 
     /**
      * Set static receiving sequence panel on view.
@@ -172,7 +172,7 @@ public abstract class SendPropertiesPanelView extends AbstractView<SendPropertie
      * @param isVisible
      *         <code>true</code> to show panel, <code>false</code> not to show
      */
-    public abstract void setVisibleStaticPanel(boolean isVisible);
+    void setVisibleStaticPanel(boolean isVisible);
 
     /**
      * Set description panel on view.
@@ -180,6 +180,6 @@ public abstract class SendPropertiesPanelView extends AbstractView<SendPropertie
      * @param isVisible
      *         <code>true</code> to show panel, <code>false</code> not to show
      */
-    public abstract void setVisibleDescriptionPanel(boolean isVisible);
+    void setVisibleDescriptionPanel(boolean isVisible);
 
 }

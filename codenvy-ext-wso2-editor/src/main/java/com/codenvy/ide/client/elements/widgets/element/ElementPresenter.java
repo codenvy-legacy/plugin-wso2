@@ -25,7 +25,7 @@ import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.validators.InnerElementsValidator;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -101,7 +101,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
 
     /** @return the GWT widget that is controlled by the presenter */
     @Nonnull
-    public Widget getView() {
+    public IsWidget getView() {
         return view;
     }
 

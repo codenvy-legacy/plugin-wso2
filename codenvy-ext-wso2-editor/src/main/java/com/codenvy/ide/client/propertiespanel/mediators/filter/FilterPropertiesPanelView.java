@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.mediators.filter;
 
-import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
@@ -29,13 +29,13 @@ import java.util.List;
  * @author Andrey Plotnikov
  */
 @ImplementedBy(FilterPropertiesPanelViewImpl.class)
-public abstract class FilterPropertiesPanelView extends AbstractView<FilterPropertiesPanelView.ActionDelegate> {
+public interface FilterPropertiesPanelView extends View<FilterPropertiesPanelView.ActionDelegate> {
 
     /**
      * Interface defines methods of {@link FilterPropertiesPanelPresenter} which calls from view. These methods defines
      * some actions when user change properties of Filter mediator.
      */
-    public interface ActionDelegate extends AbstractView.ActionDelegate {
+    public interface ActionDelegate {
 
         /** Performs some actions in response to user's changing condition type field. */
         void onConditionTypeChanged();
@@ -53,7 +53,7 @@ public abstract class FilterPropertiesPanelView extends AbstractView<FilterPrope
 
     /** @return content of the condition type field */
     @Nonnull
-    public abstract String getConditionType();
+    String getConditionType();
 
     /**
      * Selects an item from list of condition types in the condition type field.
@@ -61,7 +61,7 @@ public abstract class FilterPropertiesPanelView extends AbstractView<FilterPrope
      * @param conditionType
      *         new selected type
      */
-    public abstract void selectConditionType(@Nonnull String conditionType);
+    void selectConditionType(@Nonnull String conditionType);
 
     /**
      * Changes content of the condition type field.
@@ -69,7 +69,7 @@ public abstract class FilterPropertiesPanelView extends AbstractView<FilterPrope
      * @param conditionTypes
      *         new content of the field
      */
-    public abstract void setConditionTypes(@Nullable List<String> conditionTypes);
+    void setConditionTypes(@Nullable List<String> conditionTypes);
 
     /**
      * Changes content of the source field.
@@ -77,11 +77,11 @@ public abstract class FilterPropertiesPanelView extends AbstractView<FilterPrope
      * @param source
      *         new content of the field
      */
-    public abstract void setSource(@Nullable String source);
+    void setSource(@Nullable String source);
 
     /** @return content of the regular expression field */
     @Nonnull
-    public abstract String getRegularExpression();
+    String getRegularExpression();
 
     /**
      * Changes content of the regular expression field.
@@ -89,8 +89,7 @@ public abstract class FilterPropertiesPanelView extends AbstractView<FilterPrope
      * @param regularExpression
      *         new content of the field
      */
-
-    public abstract void setRegularExpression(@Nonnull String regularExpression);
+    void setRegularExpression(@Nonnull String regularExpression);
 
     /**
      * Changes content of the xpath field.
@@ -98,7 +97,7 @@ public abstract class FilterPropertiesPanelView extends AbstractView<FilterPrope
      * @param xPath
      *         new content of the field
      */
-    public abstract void setXPath(@Nullable String xPath);
+    void setXPath(@Nullable String xPath);
 
     /**
      * Changes visible state of the source panel.
@@ -106,7 +105,7 @@ public abstract class FilterPropertiesPanelView extends AbstractView<FilterPrope
      * @param visible
      *         <code>true</code> the panel will be shown, <code>false</code> it will not
      */
-    public abstract void setVisibleSourcePanel(boolean visible);
+    void setVisibleSourcePanel(boolean visible);
 
     /**
      * Changes visible state of the regular expression panel.
@@ -114,7 +113,7 @@ public abstract class FilterPropertiesPanelView extends AbstractView<FilterPrope
      * @param visible
      *         <code>true</code> the panel will be shown, <code>false</code> it will not
      */
-    public abstract void setVisibleRegularExpressionPanel(boolean visible);
+    void setVisibleRegularExpressionPanel(boolean visible);
 
     /**
      * Changes visible state of the xpath panel.
@@ -122,6 +121,6 @@ public abstract class FilterPropertiesPanelView extends AbstractView<FilterPrope
      * @param visible
      *         <code>true</code> the panel will be shown, <code>false</code> it will not
      */
-    public abstract void setVisibleXpathPanel(boolean visible);
+    void setVisibleXpathPanel(boolean visible);
 
 }

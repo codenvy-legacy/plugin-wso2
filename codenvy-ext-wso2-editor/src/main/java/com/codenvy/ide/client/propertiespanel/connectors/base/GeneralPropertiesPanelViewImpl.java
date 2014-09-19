@@ -17,6 +17,7 @@ package com.codenvy.ide.client.propertiespanel.connectors.base;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
+import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -44,7 +45,8 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
-public class GeneralPropertiesPanelViewImpl extends GeneralPropertiesPanelView {
+public class GeneralPropertiesPanelViewImpl extends AbstractView<GeneralPropertiesPanelView.ActionDelegate>
+        implements GeneralPropertiesPanelView {
 
     @Singleton
     interface BaseConnectorViewImplUiBinder extends UiBinder<Widget, GeneralPropertiesPanelViewImpl> {

@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.mediators.payloadfactory;
 
-import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
@@ -31,13 +31,13 @@ import java.util.List;
  * @author Dmitry Shnurenko
  */
 @ImplementedBy(PayloadFactoryPropertiesPanelViewImpl.class)
-public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<PayloadFactoryPropertiesPanelView.ActionDelegate> {
+public interface PayloadFactoryPropertiesPanelView extends View<PayloadFactoryPropertiesPanelView.ActionDelegate> {
 
     /**
      * Interface defines methods of {@link PayloadFactoryPropertiesPanelPresenter} which calls from view. These methods defines
      * some actions when user changes properties of PayloadFactory mediator.
      */
-    public interface ActionDelegate extends AbstractView.ActionDelegate {
+    public interface ActionDelegate {
 
         /** Performs any actions appropriate in response to the user having changed payload format field. */
         void onPayloadFormatChanged();
@@ -65,7 +65,7 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
 
     /** return payload format value */
     @Nonnull
-    public abstract String getPayloadFormat();
+    String getPayloadFormat();
 
     /**
      * Select payload format in place on view.
@@ -73,7 +73,7 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
      * @param payloadFormat
      *         payload format value
      */
-    public abstract void selectPayloadFormat(@Nullable String payloadFormat);
+    void selectPayloadFormat(@Nullable String payloadFormat);
 
     /**
      * Set payload format value.
@@ -81,11 +81,11 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
      * @param payloadFormats
      *         values of payload format field.
      */
-    public abstract void setPayloadFormats(@Nonnull List<String> payloadFormats);
+    void setPayloadFormats(@Nonnull List<String> payloadFormats);
 
     /** @return format value from special view's place */
     @Nonnull
-    public abstract String getFormat();
+    String getFormat();
 
     /**
      * Set format value to special place on view.
@@ -93,7 +93,7 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
      * @param format
      *         value of format
      */
-    public abstract void setFormat(@Nonnull String format);
+    void setFormat(@Nonnull String format);
 
     /**
      * Set format key to special place on view.
@@ -101,11 +101,11 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
      * @param formatKey
      *         value of format key
      */
-    public abstract void setFormatKey(@Nullable String formatKey);
+    void setFormatKey(@Nullable String formatKey);
 
     /** @return args value from special view's place */
     @Nonnull
-    public abstract String getArgs();
+    String getArgs();
 
     /**
      * Set args value to special place on view.
@@ -113,11 +113,11 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
      * @param args
      *         value of args
      */
-    public abstract void setArgs(@Nonnull String args);
+    void setArgs(@Nonnull String args);
 
     /** @return media type of PayLoad mediator from special view's place */
     @Nonnull
-    public abstract String getMediaType();
+    String getMediaType();
 
     /**
      * Select value of media type.
@@ -125,7 +125,7 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
      * @param mediaType
      *         selected value of media type
      */
-    public abstract void selectMediaType(@Nullable String mediaType);
+    void selectMediaType(@Nullable String mediaType);
 
     /**
      * Set media type values.
@@ -133,11 +133,11 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
      * @param mediaTypes
      *         list which need to set
      */
-    public abstract void setMediaTypes(@Nonnull List<String> mediaTypes);
+    void setMediaTypes(@Nonnull List<String> mediaTypes);
 
     /** @return description from special view's place */
     @Nonnull
-    public abstract String getDescription();
+    String getDescription();
 
     /**
      * Set description to special place on view.
@@ -145,7 +145,7 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
      * @param description
      *         value of description
      */
-    public abstract void setDescription(@Nullable String description);
+    void setDescription(@Nullable String description);
 
 
     /**
@@ -154,7 +154,7 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
      * @param isVisible
      *         <code>true</code> to show format panel, <code>false</code> not to show
      */
-    public abstract void setVisibleFormatPanel(boolean isVisible);
+    void setVisibleFormatPanel(boolean isVisible);
 
     /**
      * Set visible format key panel on view.
@@ -162,6 +162,6 @@ public abstract class PayloadFactoryPropertiesPanelView extends AbstractView<Pay
      * @param isVisible
      *         <code>true</code> to show format key panel, <code>false</code> not to show
      */
-    public abstract void setVisibleFormatKeyPanel(boolean isVisible);
+    void setVisibleFormatKeyPanel(boolean isVisible);
 
 }

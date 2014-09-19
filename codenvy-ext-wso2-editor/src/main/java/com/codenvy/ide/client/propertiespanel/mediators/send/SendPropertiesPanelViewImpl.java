@@ -17,6 +17,7 @@ package com.codenvy.ide.client.propertiespanel.mediators.send;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
+import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -40,7 +41,7 @@ import java.util.List;
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
-public class SendPropertiesPanelViewImpl extends SendPropertiesPanelView {
+public class SendPropertiesPanelViewImpl extends AbstractView<SendPropertiesPanelView.ActionDelegate> implements SendPropertiesPanelView {
 
     @Singleton
     interface SendPropertiesPanelViewImplUiBinder extends UiBinder<Widget, SendPropertiesPanelViewImpl> {

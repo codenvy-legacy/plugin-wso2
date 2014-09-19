@@ -16,7 +16,7 @@
 
 package com.codenvy.ide.client.toolbar.group;
 
-import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.client.toolbar.item.ToolbarItemPresenter;
 import com.google.inject.ImplementedBy;
 
@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * @author Andrey Plotnikov
  */
 @ImplementedBy(ToolbarGroupViewImpl.class)
-public abstract class ToolbarGroupView extends AbstractView<ToolbarGroupView.ActionDelegate> {
+public interface ToolbarGroupView extends View<ToolbarGroupView.ActionDelegate> {
 
     /**
      * Changes visible state of item's panel of the view.
@@ -36,7 +36,7 @@ public abstract class ToolbarGroupView extends AbstractView<ToolbarGroupView.Act
      * @param visible
      *         <code>true</code> the panel will be shown, <code>false</code> it will not
      */
-    public abstract void setVisibleItemsPanel(boolean visible);
+    void setVisibleItemsPanel(boolean visible);
 
     /**
      * Adds a toolbar item widget on the view.
@@ -44,15 +44,15 @@ public abstract class ToolbarGroupView extends AbstractView<ToolbarGroupView.Act
      * @param toolbarItem
      *         toolbar item that need to be added
      */
-    public abstract void addItem(@Nonnull ToolbarItemPresenter toolbarItem);
+    void addItem(@Nonnull ToolbarItemPresenter toolbarItem);
 
     /** Rotate fold/unfold icon on the view. */
-    public abstract void rotateIcon();
+    void rotateIcon();
 
     /** Reset default view of the fold/unfold icon on the view. */
-    public abstract void defaultIcon();
+    void defaultIcon();
 
-    public interface ActionDelegate extends AbstractView.ActionDelegate {
+    public interface ActionDelegate {
         /** Performs some actions in response to a user's clicking on the main panel of the view. */
         void onItemClicked();
     }

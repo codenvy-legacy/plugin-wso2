@@ -16,7 +16,7 @@
 
 package com.codenvy.ide.client.propertiespanel.property.simple;
 
-import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * @author Andrey Plotnikov
  */
 @ImplementedBy(SimplePropertyViewImpl.class)
-public abstract class SimplePropertyView extends AbstractView<SimplePropertyView.ActionDelegate> {
+public interface SimplePropertyView extends View<SimplePropertyView.ActionDelegate> {
 
     /**
      * Changes title of property on the view.
@@ -37,11 +37,11 @@ public abstract class SimplePropertyView extends AbstractView<SimplePropertyView
      * @param title
      *         title that needs to be changed
      */
-    public abstract void setTitle(@Nullable String title);
+    void setTitle(@Nullable String title);
 
     /** @return selected property value */
     @Nonnull
-    public abstract String getProperty();
+    String getProperty();
 
     /**
      * Changes property value on the view.
@@ -49,9 +49,17 @@ public abstract class SimplePropertyView extends AbstractView<SimplePropertyView
      * @param property
      *         property value that need to be set
      */
-    public abstract void setProperty(@Nullable String property);
+    void setProperty(@Nullable String property);
 
-    public interface ActionDelegate extends AbstractView.ActionDelegate {
+    /**
+     * Changes visible state of the main panel.
+     *
+     * @param visible
+     *         <code>true</code> the panel will be shown, <code>false</code> it will not
+     */
+    void setVisible(boolean visible);
+
+    public interface ActionDelegate {
         /** Performs some actions in response to a user's changing property value. */
         void onPropertyChanged();
     }

@@ -17,12 +17,12 @@ package com.codenvy.ide.client.propertiespanel.property;
 
 import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyView;
-import com.googlecode.gwt.test.GwtModule;
-import com.googlecode.gwt.test.GwtTestWithMockito;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,8 +36,8 @@ import static org.mockito.Mockito.when;
 /**
  * @author Andrey Plotnikov
  */
-@GwtModule("com.codenvy.ide.WSO2Editor")
-public class ListPropertyPresenterTest extends GwtTestWithMockito {
+@RunWith(MockitoJUnitRunner.class)
+public class ListPropertyPresenterTest {
 
     private static final String STRING = "some text";
 

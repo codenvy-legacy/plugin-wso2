@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.editor;
 
-import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.api.mvp.View;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.ImplementedBy;
 
@@ -28,13 +28,13 @@ import javax.annotation.Nonnull;
  * @author Dmitry Shnurenko
  */
 @ImplementedBy(WSO2EditorViewImpl.class)
-public abstract class WSO2EditorView extends AbstractView<WSO2EditorView.ActionDelegate> {
+public interface WSO2EditorView extends View<WSO2EditorView.ActionDelegate> {
 
     /**
      * Interface defines methods of WSO2Editor's presenter which calls from view. These methods defines
      * some actions when user click show or hide button of properties panel.
      */
-    public interface ActionDelegate extends AbstractView.ActionDelegate {
+    public interface ActionDelegate {
 
         /** Performs some actions in response to user's clicking on hide panel button. */
         void onHidePanelButtonClicked();
@@ -46,15 +46,15 @@ public abstract class WSO2EditorView extends AbstractView<WSO2EditorView.ActionD
 
     /** @return place where toolbar need to be located */
     @Nonnull
-    public abstract AcceptsOneWidget getToolbarPanel();
+    AcceptsOneWidget getToolbarPanel();
 
     /** @return place where properties panel need to be located */
     @Nonnull
-    public abstract AcceptsOneWidget getPropertiesPanel();
+    AcceptsOneWidget getPropertiesPanel();
 
     /** @return place where workspace need to be located */
     @Nonnull
-    public abstract AcceptsOneWidget getWorkspacePanel();
+    AcceptsOneWidget getWorkspacePanel();
 
     /**
      * Changes visible state of the property panel.
@@ -62,6 +62,6 @@ public abstract class WSO2EditorView extends AbstractView<WSO2EditorView.ActionD
      * @param isVisible
      *         <code>true</code> the panel will be shown, <code>false</code> it will not
      */
-    public abstract void setVisiblePropertyPanel(boolean isVisible);
+    void setVisiblePropertyPanel(boolean isVisible);
 
 }

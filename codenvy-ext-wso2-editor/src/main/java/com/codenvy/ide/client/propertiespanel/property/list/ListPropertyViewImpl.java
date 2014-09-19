@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.propertiespanel.property.list;
 
 import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -33,7 +34,7 @@ import java.util.List;
 /**
  * @author Andrey Plotnikov
  */
-public class ListPropertyViewImpl extends ListPropertyView {
+public class ListPropertyViewImpl extends AbstractView<ListPropertyView.ActionDelegate> implements ListPropertyView {
 
     @Singleton
     interface ListPropertyViewImplUiBinder extends UiBinder<Widget, ListPropertyViewImpl> {

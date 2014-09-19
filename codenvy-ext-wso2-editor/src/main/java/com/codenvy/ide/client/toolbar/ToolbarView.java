@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.toolbar;
 
-import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.client.toolbar.group.ToolbarGroupPresenter;
 import com.google.inject.ImplementedBy;
 
@@ -28,12 +28,16 @@ import javax.annotation.Nonnull;
  * @author Dmitry Shnurenko
  */
 @ImplementedBy(ToolbarViewImpl.class)
-public abstract class ToolbarView extends AbstractView<AbstractView.ActionDelegate> {
+public interface ToolbarView extends View<ToolbarView.ActionDelegate> {
     /**
      * Adds a toolbar group on the view.
      *
      * @param toolbarGroup
      *         toolbar group that needs to be added
      */
-    public abstract void addGroup(@Nonnull ToolbarGroupPresenter toolbarGroup);
+    void addGroup(@Nonnull ToolbarGroupPresenter toolbarGroup);
+
+    public interface ActionDelegate {
+    }
+
 }

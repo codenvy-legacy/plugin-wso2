@@ -18,12 +18,12 @@ package com.codenvy.ide.client.propertiespanel.property;
 import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupView;
-import com.googlecode.gwt.test.GwtModule;
-import com.googlecode.gwt.test.GwtTestWithMockito;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
@@ -35,8 +35,8 @@ import static org.mockito.Mockito.when;
 /**
  * @author Andrey Plotnikov
  */
-@GwtModule("com.codenvy.ide.WSO2Editor")
-public class PropertyGroupPresenterTest extends GwtTestWithMockito {
+@RunWith(MockitoJUnitRunner.class)
+public class PropertyGroupPresenterTest {
 
     private static final String STRING = "some text";
 

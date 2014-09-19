@@ -17,12 +17,12 @@ package com.codenvy.ide.client.propertiespanel.property;
 
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyView;
-import com.googlecode.gwt.test.GwtModule;
-import com.googlecode.gwt.test.GwtTestWithMockito;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter.EditButtonClickedListener;
 import static org.junit.Assert.assertEquals;
@@ -32,8 +32,8 @@ import static org.mockito.Mockito.verify;
 /**
  * @author Andrey Plotnikov
  */
-@GwtModule("com.codenvy.ide.WSO2Editor")
-public class ComplexPropertyPresenterTest extends GwtTestWithMockito {
+@RunWith(MockitoJUnitRunner.class)
+public class ComplexPropertyPresenterTest {
 
     private static final String STRING = "some text";
 

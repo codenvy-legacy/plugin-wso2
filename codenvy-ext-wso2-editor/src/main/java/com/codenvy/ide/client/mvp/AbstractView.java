@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.mvp;
 
+import com.codenvy.ide.api.mvp.View;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
 
@@ -29,11 +30,7 @@ import java.util.List;
  *         type of action delegate
  * @author Andrey Plotnikov
  */
-public abstract class AbstractView<T extends AbstractView.ActionDelegate> extends Composite implements View<T> {
-
-    /** Required for delegating functions in the view. */
-    public interface ActionDelegate {
-    }
+public abstract class AbstractView<T> extends Composite implements View<T> {
 
     protected T delegate;
 

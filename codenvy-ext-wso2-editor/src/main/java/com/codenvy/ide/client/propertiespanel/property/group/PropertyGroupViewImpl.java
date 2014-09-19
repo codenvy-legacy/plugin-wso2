@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.propertiespanel.property.group;
 
 import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.mvp.AbstractView;
 import com.codenvy.ide.client.propertiespanel.property.AbstractPropertyPresenter;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -36,7 +37,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Andrey Plotnikov
  */
-public class PropertyGroupViewImpl extends PropertyGroupView {
+public class PropertyGroupViewImpl extends AbstractView<PropertyGroupView.ActionDelegate> implements PropertyGroupView {
 
     @Singleton
     interface PropertyGroupViewImplUiBinder extends UiBinder<Widget, PropertyGroupViewImpl> {

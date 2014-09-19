@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.general.root;
 
-import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
@@ -27,13 +27,13 @@ import javax.annotation.Nonnull;
  * @author Andrey Plotnikov
  */
 @ImplementedBy(RootPropertiesPanelViewImpl.class)
-public abstract class RootPropertiesPanelView extends AbstractView<RootPropertiesPanelView.ActionDelegate> {
+public interface RootPropertiesPanelView extends View<RootPropertiesPanelView.ActionDelegate> {
 
     /**
      * Interface defines methods of {@link RootPropertiesPanelPresenter} which calls from view. These methods defines
      * some actions when user changes properties of root element.
      */
-    public interface ActionDelegate extends AbstractView.ActionDelegate {
+    public interface ActionDelegate {
 
         /** Performs any actions appropriate in response to the user having changed name field on properties panel. */
         void onNameChanged();
@@ -45,7 +45,7 @@ public abstract class RootPropertiesPanelView extends AbstractView<RootPropertie
 
     /** @return content of the name field */
     @Nonnull
-    public abstract String getName();
+    String getName();
 
     /**
      * Changes content of the name field.
@@ -53,11 +53,11 @@ public abstract class RootPropertiesPanelView extends AbstractView<RootPropertie
      * @param name
      *         new content of the field
      */
-    public abstract void setName(@Nonnull String name);
+    void setName(@Nonnull String name);
 
     /** @return content of the name field */
     @Nonnull
-    public abstract String getOnError();
+    String getOnError();
 
     /**
      * Changes content of the onError field.
@@ -65,6 +65,6 @@ public abstract class RootPropertiesPanelView extends AbstractView<RootPropertie
      * @param onError
      *         new content of the field
      */
-    public abstract void setOnError(@Nonnull String onError);
+    void setOnError(@Nonnull String onError);
 
 }

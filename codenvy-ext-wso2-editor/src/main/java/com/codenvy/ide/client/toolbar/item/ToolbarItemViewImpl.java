@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.toolbar.item;
 
+import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ImageResource;
@@ -33,7 +34,7 @@ import com.google.inject.assistedinject.AssistedInject;
  *
  * @author Andrey Plotnikov
  */
-public class ToolbarItemViewImpl extends ToolbarItemView {
+public class ToolbarItemViewImpl extends AbstractView<ToolbarItemView.ActionDelegate> implements ToolbarItemView {
 
     @Singleton
     interface ToolbarItemViewImplUiBinder extends UiBinder<Widget, ToolbarItemViewImpl> {

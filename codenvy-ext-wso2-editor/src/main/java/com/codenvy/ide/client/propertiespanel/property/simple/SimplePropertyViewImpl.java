@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.propertiespanel.property.simple;
 
 import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -32,7 +33,7 @@ import javax.annotation.Nullable;
 /**
  * @author Andrey Plotnikov
  */
-public class SimplePropertyViewImpl extends SimplePropertyView {
+public class SimplePropertyViewImpl extends AbstractView<SimplePropertyView.ActionDelegate> implements SimplePropertyView {
 
     @Singleton
     interface SimplePropertyViewImplUiBinder extends UiBinder<Widget, SimplePropertyViewImpl> {

@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.connectors.base.parameter;
 
-import com.codenvy.ide.client.mvp.View;
+import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
@@ -74,15 +74,15 @@ public interface ParameterView extends View<ParameterView.ActionDelegate> {
      * @param name
      *         name of parameter.
      */
-    public abstract void setName(@Nonnull String name);
+    void setName(@Nonnull String name);
 
     /** @return name of parameter. */
     @Nonnull
-    public abstract String getName();
+    String getName();
 
     /** @return username parameter type. */
     @Nonnull
-    public abstract String getUsernameType();
+    String getUsernameType();
 
     /**
      * Select username parameter type in place on view.
@@ -90,7 +90,7 @@ public interface ParameterView extends View<ParameterView.ActionDelegate> {
      * @param parameterType
      *         username parameter type.
      */
-    public abstract void selectUsernameType(@Nonnull String parameterType);
+    void selectUsernameType(@Nonnull String parameterType);
 
     /**
      * Sets visible panel for adding name spaces on view.
@@ -106,7 +106,7 @@ public interface ParameterView extends View<ParameterView.ActionDelegate> {
      * @param value
      *         name of parameter.
      */
-    public abstract void setUsernameValue(@Nonnull String value);
+    void setUsernameValue(@Nonnull String value);
 
     /**
      * Set username namespace value into place on view.
@@ -114,11 +114,11 @@ public interface ParameterView extends View<ParameterView.ActionDelegate> {
      * @param value
      *         name of parameter.
      */
-    public abstract void setUsernameNamespaceValue(@Nonnull String value);
+    void setUsernameNamespaceValue(@Nonnull String value);
 
     /** @return loginUrl parameter type. */
     @Nonnull
-    public abstract String getLoginUrlType();
+    String getLoginUrlType();
 
     /**
      * Select loginUrl parameter type in place on view.
@@ -126,7 +126,7 @@ public interface ParameterView extends View<ParameterView.ActionDelegate> {
      * @param parameterType
      *         password parameter type.
      */
-    public abstract void selectLoginUrlType(@Nonnull String parameterType);
+    void selectLoginUrlType(@Nonnull String parameterType);
 
     /**
      * Sets visible panel for adding name spaces on view for the loginUrl field.
@@ -142,7 +142,7 @@ public interface ParameterView extends View<ParameterView.ActionDelegate> {
      * @param value
      *         name of parameter.
      */
-    public abstract void setLoginUrlValue(@Nonnull String value);
+    void setLoginUrlValue(@Nonnull String value);
 
     /**
      * Set loginUrl namespace value into place on view.
@@ -150,11 +150,11 @@ public interface ParameterView extends View<ParameterView.ActionDelegate> {
      * @param value
      *         name of parameter.
      */
-    public abstract void setLoginUrlNamespaceValue(@Nonnull String value);
+    void setLoginUrlNamespaceValue(@Nonnull String value);
 
     /** @return password parameter type. */
     @Nonnull
-    public abstract String getPasswordType();
+    String getPasswordType();
 
     /**
      * Select password parameter type in place on view.
@@ -162,7 +162,7 @@ public interface ParameterView extends View<ParameterView.ActionDelegate> {
      * @param parameterType
      *         password parameter type.
      */
-    public abstract void selectPasswordType(@Nonnull String parameterType);
+    void selectPasswordType(@Nonnull String parameterType);
 
     /**
      * Sets visible panel for adding name spaces on view for the password field.
@@ -178,7 +178,7 @@ public interface ParameterView extends View<ParameterView.ActionDelegate> {
      * @param value
      *         name of parameter.
      */
-    public abstract void setPasswordValue(@Nonnull String value);
+    void setPasswordValue(@Nonnull String value);
 
     /**
      * Set password namespace value into place on view.
@@ -186,11 +186,11 @@ public interface ParameterView extends View<ParameterView.ActionDelegate> {
      * @param value
      *         name of parameter.
      */
-    public abstract void setPasswordNamespaceValue(@Nonnull String value);
+    void setPasswordNamespaceValue(@Nonnull String value);
 
     /** @return forceLogin parameter type. */
     @Nonnull
-    public abstract String getForceLoginType();
+    String getForceLoginType();
 
     /**
      * Select forceLogin parameter type in place on view.
@@ -198,7 +198,7 @@ public interface ParameterView extends View<ParameterView.ActionDelegate> {
      * @param parameterType
      *         forceLogin parameter type.
      */
-    public abstract void selectForceLoginType(@Nonnull String parameterType);
+    void selectForceLoginType(@Nonnull String parameterType);
 
     /**
      * Sets visible panel for adding name spaces on view for the forceLogin field.
@@ -214,7 +214,7 @@ public interface ParameterView extends View<ParameterView.ActionDelegate> {
      * @param value
      *         name of parameter.
      */
-    public abstract void setForceLoginValue(@Nonnull String value);
+    void setForceLoginValue(@Nonnull String value);
 
     /**
      * Set forceLogin namespace value into place on view.
@@ -222,6 +222,6 @@ public interface ParameterView extends View<ParameterView.ActionDelegate> {
      * @param value
      *         name of parameter.
      */
-    public abstract void setForceLoginNamespaceValue(@Nonnull String value);
+    void setForceLoginNamespaceValue(@Nonnull String value);
 
 }

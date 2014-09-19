@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel;
 
+import com.codenvy.ide.client.mvp.AbstractView;
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -28,7 +29,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Andrey Plotnikov
  */
-public class PropertiesPanelViewImpl extends PropertiesPanelView {
+public class PropertiesPanelViewImpl extends AbstractView<PropertiesPanelView.ActionDelegate> implements PropertiesPanelView {
 
     @Singleton
     interface PropertiesPanelViewImplUiBinder extends UiBinder<Widget, PropertiesPanelViewImpl> {

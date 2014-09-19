@@ -17,6 +17,7 @@ package com.codenvy.ide.client.propertiespanel.mediators.enrich;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
+import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -40,7 +41,8 @@ import java.util.List;
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
-public class EnrichPropertiesPanelViewImpl extends EnrichPropertiesPanelView {
+public class EnrichPropertiesPanelViewImpl extends AbstractView<EnrichPropertiesPanelView.ActionDelegate>
+        implements EnrichPropertiesPanelView {
 
     @Singleton
     interface EnrichPropertiesPanelViewImplUiBinder extends UiBinder<Widget, EnrichPropertiesPanelViewImpl> {

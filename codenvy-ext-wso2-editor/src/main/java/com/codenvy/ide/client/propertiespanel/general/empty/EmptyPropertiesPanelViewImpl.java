@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.general.empty;
 
+import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -26,7 +27,8 @@ import com.google.inject.Singleton;
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
-public class EmptyPropertiesPanelViewImpl extends EmptyPropertiesPanelView {
+public class EmptyPropertiesPanelViewImpl extends AbstractView<EmptyPropertiesPanelView.ActionDelegate>
+        implements EmptyPropertiesPanelView {
 
     @Singleton
     interface EmptyPropertiesPanelViewImplUiBinder extends UiBinder<Widget, EmptyPropertiesPanelViewImpl> {

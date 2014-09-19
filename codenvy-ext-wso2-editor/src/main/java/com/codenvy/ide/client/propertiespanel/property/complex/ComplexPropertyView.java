@@ -15,10 +15,9 @@
  */
 package com.codenvy.ide.client.propertiespanel.property.complex;
 
-import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -28,7 +27,7 @@ import javax.annotation.Nullable;
  * @author Andrey Plotnikov
  */
 @ImplementedBy(ComplexPropertyViewImpl.class)
-public abstract class ComplexPropertyView extends AbstractView<ComplexPropertyView.ActionDelegate> {
+public interface ComplexPropertyView extends View<ComplexPropertyView.ActionDelegate> {
 
     /**
      * Changes title of property on the view.
@@ -36,7 +35,7 @@ public abstract class ComplexPropertyView extends AbstractView<ComplexPropertyVi
      * @param title
      *         title that needs to be changed
      */
-    public abstract void setTitle(@Nullable String title);
+    void setTitle(@Nullable String title);
 
     /**
      * Changes property value on the view.
@@ -44,9 +43,17 @@ public abstract class ComplexPropertyView extends AbstractView<ComplexPropertyVi
      * @param property
      *         property value that need to be set
      */
-    public abstract void setProperty(@Nullable String property);
+    void setProperty(@Nullable String property);
 
-    public interface ActionDelegate extends AbstractView.ActionDelegate {
+    /**
+     * Changes visible state of the main panel.
+     *
+     * @param visible
+     *         <code>true</code> the panel will be shown, <code>false</code> it will not
+     */
+    void setVisible(boolean visible);
+
+    public interface ActionDelegate {
         /** Performs some actions in response to a user's clicking on the 'Edit' button. */
         void onEditButtonClicked();
     }
