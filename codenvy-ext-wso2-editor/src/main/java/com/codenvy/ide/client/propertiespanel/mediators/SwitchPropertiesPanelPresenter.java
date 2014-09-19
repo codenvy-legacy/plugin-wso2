@@ -35,7 +35,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,28 +51,34 @@ import static com.codenvy.ide.client.elements.mediators.Switch.SOURCE_XPATH;
  */
 public class SwitchPropertiesPanelPresenter extends AbstractPropertiesPanel<Switch, PropertiesPanelView> {
 
-    private final List<SimplePropertyPresenter>     regExpFields;
-    private final ComplexPropertyPresenter          sourceXPath;
+    private final AddNameSpacesCallBack             addNameSpacesCallBack;
+    private final NameSpaceEditorPresenter          nameSpaceEditorPresenter;
     private final Provider<SimplePropertyPresenter> simplePropertyPresenterProvider;
-    private final PropertyGroupPresenter            basicGroup;
+    private final List<SimplePropertyPresenter>     regExpFields;
+    private final WSO2EditorLocalizationConstant    locale;
+
+    private PropertyGroupPresenter   basicGroup;
+    private ComplexPropertyPresenter sourceXPath;
 
     @Inject
     public SwitchPropertiesPanelPresenter(PropertiesPanelView view,
                                           PropertyTypeManager propertyTypeManager,
                                           PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                          final NameSpaceEditorPresenter nameSpaceEditorPresenter,
-                                          final WSO2EditorLocalizationConstant localizationConstant,
-                                          final ComplexPropertyPresenter sourceXPath,
+                                          NameSpaceEditorPresenter nameSpaceEditorPresenter,
+                                          WSO2EditorLocalizationConstant locale,
+                                          Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
                                           Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
         super(view, propertyTypeManager);
         this.propertyTypeManager = propertyTypeManager;
+        this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
+        this.locale = locale;
 
         this.simplePropertyPresenterProvider = simplePropertyPresenterProvider;
         this.regExpFields = new ArrayList<>();
 
-        final AddNameSpacesCallBack addNameSpacesCallBack = new AddNameSpacesCallBack() {
+        this.addNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
+            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.putProperty(NAMESPACES, nameSpaces);
                 element.putProperty(SOURCE_XPATH, expression);
 
@@ -83,12 +88,17 @@ public class SwitchPropertiesPanelPresenter extends AbstractPropertiesPanel<Swit
             }
         };
 
-        basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(localizationConstant.miscGroupTitle());
-        this.view.addGroup(basicGroup);
+        prepareView(propertiesPanelWidgetFactory, complexPropertyPresenterProvider);
+    }
 
-        this.sourceXPath = sourceXPath;
-        this.sourceXPath.setTitle(localizationConstant.switchSourceXPath());
-        this.sourceXPath.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+    private void prepareView(PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                             Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider) {
+        basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
+        view.addGroup(basicGroup);
+
+        sourceXPath = complexPropertyPresenterProvider.get();
+        sourceXPath.setTitle(locale.switchSourceXPath());
+        sourceXPath.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 Array<NameSpace> nameSpaces = element.getProperty(NAMESPACES);
@@ -97,7 +107,7 @@ public class SwitchPropertiesPanelPresenter extends AbstractPropertiesPanel<Swit
                 if (nameSpaces != null && sourceXPath != null) {
                     nameSpaceEditorPresenter.showWindowWithParameters(nameSpaces,
                                                                       addNameSpacesCallBack,
-                                                                      localizationConstant.switchXpathTitle(),
+                                                                      locale.switchXpathTitle(),
                                                                       sourceXPath);
                 }
             }
@@ -124,6 +134,7 @@ public class SwitchPropertiesPanelPresenter extends AbstractPropertiesPanel<Swit
 
             SimplePropertyPresenter field = simplePropertyPresenterProvider.get();
             field.setTitle(branch.getTitle() + ' ' + i);
+            field.setProperty(branch.getAttributeByName(REGEXP_ATTRIBUTE_NAME));
             field.addPropertyValueChangedListener(new PropertyValueChangedListener() {
                 @Override
                 public void onPropertyChanged(@Nonnull String property) {
