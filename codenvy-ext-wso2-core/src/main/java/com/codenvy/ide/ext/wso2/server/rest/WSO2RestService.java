@@ -15,10 +15,7 @@
  */
 package com.codenvy.ide.ext.wso2.server.rest;
 
-import com.codenvy.api.core.ConflictException;
-import com.codenvy.api.core.ForbiddenException;
-import com.codenvy.api.core.NotFoundException;
-import com.codenvy.api.core.ServerException;
+import com.codenvy.api.core.ApiException;
 import com.codenvy.api.vfs.server.MountPoint;
 import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
@@ -74,10 +71,8 @@ public class WSO2RestService {
     @Path("detect")
     @POST
     @Consumes(APPLICATION_JSON)
-    public Response detectConfigurationFile(FileInfo fileInfo) throws ServerException,
-                                                                      NotFoundException,
-                                                                      ForbiddenException,
-                                                                      ConflictException {
+    public Response detectConfigurationFile(FileInfo fileInfo) throws ApiException {
+
         VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(getVfsID());
         MountPoint mountPoint = vfsProvider.getMountPoint(false);
 
@@ -92,7 +87,7 @@ public class WSO2RestService {
     private String moveFile(@Nonnull VirtualFile file,
                             @Nonnull MountPoint mountPoint,
                             @Nonnull String projectName,
-                            @Nonnull String parentFolder) throws ServerException, NotFoundException, ForbiddenException, ConflictException {
+                            @Nonnull String parentFolder) throws ApiException {
 
         String pathToFolder = SRC_FOLDER_NAME + File.separator +
                               MAIN_FOLDER_NAME + File.separator +
@@ -105,7 +100,7 @@ public class WSO2RestService {
 
             file.moveTo(mountPoint.getVirtualFile(path), null);
 
-        } catch (ForbiddenException | NotFoundException | ConflictException | ServerException e) {
+        } catch (ApiException e) {
 
             if (e.getMessage().endsWith("does not exists. ")) {
                 mountPoint.getVirtualFile(projectName).createFolder(pathToFolder);
@@ -124,10 +119,8 @@ public class WSO2RestService {
     @Path("upload")
     @POST
     @Consumes(APPLICATION_JSON)
-    public Response uploadConfigurationFile(FileInfo fileInfo) throws ServerException,
-                                                                      NotFoundException,
-                                                                      ForbiddenException,
-                                                                      ConflictException {
+    public Response uploadConfigurationFile(FileInfo fileInfo) throws ApiException {
+
         VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(getVfsID());
         MountPoint mountPoint = vfsProvider.getMountPoint(false);
 
@@ -146,7 +139,6 @@ public class WSO2RestService {
             VirtualFile file = projectParent.createFile(fileName, ESB_XML_MIME_TYPE, is);
 
             parentFolder = moveFile(file, mountPoint, projectName, getParentFolderForImportingFile(file));
-
         } catch (IOException e) {
             LOG.error("Can't create " + fileName + " file", e);
             parentFolder = e.getMessage();
@@ -158,8 +150,7 @@ public class WSO2RestService {
     @Path("file/{operation}")
     @POST
     @Consumes(APPLICATION_JSON)
-    public Response overwriteConfigurationFile(@PathParam("operation") String operation, FileInfo fileInfo)
-            throws ServerException, NotFoundException, ForbiddenException, ConflictException {
+    public Response overwriteConfigurationFile(@PathParam("operation") String operation, FileInfo fileInfo) throws ApiException {
 
         VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(getVfsID());
         MountPoint mountPoint = vfsProvider.getMountPoint(false);
@@ -176,19 +167,29 @@ public class WSO2RestService {
 
         switch (operation) {
             case "rename":
-                file.rename(fileInfo.getNewFileName(), file.getMediaType(), null);
-                file = mountPoint.getVirtualFile(fileInfo.getProjectName() + File.separator + fileInfo.getNewFileName());
-                moveFile(file, mountPoint, fileInfo.getProjectName(), parentFolder);
+                renameFile(fileInfo, mountPoint, file, parentFolder);
                 break;
 
             case "overwrite":
                 oldFile.updateContent(oldFile.getMediaType(), file.getContent().getStream(), null);
+                file.delete(null);
+                break;
 
             default:
                 file.delete(null);
         }
 
         return Response.ok(parentFolder, TEXT_HTML).build();
+    }
+
+    private void renameFile(@Nonnull FileInfo fileInfo,
+                            @Nonnull MountPoint mountPoint,
+                            @Nonnull VirtualFile file,
+                            @Nonnull String parentFolder) throws ApiException {
+
+        file.rename(fileInfo.getNewFileName(), file.getMediaType(), null);
+        file = mountPoint.getVirtualFile(fileInfo.getProjectName() + File.separator + fileInfo.getNewFileName());
+        moveFile(file, mountPoint, fileInfo.getProjectName(), parentFolder);
     }
 
     /**
@@ -198,7 +199,7 @@ public class WSO2RestService {
      *         importing file
      * @return parent folder for file or empty string if file is not esb configuration
      */
-    private String getParentFolderForImportingFile(@Nonnull VirtualFile virtualFile) throws ServerException, ForbiddenException {
+    private String getParentFolderForImportingFile(@Nonnull VirtualFile virtualFile) throws ApiException {
         InputStream fileContent = virtualFile.getContent().getStream();
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 

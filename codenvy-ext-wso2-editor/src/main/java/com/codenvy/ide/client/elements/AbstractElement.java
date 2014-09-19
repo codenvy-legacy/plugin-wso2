@@ -213,6 +213,57 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
     }
 
     /** {@inheritDoc} */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof AbstractElement)) {
+            return false;
+        }
+
+        AbstractElement that = (AbstractElement)o;
+
+        boolean result = isPossibleToAddBranches == that.isPossibleToAddBranches;
+        result &= needsToShowIconAndTitle == that.needsToShowIconAndTitle;
+        result &= x == that.x;
+        result &= y == that.y;
+        result &= branchProvider.equals(that.branchProvider);
+        result &= branches.equals(that.branches);
+        result &= elementCreatorsManager.equals(that.elementCreatorsManager);
+        result &= elementName.equals(that.elementName);
+        result &= id.equals(that.id);
+        result &= imageResources != null ? !imageResources.equals(that.imageResources) : that.imageResources != null;
+        result &= parent != null ? !parent.equals(that.parent) : that.parent != null;
+        result &= properties.equals(that.properties);
+        result &= serializationName.equals(that.serializationName);
+        result &= title.equals(that.title);
+
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + (parent != null ? parent.hashCode() : 0);
+        result = 31 * result + title.hashCode();
+        result = 31 * result + x;
+        result = 31 * result + y;
+        result = 31 * result + elementName.hashCode();
+        result = 31 * result + properties.hashCode();
+        result = 31 * result + serializationName.hashCode();
+        result = 31 * result + (isPossibleToAddBranches ? 1 : 0);
+        result = 31 * result + (needsToShowIconAndTitle ? 1 : 0);
+        result = 31 * result + elementCreatorsManager.hashCode();
+        result = 31 * result + (imageResources != null ? imageResources.hashCode() : 0);
+        result = 31 * result + branchProvider.hashCode();
+        result = 31 * result + branches.hashCode();
+        return result;
+    }
+
+    /** {@inheritDoc} */
     @Nonnull
     @Override
     public String serialize() {
