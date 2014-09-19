@@ -105,6 +105,7 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
 
         ToolbarGroupPresenter group = groups.get(groupId);
 
+        states.add(editorState);
         group.addItem(toolbarFactory.createToolbarItemPresenter(title, tooltip, icon, editorState));
     }
 

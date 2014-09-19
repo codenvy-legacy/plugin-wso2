@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.propertiespanel.property;
 
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
-import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
-import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupView;
+package com.codenvy.ide.client.toolbar;
+
+import com.codenvy.ide.client.inject.factories.ToolbarFactory;
+import com.codenvy.ide.client.toolbar.group.ToolbarGroupPresenter;
+import com.codenvy.ide.client.toolbar.group.ToolbarGroupView;
+import com.codenvy.ide.client.toolbar.item.ToolbarItemPresenter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +30,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,30 +39,27 @@ import static org.mockito.Mockito.when;
  * @author Andrey Plotnikov
  */
 @RunWith(MockitoJUnitRunner.class)
-public class PropertyGroupPresenterTest {
+public class ToolbarGroupPresenterTest {
 
     private static final String STRING = "some text";
 
     @Mock
-    private AbstractPropertyPresenter    property;
+    private ToolbarFactory   toolbarFactory;
     @Mock
-    private PropertyGroupView            view;
-    @Mock
-    private PropertiesPanelWidgetFactory propertiesPanelWidgetFactory;
+    private ToolbarGroupView view;
 
-    private PropertyGroupPresenter presenter;
+    private ToolbarGroupPresenter presenter;
 
     @Before
     public void setUp() throws Exception {
-        when(propertiesPanelWidgetFactory.createPropertyGroupView(anyString())).thenReturn(view);
+        when(toolbarFactory.createToolbarGroupView(anyString())).thenReturn(view);
 
-        presenter = new PropertyGroupPresenter(propertiesPanelWidgetFactory, STRING);
+        presenter = new ToolbarGroupPresenter(toolbarFactory, STRING);
     }
 
     @Test
     public void viewShouldBePrepared() throws Exception {
-        verify(propertiesPanelWidgetFactory).createPropertyGroupView(eq(STRING));
-
+        verify(toolbarFactory).createToolbarGroupView(eq(STRING));
         verify(view).setDelegate(eq(presenter));
 
         verify(view).setVisibleItemsPanel(false);
@@ -72,17 +72,12 @@ public class PropertyGroupPresenterTest {
     }
 
     @Test
-    public void propertyShouldBeAdded() throws Exception {
-        presenter.addItem(property);
+    public void toolbarItemShouldBeAdded() throws Exception {
+        ToolbarItemPresenter toolbarItem = mock(ToolbarItemPresenter.class);
 
-        verify(view).addProperty(eq(property));
-    }
+        presenter.addItem(toolbarItem);
 
-    @Test
-    public void propertyShouldBeRemoved() throws Exception {
-        presenter.removeItem(property);
-
-        verify(view).removeProperty(eq(property));
+        verify(view).addItem(eq(toolbarItem));
     }
 
     @Test
@@ -93,6 +88,7 @@ public class PropertyGroupPresenterTest {
 
         verify(view).setVisibleItemsPanel(true);
         verify(view).rotateIcon();
+
     }
 
     @Test
