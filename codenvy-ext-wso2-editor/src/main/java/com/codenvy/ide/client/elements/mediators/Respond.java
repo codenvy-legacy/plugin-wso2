@@ -23,7 +23,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,11 +43,11 @@ public class Respond extends AbstractElement {
     public static final String ELEMENT_NAME       = "Respond";
     public static final String SERIALIZATION_NAME = "respond";
 
+    public static final Key<String> DESCRIPTION = new Key<>("Description");
+
     private static final String DESCRIPTION_ATTRIBUTE = "description";
 
     private static final List<String> PROPERTIES = emptyList();
-
-    private String description;
 
     @Inject
     public Respond(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -62,23 +61,7 @@ public class Respond extends AbstractElement {
               branchProvider,
               elementCreatorsManager);
 
-        description = "";
-    }
-
-    /** @return description value */
-    @Nullable
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Changes description field.
-     *
-     * @param description
-     *         new description value
-     */
-    public void setDescription(@Nullable String description) {
-        this.description = description;
+        putProperty(DESCRIPTION, "");
     }
 
     /** {@inheritDoc} */
@@ -87,7 +70,7 @@ public class Respond extends AbstractElement {
     protected String serializeAttributes() {
         Map<String, String> prop = new LinkedHashMap<>();
 
-        prop.put(DESCRIPTION_ATTRIBUTE, description);
+        prop.put(DESCRIPTION_ATTRIBUTE, getProperty(DESCRIPTION));
 
         return convertAttributesToXMLFormat(prop);
     }
@@ -95,6 +78,6 @@ public class Respond extends AbstractElement {
     /** {@inheritDoc} */
     @Override
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        description = String.valueOf(attributeValue);
+        putProperty(DESCRIPTION, String.valueOf(attributeValue));
     }
 }

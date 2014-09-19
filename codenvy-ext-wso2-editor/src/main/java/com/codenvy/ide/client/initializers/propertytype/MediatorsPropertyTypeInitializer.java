@@ -92,9 +92,9 @@ public class MediatorsPropertyTypeInitializer extends AbstractPropertyTypeInitia
                                                         Scope.AXIS2_CLIENT.getValue(),
                                                         Scope.OPERATION.getValue()));
 
-        manager.register(SequenceType.TYPE_NAME, Arrays.asList(SequenceType.Default.name(),
-                                                               SequenceType.Static.name(),
-                                                               SequenceType.Dynamic.name()));
+        manager.register(SequenceType.TYPE_NAME, Arrays.asList(SequenceType.DEFAULT.getValue(),
+                                                               SequenceType.STATIC.getValue(),
+                                                               SequenceType.DYNAMIC.getValue()));
 
         manager.register(ReferringType.TYPE_NAME, Arrays.asList(ReferringType.Static.name(),
                                                                 ReferringType.Dynamic.name()));

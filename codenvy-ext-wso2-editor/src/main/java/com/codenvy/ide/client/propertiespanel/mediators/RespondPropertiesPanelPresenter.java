@@ -16,7 +16,7 @@
 package com.codenvy.ide.client.propertiespanel.mediators;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.mediators.LoopBack;
+import com.codenvy.ide.client.elements.mediators.Respond;
 import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
@@ -29,26 +29,25 @@ import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 
-import static com.codenvy.ide.client.elements.mediators.LoopBack.DESCRIPTION;
+import static com.codenvy.ide.client.elements.mediators.Respond.DESCRIPTION;
 
 /**
- * The class provides the business logic that allows editor to react on user's action and to change state of LoopBack mediator
+ * The class provides the business logic that allows editor to react on user's action and to change state of Respond mediator
  * depending on user's changes of properties.
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
- * @author Valeriy Svydenko
  */
-public class LoopBackPropertiesPanelPresenter extends AbstractPropertiesPanel<LoopBack, PropertiesPanelView> {
+public class RespondPropertiesPanelPresenter extends AbstractPropertiesPanel<Respond, PropertiesPanelView> {
 
     private final SimplePropertyPresenter description;
 
     @Inject
-    public LoopBackPropertiesPanelPresenter(PropertiesPanelView view,
-                                            PropertyTypeManager propertyTypeManager,
-                                            PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                            SimplePropertyPresenter description,
-                                            WSO2EditorLocalizationConstant locale) {
+    public RespondPropertiesPanelPresenter(PropertiesPanelView view,
+                                           PropertyTypeManager propertyTypeManager,
+                                           PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                           SimplePropertyPresenter description,
+                                           WSO2EditorLocalizationConstant locale) {
         super(view, propertyTypeManager);
 
         PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());

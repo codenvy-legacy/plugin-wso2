@@ -599,7 +599,7 @@ public class AddressEndpoint extends AbstractElement {
         }
 
         @Nonnull
-        public static AddressingVersion getItemByValue(String value) {
+        public static AddressingVersion getItemByValue(@Nonnull String value) {
             switch (value) {
                 case "submission":
                     return SUBMISSION;

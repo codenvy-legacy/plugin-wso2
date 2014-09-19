@@ -29,14 +29,15 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.mediators.Send.SequenceType.Default;
+import static com.codenvy.ide.client.elements.mediators.Send.SequenceType.DEFAULT;
+import static com.codenvy.ide.client.elements.mediators.Send.SequenceType.DYNAMIC;
+import static com.codenvy.ide.client.elements.mediators.Send.SequenceType.STATIC;
 
 /**
  * The class which describes state of Send mediator and also has methods for changing it. Also the class contains the business logic
@@ -52,6 +53,14 @@ public class Send extends AbstractElement {
     public static final String ELEMENT_NAME       = "Send";
     public static final String SERIALIZATION_NAME = "send";
 
+    public static final Key<SequenceType>     SEQUENCE_TYPE      = new Key<>("SequenceType");
+    public static final Key<Boolean>          SKIP_SERIALIZATION = new Key<>("SkipSerialization");
+    public static final Key<Boolean>          BUILD_MESSAGE      = new Key<>("BuildMessage");
+    public static final Key<String>           DESCRIPTION        = new Key<>("Description");
+    public static final Key<String>           DYNAMIC_EXPRESSION = new Key<>("DynamicExpression");
+    public static final Key<String>           STATIC_EXPRESSION  = new Key<>("StaticExpression");
+    public static final Key<Array<NameSpace>> NAMESPACES         = new Key<>("NameSpaces");
+
     private static final String BUILD_MESSAGE_ATTRIBUTE_NAME = "buildmessage";
     private static final String DESCRIPTION_ATTRIBUTE_NAME   = "description";
     private static final String EXPRESSION_ATTRIBUTE_NAME    = "receive";
@@ -60,14 +69,6 @@ public class Send extends AbstractElement {
     private static final List<String> PROPERTIES = Arrays.asList(ENDPOINT_PROPERTY_NAME);
 
     private final Provider<NameSpace> nameSpaceProvider;
-
-    private SequenceType     sequencerType;
-    private boolean          skipSerialization;
-    private boolean          buildMessage;
-    private String           description;
-    private String           dynamicExpression;
-    private String           staticExpression;
-    private Array<NameSpace> nameSpaces;
 
     @Inject
     public Send(EditorResources resources,
@@ -87,117 +88,18 @@ public class Send extends AbstractElement {
 
         this.nameSpaceProvider = nameSpaceProvider;
 
-        skipSerialization = false;
-        sequencerType = Default;
-        buildMessage = false;
-        description = "";
-        dynamicExpression = "/default/xpath";
-        staticExpression = "/default/sequence";
-        nameSpaces = Collections.createArray();
+        putProperty(SKIP_SERIALIZATION, false);
+        putProperty(BUILD_MESSAGE, false);
+        putProperty(SEQUENCE_TYPE, DEFAULT);
+        putProperty(DESCRIPTION, "");
+        putProperty(DYNAMIC_EXPRESSION, "/default/xpath");
+        putProperty(STATIC_EXPRESSION, "/default/sequence");
+        putProperty(NAMESPACES, Collections.<NameSpace>createArray());
 
         Branch branch = branchProvider.get();
         branch.setParent(this);
 
         branches.add(branch);
-    }
-
-    public void setSkipSerialization(boolean skipSerialization) {
-        this.skipSerialization = skipSerialization;
-    }
-
-    /** @return value of sequence type of element */
-    @Nonnull
-    public SequenceType getSequencerType() {
-        return sequencerType;
-    }
-
-    /**
-     * Sets receiving sequence type to element
-     *
-     * @param receivingSequencerType
-     *         value which need to set to element
-     */
-    public void setSequencerType(@Nullable SequenceType receivingSequencerType) {
-        this.sequencerType = receivingSequencerType;
-    }
-
-    /** @return value of build message before sending of element */
-    public boolean getBuildMessage() {
-        return buildMessage;
-    }
-
-    /**
-     * Sets build message before sending parameter to element
-     *
-     * @param buildMessage
-     *         value which need to set to element
-     */
-    public void setBuildMessage(boolean buildMessage) {
-        this.buildMessage = buildMessage;
-    }
-
-    /** @return list of name spaces of element */
-    @Nonnull
-    public Array<NameSpace> getNameSpaces() {
-        return nameSpaces;
-    }
-
-    /**
-     * Sets list of name spaces to element
-     *
-     * @param nameSpaces
-     *         list of name spaces which need to set to element
-     */
-    public void setNameSpaces(@Nonnull Array<NameSpace> nameSpaces) {
-        this.nameSpaces = nameSpaces;
-    }
-
-    /** @return dynamic expression type of element */
-    @Nonnull
-    public String getDynamicExpression() {
-        return dynamicExpression;
-    }
-
-    /**
-     * Sets dynamic expression to element
-     *
-     * @param dynamicExpression
-     *         value which need to set to element
-     */
-    public void setDynamicExpression(@Nullable String dynamicExpression) {
-        this.dynamicExpression = dynamicExpression;
-    }
-
-    /** @return static expression type of element */
-    @Nonnull
-    public String getStaticExpression() {
-        return staticExpression;
-    }
-
-    /**
-     * Sets static expression to element
-     *
-     * @param staticExpression
-     *         value which need to set to element
-     */
-    public void setStaticExpression(@Nullable String staticExpression) {
-        this.staticExpression = staticExpression;
-    }
-
-    /** @return value description of element */
-    @Nullable
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Sets description value to element
-     *
-     * @param description
-     *         value which need to set to element
-     */
-    public void setDescription(@Nullable String description) {
-        this.description = description;
     }
 
     /** {@inheritDoc} */
@@ -207,35 +109,42 @@ public class Send extends AbstractElement {
         StringBuilder result = new StringBuilder();
         Map<String, String> prop = new LinkedHashMap<>();
 
-        switch (sequencerType) {
-            case Static:
-                prop.put(EXPRESSION_ATTRIBUTE_NAME, staticExpression);
-                break;
+        serializeSequenceTypeAttribute(prop, result);
 
-            case Dynamic:
-                prop.put(EXPRESSION_ATTRIBUTE_NAME, dynamicExpression);
-                result.append(convertNameSpaceToXMLFormat(nameSpaces));
-                break;
-        }
-
-        if (buildMessage) {
+        Boolean buildMessage = getProperty(BUILD_MESSAGE);
+        if (buildMessage != null && buildMessage) {
             prop.put(BUILD_MESSAGE_ATTRIBUTE_NAME, "true");
         }
 
-        prop.put(DESCRIPTION_ATTRIBUTE_NAME, description);
+        prop.put(DESCRIPTION_ATTRIBUTE_NAME, getProperty(DESCRIPTION));
 
         return result.append(convertAttributesToXMLFormat(prop)).toString();
+    }
+
+    private void serializeSequenceTypeAttribute(@Nonnull Map<String, String> prop, @Nonnull StringBuilder result) {
+        SequenceType sType = getProperty(SEQUENCE_TYPE);
+        if (sType == null) {
+            return;
+        }
+
+        if (sType.equals(STATIC)) {
+            prop.put(EXPRESSION_ATTRIBUTE_NAME, getProperty(STATIC_EXPRESSION));
+        } else if (sType.equals(DYNAMIC)) {
+            prop.put(EXPRESSION_ATTRIBUTE_NAME, getProperty(DYNAMIC_EXPRESSION));
+            result.append(convertNameSpaceToXMLFormat(getProperty(NAMESPACES)));
+        }
     }
 
     /** {@inheritDoc} */
     @Nonnull
     @Override
     public String serialize() {
-        StringBuilder result = new StringBuilder();
-
-        if (skipSerialization) {
+        Boolean skipSerialization = getProperty(SKIP_SERIALIZATION);
+        if (skipSerialization != null && skipSerialization) {
             return "";
         }
+
+        StringBuilder result = new StringBuilder();
 
         result.append("<send ").append(serializeAttributes()).append(">\n");
 
@@ -257,36 +166,49 @@ public class Send extends AbstractElement {
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
         switch (attributeName) {
             case EXPRESSION_ATTRIBUTE_NAME:
-                if (attributeValue.contains("{")) {
-                    dynamicExpression = attributeValue.replace("{", "").replace("}", "");
-
-                    sequencerType = SequenceType.Dynamic;
-                } else {
-                    staticExpression = attributeValue;
-
-                    sequencerType = SequenceType.Static;
-                }
+                adaptExpressionAttribute(attributeValue);
                 break;
 
             case BUILD_MESSAGE_ATTRIBUTE_NAME:
-                buildMessage = Boolean.valueOf(attributeValue);
+                putProperty(BUILD_MESSAGE, Boolean.valueOf(attributeValue));
                 break;
 
             case DESCRIPTION_ATTRIBUTE_NAME:
-                description = attributeValue;
+                putProperty(DESCRIPTION, attributeValue);
                 break;
 
             default:
-                if (StringUtils.startsWith(PREFIX, attributeName, true)) {
-                    String name = StringUtils.trimStart(attributeName, PREFIX + ':');
+                applyNameSpaces(attributeName, attributeValue);
+        }
+    }
 
-                    NameSpace nameSpace = nameSpaceProvider.get();
+    private void adaptExpressionAttribute(@Nonnull String attributeValue) {
+        if (attributeValue.contains("{")) {
+            putProperty(DYNAMIC_EXPRESSION, attributeValue.replace("{", "").replace("}", ""));
 
-                    nameSpace.setPrefix(name);
-                    nameSpace.setUri(attributeValue);
+            putProperty(SEQUENCE_TYPE, SequenceType.DYNAMIC);
+        } else {
+            putProperty(STATIC_EXPRESSION, attributeValue);
 
-                    nameSpaces.add(nameSpace);
-                }
+            putProperty(SEQUENCE_TYPE, SequenceType.STATIC);
+        }
+    }
+
+    private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        if (!StringUtils.startsWith(PREFIX, attributeName, true)) {
+            return;
+        }
+
+        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
+
+        NameSpace nameSpace = nameSpaceProvider.get();
+
+        nameSpace.setPrefix(name);
+        nameSpace.setUri(attributeValue);
+
+        Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
+        if (nameSpaces != null) {
+            nameSpaces.add(nameSpace);
         }
     }
 
@@ -294,27 +216,25 @@ public class Send extends AbstractElement {
     @Override
     protected void applyProperty(@Nonnull Node node) {
         if (node.hasChildNodes()) {
-            String nodeName = node.getNodeName();
-
-            switch (nodeName) {
-                case ENDPOINT_PROPERTY_NAME:
-                    Branch branch = branchProvider.get();
-                    branch.setParent(this);
-
-                    if (node.hasChildNodes()) {
-                        Node item = node.getChildNodes().item(0);
-
-                        Element element = createElement(item.getNodeName());
-
-                        if (element != null) {
-                            element.deserialize(node);
-                            branch.addElement(element);
-                        }
-                    }
-
-                    branches.add(branch);
-                    break;
+            if (!ENDPOINT_PROPERTY_NAME.equals(node.getNodeName())) {
+                return;
             }
+
+            Branch branch = branchProvider.get();
+            branch.setParent(this);
+
+            if (node.hasChildNodes()) {
+                Node item = node.getChildNodes().item(0);
+
+                Element element = createElement(item.getNodeName());
+
+                if (element != null) {
+                    element.deserialize(node);
+                    branch.addElement(element);
+                }
+            }
+
+            branches.add(branch);
         }
     }
 
@@ -332,9 +252,35 @@ public class Send extends AbstractElement {
     }
 
     public enum SequenceType {
-        Default, Static, Dynamic;
+        DEFAULT("Default"), STATIC("Static"), DYNAMIC("Dynamic");
 
         public static final String TYPE_NAME = "ReceivingSequenceType";
+
+        private final String value;
+
+        SequenceType(@Nonnull String value) {
+            this.value = value;
+        }
+
+        @Nonnull
+        public String getValue() {
+            return value;
+        }
+
+        @Nonnull
+        public static SequenceType getItemByValue(@Nonnull String value) {
+            switch (value) {
+                case "Dynamic":
+                    return DYNAMIC;
+
+                case "Static":
+                    return STATIC;
+
+                case "Default":
+                default:
+                    return DEFAULT;
+            }
+        }
     }
 
 }

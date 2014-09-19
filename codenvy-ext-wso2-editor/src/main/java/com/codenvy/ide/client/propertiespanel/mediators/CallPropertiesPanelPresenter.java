@@ -162,19 +162,11 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, 
 
         switch (newProperty) {
             case REGISTRYKEY:
-                endpointXpathPanel.setVisible(false);
-                endpointRegistryKeyPanel.setVisible(true);
-
-                String rKey = element.getProperty(REGISTRY_KEY);
-                endpointRegistryKeyPanel.setProperty(rKey != null ? rKey : "");
+                adaptRegistryKeyAttribute();
                 break;
 
             case XPATH:
-                endpointXpathPanel.setVisible(true);
-                endpointRegistryKeyPanel.setVisible(false);
-
-                String xPath = element.getProperty(X_PATH);
-                endpointXpathPanel.setProperty(xPath);
+                adaptXPathAttribute();
                 break;
 
             case NONE:
@@ -184,6 +176,22 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, 
                 endpointRegistryKeyPanel.setVisible(false);
                 break;
         }
+    }
+
+    private void adaptRegistryKeyAttribute() {
+        endpointXpathPanel.setVisible(false);
+        endpointRegistryKeyPanel.setVisible(true);
+
+        String rKey = element.getProperty(REGISTRY_KEY);
+        endpointRegistryKeyPanel.setProperty(rKey != null ? rKey : "");
+    }
+
+    private void adaptXPathAttribute() {
+        endpointXpathPanel.setVisible(true);
+        endpointRegistryKeyPanel.setVisible(false);
+
+        String xPath = element.getProperty(X_PATH);
+        endpointXpathPanel.setProperty(xPath);
     }
 
     /** {@inheritDoc} */

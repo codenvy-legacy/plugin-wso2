@@ -152,6 +152,21 @@ public class CallTemplate extends AbstractElement {
         public String getValue() {
             return value;
         }
+
+        @Nonnull
+        public static AvailableTemplates getItemByValue(@Nonnull String value) {
+            switch (value) {
+                case "Select From Templates":
+                    return SELECT_FROM_TEMPLATE;
+
+                case "sdf":
+                    return SDF;
+
+                case "":
+                default:
+                    return EMPTY;
+            }
+        }
     }
 
 }

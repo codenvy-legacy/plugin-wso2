@@ -40,8 +40,8 @@ import com.codenvy.ide.client.propertiespanel.mediators.filter.FilterPropertiesP
 import com.codenvy.ide.client.propertiespanel.mediators.LoopBackPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.payloadfactory.PayloadFactoryPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.PropertyPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.mediators.respond.RespondPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.mediators.send.SendPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.RespondPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.SendPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.sequence.SequencePropertiesPanelPresenter;
 import com.google.inject.Inject;
 

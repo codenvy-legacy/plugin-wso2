@@ -106,7 +106,7 @@ public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPane
         availableTemplates.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                element.putProperty(AVAILABLE_TEMPLATES, AvailableTemplates.valueOf(property));
+                element.putProperty(AVAILABLE_TEMPLATES, AvailableTemplates.getItemByValue(property));
 
                 notifyListeners();
             }
