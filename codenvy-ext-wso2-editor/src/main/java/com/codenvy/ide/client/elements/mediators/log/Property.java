@@ -40,34 +40,42 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
  */
 public class Property extends AbstractEntityElement {
 
+    public static final Key<String>           NAME       = new Key<>("MediatorPropertyName");
+    public static final Key<String>           EXPRESSION = new Key<>("MediatorPropertyExpression");
+    public static final Key<Array<NameSpace>> NAMESPACES = new Key<>("MediatorPropertyNameSpaces");
+
     private static final String NAME_ATTRIBUTE  = "name";
     private static final String VALUE_ATTRIBUTE = "value";
 
+    private static final String WITH_PARAM_SERIALIZATION_NAME = "with-param";
+    private static final String PROPERTY_SERIALIZATION_NAME   = "property";
+
     private final Provider<Property>  propertyProvider;
     private final Provider<NameSpace> nameSpaceProvider;
-
-    private String           name;
-    private String           expression;
-    private Array<NameSpace> nameSpaces;
 
     @Inject
     public Property(Provider<Property> propertyProvider, Provider<NameSpace> nameSpaceProvider) {
         this.propertyProvider = propertyProvider;
         this.nameSpaceProvider = nameSpaceProvider;
-        this.nameSpaces = Collections.createArray();
+
+        putProperty(NAME, "");
+        putProperty(EXPRESSION, "");
+        putProperty(NAMESPACES, Collections.<NameSpace>createArray());
     }
 
     /** Returns serialization representation CallTemplate element's property. */
     @Nonnull
     public String serializeWithParam() {
-        return "<with-param " + convertNameSpaceToXMLFormat(nameSpaces) + "name=\"" + name + "\" value=\"" + expression + "\"/>";
+        return '<' + WITH_PARAM_SERIALIZATION_NAME + ' ' + convertNameSpaceToXMLFormat(getProperty(NAMESPACES)) +
+               "name=\"" + getProperty(NAME) + "\" value=\"" + getProperty(EXPRESSION) + "\"/>";
 
     }
 
     /** Returns serialization representation element's property. */
     @Nonnull
     public String serializeProperty() {
-        return "<property " + convertNameSpaceToXMLFormat(nameSpaces) + "name=\"" + name + "\" value=\"" + expression + "\"/>";
+        return '<' + PROPERTY_SERIALIZATION_NAME + ' ' + convertNameSpaceToXMLFormat(getProperty(NAMESPACES)) +
+               "name=\"" + getProperty(NAME) + "\" value=\"" + getProperty(EXPRESSION) + "\"/>";
     }
 
     /**
@@ -87,11 +95,11 @@ public class Property extends AbstractEntityElement {
 
             switch (nodeName) {
                 case NAME_ATTRIBUTE:
-                    name = nodeValue;
+                    putProperty(NAME, nodeValue);
                     break;
 
                 case VALUE_ATTRIBUTE:
-                    expression = nodeValue;
+                    putProperty(EXPRESSION, nodeValue);
                     break;
 
                 default:
@@ -101,7 +109,9 @@ public class Property extends AbstractEntityElement {
     }
 
     private void applyNameSpaces(@Nonnull String nodeName, @Nonnull String nodeValue) {
-        if (!StringUtils.startsWith(PREFIX, nodeName, true)) {
+        Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
+
+        if (!StringUtils.startsWith(PREFIX, nodeName, true) || nameSpaces == null) {
             return;
         }
 
@@ -115,63 +125,9 @@ public class Property extends AbstractEntityElement {
         nameSpaces.add(nameSpace);
     }
 
-    /** @return namespaces which contain in property */
-    @Nonnull
-    public Array<NameSpace> getNameSpaces() {
-        return nameSpaces;
-    }
-
-    /**
-     * Sets namespaces to property
-     *
-     * @param nameSpaces
-     *         list of name spaces that should be set
-     */
-    public void setNameSpaces(@Nonnull Array<NameSpace> nameSpaces) {
-        this.nameSpaces = nameSpaces;
-    }
-
-    /** @return name of namespace */
-    @Nonnull
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets name of namespace
-     *
-     * @param name
-     *         value that should be set
-     */
-    public void setName(@Nonnull String name) {
-        this.name = name;
-    }
-
-    /** @return expression of namespace */
-    @Nonnull
-    public String getExpression() {
-        return expression;
-    }
-
-    /**
-     * Set expression of namespace
-     *
-     * @param expression
-     *         expression that should be set
-     */
-    public void setExpression(@Nonnull String expression) {
-        this.expression = expression;
-    }
-
     /** @return copy of property element */
-    public Property clone() {
-        Property property = propertyProvider.get();
-
-        property.setName(name);
-        property.setExpression(expression);
-        property.setNameSpaces(nameSpaces);
-
-        return property;
+    public Property copy() {
+        return propertyProvider.get();
     }
 
 }

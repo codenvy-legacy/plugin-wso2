@@ -62,7 +62,7 @@ public class NameSpace {
 
     /** @return copy of namespace */
     @Nonnull
-    public NameSpace clone() {
+    public NameSpace copy() {
         NameSpace nameSpace = nameSpaceProvider.get();
 
         nameSpace.setPrefix(prefix);

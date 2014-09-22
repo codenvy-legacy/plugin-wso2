@@ -44,6 +44,8 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.codenvy.ide.client.elements.mediators.log.Property.NAME;
+
 /**
  * Provides a graphical representation of dialog window for editing property.
  *
@@ -115,15 +117,19 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
 
         TextColumn<Property> name = new TextColumn<Property>() {
             @Override
-            public String getValue(Property object) {
-                return object.getName();
+            public String getValue(Property property) {
+                String name = property.getProperty(NAME);
+
+                return name == null ? "" : name;
             }
         };
 
         TextColumn<Property> expression = new TextColumn<Property>() {
             @Override
-            public String getValue(Property object) {
-                return object.getExpression();
+            public String getValue(Property property) {
+                String expression = property.getProperty(NAME);
+
+                return expression == null ? "" : expression;
             }
         };
 

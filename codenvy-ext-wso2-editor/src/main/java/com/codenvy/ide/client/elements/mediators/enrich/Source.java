@@ -295,7 +295,7 @@ public class Source extends AbstractEntityElement {
         @Nonnull
         public static InlineType getItemByValue(@Nonnull String value) {
 
-            if (value.equals("SourceXML")) {
+            if ("SourceXML".equals(value)) {
                 return SOURCE_XML;
             } else {
                 return REGISTRY_KEY;

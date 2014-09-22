@@ -26,14 +26,17 @@ import com.google.gwt.xml.client.NodeList;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.mediators.payload.Format.FormatType;
+import static com.codenvy.ide.client.elements.mediators.payload.Format.FORMAT_MEDIA_TYPE;
+import static com.codenvy.ide.client.elements.mediators.payload.Format.FORMAT_TYPE;
+import static com.codenvy.ide.client.elements.mediators.payload.Format.FormatType.INLINE;
+import static com.codenvy.ide.client.elements.mediators.payload.Format.FormatType.REGISTRY;
+import static com.codenvy.ide.client.elements.mediators.payload.Format.MediaType;
 
 /**
  * The class which describes state of PayloadFactory mediator and also has methods for changing it. Also the class contains the business
@@ -49,6 +52,10 @@ public class PayloadFactory extends AbstractElement {
     public static final String ELEMENT_NAME       = "PayloadFactory";
     public static final String SERIALIZATION_NAME = "payloadFactory";
 
+    public static final Key<Format>     FORMAT      = new Key<>("PayloadFormat");
+    public static final Key<String>     DESCRIPTION = new Key<>("PayloadDescription");
+    public static final Key<Array<Arg>> ARGS        = new Key<>("PayloadArgs");
+
     private static final String FORMAT_PROPERTY_NAME       = "format";
     private static final String ARGS_PROPERTY_NAME         = "args";
     private static final String MEDIA_TYPE_ATTRIBUTE_NAME  = "media-type";
@@ -58,10 +65,6 @@ public class PayloadFactory extends AbstractElement {
                                                                  ARGS_PROPERTY_NAME);
 
     private final Provider<Arg> argProvider;
-
-    private String     description;
-    private Format     format;
-    private Array<Arg> args;
 
     @Inject
     public PayloadFactory(EditorResources resources,
@@ -81,68 +84,30 @@ public class PayloadFactory extends AbstractElement {
 
         this.argProvider = argProvider;
 
-        description = "";
-
-        this.format = format;
-        args = Collections.createArray();
-    }
-
-    /** @return format element of payload mediator */
-    @Nonnull
-    public Format getFormat() {
-        return format;
-    }
-
-    /**
-     * Set format to payload mediator.
-     *
-     * @param format
-     *         format element which need to set
-     */
-    public void setFormat(@Nonnull Format format) {
-        this.format = format;
-    }
-
-    /** @return list of args of payload factory mediator */
-    @Nonnull
-    public Array<Arg> getArgs() {
-        return args;
-    }
-
-    /**
-     * Set list of args to payload factory mediator.
-     *
-     * @param args
-     *         list of property arguments which need to set
-     */
-    public void setArgs(@Nullable Array<Arg> args) {
-        this.args = args;
-    }
-
-    /** @return value of description */
-    @Nullable
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Set description to payload factory mediator.
-     *
-     * @param description
-     *         description which need to set
-     */
-    public void setDescription(@Nullable String description) {
-        this.description = description;
+        putProperty(FORMAT, format);
+        putProperty(DESCRIPTION, "");
+        putProperty(ARGS, Collections.<Arg>createArray());
     }
 
     /** {@inheritDoc} */
     @Override
     @Nonnull
     protected String serializeAttributes() {
+        Format format = getProperty(FORMAT);
+        if (format == null) {
+            return "";
+        }
+
+        MediaType mediaType = format.getProperty(FORMAT_MEDIA_TYPE);
+
+        if (mediaType == null) {
+            return "";
+        }
+
         Map<String, String> prop = new LinkedHashMap<>();
 
-        prop.put(MEDIA_TYPE_ATTRIBUTE_NAME, format.getMediaType().name());
-        prop.put(DESCRIPTION_ATTRIBUTE_NAME, description);
+        prop.put(MEDIA_TYPE_ATTRIBUTE_NAME, mediaType.getValue());
+        prop.put(DESCRIPTION_ATTRIBUTE_NAME, getProperty(DESCRIPTION));
 
         return convertAttributesToXMLFormat(prop);
     }
@@ -151,18 +116,25 @@ public class PayloadFactory extends AbstractElement {
     @Nonnull
     @Override
     protected String serializeProperties() {
+        Array<Arg> args = getProperty(ARGS);
+        Format format = getProperty(FORMAT);
+
+        if (args == null || format == null) {
+            return "";
+        }
+
         StringBuilder result = new StringBuilder();
 
         if (!args.isEmpty()) {
-            result.append("<args>\n");
+            result.append('<').append(ARGS_PROPERTY_NAME).append('>');
 
             for (Arg arg : args.asIterable()) {
                 result.append(arg.serialize());
             }
 
-            result.append("</args>");
+            result.append("</").append(ARGS_PROPERTY_NAME).append('>');
         } else {
-            result.append("<args/>");
+            result.append('<').append(ARGS_PROPERTY_NAME).append("/>");
         }
 
         return format.serialize() + result.toString();
@@ -171,16 +143,16 @@ public class PayloadFactory extends AbstractElement {
     /** {@inheritDoc} */
     @Override
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        switch (attributeName) {
-            case MEDIA_TYPE_ATTRIBUTE_NAME:
-                format.setMediaType(Format.MediaType.valueOf(attributeValue));
-                break;
+        Format format = getProperty(FORMAT);
 
-            case DESCRIPTION_ATTRIBUTE_NAME:
-                description = attributeValue;
-                break;
+        if (format == null) {
+            return;
+        }
 
-            default:
+        if (MEDIA_TYPE_ATTRIBUTE_NAME.equals(attributeName)) {
+            format.putProperty(FORMAT_MEDIA_TYPE, MediaType.getItemByValue(attributeValue));
+        } else {
+            putProperty(DESCRIPTION, attributeValue);
         }
     }
 
@@ -189,31 +161,46 @@ public class PayloadFactory extends AbstractElement {
     protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
 
-        switch (nodeName) {
-            case FORMAT_PROPERTY_NAME:
-                format.applyAttributes(node);
-                format.setFormatType(FormatType.Registry);
-
-                if (node.hasChildNodes()) {
-                    format.applyProperty(node);
-                    format.setFormatType(FormatType.Inline);
-                }
-                break;
-
-            case ARGS_PROPERTY_NAME:
-                NodeList childNodes = node.getChildNodes();
-
-                for (int i = 0; i < childNodes.getLength(); i++) {
-                    Node childNode = childNodes.item(i);
-
-                    Arg arg = argProvider.get();
-                    arg.applyAttributes(childNode);
-
-                    args.add(arg);
-                }
-                break;
-
-            default:
+        if (FORMAT_PROPERTY_NAME.equals(nodeName)) {
+            applyFormatProperty(node);
+        } else {
+            applyArgsProperty(node);
         }
     }
+
+    private void applyFormatProperty(@Nonnull Node node) {
+        Format format = getProperty(FORMAT);
+
+        if (format == null) {
+            return;
+        }
+
+        format.applyAttributes(node);
+        format.putProperty(FORMAT_TYPE, REGISTRY);
+
+        if (node.hasChildNodes()) {
+            format.applyProperty(node);
+            format.putProperty(FORMAT_TYPE, INLINE);
+        }
+    }
+
+    private void applyArgsProperty(@Nonnull Node node) {
+        Array<Arg> args = getProperty(ARGS);
+
+        if (!node.hasChildNodes() || args == null) {
+            return;
+        }
+
+        NodeList childNodes = node.getChildNodes();
+
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node childNode = childNodes.item(i);
+
+            Arg arg = argProvider.get();
+            arg.applyAttributes(childNode);
+
+            args.add(arg);
+        }
+    }
+
 }

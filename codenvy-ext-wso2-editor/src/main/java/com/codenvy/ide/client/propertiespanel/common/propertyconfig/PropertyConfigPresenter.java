@@ -27,6 +27,10 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static com.codenvy.ide.client.elements.mediators.log.Property.EXPRESSION;
+import static com.codenvy.ide.client.elements.mediators.log.Property.NAME;
+import static com.codenvy.ide.client.elements.mediators.log.Property.NAMESPACES;
+
 /**
  * The class provides the business logic that allows editor to react on user's action related to change of element's property.
  * Logic which provides the class allows add, remove and edit properties of mediator via special dialog window.
@@ -60,7 +64,7 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
         this.addNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
             public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
-                selectedProperty.setNameSpaces(nameSpaces);
+                selectedProperty.putProperty(NAMESPACES, nameSpaces);
             }
         };
     }
@@ -85,8 +89,8 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
 
         Property property = propertyProvider.get();
 
-        property.setName(name);
-        property.setExpression(expression);
+        property.putProperty(NAME, name);
+        property.putProperty(EXPRESSION, expression);
 
         propertiesView.setName("");
         propertiesView.setValueExpression("");
@@ -120,14 +124,27 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
     /** {@inheritDoc} */
     @Override
     public void onEditPropertiesButtonClicked() {
-        nameSpacePresenter.showDefaultWindow(selectedProperty.getNameSpaces(), addNameSpacesCallBack);
+        Array<NameSpace> nameSpaces = selectedProperty.getProperty(NAMESPACES);
+
+        if (nameSpaces == null) {
+            return;
+        }
+
+        nameSpacePresenter.showDefaultWindow(nameSpaces, addNameSpacesCallBack);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onEditButtonClicked() {
-        propertiesView.setName(selectedProperty.getName());
-        propertiesView.setValueExpression(selectedProperty.getExpression());
+        String name = selectedProperty.getProperty(NAME);
+        String expression = selectedProperty.getProperty(EXPRESSION);
+
+        if (name == null || expression == null) {
+            return;
+        }
+
+        propertiesView.setName(name);
+        propertiesView.setValueExpression(expression);
 
         index = arrayTemporary.indexOf(selectedProperty);
 
@@ -149,7 +166,7 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
         addPropertyCallback = callback;
 
         for (Property property : properties.asIterable()) {
-            arrayTemporary.add(property.clone());
+            arrayTemporary.add(property.copy());
         }
 
         propertiesView.setProperties(arrayTemporary);

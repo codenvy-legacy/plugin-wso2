@@ -20,9 +20,11 @@ import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
+import static com.codenvy.ide.client.elements.mediators.payload.Format.FormatType.INLINE;
+import static com.codenvy.ide.client.elements.mediators.payload.Format.MediaType.JSON;
+import static com.codenvy.ide.client.elements.mediators.payload.Format.MediaType.XML;
 
 /**
  * The class which describes state of Format property of PayloadFactory mediator and also has methods for changing it. Also the class
@@ -35,19 +37,21 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
  */
 public class Format extends AbstractEntityElement {
 
-    public static final String FORMAT_KEY_ATTRIBUTE_NAME = "key";
+    public static final String FORMAT_SERIALIZATION_NAME = "format";
 
-    private FormatType formatType;
-    private MediaType  mediaType;
-    private String     formatKey;
-    private String     formatInline;
+    public static final Key<MediaType>  FORMAT_MEDIA_TYPE = new Key<>("PayloadFormatMediaType");
+    public static final Key<FormatType> FORMAT_TYPE       = new Key<>("PayloadFormatType");
+    public static final Key<String>     FORMAT_KEY        = new Key<>("PayloadFormatKey");
+    public static final Key<String>     FORMAT_INLINE     = new Key<>("PayloadFormatInline");
+
+    private static final String FORMAT_KEY_ATTRIBUTE_NAME = "key";
 
     @Inject
     public Format() {
-        this.mediaType = MediaType.xml;
-        this.formatType = FormatType.Inline;
-        this.formatKey = "default/key";
-        this.formatInline = "<inline/>";
+        putProperty(FORMAT_TYPE, INLINE);
+        putProperty(FORMAT_KEY, "default/key");
+        putProperty(FORMAT_INLINE, "<inline/>");
+        putProperty(FORMAT_MEDIA_TYPE, XML);
     }
 
     /**
@@ -60,7 +64,7 @@ public class Format extends AbstractEntityElement {
         if (node.hasAttributes()) {
             Node attribute = node.getAttributes().item(0);
 
-            formatKey = String.valueOf(attribute.getNodeValue());
+            putProperty(FORMAT_KEY, attribute.getNodeValue());
         }
     }
 
@@ -81,27 +85,37 @@ public class Format extends AbstractEntityElement {
 
             String xmlns = tagName.substring(indexFirst, tagName.contains("/") ? indexLast - 1 : indexLast);
 
-            formatInline = item.replace(xmlns, "");
+            String formatInline = item.replace(xmlns, "");
+
+            putProperty(FORMAT_INLINE, formatInline);
         }
     }
 
     /** @return serialization representation of element attributes */
     @Nonnull
     public String serializeAttributes() {
-        return FORMAT_KEY_ATTRIBUTE_NAME + "=\"" + formatKey + '"';
+        return FORMAT_KEY_ATTRIBUTE_NAME + "=\"" + getProperty(FORMAT_KEY) + '"';
     }
 
     /** @return serialized representation of the source element */
     @Nonnull
     public String serialize() {
-        StringBuilder result = new StringBuilder("<format");
+        String formatInline = getProperty(FORMAT_INLINE);
 
-        if (mediaType.equals(MediaType.json)) {
-            return "<format>" + formatInline.replace("<", "&lt;").replace(">", "&gt;") + "</format>";
+        if (formatInline == null) {
+            return "";
         }
 
-        if (FormatType.Inline.equals(formatType)) {
-            result.append(">");
+        StringBuilder xml = new StringBuilder();
+        String json = "";
+
+        boolean isInline = INLINE.equals(getProperty(FORMAT_TYPE));
+        boolean isInlineJson = JSON.equals(getProperty(FORMAT_MEDIA_TYPE)) && isInline;
+
+        xml.append('<').append(FORMAT_SERIALIZATION_NAME);
+
+        if (isInline) {
+            xml.append('>');
 
             int index = formatInline.indexOf(">");
 
@@ -110,87 +124,69 @@ public class Format extends AbstractEntityElement {
             String tagName = formatInline.substring(0, tag.contains("/") ? index - 1 : index);
             String restString = formatInline.substring(tag.contains("/") ? index - 1 : index);
 
-            result.append(tagName).append(" " + PREFIX + "=\"\"").append(restString).append("</format>");
+            xml.append(tagName).append(' ' + PREFIX + "=\"\"").append(restString)
+               .append("</").append(FORMAT_SERIALIZATION_NAME).append('>');
         } else {
-            result.append(' ').append(serializeAttributes()).append("/>\n");
+            xml.append(' ').append(serializeAttributes()).append("/>\n");
         }
 
-        return result.toString();
-    }
+        if (isInlineJson) {
+            json = '<' + FORMAT_SERIALIZATION_NAME + '>' + formatInline.replace("<", "&lt;").replace(">", "&gt;") +
+                   "</" + FORMAT_SERIALIZATION_NAME + '>';
+        }
 
-    /** @return format key value of element */
-    @Nullable
-    public String getFormatKey() {
-        return formatKey;
-    }
-
-    /**
-     * Sets format key value for element.
-     *
-     * @param formatKey
-     *         value which need to set to element
-     */
-    public void setFormatKey(@Nullable String formatKey) {
-        this.formatKey = formatKey;
-    }
-
-    /** @return format inline value of element */
-    @Nonnull
-    public String getFormatInline() {
-        return formatInline;
-    }
-
-    /**
-     * Sets format inline value for element.
-     *
-     * @param formatInline
-     *         value which need to set to element
-     */
-    public void setFormatInline(@Nullable String formatInline) {
-        this.formatInline = formatInline;
-    }
-
-    /** @return format type value of element */
-    @Nonnull
-    public FormatType getFormatType() {
-        return formatType;
-    }
-
-    /**
-     * Sets format type value for element.
-     *
-     * @param formatType
-     *         value which need to set to element
-     */
-    public void setFormatType(@Nonnull FormatType formatType) {
-        this.formatType = formatType;
-    }
-
-    /** @return media type value of element */
-    @Nonnull
-    public MediaType getMediaType() {
-        return mediaType;
-    }
-
-    /**
-     * Sets media type value for element.
-     *
-     * @param mediaType
-     *         value which need to set to element
-     */
-    public void setMediaType(@Nonnull MediaType mediaType) {
-        this.mediaType = mediaType;
+        return isInlineJson ? json : xml.toString();
     }
 
     public enum FormatType {
-        Inline, Registry;
+        INLINE("Inline"), REGISTRY("Registry");
 
         public static final String TYPE_NAME = "FormatType";
+
+        private final String value;
+
+        FormatType(@Nonnull String value) {
+            this.value = value;
+        }
+
+        @Nonnull
+        public String getValue() {
+            return value;
+        }
+
+        @Nonnull
+        public static FormatType getItemByValue(@Nonnull String value) {
+            if ("Inline".equals(value)) {
+                return INLINE;
+            } else {
+                return REGISTRY;
+            }
+        }
     }
 
     public enum MediaType {
-        xml, json;
+        XML("xml"), JSON("json");
 
         public static final String TYPE_NAME = "MediaType";
+
+        private final String value;
+
+        MediaType(@Nonnull String value) {
+            this.value = value;
+        }
+
+        @Nonnull
+        public String getValue() {
+            return value;
+        }
+
+        @Nonnull
+        public static MediaType getItemByValue(@Nonnull String value) {
+            if ("xml".equals(value)) {
+                return XML;
+            } else {
+                return JSON;
+            }
+        }
     }
 }

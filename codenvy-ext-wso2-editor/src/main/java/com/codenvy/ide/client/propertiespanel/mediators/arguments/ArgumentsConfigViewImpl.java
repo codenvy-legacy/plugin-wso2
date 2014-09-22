@@ -42,9 +42,13 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.codenvy.ide.client.elements.mediators.payload.Arg.ARG_EVALUATOR;
+import static com.codenvy.ide.client.elements.mediators.payload.Arg.ARG_TYPE;
+import static com.codenvy.ide.client.elements.mediators.payload.Arg.ARG_VALUE;
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.ArgType;
-import static com.codenvy.ide.client.elements.mediators.payload.Arg.Evaluator.json;
-import static com.codenvy.ide.client.elements.mediators.payload.Arg.Evaluator.xml;
+import static com.codenvy.ide.client.elements.mediators.payload.Arg.Evaluator;
+import static com.codenvy.ide.client.elements.mediators.payload.Arg.Evaluator.JSON;
+import static com.codenvy.ide.client.elements.mediators.payload.Arg.Evaluator.XML;
 import static com.google.gwt.dom.client.Style.Unit.PX;
 
 /**
@@ -118,14 +122,16 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
         TextColumn<Arg> value = new TextColumn<Arg>() {
             @Override
             public String getValue(Arg object) {
-                return object.getValue();
+                return object.getProperty(ARG_VALUE);
             }
         };
 
         TextColumn<Arg> type = new TextColumn<Arg>() {
             @Override
-            public String getValue(Arg object) {
-                return object.getType().name();
+            public String getValue(Arg arg) {
+                ArgType argType = arg.getProperty(ARG_TYPE);
+
+                return argType == null ? "" : argType.getValue();
             }
         };
 
@@ -148,8 +154,10 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
 
         TextColumn<Arg> evaluator = new TextColumn<Arg>() {
             @Override
-            public String getValue(Arg object) {
-                return String.valueOf(object.getEvaluator());
+            public String getValue(Arg arg) {
+                Evaluator evaluator = arg.getProperty(ARG_EVALUATOR);
+
+                return evaluator == null ? "" : evaluator.getValue();
             }
         };
 
@@ -225,8 +233,8 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
     @Override
     public void setTypeValue() {
         this.typeValue.clear();
-        this.typeValue.addItem(ArgType.Expression.name());
-        this.typeValue.addItem(ArgType.Value.name());
+        this.typeValue.addItem(ArgType.EXPRESSION.getValue());
+        this.typeValue.addItem(ArgType.VALUE.getValue());
     }
 
     /** {@inheritDoc} */
@@ -276,8 +284,8 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
     @Override
     public void setEvaluator() {
         this.valueEvaluator.clear();
-        this.valueEvaluator.addItem(json.name());
-        this.valueEvaluator.addItem(xml.name());
+        this.valueEvaluator.addItem(JSON.getValue());
+        this.valueEvaluator.addItem(XML.getValue());
     }
 
     /** {@inheritDoc} */

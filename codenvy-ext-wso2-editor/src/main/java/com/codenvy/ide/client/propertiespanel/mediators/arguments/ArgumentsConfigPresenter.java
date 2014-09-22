@@ -26,9 +26,14 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import static com.codenvy.ide.client.elements.mediators.payload.Arg.ARG_EVALUATOR;
+import static com.codenvy.ide.client.elements.mediators.payload.Arg.ARG_EXPRESSION;
+import static com.codenvy.ide.client.elements.mediators.payload.Arg.ARG_NAMESPACES;
+import static com.codenvy.ide.client.elements.mediators.payload.Arg.ARG_TYPE;
+import static com.codenvy.ide.client.elements.mediators.payload.Arg.ARG_VALUE;
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.ArgType;
+import static com.codenvy.ide.client.elements.mediators.payload.Arg.Evaluator;
 
 /**
  * The class provides the business logic that allows editor to react on user's action related to change of element's arguments.
@@ -65,9 +70,9 @@ public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDeleg
 
         this.addNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
-                selectedArg.setExpression(expression);
-                selectedArg.setNameSpaces(nameSpaces);
+            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+                selectedArg.putProperty(ARG_EXPRESSION, expression);
+                selectedArg.putProperty(ARG_NAMESPACES, nameSpaces);
             }
         };
     }
@@ -92,9 +97,9 @@ public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDeleg
         String type = argView.getTypeValue().isEmpty() ? "Value" : argView.getTypeValue();
 
         Arg arg = argProvider.get();
-        arg.setType(ArgType.valueOf(type));
-        arg.setEvaluator(Arg.Evaluator.valueOf(evaluator));
-        arg.setValue(value);
+        arg.putProperty(ARG_TYPE, ArgType.getItemByValue(type));
+        arg.putProperty(ARG_EVALUATOR, Evaluator.getItemByValue(evaluator));
+        arg.putProperty(ARG_VALUE, value);
 
         argView.setValueExpression("");
         argView.clearEvaluator();
@@ -120,22 +125,36 @@ public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDeleg
     /** {@inheritDoc} */
     @Override
     public void onEditArgsButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(selectedArg.getNameSpaces(),
+        Array<NameSpace> nameSpaces = selectedArg.getProperty(ARG_NAMESPACES);
+
+        if (nameSpaces == null) {
+            return;
+        }
+
+        nameSpacePresenter.showWindowWithParameters(nameSpaces,
                                                     addNameSpacesCallBack,
                                                     local.argsLabel(),
-                                                    selectedArg.getExpression());
+                                                    selectedArg.getProperty(ARG_EXPRESSION));
     }
 
     /** {@inheritDoc} */
     @Override
     public void onEditButtonClicked() {
-        argView.setValueExpression(selectedArg.getValue());
+        String expression = selectedArg.getProperty(ARG_EXPRESSION);
+        Evaluator evaluator = selectedArg.getProperty(ARG_EVALUATOR);
+        ArgType argType = selectedArg.getProperty(ARG_TYPE);
+
+        if (expression == null || evaluator == null || argType == null) {
+            return;
+        }
+
+        argView.setValueExpression(expression);
 
         argView.setEvaluator();
-        argView.selectEvaluator(String.valueOf(selectedArg.getEvaluator()));
+        argView.selectEvaluator(evaluator.getValue());
 
         argView.setTypeValue();
-        argView.selectType(String.valueOf(selectedArg.getType()));
+        argView.selectType(argType.getValue());
 
         index = arrayTemporary.indexOf(selectedArg);
 

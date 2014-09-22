@@ -146,7 +146,7 @@ public class Send extends AbstractElement {
 
         StringBuilder result = new StringBuilder();
 
-        result.append("<send ").append(serializeAttributes()).append(">\n");
+        result.append('<').append(SERIALIZATION_NAME).append(' ').append(serializeAttributes()).append(">\n");
 
         if (branches.get(0).hasElements()) {
             result.append('<').append(ENDPOINT_PROPERTY_NAME).append(">\n");
@@ -156,7 +156,7 @@ public class Send extends AbstractElement {
             result.append("</").append(ENDPOINT_PROPERTY_NAME).append(">\n");
         }
 
-        result.append("</send>");
+        result.append("</").append(SERIALIZATION_NAME).append('>');
 
         return result.toString();
     }

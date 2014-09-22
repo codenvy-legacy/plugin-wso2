@@ -172,7 +172,7 @@ public class Property extends AbstractEntityElement {
 
     /** @return copy of property */
     @Nonnull
-    public Property clone() {
+    public Property copy() {
         Property property = propertyProvider.get();
 
         property.setName(name);

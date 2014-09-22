@@ -131,7 +131,7 @@ public class EditorAddressPropertyPresenter implements EditorAddressPropertyView
     public void showDialog(@Nullable Property property, @Nonnull EditorAddressPropertyCallBack callBack) {
         this.callBack = callBack;
 
-        selectedProperty = property == null ? propertyProvider.get() : property.clone();
+        selectedProperty = property == null ? propertyProvider.get() : property.copy();
 
         boolean isVisible = EXPRESSION.equals(selectedProperty.getType());
 

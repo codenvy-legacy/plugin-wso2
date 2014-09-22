@@ -44,6 +44,7 @@ import static com.codenvy.ide.client.elements.mediators.log.Log.LOG_PROPERTIES;
 import static com.codenvy.ide.client.elements.mediators.log.Log.LOG_SEPARATOR;
 import static com.codenvy.ide.client.elements.mediators.log.Log.LogCategory;
 import static com.codenvy.ide.client.elements.mediators.log.Log.LogLevel;
+import static com.codenvy.ide.client.elements.mediators.log.Property.NAME;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of Log mediator
@@ -209,7 +210,7 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log, Pr
         for (int i = 0; i <= size; i++) {
             Property property = properties.get(i);
 
-            content.append(property.getName());
+            content.append(property.getProperty(NAME));
 
             if (i != size) {
                 content.append(", ");

@@ -148,7 +148,7 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
         this.properties = Collections.createArray();
 
         for (Property property : properties.asIterable()) {
-            this.properties.add(property.clone());
+            this.properties.add(property.copy());
         }
 
         view.setProperties(this.properties);

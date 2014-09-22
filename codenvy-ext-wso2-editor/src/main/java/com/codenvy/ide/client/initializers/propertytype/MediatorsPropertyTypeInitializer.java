@@ -43,6 +43,7 @@ import static com.codenvy.ide.client.elements.mediators.payload.Format.MediaType
 
 /**
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class MediatorsPropertyTypeInitializer extends AbstractPropertyTypeInitializer {
 
@@ -110,9 +111,9 @@ public class MediatorsPropertyTypeInitializer extends AbstractPropertyTypeInitia
 
         manager.register(ValueType.TYPE_NAME, Arrays.asList(ValueType.LITERAL.name(), ValueType.EXPRESSION.name()));
 
-        manager.register(MediaType.TYPE_NAME, Arrays.asList(MediaType.xml.name(), MediaType.json.name()));
+        manager.register(MediaType.TYPE_NAME, Arrays.asList(MediaType.XML.getValue(), MediaType.JSON.getValue()));
 
-        manager.register(FormatType.TYPE_NAME, Arrays.asList(FormatType.Inline.name(), FormatType.Registry.name()));
+        manager.register(FormatType.TYPE_NAME, Arrays.asList(FormatType.INLINE.getValue(), FormatType.REGISTRY.getValue()));
 
         manager.register(SourceType.TYPE_NAME, Arrays.asList(SourceType.CUSTOM.getValue(),
                                                              SourceType.ENVELOPE.getValue(),

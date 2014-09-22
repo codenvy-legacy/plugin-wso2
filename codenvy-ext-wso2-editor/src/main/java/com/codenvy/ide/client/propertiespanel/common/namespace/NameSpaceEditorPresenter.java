@@ -64,7 +64,7 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
         this.callBack = callBack;
 
         for (NameSpace nameSpace : nameSpaces.asIterable()) {
-            nameSpacesTemporary.add(nameSpace.clone());
+            nameSpacesTemporary.add(nameSpace.copy());
         }
 
         nameSpaceEditorView.setNameSpaces(nameSpacesTemporary);

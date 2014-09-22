@@ -41,7 +41,7 @@ public enum Action {
     @Nonnull
     public static Action getItemByValue(@Nonnull String value) {
 
-        if (value.equals("set")) {
+        if ("set".equals(value)) {
             return SET;
         } else {
             return REMOVE;

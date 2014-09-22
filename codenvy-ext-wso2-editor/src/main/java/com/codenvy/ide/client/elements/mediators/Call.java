@@ -106,9 +106,9 @@ public class Call extends AbstractElement {
     public String serialize() {
         String description = getProperty(DESCRIPTION);
 
-        String content = "<call" + ((description != null && description.isEmpty())
-                                    ? ""
-                                    : ' ' + DESCRIPTION_ATTRIBUTE_NAME + "=\"" + description + '"');
+        String content = '<' + SERIALIZATION_NAME + ((description != null && description.isEmpty())
+                                                     ? ""
+                                                     : ' ' + DESCRIPTION_ATTRIBUTE_NAME + "=\"" + description + '"');
 
         EndpointType endpointType = getProperty(ENDPOINT_TYPE);
 
@@ -122,7 +122,7 @@ public class Call extends AbstractElement {
                        '<' + ENDPOINT_PROPERTY_NAME + ">\n" +
                        branches.get(0).serialize() +
                        "</" + ENDPOINT_PROPERTY_NAME + ">\n" +
-                       "</call>";
+                       "</" + SERIALIZATION_NAME + '>';
 
             case REGISTRYKEY:
                 return content + ">\n" +
@@ -135,7 +135,7 @@ public class Call extends AbstractElement {
 
                 return content + ">\n" +
                        '<' + ENDPOINT_PROPERTY_NAME + ' ' + serializedNameSpaces +
-                       KEY_EXPRESSION_ATTRIBUTE_NAME + "=\"" + getProperty(X_PATH) + "\"/>\n" + "</call>";
+                       KEY_EXPRESSION_ATTRIBUTE_NAME + "=\"" + getProperty(X_PATH) + "\"/>\n" + "</" + SERIALIZATION_NAME + '>';
 
             case NONE:
 
