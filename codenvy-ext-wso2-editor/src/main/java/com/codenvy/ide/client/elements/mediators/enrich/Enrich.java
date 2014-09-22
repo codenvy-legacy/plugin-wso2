@@ -24,12 +24,14 @@ import com.google.gwt.xml.client.NodeList;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.codenvy.ide.client.elements.mediators.enrich.Source.SOURCE_SERIALIZATION_NAME;
+import static com.codenvy.ide.client.elements.mediators.enrich.Target.TARGET_SERIALIZATION_NAME;
 
 /**
  * The class which describes state of Send mediator and also has methods for changing it. Also the class contains the business logic
@@ -45,16 +47,13 @@ public class Enrich extends AbstractElement {
     public static final String ELEMENT_NAME       = "Enrich";
     public static final String SERIALIZATION_NAME = "enrich";
 
-    private static final String TARGET_PROPERTY_NAME = "target";
-    private static final String SOURCE_PROPERTY_NAME = "source";
+    public static final Key<Source> SOURCE      = new Key<>("EnrichSource");
+    public static final Key<Target> TARGET      = new Key<>("EnrichTarget");
+    public static final Key<String> DESCRIPTION = new Key<>("EnrichDescription");
 
     private static final String DESCRIPTION_ATTRIBUTE_NAME = "description";
 
-    private static final List<String> PROPERTIES = Arrays.asList(TARGET_PROPERTY_NAME, SOURCE_PROPERTY_NAME);
-
-    private String description;
-    private Source source;
-    private Target target;
+    private static final List<String> PROPERTIES = Arrays.asList(TARGET_SERIALIZATION_NAME, SOURCE_SERIALIZATION_NAME);
 
     @Inject
     public Enrich(EditorResources resources,
@@ -72,65 +71,9 @@ public class Enrich extends AbstractElement {
               branchProvider,
               elementCreatorsManager);
 
-        this.description = "";
-
-        this.source = source;
-        this.target = target;
-    }
-
-    /** @return source entity of enrich element */
-    @Nonnull
-    public Source getSource() {
-        return source;
-    }
-
-    /**
-     * Sets source entity of enrich element.
-     *
-     * @param source
-     *         entity which need to set to element
-     */
-    public void setSource(@Nonnull Source source) {
-        this.source = source;
-    }
-
-    /** @return target entity of enrich element */
-    @Nonnull
-    public Target getTarget() {
-        return target;
-    }
-
-    /**
-     * Sets target entity of enrich element.
-     *
-     * @param target
-     *         entity which need to set to element
-     */
-    public void setTarget(@Nonnull Target target) {
-        this.target = target;
-    }
-
-    /** @return description value of enrich element */
-    @Nullable
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Sets description value to enrich element
-     *
-     * @param description
-     *         value which need to set to element
-     */
-    public void setDescription(@Nullable String description) {
-        this.description = description;
-    }
-
-    /** {@inheritDoc} */
-    @Nonnull
-    @Override
-    protected String serializeProperties() {
-        return source.serialize() + target.serialize();
+        putProperty(SOURCE, source);
+        putProperty(TARGET, target);
+        putProperty(DESCRIPTION, "");
     }
 
     /** {@inheritDoc} */
@@ -139,14 +82,35 @@ public class Enrich extends AbstractElement {
     protected String serializeAttributes() {
         Map<String, String> attributes = new LinkedHashMap<>();
 
-        attributes.put(DESCRIPTION_ATTRIBUTE_NAME, description);
+        attributes.put(DESCRIPTION_ATTRIBUTE_NAME, getProperty(DESCRIPTION));
 
         return convertAttributesToXMLFormat(attributes);
     }
 
     /** {@inheritDoc} */
+    @Nonnull
+    @Override
+    protected String serializeProperties() {
+        Source source = getProperty(SOURCE);
+        Target target = getProperty(TARGET);
+
+        if (source == null || target == null) {
+            return "";
+        }
+
+        return source.serialize() + target.serialize();
+    }
+
+    /** {@inheritDoc} */
     @Override
     public void deserialize(@Nonnull Node node) {
+        Source source = getProperty(SOURCE);
+        Target target = getProperty(TARGET);
+
+        if (source == null || target == null) {
+            return;
+        }
+
         readXMLAttributes(node);
 
         NodeList childNodes = node.getChildNodes();
@@ -154,8 +118,8 @@ public class Enrich extends AbstractElement {
         for (int i = 0; i < childNodes.getLength(); i++) {
             Node childNode = childNodes.item(i);
 
-            if (TARGET_PROPERTY_NAME.equals(childNode.getNodeName())) {
-                target.applyAttributes(childNode);
+            if (TARGET_SERIALIZATION_NAME.equals(childNode.getNodeName())) {
+                target.deserialize(childNode);
             } else {
                 source.applyProperty(childNode);
             }
@@ -165,6 +129,6 @@ public class Enrich extends AbstractElement {
     /** {@inheritDoc} */
     @Override
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        description = String.valueOf(attributeValue);
+        putProperty(DESCRIPTION, attributeValue);
     }
 }

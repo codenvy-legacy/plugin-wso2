@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.mediators.Property.Action.set;
+import static com.codenvy.ide.client.elements.mediators.Action.SET;
 import static com.codenvy.ide.client.elements.mediators.Property.DataType.STRING;
 import static com.codenvy.ide.client.elements.mediators.Property.Scope.SYNAPSE;
 import static com.codenvy.ide.client.elements.mediators.ValueType.EXPRESSION;
@@ -96,7 +96,7 @@ public class Property extends AbstractElement {
 
         this.nameSpaceProvider = nameSpaceProvider;
 
-        putProperty(PROPERTY_ACTION, set);
+        putProperty(PROPERTY_ACTION, SET);
         putProperty(VALUE_TYPE, LITERAL);
         putProperty(PROPERTY_DATA_TYPE, STRING);
         putProperty(PROPERTY_SCOPE, SYNAPSE);
@@ -122,7 +122,7 @@ public class Property extends AbstractElement {
 
         attributes.remove((vType != null && vType.equals(EXPRESSION)) ? VALUE_LITERAL_ATTRIBUTE : VALUE_EXPRESSION_ATTRIBUTE);
 
-        if (propAction != null && propAction.equals(set)) {
+        if (SET.equals(propAction)) {
             attributes.remove(ACTION_ATTRIBUTE);
         } else {
             attributes.remove(VALUE_EXPRESSION_ATTRIBUTE);
@@ -148,7 +148,7 @@ public class Property extends AbstractElement {
         attributes.put(VALUE_EXPRESSION_ATTRIBUTE, getProperty(VALUE_EXPRESSION));
         attributes.put(VALUE_LITERAL_ATTRIBUTE, getProperty(VALUE_LITERAL));
         attributes.put(SCOPE_ATTRIBUTE, scope != null ? scope.getValue() : "");
-        attributes.put(ACTION_ATTRIBUTE, propAction != null ? propAction.name() : "");
+        attributes.put(ACTION_ATTRIBUTE, propAction != null ? propAction.getValue() : "");
         attributes.put(DATA_TYPE_ATTRIBUTE, dataType != null ? dataType.name() : "");
         attributes.put(STRING_CAPTURE_GROUP_ATTRIBUTE, getProperty(VALUE_STRING_CAPTURE_GROUP));
         attributes.put(STRING_PATTERN_ATTRIBUTE, getProperty(VALUE_STRING_PATTERN));
@@ -164,7 +164,7 @@ public class Property extends AbstractElement {
                 break;
 
             case ACTION_ATTRIBUTE:
-                putProperty(PROPERTY_ACTION, Action.valueOf(attributeValue));
+                putProperty(PROPERTY_ACTION, Action.getItemByValue(attributeValue));
                 break;
 
             case DATA_TYPE_ATTRIBUTE:
@@ -217,12 +217,6 @@ public class Property extends AbstractElement {
         if (nameSpaces != null) {
             nameSpaces.add(nameSpace);
         }
-    }
-
-    public enum Action {
-        set, remove;
-
-        public static final String TYPE_NAME = "Action";
     }
 
     public enum DataType {

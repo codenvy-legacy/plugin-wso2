@@ -33,11 +33,11 @@ import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.mediators.Header.HeaderAction.remove;
-import static com.codenvy.ide.client.elements.mediators.Header.HeaderAction.set;
+import static com.codenvy.ide.client.elements.mediators.Action.REMOVE;
+import static com.codenvy.ide.client.elements.mediators.Action.SET;
 import static com.codenvy.ide.client.elements.mediators.Header.HeaderValueType.INLINE;
 import static com.codenvy.ide.client.elements.mediators.Header.HeaderValueType.LITERAL;
-import static com.codenvy.ide.client.elements.mediators.Header.ScopeType.Synapse;
+import static com.codenvy.ide.client.elements.mediators.Header.ScopeType.SYNAPSE;
 
 /**
  * The class which describes state of Header mediator and also has methods for changing it. Also the class contains the business
@@ -53,7 +53,7 @@ public class Header extends AbstractElement {
     public static final String ELEMENT_NAME       = "Header";
     public static final String SERIALIZATION_NAME = "header";
 
-    public static final Key<HeaderAction>    ACTION        = new Key<>("HeaderAction");
+    public static final Key<Action>          ACTION        = new Key<>("HeaderAction");
     public static final Key<HeaderValueType> VALUE_TYPE    = new Key<>("HeaderValueType");
     public static final Key<ScopeType>       SCOPE         = new Key<>("HeaderScope");
     public static final Key<String>          HEADER_NAME   = new Key<>("HeaderName");
@@ -92,8 +92,8 @@ public class Header extends AbstractElement {
 
         this.nameSpaceProvider = nameSpaceProvider;
 
-        putProperty(ACTION, set);
-        putProperty(SCOPE, Synapse);
+        putProperty(ACTION, SET);
+        putProperty(SCOPE, SYNAPSE);
         putProperty(HEADER_NAME, "To");
         putProperty(VALUE_TYPE, LITERAL);
         putProperty(VALUE_LITERAL, "header_value");
@@ -145,9 +145,9 @@ public class Header extends AbstractElement {
 
         setDefaultAttributes(attributes);
 
-        HeaderAction action = getProperty(ACTION);
+        Action action = getProperty(ACTION);
 
-        if (action != null && action.equals(remove)) {
+        if (action != null && action.equals(REMOVE)) {
             attributes.remove(VALUE_ATTRIBUTE);
             attributes.remove(EXPRESSION_ATTRIBUTE);
         } else {
@@ -181,16 +181,16 @@ public class Header extends AbstractElement {
 
         ScopeType scopeType = getProperty(SCOPE);
         if (scopeType != null) {
-            attributes.put(SCOPE_ATTRIBUTE, scopeType.name());
+            attributes.put(SCOPE_ATTRIBUTE, scopeType.getValue());
         }
 
         attributes.put(VALUE_ATTRIBUTE, getProperty(VALUE_LITERAL));
         attributes.put(EXPRESSION_ATTRIBUTE, getProperty(EXPRESSION));
 
-        HeaderAction action = getProperty(ACTION);
+        Action action = getProperty(ACTION);
 
         if (action != null) {
-            attributes.put(ACTION_ATTRIBUTE, action.name());
+            attributes.put(ACTION_ATTRIBUTE, action.getValue());
         }
     }
 
@@ -203,7 +203,7 @@ public class Header extends AbstractElement {
                 break;
 
             case SCOPE_ATTRIBUTE:
-                putProperty(SCOPE, ScopeType.valueOf(attributeValue));
+                putProperty(SCOPE, ScopeType.getItemByValue(attributeValue));
                 break;
 
             case VALUE_ATTRIBUTE:
@@ -216,7 +216,7 @@ public class Header extends AbstractElement {
                 break;
 
             case ACTION_ATTRIBUTE:
-                putProperty(ACTION, HeaderAction.valueOf(attributeValue));
+                putProperty(ACTION, Action.getItemByValue(attributeValue));
                 break;
 
             default:
@@ -275,12 +275,6 @@ public class Header extends AbstractElement {
         }
     }
 
-    public enum HeaderAction {
-        set, remove;
-
-        public static final String TYPE_NAME = "HeaderAction";
-    }
-
     public enum HeaderValueType {
         LITERAL, EXPRESSION, INLINE;
 
@@ -288,9 +282,29 @@ public class Header extends AbstractElement {
     }
 
     public enum ScopeType {
-        Synapse, transport;
+        SYNAPSE("Synapse"), TRANSPORT("transport");
 
         public static final String TYPE_NAME = "ScopeType";
+
+        private final String value;
+
+        ScopeType(@Nonnull String value) {
+            this.value = value;
+        }
+
+        @Nonnull
+        public String getValue() {
+            return value;
+        }
+
+        @Nonnull
+        public static ScopeType getItemByValue(@Nonnull String value) {
+            if (value.equals("Synapse")) {
+                return SYNAPSE;
+            } else {
+                return TRANSPORT;
+            }
+        }
     }
 
 }

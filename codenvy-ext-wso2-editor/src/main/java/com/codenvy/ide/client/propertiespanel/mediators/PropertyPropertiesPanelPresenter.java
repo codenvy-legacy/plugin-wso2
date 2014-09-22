@@ -17,6 +17,7 @@ package com.codenvy.ide.client.propertiespanel.mediators;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.client.elements.mediators.Action;
 import com.codenvy.ide.client.elements.mediators.Property;
 import com.codenvy.ide.client.elements.mediators.ValueType;
 import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
@@ -38,7 +39,6 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.codenvy.ide.client.elements.mediators.Property.Action;
 import static com.codenvy.ide.client.elements.mediators.Property.DESCRIPTION;
 import static com.codenvy.ide.client.elements.mediators.Property.DataType;
 import static com.codenvy.ide.client.elements.mediators.Property.NAMESPACES;
@@ -124,7 +124,7 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
         propertyAction.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                element.putProperty(PROPERTY_ACTION, Action.valueOf(property));
+                element.putProperty(PROPERTY_ACTION, Action.getItemByValue(property));
 
                 applyValueTypes();
 
@@ -265,15 +265,15 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
     private void applyValueTypes() {
         ValueType valueType = element.getProperty(VALUE_TYPE);
 
-        if (Action.set.equals(element.getProperty(PROPERTY_ACTION))) {
-            setDefaultVisible(true);
+        boolean isSetPropertyAction = Action.SET.equals(element.getProperty(PROPERTY_ACTION));
 
-            if (valueType != null) {
-                valueExpression.setVisible(valueType.equals(EXPRESSION));
-                valueLiteral.setVisible(!valueType.equals(EXPRESSION));
-            }
-        } else {
-            setDefaultVisible(false);
+        setDefaultVisible(isSetPropertyAction);
+
+        if (isSetPropertyAction && valueType != null) {
+            boolean isExpression = EXPRESSION.equals(valueType);
+
+            valueExpression.setVisible(isExpression);
+            valueLiteral.setVisible(!isExpression);
         }
     }
 
@@ -302,7 +302,7 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
         propertyAction.setValues(propertyTypeManager.getValuesByName(Action.TYPE_NAME));
         Action action = element.getProperty(PROPERTY_ACTION);
         if (action != null) {
-            propertyAction.selectValue(action.name());
+            propertyAction.selectValue(action.getValue());
         }
 
         propertyDataType.setValues(propertyTypeManager.getValuesByName(DataType.TYPE_NAME));
@@ -314,7 +314,7 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
         propertyScope.setValues(propertyTypeManager.getValuesByName(Scope.TYPE_NAME));
         Scope scope = element.getProperty(PROPERTY_SCOPE);
         if (scope != null) {
-            propertyScope.selectValue(scope.name());
+            propertyScope.selectValue(scope.getValue());
         }
 
         propertyName.setProperty(element.getProperty(PROPERTY_NAME));

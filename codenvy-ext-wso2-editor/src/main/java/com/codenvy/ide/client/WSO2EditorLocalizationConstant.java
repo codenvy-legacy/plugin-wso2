@@ -1535,4 +1535,13 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.miscgroup.title")
     String miscGroupTitle();
+
+    @Key("propertiespanel.mediators.enrich.group.misc")
+    String enrichGroupMisc();
+
+    @Key("propertiespanel.mediators.enrich.group.source")
+    String enrichGroupSource();
+
+    @Key("propertiespanel.mediators.enrich.group.target")
+    String enrichGroupTarget();
 }

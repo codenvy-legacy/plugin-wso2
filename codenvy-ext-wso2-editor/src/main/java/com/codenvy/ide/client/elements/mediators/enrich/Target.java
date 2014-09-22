@@ -20,17 +20,18 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
-import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
+import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetAction.REPLACE;
+import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetType.CUSTOM;
+import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetType.PROPERTY;
 
 /**
  * The class which describes state of Target element of Enrich mediator and also has methods for changing it. Also the class contains
@@ -43,57 +44,60 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
  */
 public class Target extends AbstractEntityElement {
 
-    public static final String ACTION_ATTRIBUTE_NAME   = "action";
-    public static final String TYPE_ATTRIBUTE_NAME     = "type";
-    public static final String XPATH_ATTRIBUTE_NAME    = "xpath";
-    public static final String PROPERTY_ATTRIBUTE_NAME = "property";
+    public static final String TARGET_SERIALIZATION_NAME = "target";
+
+    public static final Key<TargetAction>     TARGET_ACTION     = new Key<>("EnrichTargetAction");
+    public static final Key<TargetType>       TARGET_TYPE       = new Key<>("EnrichTargetType");
+    public static final Key<String>           TARGET_XPATH      = new Key<>("EnrichTargetXpath");
+    public static final Key<String>           TARGET_PROPERTY   = new Key<>("EnrichTargetProperty");
+    public static final Key<Array<NameSpace>> TARGET_NAMESPACES = new Key<>("EnrichTargetNamespaces");
+
+    private static final String ACTION_ATTRIBUTE_NAME   = "action";
+    private static final String TYPE_ATTRIBUTE_NAME     = "type";
+    private static final String XPATH_ATTRIBUTE_NAME    = "xpath";
+    private static final String PROPERTY_ATTRIBUTE_NAME = "property";
 
     private final Provider<NameSpace> nameSpaceProvider;
-
-    private TargetAction     action;
-    private TargetType       type;
-    private String           xpath;
-    private String           property;
-    private Array<NameSpace> nameSpaces;
 
     @Inject
     public Target(Provider<NameSpace> nameSpaceProvider) {
         this.nameSpaceProvider = nameSpaceProvider;
 
-        this.xpath = "/default/xpath";
-        this.property = "target_property";
-
-        this.action = TargetAction.replace;
-        this.type = TargetType.custom;
-
-        this.nameSpaces = Collections.createArray();
+        putProperty(TARGET_ACTION, REPLACE);
+        putProperty(TARGET_TYPE, CUSTOM);
+        putProperty(TARGET_XPATH, "/default/xpath");
+        putProperty(TARGET_PROPERTY, "target_property");
+        putProperty(TARGET_NAMESPACES, Collections.<NameSpace>createArray());
     }
 
     /** Serialization representation attributes of target property of element. */
     @Nonnull
     private String serializeAttributes() {
-        Map<String, String> prop = new LinkedHashMap<>();
+        TargetAction targetAction = getProperty(TARGET_ACTION);
+        TargetType targetType = getProperty(TARGET_TYPE);
 
-        if (!TargetAction.replace.equals(action)) {
-            prop.put(ACTION_ATTRIBUTE_NAME, action.name());
+        if (targetAction == null || targetType == null) {
+            return "";
         }
 
-        switch (type) {
-            case custom:
-                prop.put(XPATH_ATTRIBUTE_NAME, xpath);
+        Map<String, String> prop = new LinkedHashMap<>();
+
+        if (!REPLACE.equals(targetAction)) {
+            prop.put(ACTION_ATTRIBUTE_NAME, targetAction.getValue());
+        }
+
+        switch (targetType) {
+            case CUSTOM:
+                prop.put(XPATH_ATTRIBUTE_NAME, getProperty(TARGET_XPATH));
                 break;
 
-            case property:
-                prop.put(TYPE_ATTRIBUTE_NAME, type.name());
-                prop.put(PROPERTY_ATTRIBUTE_NAME, property);
+            case PROPERTY:
+                prop.put(PROPERTY_ATTRIBUTE_NAME, getProperty(TARGET_PROPERTY));
+                prop.put(TYPE_ATTRIBUTE_NAME, targetType.getValue());
                 break;
 
-            case body:
-                prop.put(TYPE_ATTRIBUTE_NAME, type.name());
-                break;
-
-            case envelope:
-                prop.put(TYPE_ATTRIBUTE_NAME, type.name());
+            default:
+                prop.put(TYPE_ATTRIBUTE_NAME, targetType.getValue());
                 break;
         }
 
@@ -103,149 +107,126 @@ public class Target extends AbstractEntityElement {
     /** @return serialized representation of the target element */
     @Nonnull
     public String serialize() {
-        StringBuilder result = new StringBuilder();
-
-        result.append("<target ").append(convertNameSpaceToXMLFormat(nameSpaces)).append(" ").append(serializeAttributes()).append("/>\n");
-
-        return result.toString();
+        return '<' + TARGET_SERIALIZATION_NAME + convertNameSpaceToXMLFormat(getProperty(TARGET_NAMESPACES)) +
+               ' ' + serializeAttributes() + "/>\n";
     }
 
     /**
-     * Apply attributes from XML node to the diagram element
+     * Deserialize diagram element with all inner elements.
      *
      * @param node
-     *         XML node that need to be analyzed
+     *         XML node that need to be deserialized
      */
-    public void applyAttributes(@Nonnull Node node) {
-        NamedNodeMap attributeMap = node.getAttributes();
+    public void deserialize(@Nonnull Node node) {
+        readXMLAttributes(node);
+    }
 
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
+    /** {@inheritDoc} */
+    @Override
+    protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        switch (attributeName) {
+            case ACTION_ATTRIBUTE_NAME:
+                putProperty(TARGET_ACTION, TargetAction.getItemByValue(attributeValue));
+                break;
 
-            String nodeName = attributeNode.getNodeName();
-            String nodeValue = attributeNode.getNodeValue();
+            case TYPE_ATTRIBUTE_NAME:
+                putProperty(TARGET_TYPE, TargetType.getItemByValue(attributeValue));
+                break;
 
-            switch (nodeName) {
-                case ACTION_ATTRIBUTE_NAME:
-                    action = TargetAction.valueOf(nodeValue);
-                    break;
+            case XPATH_ATTRIBUTE_NAME:
+                putProperty(TARGET_XPATH, attributeValue);
+                break;
 
-                case TYPE_ATTRIBUTE_NAME:
-                    type = TargetType.valueOf(nodeValue);
-                    break;
+            case PROPERTY_ATTRIBUTE_NAME:
+                putProperty(TARGET_PROPERTY, attributeValue);
+                putProperty(TARGET_TYPE, PROPERTY);
+                break;
 
-                case XPATH_ATTRIBUTE_NAME:
-                    xpath = nodeValue;
-                    break;
+            default:
+                applyNameSpaces(attributeName, attributeValue);
+        }
+    }
 
-                case PROPERTY_ATTRIBUTE_NAME:
-                    property = nodeValue;
-                    break;
+    private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        Array<NameSpace> nameSpaces = getProperty(TARGET_NAMESPACES);
+
+        if (!StringUtils.startsWith(PREFIX, attributeName, true) || nameSpaces == null) {
+            return;
+        }
+
+        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
+
+        NameSpace nameSpace = nameSpaceProvider.get();
+
+        nameSpace.setPrefix(name);
+        nameSpace.setUri(attributeValue);
+
+        nameSpaces.add(nameSpace);
+    }
+
+
+    public enum TargetAction {
+        REPLACE("replace"), CHILD("child"), SIBLING("sibling");
+
+        public static final String TYPE_NAME = "EnrichTargetAction";
+
+        private final String value;
+
+        TargetAction(@Nonnull String value) {
+            this.value = value;
+        }
+
+        @Nonnull
+        public String getValue() {
+            return value;
+        }
+
+        @Nonnull
+        public static TargetAction getItemByValue(@Nonnull String value) {
+            switch (value) {
+                case "replace":
+                    return REPLACE;
+
+                case "child":
+                    return CHILD;
 
                 default:
-                    if (StringUtils.startsWith(PREFIX, nodeName, true)) {
-                        String name = StringUtils.trimStart(nodeName, PREFIX + ':');
-
-                        NameSpace nameSpace = nameSpaceProvider.get();
-
-                        nameSpace.setPrefix(name);
-                        nameSpace.setUri(nodeValue);
-
-                        nameSpaces.add(nameSpace);
-                    }
+                    return SIBLING;
             }
         }
     }
 
-    /** @return action value of target */
-    @Nonnull
-    public TargetAction getAction() {
-        return action;
-    }
-
-    /**
-     * Sets action value for target.
-     *
-     * @param action
-     *         value which need to set to element
-     */
-    public void setAction(@Nonnull TargetAction action) {
-        this.action = action;
-    }
-
-    /** @return type value of target */
-    @Nonnull
-    public TargetType getType() {
-        return type;
-    }
-
-    /**
-     * Sets type value for target.
-     *
-     * @param type
-     *         value which need to set to element
-     */
-    public void setType(@Nonnull TargetType type) {
-        this.type = type;
-    }
-
-    /** @return xpath value of target */
-    @Nonnull
-    public String getXpath() {
-        return xpath;
-    }
-
-    /**
-     * Sets xpath value for target.
-     *
-     * @param xpath
-     *         value which need to set to element
-     */
-    public void setXpath(@Nullable String xpath) {
-        this.xpath = xpath;
-    }
-
-    /** @return property value of target */
-    @Nonnull
-    public String getProperty() {
-        return property;
-    }
-
-    /**
-     * Sets property value for target.
-     *
-     * @param property
-     *         value which need to set to element
-     */
-    public void setProperty(@Nonnull String property) {
-        this.property = property;
-    }
-
-    /** @return list name spaces of target */
-    @Nonnull
-    public Array<NameSpace> getNameSpaces() {
-        return nameSpaces;
-    }
-
-    /**
-     * Sets list of name spaces for target.
-     *
-     * @param nameSpaces
-     *         list which need to set to element
-     */
-    public void setNameSpaces(Array<NameSpace> nameSpaces) {
-        this.nameSpaces = nameSpaces;
-    }
-
-    public enum TargetAction {
-        replace, child, sibling;
-
-        public static final String TYPE_NAME = "TargetAction";
-    }
-
     public enum TargetType {
-        custom, envelope, body, property;
+        CUSTOM("custom"), ENVELOPE("envelope"), BODY("body"), PROPERTY("property");
 
-        public static final String TYPE_NAME = "TargetType";
+        public static final String TYPE_NAME = "EnrichTargetType";
+
+        private final String value;
+
+        TargetType(@Nonnull String value) {
+            this.value = value;
+        }
+
+        @Nonnull
+        public String getValue() {
+            return value;
+        }
+
+        @Nonnull
+        public static TargetType getItemByValue(@Nonnull String value) {
+            switch (value) {
+                case "custom":
+                    return CUSTOM;
+
+                case "envelope":
+                    return ENVELOPE;
+
+                case "body":
+                    return BODY;
+
+                default:
+                    return PROPERTY;
+            }
+        }
     }
 }

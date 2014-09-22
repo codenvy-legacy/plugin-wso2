@@ -94,10 +94,10 @@ public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPane
                     complexPropertyPresenterProvider);
     }
 
-    private void prepareView(PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                             Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
-                             Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                             Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider) {
+    private void prepareView(@Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                             @Nonnull Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
+                             @Nonnull Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                             @Nonnull Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider) {
         PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(local.miscGroupTitle());
         view.addGroup(basicGroup);
 

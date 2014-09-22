@@ -106,7 +106,7 @@ public class Log extends AbstractElement {
         LogLevel logLevel = getProperty(LOG_LEVEL);
 
         if (logLevel != null && !logLevel.equals(SIMPLE)) {
-            attributes.put(LEVEL_ATTRIBUTE_NAME, logLevel.name());
+            attributes.put(LEVEL_ATTRIBUTE_NAME, logLevel.name().toLowerCase());
         }
 
         attributes.put(SEPARATOR_ATTRIBUTE_NAME, getProperty(LOG_SEPARATOR));

@@ -17,6 +17,7 @@ package com.codenvy.ide.client.propertiespanel.mediators;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.client.elements.mediators.Action;
 import com.codenvy.ide.client.elements.mediators.Header;
 import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
@@ -39,13 +40,12 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
+import static com.codenvy.ide.client.elements.mediators.Action.REMOVE;
 import static com.codenvy.ide.client.elements.mediators.Header.ACTION;
 import static com.codenvy.ide.client.elements.mediators.Header.EXPRESSION;
 import static com.codenvy.ide.client.elements.mediators.Header.EXPRESSION_NAMESPACES;
 import static com.codenvy.ide.client.elements.mediators.Header.HEADER_NAME;
 import static com.codenvy.ide.client.elements.mediators.Header.HEADER_NAMESPACES;
-import static com.codenvy.ide.client.elements.mediators.Header.HeaderAction;
-import static com.codenvy.ide.client.elements.mediators.Header.HeaderAction.remove;
 import static com.codenvy.ide.client.elements.mediators.Header.HeaderValueType;
 import static com.codenvy.ide.client.elements.mediators.Header.INLINE_XML;
 import static com.codenvy.ide.client.elements.mediators.Header.SCOPE;
@@ -140,10 +140,10 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
                     complexPropertyPresenterProvider);
     }
 
-    private void prepareView(PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                             Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
-                             Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                             Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider) {
+    private void prepareView(@Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                             @Nonnull Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
+                             @Nonnull Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                             @Nonnull Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider) {
         PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
         view.addGroup(basicGroup);
 
@@ -152,7 +152,7 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
         action.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                HeaderAction headerAction = HeaderAction.valueOf(property);
+                Action headerAction = Action.getItemByValue(property);
                 element.putProperty(ACTION, headerAction);
 
                 redesignPropertyPanelView();
@@ -167,7 +167,7 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
         scope.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                element.putProperty(SCOPE, ScopeType.valueOf(property));
+                element.putProperty(SCOPE, ScopeType.getItemByValue(property));
 
                 notifyListeners();
             }
@@ -262,7 +262,7 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
 
     private void redesignPropertyPanelView() {
         HeaderValueType type = element.getProperty(VALUE_TYPE);
-        HeaderAction headerAction = element.getProperty(ACTION);
+        Action headerAction = element.getProperty(ACTION);
 
         if (headerAction == null || type == null) {
             return;
@@ -270,7 +270,7 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
 
         setDefaultPropertyPanelVisible();
 
-        if (remove.equals(headerAction)) {
+        if (REMOVE.equals(headerAction)) {
             valueType.setVisible(false);
             valueLiteral.setVisible(false);
             headerExpression.setVisible(false);
@@ -284,9 +284,7 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
                 break;
 
             case INLINE:
-                valueLiteral.setVisible(false);
-                headerExpression.setVisible(false);
-                headerName.setVisible(false);
+                applyInlineValueType();
                 break;
 
             default:
@@ -296,24 +294,30 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
         }
     }
 
+    private void applyInlineValueType() {
+        valueLiteral.setVisible(false);
+        headerExpression.setVisible(false);
+        headerName.setVisible(false);
+    }
+
     /** {@inheritDoc} */
     @Override
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
         redesignPropertyPanelView();
 
-        action.setValues(propertyTypeManager.getValuesByName(HeaderAction.TYPE_NAME));
-        HeaderAction headerAction = element.getProperty(ACTION);
+        action.setValues(propertyTypeManager.getValuesByName(Action.TYPE_NAME));
+        Action headerAction = element.getProperty(ACTION);
 
         if (headerAction != null) {
-            this.action.selectValue(headerAction.name());
+            this.action.selectValue(headerAction.getValue());
         }
 
         scope.setValues(propertyTypeManager.getValuesByName(ScopeType.TYPE_NAME));
         ScopeType headerScope = element.getProperty(SCOPE);
 
         if (headerScope != null) {
-            this.scope.selectValue(headerScope.name());
+            this.scope.selectValue(headerScope.getValue());
         }
 
         valueType.setValues(propertyTypeManager.getValuesByName(HeaderValueType.TYPE_NAME));

@@ -25,14 +25,12 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType.RegistryKey;
-import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType.SourceXML;
-import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType.custom;
+import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType.REGISTRY_KEY;
+import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType.CUSTOM;
 
 /**
  * The class which describes state of Source element of Enrich mediator and also has methods for changing it. Also the class contains
@@ -44,91 +42,105 @@ import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType
  */
 public class Source extends AbstractEntityElement {
 
-    public static final String CLONE_SOURCE_ATTRIBUTE_NAME        = "clone";
-    public static final String SOURCE_TYPE_ATTRIBUTE_NAME         = "type";
-    public static final String INLINE_REGISTRY_KEY_ATTRIBUTE_NAME = "key";
-    public static final String XPATH_ATTRIBUTE_NAME               = "xpath";
-    public static final String PROPERTY_ATTRIBUTE_NAME            = "property";
+    public static final String SOURCE_SERIALIZATION_NAME = "source";
+
+    public static final Key<Boolean>          SOURCE_CLONE               = new Key<>("EnrichSourceClone");
+    public static final Key<SourceType>       SOURCE_TYPE                = new Key<>("EnrichSourceType");
+    public static final Key<InlineType>       SOURCE_INLINE_TYPE         = new Key<>("EnrichSourceInlineType");
+    public static final Key<String>           SOURCE_INLINE_REGISTER_KEY = new Key<>("EnrichSourceInlineRegistryKey");
+    public static final Key<String>           SOURCE_XML                 = new Key<>("EnrichSourceXml");
+    public static final Key<String>           SOURCE_XPATH               = new Key<>("EnrichSourceXPath");
+    public static final Key<String>           SOURCE_PROPERTY            = new Key<>("EnrichSourceProperty");
+    public static final Key<Array<NameSpace>> SOURCE_NAMESPACES          = new Key<>("EnrichSourceNamespaces");
+
+    private static final String CLONE_SOURCE_ATTRIBUTE_NAME        = "clone";
+    private static final String SOURCE_TYPE_ATTRIBUTE_NAME         = "type";
+    private static final String INLINE_REGISTRY_KEY_ATTRIBUTE_NAME = "key";
+    private static final String XPATH_ATTRIBUTE_NAME               = "xpath";
+    private static final String PROPERTY_ATTRIBUTE_NAME            = "property";
 
     private final Provider<NameSpace> nameSpaceProvider;
-
-    private boolean          clone;
-    private SourceType       type;
-    private InlineType       inlineType;
-    private String           inlRegisterKey;
-    private String           sourceXML;
-    private String           xpath;
-    private String           property;
-    private Array<NameSpace> nameSpaces;
 
     @Inject
     public Source(Provider<NameSpace> nameSpaceProvider) {
         this.nameSpaceProvider = nameSpaceProvider;
 
-        this.clone = false;
-        this.type = custom;
-        this.inlineType = SourceXML;
-
-        this.inlRegisterKey = "/default/sequence";
-        this.sourceXML = "<inline/>";
-        this.xpath = "/default/xpath";
-        this.property = "source_property";
-
-        this.nameSpaces = Collections.createArray();
+        putProperty(SOURCE_CLONE, false);
+        putProperty(SOURCE_TYPE, CUSTOM);
+        putProperty(SOURCE_INLINE_TYPE, InlineType.SOURCE_XML);
+        putProperty(SOURCE_INLINE_REGISTER_KEY, "/default/sequence");
+        putProperty(SOURCE_XML, "<inline/>");
+        putProperty(SOURCE_XPATH, "/default/xpath");
+        putProperty(SOURCE_PROPERTY, "source_property");
+        putProperty(SOURCE_NAMESPACES, Collections.<NameSpace>createArray());
     }
 
     /** Serialization representation attributes of source property of element. */
     @Nonnull
     private String serializeAttributes() {
+        Boolean cloneSource = getProperty(SOURCE_CLONE);
+        SourceType type = getProperty(SOURCE_TYPE);
+
+        if (cloneSource == null || type == null) {
+            return "";
+        }
+
         Map<String, String> prop = new LinkedHashMap<>();
 
-        if (clone) {
-            prop.put(CLONE_SOURCE_ATTRIBUTE_NAME, String.valueOf(clone));
+        if (Boolean.TRUE.equals(cloneSource)) {
+            prop.put(CLONE_SOURCE_ATTRIBUTE_NAME, String.valueOf(cloneSource));
         }
 
         switch (type) {
-            case custom:
-                prop.put(XPATH_ATTRIBUTE_NAME, xpath);
-
+            case CUSTOM:
+                prop.put(XPATH_ATTRIBUTE_NAME, getProperty(SOURCE_XPATH));
                 break;
 
-            case property:
-                prop.put(SOURCE_TYPE_ATTRIBUTE_NAME, type.name());
-                prop.put(PROPERTY_ATTRIBUTE_NAME, property);
-
+            case PROPERTY:
+                prop.put(SOURCE_TYPE_ATTRIBUTE_NAME, type.getValue());
+                prop.put(PROPERTY_ATTRIBUTE_NAME, getProperty(SOURCE_PROPERTY));
                 break;
 
-            case inline:
-                prop.put(SOURCE_TYPE_ATTRIBUTE_NAME, type.name());
-
-                if (inlineType.equals(RegistryKey)) {
-                    prop.put(INLINE_REGISTRY_KEY_ATTRIBUTE_NAME, inlRegisterKey);
-                }
-
+            case INLINE:
+                prop.put(SOURCE_TYPE_ATTRIBUTE_NAME, type.getValue());
+                serializeInlineTypeAttributes(prop);
                 break;
 
-            case envelope:
-                prop.put(SOURCE_TYPE_ATTRIBUTE_NAME, type.name());
+            default:
+                prop.put(SOURCE_TYPE_ATTRIBUTE_NAME, type.getValue());
 
-                break;
-
-            case body:
-                prop.put(SOURCE_TYPE_ATTRIBUTE_NAME, type.name());
-
-                break;
         }
 
         return convertAttributesToXMLFormat(prop);
     }
 
+    private void serializeInlineTypeAttributes(@Nonnull Map<String, String> prop) {
+        InlineType inlineType = getProperty(SOURCE_INLINE_TYPE);
+
+        if (REGISTRY_KEY.equals(inlineType)) {
+            prop.put(INLINE_REGISTRY_KEY_ATTRIBUTE_NAME, getProperty(SOURCE_INLINE_REGISTER_KEY));
+        }
+
+    }
+
     /** @return serialized representation of the source element */
     @Nonnull
     public String serialize() {
+        Array<NameSpace> nameSpaces = getProperty(SOURCE_NAMESPACES);
+        SourceType type = getProperty(SOURCE_TYPE);
+        InlineType inlineType = getProperty(SOURCE_INLINE_TYPE);
+        String sourceXML = getProperty(SOURCE_XML);
+
+        if (sourceXML == null) {
+            return "";
+        }
+
         StringBuilder result = new StringBuilder();
 
-        result.append("<source ").append(convertNameSpaceToXMLFormat(nameSpaces)).append(serializeAttributes()).append(">\n");
+        result.append('<').append(SOURCE_SERIALIZATION_NAME).append(' ')
+              .append(convertNameSpaceToXMLFormat(nameSpaces)).append(serializeAttributes()).append(">\n");
 
-        if (type.equals(SourceType.inline) && inlineType.equals(InlineType.SourceXML)) {
+        if (SourceType.INLINE.equals(type) && InlineType.SOURCE_XML.equals(inlineType)) {
 
             int index = sourceXML.indexOf(">");
 
@@ -140,7 +152,7 @@ public class Source extends AbstractEntityElement {
             result.append(tagName).append(" " + PREFIX + "=\"\"").append(restString);
         }
 
-        result.append("</source>");
+        result.append("</").append(SOURCE_SERIALIZATION_NAME).append('>');
 
         return result.toString();
     }
@@ -151,40 +163,51 @@ public class Source extends AbstractEntityElement {
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
         switch (attributeName) {
             case CLONE_SOURCE_ATTRIBUTE_NAME:
-                clone = Boolean.valueOf(attributeValue);
+                putProperty(SOURCE_CLONE, Boolean.valueOf(attributeValue));
                 break;
 
             case SOURCE_TYPE_ATTRIBUTE_NAME:
-                type = SourceType.valueOf(attributeValue);
+                putProperty(SOURCE_TYPE, SourceType.getItemByValue(attributeValue));
                 break;
 
             case INLINE_REGISTRY_KEY_ATTRIBUTE_NAME:
-                inlRegisterKey = attributeValue;
-
-                type = SourceType.inline;
-                inlineType = InlineType.RegistryKey;
+                applyInlineRegistryKeyAttribute(attributeValue);
                 break;
 
             case XPATH_ATTRIBUTE_NAME:
-                xpath = attributeValue;
+                putProperty(SOURCE_XPATH, attributeValue);
                 break;
 
             case PROPERTY_ATTRIBUTE_NAME:
-                property = attributeValue;
+                putProperty(SOURCE_PROPERTY, attributeValue);
                 break;
 
             default:
-                if (StringUtils.startsWith(PREFIX, attributeName, true)) {
-                    String name = StringUtils.trimStart(attributeName, PREFIX + ':');
-
-                    NameSpace nameSpace = nameSpaceProvider.get();
-
-                    nameSpace.setPrefix(name);
-                    nameSpace.setUri(attributeValue);
-
-                    nameSpaces.add(nameSpace);
-                }
+                applyNameSpaces(attributeName, attributeValue);
         }
+    }
+
+    private void applyInlineRegistryKeyAttribute(@Nonnull String attributeValue) {
+        putProperty(SOURCE_INLINE_REGISTER_KEY, attributeValue);
+        putProperty(SOURCE_TYPE, SourceType.INLINE);
+        putProperty(SOURCE_INLINE_TYPE, InlineType.REGISTRY_KEY);
+    }
+
+    private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        Array<NameSpace> nameSpaces = getProperty(SOURCE_NAMESPACES);
+
+        if (!StringUtils.startsWith(PREFIX, attributeName, true) || nameSpaces == null) {
+            return;
+        }
+
+        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
+
+        NameSpace nameSpace = nameSpaceProvider.get();
+
+        nameSpace.setPrefix(name);
+        nameSpace.setUri(attributeValue);
+
+        nameSpaces.add(nameSpace);
     }
 
     /**
@@ -196,156 +219,87 @@ public class Source extends AbstractEntityElement {
     public void applyProperty(@Nonnull Node node) {
         readXMLAttributes(node);
 
-        if (node.hasChildNodes()) {
-            String item = node.getChildNodes().item(0).toString();
+        String sourceXML = getProperty(SOURCE_XML);
 
-            int indexFirst = item.indexOf(" ");
-            int indexLast = item.indexOf(">");
-
-            String tagName = item.substring(0, indexLast);
-
-            String xmlns = tagName.substring(indexFirst, tagName.contains("/") ? indexLast - 1 : indexLast);
-
-            sourceXML = item.replace(xmlns, "");
+        if (sourceXML == null || !node.hasChildNodes()) {
+            return;
         }
-    }
 
-    /** @return source clone value of source */
-    public boolean getClone() {
-        return clone;
-    }
+        String item = node.getChildNodes().item(0).toString();
 
-    /**
-     * Sets source clone value for source.
-     *
-     * @param clone
-     *         value which need to set to element
-     */
-    public void setClone(boolean clone) {
-        this.clone = clone;
-    }
+        int indexFirst = item.indexOf(" ");
+        int indexLast = item.indexOf(">");
 
-    /** @return source type value of source */
-    @Nonnull
-    public SourceType getType() {
-        return type;
-    }
+        String tagName = item.substring(0, indexLast);
 
-    /**
-     * Sets source type value for source.
-     *
-     * @param type
-     *         value which need to set to element
-     */
-    public void setType(@Nonnull SourceType type) {
-        this.type = type;
-    }
+        String xmlns = tagName.substring(indexFirst, tagName.contains("/") ? indexLast - 1 : indexLast);
 
-    /** @return inline type value of source */
-    @Nonnull
-    public InlineType getInlineType() {
-        return inlineType;
-    }
+        sourceXML = item.replace(xmlns, "");
 
-    /**
-     * Sets inline type value for source.
-     *
-     * @param inlineType
-     *         value which need to set to element
-     */
-    public void setInlineType(@Nonnull InlineType inlineType) {
-        this.inlineType = inlineType;
-    }
-
-    /** @return inline registry key value of source */
-    @Nonnull
-    public String getInlRegisterKey() {
-        return inlRegisterKey;
-    }
-
-    /**
-     * Sets inline registry key value for source.
-     *
-     * @param inlRegisterKey
-     *         value which need to set to element
-     */
-    public void setInlRegisterKey(@Nonnull String inlRegisterKey) {
-        this.inlRegisterKey = inlRegisterKey;
-    }
-
-    /** @return source xml value of source */
-    @Nonnull
-    public String getSourceXML() {
-        return sourceXML;
-    }
-
-    /**
-     * Sets source xml value for source.
-     *
-     * @param sourceXML
-     *         value which need to set to element
-     */
-    public void setSourceXML(@Nonnull String sourceXML) {
-        this.sourceXML = sourceXML;
-    }
-
-    /** @return xpath value of source */
-    @Nonnull
-    public String getXpath() {
-        return xpath;
-    }
-
-    /**
-     * Sets source xpath value for source.
-     *
-     * @param xpath
-     *         value which need to set to element
-     */
-    public void setXpath(@Nullable String xpath) {
-        this.xpath = xpath;
-    }
-
-    /** @return property value of source */
-    @Nonnull
-    public String getProperty() {
-        return property;
-    }
-
-    /**
-     * Sets property value for source.
-     *
-     * @param property
-     *         value which need to set to element
-     */
-    public void setProperty(@Nonnull String property) {
-        this.property = property;
-    }
-
-    /** @return list of name spaces of source */
-    @Nonnull
-    public Array<NameSpace> getNameSpaces() {
-        return nameSpaces;
-    }
-
-    /**
-     * Sets list of name spaces for source.
-     *
-     * @param nameSpaces
-     *         value which need to set to element
-     */
-    public void setNameSpaces(@Nonnull Array<NameSpace> nameSpaces) {
-        this.nameSpaces = nameSpaces;
+        putProperty(SOURCE_XML, sourceXML);
     }
 
     public enum SourceType {
-        custom, envelope, body, property, inline;
+        CUSTOM("custom"), ENVELOPE("envelope"), BODY("body"), PROPERTY("property"), INLINE("inline");
 
-        public static final String TYPE_NAME = "SourceType";
+        public static final String TYPE_NAME = "EnrichSourceType";
+
+        private final String value;
+
+        SourceType(@Nonnull String value) {
+            this.value = value;
+        }
+
+        @Nonnull
+        public String getValue() {
+            return value;
+        }
+
+        @Nonnull
+        public static SourceType getItemByValue(@Nonnull String value) {
+            switch (value) {
+                case "custom":
+                    return CUSTOM;
+
+                case "envelope":
+                    return ENVELOPE;
+
+                case "body":
+                    return BODY;
+
+                case "property":
+                    return PROPERTY;
+
+                default:
+                    return INLINE;
+            }
+        }
     }
 
     public enum InlineType {
-        SourceXML, RegistryKey;
+        SOURCE_XML("SourceXML"), REGISTRY_KEY("RegistryKey");
 
-        public static final String INLINE_TYPE = "Inline type";
+        public static final String TYPE_NAME = "EnrichInlineType";
+
+        private final String value;
+
+        InlineType(@Nonnull String value) {
+            this.value = value;
+        }
+
+        @Nonnull
+        public String getValue() {
+            return value;
+        }
+
+        @Nonnull
+        public static InlineType getItemByValue(@Nonnull String value) {
+
+            if (value.equals("SourceXML")) {
+                return SOURCE_XML;
+            } else {
+                return REGISTRY_KEY;
+            }
+        }
     }
 }
