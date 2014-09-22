@@ -36,17 +36,18 @@ import com.codenvy.ide.client.propertiespanel.mediators.HeaderPropertiesPanelPre
 import com.codenvy.ide.client.propertiespanel.mediators.LogPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.SwitchPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.EnrichPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.mediators.filter.FilterPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.FilterPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.LoopBackPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.payloadfactory.PayloadFactoryPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.PropertyPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.RespondPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.SendPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.mediators.sequence.SequencePropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.mediators.SequencePropertiesPanelPresenter;
 import com.google.inject.Inject;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class MediatorsPropertiesPanelInitializer extends AbstractPropertiesPanelInitializer {
 

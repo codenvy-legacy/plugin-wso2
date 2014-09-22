@@ -276,12 +276,6 @@ public class JiraConnectorToolbarInitializer extends AbstractToolbarInitializer 
                         locale.toolbarJiraUpdateCommentTitle(),
                         locale.toolbarJiraUpdateCommentTooltip(),
                         resources.jiraConnectorToolbar(),
-                        JiraConnectorCreatingState.ADD_ATTACHMENT_TO_ISSUE_ID);
-
-        toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,
-                        locale.toolbarJiraUpdateCommentTitle(),
-                        locale.toolbarJiraUpdateCommentTooltip(),
-                        resources.jiraConnectorToolbar(),
                         JiraConnectorCreatingState.UPDATE_COMMENT);
 
         toolbar.addItem(ToolbarGroupIds.JIRA_CONNECTORS,

@@ -28,12 +28,11 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType.Dynamic;
-import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType.Static;
+import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType.DYNAMIC;
+import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType.STATIC;
 
 /**
  * The class which describes state of Sequence mediator and also has methods for changing it. Also the class contains the business
@@ -43,21 +42,22 @@ import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType.S
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Valeriy Svydenko
  */
 public class Sequence extends AbstractElement {
     public static final String ELEMENT_NAME       = "Sequence";
     public static final String SERIALIZATION_NAME = "sequence";
+
+    public static final Key<Array<NameSpace>> NAMESPACES             = new Key<>("NameSpaces");
+    public static final Key<ReferringType>    REFERRING_TYPE         = new Key<>("ReferringType");
+    public static final Key<String>           STATIC_REFERENCE_TYPE  = new Key<>("StaticReferenceType");
+    public static final Key<String>           DYNAMIC_REFERENCE_TYPE = new Key<>("DynamicReferenceType");
 
     private static final String KEY_ATTRIBUTE_NAME = "key";
 
     private static final List<String> PROPERTIES = java.util.Collections.emptyList();
 
     private final Provider<NameSpace> nameSpaceProvider;
-
-    private ReferringType    referringType;
-    private String           staticReferenceKey;
-    private String           dynamicReferenceKey;
-    private Array<NameSpace> nameSpaces;
 
     @Inject
     public Sequence(EditorResources resources,
@@ -77,96 +77,32 @@ public class Sequence extends AbstractElement {
 
         this.nameSpaceProvider = nameSpaceProvider;
 
-        referringType = Static;
-        staticReferenceKey = "";
-        dynamicReferenceKey = "/default/expression";
-        nameSpaces = Collections.createArray();
-    }
-
-    /** @return referring type of sequence */
-    @Nonnull
-    public ReferringType getReferringType() {
-        return referringType;
-    }
-
-    /**
-     * Changes referring type of sequence.
-     *
-     * @param referringType
-     *         new referring type of sequence
-     */
-    public void setReferringType(@Nonnull ReferringType referringType) {
-        this.referringType = referringType;
-    }
-
-    /** @return static reference key of sequence */
-    @Nullable
-    public String getStaticReferenceKey() {
-        return staticReferenceKey;
-    }
-
-    /**
-     * Changes static reference key of sequence.
-     *
-     * @param staticReferenceKey
-     *         new static reference key of sequence
-     */
-    public void setStaticReferenceKey(@Nullable String staticReferenceKey) {
-        this.staticReferenceKey = staticReferenceKey;
-    }
-
-    /** @return dynamic reference key of sequence */
-    @Nullable
-    public String getDynamicReferenceKey() {
-        return dynamicReferenceKey;
-    }
-
-    /**
-     * Changes dynamic reference key of sequence.
-     *
-     * @param dynamicReferenceKey
-     *         new dynamic reference key of sequence
-     */
-    public void setDynamicReferenceKey(@Nullable String dynamicReferenceKey) {
-        this.dynamicReferenceKey = dynamicReferenceKey;
-    }
-
-    /** @return namespaces which contain in sequence */
-    @Nonnull
-    public Array<NameSpace> getNameSpaces() {
-        return nameSpaces;
-    }
-
-    /**
-     * Changes list of name spaces.
-     *
-     * @param nameSpaces
-     *         list of name spaces which needs to set in element
-     */
-    public void setNameSpaces(@Nonnull Array<NameSpace> nameSpaces) {
-        this.nameSpaces = nameSpaces;
+        putProperty(REFERRING_TYPE, STATIC);
+        putProperty(STATIC_REFERENCE_TYPE, "");
+        putProperty(DYNAMIC_REFERENCE_TYPE, "/default/expression");
+        putProperty(NAMESPACES, Collections.<NameSpace>createArray());
     }
 
     /** {@inheritDoc} */
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        if (referringType.equals(Static)) {
-            return KEY_ATTRIBUTE_NAME + "=\"" + staticReferenceKey + '"';
+        ReferringType referringType = getProperty(REFERRING_TYPE);
+
+        if (referringType != null && referringType.equals(STATIC)) {
+            return KEY_ATTRIBUTE_NAME + "=\"" + getProperty(STATIC_REFERENCE_TYPE) + '"';
         }
 
-        StringBuilder spaces = new StringBuilder();
-
-        for (NameSpace nameSpace : nameSpaces.asIterable()) {
-            spaces.append(nameSpace.toString()).append(' ');
-        }
-
-        return spaces + KEY_ATTRIBUTE_NAME + "=\"{" + dynamicReferenceKey + "}\"";
+        return convertNameSpaceToXMLFormat(getProperty(NAMESPACES)) + KEY_ATTRIBUTE_NAME + "=\"{" +
+               getProperty(DYNAMIC_REFERENCE_TYPE) + "}\"";
     }
 
     @Override
     public void deserialize(@Nonnull Node node) {
-        nameSpaces.clear();
+        Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
+        if (nameSpaces != null) {
+            nameSpaces.clear();
+        }
 
         super.deserialize(node);
     }
@@ -174,39 +110,72 @@ public class Sequence extends AbstractElement {
     /** {@inheritDoc} */
     @Override
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        switch (attributeName) {
-            case KEY_ATTRIBUTE_NAME:
-                if (StringUtils.startsWith("{", attributeValue, true)) {
-                    referringType = Dynamic;
+        if (KEY_ATTRIBUTE_NAME.equals(attributeName)) {
+            adaptKeyNameAttribute(attributeValue);
+        } else {
+            adaptNameSpaceAttribute(attributeName, attributeValue);
+        }
+    }
 
-                    int startPosition = attributeValue.indexOf("{") + 1;
-                    int endPosition = attributeValue.lastIndexOf("}");
+    private void adaptKeyNameAttribute(@Nonnull String value) {
+        if (StringUtils.startsWith("{", value, true)) {
+            putProperty(REFERRING_TYPE, DYNAMIC);
 
-                    dynamicReferenceKey = attributeValue.substring(startPosition, endPosition);
-                } else {
-                    referringType = Static;
-                    staticReferenceKey = attributeValue;
-                }
-                break;
+            int startPosition = value.indexOf("{") + 1;
+            int endPosition = value.lastIndexOf("}");
 
-            default:
-                if (StringUtils.startsWith(PREFIX, attributeName, true)) {
-                    String name = StringUtils.trimStart(attributeName, PREFIX + ':');
+            putProperty(DYNAMIC_REFERENCE_TYPE, value.substring(startPosition, endPosition));
+        } else {
+            putProperty(REFERRING_TYPE, STATIC);
+            putProperty(STATIC_REFERENCE_TYPE, value);
+        }
+    }
 
-                    NameSpace nameSpace = nameSpaceProvider.get();
+    private void adaptNameSpaceAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        if (!StringUtils.startsWith(PREFIX, attributeName, true)) {
+            return;
+        }
 
-                    nameSpace.setPrefix(name);
-                    nameSpace.setUri(attributeValue);
+        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
 
-                    nameSpaces.add(nameSpace);
-                }
+        NameSpace nameSpace = nameSpaceProvider.get();
+
+        nameSpace.setPrefix(name);
+        nameSpace.setUri(attributeValue);
+
+        Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
+        if (nameSpaces != null) {
+            nameSpaces.add(nameSpace);
         }
     }
 
     public enum ReferringType {
-        Dynamic, Static;
+        DYNAMIC("Dynamic"), STATIC("Static");
 
         public static final String TYPE_NAME = "ReferringType";
+
+        private final String value;
+
+        ReferringType(@Nonnull String value) {
+            this.value = value;
+        }
+
+        @Nonnull
+        public String getValue() {
+            return value;
+        }
+
+        @Nonnull
+        public static ReferringType getItemByValue(@Nonnull String value) {
+            switch (value) {
+                case "Static":
+                    return STATIC;
+
+                case "Dynamic":
+                default:
+                    return DYNAMIC;
+            }
+        }
     }
 
 }

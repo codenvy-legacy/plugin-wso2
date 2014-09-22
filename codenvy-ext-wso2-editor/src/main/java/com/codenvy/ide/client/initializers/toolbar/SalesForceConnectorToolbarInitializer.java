@@ -101,12 +101,6 @@ public class SalesForceConnectorToolbarInitializer extends AbstractToolbarInitia
                         SalesForceConnectorCreatingState.QUERY);
 
         toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
-                        locale.toolbarSalesforceQueryTitle(),
-                        locale.toolbarSalesforceQueryTooltip(),
-                        resources.salesforceConnectorToolbar(),
-                        SalesForceConnectorCreatingState.QUERY);
-
-        toolbar.addItem(ToolbarGroupIds.SALESFORCE_CONNECTORS,
                         locale.toolbarSalesforceQueryAllTitle(),
                         locale.toolbarSalesforceQueryAllTooltip(),
                         resources.salesforceConnectorToolbar(),

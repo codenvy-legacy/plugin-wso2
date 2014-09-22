@@ -93,8 +93,8 @@ public class MediatorsPropertyTypeInitializer extends AbstractPropertyTypeInitia
                                                                SequenceType.STATIC.getValue(),
                                                                SequenceType.DYNAMIC.getValue()));
 
-        manager.register(ReferringType.TYPE_NAME, Arrays.asList(ReferringType.Static.name(),
-                                                                ReferringType.Dynamic.name()));
+        manager.register(ReferringType.TYPE_NAME, Arrays.asList(ReferringType.STATIC.getValue(),
+                                                                ReferringType.DYNAMIC.getValue()));
 
         manager.register(LogCategory.TYPE_NAME, Arrays.asList(LogCategory.TRACE.name(),
                                                               LogCategory.DEBUG.name(),

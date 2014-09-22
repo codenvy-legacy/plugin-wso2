@@ -28,7 +28,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -53,6 +52,14 @@ public class Filter extends AbstractElement {
     public static final String ELEMENT_NAME       = "Filter";
     public static final String SERIALIZATION_NAME = "filter";
 
+    public static final Key<ConditionType>    CONDITION_TYPE     = new Key<>("ConditionKey");
+    public static final Key<String>           SOURCE             = new Key<>("Source");
+    public static final Key<String>           REGULAR_EXPRESSION = new Key<>("RegularExpression");
+    public static final Key<String>           X_PATH             = new Key<>("XPath");
+    public static final Key<Array<NameSpace>> SOURCE_NAMESPACE   = new Key<>("SourceNamespace");
+    public static final Key<Array<NameSpace>> XPATH_NAMESPACE    = new Key<>("XPathNamespace");
+    public static final Key<Array<NameSpace>> NAMESPACES         = new Key<>("Namespaces");
+
     private static final String SOURCE_ATTRIBUTE_NAME             = "source";
     private static final String REGULAR_EXPRESSION_ATTRIBUTE_NAME = "regex";
     private static final String XPATH_ATTRIBUTE_NAME              = "xpath";
@@ -66,13 +73,6 @@ public class Filter extends AbstractElement {
 
     private final Provider<NameSpace> nameSpaceProvider;
 
-    private ConditionType    conditionType;
-    private String           source;
-    private String           regularExpression;
-    private String           xPath;
-    private Array<NameSpace> sourceNameSpaces;
-    private Array<NameSpace> xPathNameSpaces;
-    private Array<NameSpace> nameSpaces;
     boolean isSourceAttributeFound;
 
     @Inject
@@ -93,13 +93,13 @@ public class Filter extends AbstractElement {
 
         this.nameSpaceProvider = nameSpaceProvider;
 
-        conditionType = SOURCE_AND_REGEX;
-        source = "get-property('To')";
-        regularExpression = "default_regex";
-        xPath = "/default/xpath";
+        putProperty(CONDITION_TYPE, SOURCE_AND_REGEX);
+        putProperty(SOURCE, "get-property('To')");
+        putProperty(REGULAR_EXPRESSION, "default_regex");
+        putProperty(X_PATH, "/default/xpath");
 
-        sourceNameSpaces = Collections.createArray();
-        xPathNameSpaces = Collections.createArray();
+        putProperty(SOURCE_NAMESPACE, Collections.<NameSpace>createArray());
+        putProperty(XPATH_NAMESPACE, Collections.<NameSpace>createArray());
 
         Branch thenBranch = branchProvider.get();
         thenBranch.setParent(this);
@@ -114,137 +114,47 @@ public class Filter extends AbstractElement {
         branches.addAll(Arrays.asList(thenBranch, elseBranch));
     }
 
-    /** @return condition type of filter mediator */
-    @Nonnull
-    public ConditionType getConditionType() {
-        return conditionType;
-    }
-
-    /**
-     * Sets condition type parameter to element
-     *
-     * @param conditionType
-     *         value which need to set to element
-     */
-    public void setConditionType(@Nonnull ConditionType conditionType) {
-        this.conditionType = conditionType;
-    }
-
-    /** @return source of filter mediator */
-    @Nullable
-    public String getSource() {
-        return source;
-    }
-
-    /**
-     * Sets source parameter to element
-     *
-     * @param source
-     *         value which need to set to element
-     */
-    public void setSource(@Nullable String source) {
-        this.source = source;
-    }
-
-    /** @return regular expression of filter mediator */
-    @Nonnull
-    public String getRegularExpression() {
-        return regularExpression;
-    }
-
-    /**
-     * Sets regular expression parameter to element
-     *
-     * @param regularExpression
-     *         value which need to set to element
-     */
-    public void setRegularExpression(@Nonnull String regularExpression) {
-        this.regularExpression = regularExpression;
-    }
-
-    /** @return xpath of filter mediator */
-    @Nullable
-    public String getXPath() {
-        return xPath;
-    }
-
-    /**
-     * Sets xpath parameter to element
-     *
-     * @param xPath
-     *         value which need to set to element
-     */
-    public void setXPath(@Nullable String xPath) {
-        this.xPath = xPath;
-    }
-
-    /** @return list of source namespaces of filter mediator */
-    @Nonnull
-    public Array<NameSpace> getSourceNameSpaces() {
-        return sourceNameSpaces;
-    }
-
-    /**
-     * Sets list of source namespaces to element
-     *
-     * @param sourceNameSpaces
-     *         list of source namespaces which need to set to element
-     */
-    public void setSourceNameSpaces(@Nonnull Array<NameSpace> sourceNameSpaces) {
-        this.sourceNameSpaces = sourceNameSpaces;
-    }
-
-    /** @return list of xpath namespaces of filter mediator */
-    @Nonnull
-    public Array<NameSpace> getXPathNameSpaces() {
-        return xPathNameSpaces;
-    }
-
-    /**
-     * Sets list of xpath namespaces to element
-     *
-     * @param xPathNameSpaces
-     *         list which need to set to element
-     */
-    public void setXPathNameSpaces(@Nonnull Array<NameSpace> xPathNameSpaces) {
-        this.xPathNameSpaces = xPathNameSpaces;
-    }
-
     /** {@inheritDoc} */
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        Map<String, String> attributes = new LinkedHashMap<>();
+        ConditionType conditionType = getProperty(CONDITION_TYPE);
 
-        switch (conditionType) {
-            case XPATH:
-                attributes.put(XPATH_ATTRIBUTE_NAME, xPath);
-
-                return convertNameSpaceToXMLFormat(xPathNameSpaces) + convertAttributesToXMLFormat(attributes);
-
-            case SOURCE_AND_REGEX:
-            default:
-                attributes.put(SOURCE_ATTRIBUTE_NAME, source);
-                attributes.put(REGULAR_EXPRESSION_ATTRIBUTE_NAME, regularExpression);
-
-                return convertNameSpaceToXMLFormat(sourceNameSpaces) + convertAttributesToXMLFormat(attributes);
+        if (conditionType == null) {
+            return "";
         }
+
+        Map<String, String> attributes = new LinkedHashMap<>();
+        String result;
+
+        if (XPATH.equals(conditionType)) {
+            attributes.put(XPATH_ATTRIBUTE_NAME, getProperty(X_PATH));
+            result = convertNameSpaceToXMLFormat(getProperty(XPATH_NAMESPACE));
+        } else {
+            attributes.put(SOURCE_ATTRIBUTE_NAME, getProperty(SOURCE));
+            attributes.put(REGULAR_EXPRESSION_ATTRIBUTE_NAME, getProperty(REGULAR_EXPRESSION));
+            result = convertNameSpaceToXMLFormat(getProperty(SOURCE_NAMESPACE));
+        }
+
+        return result + convertAttributesToXMLFormat(attributes);
     }
 
     /** {@inheritDoc} */
     @Override
     public void deserialize(@Nonnull Node node) {
         isSourceAttributeFound = false;
-        nameSpaces = Collections.createArray();
+        Array<NameSpace> nameSpaces = Collections.createArray();
+
+        putProperty(NAMESPACES, nameSpaces);
 
         super.deserialize(node);
 
         if (isSourceAttributeFound) {
-            conditionType = SOURCE_AND_REGEX;
-            sourceNameSpaces = nameSpaces;
+            putProperty(CONDITION_TYPE, SOURCE_AND_REGEX);
+            putProperty(SOURCE_NAMESPACE, nameSpaces);
         } else {
-            conditionType = XPATH;
-            xPathNameSpaces = nameSpaces;
+            putProperty(CONDITION_TYPE, XPATH);
+            putProperty(XPATH_NAMESPACE, nameSpaces);
         }
     }
 
@@ -253,32 +163,39 @@ public class Filter extends AbstractElement {
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
         switch (attributeName) {
             case REGULAR_EXPRESSION_ATTRIBUTE_NAME:
-                regularExpression = attributeValue;
+                putProperty(REGULAR_EXPRESSION, attributeValue);
                 break;
 
             case SOURCE_ATTRIBUTE_NAME:
-                source = attributeValue;
+                putProperty(SOURCE, attributeValue);
                 isSourceAttributeFound = true;
                 break;
 
             case XPATH_ATTRIBUTE_NAME:
-                xPath = attributeValue;
+                putProperty(X_PATH, attributeValue);
                 break;
 
             default:
-                if (StringUtils.startsWith(PREFIX, attributeName, true)) {
-                    String name = StringUtils.trimStart(attributeName, PREFIX + ':');
+                applyNameSpaces(attributeName, attributeValue);
+        }
+    }
 
-                    NameSpace nameSpace = nameSpaceProvider.get();
-
-                    nameSpace.setPrefix(name);
-                    nameSpace.setUri(attributeValue);
-
-                    nameSpaces.add(nameSpace);
-                }
+    private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        if (!StringUtils.startsWith(PREFIX, attributeName, true)) {
+            return;
         }
 
+        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
 
+        NameSpace nameSpace = nameSpaceProvider.get();
+
+        nameSpace.setPrefix(name);
+        nameSpace.setUri(attributeValue);
+
+        Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
+        if (nameSpaces != null) {
+            nameSpaces.add(nameSpace);
+        }
     }
 
     public enum ConditionType {
