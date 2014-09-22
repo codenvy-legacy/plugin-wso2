@@ -36,7 +36,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static com.codenvy.ide.client.elements.widgets.element.ElementView.BRANCHES_PADDING;
 import static com.codenvy.ide.client.elements.widgets.element.ElementView.DEFAULT_HEIGHT;
@@ -169,7 +168,13 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     private void recreateBranches() {
         view.removeBranches();
 
-        Set<String> keys = widgetBranches.keySet();
+        List<String> branchesId = showWidgetsAndReturnBranchesId();
+
+        removeUnnecessaryWidgets(branchesId);
+    }
+
+    @Nonnull
+    private List<String> showWidgetsAndReturnBranchesId() {
         List<String> branchesId = new ArrayList<>();
 
         for (Branch branch : element.getBranches()) {
@@ -188,7 +193,11 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
             view.addBranch(branchPresenter);
         }
 
-        for (String key : keys) {
+        return branchesId;
+    }
+
+    private void removeUnnecessaryWidgets(@Nonnull List<String> branchesId) {
+        for (String key : widgetBranches.keySet()) {
             if (!branchesId.contains(key)) {
                 widgetBranches.remove(key);
             }
@@ -196,41 +205,39 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     }
 
     private void detectWidgetSize() {
-        int width;
-        int height;
-        List<Branch> branches = element.getBranches();
-
-        if (branches.isEmpty()) {
-            width = 0;
-            height = DEFAULT_HEIGHT;
+        if (element.getBranches().isEmpty()) {
+            view.setHeight(DEFAULT_HEIGHT);
+            view.setWidth(element.needsToShowIconAndTitle() ? DEFAULT_WIDTH : 0);
         } else {
-            height = 0;
-            int maxWidth = 0;
+            resizeWidgetToBranchesSize();
+        }
+    }
 
-            List<BranchPresenter> branchesWidgets = new ArrayList<>(widgetBranches.values());
+    private void resizeWidgetToBranchesSize() {
+        int height = 0;
+        int width;
 
-            for (BranchPresenter branch : branchesWidgets) {
-                branch.resizeView();
+        List<BranchPresenter> branchesWidgets = new ArrayList<>(widgetBranches.values());
+        int maxWidth = branchesWidgets.get(0).getWidth();
 
-                maxWidth = branchesWidgets.get(0).getWidth();
-                height += branch.getHeight();
+        for (BranchPresenter branch : branchesWidgets) {
+            branch.resizeView();
 
-                int branchWidth = branch.getWidth();
+            height += branch.getHeight();
 
-                if (branchWidth > maxWidth) {
-                    maxWidth = branchWidth;
-                }
+            int branchWidth = branch.getWidth();
+
+            if (branchWidth > maxWidth) {
+                maxWidth = branchWidth;
             }
-
-            for (BranchPresenter branch : branchesWidgets) {
-                branch.setWidth(maxWidth);
-            }
-
-            width = maxWidth + 2 * BRANCHES_PADDING;
-            height += BRANCHES_PADDING * (branches.size() + 1);
         }
 
-        width += element.needsToShowIconAndTitle() ? DEFAULT_WIDTH : 0;
+        for (BranchPresenter branch : branchesWidgets) {
+            branch.setWidth(maxWidth);
+        }
+
+        width = maxWidth + 2 * BRANCHES_PADDING + (element.needsToShowIconAndTitle() ? DEFAULT_WIDTH : 0);
+        height += BRANCHES_PADDING * (branchesWidgets.size() + 1);
 
         view.setHeight(height);
         view.setWidth(width);
@@ -239,15 +246,9 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     /** {@inheritDoc} */
     @Override
     public void onStateChanged(@Nullable Element element) {
-        Element selectedElement = selectionManager.getElement();
-
         view.unselectBelowCursor();
 
-        if (selectedElement == null) {
-            return;
-        }
-
-        if (selectedElement.equals(element)) {
+        if (this.element.equals(element)) {
             view.select();
         } else {
             view.unselect();

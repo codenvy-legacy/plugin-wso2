@@ -30,7 +30,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -62,15 +61,15 @@ public class ToolbarPresenterTest {
 
     @Test
     public void viewShouldBePrepared() throws Exception {
-        verify(view).setDelegate(eq(presenter));
+        verify(view).setDelegate(presenter);
     }
 
     @Test
     public void toolbarGroupShouldBeAdded() throws Exception {
         presenter.addGroup(GROUP_ID, TITLE);
 
-        verify(locale, never()).errorToolbarGroupWasAlreadyRegistered(eq(GROUP_ID));
-        verify(toolbarFactory).createToolbarGroupPresenter(eq(TITLE));
+        verify(locale, never()).errorToolbarGroupWasAlreadyRegistered(GROUP_ID);
+        verify(toolbarFactory).createToolbarGroupPresenter(TITLE);
     }
 
     @Test
@@ -81,8 +80,8 @@ public class ToolbarPresenterTest {
 
         presenter.addGroup(GROUP_ID, TITLE);
 
-        verify(locale).errorToolbarGroupWasAlreadyRegistered(eq(GROUP_ID));
-        verify(toolbarFactory, never()).createToolbarGroupPresenter(eq(TITLE));
+        verify(locale).errorToolbarGroupWasAlreadyRegistered(GROUP_ID);
+        verify(toolbarFactory, never()).createToolbarGroupPresenter(TITLE);
     }
 
     @Test
@@ -93,18 +92,18 @@ public class ToolbarPresenterTest {
 
         presenter.addItem(GROUP_ID, TITLE, TOOLTIP, icon, EDITOR_STATE);
 
-        verify(locale, never()).errorToolbarGroupHasNotRegisteredYet(eq(GROUP_ID));
-        verify(locale, never()).errorToolbarEditorStateWasAlreadyAdded(eq(EDITOR_STATE));
-        verify(toolbarFactory).createToolbarItemPresenter(eq(TITLE), eq(TOOLTIP), eq(icon), eq(EDITOR_STATE));
+        verify(locale, never()).errorToolbarGroupHasNotRegisteredYet(GROUP_ID);
+        verify(locale, never()).errorToolbarEditorStateWasAlreadyAdded(EDITOR_STATE);
+        verify(toolbarFactory).createToolbarItemPresenter(TITLE, TOOLTIP, icon, EDITOR_STATE);
     }
 
     @Test
     public void toolbarItemShouldBeNotAddedWhenGroupHasNotRegistered() throws Exception {
         presenter.addItem(GROUP_ID, TITLE, TOOLTIP, icon, EDITOR_STATE);
 
-        verify(locale).errorToolbarGroupHasNotRegisteredYet(eq(GROUP_ID));
-        verify(locale, never()).errorToolbarEditorStateWasAlreadyAdded(eq(EDITOR_STATE));
-        verify(toolbarFactory, never()).createToolbarItemPresenter(eq(TITLE), eq(TOOLTIP), eq(icon), eq(EDITOR_STATE));
+        verify(locale).errorToolbarGroupHasNotRegisteredYet(GROUP_ID);
+        verify(locale, never()).errorToolbarEditorStateWasAlreadyAdded(EDITOR_STATE);
+        verify(toolbarFactory, never()).createToolbarItemPresenter(TITLE, TOOLTIP, icon, EDITOR_STATE);
     }
 
     @Test
@@ -116,9 +115,9 @@ public class ToolbarPresenterTest {
 
         presenter.addItem(GROUP_ID, TITLE, TOOLTIP, icon, EDITOR_STATE);
 
-        verify(locale, never()).errorToolbarGroupHasNotRegisteredYet(eq(GROUP_ID));
-        verify(locale).errorToolbarEditorStateWasAlreadyAdded(eq(EDITOR_STATE));
-        verify(toolbarFactory, never()).createToolbarItemPresenter(eq(TITLE), eq(TOOLTIP), eq(icon), eq(EDITOR_STATE));
+        verify(locale, never()).errorToolbarGroupHasNotRegisteredYet(GROUP_ID);
+        verify(locale).errorToolbarEditorStateWasAlreadyAdded(EDITOR_STATE);
+        verify(toolbarFactory, never()).createToolbarItemPresenter(TITLE, TOOLTIP, icon, EDITOR_STATE);
     }
 
     @Test
@@ -131,8 +130,8 @@ public class ToolbarPresenterTest {
 
         presenter.go(container);
 
-        verify(container).setWidget(eq(view));
-        verify(view).addGroup(eq(toolbarGroup));
+        verify(container).setWidget(view);
+        verify(view).addGroup(toolbarGroup);
     }
 
 }

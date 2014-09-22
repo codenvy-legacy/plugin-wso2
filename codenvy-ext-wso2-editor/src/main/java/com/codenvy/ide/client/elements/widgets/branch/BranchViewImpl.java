@@ -192,6 +192,13 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
     @Override
     public void clear() {
         body.clear();
+
+        controller.clearDiagram();
+
+        for (ElementPresenter element : elements) {
+            dragController.makeNotDraggable(element.getView().asWidget());
+        }
+
         elements.clear();
     }
 

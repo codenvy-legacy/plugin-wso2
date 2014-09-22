@@ -26,7 +26,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter.EditButtonClickedListener;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -46,7 +45,7 @@ public class ComplexPropertyPresenterTest {
 
     @Test
     public void viewShouldBePrepared() throws Exception {
-        verify(view).setDelegate(eq(presenter));
+        verify(view).setDelegate(presenter);
     }
 
     @Test
@@ -58,14 +57,14 @@ public class ComplexPropertyPresenterTest {
     public void titleShouldBeSet() throws Exception {
         presenter.setTitle(STRING);
 
-        verify(view).setTitle(eq(STRING));
+        verify(view).setTitle(STRING);
     }
 
     @Test
     public void propertyShouldBeSet() throws Exception {
         presenter.setProperty(STRING);
 
-        verify(view).setProperty(eq(STRING));
+        verify(view).setProperty(STRING);
     }
 
     @Test

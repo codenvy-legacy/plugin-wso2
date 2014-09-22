@@ -29,7 +29,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -50,7 +49,7 @@ public class ListPropertyPresenterTest {
 
     @Test
     public void viewShouldBePrepared() throws Exception {
-        verify(view).setDelegate(eq(presenter));
+        verify(view).setDelegate(presenter);
     }
 
     @Test
@@ -62,7 +61,7 @@ public class ListPropertyPresenterTest {
     public void titleShouldBeSet() throws Exception {
         presenter.setTitle(STRING);
 
-        verify(view).setTitle(eq(STRING));
+        verify(view).setTitle(STRING);
     }
 
     @Test
@@ -71,14 +70,14 @@ public class ListPropertyPresenterTest {
 
         presenter.setValues(values);
 
-        verify(view).setPropertyValues(eq(values));
+        verify(view).setPropertyValues(values);
     }
 
     @Test
     public void propertyValueShouldBeSelected() throws Exception {
         presenter.selectValue(STRING);
 
-        verify(view).selectPropertyValue(eq(STRING));
+        verify(view).selectPropertyValue(STRING);
     }
 
     @Test
@@ -103,7 +102,7 @@ public class ListPropertyPresenterTest {
         presenter.addPropertyValueChangedListener(listener);
         presenter.notifyPropertyValueChangedListener();
 
-        verify(listener).onPropertyChanged(eq(STRING));
+        verify(listener).onPropertyChanged(STRING);
     }
 
     @Test

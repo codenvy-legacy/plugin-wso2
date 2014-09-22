@@ -27,7 +27,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -58,9 +57,9 @@ public class PropertyGroupPresenterTest {
 
     @Test
     public void viewShouldBePrepared() throws Exception {
-        verify(propertiesPanelWidgetFactory).createPropertyGroupView(eq(STRING));
+        verify(propertiesPanelWidgetFactory).createPropertyGroupView(STRING);
 
-        verify(view).setDelegate(eq(presenter));
+        verify(view).setDelegate(presenter);
 
         verify(view).setVisibleItemsPanel(false);
         verify(view).defaultIcon();
@@ -75,14 +74,14 @@ public class PropertyGroupPresenterTest {
     public void propertyShouldBeAdded() throws Exception {
         presenter.addItem(property);
 
-        verify(view).addProperty(eq(property));
+        verify(view).addProperty(property);
     }
 
     @Test
     public void propertyShouldBeRemoved() throws Exception {
         presenter.removeItem(property);
 
-        verify(view).removeProperty(eq(property));
+        verify(view).removeProperty(property);
     }
 
     @Test

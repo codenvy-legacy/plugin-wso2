@@ -26,7 +26,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -49,7 +48,7 @@ public class SimplePropertyPresenterTest {
 
     @Test
     public void viewShouldBePrepared() throws Exception {
-        verify(view).setDelegate(eq(presenter));
+        verify(view).setDelegate(presenter);
     }
 
     @Test
@@ -61,14 +60,14 @@ public class SimplePropertyPresenterTest {
     public void titleShouldBeSet() throws Exception {
         presenter.setTitle(STRING);
 
-        verify(view).setTitle(eq(STRING));
+        verify(view).setTitle(STRING);
     }
 
     @Test
     public void propertyShouldBeSet() throws Exception {
         presenter.setProperty(STRING);
 
-        verify(view).setProperty(eq(STRING));
+        verify(view).setProperty(STRING);
     }
 
     @Test
@@ -108,7 +107,7 @@ public class SimplePropertyPresenterTest {
         presenter.addPropertyValueChangedListener(listener);
         presenter.notifyPropertyValueChangedListener();
 
-        verify(listener).onPropertyChanged(eq(STRING));
+        verify(listener).onPropertyChanged(STRING);
     }
 
     @Test
