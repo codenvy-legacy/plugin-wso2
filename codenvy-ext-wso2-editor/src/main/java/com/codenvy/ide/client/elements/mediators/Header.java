@@ -298,7 +298,7 @@ public class Header extends AbstractElement {
 
         @Nonnull
         public static ScopeType getItemByValue(@Nonnull String value) {
-            if (value.equals("Synapse")) {
+            if ("Synapse".equals(value)) {
                 return SYNAPSE;
             } else {
                 return TRANSPORT;

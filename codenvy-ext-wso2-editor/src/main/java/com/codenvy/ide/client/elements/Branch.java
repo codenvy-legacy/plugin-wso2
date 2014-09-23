@@ -187,11 +187,11 @@ public class Branch {
      *         XML node that need to be deserialized
      */
     public void deserialize(@Nonnull Node node) {
-        String name = node.getNodeName();
+        String nameValue = node.getNodeName();
         NodeList childNodes = node.getChildNodes();
 
-        this.name = name;
-        this.title = StringUtils.capitalizeFirstLetter(name);
+        name = nameValue;
+        title = StringUtils.capitalizeFirstLetter(nameValue);
 
         deserializeAttributes(node);
 

@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,7 +33,6 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static java.util.Collections.emptyList;
 
 /**
  * The Class describes CreateWorksheet connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -92,10 +92,10 @@ public class CreateWorksheet extends AbstractConnector {
         worksheetRowsExpression = "";
         worksheetColumnsExpression = "";
 
-        spreadsheetNameNS = emptyList();
-        worksheetNameNS = emptyList();
-        worksheetRowsNS = emptyList();
-        worksheetColumnsNS = emptyList();
+        spreadsheetNameNS = new ArrayList<>();
+        worksheetNameNS = new ArrayList<>();
+        worksheetRowsNS = new ArrayList<>();
+        worksheetColumnsNS = new ArrayList<>();
     }
 
     /** {@inheritDoc} */

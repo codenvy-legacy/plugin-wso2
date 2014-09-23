@@ -39,23 +39,23 @@ public class EndpointsPropertyTypeInitializer extends AbstractPropertyTypeInitia
     /** {@inheritDoc} */
     @Override
     public void initialize() {
-        manager.register(Format.TYPE_NAME, Arrays.asList(Format.LEAVE_AS_IS.name(),
-                                                         Format.soap11.name(),
-                                                         Format.soap12.name(),
-                                                         Format.pox.name(),
-                                                         Format.get.name(),
-                                                         Format.REST.name()));
+        manager.register(Format.TYPE_NAME, Arrays.asList(Format.LEAVE_AS_IS.getValue(),
+                                                         Format.SOUP11.getValue(),
+                                                         Format.SOUP12.getValue(),
+                                                         Format.POX.getValue(),
+                                                         Format.GET.getValue(),
+                                                         Format.REST.getValue()));
 
-        manager.register(Optimize.TYPE_NAME, Arrays.asList(Optimize.LEAVE_AS_IS.name(),
-                                                           Optimize.mtom.name(),
-                                                           Optimize.swa.name()));
+        manager.register(Optimize.TYPE_NAME, Arrays.asList(Optimize.LEAVE_AS_IS.getValue(),
+                                                           Optimize.MTOM.getValue(),
+                                                           Optimize.SWA.getValue()));
 
         manager.register(AddressingVersion.TYPE_NAME, Arrays.asList(AddressingVersion.FINAL.getValue(),
                                                                     AddressingVersion.SUBMISSION.getValue()));
 
-        manager.register(TimeoutAction.TYPE_NAME, Arrays.asList(TimeoutAction.never.name(),
-                                                                TimeoutAction.discard.name(),
-                                                                TimeoutAction.fault.name()));
+        manager.register(TimeoutAction.TYPE_NAME, Arrays.asList(TimeoutAction.NEVER.getValue(),
+                                                                TimeoutAction.DISCARD.getValue(),
+                                                                TimeoutAction.FAULT.getValue()));
     }
 
 }

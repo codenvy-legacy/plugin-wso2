@@ -21,6 +21,7 @@ import com.google.inject.Singleton;
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The manager of a property type. It provides an ability to contain registered property types.
@@ -30,7 +31,7 @@ import java.util.List;
  */
 @Singleton
 public class PropertyTypeManager {
-    private final HashMap<String, List<String>> propertyTypes;
+    private final Map<String, List<String>> propertyTypes;
 
     @Inject
     public PropertyTypeManager() {

@@ -46,16 +46,16 @@ public class RespondPropertiesPanelPresenter extends AbstractPropertiesPanel<Res
     public RespondPropertiesPanelPresenter(PropertiesPanelView view,
                                            PropertyTypeManager propertyTypeManager,
                                            PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                           SimplePropertyPresenter description,
+                                           SimplePropertyPresenter descriptionPropertyPresenter,
                                            WSO2EditorLocalizationConstant locale) {
         super(view, propertyTypeManager);
 
         PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
         this.view.addGroup(basicGroup);
 
-        this.description = description;
-        this.description.setTitle(locale.addressEndpointDescription());
-        this.description.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        description = descriptionPropertyPresenter;
+        description.setTitle(locale.addressEndpointDescription());
+        description.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(DESCRIPTION, property);
@@ -63,7 +63,7 @@ public class RespondPropertiesPanelPresenter extends AbstractPropertiesPanel<Res
                 notifyListeners();
             }
         });
-        basicGroup.addItem(description);
+        basicGroup.addItem(descriptionPropertyPresenter);
     }
 
     /** {@inheritDoc} */

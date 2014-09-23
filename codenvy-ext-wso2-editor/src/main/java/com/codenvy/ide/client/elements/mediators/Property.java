@@ -256,7 +256,6 @@ public class Property extends AbstractElement {
                     return OPERATION;
 
                 default:
-                case "Synapse":
                     return SYNAPSE;
             }
         }

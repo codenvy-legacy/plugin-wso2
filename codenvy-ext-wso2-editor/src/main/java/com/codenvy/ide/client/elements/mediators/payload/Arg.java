@@ -150,7 +150,17 @@ public class Arg extends AbstractEntityElement {
     /** @return copy of element */
     @Nonnull
     public Arg copy() {
-        return argProvider.get();
+        List<NameSpace> nameSpaces = getProperty(ARG_NAMESPACES);
+
+        Arg arg = argProvider.get();
+
+        arg.putProperty(ARG_TYPE, getProperty(ARG_TYPE));
+        arg.putProperty(ARG_EVALUATOR, getProperty(ARG_EVALUATOR));
+        arg.putProperty(ARG_EXPRESSION, getProperty(ARG_EXPRESSION));
+        arg.putProperty(ARG_VALUE, getProperty(ARG_VALUE));
+        arg.putProperty(ARG_NAMESPACES, copyList(nameSpaces));
+
+        return arg;
     }
 
     public enum ArgType {

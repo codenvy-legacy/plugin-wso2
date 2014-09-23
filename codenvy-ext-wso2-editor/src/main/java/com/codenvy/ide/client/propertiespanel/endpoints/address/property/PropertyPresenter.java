@@ -21,8 +21,10 @@ import com.codenvy.ide.client.propertiespanel.endpoints.address.editoraddresspro
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.NAME;
 
 /**
  * The class provides the business logic that allows editor to react on user's action related to change of Address's
@@ -71,7 +73,14 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
             public void onAddressPropertyChanged(@Nonnull Property property) {
                 int index = properties.indexOf(selectedProperty);
 
-                if (property.getName().equals(selectedProperty.getName()) || !isElementNameContained(property)) {
+                String innerPropertyName = property.getProperty(NAME);
+                String selectedPropertyName = selectedProperty.getProperty(NAME);
+
+                if (innerPropertyName == null || selectedPropertyName == null) {
+                    return;
+                }
+
+                if (innerPropertyName.equals(selectedPropertyName) || !isElementNameContained(property)) {
                     properties.set(index, property);
 
                     PropertyPresenter.this.view.setProperties(properties);
@@ -92,8 +101,14 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
      *         value of property which need to check
      */
     private boolean isElementNameContained(@Nonnull Property property) {
+        String innerPropertyName = property.getProperty(NAME);
+
+        if (innerPropertyName == null) {
+            return false;
+        }
+
         for (Property prop : properties) {
-            if (property.getName().equals(prop.getName())) {
+            if (innerPropertyName.equals(prop.getProperty(NAME))) {
                 return true;
             }
         }
@@ -142,23 +157,22 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
         selectedProperty = property;
     }
 
-    public void showDialog(@Nonnull PropertiesChangedCallback callback, @Nonnull List<Property> properties) {
+    public void showDialog(@Nonnull PropertiesChangedCallback innerCallback, @Nonnull List<Property> propertiesArray) {
         selectedProperty = null;
 
-        this.callback = callback;
-        this.properties = Collections.emptyList();
+        callback = innerCallback;
+        properties = new ArrayList<>();
 
-        for (Property property : properties) {
-            this.properties.add(property.copy());
+        for (Property property : propertiesArray) {
+            properties.add(property.copy());
         }
 
-        view.setProperties(this.properties);
+        view.setProperties(properties);
 
         view.showDialog();
     }
 
     public interface PropertiesChangedCallback {
-
         /**
          * Performs some actions when properties was changed.
          *
@@ -166,7 +180,6 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
          *         changed list of properties
          */
         void onPropertiesChanged(@Nonnull List<Property> properties);
-
     }
 
 }

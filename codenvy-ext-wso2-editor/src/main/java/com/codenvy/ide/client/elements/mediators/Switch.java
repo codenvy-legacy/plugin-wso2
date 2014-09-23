@@ -166,25 +166,29 @@ public class Switch extends AbstractElement {
     /** {@inheritDoc} */
     @Override
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        switch (attributeName) {
-            case SOURCE_ATTRIBUTE_NAME:
-                putProperty(SOURCE_XPATH, attributeValue);
-                break;
 
-            default:
-                if (StringUtils.startsWith(PREFIX, attributeName, true)) {
-                    String name = StringUtils.trimStart(attributeName, PREFIX + ':');
+        if (SOURCE_ATTRIBUTE_NAME.equals(attributeName)) {
+            putProperty(SOURCE_XPATH, attributeValue);
+        } else {
+            applyNameSpaces(attributeName, attributeValue);
+        }
+    }
 
-                    NameSpace nameSpace = nameSpaceProvider.get();
+    private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        if (!StringUtils.startsWith(PREFIX, attributeName, true)) {
+            return;
+        }
 
-                    nameSpace.setPrefix(name);
-                    nameSpace.setUri(attributeValue);
+        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
 
-                    nameSpaces = getProperty(NAMESPACES);
-                    if (nameSpaces != null) {
-                        nameSpaces.add(nameSpace);
-                    }
-                }
+        NameSpace nameSpace = nameSpaceProvider.get();
+
+        nameSpace.setPrefix(name);
+        nameSpace.setUri(attributeValue);
+
+        nameSpaces = getProperty(NAMESPACES);
+        if (nameSpaces != null) {
+            nameSpaces.add(nameSpace);
         }
     }
 

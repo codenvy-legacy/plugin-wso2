@@ -100,7 +100,7 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
 
     private void prepareView(@Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
                              @Nonnull Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
-                             @Nonnull final ComplexPropertyPresenter valueExpression,
+                             @Nonnull final ComplexPropertyPresenter valueExpressionPropertyPresenter,
                              @Nonnull Provider<ListPropertyPresenter> listPropertyPresenterProvider) {
 
         PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
@@ -181,14 +181,14 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
                 element.putProperty(NAMESPACES, nameSpaces);
                 element.putProperty(VALUE_EXPRESSION, expression != null ? expression : "");
 
-                valueExpression.setProperty(expression);
+                valueExpressionPropertyPresenter.setProperty(expression);
 
                 notifyListeners();
             }
         };
 
-        this.valueExpression = valueExpression;
-        this.valueExpression.setTitle(locale.valueStringPattern());
+        valueExpression = valueExpressionPropertyPresenter;
+        valueExpression.setTitle(locale.valueStringPattern());
         this.valueExpression.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
@@ -206,7 +206,7 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
             }
         });
 
-        basicGroup.addItem(valueExpression);
+        basicGroup.addItem(valueExpressionPropertyPresenter);
 
         valueStringPattern = simplePropertyPresenterProvider.get();
         valueStringPattern.setTitle(locale.valueStringPattern());

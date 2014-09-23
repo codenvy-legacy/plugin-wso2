@@ -81,14 +81,14 @@ public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Se
     }
 
     private void prepareView(@Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                             @Nonnull ListPropertyPresenter referringType,
+                             @Nonnull ListPropertyPresenter referringTypePropertyPresenter,
                              @Nonnull Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider) {
         PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(local.miscGroupTitle());
         view.addGroup(basicGroup);
 
-        this.referringType = referringType;
-        this.referringType.setTitle(local.referringType());
-        this.referringType.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        referringType = referringTypePropertyPresenter;
+        referringType.setTitle(local.referringType());
+        referringType.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 ReferringType referringType = ReferringType.getItemByValue(property);
@@ -98,7 +98,7 @@ public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Se
             }
         });
 
-        basicGroup.addItem(this.referringType);
+        basicGroup.addItem(referringType);
 
         final ChangeResourceKeyCallBack keyCallBack = new ChangeResourceKeyCallBack() {
             @Override

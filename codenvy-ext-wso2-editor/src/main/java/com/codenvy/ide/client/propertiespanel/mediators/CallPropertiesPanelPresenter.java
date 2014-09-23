@@ -68,7 +68,7 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, 
                                         PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
                                         final ComplexPropertyPresenter endpointXpathPanel,
                                         Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
-                                        final ListPropertyPresenter endpointType) {
+                                        final ListPropertyPresenter endpointTypeListPropertyPresenter) {
         super(view, propertyTypeManager);
 
         this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
@@ -76,21 +76,21 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, 
 
         prepareView(propertiesPanelWidgetFactory,
                     simplePropertyPresenterProvider,
-                    endpointType,
+                    endpointTypeListPropertyPresenter,
                     endpointXpathPanel);
     }
 
     private void prepareView(@Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
                              @Nonnull Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
-                             @Nonnull ListPropertyPresenter endpointType,
-                             @Nonnull final ComplexPropertyPresenter endpointXpathPanel) {
+                             @Nonnull ListPropertyPresenter endpointTypeListProperty,
+                             @Nonnull final ComplexPropertyPresenter endpointXpathComplexProperty) {
 
         PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
         this.view.addGroup(basicGroup);
 
-        this.endpointType = endpointType;
-        this.endpointType.setTitle(locale.endpointType());
-        this.endpointType.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        endpointType = endpointTypeListProperty;
+        endpointType.setTitle(locale.endpointType());
+        endpointType.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 redesignViewToEndpointType(property);
@@ -98,7 +98,7 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, 
                 notifyListeners();
             }
         });
-        basicGroup.addItem(this.endpointType);
+        basicGroup.addItem(endpointType);
 
         endpointRegistryKeyPanel = simplePropertyPresenterProvider.get();
         endpointRegistryKeyPanel.setTitle(locale.endpointRegistryKey());
@@ -118,29 +118,30 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, 
                 element.putProperty(NAMESPACES, nameSpaces);
                 element.putProperty(X_PATH, expression != null ? expression : "");
 
-                endpointXpathPanel.setProperty(expression);
+                endpointXpathComplexProperty.setProperty(expression);
 
                 notifyListeners();
             }
         };
 
-        this.endpointXpathPanel = endpointXpathPanel;
-        this.endpointXpathPanel.setTitle(locale.endpointXpath());
-        this.endpointXpathPanel.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+        endpointXpathPanel = endpointXpathComplexProperty;
+        endpointXpathPanel.setTitle(locale.endpointXpath());
+        endpointXpathPanel.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 List<NameSpace> nameSpaces = element.getProperty(NAMESPACES);
                 String xPath = element.getProperty(X_PATH);
 
-                if (xPath != null && nameSpaces != null) {
-                    nameSpaceEditorPresenter.showWindowWithParameters(nameSpaces,
-                                                                      addNameSpacesCallBack,
-                                                                      locale.callExpressionTitle(),
-                                                                      xPath);
+                if (xPath == null || nameSpaces == null) {
+                    return;
                 }
+                nameSpaceEditorPresenter.showWindowWithParameters(nameSpaces,
+                                                                  addNameSpacesCallBack,
+                                                                  locale.callExpressionTitle(),
+                                                                  xPath);
             }
         });
-        basicGroup.addItem(this.endpointXpathPanel);
+        basicGroup.addItem(endpointXpathPanel);
 
         description = simplePropertyPresenterProvider.get();
         description.setTitle(locale.addressEndpointDescription());
@@ -169,8 +170,6 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, 
                 adaptXPathAttribute();
                 break;
 
-            case NONE:
-            case INLINE:
             default:
                 endpointXpathPanel.setVisible(false);
                 endpointRegistryKeyPanel.setVisible(false);
@@ -207,8 +206,8 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, 
             redesignViewToEndpointType(type.name());
         }
 
-        String description = element.getProperty(DESCRIPTION);
-        this.description.setProperty(description != null ? description : "");
+        String descriptionValue = element.getProperty(DESCRIPTION);
+        description.setProperty(descriptionValue != null ? descriptionValue : "");
     }
 
 }

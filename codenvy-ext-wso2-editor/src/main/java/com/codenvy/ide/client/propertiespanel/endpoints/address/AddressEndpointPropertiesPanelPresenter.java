@@ -149,7 +149,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         format.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                element.putProperty(FORMAT, Format.valueOf(property));
+                element.putProperty(FORMAT, Format.getItemByValue(property));
 
                 notifyListeners();
             }
@@ -312,7 +312,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         optimize.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                element.putProperty(OPTIMIZE, Optimize.valueOf(property));
+                element.putProperty(OPTIMIZE, Optimize.getItemByValue(property));
 
                 notifyListeners();
             }
@@ -457,7 +457,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         timeoutAction.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                element.putProperty(TIMEOUT_ACTION, TimeoutAction.valueOf(property));
+                element.putProperty(TIMEOUT_ACTION, TimeoutAction.getItemByValue(property));
 
                 notifyListeners();
             }
@@ -471,10 +471,10 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         super.go(container);
 
         format.setValues(propertyTypeManager.getValuesByName(Format.TYPE_NAME));
-        Format format = element.getProperty(FORMAT);
+        Format formatValue = element.getProperty(FORMAT);
 
-        if (format != null) {
-            this.format.selectValue(format.name());
+        if (formatValue != null) {
+            format.selectValue(formatValue.getValue());
         }
 
         uri.setProperty(element.getProperty(URI));
@@ -491,10 +491,10 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         showProperties(element.getProperty(PROPERTIES));
 
         optimize.setValues(propertyTypeManager.getValuesByName(Optimize.TYPE_NAME));
-        Optimize optimize = element.getProperty(OPTIMIZE);
+        Optimize optimizeValue = element.getProperty(OPTIMIZE);
 
-        if (optimize != null) {
-            this.optimize.selectValue(optimize.name());
+        if (optimizeValue != null) {
+            optimize.selectValue(optimizeValue.getValue());
         }
 
         description.setProperty(element.getProperty(DESCRIPTION));
@@ -503,8 +503,8 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
 
         Boolean isReliableMessagingEnabled = element.getProperty(RELIABLE_MESSAGING_ENABLED);
         if (isReliableMessagingEnabled != null) {
-            this.reliableMessagingEnabled.setValues(booleanValues);
-            this.reliableMessagingEnabled.selectValue(isReliableMessagingEnabled.toString());
+            reliableMessagingEnabled.setValues(booleanValues);
+            reliableMessagingEnabled.selectValue(isReliableMessagingEnabled.toString());
 
             reliableMessagePolicy.setVisible(isReliableMessagingEnabled);
             reliableMessagePolicy.setProperty(element.getProperty(RELIABLE_MESSAGING_POLICY));
@@ -512,8 +512,8 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
 
         Boolean isSecurityEnabled = element.getProperty(SECURITY_ENABLED);
         if (isSecurityEnabled != null) {
-            this.securityEnabled.setValues(booleanValues);
-            this.securityEnabled.selectValue(isSecurityEnabled.toString());
+            securityEnabled.setValues(booleanValues);
+            securityEnabled.selectValue(isSecurityEnabled.toString());
 
             securityPolicy.setVisible(isSecurityEnabled);
             securityPolicy.setProperty(element.getProperty(SECURITY_POLICY));
@@ -527,9 +527,9 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
             addressingVersion.setVisible(isAddressingEnabled);
             addressingVersion.setValues(propertyTypeManager.getValuesByName(AddressingVersion.TYPE_NAME));
 
-            AddressingVersion addressingVersion = element.getProperty(ADDRESSING_VERSION);
-            if (addressingVersion != null) {
-                this.addressingVersion.selectValue(addressingVersion.name());
+            AddressingVersion addressingVersionValue = element.getProperty(ADDRESSING_VERSION);
+            if (addressingVersionValue != null) {
+                addressingVersion.selectValue(addressingVersionValue.getValue());
             }
 
             addressingSeparateListener.setVisible(isAddressingEnabled);
@@ -540,39 +540,40 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         timeoutDuration.setProperty(String.valueOf(element.getProperty(TIMEOUT_DURATION)));
 
         timeoutAction.setValues(propertyTypeManager.getValuesByName(TimeoutAction.TYPE_NAME));
-        TimeoutAction timeoutAction = element.getProperty(TIMEOUT_ACTION);
+        TimeoutAction timeoutActionValue = element.getProperty(TIMEOUT_ACTION);
 
-        if (timeoutAction != null) {
-            this.timeoutAction.selectValue(timeoutAction.name());
+        if (timeoutActionValue != null) {
+            timeoutAction.selectValue(timeoutActionValue.getValue());
         }
     }
 
     /**
      * Shows value of properties in special place on the view.
      *
-     * @param properties
+     * @param propertiesArray
      *         list of properties which must to be displayed
      */
-    private void showProperties(@Nullable List<Property> properties) {
-        if (properties == null) {
-            this.properties.setProperty("");
+    private void showProperties(@Nullable List<Property> propertiesArray) {
+        if (propertiesArray == null) {
+            properties.setProperty("");
             return;
         }
 
         StringBuilder content = new StringBuilder();
-        int size = properties.size() - 1;
+        int size = propertiesArray.size() - 1;
 
         for (int i = 0; i <= size; i++) {
-            Property property = properties.get(i);
+            Property property = propertiesArray.get(i);
 
-            content.append(locale.addressEndpointEndpointProperty(property.getName()));
+            String name = property.getProperty(Property.NAME);
 
-            if (i != size) {
-                content.append(", ");
+            if (name != null) {
+                content.append(locale.addressEndpointEndpointProperty(name));
+                content.append(i != size ? ", " : "");
             }
         }
 
-        this.properties.setProperty(content.toString());
+        properties.setProperty(content.toString());
     }
 
 }

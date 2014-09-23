@@ -127,7 +127,16 @@ public class Property extends AbstractEntityElement {
 
     /** @return copy of property element */
     public Property copy() {
-        return propertyProvider.get();
+        List<NameSpace> nameSpaces = copyList(getProperty(NAMESPACES));
+
+
+        Property property = propertyProvider.get();
+
+        property.putProperty(NAME, getProperty(NAME));
+        property.putProperty(EXPRESSION, getProperty(EXPRESSION));
+        property.putProperty(NAMESPACES, nameSpaces);
+
+        return property;
     }
 
 }

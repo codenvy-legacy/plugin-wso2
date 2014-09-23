@@ -280,8 +280,8 @@ public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send, 
         buildMessageBeforeSending.setValues(booleanValues);
         buildMessageBeforeSending.selectValue(String.valueOf(element.getProperty(BUILD_MESSAGE)));
 
-        String description = element.getProperty(DESCRIPTION);
-        this.description.setProperty(description != null ? description : "");
+        String descriptionValue = element.getProperty(DESCRIPTION);
+        description.setProperty(descriptionValue != null ? descriptionValue : "");
 
         String staticExpression = element.getProperty(STATIC_EXPRESSION);
         staticRec.setProperty(staticExpression != null ? staticExpression : "");

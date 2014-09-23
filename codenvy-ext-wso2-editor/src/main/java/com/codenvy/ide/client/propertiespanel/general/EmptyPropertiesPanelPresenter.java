@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.propertiespanel.general.empty;
+package com.codenvy.ide.client.propertiespanel.general;
 
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.google.inject.Inject;
 
 /**
@@ -26,10 +27,10 @@ import com.google.inject.Inject;
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
-public class EmptyPropertiesPanelPresenter extends AbstractPropertiesPanel<Element, EmptyPropertiesPanelView> {
+public class EmptyPropertiesPanelPresenter extends AbstractPropertiesPanel<Element, PropertiesPanelView> {
 
     @Inject
-    public EmptyPropertiesPanelPresenter(EmptyPropertiesPanelView view, PropertyTypeManager propertyTypeManager) {
+    public EmptyPropertiesPanelPresenter(PropertiesPanelView view, PropertyTypeManager propertyTypeManager) {
         super(view, propertyTypeManager);
     }
 

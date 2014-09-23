@@ -100,17 +100,19 @@ public class SwitchPropertiesPanelPresenter extends AbstractPropertiesPanel<Swit
             @Override
             public void onEditButtonClicked() {
                 List<NameSpace> nameSpaces = element.getProperty(NAMESPACES);
-                String sourceXPath = element.getProperty(SOURCE_XPATH);
+                String sourceXPathValue = element.getProperty(SOURCE_XPATH);
 
-                if (nameSpaces != null && sourceXPath != null) {
-                    nameSpaceEditorPresenter.showWindowWithParameters(nameSpaces,
-                                                                      addNameSpacesCallBack,
-                                                                      locale.switchXpathTitle(),
-                                                                      sourceXPath);
+                if (nameSpaces == null || sourceXPathValue == null) {
+                    return;
                 }
+                nameSpaceEditorPresenter.showWindowWithParameters(nameSpaces,
+                                                                  addNameSpacesCallBack,
+                                                                  locale.switchXpathTitle(),
+                                                                  sourceXPathValue);
+
             }
         });
-        basicGroup.addItem(this.sourceXPath);
+        basicGroup.addItem(sourceXPath);
     }
 
     /** {@inheritDoc} */

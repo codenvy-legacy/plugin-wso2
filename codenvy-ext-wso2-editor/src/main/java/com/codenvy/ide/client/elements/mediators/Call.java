@@ -117,30 +117,38 @@ public class Call extends AbstractElement {
 
         switch (endpointType) {
             case INLINE:
-                return content + ">\n" +
-                       '<' + ENDPOINT_PROPERTY_NAME + ">\n" +
-                       branches.get(0).serialize() +
-                       "</" + ENDPOINT_PROPERTY_NAME + ">\n" +
-                       "</" + SERIALIZATION_NAME + '>';
+                return serializeInlineParameter(content);
 
             case REGISTRYKEY:
                 return content + ">\n" +
                        '<' + ENDPOINT_PROPERTY_NAME + ' ' + KEY_ATTRIBUTE_NAME + "=\"" + getProperty(REGISTRY_KEY) + "\"/>\n" +
-                       "</call>";
+                       "</" + SERIALIZATION_NAME + '>';
 
             case XPATH:
-                List<NameSpace> nameSpaces = getProperty(NAMESPACES);
-                String serializedNameSpaces = convertNameSpaceToXMLFormat(nameSpaces);
-
-                return content + ">\n" +
-                       '<' + ENDPOINT_PROPERTY_NAME + ' ' + serializedNameSpaces +
-                       KEY_EXPRESSION_ATTRIBUTE_NAME + "=\"" + getProperty(X_PATH) + "\"/>\n" + "</" + SERIALIZATION_NAME + '>';
+                return serializeXPathParameter(content);
 
             case NONE:
 
             default:
                 return content + "/>";
         }
+    }
+
+    private String serializeXPathParameter(@Nonnull String content) {
+        List<NameSpace> nameSpaces = getProperty(NAMESPACES);
+        String serializedNameSpaces = convertNameSpaceToXMLFormat(nameSpaces);
+
+        return content + ">\n" +
+               '<' + ENDPOINT_PROPERTY_NAME + ' ' + serializedNameSpaces +
+               KEY_EXPRESSION_ATTRIBUTE_NAME + "=\"" + getProperty(X_PATH) + "\"/>\n" + "</" + SERIALIZATION_NAME + '>';
+    }
+
+    private String serializeInlineParameter(@Nonnull String content) {
+        return content + ">\n" +
+               '<' + ENDPOINT_PROPERTY_NAME + ">\n" +
+               branches.get(0).serialize() +
+               "</" + ENDPOINT_PROPERTY_NAME + ">\n" +
+               "</" + SERIALIZATION_NAME + '>';
     }
 
     /** {@inheritDoc} */

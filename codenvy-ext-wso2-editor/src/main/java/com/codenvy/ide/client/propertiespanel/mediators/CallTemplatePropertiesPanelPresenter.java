@@ -157,10 +157,10 @@ public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPane
         super.go(container);
 
         availableTemplates.setValues(propertyTypeManager.getValuesByName(AvailableTemplates.TYPE_NAME));
-        AvailableTemplates availableTemplates = element.getProperty(AVAILABLE_TEMPLATES);
+        AvailableTemplates availableTemplatesValue = element.getProperty(AVAILABLE_TEMPLATES);
 
-        if (availableTemplates != null) {
-            this.availableTemplates.selectValue(availableTemplates.name());
+        if (availableTemplatesValue != null) {
+            availableTemplates.selectValue(availableTemplatesValue.getValue());
         }
 
         targetTemplate.setProperty(element.getProperty(TARGET_TEMPLATES));

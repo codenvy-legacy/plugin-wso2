@@ -39,6 +39,12 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.EXPRESSION;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.NAME;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.SCOPE;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.TYPE;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.VALUE;
+
 /**
  * Provides a graphical representation of dialog window for editing property of address endpoint.
  *
@@ -106,33 +112,45 @@ public class PropertyViewImpl extends Window implements PropertyView {
 
         TextColumn<Property> name = new TextColumn<Property>() {
             @Override
-            public String getValue(Property object) {
-                return object.getName();
+            public String getValue(Property property) {
+                return property.getProperty(NAME);
             }
         };
 
         TextColumn<Property> value = new TextColumn<Property>() {
             @Override
-            public String getValue(Property object) {
-                if (ValueType.LITERAL.equals(object.getType())) {
-                    return object.getValue();
+            public String getValue(Property property) {
+                if (ValueType.LITERAL.equals(property.getProperty(TYPE))) {
+                    return property.getProperty(VALUE);
                 }
 
-                return object.getExpression();
+                return property.getProperty(EXPRESSION);
             }
         };
 
         TextColumn<Property> type = new TextColumn<Property>() {
             @Override
-            public String getValue(Property object) {
-                return object.getType().name();
+            public String getValue(Property property) {
+                ValueType type = property.getProperty(TYPE);
+
+                if (type == null) {
+                    return "";
+                }
+
+                return type.name();
             }
         };
 
         TextColumn<Property> scope = new TextColumn<Property>() {
             @Override
-            public String getValue(Property object) {
-                return object.getScope().getValue();
+            public String getValue(Property property) {
+                Property.Scope scope = property.getProperty(SCOPE);
+
+                if (scope == null) {
+                    return "";
+                }
+
+                return scope.getValue();
             }
         };
 

@@ -20,6 +20,7 @@ import com.google.gwt.xml.client.Node;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -48,7 +49,7 @@ public abstract class AbstractEntityElement {
      * @param <T>
      *         type of property
      */
-    public <T> void putProperty(@Nonnull Key<T> key, @Nonnull T value) {
+    public <T> void putProperty(@Nonnull Key<T> key, @Nullable T value) {
         //noinspection unchecked
         properties.put((Key<Object>)key, value);
     }
@@ -155,8 +156,13 @@ public abstract class AbstractEntityElement {
         /** {@inheritDoc} */
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof Key)) return false;
+            if (this == o) {
+                return true;
+            }
+
+            if (!(o instanceof Key)) {
+                return false;
+            }
 
             Key key = (Key)o;
             return name.equals(key.name);
@@ -200,6 +206,28 @@ public abstract class AbstractEntityElement {
      *         value of XML attribute
      */
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+    }
+
+    /**
+     * Returns copy of list. If list which we send to method is null, method return empty list. If list isn't null
+     * method returns copy of list.
+     *
+     * @param nameSpaces
+     *         list which need to copy
+     */
+    protected List<NameSpace> copyList(@Nullable List<NameSpace> nameSpaces) {
+
+        List<NameSpace> result = Collections.emptyList();
+
+        if (nameSpaces == null) {
+            return result;
+        }
+
+        for (NameSpace nameSpace : nameSpaces) {
+            result.add(nameSpace.copy());
+        }
+
+        return result;
     }
 
 }

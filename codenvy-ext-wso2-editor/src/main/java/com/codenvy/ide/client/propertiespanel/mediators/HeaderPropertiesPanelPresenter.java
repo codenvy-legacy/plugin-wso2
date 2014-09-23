@@ -310,21 +310,21 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
         Action headerAction = element.getProperty(ACTION);
 
         if (headerAction != null) {
-            this.action.selectValue(headerAction.getValue());
+            action.selectValue(headerAction.getValue());
         }
 
         scope.setValues(propertyTypeManager.getValuesByName(ScopeType.TYPE_NAME));
         ScopeType headerScope = element.getProperty(SCOPE);
 
         if (headerScope != null) {
-            this.scope.selectValue(headerScope.getValue());
+            scope.selectValue(headerScope.getValue());
         }
 
         valueType.setValues(propertyTypeManager.getValuesByName(HeaderValueType.TYPE_NAME));
         HeaderValueType headerValueType = element.getProperty(VALUE_TYPE);
 
         if (headerValueType != null) {
-            this.valueType.selectValue(headerValueType.name());
+            valueType.selectValue(headerValueType.name());
         }
 
         valueLiteral.setProperty(element.getProperty(VALUE_LITERAL));

@@ -39,6 +39,7 @@ import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.Filter.CONDITION_TYPE;
 import static com.codenvy.ide.client.elements.mediators.Filter.ConditionType;
+import static com.codenvy.ide.client.elements.mediators.Filter.ConditionType.XPATH;
 import static com.codenvy.ide.client.elements.mediators.Filter.REGULAR_EXPRESSION;
 import static com.codenvy.ide.client.elements.mediators.Filter.SOURCE;
 import static com.codenvy.ide.client.elements.mediators.Filter.SOURCE_NAMESPACE;
@@ -81,15 +82,15 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
     }
 
     private void prepareView(@Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                             @Nonnull ListPropertyPresenter conditionType,
+                             @Nonnull ListPropertyPresenter conditionTypePropertyPresenter,
                              @Nonnull Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                             @Nonnull SimplePropertyPresenter regularExpression) {
+                             @Nonnull SimplePropertyPresenter regularExpressionPropertyPresenter) {
         PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(local.miscGroupTitle());
         this.view.addGroup(basicGroup);
 
-        this.conditionType = conditionType;
-        this.conditionType.setTitle(local.conditionType());
-        this.conditionType.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        conditionType = conditionTypePropertyPresenter;
+        conditionType.setTitle(local.conditionType());
+        conditionType.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 redesignViewToConditionType(ConditionType.valueOf(property));
@@ -98,7 +99,7 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
             }
         });
 
-        basicGroup.addItem(this.conditionType);
+        basicGroup.addItem(conditionType);
 
         final AddNameSpacesCallBack addSourceNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
@@ -133,9 +134,9 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
 
         basicGroup.addItem(this.source);
 
-        this.regularExpression = regularExpression;
-        this.regularExpression.setTitle(local.regularExpression());
-        this.regularExpression.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        regularExpression = regularExpressionPropertyPresenter;
+        regularExpression.setTitle(local.regularExpression());
+        regularExpression.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(REGULAR_EXPRESSION, property);
@@ -144,7 +145,7 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
             }
         });
 
-        basicGroup.addItem(this.regularExpression);
+        basicGroup.addItem(regularExpression);
 
         final AddNameSpacesCallBack addXPathNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
@@ -184,27 +185,29 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
     private void redesignViewToConditionType(@Nonnull ConditionType conditionType) {
         element.putProperty(CONDITION_TYPE, conditionType);
 
-        switch (conditionType) {
-            case XPATH:
-                xPath.setProperty(element.getProperty(X_PATH));
-
-                source.setVisible(false);
-                regularExpression.setVisible(false);
-                xPath.setVisible(true);
-
-                break;
-
-            case SOURCE_AND_REGEX:
-            default:
-                source.setProperty(element.getProperty(SOURCE));
-                regularExpression.setProperty(element.getProperty(REGULAR_EXPRESSION));
-
-                source.setVisible(true);
-                regularExpression.setVisible(true);
-                xPath.setVisible(false);
+        if (XPATH.equals(conditionType)) {
+            redesignViewToXPathConditionType();
+        } else {
+            redesignViewToDefaultConditionType();
         }
     }
 
+    private void redesignViewToXPathConditionType() {
+        xPath.setProperty(element.getProperty(X_PATH));
+
+        source.setVisible(false);
+        regularExpression.setVisible(false);
+        xPath.setVisible(true);
+    }
+
+    private void redesignViewToDefaultConditionType() {
+        source.setProperty(element.getProperty(SOURCE));
+        regularExpression.setProperty(element.getProperty(REGULAR_EXPRESSION));
+
+        source.setVisible(true);
+        regularExpression.setVisible(true);
+        xPath.setVisible(false);
+    }
 
     /** {@inheritDoc} */
     @Override

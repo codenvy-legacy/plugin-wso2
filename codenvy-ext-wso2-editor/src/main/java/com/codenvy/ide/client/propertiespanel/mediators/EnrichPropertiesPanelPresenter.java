@@ -486,22 +486,22 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
         }
 
         InlineType inlineType = source.getProperty(SOURCE_INLINE_TYPE);
-        SourceType sourceType = source.getProperty(SOURCE_TYPE);
-        Boolean sourceClone = source.getProperty(SOURCE_CLONE);
-        TargetAction targetAction = target.getProperty(TARGET_ACTION);
-        TargetType targetType = target.getProperty(TARGET_TYPE);
+        SourceType sourceTypeValue = source.getProperty(SOURCE_TYPE);
+        Boolean sourceCloneValue = source.getProperty(SOURCE_CLONE);
+        TargetAction targetActionValue = target.getProperty(TARGET_ACTION);
+        TargetType targetTypeValue = target.getProperty(TARGET_TYPE);
 
-        if (inlineType == null || sourceType == null || targetAction == null || targetType == null || sourceClone == null) {
+        if (inlineType == null || sourceTypeValue == null || targetActionValue == null || targetTypeValue == null || sourceCloneValue == null) {
             return;
         }
 
         description.setProperty(element.getProperty(DESCRIPTION));
 
-        this.sourceClone.setValues(propertyTypeManager.getValuesByName(BOOLEAN_TYPE_NAME));
-        this.sourceClone.selectValue(sourceClone.toString());
+        sourceClone.setValues(propertyTypeManager.getValuesByName(BOOLEAN_TYPE_NAME));
+        sourceClone.selectValue(sourceCloneValue.toString());
 
-        this.sourceType.setValues(propertyTypeManager.getValuesByName(SourceType.TYPE_NAME));
-        this.sourceType.selectValue(sourceType.getValue());
+        sourceType.setValues(propertyTypeManager.getValuesByName(SourceType.TYPE_NAME));
+        sourceType.selectValue(sourceTypeValue.getValue());
 
         sourceProperty.setProperty(source.getProperty(SOURCE_PROPERTY));
 
@@ -514,17 +514,17 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
 
         sourceInlineRegistryKey.setProperty(source.getProperty(SOURCE_INLINE_REGISTER_KEY));
 
-        this.targetAction.setValues(propertyTypeManager.getValuesByName(TargetAction.TYPE_NAME));
-        this.targetAction.selectValue(targetAction.getValue());
+        targetAction.setValues(propertyTypeManager.getValuesByName(TargetAction.TYPE_NAME));
+        targetAction.selectValue(targetActionValue.getValue());
 
-        this.targetType.setValues(propertyTypeManager.getValuesByName(TargetType.TYPE_NAME));
-        this.targetType.selectValue(targetType.getValue());
+        targetType.setValues(propertyTypeManager.getValuesByName(TargetType.TYPE_NAME));
+        targetType.selectValue(targetTypeValue.getValue());
 
         targetProperty.setProperty(target.getProperty(TARGET_PROPERTY));
 
         targetXpath.setProperty(target.getProperty(TARGET_XPATH));
 
-        if (SourceType.INLINE.equals(sourceType)) {
+        if (SourceType.INLINE.equals(sourceTypeValue)) {
             applySourceInlineType();
         }
 

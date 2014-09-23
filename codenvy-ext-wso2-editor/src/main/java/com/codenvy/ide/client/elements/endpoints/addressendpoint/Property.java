@@ -19,7 +19,6 @@ import com.codenvy.ide.client.elements.AbstractEntityElement;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.ValueType;
 import com.codenvy.ide.util.StringUtils;
-import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -30,7 +29,6 @@ import java.util.List;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.Scope.DEFAULT;
-import static com.codenvy.ide.client.elements.mediators.ValueType.EXPRESSION;
 import static com.codenvy.ide.client.elements.mediators.ValueType.LITERAL;
 
 /**
@@ -46,6 +44,13 @@ public class Property extends AbstractEntityElement {
 
     public static final String SERIALIZE_NAME = "property";
 
+    public static final Key<String>          NAME       = new Key<>("EndPointPropertyName");
+    public static final Key<String>          VALUE      = new Key<>("EndPointPropertyValue");
+    public static final Key<String>          EXPRESSION = new Key<>("EndPointPropertyExpression");
+    public static final Key<ValueType>       TYPE       = new Key<>("EndPointPropertyType");
+    public static final Key<Scope>           SCOPE      = new Key<>("EndPointPropertyScope");
+    public static final Key<List<NameSpace>> NANESPACES = new Key<>("EndPointPropertyNamespaces");
+
     private static final String NAME_ATTRIBUTE       = "name";
     private static final String VALUE_ATTRIBUTE      = "value";
     private static final String EXPRESSION_ATTRIBUTE = "expression";
@@ -54,133 +59,33 @@ public class Property extends AbstractEntityElement {
     private final Provider<Property>  propertyProvider;
     private final Provider<NameSpace> nameSpaceProvider;
 
-    private String          name;
-    private String          value;
-    private String          expression;
-    private ValueType       type;
-    private Scope           scope;
-    private List<NameSpace> nameSpaces;
-
     @Inject
     public Property(Provider<Property> propertyProvider, Provider<NameSpace> nameSpaceProvider) {
         this.propertyProvider = propertyProvider;
         this.nameSpaceProvider = nameSpaceProvider;
 
-        name = "property_name";
-        value = "property_value";
-        expression = "/default/expression";
-        type = LITERAL;
-        scope = DEFAULT;
-        nameSpaces = Collections.emptyList();
+        putProperty(NAME, "property_name");
+        putProperty(VALUE, "property_value");
+        putProperty(EXPRESSION, "/default/expression");
+        putProperty(TYPE, LITERAL);
+        putProperty(SCOPE, DEFAULT);
+        putProperty(NANESPACES, Collections.<NameSpace>emptyList());
     }
 
-    /** @return name of property of address endpoint */
-    @Nonnull
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets name to property element of address endpoint.
-     *
-     * @param name
-     *         value that should be set
-     */
-    public void setName(@Nonnull String name) {
-        this.name = name;
-    }
-
-    /** @return value of property of address endpoint */
-    @Nonnull
-    public String getValue() {
-        return value;
-    }
-
-    /**
-     * Sets value to property element of address endpoint.
-     *
-     * @param value
-     *         value that should be set
-     */
-    public void setValue(@Nonnull String value) {
-        this.value = value;
-    }
-
-    /** @return expression of property of address endpoint */
-    @Nonnull
-    public String getExpression() {
-        return expression;
-    }
-
-    /**
-     * Sets expression to property element of address endpoint.
-     *
-     * @param expression
-     *         value that should be set
-     */
-    public void setExpression(@Nonnull String expression) {
-        this.expression = expression;
-    }
-
-    /** @return type of property of address endpoint */
-    @Nonnull
-    public ValueType getType() {
-        return type;
-    }
-
-    /**
-     * Sets type to property element of address endpoint.
-     *
-     * @param type
-     *         value that should be set
-     */
-    public void setType(@Nonnull ValueType type) {
-        this.type = type;
-    }
-
-    /** @return scope of property of address endpoint */
-    @Nonnull
-    public Scope getScope() {
-        return scope;
-    }
-
-    /**
-     * Sets scope to property element of address endpoint.
-     *
-     * @param scope
-     *         value that should be set
-     */
-    public void setScope(@Nonnull Scope scope) {
-        this.scope = scope;
-    }
-
-    /** @return list of name spaces of property of address endpoint */
-    @Nonnull
-    public List<NameSpace> getNameSpaces() {
-        return nameSpaces;
-    }
-
-    /**
-     * Sets list of name spaces to property element of address endpoint.
-     *
-     * @param nameSpaces
-     *         list that should be set
-     */
-    public void setNameSpaces(@Nonnull List<NameSpace> nameSpaces) {
-        this.nameSpaces = nameSpaces;
-    }
 
     /** @return copy of property */
     @Nonnull
     public Property copy() {
+        List<NameSpace> nameSpaces = getProperty(NANESPACES);
+
         Property property = propertyProvider.get();
 
-        property.setName(name);
-        property.setExpression(expression);
-        property.setValue(value);
-        property.setType(type);
-        property.setScope(scope);
-        property.setNameSpaces(nameSpaces);
+        property.putProperty(NAME, getProperty(NAME));
+        property.putProperty(VALUE, getProperty(VALUE));
+        property.putProperty(EXPRESSION, getProperty(EXPRESSION));
+        property.putProperty(TYPE, getProperty(TYPE));
+        property.putProperty(SCOPE, getProperty(SCOPE));
+        property.putProperty(NANESPACES, copyList(nameSpaces));
 
         return property;
     }
@@ -188,67 +93,77 @@ public class Property extends AbstractEntityElement {
     /** @return a serialize representation of Endpoint property */
     @Nonnull
     public String serialize() {
-        String startTag = '<' + SERIALIZE_NAME + ' ';
-        String nameAttr = NAME_ATTRIBUTE + "=\"" + name + "\" ";
-        String scope = (DEFAULT.equals(this.scope) ? "" : ' ' + SCOPE_ATTRIBUTE + "=\"" + this.scope.getValue() + '"');
+        Scope scope = getProperty(SCOPE);
 
-        if (LITERAL.equals(type)) {
-            return startTag + nameAttr +
-                   VALUE_ATTRIBUTE + "=\"" + value + '"' +
-                   scope + "/>\n";
+        if (scope == null) {
+            return "";
         }
 
-        return startTag + convertNameSpaceToXMLFormat(nameSpaces) + nameAttr +
-               EXPRESSION_ATTRIBUTE + "=\"" + expression + "\" " + scope + "/>\n";
+        String startTag = '<' + SERIALIZE_NAME + ' ';
+        String nameAttr = NAME_ATTRIBUTE + "=\"" + getProperty(NAME) + "\" ";
+        String scopeValue = (DEFAULT.equals(getProperty(SCOPE)) ? "" : ' ' + SCOPE_ATTRIBUTE + "=\"" + scope.getValue() + '"');
+
+        if (LITERAL.equals(getProperty(TYPE))) {
+            return startTag + nameAttr +
+                   VALUE_ATTRIBUTE + "=\"" + getProperty(VALUE) + '"' +
+                   scopeValue + "/>\n";
+        }
+
+        return startTag + convertNameSpaceToXMLFormat(getProperty(NANESPACES)) + nameAttr +
+               EXPRESSION_ATTRIBUTE + "=\"" + getProperty(EXPRESSION) + "\" " + scopeValue + "/>\n";
     }
 
     /**
-     * Apply attributes from XML node to the diagram element.
+     * Deserialize diagram element with all inner elements.
      *
      * @param node
-     *         XML node that need to be analyzed
+     *         XML node that need to be deserialized
      */
-    public void applyAttributes(@Nonnull Node node) {
-        NamedNodeMap attributeMap = node.getAttributes();
+    public void deserialize(@Nonnull Node node) {
+        readXMLAttributes(node);
+    }
 
-        for (int i = 0; i < attributeMap.getLength(); i++) {
-            Node attributeNode = attributeMap.item(i);
+    /** {@inheritDoc} */
+    @Override
+    protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        switch (attributeName) {
+            case NAME_ATTRIBUTE:
+                putProperty(NAME, attributeValue);
+                break;
 
-            String nodeName = attributeNode.getNodeName();
-            String nodeValue = attributeNode.getNodeValue();
+            case VALUE_ATTRIBUTE:
+                putProperty(VALUE, attributeValue);
+                putProperty(TYPE, LITERAL);
+                break;
 
-            switch (nodeName) {
-                case NAME_ATTRIBUTE:
-                    name = nodeValue;
-                    break;
+            case EXPRESSION_ATTRIBUTE:
+                putProperty(EXPRESSION, attributeValue);
+                putProperty(TYPE, ValueType.EXPRESSION);
+                break;
 
-                case VALUE_ATTRIBUTE:
-                    value = nodeValue;
-                    type = LITERAL;
-                    break;
+            case SCOPE_ATTRIBUTE:
+                putProperty(SCOPE, Scope.getItemByValue(attributeValue));
+                break;
 
-                case EXPRESSION_ATTRIBUTE:
-                    expression = nodeValue;
-                    type = EXPRESSION;
-                    break;
-
-                case SCOPE_ATTRIBUTE:
-                    scope = Scope.getItemByValue(nodeValue);
-                    break;
-
-                default:
-                    if (StringUtils.startsWith(PREFIX, nodeName, true)) {
-                        String name = StringUtils.trimStart(nodeName, PREFIX + ':');
-
-                        NameSpace nameSpace = nameSpaceProvider.get();
-
-                        nameSpace.setPrefix(name);
-                        nameSpace.setUri(nodeValue);
-
-                        nameSpaces.add(nameSpace);
-                    }
-            }
+            default:
+                applyNameSpaces(attributeName, attributeValue);
         }
+    }
+
+    private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        List<NameSpace> nameSpaces = getProperty(NANESPACES);
+        if (!StringUtils.startsWith(PREFIX, attributeName, true) || nameSpaces == null) {
+            return;
+        }
+
+        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
+
+        NameSpace nameSpace = nameSpaceProvider.get();
+
+        nameSpace.setPrefix(name);
+        nameSpace.setUri(attributeValue);
+
+        nameSpaces.add(nameSpace);
     }
 
     public enum Scope {
@@ -280,7 +195,6 @@ public class Property extends AbstractEntityElement {
                     return AXIS2_CLIENT;
 
                 default:
-                case "default":
                     return DEFAULT;
             }
         }

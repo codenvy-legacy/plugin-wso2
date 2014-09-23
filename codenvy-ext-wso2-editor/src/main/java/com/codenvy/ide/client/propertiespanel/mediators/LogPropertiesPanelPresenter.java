@@ -172,17 +172,17 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log, Pr
         super.go(container);
 
         category.setValues(propertyTypeManager.getValuesByName(LogCategory.TYPE_NAME));
-        LogCategory category = element.getProperty(LOG_CATEGORY);
+        LogCategory categoryValue = element.getProperty(LOG_CATEGORY);
 
-        if (category != null) {
-            this.category.selectValue(category.name());
+        if (categoryValue != null) {
+            category.selectValue(categoryValue.name());
         }
 
         level.setValues(propertyTypeManager.getValuesByName(LogLevel.TYPE_NAME));
-        LogLevel level = element.getProperty(LOG_LEVEL);
+        LogLevel levelValue = element.getProperty(LOG_LEVEL);
 
-        if (level != null) {
-            this.level.selectValue(level.name());
+        if (levelValue != null) {
+            level.selectValue(levelValue.name());
         }
 
         separator.setProperty(element.getProperty(LOG_SEPARATOR));
@@ -200,7 +200,7 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log, Pr
      */
     private void showProperties(@Nullable List<Property> properties) {
         if (properties == null) {
-            this.logProperties.setProperty("");
+            logProperties.setProperty("");
             return;
         }
 
@@ -211,13 +211,10 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log, Pr
             Property property = properties.get(i);
 
             content.append(property.getProperty(NAME));
-
-            if (i != size) {
-                content.append(", ");
-            }
+            content.append(i != size ? ", " : "");
         }
 
-        this.logProperties.setProperty(content.toString());
+        logProperties.setProperty(content.toString());
     }
 
 }

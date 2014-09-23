@@ -40,6 +40,9 @@ public class RootElement extends AbstractElement {
     public static final String ELEMENT_NAME       = "RootElement";
     public static final String SERIALIZATION_NAME = "sequence";
 
+    public static final Key<String> NAME     = new Key<>("RootElementName");
+    public static final Key<String> ON_ERROR = new Key<>("RootElementOnError");
+
     private static final String NAME_SPACE_ATTRIBUTE = " xmlns=\"http://ws.apache.org/ns/synapse\" ";
     private static final String XML_HEADER           = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 
@@ -48,47 +51,12 @@ public class RootElement extends AbstractElement {
 
     private static final List<String> PROPERTIES = Collections.emptyList();
 
-    private String name;
-    private String onError;
-
     @Inject
     public RootElement(Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
         super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, false, null, branchProvider, elementCreatorsManager);
 
-        this.name = "";
-        this.onError = "";
-    }
-
-    /** @return name of root element */
-    @Nonnull
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets name to root element
-     *
-     * @param name
-     *         value which need to set to element
-     */
-    public void setName(@Nonnull String name) {
-        this.name = name;
-    }
-
-    /** @return error value of root element */
-    @Nonnull
-    public String getOnError() {
-        return onError;
-    }
-
-    /**
-     * Sets value of error to element
-     *
-     * @param onError
-     *         value which need to set to element
-     */
-    public void setOnError(@Nonnull String onError) {
-        this.onError = onError;
+        putProperty(NAME, "");
+        putProperty(ON_ERROR, "");
     }
 
     /** {@inheritDoc} */
@@ -110,11 +78,11 @@ public class RootElement extends AbstractElement {
     @Override
     protected String serializeAttributes() {
         Map<String, String> attributes = new LinkedHashMap<>();
-        attributes.put(ON_ERROR_ATTRIBUTE_NAME, onError);
+        attributes.put(ON_ERROR_ATTRIBUTE_NAME, getProperty(ON_ERROR));
 
         String onErrorAttribute = convertAttributesToXMLFormat(attributes);
 
-        return NAME_ATTRIBUTE_NAME + "=\"" + name + "\"" + (onErrorAttribute.isEmpty() ? "" : ' ' + onErrorAttribute);
+        return NAME_ATTRIBUTE_NAME + "=\"" + getProperty(NAME) + "\"" + (onErrorAttribute.isEmpty() ? "" : ' ' + onErrorAttribute);
     }
 
     /** {@inheritDoc} */
@@ -122,11 +90,11 @@ public class RootElement extends AbstractElement {
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
         switch (attributeName) {
             case NAME_ATTRIBUTE_NAME:
-                name = attributeValue;
+                putProperty(NAME, attributeValue);
                 break;
 
             case ON_ERROR_ATTRIBUTE_NAME:
-                onError = attributeValue;
+                putProperty(ON_ERROR, attributeValue);
                 break;
 
             default:

@@ -18,8 +18,8 @@ package com.codenvy.ide.client.initializers.propertiespanel;
 
 import com.codenvy.ide.client.elements.RootElement;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
-import com.codenvy.ide.client.propertiespanel.general.empty.EmptyPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.general.root.RootPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.general.EmptyPropertiesPanelPresenter;
+import com.codenvy.ide.client.propertiespanel.general.RootPropertiesPanelPresenter;
 import com.google.inject.Inject;
 
 /**

@@ -34,7 +34,8 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion.FINAL;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.LEAVE_AS_IS;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction.never;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction.NEVER;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.SERIALIZE_NAME;
 
 /**
  * The class which describes state of Address endpoint and also has methods for changing it. Also the class contains the business logic
@@ -161,7 +162,7 @@ public class AddressEndpoint extends AbstractElement {
         putProperty(ADDRESSING_SEPARATE_LISTENER, false);
 
         putProperty(TIMEOUT_DURATION, 0);
-        putProperty(TIMEOUT_ACTION, never);
+        putProperty(TIMEOUT_ACTION, NEVER);
     }
 
     /** {@inheritDoc} */
@@ -175,13 +176,13 @@ public class AddressEndpoint extends AbstractElement {
         Format format = getProperty(FORMAT);
 
         if (format != null && !LEAVE_AS_IS.equals(format)) {
-            attributes.put(FORMAT_ATTRIBUTE, format.name());
+            attributes.put(FORMAT_ATTRIBUTE, format.getValue());
         }
 
         Optimize optimize = getProperty(OPTIMIZE);
 
         if (optimize != null && !Optimize.LEAVE_AS_IS.equals(optimize)) {
-            attributes.put(OPTIMIZE_ATTRIBUTE, optimize.name());
+            attributes.put(OPTIMIZE_ATTRIBUTE, optimize.getValue());
         }
 
         return convertAttributesToXMLFormat(attributes);
@@ -223,9 +224,9 @@ public class AddressEndpoint extends AbstractElement {
 
         if (timeoutDuration != null && timeoutAction != null) {
             value = convertNumberValueToXMLAttribute(timeoutDuration, 1, DURATION_PROPERTY) +
-                    (never.equals(timeoutAction) ?
+                    (NEVER.equals(timeoutAction) ?
                      "" :
-                     convertStringValueToXMLAttribute(timeoutAction.name(), ACTION_PROPERTY));
+                     convertStringValueToXMLAttribute(timeoutAction.getValue(), ACTION_PROPERTY));
 
             content += convertStringValueToXMLAttribute(value, TIMEOUT_PROPERTY);
         }
@@ -340,11 +341,11 @@ public class AddressEndpoint extends AbstractElement {
                 break;
 
             case FORMAT_ATTRIBUTE:
-                putProperty(FORMAT, Format.valueOf(attributeValue));
+                putProperty(FORMAT, Format.getItemByValue(attributeValue));
                 break;
 
             case OPTIMIZE_ATTRIBUTE:
-                putProperty(OPTIMIZE, Optimize.valueOf(attributeValue));
+                putProperty(OPTIMIZE, Optimize.getItemByValue(attributeValue));
                 break;
 
             default:
@@ -361,15 +362,8 @@ public class AddressEndpoint extends AbstractElement {
                 applyElementProperty(node);
                 break;
 
-            case Property.SERIALIZE_NAME:
-                Property property = propertyProvider.get();
-                property.applyAttributes(node);
-
-                List<Property> properties = getProperty(PROPERTIES);
-
-                if (properties != null) {
-                    properties.add(property);
-                }
+            case SERIALIZE_NAME:
+                applySerializeNameProperty(node);
                 break;
 
             case DESCRIPTION_PROPERTY:
@@ -377,6 +371,17 @@ public class AddressEndpoint extends AbstractElement {
                 break;
 
             default:
+        }
+    }
+
+    private void applySerializeNameProperty(@Nonnull Node node) {
+        Property property = propertyProvider.get();
+        property.deserialize(node);
+
+        List<Property> properties = getProperty(PROPERTIES);
+
+        if (properties != null) {
+            properties.add(property);
         }
     }
 
@@ -400,27 +405,13 @@ public class AddressEndpoint extends AbstractElement {
                     applyAddressingProperties(item);
                     break;
 
-                case ENABLE_RM_PROPERTY: {
-                    putProperty(RELIABLE_MESSAGING_ENABLED, true);
+                case ENABLE_RM_PROPERTY:
+                    applyEnableRmProperty(node);
+                    break;
 
-                    if (node.hasAttributes()) {
-                        Node attributeNode = node.getAttributes().item(0);
-
-                        putProperty(RELIABLE_MESSAGING_POLICY, attributeNode.getNodeValue());
-                    }
-                }
-                break;
-
-                case ENABLE_SEC_PROPERTY: {
-                    putProperty(SECURITY_ENABLED, true);
-
-                    if (node.hasAttributes()) {
-                        Node attributeNode = node.getAttributes().item(0);
-
-                        putProperty(SECURITY_POLICY, attributeNode.getNodeValue());
-                    }
-                }
-                break;
+                case ENABLE_SEC_PROPERTY:
+                    applyEnableSecProperty(node);
+                    break;
 
                 case TIMEOUT_PROPERTY:
                     applyTimeoutProperties(item);
@@ -436,6 +427,26 @@ public class AddressEndpoint extends AbstractElement {
 
                 default:
             }
+        }
+    }
+
+    private void applyEnableRmProperty(@Nonnull Node node) {
+        putProperty(RELIABLE_MESSAGING_ENABLED, true);
+
+        if (node.hasAttributes()) {
+            Node attributeNode = node.getAttributes().item(0);
+
+            putProperty(RELIABLE_MESSAGING_POLICY, attributeNode.getNodeValue());
+        }
+    }
+
+    private void applyEnableSecProperty(@Nonnull Node node) {
+        putProperty(SECURITY_ENABLED, true);
+
+        if (node.hasAttributes()) {
+            Node attributeNode = node.getAttributes().item(0);
+
+            putProperty(SECURITY_POLICY, attributeNode.getNodeValue());
         }
     }
 
@@ -485,16 +496,10 @@ public class AddressEndpoint extends AbstractElement {
             String propertyName = item.getNodeName();
             String propertyValue = item.getChildNodes().item(0).getNodeValue();
 
-            switch (propertyName) {
-                case DURATION_PROPERTY:
-                    putProperty(TIMEOUT_DURATION, Integer.valueOf(propertyValue));
-                    break;
-
-                case ACTION_PROPERTY:
-                    putProperty(TIMEOUT_ACTION, TimeoutAction.valueOf(propertyValue));
-                    break;
-
-                default:
+            if (DURATION_PROPERTY.equals(propertyName)) {
+                putProperty(TIMEOUT_DURATION, Integer.valueOf(propertyValue));
+            } else {
+                putProperty(TIMEOUT_ACTION, TimeoutAction.getItemByValue(propertyValue));
             }
         }
     }
@@ -570,15 +575,74 @@ public class AddressEndpoint extends AbstractElement {
     }
 
     public enum Format {
-        LEAVE_AS_IS, soap11, soap12, pox, get, REST;
+        LEAVE_AS_IS("LEAVE_AS_IS"), SOUP11("soap11"), SOUP12("soap12"), POX("pox"), GET("get"), REST("REST");
 
         public static final String TYPE_NAME = "AddressEndpointFormat";
+
+        private final String value;
+
+        Format(@Nonnull String value) {
+            this.value = value;
+        }
+
+        @Nonnull
+        public String getValue() {
+            return value;
+        }
+
+        @Nonnull
+        public static Format getItemByValue(String value) {
+            switch (value) {
+                case "LEAVE_AS_IS":
+                    return LEAVE_AS_IS;
+
+                case "soap11":
+                    return SOUP11;
+
+                case "soap12":
+                    return SOUP12;
+
+                case "pox":
+                    return POX;
+
+                case "get":
+                    return GET;
+
+                default:
+                    return REST;
+            }
+        }
     }
 
     public enum Optimize {
-        LEAVE_AS_IS, mtom, swa;
+        LEAVE_AS_IS("LEAVE_AS_IS"), MTOM("mtom"), SWA("swa");
 
         public static final String TYPE_NAME = "Optimize";
+
+        private final String value;
+
+        Optimize(@Nonnull String value) {
+            this.value = value;
+        }
+
+        @Nonnull
+        public String getValue() {
+            return value;
+        }
+
+        @Nonnull
+        public static Optimize getItemByValue(String value) {
+            switch (value) {
+                case "LEAVE_AS_IS":
+                    return LEAVE_AS_IS;
+
+                case "mtom":
+                    return MTOM;
+
+                default:
+                    return SWA;
+            }
+        }
     }
 
     public enum AddressingVersion {
@@ -599,22 +663,44 @@ public class AddressEndpoint extends AbstractElement {
 
         @Nonnull
         public static AddressingVersion getItemByValue(@Nonnull String value) {
-            switch (value) {
-                case "submission":
-                    return SUBMISSION;
-
-                case "final":
-                default:
-                    return FINAL;
+            if ("submission".equals(value)) {
+                return SUBMISSION;
+            } else {
+                return FINAL;
             }
         }
 
     }
 
     public enum TimeoutAction {
-        never, discard, fault;
+        NEVER("never"), DISCARD("discard"), FAULT("fault");
 
         public static final String TYPE_NAME = "TimeoutAction";
+
+        private final String value;
+
+        TimeoutAction(@Nonnull String value) {
+            this.value = value;
+        }
+
+        @Nonnull
+        public String getValue() {
+            return value;
+        }
+
+        @Nonnull
+        public static TimeoutAction getItemByValue(String value) {
+            switch (value) {
+                case "never":
+                    return NEVER;
+
+                case "discard":
+                    return DISCARD;
+
+                default:
+                    return FAULT;
+            }
+        }
     }
 
 }

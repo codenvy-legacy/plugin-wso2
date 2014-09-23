@@ -143,7 +143,7 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
                              @Nonnull Provider<ListPropertyPresenter> listPropertyPresenterProvider,
                              @Nonnull Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider) {
 
-        PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.enrichGroupMisc());
+        PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
         view.addGroup(basicGroup);
 
         payloadFormat = listPropertyPresenterProvider.get();
@@ -234,8 +234,10 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
 
     }
 
-    /** Sets payload format value to element from special place of view and displaying properties panel to a certain value of payload
-     * format */
+    /**
+     * Sets payload format value to element from special place of view and displaying properties panel to a certain value of payload
+     * format
+     */
     private void applyPayloadFormat() {
         FormatType payloadFormat = format.getProperty(FORMAT_TYPE);
 
@@ -272,10 +274,10 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
         mediaType.setValues(propertyTypeManager.getValuesByName(MediaType.TYPE_NAME));
         mediaType.selectValue(formatMediaType.getValue());
 
-        List<Arg> args = element.getProperty(ARGS);
+        List<Arg> argsArray = element.getProperty(ARGS);
 
-        if (args != null && !args.isEmpty()) {
-            this.args.setProperty(locale.payloadFactoryArguments());
+        if (argsArray != null && !argsArray.isEmpty()) {
+            args.setProperty(locale.payloadFactoryArguments());
         }
 
         description.setProperty(element.getProperty(DESCRIPTION));

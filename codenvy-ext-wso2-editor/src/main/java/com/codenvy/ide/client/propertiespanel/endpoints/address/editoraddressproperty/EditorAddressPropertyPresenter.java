@@ -26,10 +26,14 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.NAME;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.NANESPACES;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.SCOPE;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.Scope;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.TYPE;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.VALUE;
 import static com.codenvy.ide.client.elements.mediators.ValueType.EXPRESSION;
 
 /**
@@ -66,8 +70,8 @@ public class EditorAddressPropertyPresenter implements EditorAddressPropertyView
         this.nameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
             public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                selectedProperty.setNameSpaces(nameSpaces);
-                selectedProperty.setExpression(expression);
+                selectedProperty.putProperty(NANESPACES, nameSpaces);
+                selectedProperty.putProperty(Property.EXPRESSION, expression);
             }
         };
     }
@@ -75,10 +79,10 @@ public class EditorAddressPropertyPresenter implements EditorAddressPropertyView
     /** {@inheritDoc} */
     @Override
     public void onOkButtonClicked() {
-        selectedProperty.setName(view.getName());
-        selectedProperty.setValue(view.getValue());
-        selectedProperty.setScope(Scope.getItemByValue(view.getScope()));
-        selectedProperty.setType(ValueType.valueOf(view.getType()));
+        selectedProperty.putProperty(NAME, view.getName());
+        selectedProperty.putProperty(VALUE, view.getValue());
+        selectedProperty.putProperty(SCOPE, Scope.getItemByValue(view.getScope()));
+        selectedProperty.putProperty(TYPE, ValueType.valueOf(view.getType()));
 
         callBack.onAddressPropertyChanged(selectedProperty);
     }
@@ -94,7 +98,7 @@ public class EditorAddressPropertyPresenter implements EditorAddressPropertyView
     public void onValueTypeChanged() {
         ValueType type = ValueType.valueOf(view.getType());
 
-        selectedProperty.setType(type);
+        selectedProperty.putProperty(TYPE, type);
 
         boolean isVisible = EXPRESSION.equals(type);
 
@@ -105,16 +109,22 @@ public class EditorAddressPropertyPresenter implements EditorAddressPropertyView
     /** {@inheritDoc} */
     @Override
     public void onValueScopeChanged() {
-        selectedProperty.setScope(Scope.getItemByValue(view.getScope()));
+        selectedProperty.putProperty(SCOPE, Scope.getItemByValue(view.getScope()));
     }
 
     /** {@inheritDoc} */
     @Override
     public void onAddNameSpaceBtnClicked() {
-        nameSpacePresenter.showWindowWithParameters(selectedProperty.getNameSpaces(),
+        List<NameSpace> nameSpaces = selectedProperty.getProperty(NANESPACES);
+
+        if (nameSpaces == null) {
+            return;
+        }
+
+        nameSpacePresenter.showWindowWithParameters(nameSpaces,
                                                     nameSpacesCallBack,
                                                     local.headerValueExpression(),
-                                                    selectedProperty.getExpression());
+                                                    selectedProperty.getProperty(Property.EXPRESSION));
     }
 
     /** Hides dialog window for editing properties. */
@@ -135,15 +145,24 @@ public class EditorAddressPropertyPresenter implements EditorAddressPropertyView
 
         selectedProperty = property == null ? propertyProvider.get() : property.copy();
 
-        boolean isVisible = EXPRESSION.equals(selectedProperty.getType());
+        boolean isVisible = EXPRESSION.equals(selectedProperty.getProperty(TYPE));
 
         view.setTextBoxEnable(!isVisible);
         view.setNameSpaceBtnVisible(isVisible);
 
-        view.setName(selectedProperty.getName());
-        view.setValue(selectedProperty.getValue());
-        view.selectScope(selectedProperty.getScope().getValue());
-        view.selectType(selectedProperty.getType().name());
+        String name = selectedProperty.getProperty(NAME);
+        String value = selectedProperty.getProperty(VALUE);
+        Scope scope = selectedProperty.getProperty(SCOPE);
+        ValueType type = selectedProperty.getProperty(TYPE);
+
+        if (name == null || value == null || scope == null || type == null) {
+            return;
+        }
+
+        view.setName(name);
+        view.setValue(value);
+        view.selectScope(scope.getValue());
+        view.selectType(type.name());
 
         view.showWindow();
     }
