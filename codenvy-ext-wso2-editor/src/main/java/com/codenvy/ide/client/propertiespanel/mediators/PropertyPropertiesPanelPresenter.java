@@ -31,13 +31,13 @@ import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPr
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.Property.DESCRIPTION;
 import static com.codenvy.ide.client.elements.mediators.Property.DataType;
@@ -177,7 +177,7 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
 
         final AddNameSpacesCallBack addNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nullable String expression) {
                 element.putProperty(NAMESPACES, nameSpaces);
                 element.putProperty(VALUE_EXPRESSION, expression != null ? expression : "");
 
@@ -192,7 +192,7 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
         this.valueExpression.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
-                Array<NameSpace> nameSpaces = element.getProperty(NAMESPACES);
+                List<NameSpace> nameSpaces = element.getProperty(NAMESPACES);
                 String vExpression = element.getProperty(VALUE_EXPRESSION);
 
                 if (vExpression == null || nameSpaces == null) {

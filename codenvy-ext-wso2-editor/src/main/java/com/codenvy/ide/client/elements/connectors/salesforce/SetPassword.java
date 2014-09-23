@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes SetPassword connector for Salesforce group connectors. Also the class contains the business logic
@@ -53,12 +52,12 @@ public class SetPassword extends AbstractConnector {
 
     private static final List<String> PROPERTIES = Arrays.asList(USERNAME, PASSWORD);
 
-    private String           username;
-    private String           password;
-    private String           usernameInline;
-    private String           passwordInline;
-    private Array<NameSpace> passwordNameSpaces;
-    private Array<NameSpace> usernameNameSpaces;
+    private String          username;
+    private String          password;
+    private String          usernameInline;
+    private String          passwordInline;
+    private List<NameSpace> passwordNameSpaces;
+    private List<NameSpace> usernameNameSpaces;
 
     @Inject
     public SetPassword(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -77,8 +76,8 @@ public class SetPassword extends AbstractConnector {
         usernameInline = "";
         passwordInline = "";
 
-        usernameNameSpaces = createArray();
-        passwordNameSpaces = createArray();
+        usernameNameSpaces = emptyList();
+        passwordNameSpaces = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -158,20 +157,20 @@ public class SetPassword extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getUsernameNameSpaces() {
+    public List<NameSpace> getUsernameNameSpaces() {
         return usernameNameSpaces;
     }
 
-    public void setUsernameNameSpaces(@Nonnull Array<NameSpace> usernameNameSpaces) {
+    public void setUsernameNameSpaces(@Nonnull List<NameSpace> usernameNameSpaces) {
         this.usernameNameSpaces = usernameNameSpaces;
     }
 
     @Nonnull
-    public Array<NameSpace> getPasswordNameSpaces() {
+    public List<NameSpace> getPasswordNameSpaces() {
         return passwordNameSpaces;
     }
 
-    public void setPasswordNameSpaces(@Nonnull Array<NameSpace> passwordNameSpaces) {
+    public void setPasswordNameSpaces(@Nonnull List<NameSpace> passwordNameSpaces) {
         this.passwordNameSpaces = passwordNameSpaces;
     }
 }

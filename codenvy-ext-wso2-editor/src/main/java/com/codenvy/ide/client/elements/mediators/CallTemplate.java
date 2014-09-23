@@ -20,14 +20,13 @@ import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.mediators.log.Property;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +48,7 @@ public class CallTemplate extends AbstractElement {
     public static final Key<AvailableTemplates> AVAILABLE_TEMPLATES = new Key<>("AvailableTemplates");
     public static final Key<String>             TARGET_TEMPLATES    = new Key<>("TargetTemplates");
     public static final Key<String>             DESCRIPTION         = new Key<>("CallTemplateDescription");
-    public static final Key<Array<Property>>    PARAMETERS          = new Key<>("CallTemplateParameters");
+    public static final Key<List<Property>>     PARAMETERS          = new Key<>("CallTemplateParameters");
 
     private static final String TARGET_ATTRIBUTE_NAME      = "target";
     private static final String DESCRIPTION_ATTRIBUTE_NAME = "description";
@@ -80,7 +79,7 @@ public class CallTemplate extends AbstractElement {
         putProperty(AVAILABLE_TEMPLATES, AvailableTemplates.EMPTY);
         putProperty(TARGET_TEMPLATES, "");
         putProperty(DESCRIPTION, "");
-        putProperty(PARAMETERS, Collections.<Property>createArray());
+        putProperty(PARAMETERS, Collections.<Property>emptyList());
     }
 
     /** {@inheritDoc} */
@@ -99,7 +98,7 @@ public class CallTemplate extends AbstractElement {
     @Nonnull
     @Override
     protected String serializeProperties() {
-        Array<Property> parameters = getProperty(PARAMETERS);
+        List<Property> parameters = getProperty(PARAMETERS);
 
         if (parameters == null) {
             return "";
@@ -107,7 +106,7 @@ public class CallTemplate extends AbstractElement {
 
         StringBuilder result = new StringBuilder();
 
-        for (Property property : parameters.asIterable()) {
+        for (Property property : parameters) {
             result.append(property.serializeWithParam());
         }
 
@@ -120,7 +119,7 @@ public class CallTemplate extends AbstractElement {
         Property property = propertyProvider.get();
         property.applyAttributes(node);
 
-        Array<Property> parameters = getProperty(PARAMETERS);
+        List<Property> parameters = getProperty(PARAMETERS);
         if (parameters != null) {
             parameters.add(property);
         }

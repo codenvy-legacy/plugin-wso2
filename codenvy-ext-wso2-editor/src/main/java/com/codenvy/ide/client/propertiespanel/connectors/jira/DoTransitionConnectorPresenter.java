@@ -25,11 +25,11 @@ import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpace
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
@@ -39,6 +39,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * depending on user's changes of properties.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class DoTransitionConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<DoTransition> {
 
@@ -65,7 +66,7 @@ public class DoTransitionConnectorPresenter extends AbstractConnectorPropertiesP
 
         this.issueIdOrKeyCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setIssieIOrKeyNS(nameSpaces);
                 element.setIssueIdOrKeyExpression(expression);
 
@@ -77,7 +78,7 @@ public class DoTransitionConnectorPresenter extends AbstractConnectorPropertiesP
 
         this.updateCommentCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setUpdateCommentNS(nameSpaces);
                 element.setUpdateCommentExpression(expression);
 
@@ -89,7 +90,7 @@ public class DoTransitionConnectorPresenter extends AbstractConnectorPropertiesP
 
         this.updateAssigneeCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setUpdateAssigneeNS(nameSpaces);
                 element.setUpdateAssigneeExpression(expression);
 
@@ -101,7 +102,7 @@ public class DoTransitionConnectorPresenter extends AbstractConnectorPropertiesP
 
         this.resolutionCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setResolutionNS(nameSpaces);
                 element.setResolutionExpression(expression);
 
@@ -113,7 +114,7 @@ public class DoTransitionConnectorPresenter extends AbstractConnectorPropertiesP
 
         this.transitionIdCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setTransitionIdNS(nameSpaces);
                 element.setTransitionIdExpression(expression);
 

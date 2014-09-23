@@ -17,16 +17,17 @@ package com.codenvy.ide.client.propertiespanel.endpoints.address.property;
 
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.client.elements.endpoints.addressendpoint.Property;
-import com.codenvy.ide.collections.Array;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * The abstract view's representation of the graphical part that provides an ability to show and edit 'Properties' property of 'Address'
  * endpoint.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 @ImplementedBy(PropertyViewImpl.class)
 public interface PropertyView extends View<PropertyView.ActionDelegate> {
@@ -37,7 +38,7 @@ public interface PropertyView extends View<PropertyView.ActionDelegate> {
      * @param properties
      *         list which need to be set
      */
-    void setProperties(@Nonnull Array<Property> properties);
+    void setProperties(@Nonnull List<Property> properties);
 
     /** Displays the view. */
     void showDialog();

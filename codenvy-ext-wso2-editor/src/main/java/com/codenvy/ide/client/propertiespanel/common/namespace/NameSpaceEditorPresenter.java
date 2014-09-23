@@ -17,13 +17,13 @@ package com.codenvy.ide.client.propertiespanel.common.namespace;
 
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * The presenter that provides a business logic of dialog window for editing name spaces of property.
@@ -38,7 +38,7 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
     private final Provider<NameSpace> nameSpaceProvider;
 
     private NameSpace             selectedNameSpace;
-    private Array<NameSpace>      nameSpacesTemporary;
+    private List<NameSpace>       nameSpacesTemporary;
     private AddNameSpacesCallBack callBack;
     private int                   index;
 
@@ -59,11 +59,11 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
      * @param callBack
      *         callback that needs to be handled when namespace editing is successful
      */
-    public void showDefaultWindow(@Nonnull Array<NameSpace> nameSpaces, @Nonnull AddNameSpacesCallBack callBack) {
-        nameSpacesTemporary = Collections.createArray();
+    public void showDefaultWindow(@Nonnull List<NameSpace> nameSpaces, @Nonnull AddNameSpacesCallBack callBack) {
+        nameSpacesTemporary = Collections.emptyList();
         this.callBack = callBack;
 
-        for (NameSpace nameSpace : nameSpaces.asIterable()) {
+        for (NameSpace nameSpace : nameSpaces) {
             nameSpacesTemporary.add(nameSpace.copy());
         }
 
@@ -86,7 +86,7 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
      * @param expression
      *         expression value for current element
      */
-    public void showWindowWithParameters(@Nonnull Array<NameSpace> nameSpaces,
+    public void showWindowWithParameters(@Nonnull List<NameSpace> nameSpaces,
                                          @Nonnull AddNameSpacesCallBack callBack,
                                          @Nonnull String labelName,
                                          @Nullable String expression) {

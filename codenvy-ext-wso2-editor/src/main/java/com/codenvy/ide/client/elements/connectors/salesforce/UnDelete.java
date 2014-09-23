@@ -20,8 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes Undelete connector for Salesforce group connectors. Also the class contains the business logic
@@ -52,12 +51,12 @@ public class UnDelete extends AbstractConnector {
 
     private static final List<String> PROPERTIES = Arrays.asList(ALL_OR_NONE, SUBJECTS);
 
-    private String           allOrNone;
-    private String           subject;
-    private String           allOrNoneExpr;
-    private String           subjectExpression;
-    private Array<NameSpace> allOrNoneNameSpaces;
-    private Array<NameSpace> subjectsNameSpaces;
+    private String          allOrNone;
+    private String          subject;
+    private String          allOrNoneExpr;
+    private String          subjectExpression;
+    private List<NameSpace> allOrNoneNameSpaces;
+    private List<NameSpace> subjectsNameSpaces;
 
     @Inject
     public UnDelete(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -76,8 +75,8 @@ public class UnDelete extends AbstractConnector {
         allOrNoneExpr = "";
         subjectExpression = "";
 
-        allOrNoneNameSpaces = Collections.createArray();
-        subjectsNameSpaces = Collections.createArray();
+        allOrNoneNameSpaces = emptyList();
+        subjectsNameSpaces = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -141,20 +140,20 @@ public class UnDelete extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getAllOrNoneNameSpaces() {
+    public List<NameSpace> getAllOrNoneNameSpaces() {
         return allOrNoneNameSpaces;
     }
 
-    public void setAllOrNoneNameSpaces(@Nonnull Array<NameSpace> allOrNoneNameSpaces) {
+    public void setAllOrNoneNameSpaces(@Nonnull List<NameSpace> allOrNoneNameSpaces) {
         this.allOrNoneNameSpaces = allOrNoneNameSpaces;
     }
 
     @Nonnull
-    public Array<NameSpace> getSubjectsNameSpaces() {
+    public List<NameSpace> getSubjectsNameSpaces() {
         return subjectsNameSpaces;
     }
 
-    public void setSubjectsNameSpaces(@Nonnull Array<NameSpace> subjectsNameSpaces) {
+    public void setSubjectsNameSpaces(@Nonnull List<NameSpace> subjectsNameSpaces) {
         this.subjectsNameSpaces = subjectsNameSpaces;
     }
 

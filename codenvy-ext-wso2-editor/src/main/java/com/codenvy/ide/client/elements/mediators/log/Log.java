@@ -19,14 +19,13 @@ import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,11 +48,11 @@ public class Log extends AbstractElement {
     public static final String ELEMENT_NAME       = "Log";
     public static final String SERIALIZATION_NAME = "log";
 
-    public static final Key<LogCategory>     LOG_CATEGORY   = new Key<>("LogCategory");
-    public static final Key<LogLevel>        LOG_LEVEL      = new Key<>("LogLevel");
-    public static final Key<String>          LOG_SEPARATOR  = new Key<>("LogSeparator");
-    public static final Key<String>          DESCRIPTION    = new Key<>("LogDescription");
-    public static final Key<Array<Property>> LOG_PROPERTIES = new Key<>("LogProperties");
+    public static final Key<LogCategory>    LOG_CATEGORY   = new Key<>("LogCategory");
+    public static final Key<LogLevel>       LOG_LEVEL      = new Key<>("LogLevel");
+    public static final Key<String>         LOG_SEPARATOR  = new Key<>("LogSeparator");
+    public static final Key<String>         DESCRIPTION    = new Key<>("LogDescription");
+    public static final Key<List<Property>> LOG_PROPERTIES = new Key<>("LogProperties");
 
     private static final String CATEGORY_ATTRIBUTE_NAME    = "category";
     private static final String LEVEL_ATTRIBUTE_NAME       = "level";
@@ -88,7 +87,7 @@ public class Log extends AbstractElement {
         putProperty(LOG_LEVEL, SIMPLE);
         putProperty(LOG_SEPARATOR, "");
         putProperty(DESCRIPTION, "");
-        putProperty(LOG_PROPERTIES, Collections.<Property>createArray());
+        putProperty(LOG_PROPERTIES, Collections.<Property>emptyList());
     }
 
     /** {@inheritDoc} */
@@ -119,7 +118,7 @@ public class Log extends AbstractElement {
     @Nonnull
     @Override
     protected String serializeProperties() {
-        Array<Property> properties = getProperty(LOG_PROPERTIES);
+        List<Property> properties = getProperty(LOG_PROPERTIES);
 
         if (properties == null) {
             return "";
@@ -127,7 +126,7 @@ public class Log extends AbstractElement {
 
         StringBuilder result = new StringBuilder();
 
-        for (Property property : properties.asIterable()) {
+        for (Property property : properties) {
             result.append(property.serializeProperty());
         }
 
@@ -144,7 +143,7 @@ public class Log extends AbstractElement {
 
             property.applyAttributes(node);
 
-            Array<Property> properties = getProperty(LOG_PROPERTIES);
+            List<Property> properties = getProperty(LOG_PROPERTIES);
 
             if (properties != null) {
                 properties.add(property);

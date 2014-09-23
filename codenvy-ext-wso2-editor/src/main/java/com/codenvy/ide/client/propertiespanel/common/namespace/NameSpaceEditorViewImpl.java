@@ -17,7 +17,6 @@ package com.codenvy.ide.client.propertiespanel.common.namespace;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.dom.client.Style;
@@ -203,10 +202,10 @@ public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorVi
 
     /** {@inheritDoc} */
     @Override
-    public void setNameSpaces(@Nonnull Array<NameSpace> nameSpacesList) {
+    public void setNameSpaces(@Nonnull List<NameSpace> nameSpacesList) {
         List<NameSpace> list = new ArrayList<>();
 
-        for (NameSpace property : nameSpacesList.asIterable()) {
+        for (NameSpace property : nameSpacesList) {
             list.add(property);
         }
 

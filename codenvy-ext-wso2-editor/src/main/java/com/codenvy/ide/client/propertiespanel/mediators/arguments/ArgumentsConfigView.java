@@ -17,10 +17,10 @@ package com.codenvy.ide.client.propertiespanel.mediators.arguments;
 
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.client.elements.mediators.payload.Arg;
-import com.codenvy.ide.collections.Array;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * The abstract view's representation of dialog window for editing arguments parameter of element. It provides an ability to show
@@ -52,7 +52,7 @@ public interface ArgumentsConfigView extends View<ArgumentsConfigView.ActionDele
      * @param argsList
      *         list which needs to be displayed
      */
-    void setArgs(@Nonnull Array<Arg> argsList);
+    void setArgs(@Nonnull List<Arg> argsList);
 
     /** Shows dialog window for editing property of element. */
     void showWindow();

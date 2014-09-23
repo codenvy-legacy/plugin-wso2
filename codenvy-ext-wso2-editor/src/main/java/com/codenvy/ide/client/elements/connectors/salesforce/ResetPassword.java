@@ -20,14 +20,13 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +54,7 @@ public class ResetPassword extends AbstractConnector {
     private String              userId;
     private String              userIdExpr;
     private ParameterEditorType parameterEditorType;
-    private Array<NameSpace>    userIdNameSpaces;
+    private List<NameSpace>     userIdNameSpaces;
 
     @Inject
     public ResetPassword(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -74,7 +73,7 @@ public class ResetPassword extends AbstractConnector {
 
         parameterEditorType = Inline;
 
-        userIdNameSpaces = Collections.createArray();
+        userIdNameSpaces = Collections.emptyList();
     }
 
     /** {@inheritDoc} */
@@ -121,11 +120,11 @@ public class ResetPassword extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getUserIdNameSpaces() {
+    public List<NameSpace> getUserIdNameSpaces() {
         return userIdNameSpaces;
     }
 
-    public void setUserIdNameSpaces(@Nonnull Array<NameSpace> userIdNameSpaces) {
+    public void setUserIdNameSpaces(@Nonnull List<NameSpace> userIdNameSpaces) {
         this.userIdNameSpaces = userIdNameSpaces;
     }
 

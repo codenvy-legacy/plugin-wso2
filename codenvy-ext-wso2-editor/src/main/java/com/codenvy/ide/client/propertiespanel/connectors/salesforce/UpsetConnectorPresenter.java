@@ -25,11 +25,11 @@ import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpace
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
@@ -39,6 +39,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * depending on user's changes of properties.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class UpsetConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<Upset> {
 
@@ -64,7 +65,7 @@ public class UpsetConnectorPresenter extends AbstractConnectorPropertiesPanelPre
 
         this.allOrNoneCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setAllOrNoneNameSpaces(nameSpaces);
                 element.setAllOrNone(expression);
 
@@ -76,7 +77,7 @@ public class UpsetConnectorPresenter extends AbstractConnectorPropertiesPanelPre
 
         this.allowTruncateCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setTruncateNameSpaces(nameSpaces);
                 element.setTruncate(expression);
 
@@ -88,7 +89,7 @@ public class UpsetConnectorPresenter extends AbstractConnectorPropertiesPanelPre
 
         this.externalidCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setExternalIdNameSpaces(nameSpaces);
                 element.setExternalId(expression);
 
@@ -100,7 +101,7 @@ public class UpsetConnectorPresenter extends AbstractConnectorPropertiesPanelPre
 
         this.sobjectsCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setSubjectsNameSpaces(nameSpaces);
                 element.setSubjects(expression);
 

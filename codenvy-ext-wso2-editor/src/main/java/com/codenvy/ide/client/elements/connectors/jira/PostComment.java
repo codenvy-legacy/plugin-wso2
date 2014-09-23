@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes PostComment connector for jira group connectors. Also the class contains the business logic
@@ -62,9 +61,9 @@ public class PostComment extends AbstractConnector {
     private String commentExpression;
     private String visibleRoleExpression;
 
-    private Array<NameSpace> issieIOrKeyNS;
-    private Array<NameSpace> commentNS;
-    private Array<NameSpace> visibleRoleNS;
+    private List<NameSpace> issieIOrKeyNS;
+    private List<NameSpace> commentNS;
+    private List<NameSpace> visibleRoleNS;
 
     @Inject
     public PostComment(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -86,9 +85,9 @@ public class PostComment extends AbstractConnector {
         commentExpression = "";
         visibleRoleExpression = "";
 
-        issieIOrKeyNS = createArray();
-        visibleRoleNS = createArray();
-        commentNS = createArray();
+        issieIOrKeyNS = emptyList();
+        visibleRoleNS = emptyList();
+        commentNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -201,29 +200,29 @@ public class PostComment extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getIssieIOrKeyNS() {
+    public List<NameSpace> getIssieIOrKeyNS() {
         return issieIOrKeyNS;
     }
 
-    public void setIssieIOrKeyNS(@Nonnull Array<NameSpace> issieIOrKeyNS) {
+    public void setIssieIOrKeyNS(@Nonnull List<NameSpace> issieIOrKeyNS) {
         this.issieIOrKeyNS = issieIOrKeyNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getCommentNS() {
+    public List<NameSpace> getCommentNS() {
         return commentNS;
     }
 
-    public void setCommentNS(@Nonnull Array<NameSpace> commentNS) {
+    public void setCommentNS(@Nonnull List<NameSpace> commentNS) {
         this.commentNS = commentNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getVisibleRoleNS() {
+    public List<NameSpace> getVisibleRoleNS() {
         return visibleRoleNS;
     }
 
-    public void setVisibleRoleNS(@Nonnull Array<NameSpace> visibleRoleNS) {
+    public void setVisibleRoleNS(@Nonnull List<NameSpace> visibleRoleNS) {
         this.visibleRoleNS = visibleRoleNS;
     }
 }

@@ -20,15 +20,15 @@ import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,13 +52,13 @@ public class Filter extends AbstractElement {
     public static final String ELEMENT_NAME       = "Filter";
     public static final String SERIALIZATION_NAME = "filter";
 
-    public static final Key<ConditionType>    CONDITION_TYPE     = new Key<>("ConditionKey");
-    public static final Key<String>           SOURCE             = new Key<>("Source");
-    public static final Key<String>           REGULAR_EXPRESSION = new Key<>("RegularExpression");
-    public static final Key<String>           X_PATH             = new Key<>("XPath");
-    public static final Key<Array<NameSpace>> SOURCE_NAMESPACE   = new Key<>("SourceNamespace");
-    public static final Key<Array<NameSpace>> XPATH_NAMESPACE    = new Key<>("XPathNamespace");
-    public static final Key<Array<NameSpace>> NAMESPACES         = new Key<>("Namespaces");
+    public static final Key<ConditionType>   CONDITION_TYPE     = new Key<>("ConditionKey");
+    public static final Key<String>          SOURCE             = new Key<>("Source");
+    public static final Key<String>          REGULAR_EXPRESSION = new Key<>("RegularExpression");
+    public static final Key<String>          X_PATH             = new Key<>("XPath");
+    public static final Key<List<NameSpace>> SOURCE_NAMESPACE   = new Key<>("SourceNamespace");
+    public static final Key<List<NameSpace>> XPATH_NAMESPACE    = new Key<>("XPathNamespace");
+    public static final Key<List<NameSpace>> NAMESPACES         = new Key<>("Namespaces");
 
     private static final String SOURCE_ATTRIBUTE_NAME             = "source";
     private static final String REGULAR_EXPRESSION_ATTRIBUTE_NAME = "regex";
@@ -69,7 +69,7 @@ public class Filter extends AbstractElement {
     private static final String IF_BRANCH_SERIALIZATION_NAME   = "then";
     private static final String ELSE_BRANCH_SERIALIZATION_NAME = "else";
 
-    private static final List<String> PROPERTIES = java.util.Collections.emptyList();
+    private static final List<String> PROPERTIES = Collections.emptyList();
 
     private final Provider<NameSpace> nameSpaceProvider;
 
@@ -98,8 +98,8 @@ public class Filter extends AbstractElement {
         putProperty(REGULAR_EXPRESSION, "default_regex");
         putProperty(X_PATH, "/default/xpath");
 
-        putProperty(SOURCE_NAMESPACE, Collections.<NameSpace>createArray());
-        putProperty(XPATH_NAMESPACE, Collections.<NameSpace>createArray());
+        putProperty(SOURCE_NAMESPACE, Collections.<NameSpace>emptyList());
+        putProperty(XPATH_NAMESPACE, Collections.<NameSpace>emptyList());
 
         Branch thenBranch = branchProvider.get();
         thenBranch.setParent(this);
@@ -143,7 +143,7 @@ public class Filter extends AbstractElement {
     @Override
     public void deserialize(@Nonnull Node node) {
         isSourceAttributeFound = false;
-        Array<NameSpace> nameSpaces = Collections.createArray();
+        List<NameSpace> nameSpaces = new ArrayList<>();
 
         putProperty(NAMESPACES, nameSpaces);
 
@@ -192,7 +192,7 @@ public class Filter extends AbstractElement {
         nameSpace.setPrefix(name);
         nameSpace.setUri(attributeValue);
 
-        Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
+        List<NameSpace> nameSpaces = getProperty(NAMESPACES);
         if (nameSpaces != null) {
             nameSpaces.add(nameSpace);
         }

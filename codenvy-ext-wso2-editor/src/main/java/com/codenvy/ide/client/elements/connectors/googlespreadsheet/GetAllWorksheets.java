@@ -20,20 +20,19 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
  * The Class describes GetAllWorksheets connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -55,7 +54,7 @@ public class GetAllWorksheets extends AbstractConnector {
 
     private String spreadsheetNameExpression;
 
-    private Array<NameSpace> spreadsheetNameNS;
+    private List<NameSpace> spreadsheetNameNS;
 
     @Inject
     public GetAllWorksheets(EditorResources resources,
@@ -75,7 +74,7 @@ public class GetAllWorksheets extends AbstractConnector {
 
         spreadsheetNameExpression = "";
 
-        spreadsheetNameNS = createArray();
+        spreadsheetNameNS = Collections.emptyList();
     }
 
     /** {@inheritDoc} */
@@ -130,11 +129,11 @@ public class GetAllWorksheets extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getSpreadsheetNameNS() {
+    public List<NameSpace> getSpreadsheetNameNS() {
         return spreadsheetNameNS;
     }
 
-    public void setSpreadsheetNameNS(@Nonnull Array<NameSpace> spreadsheetNameNS) {
+    public void setSpreadsheetNameNS(@Nonnull List<NameSpace> spreadsheetNameNS) {
         this.spreadsheetNameNS = spreadsheetNameNS;
     }
 

@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes Init connector for jira group connectors. Also the class contains the business logic
@@ -62,9 +61,9 @@ public class InitJira extends AbstractConnector {
     private String passwordExpression;
     private String uriExpression;
 
-    private Array<NameSpace> userNameNS;
-    private Array<NameSpace> passwordNS;
-    private Array<NameSpace> uriNS;
+    private List<NameSpace> userNameNS;
+    private List<NameSpace> passwordNS;
+    private List<NameSpace> uriNS;
 
     @Inject
     public InitJira(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -86,9 +85,9 @@ public class InitJira extends AbstractConnector {
         userNameExpression = "";
         uriExpression = "";
 
-        uriNS = createArray();
-        passwordNS = createArray();
-        userNameNS = createArray();
+        uriNS = emptyList();
+        passwordNS = emptyList();
+        userNameNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -202,29 +201,29 @@ public class InitJira extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getUserNameNS() {
+    public List<NameSpace> getUserNameNS() {
         return userNameNS;
     }
 
-    public void setUserNameNS(@Nonnull Array<NameSpace> userNameNS) {
+    public void setUserNameNS(@Nonnull List<NameSpace> userNameNS) {
         this.userNameNS = userNameNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getPasswordNS() {
+    public List<NameSpace> getPasswordNS() {
         return passwordNS;
     }
 
-    public void setPasswordNS(@Nonnull Array<NameSpace> passwordNS) {
+    public void setPasswordNS(@Nonnull List<NameSpace> passwordNS) {
         this.passwordNS = passwordNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getUriNS() {
+    public List<NameSpace> getUriNS() {
         return uriNS;
     }
 
-    public void setUriNS(@Nonnull Array<NameSpace> uriNS) {
+    public void setUriNS(@Nonnull List<NameSpace> uriNS) {
         this.uriNS = uriNS;
     }
 }

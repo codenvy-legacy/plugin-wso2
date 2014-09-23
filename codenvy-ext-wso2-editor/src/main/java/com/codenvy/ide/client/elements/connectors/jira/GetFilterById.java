@@ -20,20 +20,19 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
  * The Class describes GetFilterById connector for jira group connectors. Also the class contains the business logic
@@ -54,7 +53,7 @@ public class GetFilterById extends AbstractConnector {
 
     private String           filterId;
     private String           filterIdExpression;
-    private Array<NameSpace> filterIdNS;
+    private List<NameSpace> filterIdNS;
 
     @Inject
     public GetFilterById(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -71,7 +70,7 @@ public class GetFilterById extends AbstractConnector {
         filterId = "";
         filterIdExpression = "";
 
-        filterIdNS = createArray();
+        filterIdNS = Collections.emptyList();
     }
 
     /** {@inheritDoc} */
@@ -127,11 +126,11 @@ public class GetFilterById extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getFilterIdNS() {
+    public List<NameSpace> getFilterIdNS() {
         return filterIdNS;
     }
 
-    public void setFilterIdNS(@Nonnull Array<NameSpace> filterIdNS) {
+    public void setFilterIdNS(@Nonnull List<NameSpace> filterIdNS) {
         this.filterIdNS = filterIdNS;
     }
 

@@ -25,11 +25,11 @@ import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpace
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
@@ -64,7 +64,7 @@ public class RetrieveConnectorPresenter extends AbstractConnectorPropertiesPanel
 
         this.fieldListCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setFieldListNameSpaces(nameSpaces);
                 element.setFieldList(expression);
 
@@ -76,7 +76,7 @@ public class RetrieveConnectorPresenter extends AbstractConnectorPropertiesPanel
 
         this.objectTypeCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setObjectTypeNameSpaces(nameSpaces);
                 element.setObjectType(expression);
 
@@ -88,7 +88,7 @@ public class RetrieveConnectorPresenter extends AbstractConnectorPropertiesPanel
 
         this.objectIDSCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setObjectIDSNameSpaces(nameSpaces);
                 element.setObjectIDS(expression);
 

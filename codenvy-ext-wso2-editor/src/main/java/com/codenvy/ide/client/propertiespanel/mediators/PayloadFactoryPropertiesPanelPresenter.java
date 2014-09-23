@@ -34,12 +34,12 @@ import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPr
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.payload.Format.FORMAT_INLINE;
 import static com.codenvy.ide.client.elements.mediators.payload.Format.FORMAT_KEY;
@@ -123,7 +123,7 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
 
         this.argumentCallBack = new AddArgumentCallBack() {
             @Override
-            public void onArgumentsChanged(@Nonnull Array<Arg> argsArray) {
+            public void onArgumentsChanged(@Nonnull List<Arg> argsArray) {
                 element.putProperty(ARGS, argsArray);
 
                 args.setProperty(argsArray.isEmpty() ? "" : locale.payloadFactoryArguments());
@@ -197,7 +197,7 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
         args.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
-                Array<Arg> args = element.getProperty(ARGS);
+                List<Arg> args = element.getProperty(ARGS);
 
                 if (args == null) {
                     return;
@@ -234,7 +234,8 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
 
     }
 
-    /** Sets payload format value to element from special place of view and displaying properties panel to a certain value of payload format */
+    /** Sets payload format value to element from special place of view and displaying properties panel to a certain value of payload
+     * format */
     private void applyPayloadFormat() {
         FormatType payloadFormat = format.getProperty(FORMAT_TYPE);
 
@@ -271,7 +272,7 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
         mediaType.setValues(propertyTypeManager.getValuesByName(MediaType.TYPE_NAME));
         mediaType.selectValue(formatMediaType.getValue());
 
-        Array<Arg> args = element.getProperty(ARGS);
+        List<Arg> args = element.getProperty(ARGS);
 
         if (args != null && !args.isEmpty()) {
             this.args.setProperty(locale.payloadFactoryArguments());

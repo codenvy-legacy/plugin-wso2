@@ -32,7 +32,6 @@ import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPr
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -143,7 +142,7 @@ public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send, 
 
         final AddNameSpacesCallBack addNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.putProperty(DYNAMIC_EXPRESSION, expression);
                 element.putProperty(NAMESPACES, nameSpaces);
 
@@ -158,7 +157,7 @@ public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send, 
         dynamicRec.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
-                Array<NameSpace> nameSpaces = element.getProperty(NAMESPACES);
+                List<NameSpace> nameSpaces = element.getProperty(NAMESPACES);
                 String expression = element.getProperty(DYNAMIC_EXPRESSION);
 
                 if (expression != null && nameSpaces != null) {

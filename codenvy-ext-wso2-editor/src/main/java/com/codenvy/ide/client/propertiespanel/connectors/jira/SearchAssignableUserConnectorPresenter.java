@@ -25,11 +25,11 @@ import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpace
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
@@ -39,6 +39,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * depending on user's changes of properties.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class SearchAssignableUserConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<SearchAssignableUser> {
 
@@ -65,7 +66,7 @@ public class SearchAssignableUserConnectorPresenter extends AbstractConnectorPro
 
         this.userNameCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setUserNameNS(nameSpaces);
                 element.setUserNameExpression(expression);
 
@@ -77,7 +78,7 @@ public class SearchAssignableUserConnectorPresenter extends AbstractConnectorPro
 
         this.projectCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setProjectNS(nameSpaces);
                 element.setProjectExpression(expression);
 
@@ -89,7 +90,7 @@ public class SearchAssignableUserConnectorPresenter extends AbstractConnectorPro
 
         this.issueKeyCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setIssueKeyNS(nameSpaces);
                 element.setIssueKeyExpression(expression);
 
@@ -101,7 +102,7 @@ public class SearchAssignableUserConnectorPresenter extends AbstractConnectorPro
 
         this.startAtCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setStartAtNS(nameSpaces);
                 element.setStartAtExpression(expression);
 
@@ -113,7 +114,7 @@ public class SearchAssignableUserConnectorPresenter extends AbstractConnectorPro
 
         this.maxResultsCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setMaxResultsNS(nameSpaces);
                 element.setMaxResultsExpression(expression);
 

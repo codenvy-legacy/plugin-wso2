@@ -20,14 +20,13 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +54,7 @@ public class QueryMore extends AbstractConnector {
     private String              batchSize;
     private String              batchSizeExpr;
     private ParameterEditorType parameterEditorType;
-    private Array<NameSpace>    batchSizeNameSpaces;
+    private List<NameSpace>     batchSizeNameSpaces;
 
     @Inject
     public QueryMore(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -74,7 +73,7 @@ public class QueryMore extends AbstractConnector {
 
         parameterEditorType = Inline;
 
-        batchSizeNameSpaces = Collections.createArray();
+        batchSizeNameSpaces = Collections.emptyList();
     }
 
     /** {@inheritDoc} */
@@ -121,11 +120,11 @@ public class QueryMore extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getBatchSizeNameSpaces() {
+    public List<NameSpace> getBatchSizeNameSpaces() {
         return batchSizeNameSpaces;
     }
 
-    public void setBatchSizeNameSpaces(@Nonnull Array<NameSpace> batchSizeNameSpaces) {
+    public void setBatchSizeNameSpaces(@Nonnull List<NameSpace> batchSizeNameSpaces) {
         this.batchSizeNameSpaces = batchSizeNameSpaces;
     }
 

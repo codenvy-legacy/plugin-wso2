@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes SearchJira connector for jira group connectors. Also the class contains the business logic
@@ -62,9 +61,9 @@ public class SearchJira extends AbstractConnector {
     private String maxResultExpression;
     private String startFromExpression;
 
-    private Array<NameSpace> queryNS;
-    private Array<NameSpace> maxResultNS;
-    private Array<NameSpace> startFromNS;
+    private List<NameSpace> queryNS;
+    private List<NameSpace> maxResultNS;
+    private List<NameSpace> startFromNS;
 
     @Inject
     public SearchJira(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -86,9 +85,9 @@ public class SearchJira extends AbstractConnector {
         startFromExpression = "";
         maxResultExpression = "";
 
-        startFromNS = createArray();
-        queryNS = createArray();
-        maxResultNS = createArray();
+        startFromNS = emptyList();
+        queryNS = emptyList();
+        maxResultNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -202,29 +201,29 @@ public class SearchJira extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getQueryNS() {
+    public List<NameSpace> getQueryNS() {
         return queryNS;
     }
 
-    public void setQueryNS(@Nonnull Array<NameSpace> queryNS) {
+    public void setQueryNS(@Nonnull List<NameSpace> queryNS) {
         this.queryNS = queryNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getMaxResultNS() {
+    public List<NameSpace> getMaxResultNS() {
         return maxResultNS;
     }
 
-    public void setMaxResultNS(@Nonnull Array<NameSpace> maxResultNS) {
+    public void setMaxResultNS(@Nonnull List<NameSpace> maxResultNS) {
         this.maxResultNS = maxResultNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getStartFromNS() {
+    public List<NameSpace> getStartFromNS() {
         return startFromNS;
     }
 
-    public void setStartFromNS(@Nonnull Array<NameSpace> startFromNS) {
+    public void setStartFromNS(@Nonnull List<NameSpace> startFromNS) {
         this.startFromNS = startFromNS;
     }
 }

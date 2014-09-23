@@ -25,11 +25,12 @@ import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpace
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
@@ -65,7 +66,7 @@ public class InitSpreadsheetConnectorPresenter extends AbstractConnectorProperti
 
         this.oauthConsumerKeyCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setOauthConsumerKeyNS(nameSpaces);
                 element.setOauthConsumerKeyExpression(expression);
 
@@ -77,7 +78,7 @@ public class InitSpreadsheetConnectorPresenter extends AbstractConnectorProperti
 
         this.oauthConsumerSecretCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setOauthConsumerSecretNS(nameSpaces);
                 element.setOauthConsumerSecretExpression(expression);
 
@@ -89,7 +90,7 @@ public class InitSpreadsheetConnectorPresenter extends AbstractConnectorProperti
 
         this.oauthAccessTokenCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setOauthAccessTokenNS(nameSpaces);
                 element.setOauthAccessTokenExpression(expression);
 
@@ -101,7 +102,7 @@ public class InitSpreadsheetConnectorPresenter extends AbstractConnectorProperti
 
         this.oauthAccessTokenSecretCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setOauthAccessTokenSecretNS(nameSpaces);
                 element.setOauthAccessTokenSecretExpression(expression);
 

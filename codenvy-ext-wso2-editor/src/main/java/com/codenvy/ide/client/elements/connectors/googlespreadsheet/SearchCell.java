@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes SearchCell connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -61,9 +60,9 @@ public class SearchCell extends AbstractConnector {
     private String worksheetNameExpression;
     private String searchStringExpression;
 
-    private Array<NameSpace> spreadsheetNameNS;
-    private Array<NameSpace> worksheetNameNS;
-    private Array<NameSpace> searchStringNS;
+    private List<NameSpace> spreadsheetNameNS;
+    private List<NameSpace> worksheetNameNS;
+    private List<NameSpace> searchStringNS;
 
     @Inject
     public SearchCell(EditorResources resources,
@@ -87,9 +86,9 @@ public class SearchCell extends AbstractConnector {
         worksheetNameExpression = "";
         searchStringExpression = "";
 
-        spreadsheetNameNS = createArray();
-        worksheetNameNS = createArray();
-        searchStringNS = createArray();
+        spreadsheetNameNS = emptyList();
+        worksheetNameNS = emptyList();
+        searchStringNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -166,11 +165,11 @@ public class SearchCell extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getSpreadsheetNameNS() {
+    public List<NameSpace> getSpreadsheetNameNS() {
         return spreadsheetNameNS;
     }
 
-    public void setSpreadsheetNameNS(@Nonnull Array<NameSpace> spreadsheetNameNS) {
+    public void setSpreadsheetNameNS(@Nonnull List<NameSpace> spreadsheetNameNS) {
         this.spreadsheetNameNS = spreadsheetNameNS;
     }
 
@@ -193,11 +192,11 @@ public class SearchCell extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getWorksheetNameNS() {
+    public List<NameSpace> getWorksheetNameNS() {
         return worksheetNameNS;
     }
 
-    public void setWorksheetNameNS(@Nonnull Array<NameSpace> worksheetNameNS) {
+    public void setWorksheetNameNS(@Nonnull List<NameSpace> worksheetNameNS) {
         this.worksheetNameNS = worksheetNameNS;
     }
 
@@ -220,11 +219,11 @@ public class SearchCell extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getSearchStringNS() {
+    public List<NameSpace> getSearchStringNS() {
         return searchStringNS;
     }
 
-    public void setSearchStringNS(@Nonnull Array<NameSpace> searchStringNS) {
+    public void setSearchStringNS(@Nonnull List<NameSpace> searchStringNS) {
         this.searchStringNS = searchStringNS;
     }
 

@@ -25,11 +25,11 @@ import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpace
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
@@ -69,7 +69,7 @@ public class GetSentDirectMessagesConnectorPresenter extends AbstractConnectorPr
 
         this.consumerKeyCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setConsumerKeyNS(nameSpaces);
                 element.setConsumerKeyExpr(expression);
 
@@ -81,7 +81,7 @@ public class GetSentDirectMessagesConnectorPresenter extends AbstractConnectorPr
 
         this.consumerSecretCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setConsumerSecretNS(nameSpaces);
                 element.setConsumerSecretExpr(expression);
 
@@ -93,7 +93,7 @@ public class GetSentDirectMessagesConnectorPresenter extends AbstractConnectorPr
 
         this.accessTokenCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setAccessTokenNS(nameSpaces);
                 element.setAccessTokenExpr(expression);
 
@@ -105,7 +105,7 @@ public class GetSentDirectMessagesConnectorPresenter extends AbstractConnectorPr
 
         this.accessTokenSecretCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setAccessTokenSecretNS(nameSpaces);
                 element.setAccessTokenSecretExpr(expression);
 
@@ -117,7 +117,7 @@ public class GetSentDirectMessagesConnectorPresenter extends AbstractConnectorPr
 
         this.countCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setCountNS(nameSpaces);
                 element.setCountExpr(expression);
 
@@ -129,7 +129,7 @@ public class GetSentDirectMessagesConnectorPresenter extends AbstractConnectorPr
 
         this.pageCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setPageNS(nameSpaces);
                 element.setPageExpr(expression);
 
@@ -141,7 +141,7 @@ public class GetSentDirectMessagesConnectorPresenter extends AbstractConnectorPr
 
         this.sinceIdCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setSinceIdNS(nameSpaces);
                 element.setSinceIdExpr(expression);
 
@@ -153,7 +153,7 @@ public class GetSentDirectMessagesConnectorPresenter extends AbstractConnectorPr
 
         this.maxIdCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setMaxIdNS(nameSpaces);
                 element.setMaxIdExpr(expression);
 

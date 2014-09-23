@@ -18,8 +18,6 @@ package com.codenvy.ide.client.elements.endpoints.addressendpoint;
 import com.codenvy.ide.client.elements.AbstractEntityElement;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.ValueType;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
@@ -27,6 +25,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.Scope.DEFAULT;
@@ -54,12 +54,12 @@ public class Property extends AbstractEntityElement {
     private final Provider<Property>  propertyProvider;
     private final Provider<NameSpace> nameSpaceProvider;
 
-    private String           name;
-    private String           value;
-    private String           expression;
-    private ValueType        type;
-    private Scope            scope;
-    private Array<NameSpace> nameSpaces;
+    private String          name;
+    private String          value;
+    private String          expression;
+    private ValueType       type;
+    private Scope           scope;
+    private List<NameSpace> nameSpaces;
 
     @Inject
     public Property(Provider<Property> propertyProvider, Provider<NameSpace> nameSpaceProvider) {
@@ -71,7 +71,7 @@ public class Property extends AbstractEntityElement {
         expression = "/default/expression";
         type = LITERAL;
         scope = DEFAULT;
-        nameSpaces = Collections.createArray();
+        nameSpaces = Collections.emptyList();
     }
 
     /** @return name of property of address endpoint */
@@ -156,7 +156,7 @@ public class Property extends AbstractEntityElement {
 
     /** @return list of name spaces of property of address endpoint */
     @Nonnull
-    public Array<NameSpace> getNameSpaces() {
+    public List<NameSpace> getNameSpaces() {
         return nameSpaces;
     }
 
@@ -166,7 +166,7 @@ public class Property extends AbstractEntityElement {
      * @param nameSpaces
      *         list that should be set
      */
-    public void setNameSpaces(@Nonnull Array<NameSpace> nameSpaces) {
+    public void setNameSpaces(@Nonnull List<NameSpace> nameSpaces) {
         this.nameSpaces = nameSpaces;
     }
 

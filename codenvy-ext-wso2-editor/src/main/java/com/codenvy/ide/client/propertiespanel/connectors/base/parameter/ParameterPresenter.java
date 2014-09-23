@@ -19,14 +19,14 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.ValueType;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
-import com.codenvy.ide.collections.Array;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.ValueType.EXPRESSION;
 import static com.codenvy.ide.client.elements.mediators.ValueType.LITERAL;
-import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
  * The presenter that provides a business logic of editing of new configuration parameter of connector.
@@ -42,10 +42,10 @@ public class ParameterPresenter implements ParameterView.ActionDelegate {
     private final AddNameSpacesCallBack    forceLoginNameSpacesCallBack;
     private final AddNameSpacesCallBack    passwordNameSpacesCallBack;
 
-    private Array<NameSpace>           usernameNameSpaces;
-    private Array<NameSpace>           passwordNameSpaces;
-    private Array<NameSpace>           loginUrlNameSpaces;
-    private Array<NameSpace>           forceLoginNameSpaces;
+    private List<NameSpace>            usernameNameSpaces;
+    private List<NameSpace>            passwordNameSpaces;
+    private List<NameSpace>            loginUrlNameSpaces;
+    private List<NameSpace>            forceLoginNameSpaces;
     private ConnectorParameterCallBack callBack;
 
     @Inject
@@ -53,16 +53,16 @@ public class ParameterPresenter implements ParameterView.ActionDelegate {
         this.view = view;
         this.view.setDelegate(this);
 
-        usernameNameSpaces = createArray();
-        passwordNameSpaces = createArray();
-        loginUrlNameSpaces = createArray();
-        forceLoginNameSpaces = createArray();
+        usernameNameSpaces = Collections.emptyList();
+        passwordNameSpaces = Collections.emptyList();
+        loginUrlNameSpaces = Collections.emptyList();
+        forceLoginNameSpaces = Collections.emptyList();
 
         this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
 
         this.usernameNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 usernameNameSpaces = nameSpaces;
                 ParameterPresenter.this.view.setUsernameNamespaceValue(expression);
             }
@@ -70,7 +70,7 @@ public class ParameterPresenter implements ParameterView.ActionDelegate {
 
         this.passwordNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 passwordNameSpaces = nameSpaces;
                 ParameterPresenter.this.view.setPasswordNamespaceValue(expression);
             }
@@ -78,7 +78,7 @@ public class ParameterPresenter implements ParameterView.ActionDelegate {
 
         this.forceLoginNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 forceLoginNameSpaces = nameSpaces;
                 ParameterPresenter.this.view.setForceLoginNamespaceValue(expression);
             }
@@ -86,7 +86,7 @@ public class ParameterPresenter implements ParameterView.ActionDelegate {
 
         this.loginUrlNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 loginUrlNameSpaces = nameSpaces;
                 ParameterPresenter.this.view.setLoginUrlNamespaceValue(expression);
             }

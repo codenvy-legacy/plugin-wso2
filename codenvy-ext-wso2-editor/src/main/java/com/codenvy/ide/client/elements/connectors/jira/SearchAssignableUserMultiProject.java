@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes SearchAssignableUserMultiProject connector for jira group connectors. Also the class contains the business logic
@@ -65,10 +64,10 @@ public class SearchAssignableUserMultiProject extends AbstractConnector {
     private String startAtExpression;
     private String maxResultsExpression;
 
-    private Array<NameSpace> userNameNS;
-    private Array<NameSpace> projectNS;
-    private Array<NameSpace> startAtNS;
-    private Array<NameSpace> maxResultsNS;
+    private List<NameSpace> userNameNS;
+    private List<NameSpace> projectNS;
+    private List<NameSpace> startAtNS;
+    private List<NameSpace> maxResultsNS;
 
     @Inject
     public SearchAssignableUserMultiProject(EditorResources resources,
@@ -94,10 +93,10 @@ public class SearchAssignableUserMultiProject extends AbstractConnector {
         startAtExpression = "";
         maxResultsExpression = "";
 
-        startAtNS = createArray();
-        userNameNS = createArray();
-        projectNS = createArray();
-        maxResultsNS = createArray();
+        startAtNS = emptyList();
+        userNameNS = emptyList();
+        projectNS = emptyList();
+        maxResultsNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -239,38 +238,38 @@ public class SearchAssignableUserMultiProject extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getUserNameNS() {
+    public List<NameSpace> getUserNameNS() {
         return userNameNS;
     }
 
-    public void setUserNameNS(@Nonnull Array<NameSpace> userNameNS) {
+    public void setUserNameNS(@Nonnull List<NameSpace> userNameNS) {
         this.userNameNS = userNameNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getProjectNS() {
+    public List<NameSpace> getProjectNS() {
         return projectNS;
     }
 
-    public void setProjectNS(@Nonnull Array<NameSpace> projectNS) {
+    public void setProjectNS(@Nonnull List<NameSpace> projectNS) {
         this.projectNS = projectNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getStartAtNS() {
+    public List<NameSpace> getStartAtNS() {
         return startAtNS;
     }
 
-    public void setStartAtNS(@Nonnull Array<NameSpace> startAtNS) {
+    public void setStartAtNS(@Nonnull List<NameSpace> startAtNS) {
         this.startAtNS = startAtNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getMaxResultsNS() {
+    public List<NameSpace> getMaxResultsNS() {
         return maxResultsNS;
     }
 
-    public void setMaxResultsNS(@Nonnull Array<NameSpace> maxResultsNS) {
+    public void setMaxResultsNS(@Nonnull List<NameSpace> maxResultsNS) {
         this.maxResultsNS = maxResultsNS;
     }
 }

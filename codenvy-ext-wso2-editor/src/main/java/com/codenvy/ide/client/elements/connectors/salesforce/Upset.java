@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -34,7 +33,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes Upset connector for Salesforce group connectors. Also the class contains the business logic
@@ -66,10 +65,10 @@ public class Upset extends AbstractConnector {
     private String externalIdInline;
     private String subjectsInline;
 
-    private Array<NameSpace> truncateNameSpaces;
-    private Array<NameSpace> subjectsNameSpaces;
-    private Array<NameSpace> externalIdNameSpaces;
-    private Array<NameSpace> allOrNoneNameSpaces;
+    private List<NameSpace> truncateNameSpaces;
+    private List<NameSpace> subjectsNameSpaces;
+    private List<NameSpace> externalIdNameSpaces;
+    private List<NameSpace> allOrNoneNameSpaces;
 
     @Inject
     public Upset(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -93,10 +92,10 @@ public class Upset extends AbstractConnector {
         truncateInline = "";
         subjectsInline = "";
 
-        allOrNoneNameSpaces = createArray();
-        externalIdNameSpaces = createArray();
-        truncateNameSpaces = createArray();
-        subjectsNameSpaces = createArray();
+        allOrNoneNameSpaces = emptyList();
+        externalIdNameSpaces = emptyList();
+        truncateNameSpaces = emptyList();
+        subjectsNameSpaces = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -240,38 +239,38 @@ public class Upset extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getAllOrNoneNameSpaces() {
+    public List<NameSpace> getAllOrNoneNameSpaces() {
         return allOrNoneNameSpaces;
     }
 
-    public void setAllOrNoneNameSpaces(@Nonnull Array<NameSpace> allOrNoneNameSpaces) {
+    public void setAllOrNoneNameSpaces(@Nonnull List<NameSpace> allOrNoneNameSpaces) {
         this.allOrNoneNameSpaces = allOrNoneNameSpaces;
     }
 
     @Nonnull
-    public Array<NameSpace> getExternalIdNameSpaces() {
+    public List<NameSpace> getExternalIdNameSpaces() {
         return externalIdNameSpaces;
     }
 
-    public void setExternalIdNameSpaces(@Nonnull Array<NameSpace> externalIdNameSpaces) {
+    public void setExternalIdNameSpaces(@Nonnull List<NameSpace> externalIdNameSpaces) {
         this.externalIdNameSpaces = externalIdNameSpaces;
     }
 
     @Nonnull
-    public Array<NameSpace> getTruncateNameSpaces() {
+    public List<NameSpace> getTruncateNameSpaces() {
         return truncateNameSpaces;
     }
 
-    public void setTruncateNameSpaces(@Nonnull Array<NameSpace> truncateNameSpaces) {
+    public void setTruncateNameSpaces(@Nonnull List<NameSpace> truncateNameSpaces) {
         this.truncateNameSpaces = truncateNameSpaces;
     }
 
     @Nonnull
-    public Array<NameSpace> getSubjectsNameSpaces() {
+    public List<NameSpace> getSubjectsNameSpaces() {
         return subjectsNameSpaces;
     }
 
-    public void setSubjectsNameSpaces(@Nonnull Array<NameSpace> subjectsNameSpaces) {
+    public void setSubjectsNameSpaces(@Nonnull List<NameSpace> subjectsNameSpaces) {
         this.subjectsNameSpaces = subjectsNameSpaces;
     }
 

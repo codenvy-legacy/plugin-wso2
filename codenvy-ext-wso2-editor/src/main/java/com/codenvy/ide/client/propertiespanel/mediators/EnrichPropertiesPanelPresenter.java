@@ -35,12 +35,12 @@ import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPr
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.enrich.Enrich.DESCRIPTION;
 import static com.codenvy.ide.client.elements.mediators.enrich.Enrich.SOURCE;
@@ -70,6 +70,7 @@ import static com.codenvy.ide.client.initializers.propertytype.CommonPropertyTyp
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enrich, PropertiesPanelView> {
 
@@ -124,7 +125,7 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
 
         this.sourceXPathCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 source.putProperty(SOURCE_XPATH, expression);
                 source.putProperty(SOURCE_NAMESPACES, nameSpaces);
 
@@ -136,7 +137,7 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
 
         this.targetXPathCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 target.putProperty(TARGET_XPATH, expression);
                 target.putProperty(TARGET_NAMESPACES, nameSpaces);
 
@@ -271,7 +272,7 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
             @Override
             public void onEditButtonClicked() {
                 String sourceXPath = source.getProperty(SOURCE_XPATH);
-                Array<NameSpace> nameSpaces = source.getProperty(SOURCE_NAMESPACES);
+                List<NameSpace> nameSpaces = source.getProperty(SOURCE_NAMESPACES);
 
                 if (sourceXPath == null || nameSpaces == null) {
                     return;
@@ -344,7 +345,7 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
         targetXpath.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
-                Array<NameSpace> targetNamespaces = target.getProperty(TARGET_NAMESPACES);
+                List<NameSpace> targetNamespaces = target.getProperty(TARGET_NAMESPACES);
                 String targetXPath = target.getProperty(TARGET_XPATH);
 
                 if (targetNamespaces == null || targetXPath == null) {

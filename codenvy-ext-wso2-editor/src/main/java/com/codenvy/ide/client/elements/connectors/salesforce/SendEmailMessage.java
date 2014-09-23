@@ -20,8 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -29,6 +27,7 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,9 +52,9 @@ public class SendEmailMessage extends AbstractConnector {
 
     private static final List<String> PROPERTIES = Arrays.asList(SEND_EMAIL_MESSAGE);
 
-    private String           sendEmailMessage;
-    private String           sendEmailMessageInline;
-    private Array<NameSpace> sendEmailMessageNameSpaces;
+    private String          sendEmailMessage;
+    private String          sendEmailMessageInline;
+    private List<NameSpace> sendEmailMessageNameSpaces;
 
     @Inject
     public SendEmailMessage(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -72,7 +71,7 @@ public class SendEmailMessage extends AbstractConnector {
         sendEmailMessage = "";
         sendEmailMessageInline = "";
 
-        sendEmailMessageNameSpaces = Collections.createArray();
+        sendEmailMessageNameSpaces = Collections.emptyList();
     }
 
     /** {@inheritDoc} */
@@ -127,11 +126,11 @@ public class SendEmailMessage extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getSendEmailMessageNameSpaces() {
+    public List<NameSpace> getSendEmailMessageNameSpaces() {
         return sendEmailMessageNameSpaces;
     }
 
-    public void setSendEmailNameSpaces(@Nonnull Array<NameSpace> searchStringMessageNameSpaces) {
+    public void setSendEmailNameSpaces(@Nonnull List<NameSpace> searchStringMessageNameSpaces) {
         this.sendEmailMessageNameSpaces = searchStringMessageNameSpaces;
     }
 }

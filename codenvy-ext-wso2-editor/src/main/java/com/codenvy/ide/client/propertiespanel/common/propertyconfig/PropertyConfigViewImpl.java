@@ -18,7 +18,6 @@ package com.codenvy.ide.client.propertiespanel.common.propertyconfig;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.mediators.ValueType;
 import com.codenvy.ide.client.elements.mediators.log.Property;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
@@ -212,10 +211,10 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
 
     /** {@inheritDoc} */
     @Override
-    public void setProperties(@Nonnull Array<Property> propertyList) {
+    public void setProperties(@Nonnull List<Property> propertyList) {
         List<Property> list = new ArrayList<>();
 
-        for (Property property : propertyList.asIterable()) {
+        for (Property property : propertyList) {
             list.add(property);
         }
 

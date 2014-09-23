@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes Retweet connector for twitter group of connectors. Also the class contains the business logic
@@ -68,11 +67,11 @@ public class Retweet extends AbstractConnector {
     private String accessTokenSecretExpr;
     private String idExpr;
 
-    private Array<NameSpace> consumerKeyNS;
-    private Array<NameSpace> consumerSecretNS;
-    private Array<NameSpace> accessTokenNS;
-    private Array<NameSpace> accessTokenSecretNS;
-    private Array<NameSpace> idNS;
+    private List<NameSpace> consumerKeyNS;
+    private List<NameSpace> consumerSecretNS;
+    private List<NameSpace> accessTokenNS;
+    private List<NameSpace> accessTokenSecretNS;
+    private List<NameSpace> idNS;
 
     @Inject
     public Retweet(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -98,11 +97,11 @@ public class Retweet extends AbstractConnector {
         consumerSecretExpr = "";
         idExpr = "";
 
-        consumerKeyNS = createArray();
-        consumerSecretNS = createArray();
-        accessTokenNS = createArray();
-        accessTokenSecretNS = createArray();
-        idNS = createArray();
+        consumerKeyNS = emptyList();
+        consumerSecretNS = emptyList();
+        accessTokenNS = emptyList();
+        accessTokenSecretNS = emptyList();
+        idNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -192,11 +191,11 @@ public class Retweet extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getIdNS() {
+    public List<NameSpace> getIdNS() {
         return idNS;
     }
 
-    public void setIdNS(@Nonnull Array<NameSpace> idNS) {
+    public void setIdNS(@Nonnull List<NameSpace> idNS) {
         this.idNS = idNS;
     }
 
@@ -273,38 +272,38 @@ public class Retweet extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getConsumerKeyNS() {
+    public List<NameSpace> getConsumerKeyNS() {
         return consumerKeyNS;
     }
 
-    public void setConsumerKeyNS(@Nonnull Array<NameSpace> consumerKeyNS) {
+    public void setConsumerKeyNS(@Nonnull List<NameSpace> consumerKeyNS) {
         this.consumerKeyNS = consumerKeyNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getConsumerSecretNS() {
+    public List<NameSpace> getConsumerSecretNS() {
         return consumerSecretNS;
     }
 
-    public void setConsumerSecretNS(@Nonnull Array<NameSpace> consumerSecretNS) {
+    public void setConsumerSecretNS(@Nonnull List<NameSpace> consumerSecretNS) {
         this.consumerSecretNS = consumerSecretNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getAccessTokenNS() {
+    public List<NameSpace> getAccessTokenNS() {
         return accessTokenNS;
     }
 
-    public void setAccessTokenNS(@Nonnull Array<NameSpace> accessTokenNS) {
+    public void setAccessTokenNS(@Nonnull List<NameSpace> accessTokenNS) {
         this.accessTokenNS = accessTokenNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getAccessTokenSecretNS() {
+    public List<NameSpace> getAccessTokenSecretNS() {
         return accessTokenSecretNS;
     }
 
-    public void setAccessTokenSecretNS(@Nonnull Array<NameSpace> accessTokenSecretNS) {
+    public void setAccessTokenSecretNS(@Nonnull List<NameSpace> accessTokenSecretNS) {
         this.accessTokenSecretNS = accessTokenSecretNS;
     }
 }

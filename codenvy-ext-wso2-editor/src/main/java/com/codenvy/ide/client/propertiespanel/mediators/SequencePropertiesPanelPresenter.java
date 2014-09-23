@@ -30,13 +30,13 @@ import com.codenvy.ide.client.propertiespanel.property.PropertyValueChangedListe
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.Sequence.DYNAMIC_REFERENCE_TYPE;
 import static com.codenvy.ide.client.elements.mediators.Sequence.NAMESPACES;
@@ -129,7 +129,7 @@ public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Se
 
         final AddNameSpacesCallBack addNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nullable String expression) {
                 element.putProperty(NAMESPACES, nameSpaces);
                 element.putProperty(DYNAMIC_REFERENCE_TYPE, expression != null ? expression : "");
 
@@ -144,7 +144,7 @@ public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Se
         dynamicReferenceKey.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
-                Array<NameSpace> nameSpaces = element.getProperty(NAMESPACES);
+                List<NameSpace> nameSpaces = element.getProperty(NAMESPACES);
                 String dynamicRefKey = element.getProperty(DYNAMIC_REFERENCE_TYPE);
 
                 if (dynamicRefKey == null || nameSpaces == null) {

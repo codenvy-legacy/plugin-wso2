@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes GetFollowers connector for twitter group of connectors. Also the class contains the business logic
@@ -62,9 +61,9 @@ public class GetFollowers extends AbstractConnector {
     private String userIdExpr;
     private String cursorExpr;
 
-    private Array<NameSpace> screenNameNS;
-    private Array<NameSpace> userIdNS;
-    private Array<NameSpace> cursorNS;
+    private List<NameSpace> screenNameNS;
+    private List<NameSpace> userIdNS;
+    private List<NameSpace> cursorNS;
 
     @Inject
     public GetFollowers(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -86,9 +85,9 @@ public class GetFollowers extends AbstractConnector {
         cursorExpr = "";
         userIdExpr = "";
 
-        cursorNS = createArray();
-        screenNameNS = createArray();
-        userIdNS = createArray();
+        cursorNS = emptyList();
+        screenNameNS = emptyList();
+        userIdNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -202,29 +201,29 @@ public class GetFollowers extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getScreenNameNS() {
+    public List<NameSpace> getScreenNameNS() {
         return screenNameNS;
     }
 
-    public void setScreenNameNS(@Nonnull Array<NameSpace> screenNameNS) {
+    public void setScreenNameNS(@Nonnull List<NameSpace> screenNameNS) {
         this.screenNameNS = screenNameNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getUserIdNS() {
+    public List<NameSpace> getUserIdNS() {
         return userIdNS;
     }
 
-    public void setUserIdNS(@Nonnull Array<NameSpace> userIdNS) {
+    public void setUserIdNS(@Nonnull List<NameSpace> userIdNS) {
         this.userIdNS = userIdNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getCursorNS() {
+    public List<NameSpace> getCursorNS() {
         return cursorNS;
     }
 
-    public void setCursorNS(@Nonnull Array<NameSpace> cursorNS) {
+    public void setCursorNS(@Nonnull List<NameSpace> cursorNS) {
         this.cursorNS = cursorNS;
     }
 }

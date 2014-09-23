@@ -16,9 +16,9 @@
 package com.codenvy.ide.client.propertiespanel.mediators.arguments;
 
 import com.codenvy.ide.client.elements.mediators.payload.Arg;
-import com.codenvy.ide.collections.Array;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * The entity which includes arguments, that may be modified, must implement this interface. This
@@ -34,5 +34,5 @@ public interface AddArgumentCallBack {
      * @param arg
      *         changed list of properties
      */
-    void onArgumentsChanged(@Nonnull Array<Arg> arg);
+    void onArgumentsChanged(@Nonnull List<Arg> arg);
 }

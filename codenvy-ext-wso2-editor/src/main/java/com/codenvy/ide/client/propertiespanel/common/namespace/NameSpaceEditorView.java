@@ -17,16 +17,17 @@ package com.codenvy.ide.client.propertiespanel.common.namespace;
 
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.collections.Array;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * The presentation of Name Space Editor view. It contains a general places for name spaces properties.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 @ImplementedBy(NameSpaceEditorViewImpl.class)
 public interface NameSpaceEditorView extends View<NameSpaceEditorView.ActionDelegate> {
@@ -112,7 +113,7 @@ public interface NameSpaceEditorView extends View<NameSpaceEditorView.ActionDele
      * @param nameSpaces
      *         namespaces which need to be displayed.
      */
-    public void setNameSpaces(@Nonnull Array<NameSpace> nameSpaces);
+    public void setNameSpaces(@Nonnull List<NameSpace> nameSpaces);
 
     /** Set name NameSpace dialog window. */
     public void setNameSpaceLabelName(@Nonnull String nameSpace);

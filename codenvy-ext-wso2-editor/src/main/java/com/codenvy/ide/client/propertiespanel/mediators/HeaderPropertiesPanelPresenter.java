@@ -32,13 +32,13 @@ import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPr
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.Action.REMOVE;
 import static com.codenvy.ide.client.elements.mediators.Header.ACTION;
@@ -99,7 +99,7 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
 
         this.headerCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.putProperty(HEADER_NAME, nameSpaces.isEmpty() ?
                                                  expression :
                                                  nameSpaces.get(nameSpaces.size() - 1).getPrefix() + ":" + expression);
@@ -113,7 +113,7 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
 
         this.expressionCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.putProperty(EXPRESSION, expression);
                 element.putProperty(EXPRESSION_NAMESPACES, nameSpaces);
 
@@ -205,7 +205,7 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
         headerExpression.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
-                Array<NameSpace> expressionNameSpaces = element.getProperty(EXPRESSION_NAMESPACES);
+                List<NameSpace> expressionNameSpaces = element.getProperty(EXPRESSION_NAMESPACES);
                 String expression = element.getProperty(EXPRESSION);
 
                 if (expressionNameSpaces != null) {
@@ -223,7 +223,7 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
         headerName.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
-                Array<NameSpace> headerNameSpaces = element.getProperty(HEADER_NAMESPACES);
+                List<NameSpace> headerNameSpaces = element.getProperty(HEADER_NAMESPACES);
                 String expression = element.getProperty(HEADER_NAME);
 
                 if (expression != null && expression.contains(":")) {

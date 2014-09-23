@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes SearchUser connector for jira group connectors. Also the class contains the business logic
@@ -68,11 +67,11 @@ public class SearchUser extends AbstractConnector {
     private String includeActiveExpression;
     private String includeInactiveExpression;
 
-    private Array<NameSpace> userNameNS;
-    private Array<NameSpace> includeInactiveNS;
-    private Array<NameSpace> includeActiveNS;
-    private Array<NameSpace> startAtNS;
-    private Array<NameSpace> maxResultsNS;
+    private List<NameSpace> userNameNS;
+    private List<NameSpace> includeInactiveNS;
+    private List<NameSpace> includeActiveNS;
+    private List<NameSpace> startAtNS;
+    private List<NameSpace> maxResultsNS;
 
     @Inject
     public SearchUser(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -98,11 +97,11 @@ public class SearchUser extends AbstractConnector {
         startAtExpression = "";
         includeInactiveExpression = "";
 
-        userNameNS = createArray();
-        startAtNS = createArray();
-        maxResultsNS = createArray();
-        includeActiveNS = createArray();
-        includeInactiveNS = createArray();
+        userNameNS = emptyList();
+        startAtNS = emptyList();
+        maxResultsNS = emptyList();
+        includeActiveNS = emptyList();
+        includeInactiveNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -274,47 +273,47 @@ public class SearchUser extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getUserNameNS() {
+    public List<NameSpace> getUserNameNS() {
         return userNameNS;
     }
 
-    public void setUserNameNS(@Nonnull Array<NameSpace> userNameNS) {
+    public void setUserNameNS(@Nonnull List<NameSpace> userNameNS) {
         this.userNameNS = userNameNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getIncludeInactiveNS() {
+    public List<NameSpace> getIncludeInactiveNS() {
         return includeInactiveNS;
     }
 
-    public void setIncludeInactiveNS(@Nonnull Array<NameSpace> includeInactiveNS) {
+    public void setIncludeInactiveNS(@Nonnull List<NameSpace> includeInactiveNS) {
         this.includeInactiveNS = includeInactiveNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getIncludeActiveNS() {
+    public List<NameSpace> getIncludeActiveNS() {
         return includeActiveNS;
     }
 
-    public void setIncludeActiveNS(@Nonnull Array<NameSpace> includeActiveNS) {
+    public void setIncludeActiveNS(@Nonnull List<NameSpace> includeActiveNS) {
         this.includeActiveNS = includeActiveNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getChartAtNS() {
+    public List<NameSpace> getChartAtNS() {
         return startAtNS;
     }
 
-    public void setStartAtNS(@Nonnull Array<NameSpace> startAtNS) {
+    public void setStartAtNS(@Nonnull List<NameSpace> startAtNS) {
         this.startAtNS = startAtNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getMaxResultsNS() {
+    public List<NameSpace> getMaxResultsNS() {
         return maxResultsNS;
     }
 
-    public void setMaxResultsNS(@Nonnull Array<NameSpace> maxResultsNS) {
+    public void setMaxResultsNS(@Nonnull List<NameSpace> maxResultsNS) {
         this.maxResultsNS = maxResultsNS;
     }
 }

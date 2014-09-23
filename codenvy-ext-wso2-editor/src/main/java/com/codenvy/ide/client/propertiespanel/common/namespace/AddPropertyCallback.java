@@ -16,15 +16,16 @@
 package com.codenvy.ide.client.propertiespanel.common.namespace;
 
 import com.codenvy.ide.client.elements.mediators.log.Property;
-import com.codenvy.ide.collections.Array;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * The entity which includes property, that may be modified, must implement this interface and realize method. This
  * method will be call when property changed.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public interface AddPropertyCallback {
     /**
@@ -33,5 +34,5 @@ public interface AddPropertyCallback {
      * @param property
      *         changed list of properties
      */
-    void onPropertiesChanged(@Nonnull Array<Property> property);
+    void onPropertiesChanged(@Nonnull List<Property> property);
 }

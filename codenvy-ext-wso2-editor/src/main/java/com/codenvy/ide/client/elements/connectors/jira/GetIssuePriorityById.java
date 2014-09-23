@@ -20,20 +20,19 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
  * The Class describes GetIssuePriorityById connector for jira group connectors. Also the class contains the business logic
@@ -52,9 +51,9 @@ public class GetIssuePriorityById extends AbstractConnector {
 
     private static final List<String> PROPERTIES = Arrays.asList(ISSUE_PRIORITY_ID);
 
-    private String           issuePriorityId;
-    private String           issuePriorityExpression;
-    private Array<NameSpace> issuePriorityNS;
+    private String          issuePriorityId;
+    private String          issuePriorityExpression;
+    private List<NameSpace> issuePriorityNS;
 
     @Inject
     public GetIssuePriorityById(EditorResources resources,
@@ -73,7 +72,7 @@ public class GetIssuePriorityById extends AbstractConnector {
         issuePriorityId = "";
         issuePriorityExpression = "";
 
-        issuePriorityNS = createArray();
+        issuePriorityNS = Collections.emptyList();
     }
 
     /** {@inheritDoc} */
@@ -129,11 +128,11 @@ public class GetIssuePriorityById extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getIssuePriorityNS() {
+    public List<NameSpace> getIssuePriorityNS() {
         return issuePriorityNS;
     }
 
-    public void setIssuePriorityNS(@Nonnull Array<NameSpace> issuePriorityNS) {
+    public void setIssuePriorityNS(@Nonnull List<NameSpace> issuePriorityNS) {
         this.issuePriorityNS = issuePriorityNS;
     }
 

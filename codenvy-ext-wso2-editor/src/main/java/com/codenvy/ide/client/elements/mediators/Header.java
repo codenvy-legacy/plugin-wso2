@@ -20,14 +20,13 @@ import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,8 +60,8 @@ public class Header extends AbstractElement {
     public static final Key<String>          EXPRESSION    = new Key<>("HeaderExpression");
     public static final Key<String>          INLINE_XML    = new Key<>("HeaderInlineXml");
 
-    public static final Key<Array<NameSpace>> HEADER_NAMESPACES     = new Key<>("HeaderNameSpaces");
-    public static final Key<Array<NameSpace>> EXPRESSION_NAMESPACES = new Key<>("HeaderExpressionNameSpaces");
+    public static final Key<List<NameSpace>> HEADER_NAMESPACES     = new Key<>("HeaderNameSpaces");
+    public static final Key<List<NameSpace>> EXPRESSION_NAMESPACES = new Key<>("HeaderExpressionNameSpaces");
 
     private static final String NAME_ATTRIBUTE       = "name";
     private static final String VALUE_ATTRIBUTE      = "value";
@@ -99,8 +98,8 @@ public class Header extends AbstractElement {
         putProperty(VALUE_LITERAL, "header_value");
         putProperty(EXPRESSION, "/default/expression");
         putProperty(INLINE_XML, "");
-        putProperty(HEADER_NAMESPACES, Collections.<NameSpace>createArray());
-        putProperty(EXPRESSION_NAMESPACES, Collections.<NameSpace>createArray());
+        putProperty(HEADER_NAMESPACES, Collections.<NameSpace>emptyList());
+        putProperty(EXPRESSION_NAMESPACES, Collections.<NameSpace>emptyList());
     }
 
     /** {@inheritDoc} */
@@ -130,14 +129,14 @@ public class Header extends AbstractElement {
         Map<String, String> attributes = new LinkedHashMap<>();
         StringBuilder result = new StringBuilder();
 
-        Array<NameSpace> headerNameSpaces = getProperty(HEADER_NAMESPACES);
+        List<NameSpace> headerNameSpaces = getProperty(HEADER_NAMESPACES);
 
         if (headerNameSpaces != null && !headerNameSpaces.isEmpty()) {
             NameSpace nameSpace = headerNameSpaces.get(headerNameSpaces.size() - 1);
             result.append(nameSpace.toString()).append(' ');
         }
 
-        Array<NameSpace> expressionNamespaces = getProperty(EXPRESSION_NAMESPACES);
+        List<NameSpace> expressionNamespaces = getProperty(EXPRESSION_NAMESPACES);
 
         if (expressionNamespaces != null) {
             result.append(convertNameSpaceToXMLFormat(expressionNamespaces));
@@ -236,8 +235,8 @@ public class Header extends AbstractElement {
         nameSpace.setPrefix(name);
         nameSpace.setUri(attributeValue);
 
-        Array<NameSpace> headerNamespaces = getProperty(HEADER_NAMESPACES);
-        Array<NameSpace> expressionNamespaces = getProperty(EXPRESSION_NAMESPACES);
+        List<NameSpace> headerNamespaces = getProperty(HEADER_NAMESPACES);
+        List<NameSpace> expressionNamespaces = getProperty(EXPRESSION_NAMESPACES);
 
         if (headerNamespaces == null || expressionNamespaces == null) {
             return;

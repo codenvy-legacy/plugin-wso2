@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes CreateWorksheet connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -64,10 +63,10 @@ public class CreateWorksheet extends AbstractConnector {
     private String worksheetRowsExpression;
     private String worksheetColumnsExpression;
 
-    private Array<NameSpace> spreadsheetNameNS;
-    private Array<NameSpace> worksheetNameNS;
-    private Array<NameSpace> worksheetRowsNS;
-    private Array<NameSpace> worksheetColumnsNS;
+    private List<NameSpace> spreadsheetNameNS;
+    private List<NameSpace> worksheetNameNS;
+    private List<NameSpace> worksheetRowsNS;
+    private List<NameSpace> worksheetColumnsNS;
 
     @Inject
     public CreateWorksheet(EditorResources resources,
@@ -93,10 +92,10 @@ public class CreateWorksheet extends AbstractConnector {
         worksheetRowsExpression = "";
         worksheetColumnsExpression = "";
 
-        spreadsheetNameNS = createArray();
-        worksheetNameNS = createArray();
-        worksheetRowsNS = createArray();
-        worksheetColumnsNS = createArray();
+        spreadsheetNameNS = emptyList();
+        worksheetNameNS = emptyList();
+        worksheetRowsNS = emptyList();
+        worksheetColumnsNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -184,11 +183,11 @@ public class CreateWorksheet extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getSpreadsheetNameNS() {
+    public List<NameSpace> getSpreadsheetNameNS() {
         return spreadsheetNameNS;
     }
 
-    public void setSpreadsheetNameNS(@Nonnull Array<NameSpace> spreadsheetNameNS) {
+    public void setSpreadsheetNameNS(@Nonnull List<NameSpace> spreadsheetNameNS) {
         this.spreadsheetNameNS = spreadsheetNameNS;
     }
 
@@ -211,11 +210,11 @@ public class CreateWorksheet extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getWorksheetNameNS() {
+    public List<NameSpace> getWorksheetNameNS() {
         return worksheetNameNS;
     }
 
-    public void setWorksheetNameNS(@Nonnull Array<NameSpace> worksheetNameNS) {
+    public void setWorksheetNameNS(@Nonnull List<NameSpace> worksheetNameNS) {
         this.worksheetNameNS = worksheetNameNS;
     }
 
@@ -238,11 +237,11 @@ public class CreateWorksheet extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getWorksheetRowsNS() {
+    public List<NameSpace> getWorksheetRowsNS() {
         return worksheetRowsNS;
     }
 
-    public void seWorksheetRowsNS(@Nonnull Array<NameSpace> worksheetRowsNS) {
+    public void seWorksheetRowsNS(@Nonnull List<NameSpace> worksheetRowsNS) {
         this.worksheetRowsNS = worksheetRowsNS;
     }
 
@@ -265,11 +264,11 @@ public class CreateWorksheet extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getWorksheetColumnsNS() {
+    public List<NameSpace> getWorksheetColumnsNS() {
         return worksheetColumnsNS;
     }
 
-    public void setworksheetColumnsNameNS(@Nonnull Array<NameSpace> worksheetColumnsNS) {
+    public void setworksheetColumnsNameNS(@Nonnull List<NameSpace> worksheetColumnsNS) {
         this.worksheetColumnsNS = worksheetColumnsNS;
     }
 

@@ -17,15 +17,15 @@ package com.codenvy.ide.client.elements.mediators.enrich;
 
 import com.codenvy.ide.client.elements.AbstractEntityElement;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
@@ -44,14 +44,14 @@ public class Source extends AbstractEntityElement {
 
     public static final String SOURCE_SERIALIZATION_NAME = "source";
 
-    public static final Key<Boolean>          SOURCE_CLONE               = new Key<>("EnrichSourceClone");
-    public static final Key<SourceType>       SOURCE_TYPE                = new Key<>("EnrichSourceType");
-    public static final Key<InlineType>       SOURCE_INLINE_TYPE         = new Key<>("EnrichSourceInlineType");
-    public static final Key<String>           SOURCE_INLINE_REGISTER_KEY = new Key<>("EnrichSourceInlineRegistryKey");
-    public static final Key<String>           SOURCE_XML                 = new Key<>("EnrichSourceXml");
-    public static final Key<String>           SOURCE_XPATH               = new Key<>("EnrichSourceXPath");
-    public static final Key<String>           SOURCE_PROPERTY            = new Key<>("EnrichSourceProperty");
-    public static final Key<Array<NameSpace>> SOURCE_NAMESPACES          = new Key<>("EnrichSourceNamespaces");
+    public static final Key<Boolean>         SOURCE_CLONE               = new Key<>("EnrichSourceClone");
+    public static final Key<SourceType>      SOURCE_TYPE                = new Key<>("EnrichSourceType");
+    public static final Key<InlineType>      SOURCE_INLINE_TYPE         = new Key<>("EnrichSourceInlineType");
+    public static final Key<String>          SOURCE_INLINE_REGISTER_KEY = new Key<>("EnrichSourceInlineRegistryKey");
+    public static final Key<String>          SOURCE_XML                 = new Key<>("EnrichSourceXml");
+    public static final Key<String>          SOURCE_XPATH               = new Key<>("EnrichSourceXPath");
+    public static final Key<String>          SOURCE_PROPERTY            = new Key<>("EnrichSourceProperty");
+    public static final Key<List<NameSpace>> SOURCE_NAMESPACES          = new Key<>("EnrichSourceNamespaces");
 
     private static final String CLONE_SOURCE_ATTRIBUTE_NAME        = "clone";
     private static final String SOURCE_TYPE_ATTRIBUTE_NAME         = "type";
@@ -72,7 +72,7 @@ public class Source extends AbstractEntityElement {
         putProperty(SOURCE_XML, "<inline/>");
         putProperty(SOURCE_XPATH, "/default/xpath");
         putProperty(SOURCE_PROPERTY, "source_property");
-        putProperty(SOURCE_NAMESPACES, Collections.<NameSpace>createArray());
+        putProperty(SOURCE_NAMESPACES, Collections.<NameSpace>emptyList());
     }
 
     /** Serialization representation attributes of source property of element. */
@@ -126,7 +126,7 @@ public class Source extends AbstractEntityElement {
     /** @return serialized representation of the source element */
     @Nonnull
     public String serialize() {
-        Array<NameSpace> nameSpaces = getProperty(SOURCE_NAMESPACES);
+        List<NameSpace> nameSpaces = getProperty(SOURCE_NAMESPACES);
         SourceType type = getProperty(SOURCE_TYPE);
         InlineType inlineType = getProperty(SOURCE_INLINE_TYPE);
         String sourceXML = getProperty(SOURCE_XML);
@@ -194,7 +194,7 @@ public class Source extends AbstractEntityElement {
     }
 
     private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        Array<NameSpace> nameSpaces = getProperty(SOURCE_NAMESPACES);
+        List<NameSpace> nameSpaces = getProperty(SOURCE_NAMESPACES);
 
         if (!StringUtils.startsWith(PREFIX, attributeName, true) || nameSpaces == null) {
             return;

@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes UpdateComment connector for jira group connectors. Also the class contains the business logic
@@ -59,8 +58,8 @@ public class UpdateComment extends AbstractConnector {
     private String issueIdOrKeyExpression;
     private String commentIdExpression;
 
-    private Array<NameSpace> issueIdOrKeyNS;
-    private Array<NameSpace> commentIdNS;
+    private List<NameSpace> issueIdOrKeyNS;
+    private List<NameSpace> commentIdNS;
 
     @Inject
     public UpdateComment(EditorResources resources,
@@ -82,8 +81,8 @@ public class UpdateComment extends AbstractConnector {
         issueIdOrKeyExpression = "";
         commentIdExpression = "";
 
-        issueIdOrKeyNS = createArray();
-        commentIdNS = createArray();
+        issueIdOrKeyNS = emptyList();
+        commentIdNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -167,20 +166,20 @@ public class UpdateComment extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getIssueIdOrKeyNS() {
+    public List<NameSpace> getIssueIdOrKeyNS() {
         return issueIdOrKeyNS;
     }
 
-    public void setIssueIdOrKeyNS(@Nonnull Array<NameSpace> issueIdOrKeyNS) {
+    public void setIssueIdOrKeyNS(@Nonnull List<NameSpace> issueIdOrKeyNS) {
         this.issueIdOrKeyNS = issueIdOrKeyNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getCommentIdNS() {
+    public List<NameSpace> getCommentIdNS() {
         return commentIdNS;
     }
 
-    public void setCommentIdNS(@Nonnull Array<NameSpace> commentIdNS) {
+    public void setCommentIdNS(@Nonnull List<NameSpace> commentIdNS) {
         this.commentIdNS = commentIdNS;
     }
 }

@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes GetUserAssignableProjects connector for jira group connectors. Also the class contains the business logic
@@ -65,10 +64,10 @@ public class GetUserAssignableProjects extends AbstractConnector {
     private String maxResultExpression;
     private String startFromExpression;
 
-    private Array<NameSpace> userNameNS;
-    private Array<NameSpace> projectKeyNS;
-    private Array<NameSpace> maxResultNS;
-    private Array<NameSpace> startFromNS;
+    private List<NameSpace> userNameNS;
+    private List<NameSpace> projectKeyNS;
+    private List<NameSpace> maxResultNS;
+    private List<NameSpace> startFromNS;
 
     @Inject
     public GetUserAssignableProjects(EditorResources resources,
@@ -94,10 +93,10 @@ public class GetUserAssignableProjects extends AbstractConnector {
         startFromExpression = "";
         maxResultExpression = "";
 
-        startFromNS = createArray();
-        userNameNS = createArray();
-        maxResultNS = createArray();
-        projectKeyNS = createArray();
+        startFromNS = emptyList();
+        userNameNS = emptyList();
+        maxResultNS = emptyList();
+        projectKeyNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -240,38 +239,38 @@ public class GetUserAssignableProjects extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getUserNameNS() {
+    public List<NameSpace> getUserNameNS() {
         return userNameNS;
     }
 
-    public void setUserNameNS(@Nonnull Array<NameSpace> userNameNS) {
+    public void setUserNameNS(@Nonnull List<NameSpace> userNameNS) {
         this.userNameNS = userNameNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getProjectKeyNS() {
+    public List<NameSpace> getProjectKeyNS() {
         return projectKeyNS;
     }
 
-    public void setProjectKeyNS(@Nonnull Array<NameSpace> projectKeyNS) {
+    public void setProjectKeyNS(@Nonnull List<NameSpace> projectKeyNS) {
         this.projectKeyNS = projectKeyNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getMaxResultNS() {
+    public List<NameSpace> getMaxResultNS() {
         return maxResultNS;
     }
 
-    public void setMaxResultNS(@Nonnull Array<NameSpace> maxResultNS) {
+    public void setMaxResultNS(@Nonnull List<NameSpace> maxResultNS) {
         this.maxResultNS = maxResultNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getStartFromNS() {
+    public List<NameSpace> getStartFromNS() {
         return startFromNS;
     }
 
-    public void setStartFromNS(@Nonnull Array<NameSpace> startFromNS) {
+    public void setStartFromNS(@Nonnull List<NameSpace> startFromNS) {
         this.startFromNS = startFromNS;
     }
 

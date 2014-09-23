@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes InitSpreadsheet connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -67,10 +66,10 @@ public class InitSpreadsheet extends AbstractConnector {
     private String oauthAccessTokenExpression;
     private String oauthAccessTokenSecretExpression;
 
-    private Array<NameSpace> oauthConsumerKeyNS;
-    private Array<NameSpace> oauthConsumerSecretNS;
-    private Array<NameSpace> oauthAccessTokenNS;
-    private Array<NameSpace> oauthAccessTokenSecretNS;
+    private List<NameSpace> oauthConsumerKeyNS;
+    private List<NameSpace> oauthConsumerSecretNS;
+    private List<NameSpace> oauthAccessTokenNS;
+    private List<NameSpace> oauthAccessTokenSecretNS;
 
     @Inject
     public InitSpreadsheet(EditorResources resources,
@@ -96,10 +95,10 @@ public class InitSpreadsheet extends AbstractConnector {
         oauthAccessTokenExpression = "";
         oauthAccessTokenSecretExpression = "";
 
-        oauthConsumerKeyNS = createArray();
-        oauthConsumerSecretNS = createArray();
-        oauthAccessTokenNS = createArray();
-        oauthAccessTokenSecretNS = createArray();
+        oauthConsumerKeyNS = emptyList();
+        oauthConsumerSecretNS = emptyList();
+        oauthAccessTokenNS = emptyList();
+        oauthAccessTokenSecretNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -241,38 +240,38 @@ public class InitSpreadsheet extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getOauthConsumerKeyNS() {
+    public List<NameSpace> getOauthConsumerKeyNS() {
         return oauthConsumerKeyNS;
     }
 
-    public void setOauthConsumerKeyNS(@Nonnull Array<NameSpace> oauthConsumerKeyNS) {
+    public void setOauthConsumerKeyNS(@Nonnull List<NameSpace> oauthConsumerKeyNS) {
         this.oauthConsumerKeyNS = oauthConsumerKeyNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getOauthConsumerSecretNS() {
+    public List<NameSpace> getOauthConsumerSecretNS() {
         return oauthConsumerSecretNS;
     }
 
-    public void setOauthConsumerSecretNS(@Nonnull Array<NameSpace> oauthConsumerSecretNS) {
+    public void setOauthConsumerSecretNS(@Nonnull List<NameSpace> oauthConsumerSecretNS) {
         this.oauthConsumerSecretNS = oauthConsumerSecretNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getOauthAccessTokenNS() {
+    public List<NameSpace> getOauthAccessTokenNS() {
         return oauthAccessTokenNS;
     }
 
-    public void setOauthAccessTokenNS(@Nonnull Array<NameSpace> oauthAccessTokenNS) {
+    public void setOauthAccessTokenNS(@Nonnull List<NameSpace> oauthAccessTokenNS) {
         this.oauthAccessTokenNS = oauthAccessTokenNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getOauthAccessTokenSecretNS() {
+    public List<NameSpace> getOauthAccessTokenSecretNS() {
         return oauthAccessTokenSecretNS;
     }
 
-    public void setOauthAccessTokenSecretNS(@Nonnull Array<NameSpace> oauthAccessTokenSecretNS) {
+    public void setOauthAccessTokenSecretNS(@Nonnull List<NameSpace> oauthAccessTokenSecretNS) {
         this.oauthAccessTokenSecretNS = oauthAccessTokenSecretNS;
     }
 

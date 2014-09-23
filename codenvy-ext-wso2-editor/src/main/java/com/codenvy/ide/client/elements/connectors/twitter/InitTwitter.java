@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes Init connector for twitter group of connectors. Also the class contains the business logic
@@ -65,10 +64,10 @@ public class InitTwitter extends AbstractConnector {
     private String accessTokenExpr;
     private String accessTokenSecretExpr;
 
-    private Array<NameSpace> consumerKeyNS;
-    private Array<NameSpace> consumerSecretNS;
-    private Array<NameSpace> accessTokenNS;
-    private Array<NameSpace> accessTokenSecretNS;
+    private List<NameSpace> consumerKeyNS;
+    private List<NameSpace> consumerSecretNS;
+    private List<NameSpace> accessTokenNS;
+    private List<NameSpace> accessTokenSecretNS;
 
     @Inject
     public InitTwitter(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -92,10 +91,10 @@ public class InitTwitter extends AbstractConnector {
         accessTokenSecretExpr = "";
         consumerSecretExpr = "";
 
-        consumerKeyNS = createArray();
-        consumerSecretNS = createArray();
-        accessTokenNS = createArray();
-        accessTokenSecretNS = createArray();
+        consumerKeyNS = emptyList();
+        consumerSecretNS = emptyList();
+        accessTokenNS = emptyList();
+        accessTokenSecretNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -238,38 +237,38 @@ public class InitTwitter extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getConsumerKeyNS() {
+    public List<NameSpace> getConsumerKeyNS() {
         return consumerKeyNS;
     }
 
-    public void setConsumerKeyNS(@Nonnull Array<NameSpace> consumerKeyNS) {
+    public void setConsumerKeyNS(@Nonnull List<NameSpace> consumerKeyNS) {
         this.consumerKeyNS = consumerKeyNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getConsumerSecretNS() {
+    public List<NameSpace> getConsumerSecretNS() {
         return consumerSecretNS;
     }
 
-    public void setConsumerSecretNS(@Nonnull Array<NameSpace> consumerSecretNS) {
+    public void setConsumerSecretNS(@Nonnull List<NameSpace> consumerSecretNS) {
         this.consumerSecretNS = consumerSecretNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getAccessTokenNS() {
+    public List<NameSpace> getAccessTokenNS() {
         return accessTokenNS;
     }
 
-    public void setAccessTokenNS(@Nonnull Array<NameSpace> accessTokenNS) {
+    public void setAccessTokenNS(@Nonnull List<NameSpace> accessTokenNS) {
         this.accessTokenNS = accessTokenNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getAccessTokenSecretNS() {
+    public List<NameSpace> getAccessTokenSecretNS() {
         return accessTokenSecretNS;
     }
 
-    public void setAccessTokenSecretNS(@Nonnull Array<NameSpace> accessTokenSecretNS) {
+    public void setAccessTokenSecretNS(@Nonnull List<NameSpace> accessTokenSecretNS) {
         this.accessTokenSecretNS = accessTokenSecretNS;
     }
 }

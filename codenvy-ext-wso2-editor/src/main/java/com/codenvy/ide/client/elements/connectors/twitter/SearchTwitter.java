@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes Search connector for twitter group of connectors. Also the class contains the business logic
@@ -87,17 +86,17 @@ public class SearchTwitter extends AbstractConnector {
     private String untilExpr;
     private String countExpr;
 
-    private Array<NameSpace> searchNS;
-    private Array<NameSpace> langNS;
-    private Array<NameSpace> localeNS;
-    private Array<NameSpace> maxIdNS;
-    private Array<NameSpace> sinceNS;
-    private Array<NameSpace> sinceIdNS;
-    private Array<NameSpace> geocodeNS;
-    private Array<NameSpace> radiusNS;
-    private Array<NameSpace> unitNS;
-    private Array<NameSpace> untilNS;
-    private Array<NameSpace> countNS;
+    private List<NameSpace> searchNS;
+    private List<NameSpace> langNS;
+    private List<NameSpace> localeNS;
+    private List<NameSpace> maxIdNS;
+    private List<NameSpace> sinceNS;
+    private List<NameSpace> sinceIdNS;
+    private List<NameSpace> geocodeNS;
+    private List<NameSpace> radiusNS;
+    private List<NameSpace> unitNS;
+    private List<NameSpace> untilNS;
+    private List<NameSpace> countNS;
 
     @Inject
     public SearchTwitter(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -135,17 +134,17 @@ public class SearchTwitter extends AbstractConnector {
         untilExpr = "";
         countExpr = "";
 
-        searchNS = createArray();
-        langNS = createArray();
-        localeNS = createArray();
-        maxIdNS = createArray();
-        sinceNS = createArray();
-        sinceIdNS = createArray();
-        geocodeNS = createArray();
-        radiusNS = createArray();
-        unitNS = createArray();
-        untilNS = createArray();
-        countNS = createArray();
+        searchNS = emptyList();
+        langNS = emptyList();
+        localeNS = emptyList();
+        maxIdNS = emptyList();
+        sinceNS = emptyList();
+        sinceIdNS = emptyList();
+        geocodeNS = emptyList();
+        radiusNS = emptyList();
+        unitNS = emptyList();
+        untilNS = emptyList();
+        countNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -491,101 +490,101 @@ public class SearchTwitter extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getSearchNS() {
+    public List<NameSpace> getSearchNS() {
         return searchNS;
     }
 
-    public void setSearchNS(@Nonnull Array<NameSpace> searchNS) {
+    public void setSearchNS(@Nonnull List<NameSpace> searchNS) {
         this.searchNS = searchNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getLangNS() {
+    public List<NameSpace> getLangNS() {
         return langNS;
     }
 
-    public void setLangNS(@Nonnull Array<NameSpace> langNS) {
+    public void setLangNS(@Nonnull List<NameSpace> langNS) {
         this.langNS = langNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getLocaleNS() {
+    public List<NameSpace> getLocaleNS() {
         return localeNS;
     }
 
-    public void setLocaleNS(@Nonnull Array<NameSpace> localeNS) {
+    public void setLocaleNS(@Nonnull List<NameSpace> localeNS) {
         this.localeNS = localeNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getMaxIdNS() {
+    public List<NameSpace> getMaxIdNS() {
         return maxIdNS;
     }
 
-    public void setMaxIdNS(@Nonnull Array<NameSpace> maxIdNS) {
+    public void setMaxIdNS(@Nonnull List<NameSpace> maxIdNS) {
         this.maxIdNS = maxIdNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getSinceNS() {
+    public List<NameSpace> getSinceNS() {
         return sinceNS;
     }
 
-    public void setSinceNS(@Nonnull Array<NameSpace> sinceNS) {
+    public void setSinceNS(@Nonnull List<NameSpace> sinceNS) {
         this.sinceNS = sinceNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getSinceIdNS() {
+    public List<NameSpace> getSinceIdNS() {
         return sinceIdNS;
     }
 
-    public void setSinceIdNS(@Nonnull Array<NameSpace> sinceIdNS) {
+    public void setSinceIdNS(@Nonnull List<NameSpace> sinceIdNS) {
         this.sinceIdNS = sinceIdNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getGeocodeNS() {
+    public List<NameSpace> getGeocodeNS() {
         return geocodeNS;
     }
 
-    public void setGeocodeNS(@Nonnull Array<NameSpace> geocodeNS) {
+    public void setGeocodeNS(@Nonnull List<NameSpace> geocodeNS) {
         this.geocodeNS = geocodeNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getRadiusNS() {
+    public List<NameSpace> getRadiusNS() {
         return radiusNS;
     }
 
-    public void setRadiusNS(@Nonnull Array<NameSpace> radiusNS) {
+    public void setRadiusNS(@Nonnull List<NameSpace> radiusNS) {
         this.radiusNS = radiusNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getUnitNS() {
+    public List<NameSpace> getUnitNS() {
         return unitNS;
     }
 
-    public void setUnitNS(@Nonnull Array<NameSpace> unitNS) {
+    public void setUnitNS(@Nonnull List<NameSpace> unitNS) {
         this.unitNS = unitNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getUntilNS() {
+    public List<NameSpace> getUntilNS() {
         return untilNS;
     }
 
-    public void setUntilNS(@Nonnull Array<NameSpace> untilNS) {
+    public void setUntilNS(@Nonnull List<NameSpace> untilNS) {
         this.untilNS = untilNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getCountNS() {
+    public List<NameSpace> getCountNS() {
         return countNS;
     }
 
-    public void setCountNS(@Nonnull Array<NameSpace> countNS) {
+    public void setCountNS(@Nonnull List<NameSpace> countNS) {
         this.countNS = countNS;
     }
 }

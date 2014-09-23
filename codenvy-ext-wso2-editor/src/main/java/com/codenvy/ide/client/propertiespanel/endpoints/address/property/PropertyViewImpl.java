@@ -18,7 +18,6 @@ package com.codenvy.ide.client.propertiespanel.endpoints.address.property;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.endpoints.addressendpoint.Property;
 import com.codenvy.ide.client.elements.mediators.ValueType;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.dom.client.Style;
@@ -45,6 +44,7 @@ import java.util.List;
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class PropertyViewImpl extends Window implements PropertyView {
 
@@ -157,10 +157,10 @@ public class PropertyViewImpl extends Window implements PropertyView {
 
     /** {@inheritDoc} */
     @Override
-    public void setProperties(@Nonnull Array<Property> properties) {
+    public void setProperties(@Nonnull List<Property> properties) {
         List<Property> list = new ArrayList<>();
 
-        for (Property property : properties.asIterable()) {
+        for (Property property : properties) {
             list.add(property);
         }
 

@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -34,7 +33,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes Retrieve connector for Salesforce group connectors. Also the class contains the business logic
@@ -55,15 +54,15 @@ public class Retrieve extends AbstractConnector {
 
     private static final List<String> PROPERTIES = Arrays.asList(FIELD_LIST, OBJECT_TYPE, OBJECT_IDS);
 
-    private String           fieldList;
-    private String           objectType;
-    private String           objectIDS;
-    private String           fieldListInline;
-    private String           objectTypeInline;
-    private String           objectIDSInline;
-    private Array<NameSpace> objectTypeNameSpaces;
-    private Array<NameSpace> objectIDSNameSpaces;
-    private Array<NameSpace> fieldListNameSpaces;
+    private String          fieldList;
+    private String          objectType;
+    private String          objectIDS;
+    private String          fieldListInline;
+    private String          objectTypeInline;
+    private String          objectIDSInline;
+    private List<NameSpace> objectTypeNameSpaces;
+    private List<NameSpace> objectIDSNameSpaces;
+    private List<NameSpace> fieldListNameSpaces;
 
     @Inject
     public Retrieve(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -84,9 +83,9 @@ public class Retrieve extends AbstractConnector {
         objectTypeInline = "";
         objectIDSInline = "";
 
-        fieldListNameSpaces = createArray();
-        objectTypeNameSpaces = createArray();
-        objectIDSNameSpaces = createArray();
+        fieldListNameSpaces = emptyList();
+        objectTypeNameSpaces = emptyList();
+        objectIDSNameSpaces = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -199,29 +198,29 @@ public class Retrieve extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getFieldListNameSpaces() {
+    public List<NameSpace> getFieldListNameSpaces() {
         return fieldListNameSpaces;
     }
 
-    public void setFieldListNameSpaces(@Nonnull Array<NameSpace> fieldListNameSpaces) {
+    public void setFieldListNameSpaces(@Nonnull List<NameSpace> fieldListNameSpaces) {
         this.fieldListNameSpaces = fieldListNameSpaces;
     }
 
     @Nonnull
-    public Array<NameSpace> getObjectTypeNameSpaces() {
+    public List<NameSpace> getObjectTypeNameSpaces() {
         return objectTypeNameSpaces;
     }
 
-    public void setObjectTypeNameSpaces(@Nonnull Array<NameSpace> objectTypeNameSpaces) {
+    public void setObjectTypeNameSpaces(@Nonnull List<NameSpace> objectTypeNameSpaces) {
         this.objectTypeNameSpaces = objectTypeNameSpaces;
     }
 
     @Nonnull
-    public Array<NameSpace> getObjectIDSNameSpaces() {
+    public List<NameSpace> getObjectIDSNameSpaces() {
         return objectIDSNameSpaces;
     }
 
-    public void setObjectIDSNameSpaces(@Nonnull Array<NameSpace> objectIDSNameSpaces) {
+    public void setObjectIDSNameSpaces(@Nonnull List<NameSpace> objectIDSNameSpaces) {
         this.objectIDSNameSpaces = objectIDSNameSpaces;
     }
 }

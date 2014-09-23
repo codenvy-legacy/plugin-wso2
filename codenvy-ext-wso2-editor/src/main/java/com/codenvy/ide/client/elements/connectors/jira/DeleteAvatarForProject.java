@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes DeleteAvatarForProject connector for jira group connectors. Also the class contains the business logic
@@ -45,11 +44,11 @@ import static com.codenvy.ide.collections.Collections.createArray;
  */
 public class DeleteAvatarForProject extends AbstractConnector {
 
-    public static final  String ELEMENT_NAME       = "DeleteAvatarForProject";
-    public static final  String SERIALIZATION_NAME = "jira.deleteAvatarForProject";
+    public static final String ELEMENT_NAME       = "DeleteAvatarForProject";
+    public static final String SERIALIZATION_NAME = "jira.deleteAvatarForProject";
 
-    private static final String PROJECT_KEY        = "projectKey";
-    private static final String AVATAR_ID          = "avatarId";
+    private static final String PROJECT_KEY = "projectKey";
+    private static final String AVATAR_ID   = "avatarId";
 
     private static final List<String> PROPERTIES = Arrays.asList(PROJECT_KEY, AVATAR_ID);
 
@@ -59,8 +58,8 @@ public class DeleteAvatarForProject extends AbstractConnector {
     private String projectKeyExpression;
     private String avatarIdExpression;
 
-    private Array<NameSpace> projectKeyNS;
-    private Array<NameSpace> avatarIdNS;
+    private List<NameSpace> projectKeyNS;
+    private List<NameSpace> avatarIdNS;
 
     @Inject
     public DeleteAvatarForProject(EditorResources resources,
@@ -82,8 +81,8 @@ public class DeleteAvatarForProject extends AbstractConnector {
         projectKeyExpression = "";
         avatarIdExpression = "";
 
-        projectKeyNS = createArray();
-        avatarIdNS = createArray();
+        projectKeyNS = emptyList();
+        avatarIdNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -167,20 +166,20 @@ public class DeleteAvatarForProject extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getProjectKeyNS() {
+    public List<NameSpace> getProjectKeyNS() {
         return projectKeyNS;
     }
 
-    public void setProjectKeyNS(@Nonnull Array<NameSpace> projectKeyNS) {
+    public void setProjectKeyNS(@Nonnull List<NameSpace> projectKeyNS) {
         this.projectKeyNS = projectKeyNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getAvatarIdNS() {
+    public List<NameSpace> getAvatarIdNS() {
         return avatarIdNS;
     }
 
-    public void setAvatarIdNS(@Nonnull Array<NameSpace> avatarIdNS) {
+    public void setAvatarIdNS(@Nonnull List<NameSpace> avatarIdNS) {
         this.avatarIdNS = avatarIdNS;
     }
 

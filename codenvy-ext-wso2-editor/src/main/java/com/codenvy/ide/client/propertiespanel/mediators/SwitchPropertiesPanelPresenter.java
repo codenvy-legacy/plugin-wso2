@@ -29,7 +29,6 @@ import com.codenvy.ide.client.propertiespanel.property.PropertyValueChangedListe
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -48,6 +47,7 @@ import static com.codenvy.ide.client.elements.mediators.Switch.SOURCE_XPATH;
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class SwitchPropertiesPanelPresenter extends AbstractPropertiesPanel<Switch, PropertiesPanelView> {
 
@@ -75,7 +75,7 @@ public class SwitchPropertiesPanelPresenter extends AbstractPropertiesPanel<Swit
 
         this.addNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.putProperty(NAMESPACES, nameSpaces);
                 element.putProperty(SOURCE_XPATH, expression);
 
@@ -99,7 +99,7 @@ public class SwitchPropertiesPanelPresenter extends AbstractPropertiesPanel<Swit
         sourceXPath.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
-                Array<NameSpace> nameSpaces = element.getProperty(NAMESPACES);
+                List<NameSpace> nameSpaces = element.getProperty(NAMESPACES);
                 String sourceXPath = element.getProperty(SOURCE_XPATH);
 
                 if (nameSpaces != null && sourceXPath != null) {

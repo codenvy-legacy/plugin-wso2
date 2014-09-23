@@ -25,11 +25,11 @@ import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpace
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
@@ -39,6 +39,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * depending on user's changes of properties.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class SearchPlacesConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<SearchPlaces> {
 
@@ -67,7 +68,7 @@ public class SearchPlacesConnectorPresenter extends AbstractConnectorPropertiesP
 
         this.consumerKeyCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setConsumerKeyNS(nameSpaces);
                 element.setConsumerKeyExpr(expression);
 
@@ -79,7 +80,7 @@ public class SearchPlacesConnectorPresenter extends AbstractConnectorPropertiesP
 
         this.consumerSecretCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setConsumerSecretNS(nameSpaces);
                 element.setConsumerSecretExpr(expression);
 
@@ -91,7 +92,7 @@ public class SearchPlacesConnectorPresenter extends AbstractConnectorPropertiesP
 
         this.accessTokenCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setAccessTokenNS(nameSpaces);
                 element.setAccessTokenExpr(expression);
 
@@ -103,7 +104,7 @@ public class SearchPlacesConnectorPresenter extends AbstractConnectorPropertiesP
 
         this.accessTokenSecretCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setAccessTokenSecretNS(nameSpaces);
                 element.setAccessTokenSecretExpr(expression);
 
@@ -115,7 +116,7 @@ public class SearchPlacesConnectorPresenter extends AbstractConnectorPropertiesP
 
         this.latitudeCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setLatitudeNS(nameSpaces);
                 element.setLatitudeExpr(expression);
 
@@ -127,7 +128,7 @@ public class SearchPlacesConnectorPresenter extends AbstractConnectorPropertiesP
 
         this.longitudeCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setLongitudeNS(nameSpaces);
                 element.setLongitudeExpr(expression);
 
@@ -139,7 +140,7 @@ public class SearchPlacesConnectorPresenter extends AbstractConnectorPropertiesP
 
         this.queryCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setQueryNS(nameSpaces);
                 element.setQueryExpr(expression);
 

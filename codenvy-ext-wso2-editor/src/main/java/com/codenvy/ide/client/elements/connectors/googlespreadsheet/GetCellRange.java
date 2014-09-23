@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes GetCellRange connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -75,12 +74,12 @@ public class GetCellRange extends AbstractConnector {
     private String minColumnExpression;
     private String maxColumnExpression;
 
-    private Array<NameSpace> spreadsheetNameNS;
-    private Array<NameSpace> worksheetNameNS;
-    private Array<NameSpace> minRowNS;
-    private Array<NameSpace> maxRowNS;
-    private Array<NameSpace> minColumnNS;
-    private Array<NameSpace> maxColumnNS;
+    private List<NameSpace> spreadsheetNameNS;
+    private List<NameSpace> worksheetNameNS;
+    private List<NameSpace> minRowNS;
+    private List<NameSpace> maxRowNS;
+    private List<NameSpace> minColumnNS;
+    private List<NameSpace> maxColumnNS;
 
     @Inject
     public GetCellRange(EditorResources resources,
@@ -110,12 +109,12 @@ public class GetCellRange extends AbstractConnector {
         minColumnExpression = "";
         maxColumnExpression = "";
 
-        spreadsheetNameNS = createArray();
-        worksheetNameNS = createArray();
-        minRowNS = createArray();
-        maxRowNS = createArray();
-        minColumnNS = createArray();
-        maxColumnNS = createArray();
+        spreadsheetNameNS = emptyList();
+        worksheetNameNS = emptyList();
+        minRowNS = emptyList();
+        maxRowNS = emptyList();
+        minColumnNS = emptyList();
+        maxColumnNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -225,11 +224,11 @@ public class GetCellRange extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getSpreadsheetNameNS() {
+    public List<NameSpace> getSpreadsheetNameNS() {
         return spreadsheetNameNS;
     }
 
-    public void setSpreadsheetNameNS(@Nonnull Array<NameSpace> spreadsheetNameNS) {
+    public void setSpreadsheetNameNS(@Nonnull List<NameSpace> spreadsheetNameNS) {
         this.spreadsheetNameNS = spreadsheetNameNS;
     }
 
@@ -252,11 +251,11 @@ public class GetCellRange extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getWorksheetCountNS() {
+    public List<NameSpace> getWorksheetCountNS() {
         return worksheetNameNS;
     }
 
-    public void setWorksheetNameNS(@Nonnull Array<NameSpace> worksheetNameNS) {
+    public void setWorksheetNameNS(@Nonnull List<NameSpace> worksheetNameNS) {
         this.worksheetNameNS = worksheetNameNS;
     }
 
@@ -333,38 +332,38 @@ public class GetCellRange extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getMinRowNS() {
+    public List<NameSpace> getMinRowNS() {
         return minRowNS;
     }
 
-    public void setMinRowNS(@Nonnull Array<NameSpace> minRowNS) {
+    public void setMinRowNS(@Nonnull List<NameSpace> minRowNS) {
         this.minRowNS = minRowNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getMaxRowNS() {
+    public List<NameSpace> getMaxRowNS() {
         return maxRowNS;
     }
 
-    public void setMaxRowNS(@Nonnull Array<NameSpace> maxRowNS) {
+    public void setMaxRowNS(@Nonnull List<NameSpace> maxRowNS) {
         this.maxRowNS = maxRowNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getMinColumnNS() {
+    public List<NameSpace> getMinColumnNS() {
         return minColumnNS;
     }
 
-    public void setMinColumnNS(@Nonnull Array<NameSpace> minColumnNS) {
+    public void setMinColumnNS(@Nonnull List<NameSpace> minColumnNS) {
         this.minColumnNS = minColumnNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getMaxColumnNS() {
+    public List<NameSpace> getMaxColumnNS() {
         return maxColumnNS;
     }
 
-    public void setMaxColumnNS(@Nonnull Array<NameSpace> maxColumnNS) {
+    public void setMaxColumnNS(@Nonnull List<NameSpace> maxColumnNS) {
         this.maxColumnNS = maxColumnNS;
     }
 

@@ -29,13 +29,13 @@ import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPr
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.Filter.CONDITION_TYPE;
 import static com.codenvy.ide.client.elements.mediators.Filter.ConditionType;
@@ -102,7 +102,7 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
 
         final AddNameSpacesCallBack addSourceNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nullable String expression) {
                 element.putProperty(SOURCE_NAMESPACE, nameSpaces);
                 element.putProperty(SOURCE, expression != null ? expression : "");
 
@@ -117,7 +117,7 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
         source.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
-                Array<NameSpace> nameSpaces = element.getProperty(SOURCE_NAMESPACE);
+                List<NameSpace> nameSpaces = element.getProperty(SOURCE_NAMESPACE);
                 String source = element.getProperty(SOURCE);
 
                 if (source == null || nameSpaces == null) {
@@ -148,7 +148,7 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
 
         final AddNameSpacesCallBack addXPathNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nullable String expression) {
                 element.putProperty(XPATH_NAMESPACE, nameSpaces);
                 element.putProperty(X_PATH, expression != null ? expression : "");
 
@@ -163,7 +163,7 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
         xPath.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
-                Array<NameSpace> nameSpaces = element.getProperty(XPATH_NAMESPACE);
+                List<NameSpace> nameSpaces = element.getProperty(XPATH_NAMESPACE);
                 String xPath = element.getProperty(X_PATH);
 
                 if (xPath == null || nameSpaces == null) {

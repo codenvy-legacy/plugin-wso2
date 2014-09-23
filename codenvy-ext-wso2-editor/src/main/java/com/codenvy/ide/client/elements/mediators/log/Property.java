@@ -17,8 +17,6 @@ package com.codenvy.ide.client.elements.mediators.log;
 
 import com.codenvy.ide.client.elements.AbstractEntityElement;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
@@ -26,6 +24,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 
@@ -40,9 +40,9 @@ import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
  */
 public class Property extends AbstractEntityElement {
 
-    public static final Key<String>           NAME       = new Key<>("MediatorPropertyName");
-    public static final Key<String>           EXPRESSION = new Key<>("MediatorPropertyExpression");
-    public static final Key<Array<NameSpace>> NAMESPACES = new Key<>("MediatorPropertyNameSpaces");
+    public static final Key<String>          NAME       = new Key<>("MediatorPropertyName");
+    public static final Key<String>          EXPRESSION = new Key<>("MediatorPropertyExpression");
+    public static final Key<List<NameSpace>> NAMESPACES = new Key<>("MediatorPropertyNameSpaces");
 
     private static final String NAME_ATTRIBUTE  = "name";
     private static final String VALUE_ATTRIBUTE = "value";
@@ -60,7 +60,7 @@ public class Property extends AbstractEntityElement {
 
         putProperty(NAME, "");
         putProperty(EXPRESSION, "");
-        putProperty(NAMESPACES, Collections.<NameSpace>createArray());
+        putProperty(NAMESPACES, Collections.<NameSpace>emptyList());
     }
 
     /** Returns serialization representation CallTemplate element's property. */
@@ -109,7 +109,7 @@ public class Property extends AbstractEntityElement {
     }
 
     private void applyNameSpaces(@Nonnull String nodeName, @Nonnull String nodeValue) {
-        Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
+        List<NameSpace> nameSpaces = getProperty(NAMESPACES);
 
         if (!StringUtils.startsWith(PREFIX, nodeName, true) || nameSpaces == null) {
             return;

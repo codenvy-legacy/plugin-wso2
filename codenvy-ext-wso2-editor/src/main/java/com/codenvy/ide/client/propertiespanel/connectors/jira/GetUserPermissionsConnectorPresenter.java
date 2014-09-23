@@ -25,11 +25,11 @@ import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpace
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
@@ -39,6 +39,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * depending on user's changes of properties.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class GetUserPermissionsConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<GetUserPermissions> {
 
@@ -64,7 +65,7 @@ public class GetUserPermissionsConnectorPresenter extends AbstractConnectorPrope
 
         this.projectKeyCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setProjectKeyNS(nameSpaces);
                 element.setProjectKeyExpression(expression);
 
@@ -76,7 +77,7 @@ public class GetUserPermissionsConnectorPresenter extends AbstractConnectorPrope
 
         this.projectIdCallBck = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setProjectIdNS(nameSpaces);
                 element.setProjectIdExpression(expression);
 
@@ -88,7 +89,7 @@ public class GetUserPermissionsConnectorPresenter extends AbstractConnectorPrope
 
         this.issueKeyCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setIssueKeyNS(nameSpaces);
                 element.setIssueKeyExpression(expression);
 
@@ -100,7 +101,7 @@ public class GetUserPermissionsConnectorPresenter extends AbstractConnectorPrope
 
         this.issueIdCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setIssueIdNS(nameSpaces);
                 element.setIssueIdExpression(expression);
 

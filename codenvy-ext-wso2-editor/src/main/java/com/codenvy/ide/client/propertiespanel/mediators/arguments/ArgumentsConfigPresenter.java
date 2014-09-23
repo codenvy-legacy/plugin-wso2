@@ -20,12 +20,12 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.payload.Arg;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.ARG_EVALUATOR;
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.ARG_EXPRESSION;
@@ -52,7 +52,7 @@ public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDeleg
     private final AddNameSpacesCallBack          addNameSpacesCallBack;
 
     private AddArgumentCallBack argumentCallBack;
-    private Array<Arg>          arrayTemporary;
+    private List<Arg>           arrayTemporary;
     private Arg                 selectedArg;
     private int                 index;
 
@@ -70,7 +70,7 @@ public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDeleg
 
         this.addNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 selectedArg.putProperty(ARG_EXPRESSION, expression);
                 selectedArg.putProperty(ARG_NAMESPACES, nameSpaces);
             }
@@ -125,7 +125,7 @@ public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDeleg
     /** {@inheritDoc} */
     @Override
     public void onEditArgsButtonClicked() {
-        Array<NameSpace> nameSpaces = selectedArg.getProperty(ARG_NAMESPACES);
+        List<NameSpace> nameSpaces = selectedArg.getProperty(ARG_NAMESPACES);
 
         if (nameSpaces == null) {
             return;
@@ -172,11 +172,11 @@ public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDeleg
     /**
      * Shows dialog window for editing properties.
      */
-    public void showConfigWindow(@Nonnull Array<Arg> args, @Nonnull AddArgumentCallBack callback) {
-        arrayTemporary = Collections.createArray();
+    public void showConfigWindow(@Nonnull List<Arg> args, @Nonnull AddArgumentCallBack callback) {
+        arrayTemporary = Collections.emptyList();
         argumentCallBack = callback;
 
-        for (Arg arg : args.asIterable()) {
+        for (Arg arg : args) {
             arrayTemporary.add(arg);
         }
 

@@ -20,20 +20,19 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
  * The Class describes GetUserTimeLine connector for jira group connectors. Also the class contains the business logic
@@ -52,9 +51,9 @@ public class GetUserTimeLine extends AbstractConnector {
 
     private static final List<String> PROPERTIES = Arrays.asList(USER_ID);
 
-    private String           userId;
-    private String           userIdExpr;
-    private Array<NameSpace> userIdNS;
+    private String          userId;
+    private String          userIdExpr;
+    private List<NameSpace> userIdNS;
 
     @Inject
     public GetUserTimeLine(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -71,7 +70,7 @@ public class GetUserTimeLine extends AbstractConnector {
         userId = "";
         userIdExpr = "";
 
-        userIdNS = createArray();
+        userIdNS = Collections.emptyList();
     }
 
     /** {@inheritDoc} */
@@ -126,11 +125,11 @@ public class GetUserTimeLine extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getUserIdNS() {
+    public List<NameSpace> getUserIdNS() {
         return userIdNS;
     }
 
-    public void setUserIdNS(@Nonnull Array<NameSpace> userIdNS) {
+    public void setUserIdNS(@Nonnull List<NameSpace> userIdNS) {
         this.userIdNS = userIdNS;
     }
 }

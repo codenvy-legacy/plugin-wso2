@@ -19,13 +19,13 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.log.Property;
 import com.codenvy.ide.client.propertiespanel.common.namespace.AddPropertyCallback;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.log.Property.EXPRESSION;
 import static com.codenvy.ide.client.elements.mediators.log.Property.NAME;
@@ -37,6 +37,7 @@ import static com.codenvy.ide.client.elements.mediators.log.Property.NAMESPACES;
  *
  * @author Dmitry Shnurenko
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegate {
 
@@ -45,7 +46,7 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
     private final Provider<Property>       propertyProvider;
     private final AddNameSpacesCallBack    addNameSpacesCallBack;
 
-    private Array<Property>     arrayTemporary;
+    private List<Property>      arrayTemporary;
     private Property            selectedProperty;
     private AddPropertyCallback addPropertyCallback;
     private int                 index;
@@ -63,7 +64,7 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
 
         this.addNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nullable String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nullable String expression) {
                 selectedProperty.putProperty(NAMESPACES, nameSpaces);
             }
         };
@@ -124,7 +125,7 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
     /** {@inheritDoc} */
     @Override
     public void onEditPropertiesButtonClicked() {
-        Array<NameSpace> nameSpaces = selectedProperty.getProperty(NAMESPACES);
+        List<NameSpace> nameSpaces = selectedProperty.getProperty(NAMESPACES);
 
         if (nameSpaces == null) {
             return;
@@ -161,11 +162,11 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
      * @param callback
      *         callback that need to be handled when properties editing is successful
      */
-    public void showConfigWindow(@Nonnull Array<Property> properties, @Nonnull String title, @Nonnull AddPropertyCallback callback) {
-        arrayTemporary = Collections.createArray();
+    public void showConfigWindow(@Nonnull List<Property> properties, @Nonnull String title, @Nonnull AddPropertyCallback callback) {
+        arrayTemporary = Collections.emptyList();
         addPropertyCallback = callback;
 
-        for (Property property : properties.asIterable()) {
+        for (Property property : properties) {
             arrayTemporary.add(property.copy());
         }
 

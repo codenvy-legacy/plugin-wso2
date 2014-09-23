@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes SetRow connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -64,10 +63,10 @@ public class SetRow extends AbstractConnector {
     private String rowIdExpression;
     private String rowDataExpression;
 
-    private Array<NameSpace> spreadsheetNameNS;
-    private Array<NameSpace> worksheetNameNS;
-    private Array<NameSpace> rowIdNS;
-    private Array<NameSpace> rowDataNS;
+    private List<NameSpace> spreadsheetNameNS;
+    private List<NameSpace> worksheetNameNS;
+    private List<NameSpace> rowIdNS;
+    private List<NameSpace> rowDataNS;
 
     @Inject
     public SetRow(EditorResources resources,
@@ -93,10 +92,10 @@ public class SetRow extends AbstractConnector {
         rowIdExpression = "";
         rowDataExpression = "";
 
-        spreadsheetNameNS = createArray();
-        worksheetNameNS = createArray();
-        rowIdNS = createArray();
-        rowDataNS = createArray();
+        spreadsheetNameNS = emptyList();
+        worksheetNameNS = emptyList();
+        rowIdNS = emptyList();
+        rowDataNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -184,11 +183,11 @@ public class SetRow extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getSpreadsheetNameNS() {
+    public List<NameSpace> getSpreadsheetNameNS() {
         return spreadsheetNameNS;
     }
 
-    public void setSpreadsheetNameNS(@Nonnull Array<NameSpace> spreadsheetNameNS) {
+    public void setSpreadsheetNameNS(@Nonnull List<NameSpace> spreadsheetNameNS) {
         this.spreadsheetNameNS = spreadsheetNameNS;
     }
 
@@ -211,11 +210,11 @@ public class SetRow extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getWorksheetNameNS() {
+    public List<NameSpace> getWorksheetNameNS() {
         return worksheetNameNS;
     }
 
-    public void setWorksheetNameNS(@Nonnull Array<NameSpace> worksheetNameNS) {
+    public void setWorksheetNameNS(@Nonnull List<NameSpace> worksheetNameNS) {
         this.worksheetNameNS = worksheetNameNS;
     }
 
@@ -256,20 +255,20 @@ public class SetRow extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getRowIdNS() {
+    public List<NameSpace> getRowIdNS() {
         return rowIdNS;
     }
 
-    public void setRowIdNS(@Nonnull Array<NameSpace> rowIdNS) {
+    public void setRowIdNS(@Nonnull List<NameSpace> rowIdNS) {
         this.rowIdNS = rowIdNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getRowDataNS() {
+    public List<NameSpace> getRowDataNS() {
         return rowDataNS;
     }
 
-    public void setRowDataNS(@Nonnull Array<NameSpace> rowDataNS) {
+    public void setRowDataNS(@Nonnull List<NameSpace> rowDataNS) {
         this.rowDataNS = rowDataNS;
     }
 

@@ -20,8 +20,6 @@ import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
@@ -29,6 +27,7 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +50,8 @@ public class Switch extends AbstractElement {
     public static final String ELEMENT_NAME       = "Switch";
     public static final String SERIALIZATION_NAME = "switch";
 
-    public static final Key<String>           SOURCE_XPATH = new Key<>("SourceXpath");
-    public static final Key<Array<NameSpace>> NAMESPACES   = new Key<>("NameSpaces");
+    public static final Key<String>          SOURCE_XPATH = new Key<>("SourceXpath");
+    public static final Key<List<NameSpace>> NAMESPACES   = new Key<>("NameSpaces");
 
     public static final String REGEXP_ATTRIBUTE_NAME          = "regex";
     public static final String REGEXP_ATTRIBUTE_DEFAULT_VALUE = ".*+";
@@ -69,9 +68,9 @@ public class Switch extends AbstractElement {
 
     private final Provider<NameSpace> nameSpaceProvider;
 
-    private Branch           firstBranch;
-    private Branch           defaultBranch;
-    private Array<NameSpace> nameSpaces;
+    private Branch          firstBranch;
+    private Branch          defaultBranch;
+    private List<NameSpace> nameSpaces;
 
     @Inject
     public Switch(EditorResources resources,
@@ -92,7 +91,7 @@ public class Switch extends AbstractElement {
         this.nameSpaceProvider = nameSpaceProvider;
 
         putProperty(SOURCE_XPATH, "default/xpath");
-        putProperty(NAMESPACES, Collections.<NameSpace>createArray());
+        putProperty(NAMESPACES, Collections.<NameSpace>emptyList());
 
         firstBranch = branchProvider.get();
         firstBranch.setParent(this);
@@ -148,7 +147,7 @@ public class Switch extends AbstractElement {
         Map<String, String> attributes = new LinkedHashMap<>();
         attributes.put(SOURCE_ATTRIBUTE_NAME, getProperty(SOURCE_XPATH));
 
-        Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
+        List<NameSpace> nameSpaces = getProperty(NAMESPACES);
 
         return nameSpaces == null ? "" : convertNameSpaceToXMLFormat(nameSpaces) + convertAttributesToXMLFormat(attributes);
     }

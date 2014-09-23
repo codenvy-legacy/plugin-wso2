@@ -29,12 +29,12 @@ import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPr
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.CallTemplate.AVAILABLE_TEMPLATES;
 import static com.codenvy.ide.client.elements.mediators.CallTemplate.AvailableTemplates;
@@ -76,9 +76,8 @@ public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPane
         this.local = local;
 
         this.addPropertyCallback = new AddPropertyCallback() {
-
             @Override
-            public void onPropertiesChanged(@Nonnull Array<Property> properties) {
+            public void onPropertiesChanged(@Nonnull List<Property> properties) {
                 element.putProperty(PARAMETERS, properties);
 
                 parameters.setProperty(properties.isEmpty() ? "" :
@@ -130,7 +129,7 @@ public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPane
         parameters.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
-                Array<Property> parameters = element.getProperty(PARAMETERS);
+                List<Property> parameters = element.getProperty(PARAMETERS);
 
                 if (parameters != null) {
                     propertyConfigPresenter.showConfigWindow(parameters, local.calltemplateParameters(), addPropertyCallback);

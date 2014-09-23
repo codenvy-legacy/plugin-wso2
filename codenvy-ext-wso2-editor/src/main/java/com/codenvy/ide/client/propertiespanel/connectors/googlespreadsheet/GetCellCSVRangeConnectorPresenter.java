@@ -25,11 +25,11 @@ import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpace
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
@@ -67,7 +67,7 @@ public class GetCellCSVRangeConnectorPresenter extends AbstractConnectorProperti
 
         this.spreadsheetNameCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setSpreadsheetNameNS(nameSpaces);
                 element.setSpreadsheetNameExpression(expression);
 
@@ -79,7 +79,7 @@ public class GetCellCSVRangeConnectorPresenter extends AbstractConnectorProperti
 
         this.worksheetNameCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setWorksheetNameNS(nameSpaces);
                 element.setWorksheetNameExpression(expression);
 
@@ -91,7 +91,7 @@ public class GetCellCSVRangeConnectorPresenter extends AbstractConnectorProperti
 
         this.minRowCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setMinRowNS(nameSpaces);
                 element.setMinRowExpression(expression);
 
@@ -103,7 +103,7 @@ public class GetCellCSVRangeConnectorPresenter extends AbstractConnectorProperti
 
         this.maxRowNameCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setMaxRowNS(nameSpaces);
                 element.setMaxRowExpression(expression);
 
@@ -115,7 +115,7 @@ public class GetCellCSVRangeConnectorPresenter extends AbstractConnectorProperti
 
         this.minColumnNameCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setMaxColumnNS(nameSpaces);
                 element.setMinColumnExpression(expression);
 
@@ -127,7 +127,7 @@ public class GetCellCSVRangeConnectorPresenter extends AbstractConnectorProperti
 
         this.maxColumnNameCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setMaxColumnNS(nameSpaces);
                 element.setMaxColumnExpression(expression);
 

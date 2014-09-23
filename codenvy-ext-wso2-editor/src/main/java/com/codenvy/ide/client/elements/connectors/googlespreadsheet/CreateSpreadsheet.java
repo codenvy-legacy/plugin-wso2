@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes CreateSpreadsheet connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -58,8 +57,8 @@ public class CreateSpreadsheet extends AbstractConnector {
     private String spreadsheetNameExpression;
     private String worksheetCountExpression;
 
-    private Array<NameSpace> spreadsheetNameNS;
-    private Array<NameSpace> worksheetCountNS;
+    private List<NameSpace> spreadsheetNameNS;
+    private List<NameSpace> worksheetCountNS;
 
     @Inject
     public CreateSpreadsheet(EditorResources resources,
@@ -81,8 +80,8 @@ public class CreateSpreadsheet extends AbstractConnector {
         spreadsheetNameExpression = "";
         worksheetCountExpression = "";
 
-        spreadsheetNameNS = createArray();
-        worksheetCountNS = createArray();
+        spreadsheetNameNS = emptyList();
+        worksheetCountNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -166,20 +165,20 @@ public class CreateSpreadsheet extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getSpreadsheetNameNS() {
+    public List<NameSpace> getSpreadsheetNameNS() {
         return spreadsheetNameNS;
     }
 
-    public void setSpreadsheetNameNS(@Nonnull Array<NameSpace> spreadsheetNameNS) {
+    public void setSpreadsheetNameNS(@Nonnull List<NameSpace> spreadsheetNameNS) {
         this.spreadsheetNameNS = spreadsheetNameNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getWorksheetCountNS() {
+    public List<NameSpace> getWorksheetCountNS() {
         return worksheetCountNS;
     }
 
-    public void setWorksheetCountNS(@Nonnull Array<NameSpace> worksheetCountNS) {
+    public void setWorksheetCountNS(@Nonnull List<NameSpace> worksheetCountNS) {
         this.worksheetCountNS = worksheetCountNS;
     }
 

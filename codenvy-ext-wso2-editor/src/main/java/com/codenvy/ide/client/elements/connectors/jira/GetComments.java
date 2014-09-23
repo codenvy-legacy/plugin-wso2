@@ -20,20 +20,19 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
  * The Class describes GetComments connector for jira group connectors. Also the class contains the business logic
@@ -54,7 +53,7 @@ public class GetComments extends AbstractConnector {
 
     private String           issueIdOrKey;
     private String           issueIdOrKeyExpression;
-    private Array<NameSpace> issueIdOrKeyNameSpaces;
+    private List<NameSpace> issueIdOrKeyNameSpaces;
 
     @Inject
     public GetComments(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -71,7 +70,7 @@ public class GetComments extends AbstractConnector {
         issueIdOrKey = "";
         issueIdOrKeyExpression = "";
 
-        issueIdOrKeyNameSpaces = createArray();
+        issueIdOrKeyNameSpaces = Collections.emptyList();
     }
 
     /** {@inheritDoc} */
@@ -126,11 +125,11 @@ public class GetComments extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getIssueIdOrKeyNameSpaces() {
+    public List<NameSpace> getIssueIdOrKeyNameSpaces() {
         return issueIdOrKeyNameSpaces;
     }
 
-    public void setIssueIdOrKeyNameSpaces(@Nonnull Array<NameSpace> issueIdOrKeyNameSpaces) {
+    public void setIssueIdOrKeyNameSpaces(@Nonnull List<NameSpace> issueIdOrKeyNameSpaces) {
         this.issueIdOrKeyNameSpaces = issueIdOrKeyNameSpaces;
     }
 

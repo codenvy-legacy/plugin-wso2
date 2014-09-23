@@ -19,8 +19,6 @@ import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.inject.Provider;
@@ -28,6 +26,7 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,9 +51,9 @@ public class PayloadFactory extends AbstractElement {
     public static final String ELEMENT_NAME       = "PayloadFactory";
     public static final String SERIALIZATION_NAME = "payloadFactory";
 
-    public static final Key<Format>     FORMAT      = new Key<>("PayloadFormat");
-    public static final Key<String>     DESCRIPTION = new Key<>("PayloadDescription");
-    public static final Key<Array<Arg>> ARGS        = new Key<>("PayloadArgs");
+    public static final Key<Format>    FORMAT      = new Key<>("PayloadFormat");
+    public static final Key<String>    DESCRIPTION = new Key<>("PayloadDescription");
+    public static final Key<List<Arg>> ARGS        = new Key<>("PayloadArgs");
 
     private static final String FORMAT_PROPERTY_NAME       = "format";
     private static final String ARGS_PROPERTY_NAME         = "args";
@@ -86,7 +85,7 @@ public class PayloadFactory extends AbstractElement {
 
         putProperty(FORMAT, format);
         putProperty(DESCRIPTION, "");
-        putProperty(ARGS, Collections.<Arg>createArray());
+        putProperty(ARGS, Collections.<Arg>emptyList());
     }
 
     /** {@inheritDoc} */
@@ -116,7 +115,7 @@ public class PayloadFactory extends AbstractElement {
     @Nonnull
     @Override
     protected String serializeProperties() {
-        Array<Arg> args = getProperty(ARGS);
+        List<Arg> args = getProperty(ARGS);
         Format format = getProperty(FORMAT);
 
         if (args == null || format == null) {
@@ -128,7 +127,7 @@ public class PayloadFactory extends AbstractElement {
         if (!args.isEmpty()) {
             result.append('<').append(ARGS_PROPERTY_NAME).append('>');
 
-            for (Arg arg : args.asIterable()) {
+            for (Arg arg : args) {
                 result.append(arg.serialize());
             }
 
@@ -185,7 +184,7 @@ public class PayloadFactory extends AbstractElement {
     }
 
     private void applyArgsProperty(@Nonnull Node node) {
-        Array<Arg> args = getProperty(ARGS);
+        List<Arg> args = getProperty(ARGS);
 
         if (!node.hasChildNodes() || args == null) {
             return;

@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes CreateFilter connector for jira group connectors. Also the class contains the business logic
@@ -65,10 +64,10 @@ public class CreateFilter extends AbstractConnector {
     private String descriptionExpression;
     private String favouriteExpression;
 
-    private Array<NameSpace> filterNameNS;
-    private Array<NameSpace> jqlTypeNS;
-    private Array<NameSpace> descriptionNS;
-    private Array<NameSpace> favouriteNS;
+    private List<NameSpace> filterNameNS;
+    private List<NameSpace> jqlTypeNS;
+    private List<NameSpace> descriptionNS;
+    private List<NameSpace> favouriteNS;
 
     @Inject
     public CreateFilter(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -92,10 +91,10 @@ public class CreateFilter extends AbstractConnector {
         favouriteExpression = "";
         descriptionExpression = "";
 
-        favouriteNS = createArray();
-        filterNameNS = createArray();
-        descriptionNS = createArray();
-        jqlTypeNS = createArray();
+        favouriteNS = emptyList();
+        filterNameNS = emptyList();
+        descriptionNS = emptyList();
+        jqlTypeNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -237,38 +236,38 @@ public class CreateFilter extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getFilterNameNS() {
+    public List<NameSpace> getFilterNameNS() {
         return filterNameNS;
     }
 
-    public void setFilterNameNS(@Nonnull Array<NameSpace> filterNameNS) {
+    public void setFilterNameNS(@Nonnull List<NameSpace> filterNameNS) {
         this.filterNameNS = filterNameNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getJqlTypeNS() {
+    public List<NameSpace> getJqlTypeNS() {
         return jqlTypeNS;
     }
 
-    public void setJqlTypeNS(@Nonnull Array<NameSpace> jqlTypeNS) {
+    public void setJqlTypeNS(@Nonnull List<NameSpace> jqlTypeNS) {
         this.jqlTypeNS = jqlTypeNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getDescriptionNS() {
+    public List<NameSpace> getDescriptionNS() {
         return descriptionNS;
     }
 
-    public void setDescriptionNS(@Nonnull Array<NameSpace> descriptionNS) {
+    public void setDescriptionNS(@Nonnull List<NameSpace> descriptionNS) {
         this.descriptionNS = descriptionNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getFavouriteNS() {
+    public List<NameSpace> getFavouriteNS() {
         return favouriteNS;
     }
 
-    public void setFavouriteNS(@Nonnull Array<NameSpace> favouriteNS) {
+    public void setFavouriteNS(@Nonnull List<NameSpace> favouriteNS) {
         this.favouriteNS = favouriteNS;
     }
 }

@@ -18,11 +18,11 @@ package com.codenvy.ide.client.propertiespanel.endpoints.address.property;
 import com.codenvy.ide.client.elements.endpoints.addressendpoint.Property;
 import com.codenvy.ide.client.propertiespanel.endpoints.address.editoraddressproperty.EditorAddressPropertyCallBack;
 import com.codenvy.ide.client.propertiespanel.endpoints.address.editoraddressproperty.EditorAddressPropertyPresenter;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * The class provides the business logic that allows editor to react on user's action related to change of Address's
@@ -31,6 +31,7 @@ import javax.annotation.Nonnull;
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class PropertyPresenter implements PropertyView.ActionDelegate {
 
@@ -41,7 +42,7 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
 
     private Property                  selectedProperty;
     private PropertiesChangedCallback callback;
-    private Array<Property>           properties;
+    private List<Property>            properties;
 
     @Inject
     public PropertyPresenter(PropertyView view, final EditorAddressPropertyPresenter editPropertyPresenter) {
@@ -91,7 +92,7 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
      *         value of property which need to check
      */
     private boolean isElementNameContained(@Nonnull Property property) {
-        for (Property prop : properties.asIterable()) {
+        for (Property prop : properties) {
             if (property.getName().equals(prop.getName())) {
                 return true;
             }
@@ -141,13 +142,13 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
         selectedProperty = property;
     }
 
-    public void showDialog(@Nonnull PropertiesChangedCallback callback, @Nonnull Array<Property> properties) {
+    public void showDialog(@Nonnull PropertiesChangedCallback callback, @Nonnull List<Property> properties) {
         selectedProperty = null;
 
         this.callback = callback;
-        this.properties = Collections.createArray();
+        this.properties = Collections.emptyList();
 
-        for (Property property : properties.asIterable()) {
+        for (Property property : properties) {
             this.properties.add(property.copy());
         }
 
@@ -164,7 +165,7 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
          * @param properties
          *         changed list of properties
          */
-        void onPropertiesChanged(@Nonnull Array<Property> properties);
+        void onPropertiesChanged(@Nonnull List<Property> properties);
 
     }
 

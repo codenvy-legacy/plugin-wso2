@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes SetActorsToRoleOfProject connector for jira group connectors. Also the class contains the business logic
@@ -59,8 +58,8 @@ public class SetActorsToRoleOfProject extends AbstractConnector {
     private String projectKeyExpression;
     private String roleIdExpression;
 
-    private Array<NameSpace> projectKeyNS;
-    private Array<NameSpace> roleIdNS;
+    private List<NameSpace> projectKeyNS;
+    private List<NameSpace> roleIdNS;
 
     @Inject
     public SetActorsToRoleOfProject(EditorResources resources,
@@ -82,8 +81,8 @@ public class SetActorsToRoleOfProject extends AbstractConnector {
         projectKeyExpression = "";
         roleIdExpression = "";
 
-        projectKeyNS = createArray();
-        roleIdNS = createArray();
+        projectKeyNS = emptyList();
+        roleIdNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -168,20 +167,20 @@ public class SetActorsToRoleOfProject extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getProjectKeyNS() {
+    public List<NameSpace> getProjectKeyNS() {
         return projectKeyNS;
     }
 
-    public void setProjectKeyNS(@Nonnull Array<NameSpace> projectKeyNS) {
+    public void setProjectKeyNS(@Nonnull List<NameSpace> projectKeyNS) {
         this.projectKeyNS = projectKeyNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getRoleIdNS() {
+    public List<NameSpace> getRoleIdNS() {
         return roleIdNS;
     }
 
-    public void setRoleIdNS(@Nonnull Array<NameSpace> roleIdNS) {
+    public void setRoleIdNS(@Nonnull List<NameSpace> roleIdNS) {
         this.roleIdNS = roleIdNS;
     }
 }

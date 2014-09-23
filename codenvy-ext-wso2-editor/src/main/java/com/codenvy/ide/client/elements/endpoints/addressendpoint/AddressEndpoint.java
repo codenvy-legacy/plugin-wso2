@@ -19,8 +19,6 @@ import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
@@ -29,6 +27,7 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,9 +63,9 @@ public class AddressEndpoint extends AbstractElement {
     public static final Key<Integer> RETRY_COUNT       = new Key<>("RetryCount");
     public static final Key<Integer> RETRY_DELAY       = new Key<>("RetryDelay");
 
-    public static final Key<Array<Property>> PROPERTIES  = new Key<>("Properties");
-    public static final Key<Optimize>        OPTIMIZE    = new Key<>("Optimize");
-    public static final Key<String>          DESCRIPTION = new Key<>("Description");
+    public static final Key<List<Property>> PROPERTIES  = new Key<>("Properties");
+    public static final Key<Optimize>       OPTIMIZE    = new Key<>("Optimize");
+    public static final Key<String>         DESCRIPTION = new Key<>("Description");
 
     public static final Key<Boolean> RELIABLE_MESSAGING_ENABLED = new Key<>("ReliableMessagingEnabled");
     public static final Key<String>  RELIABLE_MESSAGING_POLICY  = new Key<>("ReliableMessagingPolicy");
@@ -147,7 +146,7 @@ public class AddressEndpoint extends AbstractElement {
         putProperty(RETRY_COUNT, 0);
         putProperty(RETRY_DELAY, 0);
 
-        putProperty(PROPERTIES, Collections.<Property>createArray());
+        putProperty(PROPERTIES, Collections.<Property>emptyList());
         putProperty(OPTIMIZE, Optimize.LEAVE_AS_IS);
         putProperty(DESCRIPTION, "");
 
@@ -267,10 +266,10 @@ public class AddressEndpoint extends AbstractElement {
     public String serialize() {
         StringBuilder content = new StringBuilder();
 
-        Array<Property> properties = getProperty(PROPERTIES);
+        List<Property> properties = getProperty(PROPERTIES);
 
         if (properties != null) {
-            for (Property property : properties.asIterable()) {
+            for (Property property : properties) {
                 content.append(property.serialize());
             }
         }
@@ -366,7 +365,7 @@ public class AddressEndpoint extends AbstractElement {
                 Property property = propertyProvider.get();
                 property.applyAttributes(node);
 
-                Array<Property> properties = getProperty(PROPERTIES);
+                List<Property> properties = getProperty(PROPERTIES);
 
                 if (properties != null) {
                     properties.add(property);

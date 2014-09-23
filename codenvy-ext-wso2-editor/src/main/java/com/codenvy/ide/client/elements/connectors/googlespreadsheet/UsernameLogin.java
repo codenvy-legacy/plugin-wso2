@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes UsernameLogin connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -58,8 +57,8 @@ public class UsernameLogin extends AbstractConnector {
     private String usernameExpression;
     private String passwordExpression;
 
-    private Array<NameSpace> usernameNS;
-    private Array<NameSpace> passwordNS;
+    private List<NameSpace> usernameNS;
+    private List<NameSpace> passwordNS;
 
     @Inject
     public UsernameLogin(EditorResources resources,
@@ -81,8 +80,8 @@ public class UsernameLogin extends AbstractConnector {
         usernameExpression = "";
         passwordExpression = "";
 
-        usernameNS = createArray();
-        passwordNS = createArray();
+        usernameNS = emptyList();
+        passwordNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -166,20 +165,20 @@ public class UsernameLogin extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getUsernameNS() {
+    public List<NameSpace> getUsernameNS() {
         return usernameNS;
     }
 
-    public void setUsernameNS(@Nonnull Array<NameSpace> usernameNS) {
+    public void setUsernameNS(@Nonnull List<NameSpace> usernameNS) {
         this.usernameNS = usernameNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getPasswordNS() {
+    public List<NameSpace> getPasswordNS() {
         return passwordNS;
     }
 
-    public void setPasswordNS(@Nonnull Array<NameSpace> passwordNS) {
+    public void setPasswordNS(@Nonnull List<NameSpace> passwordNS) {
         this.passwordNS = passwordNS;
     }
 

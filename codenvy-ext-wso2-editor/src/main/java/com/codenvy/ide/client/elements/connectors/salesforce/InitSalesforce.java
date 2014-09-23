@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -34,7 +33,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes Init connector for Salesforce group connectors. Also the class contains the business logic
@@ -66,10 +65,10 @@ public class InitSalesforce extends AbstractConnector {
     private String loginUrlInline;
     private String forceLoginInline;
 
-    private Array<NameSpace> passwordNameSpaces;
-    private Array<NameSpace> loginUrlNameSpaces;
-    private Array<NameSpace> forceLoginNameSpaces;
-    private Array<NameSpace> usernameNameSpaces;
+    private List<NameSpace> passwordNameSpaces;
+    private List<NameSpace> loginUrlNameSpaces;
+    private List<NameSpace> forceLoginNameSpaces;
+    private List<NameSpace> usernameNameSpaces;
 
     @Inject
     public InitSalesforce(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -93,10 +92,10 @@ public class InitSalesforce extends AbstractConnector {
         forceLoginInline = "";
         loginUrlInline = "";
 
-        usernameNameSpaces = createArray();
-        passwordNameSpaces = createArray();
-        forceLoginNameSpaces = createArray();
-        loginUrlNameSpaces = createArray();
+        usernameNameSpaces = emptyList();
+        passwordNameSpaces = emptyList();
+        forceLoginNameSpaces = emptyList();
+        loginUrlNameSpaces = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -239,38 +238,38 @@ public class InitSalesforce extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getUsernameNameSpaces() {
+    public List<NameSpace> getUsernameNameSpaces() {
         return usernameNameSpaces;
     }
 
-    public void setUsernameNameSpaces(@Nonnull Array<NameSpace> usernameNameSpaces) {
+    public void setUsernameNameSpaces(@Nonnull List<NameSpace> usernameNameSpaces) {
         this.usernameNameSpaces = usernameNameSpaces;
     }
 
     @Nonnull
-    public Array<NameSpace> getPasswordNameSpaces() {
+    public List<NameSpace> getPasswordNameSpaces() {
         return passwordNameSpaces;
     }
 
-    public void setPasswordNameSpaces(@Nonnull Array<NameSpace> passwordNameSpaces) {
+    public void setPasswordNameSpaces(@Nonnull List<NameSpace> passwordNameSpaces) {
         this.passwordNameSpaces = passwordNameSpaces;
     }
 
     @Nonnull
-    public Array<NameSpace> getLoginUrlNameSpaces() {
+    public List<NameSpace> getLoginUrlNameSpaces() {
         return loginUrlNameSpaces;
     }
 
-    public void setLoginUrlNameSpaces(@Nonnull Array<NameSpace> loginUrlNameSpaces) {
+    public void setLoginUrlNameSpaces(@Nonnull List<NameSpace> loginUrlNameSpaces) {
         this.loginUrlNameSpaces = loginUrlNameSpaces;
     }
 
     @Nonnull
-    public Array<NameSpace> getForceLoginNameSpaces() {
+    public List<NameSpace> getForceLoginNameSpaces() {
         return forceLoginNameSpaces;
     }
 
-    public void setForceLoginNameSpaces(@Nonnull Array<NameSpace> forceLoginNameSpaces) {
+    public void setForceLoginNameSpaces(@Nonnull List<NameSpace> forceLoginNameSpaces) {
         this.forceLoginNameSpaces = forceLoginNameSpaces;
     }
 }

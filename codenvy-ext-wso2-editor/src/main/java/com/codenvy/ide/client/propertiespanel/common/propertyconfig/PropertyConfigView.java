@@ -17,15 +17,16 @@ package com.codenvy.ide.client.propertiespanel.common.propertyconfig;
 
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.client.elements.mediators.log.Property;
-import com.codenvy.ide.collections.Array;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * The presentation of Property Config view. It contains a general places for properties of element.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 @ImplementedBy(PropertyConfigViewImpl.class)
 public interface PropertyConfigView extends View<PropertyConfigView.ActionDelegate> {
@@ -36,7 +37,7 @@ public interface PropertyConfigView extends View<PropertyConfigView.ActionDelega
      * @param propertyList
      *         list which needs to be displayed
      */
-    void setProperties(@Nonnull Array<Property> propertyList);
+    void setProperties(@Nonnull List<Property> propertyList);
 
     /**
      * Shows dialog window for editing property of element.

@@ -16,15 +16,16 @@
 package com.codenvy.ide.client.propertiespanel.common.propertyconfig;
 
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.collections.Array;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * The entity which includes name spaces, that may be modified, must implement this interface. This
  * method will be call when name spaces is changed.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public interface AddNameSpacesCallBack {
     /**
@@ -35,5 +36,5 @@ public interface AddNameSpacesCallBack {
      * @param expression
      *         value of expression from special place of view
      */
-    void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression);
+    void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression);
 }

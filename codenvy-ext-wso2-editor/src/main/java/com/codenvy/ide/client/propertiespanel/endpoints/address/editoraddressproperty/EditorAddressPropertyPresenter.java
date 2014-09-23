@@ -21,12 +21,13 @@ import com.codenvy.ide.client.elements.endpoints.addressendpoint.Property;
 import com.codenvy.ide.client.elements.mediators.ValueType;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
-import com.codenvy.ide.collections.Array;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.Scope;
 import static com.codenvy.ide.client.elements.mediators.ValueType.EXPRESSION;
@@ -37,6 +38,7 @@ import static com.codenvy.ide.client.elements.mediators.ValueType.EXPRESSION;
  * special dialog window.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class EditorAddressPropertyPresenter implements EditorAddressPropertyView.ActionDelegate {
 
@@ -63,7 +65,7 @@ public class EditorAddressPropertyPresenter implements EditorAddressPropertyView
 
         this.nameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 selectedProperty.setNameSpaces(nameSpaces);
                 selectedProperty.setExpression(expression);
             }

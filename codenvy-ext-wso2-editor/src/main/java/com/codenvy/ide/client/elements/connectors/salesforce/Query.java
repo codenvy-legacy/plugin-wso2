@@ -20,8 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -34,6 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes Query connector for Salesforce group connectors. Also the class contains the business logic
@@ -58,8 +57,8 @@ public class Query extends AbstractConnector {
     private String              batchSizeExpr;
     private String              queryStringExpr;
     private ParameterEditorType parameterEditorType;
-    private Array<NameSpace>    batchSizeNameSpaces;
-    private Array<NameSpace>    queryStringNameSpaces;
+    private List<NameSpace>     batchSizeNameSpaces;
+    private List<NameSpace>     queryStringNameSpaces;
 
     @Inject
     public Query(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -80,8 +79,8 @@ public class Query extends AbstractConnector {
 
         parameterEditorType = Inline;
 
-        batchSizeNameSpaces = Collections.createArray();
-        queryStringNameSpaces = Collections.createArray();
+        batchSizeNameSpaces = emptyList();
+        queryStringNameSpaces = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -149,20 +148,20 @@ public class Query extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getBatchSizeNameSpaces() {
+    public List<NameSpace> getBatchSizeNameSpaces() {
         return batchSizeNameSpaces;
     }
 
-    public void setBatchSizeNameSpaces(@Nonnull Array<NameSpace> batchSizeNameSpaces) {
+    public void setBatchSizeNameSpaces(@Nonnull List<NameSpace> batchSizeNameSpaces) {
         this.batchSizeNameSpaces = batchSizeNameSpaces;
     }
 
     @Nonnull
-    public Array<NameSpace> getQueryStringNameSpaces() {
+    public List<NameSpace> getQueryStringNameSpaces() {
         return queryStringNameSpaces;
     }
 
-    public void setQueryStringNameSpaces(@Nonnull Array<NameSpace> queryStringNameSpaces) {
+    public void setQueryStringNameSpaces(@Nonnull List<NameSpace> queryStringNameSpaces) {
         this.queryStringNameSpaces = queryStringNameSpaces;
     }
 

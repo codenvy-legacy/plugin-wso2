@@ -28,7 +28,6 @@ import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPr
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -70,6 +69,7 @@ import static com.codenvy.ide.client.initializers.propertytype.CommonPropertyTyp
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesPanel<AddressEndpoint, PropertiesPanelView> {
 
@@ -122,7 +122,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
 
         this.callback = new PropertyPresenter.PropertiesChangedCallback() {
             @Override
-            public void onPropertiesChanged(@Nonnull Array<Property> properties) {
+            public void onPropertiesChanged(@Nonnull List<Property> properties) {
                 element.putProperty(PROPERTIES, properties);
 
                 showProperties(properties);
@@ -298,7 +298,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         properties.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
-                Array<Property> properties = element.getProperty(PROPERTIES);
+                List<Property> properties = element.getProperty(PROPERTIES);
 
                 if (properties != null) {
                     propertyPresenter.showDialog(callback, properties);
@@ -553,7 +553,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
      * @param properties
      *         list of properties which must to be displayed
      */
-    private void showProperties(@Nullable Array<Property> properties) {
+    private void showProperties(@Nullable List<Property> properties) {
         if (properties == null) {
             this.properties.setProperty("");
             return;

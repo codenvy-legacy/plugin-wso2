@@ -17,7 +17,6 @@ package com.codenvy.ide.client.propertiespanel.mediators.arguments;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.mediators.payload.Arg;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
@@ -211,10 +210,10 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
 
     /** {@inheritDoc} */
     @Override
-    public void setArgs(@Nonnull Array<Arg> argsList) {
+    public void setArgs(@Nonnull List<Arg> argsList) {
         List<Arg> list = new ArrayList<>();
 
-        for (Arg arg : argsList.asIterable()) {
+        for (Arg arg : argsList) {
             list.add(arg);
         }
 

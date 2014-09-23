@@ -20,20 +20,19 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
  * The Class describes GetSpreadsheetsByTitle connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -55,7 +54,7 @@ public class GetSpreadsheetsByTitle extends AbstractConnector {
 
     private String titleExpression;
 
-    private Array<NameSpace> titleNS;
+    private List<NameSpace> titleNS;
 
     @Inject
     public GetSpreadsheetsByTitle(EditorResources resources,
@@ -75,7 +74,7 @@ public class GetSpreadsheetsByTitle extends AbstractConnector {
 
         titleExpression = "";
 
-        titleNS = createArray();
+        titleNS = Collections.emptyList();
     }
 
     /** {@inheritDoc} */
@@ -130,11 +129,11 @@ public class GetSpreadsheetsByTitle extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getTitleNS() {
+    public List<NameSpace> getTitleNS() {
         return titleNS;
     }
 
-    public void seTtitleNS(@Nonnull Array<NameSpace> titleNS) {
+    public void seTtitleNS(@Nonnull List<NameSpace> titleNS) {
         this.titleNS = titleNS;
     }
 

@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes GetClosesTrends connector for twitter group of connectors. Also the class contains the business logic
@@ -59,8 +58,8 @@ public class GetClosesTrends extends AbstractConnector {
     private String latitudeExpr;
     private String longitudeExpr;
 
-    private Array<NameSpace> latitudeNS;
-    private Array<NameSpace> longitudeNS;
+    private List<NameSpace> latitudeNS;
+    private List<NameSpace> longitudeNS;
 
     @Inject
     public GetClosesTrends(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -80,8 +79,8 @@ public class GetClosesTrends extends AbstractConnector {
         latitudeExpr = "";
         longitudeExpr = "";
 
-        latitudeNS = createArray();
-        longitudeNS = createArray();
+        latitudeNS = emptyList();
+        longitudeNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -166,20 +165,20 @@ public class GetClosesTrends extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getLatitudeNS() {
+    public List<NameSpace> getLatitudeNS() {
         return latitudeNS;
     }
 
-    public void setLatitudeNS(@Nonnull Array<NameSpace> latitudeNS) {
+    public void setLatitudeNS(@Nonnull List<NameSpace> latitudeNS) {
         this.latitudeNS = latitudeNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getLongitudeNS() {
+    public List<NameSpace> getLongitudeNS() {
         return longitudeNS;
     }
 
-    public void setLongitudeNS(@Nonnull Array<NameSpace> longitudeNS) {
+    public void setLongitudeNS(@Nonnull List<NameSpace> longitudeNS) {
         this.longitudeNS = longitudeNS;
     }
 }

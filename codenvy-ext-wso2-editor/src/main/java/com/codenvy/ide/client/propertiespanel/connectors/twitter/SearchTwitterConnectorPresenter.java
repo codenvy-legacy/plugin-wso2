@@ -25,11 +25,11 @@ import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpace
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
@@ -39,6 +39,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * depending on user's changes of properties.
  *
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class SearchTwitterConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<SearchTwitter> {
 
@@ -71,7 +72,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
 
         this.searchCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setSearchNS(nameSpaces);
                 element.setSearchExpr(expression);
 
@@ -83,7 +84,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
 
         this.langCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setLangNS(nameSpaces);
                 element.setLangExpr(expression);
 
@@ -95,7 +96,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
 
         this.localeCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setLocaleNS(nameSpaces);
                 element.setLocaleExpr(expression);
 
@@ -107,7 +108,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
 
         this.maxIdCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setMaxIdNS(nameSpaces);
                 element.setMaxIdExpr(expression);
 
@@ -119,7 +120,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
 
         this.sinceCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setSinceNS(nameSpaces);
                 element.setSinceExpr(expression);
 
@@ -131,7 +132,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
 
         this.sinceIdCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setSinceIdNS(nameSpaces);
                 element.setSinceIdExpr(expression);
 
@@ -143,7 +144,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
 
         this.geocodeCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setGeocodeNS(nameSpaces);
                 element.setGeocodeExpr(expression);
 
@@ -155,7 +156,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
 
         this.radiusCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setRadiusNS(nameSpaces);
                 element.setRadiusExpr(expression);
 
@@ -167,7 +168,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
 
         this.unitCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setUnitNS(nameSpaces);
                 element.setUnitExpr(expression);
 
@@ -179,7 +180,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
 
         this.untilCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setUntilNS(nameSpaces);
                 element.setUntilExpr(expression);
 
@@ -191,7 +192,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
 
         this.countCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull Array<NameSpace> nameSpaces, @Nonnull String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.setCountNS(nameSpaces);
                 element.setCountExpr(expression);
 

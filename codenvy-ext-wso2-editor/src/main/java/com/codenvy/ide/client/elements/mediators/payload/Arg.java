@@ -17,15 +17,15 @@ package com.codenvy.ide.client.elements.mediators.payload;
 
 import com.codenvy.ide.client.elements.AbstractEntityElement;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
@@ -46,11 +46,11 @@ public class Arg extends AbstractEntityElement {
 
     public static final String ARG_SERIALIZATION_NAME = "arg";
 
-    public static final Key<ArgType>          ARG_TYPE       = new Key<>("PayloadArgType");
-    public static final Key<Evaluator>        ARG_EVALUATOR  = new Key<>("PayloadArgEvaluator");
-    public static final Key<String>           ARG_EXPRESSION = new Key<>("PayloadArgExpression");
-    public static final Key<String>           ARG_VALUE      = new Key<>("PayloadArgValue");
-    public static final Key<Array<NameSpace>> ARG_NAMESPACES = new Key<>("PayloadArgNameSpaces");
+    public static final Key<ArgType>         ARG_TYPE       = new Key<>("PayloadArgType");
+    public static final Key<Evaluator>       ARG_EVALUATOR  = new Key<>("PayloadArgEvaluator");
+    public static final Key<String>          ARG_EXPRESSION = new Key<>("PayloadArgExpression");
+    public static final Key<String>          ARG_VALUE      = new Key<>("PayloadArgValue");
+    public static final Key<List<NameSpace>> ARG_NAMESPACES = new Key<>("PayloadArgNameSpaces");
 
     private static final String EVALUATOR_ATTRIBUTE_NAME  = "evaluator";
     private static final String EXPRESSION_ATTRIBUTE_NAME = "expression";
@@ -68,7 +68,7 @@ public class Arg extends AbstractEntityElement {
         putProperty(ARG_EVALUATOR, XML);
         putProperty(ARG_EXPRESSION, "/default/expression");
         putProperty(ARG_VALUE, "default");
-        putProperty(ARG_NAMESPACES, Collections.<NameSpace>createArray());
+        putProperty(ARG_NAMESPACES, Collections.<NameSpace>emptyList());
     }
 
     /** @return serialization representation of element attributes */
@@ -131,7 +131,7 @@ public class Arg extends AbstractEntityElement {
     }
 
     private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        Array<NameSpace> nameSpaces = getProperty(ARG_NAMESPACES);
+        List<NameSpace> nameSpaces = getProperty(ARG_NAMESPACES);
 
         if (!StringUtils.startsWith(PREFIX, attributeName, true) || nameSpaces == null) {
             return;

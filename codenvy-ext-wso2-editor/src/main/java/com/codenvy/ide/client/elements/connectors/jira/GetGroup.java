@@ -20,20 +20,19 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
  * The Class describes GetGroup connector for jira group connectors. Also the class contains the business logic
@@ -52,9 +51,9 @@ public class GetGroup extends AbstractConnector {
 
     private static final List<String> PROPERTIES = Arrays.asList(GROUP_NAME);
 
-    private String           groupName;
-    private String           groupNameExpression;
-    private Array<NameSpace> groupNameNS;
+    private String          groupName;
+    private String          groupNameExpression;
+    private List<NameSpace> groupNameNS;
 
     @Inject
     public GetGroup(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -71,7 +70,7 @@ public class GetGroup extends AbstractConnector {
         groupName = "";
         groupNameExpression = "";
 
-        groupNameNS = createArray();
+        groupNameNS = Collections.emptyList();
     }
 
     /** {@inheritDoc} */
@@ -128,11 +127,11 @@ public class GetGroup extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getGroupNameNS() {
+    public List<NameSpace> getGroupNameNS() {
         return groupNameNS;
     }
 
-    public void setGroupNameNS(@Nonnull Array<NameSpace> groupNameNS) {
+    public void setGroupNameNS(@Nonnull List<NameSpace> groupNameNS) {
         this.groupNameNS = groupNameNS;
     }
 

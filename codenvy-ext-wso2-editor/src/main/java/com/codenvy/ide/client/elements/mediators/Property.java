@@ -20,13 +20,12 @@ import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,17 +51,17 @@ public class Property extends AbstractElement {
     public static final String ELEMENT_NAME       = "Property";
     public static final String SERIALIZATION_NAME = "property";
 
-    public static final Key<String>           PROPERTY_NAME              = new Key<>("PropertyName");
-    public static final Key<Action>           PROPERTY_ACTION            = new Key<>("PropertyAction");
-    public static final Key<ValueType>        VALUE_TYPE                 = new Key<>("ValueType");
-    public static final Key<DataType>         PROPERTY_DATA_TYPE         = new Key<>("PropertyDataType");
-    public static final Key<String>           VALUE_LITERAL              = new Key<>("ValueLiteral");
-    public static final Key<String>           VALUE_EXPRESSION           = new Key<>("ValueExpression");
-    public static final Key<String>           VALUE_STRING_PATTERN       = new Key<>("ValueStringPattern");
-    public static final Key<Scope>            PROPERTY_SCOPE             = new Key<>("PropertyScope");
-    public static final Key<String>           VALUE_STRING_CAPTURE_GROUP = new Key<>("ValueStringCaptureGroup");
-    public static final Key<String>           DESCRIPTION                = new Key<>("Description");
-    public static final Key<Array<NameSpace>> NAMESPACES                 = new Key<>("NameSpaces");
+    public static final Key<String>          PROPERTY_NAME              = new Key<>("PropertyName");
+    public static final Key<Action>          PROPERTY_ACTION            = new Key<>("PropertyAction");
+    public static final Key<ValueType>       VALUE_TYPE                 = new Key<>("ValueType");
+    public static final Key<DataType>        PROPERTY_DATA_TYPE         = new Key<>("PropertyDataType");
+    public static final Key<String>          VALUE_LITERAL              = new Key<>("ValueLiteral");
+    public static final Key<String>          VALUE_EXPRESSION           = new Key<>("ValueExpression");
+    public static final Key<String>          VALUE_STRING_PATTERN       = new Key<>("ValueStringPattern");
+    public static final Key<Scope>           PROPERTY_SCOPE             = new Key<>("PropertyScope");
+    public static final Key<String>          VALUE_STRING_CAPTURE_GROUP = new Key<>("ValueStringCaptureGroup");
+    public static final Key<String>          DESCRIPTION                = new Key<>("Description");
+    public static final Key<List<NameSpace>> NAMESPACES                 = new Key<>("NameSpaces");
 
     private static final String NAME_ATTRIBUTE                 = "name";
     private static final String ACTION_ATTRIBUTE               = "action";
@@ -106,7 +105,7 @@ public class Property extends AbstractElement {
         putProperty(VALUE_STRING_PATTERN, "");
         putProperty(VALUE_STRING_PATTERN, "");
         putProperty(VALUE_STRING_CAPTURE_GROUP, "");
-        putProperty(NAMESPACES, Collections.<NameSpace>createArray());
+        putProperty(NAMESPACES, Collections.<NameSpace>emptyList());
     }
 
     /** {@inheritDoc} */
@@ -213,7 +212,7 @@ public class Property extends AbstractElement {
         nameSpace.setPrefix(name);
         nameSpace.setUri(attributeValue);
 
-        Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
+        List<NameSpace> nameSpaces = getProperty(NAMESPACES);
         if (nameSpaces != null) {
             nameSpaces.add(nameSpace);
         }

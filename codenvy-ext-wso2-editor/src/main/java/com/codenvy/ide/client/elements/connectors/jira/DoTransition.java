@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes DoTransition connector for jira group connectors. Also the class contains the business logic
@@ -72,11 +71,11 @@ public class DoTransition extends AbstractConnector {
     private String resolutionExpression;
     private String transitionIdExpression;
 
-    private Array<NameSpace> issieIOrKeyNS;
-    private Array<NameSpace> updateCommentNS;
-    private Array<NameSpace> updateAssigneeNS;
-    private Array<NameSpace> resolutionNS;
-    private Array<NameSpace> transitionIdNS;
+    private List<NameSpace> issieIOrKeyNS;
+    private List<NameSpace> updateCommentNS;
+    private List<NameSpace> updateAssigneeNS;
+    private List<NameSpace> resolutionNS;
+    private List<NameSpace> transitionIdNS;
 
     @Inject
     public DoTransition(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -102,11 +101,11 @@ public class DoTransition extends AbstractConnector {
         updateAssigneeExpression = "";
         transitionIdExpression = "";
 
-        resolutionNS = createArray();
-        issieIOrKeyNS = createArray();
-        updateAssigneeNS = createArray();
-        updateCommentNS = createArray();
-        transitionIdNS = createArray();
+        resolutionNS = emptyList();
+        issieIOrKeyNS = emptyList();
+        updateAssigneeNS = emptyList();
+        updateCommentNS = emptyList();
+        transitionIdNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -277,47 +276,47 @@ public class DoTransition extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getIssieIOrKeyNS() {
+    public List<NameSpace> getIssieIOrKeyNS() {
         return issieIOrKeyNS;
     }
 
-    public void setIssieIOrKeyNS(@Nonnull Array<NameSpace> issieIOrKeyNS) {
+    public void setIssieIOrKeyNS(@Nonnull List<NameSpace> issieIOrKeyNS) {
         this.issieIOrKeyNS = issieIOrKeyNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getUpdateCommentNS() {
+    public List<NameSpace> getUpdateCommentNS() {
         return updateCommentNS;
     }
 
-    public void setUpdateCommentNS(@Nonnull Array<NameSpace> updateCommentNS) {
+    public void setUpdateCommentNS(@Nonnull List<NameSpace> updateCommentNS) {
         this.updateCommentNS = updateCommentNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getUpdateAssigneeNS() {
+    public List<NameSpace> getUpdateAssigneeNS() {
         return updateAssigneeNS;
     }
 
-    public void setUpdateAssigneeNS(@Nonnull Array<NameSpace> updateAssigneeNS) {
+    public void setUpdateAssigneeNS(@Nonnull List<NameSpace> updateAssigneeNS) {
         this.updateAssigneeNS = updateAssigneeNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getResolutionNS() {
+    public List<NameSpace> getResolutionNS() {
         return resolutionNS;
     }
 
-    public void setResolutionNS(@Nonnull Array<NameSpace> resolutionNS) {
+    public void setResolutionNS(@Nonnull List<NameSpace> resolutionNS) {
         this.resolutionNS = resolutionNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getTransitionIdNS() {
+    public List<NameSpace> getTransitionIdNS() {
         return transitionIdNS;
     }
 
-    public void setTransitionIdNS(@Nonnull Array<NameSpace> transitionIdNS) {
+    public void setTransitionIdNS(@Nonnull List<NameSpace> transitionIdNS) {
         this.transitionIdNS = transitionIdNS;
     }
 

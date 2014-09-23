@@ -17,8 +17,6 @@ package com.codenvy.ide.client.elements.mediators.enrich;
 
 import com.codenvy.ide.client.elements.AbstractEntityElement;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
@@ -26,6 +24,7 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
@@ -46,11 +45,11 @@ public class Target extends AbstractEntityElement {
 
     public static final String TARGET_SERIALIZATION_NAME = "target";
 
-    public static final Key<TargetAction>     TARGET_ACTION     = new Key<>("EnrichTargetAction");
-    public static final Key<TargetType>       TARGET_TYPE       = new Key<>("EnrichTargetType");
-    public static final Key<String>           TARGET_XPATH      = new Key<>("EnrichTargetXpath");
-    public static final Key<String>           TARGET_PROPERTY   = new Key<>("EnrichTargetProperty");
-    public static final Key<Array<NameSpace>> TARGET_NAMESPACES = new Key<>("EnrichTargetNamespaces");
+    public static final Key<TargetAction>    TARGET_ACTION     = new Key<>("EnrichTargetAction");
+    public static final Key<TargetType>      TARGET_TYPE       = new Key<>("EnrichTargetType");
+    public static final Key<String>          TARGET_XPATH      = new Key<>("EnrichTargetXpath");
+    public static final Key<String>          TARGET_PROPERTY   = new Key<>("EnrichTargetProperty");
+    public static final Key<List<NameSpace>> TARGET_NAMESPACES = new Key<>("EnrichTargetNamespaces");
 
     private static final String ACTION_ATTRIBUTE_NAME   = "action";
     private static final String TYPE_ATTRIBUTE_NAME     = "type";
@@ -67,7 +66,7 @@ public class Target extends AbstractEntityElement {
         putProperty(TARGET_TYPE, CUSTOM);
         putProperty(TARGET_XPATH, "/default/xpath");
         putProperty(TARGET_PROPERTY, "target_property");
-        putProperty(TARGET_NAMESPACES, Collections.<NameSpace>createArray());
+        putProperty(TARGET_NAMESPACES, java.util.Collections.<NameSpace>emptyList());
     }
 
     /** Serialization representation attributes of target property of element. */
@@ -148,7 +147,7 @@ public class Target extends AbstractEntityElement {
     }
 
     private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        Array<NameSpace> nameSpaces = getProperty(TARGET_NAMESPACES);
+        List<NameSpace> nameSpaces = getProperty(TARGET_NAMESPACES);
 
         if (!StringUtils.startsWith(PREFIX, attributeName, true) || nameSpaces == null) {
             return;

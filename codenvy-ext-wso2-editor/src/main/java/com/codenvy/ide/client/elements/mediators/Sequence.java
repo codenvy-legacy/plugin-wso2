@@ -20,14 +20,13 @@ import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
@@ -48,10 +47,10 @@ public class Sequence extends AbstractElement {
     public static final String ELEMENT_NAME       = "Sequence";
     public static final String SERIALIZATION_NAME = "sequence";
 
-    public static final Key<Array<NameSpace>> NAMESPACES             = new Key<>("NameSpaces");
-    public static final Key<ReferringType>    REFERRING_TYPE         = new Key<>("ReferringType");
-    public static final Key<String>           STATIC_REFERENCE_TYPE  = new Key<>("StaticReferenceType");
-    public static final Key<String>           DYNAMIC_REFERENCE_TYPE = new Key<>("DynamicReferenceType");
+    public static final Key<List<NameSpace>> NAMESPACES             = new Key<>("NameSpaces");
+    public static final Key<ReferringType>   REFERRING_TYPE         = new Key<>("ReferringType");
+    public static final Key<String>          STATIC_REFERENCE_TYPE  = new Key<>("StaticReferenceType");
+    public static final Key<String>          DYNAMIC_REFERENCE_TYPE = new Key<>("DynamicReferenceType");
 
     private static final String KEY_ATTRIBUTE_NAME = "key";
 
@@ -80,7 +79,7 @@ public class Sequence extends AbstractElement {
         putProperty(REFERRING_TYPE, STATIC);
         putProperty(STATIC_REFERENCE_TYPE, "");
         putProperty(DYNAMIC_REFERENCE_TYPE, "/default/expression");
-        putProperty(NAMESPACES, Collections.<NameSpace>createArray());
+        putProperty(NAMESPACES, Collections.<NameSpace>emptyList());
     }
 
     /** {@inheritDoc} */
@@ -99,7 +98,7 @@ public class Sequence extends AbstractElement {
 
     @Override
     public void deserialize(@Nonnull Node node) {
-        Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
+        List<NameSpace> nameSpaces = getProperty(NAMESPACES);
         if (nameSpaces != null) {
             nameSpaces.clear();
         }
@@ -143,7 +142,7 @@ public class Sequence extends AbstractElement {
         nameSpace.setPrefix(name);
         nameSpace.setUri(attributeValue);
 
-        Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
+        List<NameSpace> nameSpaces = getProperty(NAMESPACES);
         if (nameSpaces != null) {
             nameSpaces.add(nameSpace);
         }

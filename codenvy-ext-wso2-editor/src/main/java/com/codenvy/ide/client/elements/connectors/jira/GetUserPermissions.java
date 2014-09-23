@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes GetUserPermissions connector for jira group connectors. Also the class contains the business logic
@@ -65,10 +64,10 @@ public class GetUserPermissions extends AbstractConnector {
     private String issueKeyExpression;
     private String issueIdExpression;
 
-    private Array<NameSpace> projectKeyNS;
-    private Array<NameSpace> projectIdNS;
-    private Array<NameSpace> issueKeyNS;
-    private Array<NameSpace> issueIdNS;
+    private List<NameSpace> projectKeyNS;
+    private List<NameSpace> projectIdNS;
+    private List<NameSpace> issueKeyNS;
+    private List<NameSpace> issueIdNS;
 
     @Inject
     public GetUserPermissions(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -92,10 +91,10 @@ public class GetUserPermissions extends AbstractConnector {
         issueIdExpression = "";
         issueKeyExpression = "";
 
-        issueIdNS = createArray();
-        projectIdNS = createArray();
-        issueKeyNS = createArray();
-        projectKeyNS = createArray();
+        issueIdNS = emptyList();
+        projectIdNS = emptyList();
+        issueKeyNS = emptyList();
+        projectKeyNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -238,38 +237,38 @@ public class GetUserPermissions extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getProjectKeyNS() {
+    public List<NameSpace> getProjectKeyNS() {
         return projectKeyNS;
     }
 
-    public void setProjectKeyNS(@Nonnull Array<NameSpace> projectKeyNS) {
+    public void setProjectKeyNS(@Nonnull List<NameSpace> projectKeyNS) {
         this.projectKeyNS = projectKeyNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getProjectIdNS() {
+    public List<NameSpace> getProjectIdNS() {
         return projectIdNS;
     }
 
-    public void setProjectIdNS(@Nonnull Array<NameSpace> projectIdNS) {
+    public void setProjectIdNS(@Nonnull List<NameSpace> projectIdNS) {
         this.projectIdNS = projectIdNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getIssueKeyNS() {
+    public List<NameSpace> getIssueKeyNS() {
         return issueKeyNS;
     }
 
-    public void setIssueKeyNS(@Nonnull Array<NameSpace> issueKeyNS) {
+    public void setIssueKeyNS(@Nonnull List<NameSpace> issueKeyNS) {
         this.issueKeyNS = issueKeyNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getIssueIdNS() {
+    public List<NameSpace> getIssueIdNS() {
         return issueIdNS;
     }
 
-    public void setIssueIdNS(@Nonnull Array<NameSpace> issueIdNS) {
+    public void setIssueIdNS(@Nonnull List<NameSpace> issueIdNS) {
         this.issueIdNS = issueIdNS;
     }
 

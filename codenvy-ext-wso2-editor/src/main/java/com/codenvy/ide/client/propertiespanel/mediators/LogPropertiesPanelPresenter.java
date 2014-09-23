@@ -29,13 +29,13 @@ import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPr
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.log.Log.DESCRIPTION;
 import static com.codenvy.ide.client.elements.mediators.log.Log.LOG_CATEGORY;
@@ -82,7 +82,7 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log, Pr
 
         this.addPropertyCallback = new AddPropertyCallback() {
             @Override
-            public void onPropertiesChanged(@Nonnull Array<Property> properties) {
+            public void onPropertiesChanged(@Nonnull List<Property> properties) {
                 element.putProperty(LOG_PROPERTIES, properties);
 
                 notifyListeners();
@@ -144,7 +144,7 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log, Pr
         logProperties.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
-                Array<Property> properties = element.getProperty(LOG_PROPERTIES);
+                List<Property> properties = element.getProperty(LOG_PROPERTIES);
 
                 if (properties != null) {
                     propertyConfigPresenter.showConfigWindow(properties, locale.properties(), addPropertyCallback);
@@ -198,7 +198,7 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log, Pr
      * @param properties
      *         list of logProperties which must to be displayed
      */
-    private void showProperties(@Nullable Array<Property> properties) {
+    private void showProperties(@Nullable List<Property> properties) {
         if (properties == null) {
             this.logProperties.setProperty("");
             return;

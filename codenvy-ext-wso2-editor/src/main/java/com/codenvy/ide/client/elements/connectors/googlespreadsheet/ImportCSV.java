@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes ImportCSV connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -67,11 +66,11 @@ public class ImportCSV extends AbstractConnector {
     private String batchEnableExpression;
     private String batchSizeExpression;
 
-    private Array<NameSpace> spreadsheetNameNS;
-    private Array<NameSpace> worksheetNameNS;
-    private Array<NameSpace> filePathNS;
-    private Array<NameSpace> batchEnableNS;
-    private Array<NameSpace> batchSizeNS;
+    private List<NameSpace> spreadsheetNameNS;
+    private List<NameSpace> worksheetNameNS;
+    private List<NameSpace> filePathNS;
+    private List<NameSpace> batchEnableNS;
+    private List<NameSpace> batchSizeNS;
 
     @Inject
     public ImportCSV(EditorResources resources,
@@ -99,11 +98,11 @@ public class ImportCSV extends AbstractConnector {
         batchEnableExpression = "";
         batchSizeExpression = "";
 
-        spreadsheetNameNS = createArray();
-        worksheetNameNS = createArray();
-        filePathNS = createArray();
-        batchEnableNS = createArray();
-        batchSizeNS = createArray();
+        spreadsheetNameNS = emptyList();
+        worksheetNameNS = emptyList();
+        filePathNS = emptyList();
+        batchEnableNS = emptyList();
+        batchSizeNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -220,20 +219,20 @@ public class ImportCSV extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getSpreadsheetNameNS() {
+    public List<NameSpace> getSpreadsheetNameNS() {
         return spreadsheetNameNS;
     }
 
-    public void setSpreadsheetNameNS(@Nonnull Array<NameSpace> spreadsheetNameNS) {
+    public void setSpreadsheetNameNS(@Nonnull List<NameSpace> spreadsheetNameNS) {
         this.spreadsheetNameNS = spreadsheetNameNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getWorksheetNameNS() {
+    public List<NameSpace> getWorksheetNameNS() {
         return worksheetNameNS;
     }
 
-    public void setWorksheetNameNS(@Nonnull Array<NameSpace> worksheetCountNS) {
+    public void setWorksheetNameNS(@Nonnull List<NameSpace> worksheetCountNS) {
         this.worksheetNameNS = worksheetCountNS;
     }
 
@@ -292,29 +291,29 @@ public class ImportCSV extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getFilePathNS() {
+    public List<NameSpace> getFilePathNS() {
         return filePathNS;
     }
 
-    public void setFilePathNS(@Nonnull Array<NameSpace> filePathNS) {
+    public void setFilePathNS(@Nonnull List<NameSpace> filePathNS) {
         this.filePathNS = filePathNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getBatchEnableNS() {
+    public List<NameSpace> getBatchEnableNS() {
         return batchEnableNS;
     }
 
-    public void setBatchEnableNS(@Nonnull Array<NameSpace> batchEnableNS) {
+    public void setBatchEnableNS(@Nonnull List<NameSpace> batchEnableNS) {
         this.batchEnableNS = batchEnableNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getBatchSizeNS() {
+    public List<NameSpace> getBatchSizeNS() {
         return batchSizeNS;
     }
 
-    public void setBatchSizeNS(@Nonnull Array<NameSpace> batchSizeNS) {
+    public void setBatchSizeNS(@Nonnull List<NameSpace> batchSizeNS) {
         this.batchSizeNS = batchSizeNS;
     }
 

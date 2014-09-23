@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -28,12 +27,12 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.collections.Collections.createArray;
 
 /**
  * The Class describes Search connector for Salesforce group connectors. Also the class contains the business logic
@@ -52,9 +51,9 @@ public class Search extends AbstractConnector {
 
     private static final List<String> PROPERTIES = Arrays.asList(SEARCH_STRING);
 
-    private String           searchString;
-    private String           searchStringInline;
-    private Array<NameSpace> searchStringNameSpaces;
+    private String          searchString;
+    private String          searchStringInline;
+    private List<NameSpace> searchStringNameSpaces;
 
     @Inject
     public Search(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -71,7 +70,7 @@ public class Search extends AbstractConnector {
         searchString = "";
         searchStringInline = "";
 
-        searchStringNameSpaces = createArray();
+        searchStringNameSpaces = Collections.emptyList();
     }
 
     /** {@inheritDoc} */
@@ -124,11 +123,11 @@ public class Search extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getSearchStringNameSpaces() {
+    public List<NameSpace> getSearchStringNameSpaces() {
         return searchStringNameSpaces;
     }
 
-    public void setSearchStringNameSpaces(@Nonnull Array<NameSpace> searchStringNameSpaces) {
+    public void setSearchStringNameSpaces(@Nonnull List<NameSpace> searchStringNameSpaces) {
         this.searchStringNameSpaces = searchStringNameSpaces;
     }
 }

@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes CreateIssue connector for jira group connectors. Also the class contains the business logic
@@ -65,10 +64,10 @@ public class CreateIssue extends AbstractConnector {
     private String descriptionExpression;
     private String issueTypeExpression;
 
-    private Array<NameSpace> projectKeyNS;
-    private Array<NameSpace> summaryNS;
-    private Array<NameSpace> descriptionNS;
-    private Array<NameSpace> issueTypeNS;
+    private List<NameSpace> projectKeyNS;
+    private List<NameSpace> summaryNS;
+    private List<NameSpace> descriptionNS;
+    private List<NameSpace> issueTypeNS;
 
     @Inject
     public CreateIssue(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -92,10 +91,10 @@ public class CreateIssue extends AbstractConnector {
         issueTypeExpression = "";
         descriptionExpression = "";
 
-        issueTypeNS = createArray();
-        projectKeyNS = createArray();
-        descriptionNS = createArray();
-        summaryNS = createArray();
+        issueTypeNS = emptyList();
+        projectKeyNS = emptyList();
+        descriptionNS = emptyList();
+        summaryNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -237,38 +236,38 @@ public class CreateIssue extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getProjectKeyNS() {
+    public List<NameSpace> getProjectKeyNS() {
         return projectKeyNS;
     }
 
-    public void setProjectKeyNS(@Nonnull Array<NameSpace> projectKeyNS) {
+    public void setProjectKeyNS(@Nonnull List<NameSpace> projectKeyNS) {
         this.projectKeyNS = projectKeyNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getSummaryNS() {
+    public List<NameSpace> getSummaryNS() {
         return summaryNS;
     }
 
-    public void setSummaryNS(@Nonnull Array<NameSpace> summaryNS) {
+    public void setSummaryNS(@Nonnull List<NameSpace> summaryNS) {
         this.summaryNS = summaryNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getDescriptionNS() {
+    public List<NameSpace> getDescriptionNS() {
         return descriptionNS;
     }
 
-    public void setDescriptionNS(@Nonnull Array<NameSpace> descriptionNS) {
+    public void setDescriptionNS(@Nonnull List<NameSpace> descriptionNS) {
         this.descriptionNS = descriptionNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getIssueTypeNS() {
+    public List<NameSpace> getIssueTypeNS() {
         return issueTypeNS;
     }
 
-    public void setIssueTypeNS(@Nonnull Array<NameSpace> issueTypeNS) {
+    public void setIssueTypeNS(@Nonnull List<NameSpace> issueTypeNS) {
         this.issueTypeNS = issueTypeNS;
     }
 

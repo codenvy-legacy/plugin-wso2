@@ -21,8 +21,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
@@ -30,6 +28,7 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
@@ -52,11 +51,11 @@ public class Call extends AbstractElement {
     public static final String ELEMENT_NAME       = "Call";
     public static final String SERIALIZATION_NAME = "call";
 
-    public static final Key<String>           REGISTRY_KEY  = new Key<>("RegistryKey");
-    public static final Key<EndpointType>     ENDPOINT_TYPE = new Key<>("EndpointType");
-    public static final Key<String>           X_PATH        = new Key<>("XPath");
-    public static final Key<String>           DESCRIPTION   = new Key<>("Description");
-    public static final Key<Array<NameSpace>> NAMESPACES    = new Key<>("NameSpaces");
+    public static final Key<String>          REGISTRY_KEY  = new Key<>("RegistryKey");
+    public static final Key<EndpointType>    ENDPOINT_TYPE = new Key<>("EndpointType");
+    public static final Key<String>          X_PATH        = new Key<>("XPath");
+    public static final Key<String>          DESCRIPTION   = new Key<>("Description");
+    public static final Key<List<NameSpace>> NAMESPACES    = new Key<>("NameSpaces");
 
     private static final String KEY_ATTRIBUTE_NAME            = "key";
     private static final String KEY_EXPRESSION_ATTRIBUTE_NAME = "key-expression";
@@ -92,7 +91,7 @@ public class Call extends AbstractElement {
         putProperty(ENDPOINT_TYPE, INLINE);
         putProperty(X_PATH, "/default/expression");
         putProperty(DESCRIPTION, "");
-        putProperty(NAMESPACES, Collections.<NameSpace>createArray());
+        putProperty(NAMESPACES, Collections.<NameSpace>emptyList());
 
         Branch branch = branchProvider.get();
         branch.setParent(this);
@@ -130,7 +129,7 @@ public class Call extends AbstractElement {
                        "</call>";
 
             case XPATH:
-                Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
+                List<NameSpace> nameSpaces = getProperty(NAMESPACES);
                 String serializedNameSpaces = convertNameSpaceToXMLFormat(nameSpaces);
 
                 return content + ">\n" +
@@ -237,7 +236,7 @@ public class Call extends AbstractElement {
         nameSpace.setPrefix(name);
         nameSpace.setUri(attributeValue);
 
-        Array<NameSpace> nameSpaces = getProperty(NAMESPACES);
+        List<NameSpace> nameSpaces = getProperty(NAMESPACES);
         if (nameSpaces != null) {
             nameSpaces.add(nameSpace);
         }

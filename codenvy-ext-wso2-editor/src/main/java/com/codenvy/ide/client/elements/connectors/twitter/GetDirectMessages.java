@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static com.codenvy.ide.collections.Collections.createArray;
+import static java.util.Collections.emptyList;
 
 /**
  * The Class describes GetDirectMessages connector for twitter group of connectors. Also the class contains the business logic
@@ -84,14 +83,14 @@ public class GetDirectMessages extends AbstractConnector {
     private String sinceIdExpr;
     private String maxIdExpr;
 
-    private Array<NameSpace> consumerKeyNS;
-    private Array<NameSpace> consumerSecretNS;
-    private Array<NameSpace> accessTokenNS;
-    private Array<NameSpace> accessTokenSecretNS;
-    private Array<NameSpace> countNS;
-    private Array<NameSpace> pageNS;
-    private Array<NameSpace> sinceIdNS;
-    private Array<NameSpace> maxIdNS;
+    private List<NameSpace> consumerKeyNS;
+    private List<NameSpace> consumerSecretNS;
+    private List<NameSpace> accessTokenNS;
+    private List<NameSpace> accessTokenSecretNS;
+    private List<NameSpace> countNS;
+    private List<NameSpace> pageNS;
+    private List<NameSpace> sinceIdNS;
+    private List<NameSpace> maxIdNS;
 
     @Inject
     public GetDirectMessages(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -123,14 +122,14 @@ public class GetDirectMessages extends AbstractConnector {
         sinceIdExpr = "";
         maxIdExpr = "";
 
-        consumerKeyNS = createArray();
-        consumerSecretNS = createArray();
-        accessTokenNS = createArray();
-        accessTokenSecretNS = createArray();
-        countNS = createArray();
-        pageNS = createArray();
-        sinceIdNS = createArray();
-        maxIdNS = createArray();
+        consumerKeyNS = emptyList();
+        consumerSecretNS = emptyList();
+        accessTokenNS = emptyList();
+        accessTokenSecretNS = emptyList();
+        countNS = emptyList();
+        pageNS = emptyList();
+        sinceIdNS = emptyList();
+        maxIdNS = emptyList();
     }
 
     /** {@inheritDoc} */
@@ -389,74 +388,74 @@ public class GetDirectMessages extends AbstractConnector {
     }
 
     @Nonnull
-    public Array<NameSpace> getConsumerKeyNS() {
+    public List<NameSpace> getConsumerKeyNS() {
         return consumerKeyNS;
     }
 
-    public void setConsumerKeyNS(@Nonnull Array<NameSpace> consumerKeyNS) {
+    public void setConsumerKeyNS(@Nonnull List<NameSpace> consumerKeyNS) {
         this.consumerKeyNS = consumerKeyNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getConsumerSecretNS() {
+    public List<NameSpace> getConsumerSecretNS() {
         return consumerSecretNS;
     }
 
-    public void setConsumerSecretNS(@Nonnull Array<NameSpace> consumerSecretNS) {
+    public void setConsumerSecretNS(@Nonnull List<NameSpace> consumerSecretNS) {
         this.consumerSecretNS = consumerSecretNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getAccessTokenNS() {
+    public List<NameSpace> getAccessTokenNS() {
         return accessTokenNS;
     }
 
-    public void setAccessTokenNS(@Nonnull Array<NameSpace> accessTokenNS) {
+    public void setAccessTokenNS(@Nonnull List<NameSpace> accessTokenNS) {
         this.accessTokenNS = accessTokenNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getAccessTokenSecretNS() {
+    public List<NameSpace> getAccessTokenSecretNS() {
         return accessTokenSecretNS;
     }
 
-    public void setAccessTokenSecretNS(@Nonnull Array<NameSpace> accessTokenSecretNS) {
+    public void setAccessTokenSecretNS(@Nonnull List<NameSpace> accessTokenSecretNS) {
         this.accessTokenSecretNS = accessTokenSecretNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getCountNS() {
+    public List<NameSpace> getCountNS() {
         return countNS;
     }
 
-    public void setCountNS(@Nonnull Array<NameSpace> countNS) {
+    public void setCountNS(@Nonnull List<NameSpace> countNS) {
         this.countNS = countNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getPageNS() {
+    public List<NameSpace> getPageNS() {
         return pageNS;
     }
 
-    public void setPageNS(@Nonnull Array<NameSpace> pageNS) {
+    public void setPageNS(@Nonnull List<NameSpace> pageNS) {
         this.pageNS = pageNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getSinceIdNS() {
+    public List<NameSpace> getSinceIdNS() {
         return sinceIdNS;
     }
 
-    public void setSinceIdNS(@Nonnull Array<NameSpace> sinceIdNS) {
+    public void setSinceIdNS(@Nonnull List<NameSpace> sinceIdNS) {
         this.sinceIdNS = sinceIdNS;
     }
 
     @Nonnull
-    public Array<NameSpace> getMaxIdNS() {
+    public List<NameSpace> getMaxIdNS() {
         return maxIdNS;
     }
 
-    public void setMaxIdNS(@Nonnull Array<NameSpace> maxIdNS) {
+    public void setMaxIdNS(@Nonnull List<NameSpace> maxIdNS) {
         this.maxIdNS = maxIdNS;
     }
 }
