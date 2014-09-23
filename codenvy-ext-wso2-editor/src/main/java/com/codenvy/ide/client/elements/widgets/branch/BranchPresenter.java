@@ -145,8 +145,8 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         view.setDefaultCursor();
 
         if (newElement == null || !connectionsValidator.canInsertElement(branch, newElement.getElementName(), x, y)
-            || (branchParent != null && !innerElementsValidator.canInsertElement(branchParent.getElementName(),
-                                                                                 newElement.getElementName()))) {
+            || (branchParent != null &&
+                !innerElementsValidator.canInsertElement(branchParent.getElementName(), newElement.getElementName()))) {
             selectionManager.setElement(null);
             return;
         }
@@ -204,15 +204,15 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     /** {@inheritDoc} */
     @Override
     public void onElementMoved(@Nonnull Element element, int x, int y) {
-        if (!connectionsValidator.canRemoveElement(branch, element.getId()) ||
-            !connectionsValidator.canInsertElement(branch, element.getElementName(), x, y)) {
-            return;
+        if (connectionsValidator.canRemoveElement(branch, element.getId()) &&
+            connectionsValidator.canInsertElement(branch, element.getElementName(), x, y)) {
+            element.setX(x);
+            element.setY(y);
+
+            onElementChanged();
+        } else {
+            redrawElements();
         }
-
-        element.setX(x);
-        element.setY(y);
-
-        onElementChanged();
     }
 
     /** {@inheritDoc} */
@@ -265,12 +265,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
             ElementPresenter elementPresenter = widgetElements.get(elementId);
 
             if (elementPresenter == null) {
-                elementPresenter = elementWidgetFactory.createElementPresenter(element);
-
-                elementPresenter.addElementChangedListener(this);
-                elementPresenter.addElementMoveListener(this);
-                elementPresenter.addElementDeleteListener(this);
-
+                elementPresenter = createElementPresenter(element);
                 widgetElements.put(elementId, elementPresenter);
             }
 
@@ -280,33 +275,42 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         }
     }
 
+    @Nonnull
+    private ElementPresenter createElementPresenter(@Nonnull Element element) {
+        ElementPresenter elementPresenter = elementWidgetFactory.createElementPresenter(element);
+
+        elementPresenter.addElementChangedListener(this);
+        elementPresenter.addElementMoveListener(this);
+        elementPresenter.addElementDeleteListener(this);
+
+        return elementPresenter;
+    }
+
     public void resizeView() {
-        int height;
-        int width;
-
-        if (branch.getElements().isEmpty()) {
-            height = DEFAULT_HEIGHT;
-            width = DEFAULT_WIDTH;
+        if (branch.hasElements()) {
+            detectElementSizeAndResizeView();
         } else {
-            List<ElementPresenter> elements = new ArrayList<>(widgetElements.values());
+            view.setHeight(DEFAULT_HEIGHT + TITLE_HEIGHT);
+            view.setWidth(DEFAULT_WIDTH);
+        }
+    }
 
-            width = 0;
-            height = elements.get(0).getHeight();
+    private void detectElementSizeAndResizeView() {
+        List<ElementPresenter> elements = new ArrayList<>(widgetElements.values());
 
-            for (ElementPresenter element : elements) {
-                width += element.getWidth();
-                int elementHeight = element.getHeight();
+        int width = (elements.size() + 1) * ARROW_PADDING;
+        int height = elements.get(0).getHeight();
 
-                if (height < elementHeight) {
-                    height = elementHeight;
-                }
+        for (ElementPresenter element : elements) {
+            width += element.getWidth();
+
+            int elementHeight = element.getHeight();
+            if (height < elementHeight) {
+                height = elementHeight;
             }
-
-            height += ELEMENTS_PADDING;
-            width += (elements.size() + 1) * ARROW_PADDING;
         }
 
-        height += TITLE_HEIGHT;
+        height += ELEMENTS_PADDING + TITLE_HEIGHT;
 
         view.setHeight(height);
         view.setWidth(width);

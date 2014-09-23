@@ -92,8 +92,8 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
 
         this.selectionManager.addListener(this);
 
-        view.setTitle(element.getTitle());
-        view.setIcon(element.getIcon());
+        this.view.setTitle(element.getTitle());
+        this.view.setIcon(element.getIcon());
 
         redrawBranches();
     }
@@ -182,9 +182,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
             BranchPresenter branchPresenter = widgetBranches.get(branchId);
 
             if (branchPresenter == null) {
-                branchPresenter = elementWidgetFactory.createContainer(branch);
-                branchPresenter.addElementChangedListener(this);
-
+                branchPresenter = createBranchPresenter(branch);
                 widgetBranches.put(branchId, branchPresenter);
             }
 
@@ -194,6 +192,14 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
         }
 
         return branchesId;
+    }
+
+    @Nonnull
+    private BranchPresenter createBranchPresenter(@Nonnull Branch branch) {
+        BranchPresenter branchPresenter = elementWidgetFactory.createContainer(branch);
+        branchPresenter.addElementChangedListener(this);
+
+        return branchPresenter;
     }
 
     private void removeUnnecessaryWidgets(@Nonnull List<String> branchesId) {

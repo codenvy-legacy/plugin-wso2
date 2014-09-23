@@ -69,6 +69,7 @@ public class ElementPresenterTest {
     private static final boolean NEEDS_TO_SHOW_ICON_AND_TITLE = true;
     private static final int     BRANCH_HEIGHT                = 100;
     private static final int     BRANCH_WIDTH                 = 100;
+    private static final int     MAX_BRANCH_WIDTH             = 200;
     private static final int     X_POSITION                   = 100;
     private static final int     Y_POSITION                   = 100;
 
@@ -106,23 +107,56 @@ public class ElementPresenterTest {
 
     private ElementPresenter presenter;
 
-    private void prepareDefaultUseCase() {
-        prepareComponents(NEEDS_TO_SHOW_ICON_AND_TITLE, Arrays.asList(branch1, branch2));
-
-        when(branch1.getId()).thenReturn(BRANCH1_ID);
-        when(branch2.getId()).thenReturn(BRANCH2_ID);
-
-        when(branchPresenter.getHeight()).thenReturn(BRANCH_HEIGHT);
-        when(branchPresenter.getWidth()).thenReturn(BRANCH_WIDTH);
-
-        when(elementWidgetFactory.createContainer(any(Branch.class))).thenReturn(branchPresenter);
-
+    private void createPresenter() {
         presenter = new ElementPresenter(elementWidgetFactory,
                                          selectionManager,
                                          elementCreatorsManager,
                                          innerElementsValidator,
                                          editorState,
                                          element);
+    }
+
+    private void prepareStartView() {
+        prepareGeneralElements();
+
+        createPresenter();
+    }
+
+    private void prepareGeneralElements() {
+        prepareComponents(NEEDS_TO_SHOW_ICON_AND_TITLE, Arrays.asList(branch1, branch2));
+
+        prepareBranchIds();
+
+        prepareBranchWidgetSize(branchPresenter, BRANCH_HEIGHT, BRANCH_WIDTH);
+        prepareBranchWidgetSize(branchPresenter2, BRANCH_HEIGHT, BRANCH_WIDTH);
+
+        prepareElementWidgetFactory();
+    }
+
+    private void prepareDefaultUseCase() {
+        prepareStartView();
+
+        resetComponentsUseInPrepareCase();
+
+        prepareGeneralElements();
+
+        presenter.addElementChangedListener(changingElementListener);
+    }
+
+    private void resetComponentsUseInPrepareCase() {
+        reset(view);
+        reset(elementWidgetFactory);
+        reset(branchPresenter);
+        reset(branchPresenter2);
+        reset(element);
+        reset(branch1);
+        reset(branch2);
+        reset(selectionManager);
+    }
+
+    private void prepareElementWidgetFactory() {
+        when(elementWidgetFactory.createContainer(branch1)).thenReturn(branchPresenter);
+        when(elementWidgetFactory.createContainer(branch2)).thenReturn(branchPresenter2);
     }
 
     private void prepareComponents(boolean needsToShowIconAndTitle, List<Branch> branches) {
@@ -135,231 +169,200 @@ public class ElementPresenterTest {
         when(elementWidgetFactory.createElementView(anyBoolean())).thenReturn(view);
     }
 
-    @Test
-    public void viewShouldBePrepared() throws Exception {
-        prepareDefaultUseCase();
+    private void prepareBranchIds() {
+        when(branch1.getId()).thenReturn(BRANCH1_ID);
+        when(branch2.getId()).thenReturn(BRANCH2_ID);
+    }
 
+    private void prepareBranchWidgetSize(BranchPresenter branchPresenter, int height, int width) {
+        when(branchPresenter.getHeight()).thenReturn(height);
+        when(branchPresenter.getWidth()).thenReturn(width);
+    }
+
+    private void verifyConstructorAction(boolean needsToShowTitleAndIcon) {
         verify(view).setDelegate(presenter);
-
-        verify(view).setVisibleTitleAndIcon(NEEDS_TO_SHOW_ICON_AND_TITLE);
         verify(view).setTitle(TITLE);
         verify(view).setIcon(icon);
+        verify(view).setVisibleTitleAndIcon(needsToShowTitleAndIcon);
+
+        verify(selectionManager).addListener(presenter);
+
+        verify(element).getTitle();
+        verify(element).getIcon();
+
+        verify(element, times(2)).needsToShowIconAndTitle();
+        verify(element).isPossibleToAddBranches();
+    }
+
+    private void branchPresenterShouldBeCreatedAndShown(BranchPresenter branchPresenter, int width) {
+        verify(branchPresenter).addElementChangedListener(presenter);
+        verify(branchPresenter).resizeView();
+        verify(branchPresenter).setWidth(width);
+    }
+
+    private void branchPresenterShouldBeNotCreated(BranchPresenter branchPresenter) {
+        verify(branchPresenter, never()).addElementChangedListener(presenter);
+        verify(branchPresenter, never()).resizeView();
+        verify(branchPresenter, never()).setWidth(anyInt());
+    }
+
+    private void branchPresenterShouldBeNotReCreatedButShown(BranchPresenter branchPresenter) {
+        verify(branchPresenter, never()).addElementChangedListener(presenter);
+
+        verify(branchPresenter).resizeView();
+        verify(branchPresenter).setWidth(BRANCH_WIDTH);
+    }
+
+    private void elementWidgetsShouldBeCreated() {
+        verify(elementWidgetFactory).createContainer(branch1);
+        verify(elementWidgetFactory).createContainer(branch2);
+    }
+
+    private void branchesShouldBeAddedOnView() {
+        verify(view).addBranch(branchPresenter);
+        verify(view).addBranch(branchPresenter2);
+    }
+
+    private void viewSizeShouldBeChanged(int height, int width) {
+        verify(view).setHeight(height);
+        verify(view).setWidth(width);
+    }
+
+    @Test
+    public void viewShouldBePrepared() throws Exception {
+        prepareStartView();
+
+        verifyConstructorAction(NEEDS_TO_SHOW_ICON_AND_TITLE);
 
         verify(view).removeBranches();
 
-        verify(elementWidgetFactory).createContainer(branch1);
-        verify(elementWidgetFactory).createContainer(branch2);
+        elementWidgetsShouldBeCreated();
 
-        verify(branchPresenter, times(2)).addElementChangedListener(presenter);
-        verify(branchPresenter, times(2)).resizeView();
-        verify(branchPresenter, times(2)).setWidth(BRANCH_WIDTH);
+        branchPresenterShouldBeCreatedAndShown(branchPresenter, BRANCH_WIDTH);
+        branchPresenterShouldBeCreatedAndShown(branchPresenter2, BRANCH_WIDTH);
 
-        verify(view, times(2)).addBranch(branchPresenter);
+        branchesShouldBeAddedOnView();
 
-        verify(view).setHeight(3 * BRANCHES_PADDING + 2 * BRANCH_HEIGHT);
-        verify(view).setWidth(BRANCH_WIDTH + 2 * BRANCHES_PADDING + DEFAULT_WIDTH);
+        viewSizeShouldBeChanged(3 * BRANCHES_PADDING + 2 * BRANCH_HEIGHT, BRANCH_WIDTH + 2 * BRANCHES_PADDING + DEFAULT_WIDTH);
     }
 
     @Test
     public void viewShouldBePreparedWhenDoesNotHaveBranchesAndNeedToShowTitle() throws Exception {
-        prepareComponents(true, Collections.<Branch>emptyList());
+        prepareComponents(NEEDS_TO_SHOW_ICON_AND_TITLE, Collections.<Branch>emptyList());
 
-        presenter = new ElementPresenter(elementWidgetFactory,
-                                         selectionManager,
-                                         elementCreatorsManager,
-                                         innerElementsValidator,
-                                         editorState,
-                                         element);
+        createPresenter();
 
-        verify(view).setDelegate(presenter);
-
-        verify(view).setVisibleTitleAndIcon(true);
-        verify(view).setTitle(TITLE);
-        verify(view).setIcon(icon);
+        verifyConstructorAction(NEEDS_TO_SHOW_ICON_AND_TITLE);
 
         verify(view).removeBranches();
 
         verify(elementWidgetFactory, never()).createContainer(any(Branch.class));
 
-        verify(branchPresenter, never()).addElementChangedListener(presenter);
-        verify(branchPresenter, never()).resizeView();
-        verify(branchPresenter, never()).setWidth(BRANCH_WIDTH);
+        branchPresenterShouldBeNotCreated(branchPresenter);
 
         verify(view, never()).addBranch(any(BranchPresenter.class));
 
-        verify(view).setHeight(DEFAULT_HEIGHT);
-        verify(view).setWidth(DEFAULT_WIDTH);
+        viewSizeShouldBeChanged(DEFAULT_HEIGHT, DEFAULT_WIDTH);
     }
 
     @Test
     public void viewShouldBePreparedWhenDoesNotHaveBranchesAndNotNeedToShowTitle() throws Exception {
         prepareComponents(false, Collections.<Branch>emptyList());
 
-        presenter = new ElementPresenter(elementWidgetFactory,
-                                         selectionManager,
-                                         elementCreatorsManager,
-                                         innerElementsValidator,
-                                         editorState,
-                                         element);
+        createPresenter();
 
-        verify(view).setDelegate(presenter);
-
-        verify(view).setVisibleTitleAndIcon(false);
-        verify(view).setTitle(TITLE);
-        verify(view).setIcon(icon);
+        verifyConstructorAction(false);
 
         verify(view).removeBranches();
 
         verify(elementWidgetFactory, never()).createContainer(any(Branch.class));
 
-        verify(branchPresenter, never()).addElementChangedListener(presenter);
-        verify(branchPresenter, never()).resizeView();
-        verify(branchPresenter, never()).setWidth(anyInt());
+        branchPresenterShouldBeNotCreated(branchPresenter);
 
         verify(view, never()).addBranch(any(BranchPresenter.class));
 
-        verify(view).setHeight(DEFAULT_HEIGHT);
-        verify(view).setWidth(0);
+        viewSizeShouldBeChanged(DEFAULT_HEIGHT, 0);
     }
 
     @Test
     public void viewShouldBePreparedWhenHasBranchesAndNotNeedToShowTitle() throws Exception {
         prepareComponents(false, Arrays.asList(branch1, branch2));
 
-        when(branch1.getId()).thenReturn(BRANCH1_ID);
-        when(branch2.getId()).thenReturn(BRANCH2_ID);
+        prepareBranchIds();
 
-        when(branchPresenter.getHeight()).thenReturn(BRANCH_HEIGHT);
-        when(branchPresenter.getWidth()).thenReturn(BRANCH_WIDTH);
+        prepareBranchWidgetSize(branchPresenter, BRANCH_HEIGHT, BRANCH_WIDTH);
+        prepareBranchWidgetSize(branchPresenter2, BRANCH_HEIGHT, BRANCH_WIDTH);
 
-        when(elementWidgetFactory.createContainer(any(Branch.class))).thenReturn(branchPresenter);
+        prepareElementWidgetFactory();
 
-        presenter = new ElementPresenter(elementWidgetFactory,
-                                         selectionManager,
-                                         elementCreatorsManager,
-                                         innerElementsValidator,
-                                         editorState,
-                                         element);
+        createPresenter();
 
-        verify(view).setDelegate(presenter);
-
-        verify(view).setVisibleTitleAndIcon(false);
-        verify(view).setTitle(TITLE);
-        verify(view).setIcon(icon);
+        verifyConstructorAction(false);
 
         verify(view).removeBranches();
 
-        verify(elementWidgetFactory).createContainer(branch1);
-        verify(elementWidgetFactory).createContainer(branch2);
+        elementWidgetsShouldBeCreated();
 
-        verify(branchPresenter, times(2)).addElementChangedListener(presenter);
-        verify(branchPresenter, times(2)).resizeView();
-        verify(branchPresenter, times(2)).setWidth(BRANCH_WIDTH);
+        branchPresenterShouldBeCreatedAndShown(branchPresenter, BRANCH_WIDTH);
+        branchPresenterShouldBeCreatedAndShown(branchPresenter2, BRANCH_WIDTH);
 
-        verify(view, times(2)).addBranch(branchPresenter);
+        branchesShouldBeAddedOnView();
 
-        verify(view).setHeight(3 * BRANCHES_PADDING + 2 * BRANCH_HEIGHT);
-        verify(view).setWidth(BRANCH_WIDTH + 2 * BRANCHES_PADDING);
+        viewSizeShouldBeChanged(3 * BRANCHES_PADDING + 2 * BRANCH_HEIGHT, BRANCH_WIDTH + 2 * BRANCHES_PADDING);
     }
 
     @Test
     public void viewShouldBePreparedWhenFirstBranchIsTheBiggestOne() throws Exception {
         prepareComponents(false, Arrays.asList(branch1, branch2));
 
-        when(branch1.getId()).thenReturn(BRANCH1_ID);
-        when(branch2.getId()).thenReturn(BRANCH2_ID);
+        prepareBranchIds();
 
-        int maxWidth = 200;
+        prepareBranchWidgetSize(branchPresenter, BRANCH_HEIGHT, MAX_BRANCH_WIDTH);
+        prepareBranchWidgetSize(branchPresenter2, BRANCH_HEIGHT, BRANCH_WIDTH);
 
-        when(branchPresenter.getHeight()).thenReturn(BRANCH_HEIGHT);
-        when(branchPresenter.getWidth()).thenReturn(maxWidth);
+        prepareElementWidgetFactory();
 
-        when(branchPresenter2.getHeight()).thenReturn(BRANCH_HEIGHT);
-        when(branchPresenter2.getWidth()).thenReturn(BRANCH_WIDTH);
+        createPresenter();
 
-        when(elementWidgetFactory.createContainer(any(Branch.class))).thenReturn(branchPresenter).thenReturn(branchPresenter2);
-
-        presenter = new ElementPresenter(elementWidgetFactory,
-                                         selectionManager,
-                                         elementCreatorsManager,
-                                         innerElementsValidator,
-                                         editorState,
-                                         element);
-
-        verify(view).setDelegate(presenter);
-
-        verify(view).setVisibleTitleAndIcon(false);
-        verify(view).setTitle(TITLE);
-        verify(view).setIcon(icon);
+        verifyConstructorAction(false);
 
         verify(view).removeBranches();
 
-        verify(elementWidgetFactory).createContainer(branch1);
-        verify(elementWidgetFactory).createContainer(branch2);
+        elementWidgetsShouldBeCreated();
 
-        verify(branchPresenter).addElementChangedListener(presenter);
-        verify(branchPresenter).resizeView();
-        verify(branchPresenter).setWidth(maxWidth);
+        branchPresenterShouldBeCreatedAndShown(branchPresenter, MAX_BRANCH_WIDTH);
+        branchPresenterShouldBeCreatedAndShown(branchPresenter2, MAX_BRANCH_WIDTH);
 
-        verify(branchPresenter2).addElementChangedListener(presenter);
-        verify(branchPresenter2).resizeView();
-        verify(branchPresenter2).setWidth(maxWidth);
+        branchesShouldBeAddedOnView();
 
-        verify(view).addBranch(branchPresenter);
-        verify(view).addBranch(branchPresenter2);
-
-        verify(view).setHeight(3 * BRANCHES_PADDING + 2 * BRANCH_HEIGHT);
-        verify(view).setWidth(maxWidth + 2 * BRANCHES_PADDING);
+        viewSizeShouldBeChanged(3 * BRANCHES_PADDING + 2 * BRANCH_HEIGHT, MAX_BRANCH_WIDTH + 2 * BRANCHES_PADDING);
     }
 
     @Test
     public void viewShouldBePreparedWhenSecondBranchIsTheBiggestOne() throws Exception {
-        prepareComponents(true, Arrays.asList(branch1, branch2));
+        prepareComponents(NEEDS_TO_SHOW_ICON_AND_TITLE, Arrays.asList(branch1, branch2));
 
-        when(branch1.getId()).thenReturn(BRANCH1_ID);
-        when(branch2.getId()).thenReturn(BRANCH2_ID);
+        prepareBranchIds();
 
-        int maxWidth = 200;
+        prepareBranchWidgetSize(branchPresenter, BRANCH_HEIGHT, BRANCH_WIDTH);
+        prepareBranchWidgetSize(branchPresenter2, BRANCH_HEIGHT, MAX_BRANCH_WIDTH);
 
-        when(branchPresenter.getHeight()).thenReturn(BRANCH_HEIGHT);
-        when(branchPresenter.getWidth()).thenReturn(BRANCH_WIDTH);
+        prepareElementWidgetFactory();
 
-        when(branchPresenter2.getHeight()).thenReturn(BRANCH_HEIGHT);
-        when(branchPresenter2.getWidth()).thenReturn(maxWidth);
+        createPresenter();
 
-        when(elementWidgetFactory.createContainer(any(Branch.class))).thenReturn(branchPresenter).thenReturn(branchPresenter2);
-
-        presenter = new ElementPresenter(elementWidgetFactory,
-                                         selectionManager,
-                                         elementCreatorsManager,
-                                         innerElementsValidator,
-                                         editorState,
-                                         element);
-
-        verify(view).setDelegate(presenter);
-
-        verify(view).setVisibleTitleAndIcon(true);
-        verify(view).setTitle(TITLE);
-        verify(view).setIcon(icon);
+        verifyConstructorAction(NEEDS_TO_SHOW_ICON_AND_TITLE);
 
         verify(view).removeBranches();
 
-        verify(elementWidgetFactory).createContainer(branch1);
-        verify(elementWidgetFactory).createContainer(branch2);
+        elementWidgetsShouldBeCreated();
 
-        verify(branchPresenter).addElementChangedListener(presenter);
-        verify(branchPresenter).resizeView();
-        verify(branchPresenter).setWidth(maxWidth);
+        branchPresenterShouldBeCreatedAndShown(branchPresenter, MAX_BRANCH_WIDTH);
+        branchPresenterShouldBeCreatedAndShown(branchPresenter2, MAX_BRANCH_WIDTH);
 
-        verify(branchPresenter2).addElementChangedListener(presenter);
-        verify(branchPresenter2).resizeView();
-        verify(branchPresenter2).setWidth(maxWidth);
+        branchesShouldBeAddedOnView();
 
-        verify(view).addBranch(branchPresenter);
-        verify(view).addBranch(branchPresenter2);
-
-        verify(view).setHeight(3 * BRANCHES_PADDING + 2 * BRANCH_HEIGHT);
-        verify(view).setWidth(maxWidth + 2 * BRANCHES_PADDING + DEFAULT_WIDTH);
+        viewSizeShouldBeChanged(3 * BRANCHES_PADDING + 2 * BRANCH_HEIGHT, MAX_BRANCH_WIDTH + 2 * BRANCHES_PADDING + DEFAULT_WIDTH);
     }
 
     @Test
@@ -577,30 +580,18 @@ public class ElementPresenterTest {
     public void changingElementListenerShouldBeNotifiedWhenChildElementIsChanged() throws Exception {
         prepareDefaultUseCase();
 
-        presenter.addElementChangedListener(changingElementListener);
-
-        reset(view);
-        reset(elementWidgetFactory);
-        reset(branchPresenter);
-
-        when(branchPresenter.getHeight()).thenReturn(BRANCH_HEIGHT);
-        when(branchPresenter.getWidth()).thenReturn(BRANCH_WIDTH);
-
         presenter.onElementChanged();
 
         verify(view).removeBranches();
 
-        verify(elementWidgetFactory, never()).createContainer(branch1);
-        verify(elementWidgetFactory, never()).createContainer(branch2);
+        verify(elementWidgetFactory, never()).createContainer(any(Branch.class));
 
-        verify(branchPresenter, never()).addElementChangedListener(presenter);
-        verify(branchPresenter, times(2)).resizeView();
-        verify(branchPresenter, times(2)).setWidth(BRANCH_WIDTH);
+        branchPresenterShouldBeNotReCreatedButShown(branchPresenter);
+        branchPresenterShouldBeNotReCreatedButShown(branchPresenter2);
 
-        verify(view, times(2)).addBranch(branchPresenter);
+        branchesShouldBeAddedOnView();
 
-        verify(view).setHeight(3 * BRANCHES_PADDING + 2 * BRANCH_HEIGHT);
-        verify(view).setWidth(BRANCH_WIDTH + 2 * BRANCHES_PADDING + DEFAULT_WIDTH);
+        viewSizeShouldBeChanged(3 * BRANCHES_PADDING + 2 * BRANCH_HEIGHT, BRANCH_WIDTH + 2 * BRANCHES_PADDING + DEFAULT_WIDTH);
 
         verify(changingElementListener).onElementChanged();
     }
@@ -609,30 +600,20 @@ public class ElementPresenterTest {
     public void widgetShouldBeUpdated() throws Exception {
         prepareDefaultUseCase();
 
-        presenter.addElementChangedListener(changingElementListener);
-
-        reset(view);
-        reset(elementWidgetFactory);
-        reset(branchPresenter);
-
-        when(branchPresenter.getHeight()).thenReturn(BRANCH_HEIGHT);
-        when(branchPresenter.getWidth()).thenReturn(BRANCH_WIDTH);
-
         presenter.onElementChanged();
 
         verify(view).removeBranches();
 
-        verify(elementWidgetFactory, never()).createContainer(branch1);
-        verify(elementWidgetFactory, never()).createContainer(branch2);
+        verify(elementWidgetFactory, never()).createContainer(any(Branch.class));
 
-        verify(branchPresenter, never()).addElementChangedListener(presenter);
-        verify(branchPresenter, times(2)).resizeView();
-        verify(branchPresenter, times(2)).setWidth(BRANCH_WIDTH);
+        branchPresenterShouldBeNotReCreatedButShown(branchPresenter);
+        branchPresenterShouldBeNotReCreatedButShown(branchPresenter2);
 
-        verify(view, times(2)).addBranch(branchPresenter);
+        branchesShouldBeAddedOnView();
 
-        verify(view).setHeight(3 * BRANCHES_PADDING + 2 * BRANCH_HEIGHT);
-        verify(view).setWidth(BRANCH_WIDTH + 2 * BRANCHES_PADDING + DEFAULT_WIDTH);
+        viewSizeShouldBeChanged(3 * BRANCHES_PADDING + 2 * BRANCH_HEIGHT, BRANCH_WIDTH + 2 * BRANCHES_PADDING + DEFAULT_WIDTH);
+
+        verify(changingElementListener).onElementChanged();
     }
 
 }
