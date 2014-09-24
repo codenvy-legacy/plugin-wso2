@@ -16,12 +16,15 @@
 package com.codenvy.ide.client.propertiespanel.connectors.base;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
+import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.elements.connectors.ConnectorPropertyManager;
 import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
+import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ConnectorParameterCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.property.PropertyValueChangedListener;
@@ -33,7 +36,9 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
+import static com.codenvy.ide.client.elements.AbstractEntityElement.Key;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.AvailableConfigs.SELECT_FROM_CONFIG;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.CONFIG;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
@@ -53,21 +58,22 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
     protected final Provider<ListPropertyPresenter>    listPropertyProvider;
     protected final Provider<SimplePropertyPresenter>  simplePropertyProvider;
     protected final Provider<ComplexPropertyPresenter> complexPropertyProvider;
+    protected final NameSpaceEditorPresenter           nameSpacePresenter;
     protected final WSO2EditorLocalizationConstant     locale;
+    protected final PropertyGroupPresenter             basicGroup;
 
-    private final ParameterPresenter       parameterPresenter;
-    private final ConnectorPropertyManager connectorPropertyManager;
-
+    private final ParameterPresenter         parameterPresenter;
+    private final ConnectorPropertyManager   connectorPropertyManager;
     private final ConnectorParameterCallBack parameterCallBack;
 
-    private SimplePropertyPresenter configRef;
-    private ListPropertyPresenter   availableConfigs;
-    private ListPropertyPresenter   parameterEditorType;
-
+    protected SimplePropertyPresenter configRef;
+    protected ListPropertyPresenter   availableConfigs;
+    protected ListPropertyPresenter   parameterEditorType;
 
     protected AbstractConnectorPropertiesPanelPresenter(@Nonnull PropertiesPanelView view,
                                                         @Nonnull ConnectorPropertyManager connectorPropertyManager,
                                                         @Nonnull ParameterPresenter parameterPresenter,
+                                                        @Nonnull NameSpaceEditorPresenter nameSpaceEditorPresenter,
                                                         @Nonnull PropertyTypeManager propertyTypeManager,
                                                         @Nonnull WSO2EditorLocalizationConstant localizationConstant,
                                                         @Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
@@ -80,6 +86,7 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
         listPropertyProvider = listPropertyPresenterProvider;
         complexPropertyProvider = complexPropertyPresenterProvider;
         simplePropertyProvider = simplePropertyPresenterProvider;
+        nameSpacePresenter = nameSpaceEditorPresenter;
         locale = localizationConstant;
 
         this.connectorPropertyManager = connectorPropertyManager;
@@ -93,6 +100,9 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
                 AbstractConnectorPropertiesPanelPresenter.this.connectorPropertyManager.addNewConfig(name);
             }
         };
+
+        basicGroup = propertiesWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
+        view.addGroup(basicGroup);
 
         prepareView();
     }
@@ -153,6 +163,85 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
         });
 
         basicGroup.addItem(parameterEditorType);
+    }
+
+    /**
+     * Creates simple property panel.Created panel contains listener which allows react to change of panel parameters
+     * and set it to element. Also method adds current property panel, which it creates, to general group presenter.
+     *
+     * @param title
+     *         value which need to set as a title of panel
+     * @param key
+     *         value of key which allows us to get inline parameter of element
+     */
+    protected SimplePropertyPresenter prepareSimplePanel(@Nonnull String title, @Nonnull final Key<String> key) {
+        final SimplePropertyPresenter simplePanel = simplePropertyProvider.get();
+        simplePanel.setTitle(title);
+        simplePanel.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+            @Override
+            public void onPropertyChanged(@Nonnull String property) {
+                element.putProperty(key, property);
+
+                simplePanel.setProperty(property);
+
+                notifyListeners();
+            }
+        });
+        basicGroup.addItem(simplePanel);
+
+        return simplePanel;
+    }
+
+    /**
+     * Creates complex property panel.Created panel contains listener which allows react to change of panel parameters
+     * and set it to element. Also method adds current property panel, which it creates, to general group presenter. Methods
+     * contains initialization of callback which need to complex panel which will be created.
+     *
+     * @param title
+     *         value which need to set as a title of panel
+     * @param nameSpaceKey
+     *         value of key which allows us to get list of name space of element
+     * @param expressionKey
+     *         value of key which allows us to get expression parameter of element
+     */
+    protected ComplexPropertyPresenter prepareComplexPanel(@Nonnull String title,
+                                                           @Nonnull final Key<List<NameSpace>> nameSpaceKey,
+                                                           @Nonnull final Key<String> expressionKey) {
+
+        final ComplexPropertyPresenter complexPanel = complexPropertyProvider.get();
+        complexPanel.setTitle(title);
+
+        final AddNameSpacesCallBack nameSpacesCallBack = new AddNameSpacesCallBack() {
+            @Override
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
+                element.putProperty(nameSpaceKey, nameSpaces);
+                element.putProperty(expressionKey, expression);
+
+                complexPanel.setProperty(expression);
+
+                notifyListeners();
+            }
+        };
+
+        complexPanel.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+            @Override
+            public void onEditButtonClicked() {
+                List<NameSpace> nameSpaces = element.getProperty(nameSpaceKey);
+                String expression = element.getProperty(expressionKey);
+
+                if (nameSpaces == null || expression == null) {
+                    return;
+                }
+
+                nameSpacePresenter.showWindowWithParameters(nameSpaces,
+                                                            nameSpacesCallBack,
+                                                            locale.connectorExpression(),
+                                                            expression);
+            }
+        });
+        basicGroup.addItem(complexPanel);
+
+        return complexPanel;
     }
 
     /** {@inheritDoc} */
