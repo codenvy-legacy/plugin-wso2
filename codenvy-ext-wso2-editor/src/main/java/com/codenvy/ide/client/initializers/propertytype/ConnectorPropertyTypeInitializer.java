@@ -37,8 +37,8 @@ public class ConnectorPropertyTypeInitializer extends AbstractPropertyTypeInitia
     /** {@inheritDoc} */
     @Override
     public void initialize() {
-        manager.register(ParameterEditorType.TYPE_NAME, Arrays.asList(ParameterEditorType.Inline.name(),
-                                                                      ParameterEditorType.NamespacedPropertyEditor.name()));
+        manager.register(ParameterEditorType.TYPE_NAME, Arrays.asList(ParameterEditorType.INLINE.getValue(),
+                                                                      ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR.getValue()));
 
         manager.register(AvailableConfigs.TYPE_NAME, Arrays.asList(AvailableConfigs.EMPTY.getValue(),
                                                                    AvailableConfigs.SELECT_FROM_CONFIG.getValue()));

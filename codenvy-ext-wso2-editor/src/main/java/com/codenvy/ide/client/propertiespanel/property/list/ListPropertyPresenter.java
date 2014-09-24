@@ -31,6 +31,7 @@ import java.util.List;
  * The class notifies all listeners about changing property value.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class ListPropertyPresenter extends AbstractPropertyPresenter<ListPropertyView> implements ListPropertyView.ActionDelegate {
 
@@ -67,6 +68,16 @@ public class ListPropertyPresenter extends AbstractPropertyPresenter<ListPropert
      */
     public void selectValue(@Nullable String value) {
         view.selectPropertyValue(value);
+    }
+
+    /**
+     * Adds available value for a property.
+     *
+     * @param value
+     *         value that needs to be added
+     */
+    public void addValue(@Nullable String value) {
+        view.addPropertyValue(value);
     }
 
     /** {@inheritDoc} */

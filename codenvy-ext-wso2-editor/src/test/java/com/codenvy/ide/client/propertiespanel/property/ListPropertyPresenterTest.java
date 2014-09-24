@@ -34,6 +34,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ListPropertyPresenterTest {
@@ -78,6 +79,13 @@ public class ListPropertyPresenterTest {
         presenter.selectValue(STRING);
 
         verify(view).selectPropertyValue(STRING);
+    }
+
+    @Test
+    public void propertyValueShouldBeAdded() throws Exception {
+        presenter.addValue(STRING);
+
+        verify(view).addPropertyValue(STRING);
     }
 
     @Test

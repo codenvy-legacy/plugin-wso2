@@ -33,6 +33,7 @@ import java.util.List;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class ListPropertyViewImpl extends AbstractView<ListPropertyView.ActionDelegate> implements ListPropertyView {
 
@@ -59,6 +60,12 @@ public class ListPropertyViewImpl extends AbstractView<ListPropertyView.ActionDe
     @Override
     public void setTitle(@Nullable String title) {
         this.title.setText(title);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void addPropertyValue(@Nullable String value) {
+        property.addItem(value);
     }
 
     /** {@inheritDoc} */

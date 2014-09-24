@@ -24,7 +24,7 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The class contains state of connectors which are general for all connectors.It contains genera logic of serialization
@@ -38,8 +38,8 @@ public class AbstractConnector extends AbstractElement {
 
     public static final String CONFIG_REF = "configRef";
 
-    private   String              configRef;
-    protected ParameterEditorType parameterEditorType;
+    public static final Key<String>              CONFIG                = new Key<>("ConfigRef");
+    public static final Key<ParameterEditorType> PARAMETER_EDITOR_TYPE = new Key<>("ParameterEditorType");
 
     protected AbstractConnector(@Nonnull String elementName,
                                 @Nonnull String title,
@@ -60,45 +60,45 @@ public class AbstractConnector extends AbstractElement {
               branchProvider,
               elementCreatorsManager);
 
-        configRef = "";
-        parameterEditorType = Inline;
+        putProperty(CONFIG, "");
+        putProperty(PARAMETER_EDITOR_TYPE, INLINE);
     }
 
     /** {@inheritDoc} */
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        return configRef == null || configRef.isEmpty() ? "" : CONFIG_REF + "=\"" + configRef + "\"";
+        String config = getProperty(CONFIG);
+        return config == null || config.isEmpty() ? "" : CONFIG_REF + "=\"" + config + "\"";
     }
 
     /** {@inheritDoc} */
     @Override
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        configRef = attributeValue;
-    }
-
-    @Nonnull
-    public String getConfigRef() {
-        return configRef;
-    }
-
-    public void setConfigRef(@Nonnull String configRef) {
-        this.configRef = configRef;
-    }
-
-    @Nonnull
-    public ParameterEditorType getParameterEditorType() {
-        return parameterEditorType;
-    }
-
-    public void setParameterEditorType(@Nonnull ParameterEditorType parameterEditorType) {
-        this.parameterEditorType = parameterEditorType;
+        putProperty(CONFIG, attributeValue);
     }
 
     public enum ParameterEditorType {
-        Inline, NamespacedPropertyEditor;
+        INLINE("Inline"), NAME_SPACED_PROPERTY_EDITOR("NamespacedPropertyEditor");
 
         public static final String TYPE_NAME = "ParameterEditorType";
+
+        private final String value;
+
+        ParameterEditorType(@Nonnull String value) {
+            this.value = value;
+        }
+
+        @Nonnull
+        public String getValue() {
+            return value;
+        }
+
+        @Nonnull
+        public static ParameterEditorType getItemByValue(@Nonnull String value) {
+            return "Inline".equals(value) ? INLINE : NAME_SPACED_PROPERTY_EDITOR;
+        }
+
     }
 
     public enum AvailableConfigs {

@@ -15,17 +15,28 @@
  */
 package com.codenvy.ide.client.propertiespanel.connectors.base;
 
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.elements.connectors.ConnectorPropertyManager;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ConnectorParameterCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.PropertyValueChangedListener;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.AvailableConfigs.SELECT_FROM_CONFIG;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.CONFIG;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
 
 /**
@@ -36,18 +47,40 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * @author Valeriy Svydenko
  */
 public abstract class AbstractConnectorPropertiesPanelPresenter<T extends AbstractConnector>
-        extends AbstractPropertiesPanel<T, GeneralPropertiesPanelView>
-        implements GeneralPropertiesPanelView.ActionDelegate, ConnectorPropertyManager.ConnectorPropertyListener {
+        extends AbstractPropertiesPanel<T, PropertiesPanelView> implements ConnectorPropertyManager.ConnectorPropertyListener {
 
-    private final ParameterPresenter         parameterPresenter;
-    private final ConnectorPropertyManager   connectorPropertyManager;
+    protected final PropertiesPanelWidgetFactory       propertiesWidgetFactory;
+    protected final Provider<ListPropertyPresenter>    listPropertyProvider;
+    protected final Provider<SimplePropertyPresenter>  simplePropertyProvider;
+    protected final Provider<ComplexPropertyPresenter> complexPropertyProvider;
+    protected final WSO2EditorLocalizationConstant     locale;
+
+    private final ParameterPresenter       parameterPresenter;
+    private final ConnectorPropertyManager connectorPropertyManager;
+
     private final ConnectorParameterCallBack parameterCallBack;
 
-    protected AbstractConnectorPropertiesPanelPresenter(@Nonnull GeneralPropertiesPanelView view,
+    private SimplePropertyPresenter configRef;
+    private ListPropertyPresenter   availableConfigs;
+    private ListPropertyPresenter   parameterEditorType;
+
+
+    protected AbstractConnectorPropertiesPanelPresenter(@Nonnull PropertiesPanelView view,
                                                         @Nonnull ConnectorPropertyManager connectorPropertyManager,
                                                         @Nonnull ParameterPresenter parameterPresenter,
-                                                        @Nonnull PropertyTypeManager propertyTypeManager) {
+                                                        @Nonnull PropertyTypeManager propertyTypeManager,
+                                                        @Nonnull WSO2EditorLocalizationConstant localizationConstant,
+                                                        @Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                                        @Nonnull Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                                        @Nonnull Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                                        @Nonnull Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
         super(view, propertyTypeManager);
+
+        propertiesWidgetFactory = propertiesPanelWidgetFactory;
+        listPropertyProvider = listPropertyPresenterProvider;
+        complexPropertyProvider = complexPropertyPresenterProvider;
+        simplePropertyProvider = simplePropertyPresenterProvider;
+        locale = localizationConstant;
 
         this.connectorPropertyManager = connectorPropertyManager;
         this.connectorPropertyManager.addListener(this);
@@ -60,184 +93,76 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
                 AbstractConnectorPropertiesPanelPresenter.this.connectorPropertyManager.addNewConfig(name);
             }
         };
+
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        element.setParameterEditorType(ParameterEditorType.valueOf(view.getParameterEditorType()));
+    private void prepareView() {
+        PropertyGroupPresenter basicGroup = propertiesWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
+        view.addGroup(basicGroup);
 
-        notifyListeners();
-    }
+        configRef = simplePropertyProvider.get();
+        configRef.setTitle(locale.connectorConfigRef());
+        configRef.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+            @Override
+            public void onPropertyChanged(@Nonnull String property) {
+                element.putProperty(CONFIG, property);
 
-    /** {@inheritDoc} */
-    @Override
-    public void onAvailableConfigsChanged() {
-        String value = view.getAvailableConfig();
+                notifyListeners();
+            }
+        });
 
-        if (!SELECT_FROM_CONFIG.getValue().equals(value)) {
-            view.setConfigRef(value);
-            element.setConfigRef(value);
-        }
+        basicGroup.addItem(configRef);
 
-        notifyListeners();
+        availableConfigs = listPropertyProvider.get();
+        availableConfigs.setTitle(locale.connectorAvailableConfigs());
+        availableConfigs.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+            @Override
+            public void onPropertyChanged(@Nonnull String property) {
+                if (!SELECT_FROM_CONFIG.getValue().equals(property)) {
+                    configRef.setProperty(property);
+                    element.putProperty(CONFIG, property);
+                }
+
+                notifyListeners();
+            }
+        });
+
+        basicGroup.addItem(availableConfigs);
+
+        ComplexPropertyPresenter newConfig = complexPropertyProvider.get();
+        newConfig.setTitle(locale.connectorNewConfig());
+        newConfig.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+            @Override
+            public void onEditButtonClicked() {
+                parameterPresenter.showDialog(parameterCallBack);
+            }
+        });
+
+        basicGroup.addItem(newConfig);
+
+        parameterEditorType = listPropertyProvider.get();
+        parameterEditorType.setTitle(locale.connectorParameterEditorType());
+        parameterEditorType.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+            @Override
+            public void onPropertyChanged(@Nonnull String property) {
+                element.putProperty(PARAMETER_EDITOR_TYPE, ParameterEditorType.valueOf(property));
+
+                notifyListeners();
+            }
+        });
+
+        basicGroup.addItem(parameterEditorType);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onGeneralPropertyChanged(@Nonnull String property) {
-        view.addAvailableConfigs(property);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onConfigRefChanged() {
-        element.setConfigRef(view.getConfigRef());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onCreateNewConfigBtnClicked() {
-        parameterPresenter.showDialog(parameterCallBack);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdTextBoxValueChanged() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthTextBoxValueChanged() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFifthTextBoxValueChanged() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSixthTextBoxValueChanged() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSeventhTextBoxValueChanged() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onEighthTextBoxValueChanged() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onNinthTextBoxValueChanged() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onTenthTextBoxValueChanged() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onEleventhTextBoxValueChanged() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdButtonClicked() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthButtonClicked() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFifthButtonClicked() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSixthButtonClicked() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSeventhButtonClicked() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onEighthButtonClicked() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onNinthButtonClicked() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onTenthButtonClicked() {
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onEleventhButtonClicked() {
-
+        availableConfigs.addValue(property);
     }
 
     /** Redraw properties panel of connector depending on user's action. */
     protected void redrawPropertiesPanel() {
-
     }
 
     /** {@inheritDoc} */
@@ -245,13 +170,16 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        view.setConfigRef(element.getConfigRef());
+        configRef.setProperty(element.getProperty(CONFIG));
+        availableConfigs.setValues(connectorPropertyManager.getAvailableConfigs());
+        parameterEditorType.setValues(propertyTypeManager.getValuesByName(ParameterEditorType.TYPE_NAME));
 
-        view.setAvailableConfigs(connectorPropertyManager.getAvailableConfigs());
-        view.setParameterEditorType(propertyTypeManager.getValuesByName(ParameterEditorType.TYPE_NAME));
-
-        view.selectParameterEditorType(element.getParameterEditorType());
+        ParameterEditorType parameterEditor = element.getProperty(PARAMETER_EDITOR_TYPE);
+        if (parameterEditor != null) {
+            parameterEditorType.selectValue(parameterEditor.getValue());
+        }
 
         redrawPropertiesPanel();
     }
+
 }

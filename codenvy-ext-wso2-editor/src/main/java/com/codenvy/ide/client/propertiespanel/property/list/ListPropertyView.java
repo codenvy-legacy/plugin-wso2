@@ -28,6 +28,7 @@ import java.util.List;
  * Also set a list of available values for the property and select some value from the list.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 @ImplementedBy(ListPropertyViewImpl.class)
 public interface ListPropertyView extends View<ListPropertyView.ActionDelegate> {
@@ -39,6 +40,14 @@ public interface ListPropertyView extends View<ListPropertyView.ActionDelegate> 
      *         title that needs to be changed
      */
     void setTitle(@Nullable String title);
+
+    /**
+     * Adds available value.
+     *
+     * @param value
+     *         value which need to be add
+     */
+    void addPropertyValue(@Nullable String value);
 
     /**
      * Sets a list of available values on the view.
