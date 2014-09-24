@@ -27,13 +27,15 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
+import static com.codenvy.ide.client.elements.NameSpace.URI;
 import static com.codenvy.ide.client.elements.mediators.Send.SequenceType.DEFAULT;
 import static com.codenvy.ide.client.elements.mediators.Send.SequenceType.DYNAMIC;
 import static com.codenvy.ide.client.elements.mediators.Send.SequenceType.STATIC;
@@ -93,7 +95,7 @@ public class Send extends AbstractElement {
         putProperty(DESCRIPTION, "");
         putProperty(DYNAMIC_EXPRESSION, "/default/xpath");
         putProperty(STATIC_EXPRESSION, "/default/sequence");
-        putProperty(NAMESPACES, Collections.<NameSpace>emptyList());
+        putProperty(NAMESPACES, new ArrayList<NameSpace>());
 
         Branch branch = branchProvider.get();
         branch.setParent(this);
@@ -202,8 +204,8 @@ public class Send extends AbstractElement {
 
         NameSpace nameSpace = nameSpaceProvider.get();
 
-        nameSpace.setPrefix(name);
-        nameSpace.setUri(attributeValue);
+        nameSpace.putProperty(PREFIX_KEY, name);
+        nameSpace.putProperty(URI, attributeValue);
 
         List<NameSpace> nameSpaces = getProperty(NAMESPACES);
         if (nameSpaces != null) {

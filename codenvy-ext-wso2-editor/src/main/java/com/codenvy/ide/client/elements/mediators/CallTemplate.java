@@ -25,8 +25,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +79,7 @@ public class CallTemplate extends AbstractElement {
         putProperty(AVAILABLE_TEMPLATES, AvailableTemplates.EMPTY);
         putProperty(TARGET_TEMPLATES, "");
         putProperty(DESCRIPTION, "");
-        putProperty(PARAMETERS, Collections.<Property>emptyList());
+        putProperty(PARAMETERS, new ArrayList<Property>());
     }
 
     /** {@inheritDoc} */

@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,7 +33,6 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static java.util.Collections.emptyList;
 
 /**
  * The Class describes UpdateStatus connector for twitter group of connectors. Also the class contains the business logic
@@ -101,11 +101,11 @@ public class UpdateStatus extends AbstractConnector {
         consumerSecretExpr = "";
         statusIdExpr = "";
 
-        consumerKeyNS = emptyList();
-        accessTokenSecretNS = emptyList();
-        statusIdNS = emptyList();
-        accessTokenNS = emptyList();
-        consumerSecretNS = emptyList();
+        consumerKeyNS = new ArrayList<>();
+        accessTokenSecretNS = new ArrayList<>();
+        statusIdNS = new ArrayList<>();
+        accessTokenNS = new ArrayList<>();
+        consumerSecretNS = new ArrayList<>();
     }
 
     /** {@inheritDoc} */

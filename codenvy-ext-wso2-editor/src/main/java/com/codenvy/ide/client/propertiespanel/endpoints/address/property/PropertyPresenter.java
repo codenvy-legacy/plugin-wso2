@@ -21,10 +21,10 @@ import com.codenvy.ide.client.propertiespanel.endpoints.address.editoraddresspro
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.NAME;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.copyEndPointPropertyList;
 
 /**
  * The class provides the business logic that allows editor to react on user's action related to change of Address's
@@ -161,11 +161,7 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
         selectedProperty = null;
 
         callback = innerCallback;
-        properties = new ArrayList<>();
-
-        for (Property property : propertiesArray) {
-            properties.add(property.copy());
-        }
+        properties = copyEndPointPropertyList(propertiesArray);
 
         view.setProperties(properties);
 

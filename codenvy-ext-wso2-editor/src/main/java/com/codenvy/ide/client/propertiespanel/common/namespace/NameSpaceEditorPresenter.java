@@ -22,8 +22,11 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.List;
+
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
+import static com.codenvy.ide.client.elements.NameSpace.URI;
+import static com.codenvy.ide.client.elements.NameSpace.copyNameSpaceList;
 
 /**
  * The presenter that provides a business logic of dialog window for editing name spaces of property.
@@ -56,16 +59,12 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
      *
      * @param nameSpaces
      *         namespaces which need to be edited
-     * @param callBack
+     * @param innerCallBack
      *         callback that needs to be handled when namespace editing is successful
      */
-    public void showDefaultWindow(@Nonnull List<NameSpace> nameSpaces, @Nonnull AddNameSpacesCallBack callBack) {
-        nameSpacesTemporary = Collections.emptyList();
-        this.callBack = callBack;
-
-        for (NameSpace nameSpace : nameSpaces) {
-            nameSpacesTemporary.add(nameSpace.copy());
-        }
+    public void showDefaultWindow(@Nonnull List<NameSpace> nameSpaces, @Nonnull AddNameSpacesCallBack innerCallBack) {
+        nameSpacesTemporary = copyNameSpaceList(nameSpaces);
+        callBack = innerCallBack;
 
         nameSpaceEditorView.setNameSpaces(nameSpacesTemporary);
         nameSpaceEditorView.setUri("");
@@ -105,8 +104,8 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
 
         NameSpace nameSpace = nameSpaceProvider.get();
 
-        nameSpace.setPrefix(prefix);
-        nameSpace.setUri(uri);
+        nameSpace.putProperty(PREFIX_KEY, prefix);
+        nameSpace.putProperty(URI, uri);
 
         nameSpaceEditorView.setPrefix("");
         nameSpaceEditorView.setUri("");
@@ -124,8 +123,15 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
     /** {@inheritDoc} */
     @Override
     public void onEditButtonClicked() {
-        nameSpaceEditorView.setPrefix(selectedNameSpace.getPrefix());
-        nameSpaceEditorView.setUri(selectedNameSpace.getUri());
+        String prefix = selectedNameSpace.getProperty(PREFIX_KEY);
+        String uri = selectedNameSpace.getProperty(URI);
+
+        if (prefix == null || uri == null) {
+            return;
+        }
+
+        nameSpaceEditorView.setPrefix(prefix);
+        nameSpaceEditorView.setUri(uri);
 
         index = nameSpacesTemporary.indexOf(selectedNameSpace);
 

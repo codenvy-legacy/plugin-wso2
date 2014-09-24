@@ -22,7 +22,7 @@ import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpace
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.ValueType.EXPRESSION;
@@ -53,10 +53,10 @@ public class ParameterPresenter implements ParameterView.ActionDelegate {
         this.view = view;
         this.view.setDelegate(this);
 
-        usernameNameSpaces = Collections.emptyList();
-        passwordNameSpaces = Collections.emptyList();
-        loginUrlNameSpaces = Collections.emptyList();
-        forceLoginNameSpaces = Collections.emptyList();
+        usernameNameSpaces = new ArrayList<>();
+        passwordNameSpaces = new ArrayList<>();
+        loginUrlNameSpaces = new ArrayList<>();
+        forceLoginNameSpaces = new ArrayList<>();
 
         this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
 

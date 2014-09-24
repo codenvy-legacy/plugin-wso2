@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.NAME;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.NANESPACES;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.NAMESPACES;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.SCOPE;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.Scope;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.TYPE;
@@ -70,7 +70,7 @@ public class EditorAddressPropertyPresenter implements EditorAddressPropertyView
         this.nameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
             public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                selectedProperty.putProperty(NANESPACES, nameSpaces);
+                selectedProperty.putProperty(NAMESPACES, nameSpaces);
                 selectedProperty.putProperty(Property.EXPRESSION, expression);
             }
         };
@@ -115,7 +115,7 @@ public class EditorAddressPropertyPresenter implements EditorAddressPropertyView
     /** {@inheritDoc} */
     @Override
     public void onAddNameSpaceBtnClicked() {
-        List<NameSpace> nameSpaces = selectedProperty.getProperty(NANESPACES);
+        List<NameSpace> nameSpaces = selectedProperty.getProperty(NAMESPACES);
 
         if (nameSpaces == null) {
             return;

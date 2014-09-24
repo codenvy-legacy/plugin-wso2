@@ -20,7 +20,6 @@ import com.google.gwt.xml.client.Node;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -145,38 +144,6 @@ public abstract class AbstractEntityElement {
         return result.toString();
     }
 
-    public static class Key<T> {
-
-        private final String name;
-
-        public Key(@Nonnull String name) {
-            this.name = name;
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-
-            if (!(o instanceof Key)) {
-                return false;
-            }
-
-            Key key = (Key)o;
-            return name.equals(key.name);
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public int hashCode() {
-            return name.hashCode();
-        }
-
-    }
-
-
     /**
      * Read all attributes from XML node to the diagram element
      *
@@ -208,26 +175,35 @@ public abstract class AbstractEntityElement {
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
     }
 
-    /**
-     * Returns copy of list. If list which we send to method is null, method return empty list. If list isn't null
-     * method returns copy of list.
-     *
-     * @param nameSpaces
-     *         list which need to copy
-     */
-    protected List<NameSpace> copyList(@Nullable List<NameSpace> nameSpaces) {
+    public static class Key<T> {
 
-        List<NameSpace> result = Collections.emptyList();
+        private final String name;
 
-        if (nameSpaces == null) {
-            return result;
+        public Key(@Nonnull String name) {
+            this.name = name;
         }
 
-        for (NameSpace nameSpace : nameSpaces) {
-            result.add(nameSpace.copy());
+        /** {@inheritDoc} */
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+
+            if (!(o instanceof Key)) {
+                return false;
+            }
+
+            Key key = (Key)o;
+            return name.equals(key.name);
         }
 
-        return result;
+        /** {@inheritDoc} */
+        @Override
+        public int hashCode() {
+            return name.hashCode();
+        }
+
     }
 
 }

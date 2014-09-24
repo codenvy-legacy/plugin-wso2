@@ -23,11 +23,14 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
+import static com.codenvy.ide.client.elements.NameSpace.URI;
 import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetAction.REPLACE;
 import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetType.CUSTOM;
 import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetType.PROPERTY;
@@ -66,7 +69,7 @@ public class Target extends AbstractEntityElement {
         putProperty(TARGET_TYPE, CUSTOM);
         putProperty(TARGET_XPATH, "/default/xpath");
         putProperty(TARGET_PROPERTY, "target_property");
-        putProperty(TARGET_NAMESPACES, java.util.Collections.<NameSpace>emptyList());
+        putProperty(TARGET_NAMESPACES, new ArrayList<NameSpace>());
     }
 
     /** Serialization representation attributes of target property of element. */
@@ -157,8 +160,8 @@ public class Target extends AbstractEntityElement {
 
         NameSpace nameSpace = nameSpaceProvider.get();
 
-        nameSpace.setPrefix(name);
-        nameSpace.setUri(attributeValue);
+        nameSpace.putProperty(PREFIX_KEY, name);
+        nameSpace.putProperty(URI, attributeValue);
 
         nameSpaces.add(nameSpace);
     }

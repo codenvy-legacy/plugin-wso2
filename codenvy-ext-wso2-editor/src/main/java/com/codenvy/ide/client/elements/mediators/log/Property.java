@@ -24,10 +24,14 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
+import static com.codenvy.ide.client.elements.NameSpace.URI;
+import static com.codenvy.ide.client.elements.NameSpace.copyNameSpaceList;
 
 /**
  * The class which describes state of property element of Log mediator and also has methods for changing it. Also the class contains the
@@ -60,7 +64,7 @@ public class Property extends AbstractEntityElement {
 
         putProperty(NAME, "");
         putProperty(EXPRESSION, "");
-        putProperty(NAMESPACES, Collections.<NameSpace>emptyList());
+        putProperty(NAMESPACES, new ArrayList<NameSpace>());
     }
 
     /** Returns serialization representation CallTemplate element's property. */
@@ -119,24 +123,42 @@ public class Property extends AbstractEntityElement {
 
         NameSpace nameSpace = nameSpaceProvider.get();
 
-        nameSpace.setPrefix(name);
-        nameSpace.setUri(nodeValue);
+        nameSpace.putProperty(PREFIX_KEY, name);
+        nameSpace.putProperty(URI, nodeValue);
 
         nameSpaces.add(nameSpace);
     }
 
-    /** @return copy of property element */
+    /** Returns copy of element. */
     public Property copy() {
-        List<NameSpace> nameSpaces = copyList(getProperty(NAMESPACES));
-
-
         Property property = propertyProvider.get();
 
         property.putProperty(NAME, getProperty(NAME));
         property.putProperty(EXPRESSION, getProperty(EXPRESSION));
-        property.putProperty(NAMESPACES, nameSpaces);
+        property.putProperty(NAMESPACES, copyNameSpaceList(getProperty(NAMESPACES)));
 
         return property;
+    }
+
+    /**
+     * Returns copy of list. If list which we send to method is null, method return empty list. If list isn't null
+     * method returns copy of list.
+     *
+     * @param listToCopy
+     *         list which need to copy
+     */
+    public static List<Property> copyPropertyList(@Nullable List<Property> listToCopy) {
+        List<Property> properties = new ArrayList<>();
+
+        if (listToCopy == null) {
+            return properties;
+        }
+
+        for (Property property : listToCopy) {
+            properties.add(property);
+        }
+
+        return properties;
     }
 
 }

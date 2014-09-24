@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,7 +33,6 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static java.util.Collections.emptyList;
 
 /**
  * The Class describes InitSpreadsheet connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -95,10 +95,10 @@ public class InitSpreadsheet extends AbstractConnector {
         oauthAccessTokenExpression = "";
         oauthAccessTokenSecretExpression = "";
 
-        oauthConsumerKeyNS = emptyList();
-        oauthConsumerSecretNS = emptyList();
-        oauthAccessTokenNS = emptyList();
-        oauthAccessTokenSecretNS = emptyList();
+        oauthConsumerKeyNS = new ArrayList<>();
+        oauthConsumerSecretNS = new ArrayList<>();
+        oauthAccessTokenNS = new ArrayList<>();
+        oauthAccessTokenSecretNS = new ArrayList<>();
     }
 
     /** {@inheritDoc} */

@@ -24,10 +24,14 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
+import static com.codenvy.ide.client.elements.NameSpace.URI;
+import static com.codenvy.ide.client.elements.NameSpace.copyNameSpaceList;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.Scope.DEFAULT;
 import static com.codenvy.ide.client.elements.mediators.ValueType.LITERAL;
 
@@ -49,7 +53,7 @@ public class Property extends AbstractEntityElement {
     public static final Key<String>          EXPRESSION = new Key<>("EndPointPropertyExpression");
     public static final Key<ValueType>       TYPE       = new Key<>("EndPointPropertyType");
     public static final Key<Scope>           SCOPE      = new Key<>("EndPointPropertyScope");
-    public static final Key<List<NameSpace>> NANESPACES = new Key<>("EndPointPropertyNamespaces");
+    public static final Key<List<NameSpace>> NAMESPACES = new Key<>("EndPointPropertyNamespaces");
 
     private static final String NAME_ATTRIBUTE       = "name";
     private static final String VALUE_ATTRIBUTE      = "value";
@@ -69,15 +73,11 @@ public class Property extends AbstractEntityElement {
         putProperty(EXPRESSION, "/default/expression");
         putProperty(TYPE, LITERAL);
         putProperty(SCOPE, DEFAULT);
-        putProperty(NANESPACES, Collections.<NameSpace>emptyList());
+        putProperty(NAMESPACES, new ArrayList<NameSpace>());
     }
 
-
-    /** @return copy of property */
-    @Nonnull
+    /** Returns copy of element. */
     public Property copy() {
-        List<NameSpace> nameSpaces = getProperty(NANESPACES);
-
         Property property = propertyProvider.get();
 
         property.putProperty(NAME, getProperty(NAME));
@@ -85,7 +85,7 @@ public class Property extends AbstractEntityElement {
         property.putProperty(EXPRESSION, getProperty(EXPRESSION));
         property.putProperty(TYPE, getProperty(TYPE));
         property.putProperty(SCOPE, getProperty(SCOPE));
-        property.putProperty(NANESPACES, copyList(nameSpaces));
+        property.putProperty(NAMESPACES, copyNameSpaceList(getProperty(NAMESPACES)));
 
         return property;
     }
@@ -109,7 +109,7 @@ public class Property extends AbstractEntityElement {
                    scopeValue + "/>\n";
         }
 
-        return startTag + convertNameSpaceToXMLFormat(getProperty(NANESPACES)) + nameAttr +
+        return startTag + convertNameSpaceToXMLFormat(getProperty(NAMESPACES)) + nameAttr +
                EXPRESSION_ATTRIBUTE + "=\"" + getProperty(EXPRESSION) + "\" " + scopeValue + "/>\n";
     }
 
@@ -151,7 +151,7 @@ public class Property extends AbstractEntityElement {
     }
 
     private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        List<NameSpace> nameSpaces = getProperty(NANESPACES);
+        List<NameSpace> nameSpaces = getProperty(NAMESPACES);
         if (!StringUtils.startsWith(PREFIX, attributeName, true) || nameSpaces == null) {
             return;
         }
@@ -160,10 +160,31 @@ public class Property extends AbstractEntityElement {
 
         NameSpace nameSpace = nameSpaceProvider.get();
 
-        nameSpace.setPrefix(name);
-        nameSpace.setUri(attributeValue);
+        nameSpace.putProperty(PREFIX_KEY, name);
+        nameSpace.putProperty(URI, attributeValue);
 
         nameSpaces.add(nameSpace);
+    }
+
+    /**
+     * Returns copy of list. If list which we send to method is null, method return empty list. If list isn't null
+     * method returns copy of list.
+     *
+     * @param listToCopy
+     *         list which need to copy
+     */
+    public static List<Property> copyEndPointPropertyList(@Nullable List<Property> listToCopy) {
+        List<Property> properties = new ArrayList<>();
+
+        if (listToCopy == null) {
+            return properties;
+        }
+
+        for (Property property : listToCopy) {
+            properties.add(property);
+        }
+
+        return properties;
     }
 
     public enum Scope {

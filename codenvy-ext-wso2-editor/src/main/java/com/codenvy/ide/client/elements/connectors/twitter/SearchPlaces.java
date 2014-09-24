@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,7 +33,6 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static java.util.Collections.emptyList;
 
 /**
  * The Class describes SearchPlaces connector for twitter group of connectors. Also the class contains the business logic
@@ -109,13 +109,13 @@ public class SearchPlaces extends AbstractConnector {
         longitudeExpr = "";
         queryExpr = "";
 
-        consumerKeyNS = emptyList();
-        consumerSecretNS = emptyList();
-        accessTokenNS = emptyList();
-        accessTokenSecretNS = emptyList();
-        latitudeNS = emptyList();
-        longitudeNS = emptyList();
-        queryNS = emptyList();
+        consumerKeyNS = new ArrayList<>();
+        consumerSecretNS = new ArrayList<>();
+        accessTokenNS = new ArrayList<>();
+        accessTokenSecretNS = new ArrayList<>();
+        latitudeNS = new ArrayList<>();
+        longitudeNS = new ArrayList<>();
+        queryNS = new ArrayList<>();
 
     }
 

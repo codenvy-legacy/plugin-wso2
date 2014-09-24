@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,7 +33,6 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static java.util.Collections.emptyList;
 
 /**
  * The Class describes GetClosesTrends connector for twitter group of connectors. Also the class contains the business logic
@@ -79,8 +79,8 @@ public class GetClosesTrends extends AbstractConnector {
         latitudeExpr = "";
         longitudeExpr = "";
 
-        latitudeNS = emptyList();
-        longitudeNS = emptyList();
+        latitudeNS = new ArrayList<>();
+        longitudeNS = new ArrayList<>();
     }
 
     /** {@inheritDoc} */

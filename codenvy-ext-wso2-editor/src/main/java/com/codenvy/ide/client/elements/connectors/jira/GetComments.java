@@ -25,8 +25,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +51,8 @@ public class GetComments extends AbstractConnector {
 
     private static final List<String> PROPERTIES = Arrays.asList(ISSUE_ID_OR_KEY);
 
-    private String           issueIdOrKey;
-    private String           issueIdOrKeyExpression;
+    private String          issueIdOrKey;
+    private String          issueIdOrKeyExpression;
     private List<NameSpace> issueIdOrKeyNameSpaces;
 
     @Inject
@@ -70,7 +70,7 @@ public class GetComments extends AbstractConnector {
         issueIdOrKey = "";
         issueIdOrKeyExpression = "";
 
-        issueIdOrKeyNameSpaces = Collections.emptyList();
+        issueIdOrKeyNameSpaces = new ArrayList<>();
     }
 
     /** {@inheritDoc} */

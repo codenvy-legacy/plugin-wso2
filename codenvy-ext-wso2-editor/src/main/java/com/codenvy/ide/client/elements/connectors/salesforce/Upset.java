@@ -26,6 +26,7 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,7 +34,6 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static java.util.Collections.emptyList;
 
 /**
  * The Class describes Upset connector for Salesforce group connectors. Also the class contains the business logic
@@ -92,10 +92,10 @@ public class Upset extends AbstractConnector {
         truncateInline = "";
         subjectsInline = "";
 
-        allOrNoneNameSpaces = emptyList();
-        externalIdNameSpaces = emptyList();
-        truncateNameSpaces = emptyList();
-        subjectsNameSpaces = emptyList();
+        allOrNoneNameSpaces = new ArrayList<>();
+        externalIdNameSpaces = new ArrayList<>();
+        truncateNameSpaces = new ArrayList<>();
+        subjectsNameSpaces = new ArrayList<>();
     }
 
     /** {@inheritDoc} */

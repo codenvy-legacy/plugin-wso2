@@ -26,13 +26,13 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static java.util.Collections.emptyList;
 
 /**
  * The Class describes SetPassword connector for Salesforce group connectors. Also the class contains the business logic
@@ -76,8 +76,8 @@ public class SetPassword extends AbstractConnector {
         usernameInline = "";
         passwordInline = "";
 
-        usernameNameSpaces = emptyList();
-        passwordNameSpaces = emptyList();
+        usernameNameSpaces = new ArrayList<>();
+        passwordNameSpaces = new ArrayList<>();
     }
 
     /** {@inheritDoc} */

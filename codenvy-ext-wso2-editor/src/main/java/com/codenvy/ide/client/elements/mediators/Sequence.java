@@ -26,10 +26,13 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
+import static com.codenvy.ide.client.elements.NameSpace.URI;
 import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType.DYNAMIC;
 import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType.STATIC;
 
@@ -54,7 +57,7 @@ public class Sequence extends AbstractElement {
 
     private static final String KEY_ATTRIBUTE_NAME = "key";
 
-    private static final List<String> PROPERTIES = java.util.Collections.emptyList();
+    private static final List<String> PROPERTIES = Collections.emptyList();
 
     private final Provider<NameSpace> nameSpaceProvider;
 
@@ -79,7 +82,7 @@ public class Sequence extends AbstractElement {
         putProperty(REFERRING_TYPE, STATIC);
         putProperty(STATIC_REFERENCE_TYPE, "");
         putProperty(DYNAMIC_REFERENCE_TYPE, "/default/expression");
-        putProperty(NAMESPACES, Collections.<NameSpace>emptyList());
+        putProperty(NAMESPACES, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -139,8 +142,8 @@ public class Sequence extends AbstractElement {
 
         NameSpace nameSpace = nameSpaceProvider.get();
 
-        nameSpace.setPrefix(name);
-        nameSpace.setUri(attributeValue);
+        nameSpace.putProperty(PREFIX_KEY, name);
+        nameSpace.putProperty(URI, attributeValue);
 
         List<NameSpace> nameSpaces = getProperty(NAMESPACES);
         if (nameSpaces != null) {

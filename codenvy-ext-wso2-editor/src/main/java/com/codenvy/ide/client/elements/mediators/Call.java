@@ -27,11 +27,13 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
+import static com.codenvy.ide.client.elements.NameSpace.URI;
 import static com.codenvy.ide.client.elements.mediators.Call.EndpointType.INLINE;
 import static com.codenvy.ide.client.elements.mediators.Call.EndpointType.NONE;
 import static com.codenvy.ide.client.elements.mediators.Call.EndpointType.REGISTRYKEY;
@@ -91,7 +93,7 @@ public class Call extends AbstractElement {
         putProperty(ENDPOINT_TYPE, INLINE);
         putProperty(X_PATH, "/default/expression");
         putProperty(DESCRIPTION, "");
-        putProperty(NAMESPACES, Collections.<NameSpace>emptyList());
+        putProperty(NAMESPACES, new ArrayList<NameSpace>());
 
         Branch branch = branchProvider.get();
         branch.setParent(this);
@@ -241,8 +243,8 @@ public class Call extends AbstractElement {
 
         NameSpace nameSpace = nameSpaceProvider.get();
 
-        nameSpace.setPrefix(name);
-        nameSpace.setUri(attributeValue);
+        nameSpace.putProperty(PREFIX_KEY, name);
+        nameSpace.putProperty(URI, attributeValue);
 
         List<NameSpace> nameSpaces = getProperty(NAMESPACES);
         if (nameSpaces != null) {

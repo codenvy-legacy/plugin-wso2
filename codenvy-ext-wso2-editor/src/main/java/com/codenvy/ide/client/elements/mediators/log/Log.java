@@ -24,8 +24,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,7 +87,7 @@ public class Log extends AbstractElement {
         putProperty(LOG_LEVEL, SIMPLE);
         putProperty(LOG_SEPARATOR, "");
         putProperty(DESCRIPTION, "");
-        putProperty(LOG_PROPERTIES, Collections.<Property>emptyList());
+        putProperty(LOG_PROPERTIES, new ArrayList<Property>());
     }
 
     /** {@inheritDoc} */

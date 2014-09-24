@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,7 +33,6 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static java.util.Collections.emptyList;
 
 /**
  * The Class describes SearchCell connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -86,9 +86,9 @@ public class SearchCell extends AbstractConnector {
         worksheetNameExpression = "";
         searchStringExpression = "";
 
-        spreadsheetNameNS = emptyList();
-        worksheetNameNS = emptyList();
-        searchStringNS = emptyList();
+        spreadsheetNameNS = new ArrayList<>();
+        worksheetNameNS = new ArrayList<>();
+        searchStringNS = new ArrayList<>();
     }
 
     /** {@inheritDoc} */

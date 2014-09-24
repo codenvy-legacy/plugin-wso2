@@ -18,7 +18,10 @@ package com.codenvy.ide.client.elements;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class describes entity which presented name space.
@@ -26,47 +29,29 @@ import javax.inject.Inject;
  * @author Dmitry Shnurenko
  * @author Andrey Plotnikov
  */
-public class NameSpace {
+public class NameSpace extends AbstractEntityElement {
 
     public static final String PREFIX = "xmlns";
 
-    private final Provider<NameSpace> nameSpaceProvider;
+    public static final Key<String> PREFIX_KEY = new Key<>("NameSpacePrefix");
+    public static final Key<String> URI        = new Key<>("NameSpaceUri");
 
-    private String prefix;
-    private String uri;
+    private final Provider<NameSpace> nameSpaceProvider;
 
     @Inject
     public NameSpace(Provider<NameSpace> nameSpaceProvider) {
         this.nameSpaceProvider = nameSpaceProvider;
+
+        putProperty(PREFIX_KEY, "");
+        putProperty(URI, "");
     }
 
-    /** @return value of prefix of namespace */
-    @Nonnull
-    public String getPrefix() {
-        return prefix;
-    }
-
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
-    }
-
-    /** @return value of uri of namespace */
-    @Nonnull
-    public String getUri() {
-        return uri;
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
-
-    /** @return copy of namespace */
-    @Nonnull
+    /** Returns copy of element. */
     public NameSpace copy() {
         NameSpace nameSpace = nameSpaceProvider.get();
 
-        nameSpace.setPrefix(prefix);
-        nameSpace.setUri(uri);
+        nameSpace.putProperty(PREFIX_KEY, getProperty(PREFIX_KEY));
+        nameSpace.putProperty(URI, getProperty(URI));
 
         return nameSpace;
     }
@@ -74,6 +59,27 @@ public class NameSpace {
     /** @return string representation of the namespace */
     @Nonnull
     public String toString() {
-        return PREFIX + ':' + prefix + "=\"" + uri + '"';
+        return PREFIX + ':' + getProperty(PREFIX_KEY) + "=\"" + getProperty(URI) + '"';
+    }
+
+    /**
+     * Returns copy of list. If list which we send to method is null, method return empty list. If list isn't null
+     * method returns copy of list.
+     *
+     * @param listToCopy
+     *         list which need to copy
+     */
+    public static List<NameSpace> copyNameSpaceList(@Nullable List<NameSpace> listToCopy) {
+        List<NameSpace> properties = new ArrayList<>();
+
+        if (listToCopy == null) {
+            return properties;
+        }
+
+        for (NameSpace nameSpace : listToCopy) {
+            properties.add(nameSpace);
+        }
+
+        return properties;
     }
 }

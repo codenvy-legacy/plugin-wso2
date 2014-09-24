@@ -25,12 +25,15 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
+import static com.codenvy.ide.client.elements.NameSpace.URI;
 import static com.codenvy.ide.client.elements.mediators.Action.SET;
 import static com.codenvy.ide.client.elements.mediators.Property.DataType.STRING;
 import static com.codenvy.ide.client.elements.mediators.Property.Scope.SYNAPSE;
@@ -73,7 +76,7 @@ public class Property extends AbstractElement {
     private static final String SCOPE_ATTRIBUTE                = "scope";
     private static final String DESCRIPTION_ATTRIBUTE          = "description";
 
-    private static final List<String> PROPERTIES = java.util.Collections.emptyList();
+    private static final List<String> PROPERTIES = Collections.emptyList();
 
     private final Provider<NameSpace> nameSpaceProvider;
 
@@ -105,7 +108,7 @@ public class Property extends AbstractElement {
         putProperty(VALUE_STRING_PATTERN, "");
         putProperty(VALUE_STRING_PATTERN, "");
         putProperty(VALUE_STRING_CAPTURE_GROUP, "");
-        putProperty(NAMESPACES, Collections.<NameSpace>emptyList());
+        putProperty(NAMESPACES, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -209,8 +212,8 @@ public class Property extends AbstractElement {
 
         NameSpace nameSpace = nameSpaceProvider.get();
 
-        nameSpace.setPrefix(name);
-        nameSpace.setUri(attributeValue);
+        nameSpace.putProperty(PREFIX_KEY, name);
+        nameSpace.putProperty(URI, attributeValue);
 
         List<NameSpace> nameSpaces = getProperty(NAMESPACES);
         if (nameSpaces != null) {

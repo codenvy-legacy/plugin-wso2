@@ -25,8 +25,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +51,8 @@ public class GetFilterById extends AbstractConnector {
 
     private static final List<String> PROPERTIES = Arrays.asList(FILTER_ID);
 
-    private String           filterId;
-    private String           filterIdExpression;
+    private String          filterId;
+    private String          filterIdExpression;
     private List<NameSpace> filterIdNS;
 
     @Inject
@@ -70,7 +70,7 @@ public class GetFilterById extends AbstractConnector {
         filterId = "";
         filterIdExpression = "";
 
-        filterIdNS = Collections.emptyList();
+        filterIdNS = new ArrayList<>();
     }
 
     /** {@inheritDoc} */

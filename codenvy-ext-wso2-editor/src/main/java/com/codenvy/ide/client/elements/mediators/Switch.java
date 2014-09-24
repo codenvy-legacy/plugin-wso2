@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
+import static com.codenvy.ide.client.elements.NameSpace.URI;
 
 /**
  * The class which describes state of Switch mediator and also has methods for changing it. Also the class contains the business
@@ -64,7 +66,7 @@ public class Switch extends AbstractElement {
     private static final String CASE_SERIALIZATION_NAME    = "case";
     private static final String DEFAULT_SERIALIZATION_NAME = "default";
 
-    private static final List<String> PROPERTIES = java.util.Collections.emptyList();
+    private static final List<String> PROPERTIES = Collections.emptyList();
 
     private final Provider<NameSpace> nameSpaceProvider;
 
@@ -91,7 +93,7 @@ public class Switch extends AbstractElement {
         this.nameSpaceProvider = nameSpaceProvider;
 
         putProperty(SOURCE_XPATH, "default/xpath");
-        putProperty(NAMESPACES, Collections.<NameSpace>emptyList());
+        putProperty(NAMESPACES, new ArrayList<NameSpace>());
 
         firstBranch = branchProvider.get();
         firstBranch.setParent(this);
@@ -183,8 +185,8 @@ public class Switch extends AbstractElement {
 
         NameSpace nameSpace = nameSpaceProvider.get();
 
-        nameSpace.setPrefix(name);
-        nameSpace.setUri(attributeValue);
+        nameSpace.putProperty(PREFIX_KEY, name);
+        nameSpace.putProperty(URI, attributeValue);
 
         nameSpaces = getProperty(NAMESPACES);
         if (nameSpaces != null) {

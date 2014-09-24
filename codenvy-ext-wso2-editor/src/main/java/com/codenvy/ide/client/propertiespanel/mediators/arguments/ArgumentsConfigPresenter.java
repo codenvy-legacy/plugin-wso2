@@ -24,7 +24,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.ARG_EVALUATOR;
@@ -34,6 +33,7 @@ import static com.codenvy.ide.client.elements.mediators.payload.Arg.ARG_TYPE;
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.ARG_VALUE;
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.ArgType;
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.Evaluator;
+import static com.codenvy.ide.client.elements.mediators.payload.Arg.copyArgsList;
 
 /**
  * The class provides the business logic that allows editor to react on user's action related to change of element's arguments.
@@ -173,12 +173,8 @@ public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDeleg
      * Shows dialog window for editing properties.
      */
     public void showConfigWindow(@Nonnull List<Arg> args, @Nonnull AddArgumentCallBack callback) {
-        arrayTemporary = Collections.emptyList();
+        arrayTemporary = copyArgsList(args);
         argumentCallBack = callback;
-
-        for (Arg arg : args) {
-            arrayTemporary.add(arg);
-        }
 
         argView.setArgs(arrayTemporary);
 

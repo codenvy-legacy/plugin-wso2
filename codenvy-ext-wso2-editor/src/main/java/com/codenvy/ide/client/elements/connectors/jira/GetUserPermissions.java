@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,7 +33,6 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static java.util.Collections.emptyList;
 
 /**
  * The Class describes GetUserPermissions connector for jira group connectors. Also the class contains the business logic
@@ -91,10 +91,10 @@ public class GetUserPermissions extends AbstractConnector {
         issueIdExpression = "";
         issueKeyExpression = "";
 
-        issueIdNS = emptyList();
-        projectIdNS = emptyList();
-        issueKeyNS = emptyList();
-        projectKeyNS = emptyList();
+        issueIdNS = new ArrayList<>();
+        projectIdNS = new ArrayList<>();
+        issueKeyNS = new ArrayList<>();
+        projectKeyNS = new ArrayList<>();
     }
 
     /** {@inheritDoc} */

@@ -26,12 +26,15 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
+import static com.codenvy.ide.client.elements.NameSpace.URI;
 import static com.codenvy.ide.client.elements.mediators.Action.REMOVE;
 import static com.codenvy.ide.client.elements.mediators.Action.SET;
 import static com.codenvy.ide.client.elements.mediators.Header.HeaderValueType.INLINE;
@@ -69,7 +72,7 @@ public class Header extends AbstractElement {
     private static final String ACTION_ATTRIBUTE     = "action";
     private static final String SCOPE_ATTRIBUTE      = "scope";
 
-    private static final List<String> PROPERTIES = java.util.Collections.emptyList();
+    private static final List<String> PROPERTIES = Collections.emptyList();
     private final Provider<NameSpace> nameSpaceProvider;
     private       boolean             isFirstNamespace;
 
@@ -98,8 +101,8 @@ public class Header extends AbstractElement {
         putProperty(VALUE_LITERAL, "header_value");
         putProperty(EXPRESSION, "/default/expression");
         putProperty(INLINE_XML, "");
-        putProperty(HEADER_NAMESPACES, Collections.<NameSpace>emptyList());
-        putProperty(EXPRESSION_NAMESPACES, Collections.<NameSpace>emptyList());
+        putProperty(HEADER_NAMESPACES, new ArrayList<NameSpace>());
+        putProperty(EXPRESSION_NAMESPACES, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -232,8 +235,8 @@ public class Header extends AbstractElement {
 
         NameSpace nameSpace = nameSpaceProvider.get();
 
-        nameSpace.setPrefix(name);
-        nameSpace.setUri(attributeValue);
+        nameSpace.putProperty(PREFIX_KEY, name);
+        nameSpace.putProperty(URI, attributeValue);
 
         List<NameSpace> headerNamespaces = getProperty(HEADER_NAMESPACES);
         List<NameSpace> expressionNamespaces = getProperty(EXPRESSION_NAMESPACES);

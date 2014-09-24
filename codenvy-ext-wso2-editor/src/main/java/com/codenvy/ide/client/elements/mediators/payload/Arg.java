@@ -23,12 +23,16 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
+import static com.codenvy.ide.client.elements.NameSpace.URI;
+import static com.codenvy.ide.client.elements.NameSpace.copyNameSpaceList;
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.ArgType.EXPRESSION;
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.ArgType.VALUE;
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.Evaluator.XML;
@@ -68,7 +72,7 @@ public class Arg extends AbstractEntityElement {
         putProperty(ARG_EVALUATOR, XML);
         putProperty(ARG_EXPRESSION, "/default/expression");
         putProperty(ARG_VALUE, "default");
-        putProperty(ARG_NAMESPACES, Collections.<NameSpace>emptyList());
+        putProperty(ARG_NAMESPACES, new ArrayList<NameSpace>());
     }
 
     /** @return serialization representation of element attributes */
@@ -141,26 +145,44 @@ public class Arg extends AbstractEntityElement {
 
         NameSpace nameSpace = nameSpaceProvider.get();
 
-        nameSpace.setPrefix(name);
-        nameSpace.setUri(attributeValue);
+        nameSpace.putProperty(PREFIX_KEY, name);
+        nameSpace.putProperty(URI, attributeValue);
 
         nameSpaces.add(nameSpace);
     }
 
-    /** @return copy of element */
-    @Nonnull
+    /** Returns copy of element. */
     public Arg copy() {
-        List<NameSpace> nameSpaces = getProperty(ARG_NAMESPACES);
-
         Arg arg = argProvider.get();
 
         arg.putProperty(ARG_TYPE, getProperty(ARG_TYPE));
         arg.putProperty(ARG_EVALUATOR, getProperty(ARG_EVALUATOR));
         arg.putProperty(ARG_EXPRESSION, getProperty(ARG_EXPRESSION));
         arg.putProperty(ARG_VALUE, getProperty(ARG_VALUE));
-        arg.putProperty(ARG_NAMESPACES, copyList(nameSpaces));
+        arg.putProperty(ARG_NAMESPACES, copyNameSpaceList(getProperty(ARG_NAMESPACES)));
 
         return arg;
+    }
+
+    /**
+     * Returns copy of list. If list which we send to method is null, method return empty list. If list isn't null
+     * method returns copy of list.
+     *
+     * @param listToCopy
+     *         list which need to copy
+     */
+    public static List<Arg> copyArgsList(@Nullable List<Arg> listToCopy) {
+        List<Arg> properties = new ArrayList<>();
+
+        if (listToCopy == null) {
+            return properties;
+        }
+
+        for (Arg arg : listToCopy) {
+            properties.add(arg);
+        }
+
+        return properties;
     }
 
     public enum ArgType {

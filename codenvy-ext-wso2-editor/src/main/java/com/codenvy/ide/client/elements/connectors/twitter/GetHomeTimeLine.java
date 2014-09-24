@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,7 +33,6 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static java.util.Collections.emptyList;
 
 /**
  * The Class describes GetHomeTimeLine connector for twitter group of connectors. Also the class contains the business logic
@@ -122,14 +122,14 @@ public class GetHomeTimeLine extends AbstractConnector {
         sinceIdExpr = "";
         maxIdExpr = "";
 
-        consumerKeyNS = emptyList();
-        consumerSecretNS = emptyList();
-        accessTokenNS = emptyList();
-        accessTokenSecretNS = emptyList();
-        countNS = emptyList();
-        pageNS = emptyList();
-        sinceIdNS = emptyList();
-        maxIdNS = emptyList();
+        consumerKeyNS = new ArrayList<>();
+        consumerSecretNS = new ArrayList<>();
+        accessTokenNS = new ArrayList<>();
+        accessTokenSecretNS = new ArrayList<>();
+        countNS = new ArrayList<>();
+        pageNS = new ArrayList<>();
+        sinceIdNS = new ArrayList<>();
+        maxIdNS = new ArrayList<>();
     }
 
     /** {@inheritDoc} */

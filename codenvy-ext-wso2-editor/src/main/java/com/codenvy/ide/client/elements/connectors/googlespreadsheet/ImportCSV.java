@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,7 +33,6 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static java.util.Collections.emptyList;
 
 /**
  * The Class describes ImportCSV connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -98,11 +98,11 @@ public class ImportCSV extends AbstractConnector {
         batchEnableExpression = "";
         batchSizeExpression = "";
 
-        spreadsheetNameNS = emptyList();
-        worksheetNameNS = emptyList();
-        filePathNS = emptyList();
-        batchEnableNS = emptyList();
-        batchSizeNS = emptyList();
+        spreadsheetNameNS = new ArrayList<>();
+        worksheetNameNS = new ArrayList<>();
+        filePathNS = new ArrayList<>();
+        batchEnableNS = new ArrayList<>();
+        batchSizeNS = new ArrayList<>();
     }
 
     /** {@inheritDoc} */

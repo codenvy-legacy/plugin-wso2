@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,7 +33,6 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static java.util.Collections.emptyList;
 
 /**
  * The Class describes SearchUser connector for jira group connectors. Also the class contains the business logic
@@ -97,11 +97,11 @@ public class SearchUser extends AbstractConnector {
         startAtExpression = "";
         includeInactiveExpression = "";
 
-        userNameNS = emptyList();
-        startAtNS = emptyList();
-        maxResultsNS = emptyList();
-        includeActiveNS = emptyList();
-        includeInactiveNS = emptyList();
+        userNameNS = new ArrayList<>();
+        startAtNS = new ArrayList<>();
+        maxResultsNS = new ArrayList<>();
+        includeActiveNS = new ArrayList<>();
+        includeInactiveNS = new ArrayList<>();
     }
 
     /** {@inheritDoc} */

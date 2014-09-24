@@ -24,12 +24,12 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.log.Property.EXPRESSION;
 import static com.codenvy.ide.client.elements.mediators.log.Property.NAME;
 import static com.codenvy.ide.client.elements.mediators.log.Property.NAMESPACES;
+import static com.codenvy.ide.client.elements.mediators.log.Property.copyPropertyList;
 
 /**
  * The class provides the business logic that allows editor to react on user's action related to change of element's property.
@@ -163,12 +163,8 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
      *         callback that need to be handled when properties editing is successful
      */
     public void showConfigWindow(@Nonnull List<Property> properties, @Nonnull String title, @Nonnull AddPropertyCallback callback) {
-        arrayTemporary = Collections.emptyList();
+        arrayTemporary = copyPropertyList(properties);
         addPropertyCallback = callback;
-
-        for (Property property : properties) {
-            arrayTemporary.add(property.copy());
-        }
 
         propertiesView.setProperties(arrayTemporary);
 

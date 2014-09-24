@@ -25,8 +25,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +51,8 @@ public class GetVersionsOfProject extends AbstractConnector {
 
     private static final List<String> PROPERTIES = Arrays.asList(PROJECT_KEY);
 
-    private String           projectKey;
-    private String           projectKeyExpression;
+    private String          projectKey;
+    private String          projectKeyExpression;
     private List<NameSpace> projectKeyNS;
 
     @Inject
@@ -72,7 +72,7 @@ public class GetVersionsOfProject extends AbstractConnector {
         projectKey = "";
         projectKeyExpression = "";
 
-        projectKeyNS = Collections.emptyList();
+        projectKeyNS = new ArrayList<>();
     }
 
     /** {@inheritDoc} */

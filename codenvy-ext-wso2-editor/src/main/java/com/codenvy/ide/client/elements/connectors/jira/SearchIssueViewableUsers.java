@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,7 +33,6 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static java.util.Collections.emptyList;
 
 /**
  * The Class describes SearchAssignableUser connector for jira group connectors. Also the class contains the business logic
@@ -99,11 +99,11 @@ public class SearchIssueViewableUsers extends AbstractConnector {
         issueKeyExpression = "";
         maxResultsExpression = "";
 
-        startAtNS = emptyList();
-        userNameNS = emptyList();
-        issueKeyNS = emptyList();
-        projectNS = emptyList();
-        maxResultsNS = emptyList();
+        startAtNS = new ArrayList<>();
+        userNameNS = new ArrayList<>();
+        issueKeyNS = new ArrayList<>();
+        projectNS = new ArrayList<>();
+        maxResultsNS = new ArrayList<>();
     }
 
     /** {@inheritDoc} */

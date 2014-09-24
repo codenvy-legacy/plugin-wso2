@@ -23,12 +23,14 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
+import static com.codenvy.ide.client.elements.NameSpace.URI;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType.REGISTRY_KEY;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType.CUSTOM;
 
@@ -72,7 +74,7 @@ public class Source extends AbstractEntityElement {
         putProperty(SOURCE_XML, "<inline/>");
         putProperty(SOURCE_XPATH, "/default/xpath");
         putProperty(SOURCE_PROPERTY, "source_property");
-        putProperty(SOURCE_NAMESPACES, Collections.<NameSpace>emptyList());
+        putProperty(SOURCE_NAMESPACES, new ArrayList<NameSpace>());
     }
 
     /** Serialization representation attributes of source property of element. */
@@ -204,8 +206,8 @@ public class Source extends AbstractEntityElement {
 
         NameSpace nameSpace = nameSpaceProvider.get();
 
-        nameSpace.setPrefix(name);
-        nameSpace.setUri(attributeValue);
+        nameSpace.putProperty(PREFIX_KEY, name);
+        nameSpace.putProperty(URI, attributeValue);
 
         nameSpaces.add(nameSpace);
     }

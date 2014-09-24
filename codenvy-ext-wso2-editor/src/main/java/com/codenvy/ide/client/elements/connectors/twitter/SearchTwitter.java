@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,7 +33,6 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static java.util.Collections.emptyList;
 
 /**
  * The Class describes Search connector for twitter group of connectors. Also the class contains the business logic
@@ -134,17 +134,17 @@ public class SearchTwitter extends AbstractConnector {
         untilExpr = "";
         countExpr = "";
 
-        searchNS = emptyList();
-        langNS = emptyList();
-        localeNS = emptyList();
-        maxIdNS = emptyList();
-        sinceNS = emptyList();
-        sinceIdNS = emptyList();
-        geocodeNS = emptyList();
-        radiusNS = emptyList();
-        unitNS = emptyList();
-        untilNS = emptyList();
-        countNS = emptyList();
+        searchNS = new ArrayList<>();
+        langNS = new ArrayList<>();
+        localeNS = new ArrayList<>();
+        maxIdNS = new ArrayList<>();
+        sinceNS = new ArrayList<>();
+        sinceIdNS = new ArrayList<>();
+        geocodeNS = new ArrayList<>();
+        radiusNS = new ArrayList<>();
+        unitNS = new ArrayList<>();
+        untilNS = new ArrayList<>();
+        countNS = new ArrayList<>();
     }
 
     /** {@inheritDoc} */

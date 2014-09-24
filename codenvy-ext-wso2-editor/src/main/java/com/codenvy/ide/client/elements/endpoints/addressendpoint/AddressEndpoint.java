@@ -26,8 +26,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -147,7 +147,7 @@ public class AddressEndpoint extends AbstractElement {
         putProperty(RETRY_COUNT, 0);
         putProperty(RETRY_DELAY, 0);
 
-        putProperty(PROPERTIES, Collections.<Property>emptyList());
+        putProperty(PROPERTIES, new ArrayList<Property>());
         putProperty(OPTIMIZE, Optimize.LEAVE_AS_IS);
         putProperty(DESCRIPTION, "");
 
@@ -406,11 +406,13 @@ public class AddressEndpoint extends AbstractElement {
                     break;
 
                 case ENABLE_RM_PROPERTY:
-                    applyEnableRmProperty(node);
+                    putProperty(RELIABLE_MESSAGING_ENABLED, true);
+                    applyPolicyAttribute(item);
                     break;
 
                 case ENABLE_SEC_PROPERTY:
-                    applyEnableSecProperty(node);
+                    putProperty(SECURITY_ENABLED, true);
+                    applyPolicyAttribute(item);
                     break;
 
                 case TIMEOUT_PROPERTY:
@@ -430,24 +432,16 @@ public class AddressEndpoint extends AbstractElement {
         }
     }
 
-    private void applyEnableRmProperty(@Nonnull Node node) {
-        putProperty(RELIABLE_MESSAGING_ENABLED, true);
-
-        if (node.hasAttributes()) {
-            Node attributeNode = node.getAttributes().item(0);
-
-            putProperty(RELIABLE_MESSAGING_POLICY, attributeNode.getNodeValue());
+    private void applyPolicyAttribute(@Nonnull Node node) {
+        if (!node.hasAttributes()) {
+            return;
         }
-    }
 
-    private void applyEnableSecProperty(@Nonnull Node node) {
-        putProperty(SECURITY_ENABLED, true);
+        Node attributeNode = node.getAttributes().item(0);
 
-        if (node.hasAttributes()) {
-            Node attributeNode = node.getAttributes().item(0);
+        boolean isEnableRmProperty = ENABLE_RM_PROPERTY.equals(node.getNodeName());
 
-            putProperty(SECURITY_POLICY, attributeNode.getNodeValue());
-        }
+        putProperty(isEnableRmProperty ? RELIABLE_MESSAGING_POLICY : SECURITY_POLICY, attributeNode.getNodeValue());
     }
 
     /**

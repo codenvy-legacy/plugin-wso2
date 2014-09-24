@@ -25,8 +25,8 @@ import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +85,7 @@ public class PayloadFactory extends AbstractElement {
 
         putProperty(FORMAT, format);
         putProperty(DESCRIPTION, "");
-        putProperty(ARGS, Collections.<Arg>emptyList());
+        putProperty(ARGS, new ArrayList<Arg>());
     }
 
     /** {@inheritDoc} */

@@ -40,6 +40,7 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 import java.util.List;
 
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
 import static com.codenvy.ide.client.elements.mediators.Action.REMOVE;
 import static com.codenvy.ide.client.elements.mediators.Header.ACTION;
 import static com.codenvy.ide.client.elements.mediators.Header.EXPRESSION;
@@ -102,7 +103,7 @@ public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Head
             public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.putProperty(HEADER_NAME, nameSpaces.isEmpty() ?
                                                  expression :
-                                                 nameSpaces.get(nameSpaces.size() - 1).getPrefix() + ":" + expression);
+                                                 nameSpaces.get(nameSpaces.size() - 1).getProperty(PREFIX_KEY) + ":" + expression);
                 element.putProperty(HEADER_NAMESPACES, nameSpaces);
 
                 headerName.setProperty(expression);

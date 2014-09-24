@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,7 +33,6 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
-import static java.util.Collections.emptyList;
 
 /**
  * The Class describes GetCellRangeCSV connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -109,12 +109,12 @@ public class GetCellRangeCSV extends AbstractConnector {
         minColumnExpression = "";
         maxColumnExpression = "";
 
-        spreadsheetNameNS = emptyList();
-        worksheetNameNS = emptyList();
-        minRowNS = emptyList();
-        maxRowNS = emptyList();
-        minColumnNS = emptyList();
-        maxColumnNS = emptyList();
+        spreadsheetNameNS = new ArrayList<>();
+        worksheetNameNS = new ArrayList<>();
+        minRowNS = new ArrayList<>();
+        maxRowNS = new ArrayList<>();
+        minColumnNS = new ArrayList<>();
+        maxColumnNS = new ArrayList<>();
     }
 
     /** {@inheritDoc} */

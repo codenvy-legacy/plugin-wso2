@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
+import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
+import static com.codenvy.ide.client.elements.NameSpace.URI;
 import static com.codenvy.ide.client.elements.mediators.Filter.ConditionType.SOURCE_AND_REGEX;
 import static com.codenvy.ide.client.elements.mediators.Filter.ConditionType.XPATH;
 
@@ -98,8 +100,8 @@ public class Filter extends AbstractElement {
         putProperty(REGULAR_EXPRESSION, "default_regex");
         putProperty(X_PATH, "/default/xpath");
 
-        putProperty(SOURCE_NAMESPACE, Collections.<NameSpace>emptyList());
-        putProperty(XPATH_NAMESPACE, Collections.<NameSpace>emptyList());
+        putProperty(SOURCE_NAMESPACE, new ArrayList<NameSpace>());
+        putProperty(XPATH_NAMESPACE, new ArrayList<NameSpace>());
 
         Branch thenBranch = branchProvider.get();
         thenBranch.setParent(this);
@@ -189,8 +191,8 @@ public class Filter extends AbstractElement {
 
         NameSpace nameSpace = nameSpaceProvider.get();
 
-        nameSpace.setPrefix(name);
-        nameSpace.setUri(attributeValue);
+        nameSpace.putProperty(PREFIX_KEY, name);
+        nameSpace.putProperty(URI, attributeValue);
 
         List<NameSpace> nameSpaces = getProperty(NAMESPACES);
         if (nameSpaces != null) {
