@@ -16,23 +16,32 @@
 package com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GoogleSpreadsheetPropertyManager;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.PurgeWorkshet;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.PurgeWorkshet.SPREADSHEET_NAME_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.PurgeWorkshet.SPREADSHEET_NAME_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.PurgeWorkshet.SPREADSHEET_NAME_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.PurgeWorkshet.WORKSHEET_NAME_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.PurgeWorkshet.WORKSHEET_NAME_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.PurgeWorkshet.WORKSHEET_NAME_NS_KEY;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -42,116 +51,61 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * @author Dmitry Shnurenko
  */
 public class PurgeWorksheetConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<PurgeWorkshet> {
-
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          spreadsheetNameCallBack;
-    private final AddNameSpacesCallBack          worksheetNameCallBack;
+    private ComplexPropertyPresenter spreadsheetNameNS;
+    private ComplexPropertyPresenter worksheetNameNS;
+    private SimplePropertyPresenter  spreadsheetName;
+    private SimplePropertyPresenter  worksheetName;
 
     @Inject
     public PurgeWorksheetConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                             NameSpaceEditorPresenter nameSpacePresenter,
-                                            GeneralPropertiesPanelView view,
+                                            PropertiesPanelView view,
                                             GoogleSpreadsheetPropertyManager googleSpreadsheetPropertyManager,
                                             ParameterPresenter parameterPresenter,
-                                            PropertyTypeManager propertyTypeManager) {
-        super(view, googleSpreadsheetPropertyManager, parameterPresenter, propertyTypeManager);
+                                            PropertyTypeManager propertyTypeManager,
+                                            PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                            Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                            Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                            Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              googleSpreadsheetPropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.spreadsheetNameCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setSpreadsheetNameNS(nameSpaces);
-                element.setSpreadsheetNameExpression(expression);
-
-                PurgeWorksheetConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.worksheetNameCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setWorksheetNameNS(nameSpaces);
-                element.setWorksheetNameExpression(expression);
-
-                PurgeWorksheetConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
+    private void prepareView() {
+        spreadsheetNameNS = createComplexPanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(),
+                                               SPREADSHEET_NAME_NS_KEY,
+                                               SPREADSHEET_NAME_EXPRESSION_KEY);
 
-        notifyListeners();
-    }
+        worksheetNameNS = createComplexPanel(locale.spreadsheetCreateWorksheetWorksheetName(),
+                                             WORKSHEET_NAME_NS_KEY,
+                                             WORKSHEET_NAME_EXPRESSION_KEY);
 
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setSpreadsheetName(view.getFirstTextBoxValue());
+        spreadsheetName = createSimplePanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(), SPREADSHEET_NAME_KEY);
 
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setWorksheetName(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getSpreadsheetNameNS(),
-                                                    spreadsheetNameCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getSpreadsheetNameExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getWorksheetNameNS(),
-                                                    worksheetNameCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getWorksheetNameExpression());
+        worksheetName = createSimplePanel(locale.spreadsheetCreateWorksheetWorksheetName(), WORKSHEET_NAME_KEY);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        ParameterEditorType property = element.getProperty(PARAMETER_EDITOR_TYPE);
+        boolean isNameSpaced = NAME_SPACED_PROPERTY_EDITOR.equals(property);
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+        spreadsheetName.setVisible(!isNameSpaced);
+        worksheetName.setVisible(!isNameSpaced);
 
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getSpreadsheetNameExpression() : element.getSpreadsheetName());
-        view.setSecondTextBoxValue(isEquals ? element.getWorksheetNameExpression() : element.getWorksheetName());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-
-        view.setFirstLabelTitle(locale.spreadsheetCreateSpreadsheetSpreadsheetName());
-        view.setSecondLabelTitle(locale.spreadsheetCreateWorksheetWorksheetName());
+        spreadsheetNameNS.setVisible(isNameSpaced);
+        worksheetNameNS.setVisible(isNameSpaced);
     }
 
     /** {@inheritDoc} */
@@ -159,6 +113,10 @@ public class PurgeWorksheetConnectorPresenter extends AbstractConnectorPropertie
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        spreadsheetName.setProperty(element.getProperty(SPREADSHEET_NAME_KEY));
+        worksheetName.setProperty(element.getProperty(WORKSHEET_NAME_KEY));
+
+        spreadsheetNameNS.setProperty(element.getProperty(SPREADSHEET_NAME_EXPRESSION_KEY));
+        worksheetNameNS.setProperty(element.getProperty(WORKSHEET_NAME_EXPRESSION_KEY));
     }
 }

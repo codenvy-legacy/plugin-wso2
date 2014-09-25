@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes CreateSpreadsheet connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -46,19 +45,17 @@ public class CreateSpreadsheet extends AbstractConnector {
     public static final String ELEMENT_NAME       = "CreateSpreadsheet";
     public static final String SERIALIZATION_NAME = "googlespreadsheet.createSpreadsheet";
 
-    private static final String SPREADSHEET_NAME = "spreadsheetName";
-    private static final String WORKSHEET_COUNT  = "worksheetCount";
+    public static final Key<String>          SPREADSHEET_NAME            = new Key<>("SpreadsheetName");
+    public static final Key<String>          WORKSHEET_COUNT             = new Key<>("WorksheetCount");
+    public static final Key<String>          SPREADSHEET_NAME_EXPRESSION = new Key<>("SpreadsheetNameExpression");
+    public static final Key<String>          WORKSHEET_COUNT_EXPRESSION  = new Key<>("WorksheetCountExpression");
+    public static final Key<List<NameSpace>> SPREADSHEET_NAME_NS         = new Key<>("SpreadsheetNameNS");
+    public static final Key<List<NameSpace>> WORKSHEET_COUNT_NS          = new Key<>("WorksheetCountNS");
 
-    private static final List<String> PROPERTIES = Arrays.asList(SPREADSHEET_NAME, WORKSHEET_COUNT);
+    private static final String SPREADSHEET = "spreadsheetName";
+    private static final String WORKSHEET   = "worksheetCount";
 
-    private String spreadsheetName;
-    private String worksheetCount;
-
-    private String spreadsheetNameExpression;
-    private String worksheetCountExpression;
-
-    private List<NameSpace> spreadsheetNameNS;
-    private List<NameSpace> worksheetCountNS;
+    private static final List<String> PROPERTIES = Arrays.asList(SPREADSHEET, WORKSHEET);
 
     @Inject
     public CreateSpreadsheet(EditorResources resources,
@@ -74,14 +71,12 @@ public class CreateSpreadsheet extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        spreadsheetName = "";
-        worksheetCount = "";
-
-        spreadsheetNameExpression = "";
-        worksheetCountExpression = "";
-
-        spreadsheetNameNS = new ArrayList<>();
-        worksheetCountNS = new ArrayList<>();
+        putProperty(SPREADSHEET_NAME, "");
+        putProperty(WORKSHEET_COUNT, "");
+        putProperty(SPREADSHEET_NAME_EXPRESSION, "");
+        putProperty(WORKSHEET_COUNT_EXPRESSION, "");
+        putProperty(SPREADSHEET_NAME_NS, new ArrayList<NameSpace>());
+        putProperty(WORKSHEET_COUNT_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -90,10 +85,10 @@ public class CreateSpreadsheet extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(SPREADSHEET_NAME, isInline ? spreadsheetName : spreadsheetNameExpression);
-        properties.put(WORKSHEET_COUNT, isInline ? worksheetCount : worksheetCountExpression);
+        properties.put(SPREADSHEET, isInline ? getProperty(SPREADSHEET_NAME) : getProperty(SPREADSHEET_NAME_EXPRESSION));
+        properties.put(WORKSHEET, isInline ? getProperty(WORKSHEET_COUNT) : getProperty(WORKSHEET_COUNT_EXPRESSION));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -103,83 +98,14 @@ public class CreateSpreadsheet extends AbstractConnector {
     protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
-        switch (nodeName) {
-            case SPREADSHEET_NAME:
-                if (isInline) {
-                    spreadsheetName = nodeValue;
-                } else {
-                    spreadsheetNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
-
-            case WORKSHEET_COUNT:
-                if (isInline) {
-                    worksheetCount = nodeValue;
-                } else {
-                    worksheetCountExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+        if (SPREADSHEET.equals(nodeName)) {
+            adaptProperty(nodeValue, SPREADSHEET_NAME, SPREADSHEET_NAME_EXPRESSION);
         }
-    }
 
-    @Nonnull
-    public String getSpreadsheetName() {
-        return spreadsheetName;
-    }
-
-    public void setSpreadsheetName(@Nonnull String spreadsheetName) {
-        this.spreadsheetName = spreadsheetName;
-    }
-
-    @Nonnull
-    public String getWorksheetCount() {
-        return worksheetCount;
-    }
-
-    public void setWorksheetCount(@Nonnull String worksheetCount) {
-        this.worksheetCount = worksheetCount;
-    }
-
-    @Nonnull
-    public String getSpreadsheetNameExpression() {
-        return spreadsheetNameExpression;
-    }
-
-    public void setSpreadsheetNameExpression(@Nonnull String spreadsheetNameExpression) {
-        this.spreadsheetNameExpression = spreadsheetNameExpression;
-    }
-
-    @Nonnull
-    public String getWorksheetCountExpression() {
-        return worksheetCountExpression;
-    }
-
-    public void setWorksheetCountExpression(@Nonnull String worksheetCountExpression) {
-        this.worksheetCountExpression = worksheetCountExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getSpreadsheetNameNS() {
-        return spreadsheetNameNS;
-    }
-
-    public void setSpreadsheetNameNS(@Nonnull List<NameSpace> spreadsheetNameNS) {
-        this.spreadsheetNameNS = spreadsheetNameNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getWorksheetCountNS() {
-        return worksheetCountNS;
-    }
-
-    public void setWorksheetCountNS(@Nonnull List<NameSpace> worksheetCountNS) {
-        this.worksheetCountNS = worksheetCountNS;
+        if (WORKSHEET.equals(nodeName)) {
+            adaptProperty(nodeValue, WORKSHEET_COUNT, WORKSHEET_COUNT_EXPRESSION);
+        }
     }
 
 }

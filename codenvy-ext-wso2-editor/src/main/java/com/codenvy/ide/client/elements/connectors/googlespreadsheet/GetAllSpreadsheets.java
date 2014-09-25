@@ -25,6 +25,8 @@ import com.google.inject.Provider;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+
 /**
  * The Class describes GetAllSpreadsheets connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
  * that allows to display serialization representation depending of the current state of element. Deserelization mechanism allows to
@@ -52,6 +54,6 @@ public class GetAllSpreadsheets extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        parameterEditorType = ParameterEditorType.Inline;
+        putProperty(PARAMETER_EDITOR_TYPE, INLINE);
     }
 }

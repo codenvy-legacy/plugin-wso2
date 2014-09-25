@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes InitSpreadsheet connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -46,6 +45,21 @@ public class InitSpreadsheet extends AbstractConnector {
     public static final String ELEMENT_NAME       = "Init";
     public static final String SERIALIZATION_NAME = "googlespreadsheet.init";
 
+    public static final Key<String> OAUTH_CONSUMER_KEY_KEY        = new Key<>("OauthConsumerKey");
+    public static final Key<String> OAUTH_CONSUMER_SECRET_KEY     = new Key<>("OauthConsumerSecret");
+    public static final Key<String> OAUTH_ACCESS_TOKEN_KEY        = new Key<>("OauthAccessToken");
+    public static final Key<String> OAUTH_ACCESS_TOKEN_SECRET_KEY = new Key<>("OauthAccessTokenSecret");
+
+    public static final Key<String> OAUTH_CONSUMER_KEY_EXPRESSION_KEY        = new Key<>("OauthConsumerKeyExpression");
+    public static final Key<String> OAUTH_CONSUMER_SECRET_EXPRESSION_KEY     = new Key<>("OauthConsumerSecretExpression");
+    public static final Key<String> OAUTH_ACCESS_TOKEN_EXPRESSION_KEY        = new Key<>("OauthAccessTokenExpression");
+    public static final Key<String> OAUTH_ACCESS_TOKEN_SECRET_EXPRESSION_KEY = new Key<>("OauthAccessTokenSecretExpression");
+
+    public static final Key<List<NameSpace>> OAUTH_CONSUMER_KEY_NS_KEY        = new Key<>("OauthConsumerKeyNS");
+    public static final Key<List<NameSpace>> OAUTH_CONSUMER_SECRET_NS_KEY     = new Key<>("OauthConsumerSecretNS");
+    public static final Key<List<NameSpace>> OAUTH_ACCESS_TOKEN_NS_KEY        = new Key<>("OauthAccessTokenNS");
+    public static final Key<List<NameSpace>> OAUTH_ACCESS_TOKEN_SECRET_NS_KEY = new Key<>("OauthAccessTokenSecretNS");
+
     private static final String OAUTH_CONSUMER_KEY        = "oauthConsumerKey";
     private static final String OAUTH_CONSUMER_SECRET     = "oauthConsumerSecret";
     private static final String OAUTH_ACCESS_TOKEN        = "oauthAccessToken";
@@ -55,21 +69,6 @@ public class InitSpreadsheet extends AbstractConnector {
                                                                  OAUTH_CONSUMER_SECRET,
                                                                  OAUTH_ACCESS_TOKEN,
                                                                  OAUTH_ACCESS_TOKEN_SECRET);
-
-    private String oauthConsumerKey;
-    private String oauthConsumerSecret;
-    private String oauthAccessToken;
-    private String oauthAccessTokenSecret;
-
-    private String oauthConsumerKeyExpression;
-    private String oauthConsumerSecretExpression;
-    private String oauthAccessTokenExpression;
-    private String oauthAccessTokenSecretExpression;
-
-    private List<NameSpace> oauthConsumerKeyNS;
-    private List<NameSpace> oauthConsumerSecretNS;
-    private List<NameSpace> oauthAccessTokenNS;
-    private List<NameSpace> oauthAccessTokenSecretNS;
 
     @Inject
     public InitSpreadsheet(EditorResources resources,
@@ -85,20 +84,20 @@ public class InitSpreadsheet extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        oauthConsumerKey = "";
-        oauthConsumerSecret = "";
-        oauthAccessToken = "";
-        oauthAccessTokenSecret = "";
+        putProperty(OAUTH_CONSUMER_KEY_KEY, "");
+        putProperty(OAUTH_CONSUMER_SECRET_KEY, "");
+        putProperty(OAUTH_ACCESS_TOKEN_KEY, "");
+        putProperty(OAUTH_ACCESS_TOKEN_SECRET_KEY, "");
 
-        oauthConsumerKeyExpression = "";
-        oauthConsumerSecretExpression = "";
-        oauthAccessTokenExpression = "";
-        oauthAccessTokenSecretExpression = "";
+        putProperty(OAUTH_CONSUMER_KEY_EXPRESSION_KEY, "");
+        putProperty(OAUTH_CONSUMER_SECRET_KEY, "");
+        putProperty(OAUTH_ACCESS_TOKEN_EXPRESSION_KEY, "");
+        putProperty(OAUTH_ACCESS_TOKEN_SECRET_EXPRESSION_KEY, "");
 
-        oauthConsumerKeyNS = new ArrayList<>();
-        oauthConsumerSecretNS = new ArrayList<>();
-        oauthAccessTokenNS = new ArrayList<>();
-        oauthAccessTokenSecretNS = new ArrayList<>();
+        putProperty(OAUTH_CONSUMER_KEY_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(OAUTH_CONSUMER_SECRET_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(OAUTH_ACCESS_TOKEN_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(OAUTH_ACCESS_TOKEN_SECRET_NS_KEY, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -107,12 +106,14 @@ public class InitSpreadsheet extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(OAUTH_CONSUMER_KEY, isInline ? oauthConsumerKey : oauthConsumerKeyExpression);
-        properties.put(OAUTH_CONSUMER_SECRET, isInline ? oauthConsumerSecret : oauthConsumerSecretExpression);
-        properties.put(OAUTH_ACCESS_TOKEN, isInline ? oauthAccessToken : oauthAccessTokenExpression);
-        properties.put(OAUTH_ACCESS_TOKEN_SECRET, isInline ? oauthAccessTokenSecret : oauthAccessTokenSecretExpression);
+        properties.put(OAUTH_CONSUMER_KEY, isInline ? getProperty(OAUTH_CONSUMER_KEY_KEY) : getProperty(OAUTH_CONSUMER_KEY_EXPRESSION_KEY));
+        properties.put(OAUTH_CONSUMER_SECRET,
+                       isInline ? getProperty(OAUTH_CONSUMER_SECRET_KEY) : getProperty(OAUTH_CONSUMER_SECRET_EXPRESSION_KEY));
+        properties.put(OAUTH_ACCESS_TOKEN, isInline ? getProperty(OAUTH_ACCESS_TOKEN_KEY) : getProperty(OAUTH_ACCESS_TOKEN_EXPRESSION_KEY));
+        properties.put(OAUTH_ACCESS_TOKEN_SECRET,
+                       isInline ? getProperty(OAUTH_ACCESS_TOKEN_SECRET_KEY) : getProperty(OAUTH_ACCESS_TOKEN_SECRET_EXPRESSION_KEY));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -122,157 +123,26 @@ public class InitSpreadsheet extends AbstractConnector {
     protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
         switch (nodeName) {
             case OAUTH_CONSUMER_KEY:
-                if (isInline) {
-                    oauthConsumerKey = nodeValue;
-                } else {
-                    oauthConsumerKeyExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, OAUTH_CONSUMER_KEY_KEY, OAUTH_CONSUMER_KEY_EXPRESSION_KEY);
                 break;
 
             case OAUTH_CONSUMER_SECRET:
-                if (isInline) {
-                    oauthConsumerSecret = nodeValue;
-                } else {
-                    oauthConsumerSecretExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, OAUTH_CONSUMER_SECRET_KEY, OAUTH_CONSUMER_SECRET_EXPRESSION_KEY);
                 break;
 
             case OAUTH_ACCESS_TOKEN:
-                if (isInline) {
-                    oauthAccessToken = nodeValue;
-                } else {
-                    oauthAccessTokenExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, OAUTH_ACCESS_TOKEN_KEY, OAUTH_ACCESS_TOKEN_EXPRESSION_KEY);
                 break;
 
             case OAUTH_ACCESS_TOKEN_SECRET:
-                if (isInline) {
-                    oauthAccessTokenSecret = nodeValue;
-                } else {
-                    oauthAccessTokenSecretExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, OAUTH_ACCESS_TOKEN_SECRET_KEY, OAUTH_ACCESS_TOKEN_SECRET_EXPRESSION_KEY);
                 break;
+
+            default:
         }
-    }
-
-    @Nonnull
-    public String getOauthConsumerKey() {
-        return oauthConsumerKey;
-    }
-
-    public void setOauthConsumerKey(@Nonnull String oauthConsumerKey) {
-        this.oauthConsumerKey = oauthConsumerKey;
-    }
-
-    @Nonnull
-    public String getOauthConsumerSecret() {
-        return oauthConsumerSecret;
-    }
-
-    public void setOauthConsumerSecret(@Nonnull String oauthConsumerSecret) {
-        this.oauthConsumerSecret = oauthConsumerSecret;
-    }
-
-    @Nonnull
-    public String getOauthAccessToken() {
-        return oauthAccessToken;
-    }
-
-    public void setOauthAccessToken(@Nonnull String oauthAccessToken) {
-        this.oauthAccessToken = oauthAccessToken;
-    }
-
-    @Nonnull
-    public String getOauthAccessTokenSecret() {
-        return oauthAccessTokenSecret;
-    }
-
-    public void setOauthAccessTokenSecret(@Nonnull String oauthAccessTokenSecret) {
-        this.oauthAccessTokenSecret = oauthAccessTokenSecret;
-    }
-
-    @Nonnull
-    public String getOauthConsumerKeyExpression() {
-        return oauthConsumerKeyExpression;
-    }
-
-    public void setOauthConsumerKeyExpression(@Nonnull String oauthConsumerKeyExpression) {
-        this.oauthConsumerKeyExpression = oauthConsumerKeyExpression;
-    }
-
-    @Nonnull
-    public String getOauthConsumerSecretExpression() {
-        return oauthConsumerSecretExpression;
-    }
-
-    public void setOauthConsumerSecretExpression(@Nonnull String oauthConsumerSecretExpression) {
-        this.oauthConsumerSecretExpression = oauthConsumerSecretExpression;
-    }
-
-    @Nonnull
-    public String getOauthAccessTokenExpression() {
-        return oauthAccessTokenExpression;
-    }
-
-    public void setOauthAccessTokenExpression(@Nonnull String oauthAccessTokenExpression) {
-        this.oauthAccessTokenExpression = oauthAccessTokenExpression;
-    }
-
-    @Nonnull
-    public String getOauthAccessTokenSecretExpression() {
-        return oauthAccessTokenSecretExpression;
-    }
-
-    public void setOauthAccessTokenSecretExpression(@Nonnull String oauthAccessTokenSecretExpression) {
-        this.oauthAccessTokenSecretExpression = oauthAccessTokenSecretExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getOauthConsumerKeyNS() {
-        return oauthConsumerKeyNS;
-    }
-
-    public void setOauthConsumerKeyNS(@Nonnull List<NameSpace> oauthConsumerKeyNS) {
-        this.oauthConsumerKeyNS = oauthConsumerKeyNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getOauthConsumerSecretNS() {
-        return oauthConsumerSecretNS;
-    }
-
-    public void setOauthConsumerSecretNS(@Nonnull List<NameSpace> oauthConsumerSecretNS) {
-        this.oauthConsumerSecretNS = oauthConsumerSecretNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getOauthAccessTokenNS() {
-        return oauthAccessTokenNS;
-    }
-
-    public void setOauthAccessTokenNS(@Nonnull List<NameSpace> oauthAccessTokenNS) {
-        this.oauthAccessTokenNS = oauthAccessTokenNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getOauthAccessTokenSecretNS() {
-        return oauthAccessTokenSecretNS;
-    }
-
-    public void setOauthAccessTokenSecretNS(@Nonnull List<NameSpace> oauthAccessTokenSecretNS) {
-        this.oauthAccessTokenSecretNS = oauthAccessTokenSecretNS;
     }
 
 }

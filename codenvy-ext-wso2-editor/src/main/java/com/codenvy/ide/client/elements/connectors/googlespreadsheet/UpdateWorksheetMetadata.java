@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes UpdateWorksheetMetadata connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -46,6 +45,24 @@ public class UpdateWorksheetMetadata extends AbstractConnector {
     public static final String ELEMENT_NAME       = "UpdateWorksheetMetadata";
     public static final String SERIALIZATION_NAME = "googlespreadsheet.updateWorksheetMetadata";
 
+    public static final Key<String> SPREADSHEET_NAME_KEY   = new Key<>("SpreadsheetName");
+    public static final Key<String> WORKSHEET_OLD_NAME_KEY = new Key<>("WorksheetName");
+    public static final Key<String> WORKSHEET_NEW_NAME_KEY = new Key<>("MinRow");
+    public static final Key<String> WORKSHEET_ROWS_KEY     = new Key<>("MaxRow");
+    public static final Key<String> WORKSHEET_COLUMNS_KEY  = new Key<>("MinColumn");
+
+    public static final Key<String> SPREADSHEET_NAME_EXPRESSION_KEY   = new Key<>("SpreadsheetNameExpression");
+    public static final Key<String> WORKSHEET_OLD_NAME_EXPRESSION_KEY = new Key<>("WorksheetNameExpression");
+    public static final Key<String> WORKSHEET_NEW_NAME_EXPRESSION_KEY = new Key<>("MinRowExpression");
+    public static final Key<String> WORKSHEET_ROWS_EXPRESSION_KEY     = new Key<>("MaxRowExpression");
+    public static final Key<String> WORKSHEET_COLUMNS_EXPRESSION_KEY  = new Key<>("MinColumnExpression");
+
+    public static final Key<List<NameSpace>> SPREADSHEET_NAME_NS_KEY   = new Key<>("SpreadsheetNameNS");
+    public static final Key<List<NameSpace>> WORKSHEET_OLD_NAME_NS_KEY = new Key<>("WorksheetNameNS");
+    public static final Key<List<NameSpace>> WORKSHEET_NEW_NAME_NS_KEY = new Key<>("MinRowNS");
+    public static final Key<List<NameSpace>> WORKSHEET_ROWS_NS_KEY     = new Key<>("MaxRowNS");
+    public static final Key<List<NameSpace>> WORKSHEET_COLUMNS_NS_KEY  = new Key<>("MinColumnNS");
+
     private static final String SPREADSHEET_NAME   = "spreadsheetName";
     private static final String WORKSHEET_OLD_NAME = "worksheetOldName";
     private static final String WORKSHEET_NEW_NAME = "worksheetNewName";
@@ -53,24 +70,6 @@ public class UpdateWorksheetMetadata extends AbstractConnector {
     private static final String WORKSHEET_COLUMNS  = "worksheetColumns";
 
     private static final List<String> PROPERTIES = Arrays.asList(SPREADSHEET_NAME, WORKSHEET_OLD_NAME, WORKSHEET_ROWS, WORKSHEET_COLUMNS);
-
-    private String spreadsheetName;
-    private String worksheetOldName;
-    private String worksheetNewName;
-    private String worksheetRows;
-    private String worksheetColumns;
-
-    private String spreadsheetNameExpression;
-    private String worksheetOldNameExpression;
-    private String worksheetNewNameExpression;
-    private String worksheetRowsExpression;
-    private String worksheetColumnsExpression;
-
-    private List<NameSpace> spreadsheetNameNS;
-    private List<NameSpace> worksheetOldNameNS;
-    private List<NameSpace> worksheetNewNameNS;
-    private List<NameSpace> worksheetRowsNS;
-    private List<NameSpace> worksheetColumnsNS;
 
     @Inject
     public UpdateWorksheetMetadata(EditorResources resources,
@@ -86,23 +85,23 @@ public class UpdateWorksheetMetadata extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        spreadsheetName = "";
-        worksheetOldName = "";
-        worksheetOldName = "";
-        worksheetOldName = "";
-        worksheetOldName = "";
+        putProperty(SPREADSHEET_NAME_KEY, "");
+        putProperty(WORKSHEET_OLD_NAME_KEY, "");
+        putProperty(WORKSHEET_NEW_NAME_KEY, "");
+        putProperty(WORKSHEET_ROWS_KEY, "");
+        putProperty(WORKSHEET_COLUMNS_KEY, "");
 
-        spreadsheetNameExpression = "";
-        worksheetOldNameExpression = "";
-        worksheetOldNameExpression = "";
-        worksheetOldNameExpression = "";
-        worksheetOldNameExpression = "";
+        putProperty(SPREADSHEET_NAME_EXPRESSION_KEY, "");
+        putProperty(WORKSHEET_OLD_NAME_EXPRESSION_KEY, "");
+        putProperty(WORKSHEET_NEW_NAME_EXPRESSION_KEY, "");
+        putProperty(WORKSHEET_ROWS_EXPRESSION_KEY, "");
+        putProperty(WORKSHEET_COLUMNS_EXPRESSION_KEY, "");
 
-        spreadsheetNameNS = new ArrayList<>();
-        worksheetOldNameNS = new ArrayList<>();
-        worksheetOldNameNS = new ArrayList<>();
-        worksheetOldNameNS = new ArrayList<>();
-        worksheetOldNameNS = new ArrayList<>();
+        putProperty(SPREADSHEET_NAME_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(WORKSHEET_OLD_NAME_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(WORKSHEET_NEW_NAME_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(WORKSHEET_ROWS_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(WORKSHEET_COLUMNS_NS_KEY, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -111,13 +110,13 @@ public class UpdateWorksheetMetadata extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(SPREADSHEET_NAME, isInline ? spreadsheetName : spreadsheetNameExpression);
-        properties.put(WORKSHEET_OLD_NAME, isInline ? worksheetOldName : worksheetOldNameExpression);
-        properties.put(WORKSHEET_NEW_NAME, isInline ? worksheetNewName : worksheetNewNameExpression);
-        properties.put(WORKSHEET_ROWS, isInline ? worksheetRows : worksheetRowsExpression);
-        properties.put(WORKSHEET_COLUMNS, isInline ? worksheetColumns : worksheetColumnsExpression);
+        properties.put(SPREADSHEET_NAME, isInline ? getProperty(SPREADSHEET_NAME_KEY) : getProperty(SPREADSHEET_NAME_EXPRESSION_KEY));
+        properties.put(WORKSHEET_OLD_NAME, isInline ? getProperty(WORKSHEET_OLD_NAME_KEY) : getProperty(WORKSHEET_OLD_NAME_EXPRESSION_KEY));
+        properties.put(WORKSHEET_NEW_NAME, isInline ? getProperty(WORKSHEET_NEW_NAME_KEY) : getProperty(WORKSHEET_NEW_NAME_EXPRESSION_KEY));
+        properties.put(WORKSHEET_ROWS, isInline ? getProperty(WORKSHEET_ROWS_KEY) : getProperty(WORKSHEET_ROWS_EXPRESSION_KEY));
+        properties.put(WORKSHEET_COLUMNS, isInline ? getProperty(WORKSHEET_COLUMNS_KEY) : getProperty(WORKSHEET_COLUMNS_EXPRESSION_KEY));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -127,194 +126,30 @@ public class UpdateWorksheetMetadata extends AbstractConnector {
     protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
         switch (nodeName) {
             case SPREADSHEET_NAME:
-                if (isInline) {
-                    spreadsheetName = nodeValue;
-                } else {
-                    spreadsheetNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, SPREADSHEET_NAME_KEY, SPREADSHEET_NAME_EXPRESSION_KEY);
                 break;
 
             case WORKSHEET_OLD_NAME:
-                if (isInline) {
-                    worksheetOldName = nodeValue;
-                } else {
-                    worksheetOldNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, WORKSHEET_OLD_NAME_KEY, WORKSHEET_OLD_NAME_EXPRESSION_KEY);
                 break;
 
             case WORKSHEET_NEW_NAME:
-                if (isInline) {
-                    worksheetNewName = nodeValue;
-                } else {
-                    worksheetNewNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, WORKSHEET_NEW_NAME_KEY, WORKSHEET_NEW_NAME_EXPRESSION_KEY);
                 break;
 
             case WORKSHEET_ROWS:
-                if (isInline) {
-                    worksheetRows = nodeValue;
-                } else {
-                    worksheetRowsExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, WORKSHEET_ROWS_KEY, WORKSHEET_ROWS_EXPRESSION_KEY);
                 break;
 
             case WORKSHEET_COLUMNS:
-                if (isInline) {
-                    worksheetColumns = nodeValue;
-                } else {
-                    worksheetColumnsExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, WORKSHEET_COLUMNS_KEY, WORKSHEET_COLUMNS_EXPRESSION_KEY);
                 break;
+
+            default:
         }
-    }
-
-    @Nonnull
-    public String getSpreadsheetName() {
-        return spreadsheetName;
-    }
-
-    public void setSpreadsheetName(@Nonnull String spreadsheetName) {
-        this.spreadsheetName = spreadsheetName;
-    }
-
-    @Nonnull
-    public String getSpreadsheetNameExpression() {
-        return spreadsheetNameExpression;
-    }
-
-    public void setSpreadsheetNameExpression(@Nonnull String spreadsheetNameExpression) {
-        this.spreadsheetNameExpression = spreadsheetNameExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getSpreadsheetNameNS() {
-        return spreadsheetNameNS;
-    }
-
-    public void setSpreadsheetNameNS(@Nonnull List<NameSpace> spreadsheetNameNS) {
-        this.spreadsheetNameNS = spreadsheetNameNS;
-    }
-
-    @Nonnull
-    public String getWorksheetOldName() {
-        return worksheetOldName;
-    }
-
-    public void setWorksheetOldName(@Nonnull String worksheetName) {
-        this.worksheetOldName = worksheetName;
-    }
-
-    @Nonnull
-    public String getWorksheetOldNameExpression() {
-        return worksheetOldNameExpression;
-    }
-
-    public void setWorksheetOldNameExpression(@Nonnull String worksheetNameExpression) {
-        this.worksheetOldNameExpression = worksheetNameExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getWorksheetOldNameNS() {
-        return worksheetOldNameNS;
-    }
-
-    public void setWorksheetOldNameNS(@Nonnull List<NameSpace> worksheetNameNS) {
-        this.worksheetOldNameNS = worksheetNameNS;
-    }
-
-    @Nonnull
-    public String getWorksheetNewName() {
-        return worksheetNewName;
-    }
-
-    public void setWorksheetNewName(@Nonnull String worksheetNewName) {
-        this.worksheetNewName = worksheetNewName;
-    }
-
-    @Nonnull
-    public String getWorksheetRows() {
-        return worksheetRows;
-    }
-
-    public void setWorksheetRows(@Nonnull String worksheetRows) {
-        this.worksheetRows = worksheetRows;
-    }
-
-    @Nonnull
-    public String getWorksheetColumns() {
-        return worksheetColumns;
-    }
-
-    public void setWorksheetColumns(@Nonnull String worksheetColumns) {
-        this.worksheetColumns = worksheetColumns;
-    }
-
-    @Nonnull
-    public String getWorksheetNewNameExpression() {
-        return worksheetNewNameExpression;
-    }
-
-    public void setWorksheetNewNameExpression(@Nonnull String worksheetNewNameExpression) {
-        this.worksheetNewNameExpression = worksheetNewNameExpression;
-    }
-
-    @Nonnull
-    public String getWorksheetRowsExpression() {
-        return worksheetRowsExpression;
-    }
-
-    public void setWorksheetRowsExpression(@Nonnull String worksheetRowsExpression) {
-        this.worksheetRowsExpression = worksheetRowsExpression;
-    }
-
-    @Nonnull
-    public String getWorksheetColumnsExpression() {
-        return worksheetColumnsExpression;
-    }
-
-    public void setWorksheetColumnsExpression(@Nonnull String worksheetColumnsExpression) {
-        this.worksheetColumnsExpression = worksheetColumnsExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getWorksheetNewNameNS() {
-        return worksheetNewNameNS;
-    }
-
-    public void setWorksheetNewNameNS(@Nonnull List<NameSpace> worksheetNewNameNS) {
-        this.worksheetNewNameNS = worksheetNewNameNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getWorksheetRowsNS() {
-        return worksheetRowsNS;
-    }
-
-    public void setWorksheetRowsNS(@Nonnull List<NameSpace> worksheetRowsNS) {
-        this.worksheetRowsNS = worksheetRowsNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getWorksheetColumnsNS() {
-        return worksheetColumnsNS;
-    }
-
-    public void setWorksheetColumnsNS(@Nonnull List<NameSpace> worksheetColumnsNS) {
-        this.worksheetColumnsNS = worksheetColumnsNS;
     }
 
 }

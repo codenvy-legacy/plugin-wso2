@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes GetWorksheetsByTitle connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -46,19 +45,17 @@ public class GetWorksheetsByTitle extends AbstractConnector {
     public static final String ELEMENT_NAME       = "GetWorksheetsByTitle";
     public static final String SERIALIZATION_NAME = "googlespreadsheet.getWorksheetsByTitle";
 
+    public static final Key<String>          SPREADSHEET_NAME_KEY            = new Key<>("SpreadsheetName");
+    public static final Key<String>          TITLE_KEY                       = new Key<>("WorksheetName");
+    public static final Key<String>          SPREADSHEET_NAME_EXPRESSION_KEY = new Key<>("SpreadsheetNameExpression");
+    public static final Key<String>          TITLE_EXPRESSION_KEY            = new Key<>("WorksheetNameExpression");
+    public static final Key<List<NameSpace>> SPREADSHEET_NAME_NS_KEY         = new Key<>("SpreadsheetNameNS");
+    public static final Key<List<NameSpace>> TITLE_NS_KEY                    = new Key<>("WorksheetNameNS");
+
     private static final String SPREADSHEET_NAME = "spreadsheetName";
     private static final String TITLE            = "title";
 
     private static final List<String> PROPERTIES = Arrays.asList(SPREADSHEET_NAME, TITLE);
-
-    private String spreadsheetName;
-    private String title;
-
-    private String spreadsheetNameExpression;
-    private String titleExpression;
-
-    private List<NameSpace> spreadsheetNameNS;
-    private List<NameSpace> titleNS;
 
     @Inject
     public GetWorksheetsByTitle(EditorResources resources,
@@ -74,14 +71,14 @@ public class GetWorksheetsByTitle extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        spreadsheetName = "";
-        title = "";
+        putProperty(SPREADSHEET_NAME_KEY, "");
+        putProperty(TITLE_KEY, "");
 
-        spreadsheetNameExpression = "";
-        titleExpression = "";
+        putProperty(SPREADSHEET_NAME_EXPRESSION_KEY, "");
+        putProperty(TITLE_EXPRESSION_KEY, "");
 
-        spreadsheetNameNS = new ArrayList<>();
-        titleNS = new ArrayList<>();
+        putProperty(SPREADSHEET_NAME_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(TITLE_NS_KEY, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -90,10 +87,10 @@ public class GetWorksheetsByTitle extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(SPREADSHEET_NAME, isInline ? spreadsheetName : spreadsheetNameExpression);
-        properties.put(TITLE, isInline ? title : titleExpression);
+        properties.put(SPREADSHEET_NAME, isInline ? getProperty(SPREADSHEET_NAME_KEY) : getProperty(SPREADSHEET_NAME_EXPRESSION_KEY));
+        properties.put(TITLE, isInline ? getProperty(TITLE_KEY) : getProperty(TITLE_EXPRESSION_KEY));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -103,83 +100,14 @@ public class GetWorksheetsByTitle extends AbstractConnector {
     protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
-        switch (nodeName) {
-            case SPREADSHEET_NAME:
-                if (isInline) {
-                    spreadsheetName = nodeValue;
-                } else {
-                    spreadsheetNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
-
-            case TITLE:
-                if (isInline) {
-                    title = nodeValue;
-                } else {
-                    titleExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+        if (SPREADSHEET_NAME.equals(nodeName)) {
+            adaptProperty(nodeValue, SPREADSHEET_NAME_KEY, SPREADSHEET_NAME_EXPRESSION_KEY);
         }
-    }
 
-    @Nonnull
-    public String getSpreadsheetName() {
-        return spreadsheetName;
-    }
-
-    public void setSpreadsheetName(@Nonnull String spreadsheetName) {
-        this.spreadsheetName = spreadsheetName;
-    }
-
-    @Nonnull
-    public String getSpreadsheetNameExpression() {
-        return spreadsheetNameExpression;
-    }
-
-    public void setSpreadsheetNameExpression(@Nonnull String spreadsheetNameExpression) {
-        this.spreadsheetNameExpression = spreadsheetNameExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getSpreadsheetNameNS() {
-        return spreadsheetNameNS;
-    }
-
-    public void setSpreadsheetNameNS(@Nonnull List<NameSpace> spreadsheetNameNS) {
-        this.spreadsheetNameNS = spreadsheetNameNS;
-    }
-
-    @Nonnull
-    public String getWorksheetTitle() {
-        return title;
-    }
-
-    public void setWorksheetsTitle(@Nonnull String title) {
-        this.title = title;
-    }
-
-    @Nonnull
-    public String getTitleExpression() {
-        return titleExpression;
-    }
-
-    public void setTitleExpression(@Nonnull String titleExpression) {
-        this.titleExpression = titleExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getTitleNS() {
-        return titleNS;
-    }
-
-    public void setTitleNS(@Nonnull List<NameSpace> titleNS) {
-        this.titleNS = titleNS;
+        if (TITLE.equals(nodeName)) {
+            adaptProperty(nodeValue, TITLE_KEY, TITLE_EXPRESSION_KEY);
+        }
     }
 
 }

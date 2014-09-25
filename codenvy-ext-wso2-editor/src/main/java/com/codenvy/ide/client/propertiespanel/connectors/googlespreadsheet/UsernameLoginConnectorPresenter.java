@@ -16,24 +16,32 @@
 package com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GoogleSpreadsheetPropertyManager;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.UsernameLogin;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
-import java.util.List;
-
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.UsernameLogin.PASSWORD_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.UsernameLogin.PASSWORD_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.UsernameLogin.PASSWORD_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.UsernameLogin.USERNAME_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.UsernameLogin.USERNAME_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.UsernameLogin.USERNAME_NS_KEY;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -43,116 +51,61 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * @author Dmitry Shnurenko
  */
 public class UsernameLoginConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<UsernameLogin> {
-
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          usernameCallBack;
-    private final AddNameSpacesCallBack          passwordCallBack;
+    private ComplexPropertyPresenter usernameNS;
+    private ComplexPropertyPresenter passwordNS;
+    private SimplePropertyPresenter  username;
+    private SimplePropertyPresenter  password;
 
     @Inject
     public UsernameLoginConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                            NameSpaceEditorPresenter nameSpacePresenter,
-                                           GeneralPropertiesPanelView view,
+                                           PropertiesPanelView view,
                                            GoogleSpreadsheetPropertyManager googleSpreadsheetPropertyManager,
                                            ParameterPresenter parameterPresenter,
-                                           PropertyTypeManager propertyTypeManager) {
-        super(view, googleSpreadsheetPropertyManager, parameterPresenter, propertyTypeManager);
+                                           PropertyTypeManager propertyTypeManager,
+                                           PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                           Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                           Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                           Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              googleSpreadsheetPropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.usernameCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setUsernameNS(nameSpaces);
-                element.setUsernameExpression(expression);
-
-                UsernameLoginConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.passwordCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setPasswordNS(nameSpaces);
-                element.setPasswordExpression(expression);
-
-                UsernameLoginConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
+    private void prepareView() {
+        usernameNS = createComplexPanel(locale.spreadsheetUsernameLoginUsername(),
+                                        USERNAME_NS_KEY,
+                                        USERNAME_EXPRESSION_KEY);
 
-        notifyListeners();
-    }
+        passwordNS = createComplexPanel(locale.spreadsheetUsernameLoginPassword(),
+                                        PASSWORD_NS_KEY,
+                                        PASSWORD_EXPRESSION_KEY);
 
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setUsername(view.getFirstTextBoxValue());
+        username = createSimplePanel(locale.spreadsheetUsernameLoginUsername(), USERNAME_KEY);
 
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setPassword(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getUsernameNS(),
-                                                    usernameCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getUsernameExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getPasswordNS(),
-                                                    passwordCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getPasswordExpression());
+        password = createSimplePanel(locale.spreadsheetUsernameLoginPassword(), PASSWORD_KEY);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        ParameterEditorType property = element.getProperty(PARAMETER_EDITOR_TYPE);
+        boolean isNameSpaced = NAME_SPACED_PROPERTY_EDITOR.equals(property);
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+        username.setVisible(!isNameSpaced);
+        password.setVisible(!isNameSpaced);
 
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getUsernameExpression() : element.getUsername());
-        view.setSecondTextBoxValue(isEquals ? element.getPasswordExpression() : element.getPassword());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-
-        view.setFirstLabelTitle(locale.spreadsheetUsernameLoginUsername());
-        view.setSecondLabelTitle(locale.spreadsheetUsernameLoginPassword());
+        usernameNS.setVisible(isNameSpaced);
+        passwordNS.setVisible(isNameSpaced);
     }
 
     /** {@inheritDoc} */
@@ -160,6 +113,10 @@ public class UsernameLoginConnectorPresenter extends AbstractConnectorProperties
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        username.setProperty(element.getProperty(USERNAME_KEY));
+        password.setProperty(element.getProperty(PASSWORD_KEY));
+
+        usernameNS.setProperty(element.getProperty(USERNAME_EXPRESSION_KEY));
+        passwordNS.setProperty(element.getProperty(PASSWORD_EXPRESSION_KEY));
     }
 }

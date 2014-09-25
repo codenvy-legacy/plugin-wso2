@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes GetCellRangeCSV connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -45,6 +44,27 @@ public class GetCellRangeCSV extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "GetCellRangeCSV";
     public static final String SERIALIZATION_NAME = "googlespreadsheet.getCellRangeCSV";
+
+    public static final Key<String> SPREADSHEET_NAME_KEY = new Key<>("SpreadsheetName");
+    public static final Key<String> WORKSHEET_NAME_KEY   = new Key<>("WorksheetName");
+    public static final Key<String> MIN_ROW_KEY          = new Key<>("MinRow");
+    public static final Key<String> MAX_ROW_KEY          = new Key<>("MaxRow");
+    public static final Key<String> MIN_COLUMN_KEY       = new Key<>("MinColumn");
+    public static final Key<String> MAX_COLUMN_KEY       = new Key<>("MaxColumn");
+
+    public static final Key<String> SPREADSHEET_NAME_EXPRESSION_KEY = new Key<>("SpreadsheetNameExpression");
+    public static final Key<String> WORKSHEET_NAME_EXPRESSION_KEY   = new Key<>("WorksheetNameExpression");
+    public static final Key<String> MIN_ROW_EXPRESSION_KEY          = new Key<>("MinRowExpression");
+    public static final Key<String> MAX_ROW_EXPRESSION_KEY          = new Key<>("MaxRowExpression");
+    public static final Key<String> MIN_COLUMN_EXPRESSION_KEY       = new Key<>("MinColumnExpression");
+    public static final Key<String> MAX_COLUMN_EXPRESSION_KEY       = new Key<>("MaxColumnExpression");
+
+    public static final Key<List<NameSpace>> SPREADSHEET_NAME_NS_KEY = new Key<>("SpreadsheetNameNS");
+    public static final Key<List<NameSpace>> WORKSHEET_NAME_NS_KEY   = new Key<>("WorksheetNameNS");
+    public static final Key<List<NameSpace>> MIN_ROW_NS_KEY          = new Key<>("MinRowNS");
+    public static final Key<List<NameSpace>> MAX_ROW_NS_KEY          = new Key<>("MaxRowNS");
+    public static final Key<List<NameSpace>> MIN_COLUMN_NS_KEY       = new Key<>("MinColumnNS");
+    public static final Key<List<NameSpace>> MAX_COLUMN_NS_KEY       = new Key<>("MaxColumnNS");
 
     private static final String SPREADSHEET_NAME = "spreadsheetName";
     private static final String WORKSHEET_NAME   = "worksheetName";
@@ -60,27 +80,6 @@ public class GetCellRangeCSV extends AbstractConnector {
                                                                  MIN_COLUMN,
                                                                  MAX_COLUMN);
 
-    private String spreadsheetName;
-    private String worksheetName;
-    private String minRow;
-    private String maxRow;
-    private String minColumn;
-    private String maxColumn;
-
-    private String spreadsheetNameExpression;
-    private String worksheetNameExpression;
-    private String minRowExpression;
-    private String maxRowExpression;
-    private String minColumnExpression;
-    private String maxColumnExpression;
-
-    private List<NameSpace> spreadsheetNameNS;
-    private List<NameSpace> worksheetNameNS;
-    private List<NameSpace> minRowNS;
-    private List<NameSpace> maxRowNS;
-    private List<NameSpace> minColumnNS;
-    private List<NameSpace> maxColumnNS;
-
     @Inject
     public GetCellRangeCSV(EditorResources resources,
                            Provider<Branch> branchProvider,
@@ -95,26 +94,26 @@ public class GetCellRangeCSV extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        spreadsheetName = "";
-        worksheetName = "";
-        minRow = "";
-        maxRow = "";
-        minColumn = "";
-        maxColumn = "";
+        putProperty(SPREADSHEET_NAME_KEY, "");
+        putProperty(WORKSHEET_NAME_KEY, "");
+        putProperty(MIN_ROW_KEY, "");
+        putProperty(MAX_ROW_KEY, "");
+        putProperty(MIN_COLUMN_KEY, "");
+        putProperty(MAX_COLUMN_KEY, "");
 
-        spreadsheetNameExpression = "";
-        worksheetNameExpression = "";
-        minRowExpression = "";
-        maxRowExpression = "";
-        minColumnExpression = "";
-        maxColumnExpression = "";
+        putProperty(SPREADSHEET_NAME_EXPRESSION_KEY, "");
+        putProperty(WORKSHEET_NAME_EXPRESSION_KEY, "");
+        putProperty(MIN_COLUMN_EXPRESSION_KEY, "");
+        putProperty(MAX_COLUMN_EXPRESSION_KEY, "");
+        putProperty(MIN_ROW_EXPRESSION_KEY, "");
+        putProperty(MAX_ROW_EXPRESSION_KEY, "");
 
-        spreadsheetNameNS = new ArrayList<>();
-        worksheetNameNS = new ArrayList<>();
-        minRowNS = new ArrayList<>();
-        maxRowNS = new ArrayList<>();
-        minColumnNS = new ArrayList<>();
-        maxColumnNS = new ArrayList<>();
+        putProperty(SPREADSHEET_NAME_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(WORKSHEET_NAME_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(MIN_ROW_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(MAX_ROW_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(MIN_COLUMN_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(MAX_COLUMN_NS_KEY, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -123,14 +122,14 @@ public class GetCellRangeCSV extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(SPREADSHEET_NAME, isInline ? spreadsheetName : spreadsheetNameExpression);
-        properties.put(WORKSHEET_NAME, isInline ? worksheetName : worksheetNameExpression);
-        properties.put(MIN_ROW, isInline ? minRow : minRowExpression);
-        properties.put(MAX_ROW, isInline ? maxRow : maxRowExpression);
-        properties.put(MIN_COLUMN, isInline ? minColumn : minColumnExpression);
-        properties.put(MAX_COLUMN, isInline ? maxColumn : maxColumnExpression);
+        properties.put(SPREADSHEET_NAME, isInline ? getProperty(SPREADSHEET_NAME_KEY) : getProperty(SPREADSHEET_NAME_EXPRESSION_KEY));
+        properties.put(WORKSHEET_NAME, isInline ? getProperty(WORKSHEET_NAME_KEY) : getProperty(WORKSHEET_NAME_EXPRESSION_KEY));
+        properties.put(MIN_ROW, isInline ? getProperty(MIN_ROW_KEY) : getProperty(MIN_ROW_EXPRESSION_KEY));
+        properties.put(MAX_ROW, isInline ? getProperty(MAX_ROW_KEY) : getProperty(MAX_ROW_EXPRESSION_KEY));
+        properties.put(MIN_COLUMN, isInline ? getProperty(MIN_COLUMN_KEY) : getProperty(MIN_COLUMN_EXPRESSION_KEY));
+        properties.put(MAX_COLUMN, isInline ? getProperty(MAX_COLUMN_KEY) : getProperty(MAX_COLUMN_EXPRESSION_KEY));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -140,231 +139,34 @@ public class GetCellRangeCSV extends AbstractConnector {
     protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
         switch (nodeName) {
             case SPREADSHEET_NAME:
-                if (isInline) {
-                    spreadsheetName = nodeValue;
-                } else {
-                    spreadsheetNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, SPREADSHEET_NAME_KEY, SPREADSHEET_NAME_EXPRESSION_KEY);
                 break;
 
             case WORKSHEET_NAME:
-                if (isInline) {
-                    worksheetName = nodeValue;
-                } else {
-                    worksheetNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, WORKSHEET_NAME_KEY, WORKSHEET_NAME_EXPRESSION_KEY);
                 break;
 
             case MIN_ROW:
-                if (isInline) {
-                    minRow = nodeValue;
-                } else {
-                    minRowExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, MIN_ROW_KEY, MIN_ROW_EXPRESSION_KEY);
                 break;
 
             case MAX_ROW:
-                if (isInline) {
-                    maxRow = nodeValue;
-                } else {
-                    maxRowExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, MAX_ROW_KEY, MAX_ROW_EXPRESSION_KEY);
                 break;
 
             case MIN_COLUMN:
-                if (isInline) {
-                    minColumn = nodeValue;
-                } else {
-                    minColumnExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, MIN_COLUMN_KEY, MIN_COLUMN_EXPRESSION_KEY);
                 break;
 
             case MAX_COLUMN:
-                if (isInline) {
-                    maxColumn = nodeValue;
-                } else {
-                    maxColumnExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, MAX_COLUMN_KEY, MAX_COLUMN_EXPRESSION_KEY);
                 break;
+
+            default:
         }
-    }
-
-    @Nonnull
-    public String getSpreadsheetName() {
-        return spreadsheetName;
-    }
-
-    public void setSpreadsheetName(@Nonnull String spreadsheetName) {
-        this.spreadsheetName = spreadsheetName;
-    }
-
-    @Nonnull
-    public String getSpreadsheetNameExpression() {
-        return spreadsheetNameExpression;
-    }
-
-    public void setSpreadsheetNameExpression(@Nonnull String spreadsheetNameExpression) {
-        this.spreadsheetNameExpression = spreadsheetNameExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getSpreadsheetNameNS() {
-        return spreadsheetNameNS;
-    }
-
-    public void setSpreadsheetNameNS(@Nonnull List<NameSpace> spreadsheetNameNS) {
-        this.spreadsheetNameNS = spreadsheetNameNS;
-    }
-
-    @Nonnull
-    public String getWorksheetName() {
-        return worksheetName;
-    }
-
-    public void setWorksheetName(@Nonnull String worksheetName) {
-        this.worksheetName = worksheetName;
-    }
-
-    @Nonnull
-    public String getWorksheetNameExpression() {
-        return worksheetNameExpression;
-    }
-
-    public void setWorksheetNameExpression(@Nonnull String worksheetNameExpression) {
-        this.worksheetNameExpression = worksheetNameExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getWorksheetCountNS() {
-        return worksheetNameNS;
-    }
-
-    public void setWorksheetNameNS(@Nonnull List<NameSpace> worksheetNameNS) {
-        this.worksheetNameNS = worksheetNameNS;
-    }
-
-    @Nonnull
-    public String getMinRow() {
-        return minRow;
-    }
-
-    public void setMinRow(@Nonnull String minRow) {
-        this.minRow = minRow;
-    }
-
-    @Nonnull
-    public String getMaxRow() {
-        return maxRow;
-    }
-
-    public void setMaxRow(@Nonnull String maxRow) {
-        this.maxRow = maxRow;
-    }
-
-    @Nonnull
-    public String getMinColumn() {
-        return minColumn;
-    }
-
-    public void setMinColumn(@Nonnull String minColumn) {
-        this.minColumn = minColumn;
-    }
-
-    @Nonnull
-    public String getMaxColumn() {
-        return maxColumn;
-    }
-
-    public void setMaxColumn(@Nonnull String maxColumn) {
-        this.maxColumn = maxColumn;
-    }
-
-    @Nonnull
-    public String getMinRowExpression() {
-        return minRowExpression;
-    }
-
-    public void setMinRowExpression(@Nonnull String minRowExpression) {
-        this.minRowExpression = minRowExpression;
-    }
-
-    @Nonnull
-    public String getMaxRowExpression() {
-        return maxRowExpression;
-    }
-
-    public void setMaxRowExpression(@Nonnull String maxRowExpression) {
-        this.maxRowExpression = maxRowExpression;
-    }
-
-    @Nonnull
-    public String getMinColumnExpression() {
-        return minColumnExpression;
-    }
-
-    public void setMinColumnExpression(@Nonnull String minColumnExpression) {
-        this.minColumnExpression = minColumnExpression;
-    }
-
-    @Nonnull
-    public String getMaxColumnExpression() {
-        return maxColumnExpression;
-    }
-
-    public void setMaxColumnExpression(@Nonnull String maxColumnExpression) {
-        this.maxColumnExpression = maxColumnExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getMinRowNS() {
-        return minRowNS;
-    }
-
-    public void setMinRowNS(@Nonnull List<NameSpace> minRowNS) {
-        this.minRowNS = minRowNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getMaxRowNS() {
-        return maxRowNS;
-    }
-
-    public void setMaxRowNS(@Nonnull List<NameSpace> maxRowNS) {
-        this.maxRowNS = maxRowNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getMinColumnNS() {
-        return minColumnNS;
-    }
-
-    public void setMinColumnNS(@Nonnull List<NameSpace> minColumnNS) {
-        this.minColumnNS = minColumnNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getMaxColumnNS() {
-        return maxColumnNS;
-    }
-
-    public void setMaxColumnNS(@Nonnull List<NameSpace> maxColumnNS) {
-        this.maxColumnNS = maxColumnNS;
     }
 
 }

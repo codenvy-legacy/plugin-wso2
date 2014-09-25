@@ -16,23 +16,38 @@
 package com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GoogleSpreadsheetPropertyManager;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.SetRow;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.SetRow.ROW_DATA_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.SetRow.ROW_DATA_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.SetRow.ROW_DATA_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.SetRow.ROW_ID_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.SetRow.ROW_ID_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.SetRow.ROW_ID_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.SetRow.SPREADSHEET_NAME_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.SetRow.SPREADSHEET_NAME_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.SetRow.SPREADSHEET_NAME_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.SetRow.WORKSHEET_NAME_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.SetRow.WORKSHEET_NAME_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.SetRow.WORKSHEET_NAME_NS_KEY;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -41,186 +56,75 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * @author Valeriy Svydenko
  */
 public class SetRowConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<SetRow> {
-
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          spreadsheetNameCallBack;
-    private final AddNameSpacesCallBack          worksheetNameCallBack;
-    private final AddNameSpacesCallBack          rowIdCallBack;
-    private final AddNameSpacesCallBack          rowDataCallBack;
+    private ComplexPropertyPresenter spreadsheetNameNS;
+    private ComplexPropertyPresenter worksheetNameNS;
+    private ComplexPropertyPresenter rowDataNS;
+    private ComplexPropertyPresenter rowIdNS;
+    private SimplePropertyPresenter  spreadsheetName;
+    private SimplePropertyPresenter  worksheetName;
+    private SimplePropertyPresenter  rowId;
+    private SimplePropertyPresenter  rowData;
 
     @Inject
     public SetRowConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                     NameSpaceEditorPresenter nameSpacePresenter,
-                                    GeneralPropertiesPanelView view,
+                                    PropertiesPanelView view,
                                     GoogleSpreadsheetPropertyManager googleSpreadsheetPropertyManager,
                                     ParameterPresenter parameterPresenter,
-                                    PropertyTypeManager propertyTypeManager) {
-        super(view, googleSpreadsheetPropertyManager, parameterPresenter, propertyTypeManager);
+                                    PropertyTypeManager propertyTypeManager,
+                                    PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                    Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                    Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                    Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              googleSpreadsheetPropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.spreadsheetNameCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setSpreadsheetNameNS(nameSpaces);
-                element.setSpreadsheetNameExpression(expression);
-
-                SetRowConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.worksheetNameCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setWorksheetNameNS(nameSpaces);
-                element.setWorksheetNameExpression(expression);
-
-                SetRowConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.rowIdCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setRowIdNS(nameSpaces);
-                element.setRowIdExpression(expression);
-
-                SetRowConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.rowDataCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setRowDataNS(nameSpaces);
-                element.setRowDataExpression(expression);
-
-                SetRowConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
+    private void prepareView() {
+        spreadsheetNameNS = createComplexPanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(),
+                                               SPREADSHEET_NAME_NS_KEY,
+                                               SPREADSHEET_NAME_EXPRESSION_KEY);
+        worksheetNameNS = createComplexPanel(locale.spreadsheetCreateWorksheetWorksheetName(),
+                                             WORKSHEET_NAME_NS_KEY,
+                                             WORKSHEET_NAME_EXPRESSION_KEY);
+        rowIdNS = createComplexPanel(locale.spreadsheetSetRowRowId(),
+                                     ROW_ID_NS_KEY,
+                                     ROW_ID_EXPRESSION_KEY);
+        rowDataNS = createComplexPanel(locale.spreadsheetSetRowRowData(),
+                                       ROW_DATA_NS_KEY,
+                                       ROW_DATA_EXPRESSION_KEY);
 
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setSpreadsheetName(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setWorksheetName(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdTextBoxValueChanged() {
-        element.setRowId(view.getThirdTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthTextBoxValueChanged() {
-        element.setRowData(view.getFourthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getSpreadsheetNameNS(),
-                                                    spreadsheetNameCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getSpreadsheetNameExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getWorksheetNameNS(),
-                                                    worksheetNameCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getWorksheetNameExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getRowIdNS(),
-                                                    rowIdCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getRowIdExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getRowDataNS(),
-                                                    rowDataCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getRowDataExpression());
+        spreadsheetName = createSimplePanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(), SPREADSHEET_NAME_KEY);
+        worksheetName = createSimplePanel(locale.spreadsheetCreateWorksheetWorksheetName(), WORKSHEET_NAME_KEY);
+        rowId = createSimplePanel(locale.spreadsheetSetRowRowId(), ROW_ID_KEY);
+        rowData = createSimplePanel(locale.spreadsheetSetRowRowData(), ROW_DATA_KEY);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        ParameterEditorType property = element.getProperty(PARAMETER_EDITOR_TYPE);
+        boolean isNameSpaced = NAME_SPACED_PROPERTY_EDITOR.equals(property);
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+        spreadsheetName.setVisible(!isNameSpaced);
+        worksheetName.setVisible(!isNameSpaced);
+        rowId.setVisible(!isNameSpaced);
+        rowData.setVisible(!isNameSpaced);
 
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-        view.setVisibleFourthButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-        view.setEnableFourthTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getSpreadsheetNameExpression() : element.getSpreadsheetName());
-        view.setSecondTextBoxValue(isEquals ? element.getWorksheetNameExpression() : element.getWorksheetName());
-        view.setThirdTextBoxValue(isEquals ? element.getRowIdExpression() : element.getRowId());
-        view.setFourthTextBoxValue(isEquals ? element.getRowDataExpression() : element.getRowData());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-        view.setVisibleThirdPanel(true);
-        view.setVisibleFourthPanel(true);
-
-        view.setFirstLabelTitle(locale.spreadsheetCreateSpreadsheetSpreadsheetName());
-        view.setSecondLabelTitle(locale.spreadsheetCreateWorksheetWorksheetName());
-        view.setThirdLabelTitle(locale.spreadsheetSetRowRowId());
-        view.setFourthLabelTitle(locale.spreadsheetSetRowRowData());
+        spreadsheetNameNS.setVisible(isNameSpaced);
+        worksheetNameNS.setVisible(isNameSpaced);
+        rowIdNS.setVisible(isNameSpaced);
+        rowDataNS.setVisible(isNameSpaced);
     }
 
     /** {@inheritDoc} */
@@ -228,6 +132,14 @@ public class SetRowConnectorPresenter extends AbstractConnectorPropertiesPanelPr
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        spreadsheetName.setProperty(element.getProperty(SPREADSHEET_NAME_KEY));
+        worksheetName.setProperty(element.getProperty(WORKSHEET_NAME_KEY));
+        rowId.setProperty(element.getProperty(ROW_ID_KEY));
+        rowData.setProperty(element.getProperty(ROW_DATA_KEY));
+
+        spreadsheetNameNS.setProperty(element.getProperty(SPREADSHEET_NAME_EXPRESSION_KEY));
+        worksheetNameNS.setProperty(element.getProperty(WORKSHEET_NAME_EXPRESSION_KEY));
+        rowIdNS.setProperty(element.getProperty(ROW_ID_EXPRESSION_KEY));
+        rowDataNS.setProperty(element.getProperty(ROW_DATA_EXPRESSION_KEY));
     }
 }

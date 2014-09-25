@@ -16,24 +16,38 @@
 package com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GoogleSpreadsheetPropertyManager;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.InitSpreadsheet;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
-import java.util.List;
-
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.InitSpreadsheet.OAUTH_ACCESS_TOKEN_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.InitSpreadsheet.OAUTH_ACCESS_TOKEN_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.InitSpreadsheet.OAUTH_ACCESS_TOKEN_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.InitSpreadsheet.OAUTH_ACCESS_TOKEN_SECRET_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.InitSpreadsheet.OAUTH_ACCESS_TOKEN_SECRET_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.InitSpreadsheet.OAUTH_ACCESS_TOKEN_SECRET_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.InitSpreadsheet.OAUTH_CONSUMER_KEY_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.InitSpreadsheet.OAUTH_CONSUMER_KEY_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.InitSpreadsheet.OAUTH_CONSUMER_KEY_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.InitSpreadsheet.OAUTH_CONSUMER_SECRET_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.InitSpreadsheet.OAUTH_CONSUMER_SECRET_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.InitSpreadsheet.OAUTH_CONSUMER_SECRET_NS_KEY;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -43,187 +57,77 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * @author Dmitry Shnurenko
  */
 public class InitSpreadsheetConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<InitSpreadsheet> {
+    private ComplexPropertyPresenter oauthConsumerKeyNS;
+    private ComplexPropertyPresenter oauthConsumerSecretNS;
+    private ComplexPropertyPresenter oauthAccessTokenNS;
+    private ComplexPropertyPresenter oauthAccessTokenSecretNS;
 
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          oauthConsumerKeyCallBack;
-    private final AddNameSpacesCallBack          oauthConsumerSecretCallBack;
-    private final AddNameSpacesCallBack          oauthAccessTokenCallBack;
-    private final AddNameSpacesCallBack          oauthAccessTokenSecretCallBack;
+    private SimplePropertyPresenter oauthConsumerKey;
+    private SimplePropertyPresenter oauthConsumerSecret;
+    private SimplePropertyPresenter oauthAccessToken;
+    private SimplePropertyPresenter oauthAccessTokenSecret;
 
     @Inject
     public InitSpreadsheetConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                              NameSpaceEditorPresenter nameSpacePresenter,
-                                             GeneralPropertiesPanelView view,
+                                             PropertiesPanelView view,
                                              GoogleSpreadsheetPropertyManager googleSpreadsheetPropertyManager,
                                              ParameterPresenter parameterPresenter,
-                                             PropertyTypeManager propertyTypeManager) {
-        super(view, googleSpreadsheetPropertyManager, parameterPresenter, propertyTypeManager);
+                                             PropertyTypeManager propertyTypeManager,
+                                             PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                             Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                             Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                             Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              googleSpreadsheetPropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.oauthConsumerKeyCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setOauthConsumerKeyNS(nameSpaces);
-                element.setOauthConsumerKeyExpression(expression);
-
-                InitSpreadsheetConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.oauthConsumerSecretCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setOauthConsumerSecretNS(nameSpaces);
-                element.setOauthConsumerSecretExpression(expression);
-
-                InitSpreadsheetConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.oauthAccessTokenCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setOauthAccessTokenNS(nameSpaces);
-                element.setOauthAccessTokenExpression(expression);
-
-                InitSpreadsheetConnectorPresenter.this.view.setThirdTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.oauthAccessTokenSecretCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setOauthAccessTokenSecretNS(nameSpaces);
-                element.setOauthAccessTokenSecretExpression(expression);
-
-                InitSpreadsheetConnectorPresenter.this.view.setFourthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
+    private void prepareView() {
+        oauthConsumerKeyNS = createComplexPanel(locale.spreadsheetInitOauthConsumerKey(),
+                                                OAUTH_CONSUMER_KEY_NS_KEY,
+                                                OAUTH_CONSUMER_KEY_EXPRESSION_KEY);
 
-        notifyListeners();
-    }
+        oauthConsumerSecretNS = createComplexPanel(locale.spreadsheetInitOauthConsumerSecret(),
+                                                   OAUTH_CONSUMER_SECRET_NS_KEY,
+                                                   OAUTH_CONSUMER_SECRET_EXPRESSION_KEY);
+        oauthAccessTokenNS = createComplexPanel(locale.spreadsheetInitOauthAccessToken(),
+                                                OAUTH_ACCESS_TOKEN_NS_KEY,
+                                                OAUTH_ACCESS_TOKEN_EXPRESSION_KEY);
+        oauthAccessTokenSecretNS = createComplexPanel(locale.spreadsheetInitOauthAccessTokenSecret(),
+                                                      OAUTH_ACCESS_TOKEN_SECRET_NS_KEY,
+                                                      OAUTH_ACCESS_TOKEN_SECRET_EXPRESSION_KEY);
 
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setOauthConsumerKey(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setOauthConsumerSecret(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdTextBoxValueChanged() {
-        element.setOauthAccessToken(view.getThirdTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthTextBoxValueChanged() {
-        element.setOauthAccessTokenSecret(view.getFourthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getOauthConsumerKeyNS(),
-                                                    oauthConsumerKeyCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getOauthConsumerKeyExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getOauthConsumerSecretNS(),
-                                                    oauthConsumerSecretCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getOauthConsumerSecretExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getOauthAccessTokenNS(),
-                                                    oauthAccessTokenCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getOauthAccessTokenExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getOauthAccessTokenSecretNS(),
-                                                    oauthAccessTokenSecretCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getOauthAccessTokenSecretExpression());
+        oauthConsumerKey = createSimplePanel(locale.spreadsheetInitOauthConsumerKey(), OAUTH_CONSUMER_KEY_KEY);
+        oauthConsumerSecret = createSimplePanel(locale.spreadsheetInitOauthConsumerSecret(), OAUTH_CONSUMER_SECRET_KEY);
+        oauthAccessToken = createSimplePanel(locale.spreadsheetImportCSVFilePath(), OAUTH_ACCESS_TOKEN_KEY);
+        oauthAccessTokenSecret = createSimplePanel(locale.spreadsheetInitOauthAccessTokenSecret(), OAUTH_ACCESS_TOKEN_SECRET_KEY);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        ParameterEditorType property = element.getProperty(PARAMETER_EDITOR_TYPE);
+        boolean isNameSpaced = NAME_SPACED_PROPERTY_EDITOR.equals(property);
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+        oauthConsumerKey.setVisible(!isNameSpaced);
+        oauthConsumerSecret.setVisible(!isNameSpaced);
+        oauthAccessToken.setVisible(!isNameSpaced);
+        oauthAccessTokenSecret.setVisible(!isNameSpaced);
 
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-        view.setVisibleFourthButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-        view.setEnableFourthTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getOauthConsumerKeyExpression() : element.getOauthConsumerKey());
-        view.setSecondTextBoxValue(isEquals ? element.getOauthConsumerSecretExpression() : element.getOauthConsumerSecret());
-        view.setThirdTextBoxValue(isEquals ? element.getOauthAccessTokenExpression() : element.getOauthAccessToken());
-        view.setFourthTextBoxValue(isEquals ? element.getOauthAccessTokenSecretExpression() : element.getOauthAccessTokenSecret());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-        view.setVisibleThirdPanel(true);
-        view.setVisibleFourthPanel(true);
-
-        view.setFirstLabelTitle(locale.spreadsheetInitOauthConsumerKey());
-        view.setSecondLabelTitle(locale.spreadsheetInitOauthConsumerSecret());
-        view.setThirdLabelTitle(locale.spreadsheetInitOauthAccessToken());
-        view.setFourthLabelTitle(locale.spreadsheetInitOauthAccessTokenSecret());
+        oauthConsumerKeyNS.setVisible(isNameSpaced);
+        oauthConsumerSecretNS.setVisible(isNameSpaced);
+        oauthAccessTokenNS.setVisible(isNameSpaced);
+        oauthAccessTokenSecretNS.setVisible(isNameSpaced);
     }
 
     /** {@inheritDoc} */
@@ -231,6 +135,15 @@ public class InitSpreadsheetConnectorPresenter extends AbstractConnectorProperti
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        oauthConsumerKey.setProperty(element.getProperty(OAUTH_CONSUMER_KEY_KEY));
+        oauthConsumerSecret.setProperty(element.getProperty(OAUTH_CONSUMER_SECRET_KEY));
+        oauthAccessToken.setProperty(element.getProperty(OAUTH_ACCESS_TOKEN_KEY));
+        oauthAccessTokenSecret.setProperty(element.getProperty(OAUTH_ACCESS_TOKEN_SECRET_KEY));
+
+        oauthConsumerKeyNS.setProperty(element.getProperty(OAUTH_CONSUMER_KEY_EXPRESSION_KEY));
+        oauthConsumerSecretNS.setProperty(element.getProperty(OAUTH_CONSUMER_SECRET_EXPRESSION_KEY));
+        oauthAccessTokenNS.setProperty(element.getProperty(OAUTH_ACCESS_TOKEN_EXPRESSION_KEY));
+        oauthAccessTokenSecretNS.setProperty(element.getProperty(OAUTH_ACCESS_TOKEN_SECRET_EXPRESSION_KEY));
     }
+
 }

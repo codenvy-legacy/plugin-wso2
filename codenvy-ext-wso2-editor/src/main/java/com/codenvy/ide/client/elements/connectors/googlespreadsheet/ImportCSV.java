@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes ImportCSV connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -46,31 +45,29 @@ public class ImportCSV extends AbstractConnector {
     public static final String ELEMENT_NAME       = "ImportCSV";
     public static final String SERIALIZATION_NAME = "googlespreadsheet.importCSV";
 
+    public static final Key<String>          SPREADSHEET_NAME_KEY            = new Key<>("SpreadsheetName");
+    public static final Key<String>          WORKSHEET_NAME_KEY              = new Key<>("WorksheetName");
+    public static final Key<String>          FILE_PATH_KEY                   = new Key<>("FilePath");
+    public static final Key<String>          BATCH_ENABLE_KEY                = new Key<>("BatchEnable");
+    public static final Key<String>          BATCH_SIZE_KEY                  = new Key<>("BatchSize");
+    public static final Key<String>          SPREADSHEET_NAME_EXPRESSION_KEY = new Key<>("SpreadsheetNameExpression");
+    public static final Key<String>          WORKSHEET_NAME_EXPRESSION_KEY   = new Key<>("WorksheetNameExpression");
+    public static final Key<String>          FILE_PATH_EXPRESSION_KEY        = new Key<>("FilePathExpression");
+    public static final Key<String>          BATCH_ENABLE_EXPRESSION_KEY     = new Key<>("BatchEnableExpression");
+    public static final Key<String>          BATCH_SIZE_EXPRESSION_KEY       = new Key<>("BatchSizeExpression");
+    public static final Key<List<NameSpace>> SPREADSHEET_NAME_NS_KEY         = new Key<>("SpreadsheetNameNS");
+    public static final Key<List<NameSpace>> WORKSHEET_NAME_NS_KEY           = new Key<>("WorksheetNameNS");
+    public static final Key<List<NameSpace>> FILE_PATH_NS_KEY                = new Key<>("FilePathNS");
+    public static final Key<List<NameSpace>> BATCH_ENABLE_NS_KEY             = new Key<>("BatchEnableNS");
+    public static final Key<List<NameSpace>> BATCH_SIZE_NS_KEY               = new Key<>("BatchSizeNS");
+
     private static final String SPREADSHEET_NAME = "spreadsheetName";
-    private static final String WORKSHEET_COUNT  = "worksheetName";
+    private static final String WORKSHEET_NAME   = "worksheetName";
     private static final String FILE_PATH        = "filePath";
     private static final String BATCH_ENABLE     = "batchEnable";
     private static final String BATCH_SIZE       = "batchSize";
 
-    private static final List<String> PROPERTIES = Arrays.asList(SPREADSHEET_NAME, WORKSHEET_COUNT, FILE_PATH, BATCH_ENABLE, BATCH_SIZE);
-
-    private String spreadsheetName;
-    private String worksheetName;
-    private String filePath;
-    private String batchEnable;
-    private String batchSize;
-
-    private String spreadsheetNameExpression;
-    private String worksheetNameExpression;
-    private String filePathExpression;
-    private String batchEnableExpression;
-    private String batchSizeExpression;
-
-    private List<NameSpace> spreadsheetNameNS;
-    private List<NameSpace> worksheetNameNS;
-    private List<NameSpace> filePathNS;
-    private List<NameSpace> batchEnableNS;
-    private List<NameSpace> batchSizeNS;
+    private static final List<String> PROPERTIES = Arrays.asList(SPREADSHEET_NAME, WORKSHEET_NAME, FILE_PATH, BATCH_ENABLE, BATCH_SIZE);
 
     @Inject
     public ImportCSV(EditorResources resources,
@@ -86,23 +83,23 @@ public class ImportCSV extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        spreadsheetName = "";
-        worksheetName = "";
-        filePath = "";
-        batchEnable = "";
-        batchSize = "";
+        putProperty(SPREADSHEET_NAME_KEY, "");
+        putProperty(WORKSHEET_NAME_KEY, "");
+        putProperty(FILE_PATH_KEY, "");
+        putProperty(BATCH_ENABLE_KEY, "");
+        putProperty(BATCH_SIZE_KEY, "");
 
-        spreadsheetNameExpression = "";
-        worksheetNameExpression = "";
-        filePathExpression = "";
-        batchEnableExpression = "";
-        batchSizeExpression = "";
+        putProperty(SPREADSHEET_NAME_EXPRESSION_KEY, "");
+        putProperty(WORKSHEET_NAME_EXPRESSION_KEY, "");
+        putProperty(FILE_PATH_EXPRESSION_KEY, "");
+        putProperty(BATCH_ENABLE_EXPRESSION_KEY, "");
+        putProperty(BATCH_SIZE_EXPRESSION_KEY, "");
 
-        spreadsheetNameNS = new ArrayList<>();
-        worksheetNameNS = new ArrayList<>();
-        filePathNS = new ArrayList<>();
-        batchEnableNS = new ArrayList<>();
-        batchSizeNS = new ArrayList<>();
+        putProperty(SPREADSHEET_NAME_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(WORKSHEET_NAME_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(FILE_PATH_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(BATCH_ENABLE_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(BATCH_SIZE_NS_KEY, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -111,13 +108,13 @@ public class ImportCSV extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(SPREADSHEET_NAME, isInline ? spreadsheetName : spreadsheetNameExpression);
-        properties.put(WORKSHEET_COUNT, isInline ? worksheetName : worksheetNameExpression);
-        properties.put(FILE_PATH, isInline ? filePath : filePathExpression);
-        properties.put(BATCH_ENABLE, isInline ? batchEnable : batchEnableExpression);
-        properties.put(BATCH_SIZE, isInline ? batchSize : batchSizeExpression);
+        properties.put(SPREADSHEET_NAME, isInline ? getProperty(SPREADSHEET_NAME_KEY) : getProperty(SPREADSHEET_NAME_EXPRESSION_KEY));
+        properties.put(WORKSHEET_NAME, isInline ? getProperty(WORKSHEET_NAME_KEY) : getProperty(WORKSHEET_NAME_EXPRESSION_KEY));
+        properties.put(FILE_PATH, isInline ? getProperty(FILE_PATH_KEY) : getProperty(FILE_PATH_EXPRESSION_KEY));
+        properties.put(BATCH_ENABLE, isInline ? getProperty(BATCH_ENABLE_KEY) : getProperty(BATCH_ENABLE_EXPRESSION_KEY));
+        properties.put(BATCH_SIZE, isInline ? getProperty(BATCH_SIZE_KEY) : getProperty(BATCH_SIZE_EXPRESSION_KEY));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -127,194 +124,30 @@ public class ImportCSV extends AbstractConnector {
     protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
         switch (nodeName) {
             case SPREADSHEET_NAME:
-                if (isInline) {
-                    spreadsheetName = nodeValue;
-                } else {
-                    spreadsheetNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, SPREADSHEET_NAME_KEY, SPREADSHEET_NAME_EXPRESSION_KEY);
                 break;
 
-            case WORKSHEET_COUNT:
-                if (isInline) {
-                    worksheetName = nodeValue;
-                } else {
-                    worksheetNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+            case WORKSHEET_NAME:
+                adaptProperty(nodeValue, WORKSHEET_NAME_KEY, WORKSHEET_NAME_EXPRESSION_KEY);
                 break;
 
             case FILE_PATH:
-                if (isInline) {
-                    filePath = nodeValue;
-                } else {
-                    filePathExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
-
-            case BATCH_ENABLE:
-                if (isInline) {
-                    batchEnable = nodeValue;
-                } else {
-                    batchEnableExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, FILE_PATH_KEY, FILE_PATH_EXPRESSION_KEY);
                 break;
 
             case BATCH_SIZE:
-                if (isInline) {
-                    batchSize = nodeValue;
-                } else {
-                    batchSizeExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, BATCH_SIZE_KEY, BATCH_SIZE_EXPRESSION_KEY);
                 break;
+
+            case BATCH_ENABLE:
+                adaptProperty(nodeValue, BATCH_ENABLE_KEY, BATCH_ENABLE_EXPRESSION_KEY);
+                break;
+
+            default:
         }
-    }
-
-    @Nonnull
-    public String getSpreadsheetName() {
-        return spreadsheetName;
-    }
-
-    public void setSpreadsheetName(@Nonnull String spreadsheetName) {
-        this.spreadsheetName = spreadsheetName;
-    }
-
-    @Nonnull
-    public String getWorksheetName() {
-        return worksheetName;
-    }
-
-    public void setWorksheetName(@Nonnull String worksheetCount) {
-        this.worksheetName = worksheetCount;
-    }
-
-    @Nonnull
-    public String getSpreadsheetNameExpression() {
-        return spreadsheetNameExpression;
-    }
-
-    public void setSpreadsheetNameExpression(@Nonnull String spreadsheetNameExpression) {
-        this.spreadsheetNameExpression = spreadsheetNameExpression;
-    }
-
-    @Nonnull
-    public String getWorksheetNameExpression() {
-        return worksheetNameExpression;
-    }
-
-    public void setWorksheetCountExpression(@Nonnull String worksheetCountExpression) {
-        this.worksheetNameExpression = worksheetCountExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getSpreadsheetNameNS() {
-        return spreadsheetNameNS;
-    }
-
-    public void setSpreadsheetNameNS(@Nonnull List<NameSpace> spreadsheetNameNS) {
-        this.spreadsheetNameNS = spreadsheetNameNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getWorksheetNameNS() {
-        return worksheetNameNS;
-    }
-
-    public void setWorksheetNameNS(@Nonnull List<NameSpace> worksheetCountNS) {
-        this.worksheetNameNS = worksheetCountNS;
-    }
-
-    @Nonnull
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(@Nonnull String filePath) {
-        this.filePath = filePath;
-    }
-
-    @Nonnull
-    public String getBatchEnable() {
-        return batchEnable;
-    }
-
-    public void setBatchEnable(@Nonnull String batchEnable) {
-        this.batchEnable = batchEnable;
-    }
-
-    @Nonnull
-    public String getBatchSize() {
-        return batchSize;
-    }
-
-    public void setBatchSize(@Nonnull String batchSize) {
-        this.batchSize = batchSize;
-    }
-
-    @Nonnull
-    public String getFilePathExpression() {
-        return filePathExpression;
-    }
-
-    public void setFilePathExpression(@Nonnull String filePathExpression) {
-        this.filePathExpression = filePathExpression;
-    }
-
-    @Nonnull
-    public String getBatchEnableExpression() {
-        return batchEnableExpression;
-    }
-
-    public void setBatchEnableExpression(@Nonnull String batchEnableExpression) {
-        this.batchEnableExpression = batchEnableExpression;
-    }
-
-    @Nonnull
-    public String getBatchSizeExpression() {
-        return batchSizeExpression;
-    }
-
-    public void setBatchSizeExpression(@Nonnull String batchSizeExpression) {
-        this.batchSizeExpression = batchSizeExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getFilePathNS() {
-        return filePathNS;
-    }
-
-    public void setFilePathNS(@Nonnull List<NameSpace> filePathNS) {
-        this.filePathNS = filePathNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getBatchEnableNS() {
-        return batchEnableNS;
-    }
-
-    public void setBatchEnableNS(@Nonnull List<NameSpace> batchEnableNS) {
-        this.batchEnableNS = batchEnableNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getBatchSizeNS() {
-        return batchSizeNS;
-    }
-
-    public void setBatchSizeNS(@Nonnull List<NameSpace> batchSizeNS) {
-        this.batchSizeNS = batchSizeNS;
     }
 
 }

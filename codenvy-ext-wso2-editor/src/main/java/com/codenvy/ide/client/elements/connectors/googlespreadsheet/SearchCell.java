@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes SearchCell connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -46,23 +45,23 @@ public class SearchCell extends AbstractConnector {
     public static final String ELEMENT_NAME       = "SearchCell";
     public static final String SERIALIZATION_NAME = "googlespreadsheet.searchCell";
 
+    public static final Key<String> SPREADSHEET_NAME_KEY = new Key<>("SpreadsheetName");
+    public static final Key<String> WORKSHEET_NAME_KEY   = new Key<>("WorksheetName");
+    public static final Key<String> SEARCH_STRING_KEY    = new Key<>("SearchString");
+
+    public static final Key<String> SPREADSHEET_NAME_EXPRESSION_KEY = new Key<>("SpreadsheetNameExpression");
+    public static final Key<String> WORKSHEET_NAME_EXPRESSION_KEY   = new Key<>("WorksheetNameExpression");
+    public static final Key<String> SEARCH_STRING_EXPRESSION_KEY    = new Key<>("SearchStringExpression");
+
+    public static final Key<List<NameSpace>> SPREADSHEET_NAME_NS_KEY = new Key<>("SpreadsheetNameNS");
+    public static final Key<List<NameSpace>> WORKSHEET_NAME_NS_KEY   = new Key<>("WorksheetNameNS");
+    public static final Key<List<NameSpace>> SEARCH_STRING_NS_KEY    = new Key<>("SearchStringNS");
+
     private static final String SPREADSHEET_NAME = "spreadsheetName";
     private static final String WORKSHEET_NAME   = "worksheetName";
     private static final String SEARCH_STRING    = "searchString";
 
     private static final List<String> PROPERTIES = Arrays.asList(SPREADSHEET_NAME, WORKSHEET_NAME, SEARCH_STRING);
-
-    private String spreadsheetName;
-    private String worksheetName;
-    private String searchString;
-
-    private String spreadsheetNameExpression;
-    private String worksheetNameExpression;
-    private String searchStringExpression;
-
-    private List<NameSpace> spreadsheetNameNS;
-    private List<NameSpace> worksheetNameNS;
-    private List<NameSpace> searchStringNS;
 
     @Inject
     public SearchCell(EditorResources resources,
@@ -78,17 +77,17 @@ public class SearchCell extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        spreadsheetName = "";
-        worksheetName = "";
-        searchString = "";
+        putProperty(SPREADSHEET_NAME_KEY, "");
+        putProperty(WORKSHEET_NAME_KEY, "");
+        putProperty(SEARCH_STRING_KEY, "");
 
-        spreadsheetNameExpression = "";
-        worksheetNameExpression = "";
-        searchStringExpression = "";
+        putProperty(SPREADSHEET_NAME_EXPRESSION_KEY, "");
+        putProperty(WORKSHEET_NAME_EXPRESSION_KEY, "");
+        putProperty(SEARCH_STRING_EXPRESSION_KEY, "");
 
-        spreadsheetNameNS = new ArrayList<>();
-        worksheetNameNS = new ArrayList<>();
-        searchStringNS = new ArrayList<>();
+        putProperty(SPREADSHEET_NAME_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(WORKSHEET_NAME_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(SEARCH_STRING_NS_KEY, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -97,11 +96,11 @@ public class SearchCell extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(SPREADSHEET_NAME, isInline ? spreadsheetName : spreadsheetNameExpression);
-        properties.put(WORKSHEET_NAME, isInline ? worksheetName : worksheetNameExpression);
-        properties.put(SEARCH_STRING, isInline ? searchString : searchStringExpression);
+        properties.put(SPREADSHEET_NAME, isInline ? getProperty(SPREADSHEET_NAME_KEY) : getProperty(SPREADSHEET_NAME_EXPRESSION_KEY));
+        properties.put(WORKSHEET_NAME, isInline ? getProperty(WORKSHEET_NAME_KEY) : getProperty(WORKSHEET_NAME_EXPRESSION_KEY));
+        properties.put(SEARCH_STRING, isInline ? getProperty(SEARCH_STRING_KEY) : getProperty(SEARCH_STRING_EXPRESSION_KEY));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -111,120 +110,22 @@ public class SearchCell extends AbstractConnector {
     protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
         switch (nodeName) {
             case SPREADSHEET_NAME:
-                if (isInline) {
-                    spreadsheetName = nodeValue;
-                } else {
-                    spreadsheetNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, SPREADSHEET_NAME_KEY, SPREADSHEET_NAME_EXPRESSION_KEY);
                 break;
 
             case WORKSHEET_NAME:
-                if (isInline) {
-                    worksheetName = nodeValue;
-                } else {
-                    worksheetNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, WORKSHEET_NAME_KEY, WORKSHEET_NAME_EXPRESSION_KEY);
                 break;
 
             case SEARCH_STRING:
-                if (isInline) {
-                    searchString = nodeValue;
-                } else {
-                    searchStringExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, SEARCH_STRING_KEY, SEARCH_STRING_EXPRESSION_KEY);
                 break;
+
+            default:
         }
-    }
-
-    @Nonnull
-    public String getSpreadsheetName() {
-        return spreadsheetName;
-    }
-
-    public void setSpreadsheetName(@Nonnull String spreadsheetName) {
-        this.spreadsheetName = spreadsheetName;
-    }
-
-    @Nonnull
-    public String getSpreadsheetNameExpression() {
-        return spreadsheetNameExpression;
-    }
-
-    public void setSpreadsheetNameExpression(@Nonnull String spreadsheetNameExpression) {
-        this.spreadsheetNameExpression = spreadsheetNameExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getSpreadsheetNameNS() {
-        return spreadsheetNameNS;
-    }
-
-    public void setSpreadsheetNameNS(@Nonnull List<NameSpace> spreadsheetNameNS) {
-        this.spreadsheetNameNS = spreadsheetNameNS;
-    }
-
-    @Nonnull
-    public String getWorksheetName() {
-        return worksheetName;
-    }
-
-    public void setWorksheetName(@Nonnull String worksheetName) {
-        this.worksheetName = worksheetName;
-    }
-
-    @Nonnull
-    public String getWorksheetNameExpression() {
-        return worksheetNameExpression;
-    }
-
-    public void setWorksheetNameExpression(@Nonnull String worksheetNameExpression) {
-        this.worksheetNameExpression = worksheetNameExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getWorksheetNameNS() {
-        return worksheetNameNS;
-    }
-
-    public void setWorksheetNameNS(@Nonnull List<NameSpace> worksheetNameNS) {
-        this.worksheetNameNS = worksheetNameNS;
-    }
-
-    @Nonnull
-    public String getSearchString() {
-        return searchString;
-    }
-
-    public void setSearchString(@Nonnull String searchString) {
-        this.searchString = searchString;
-    }
-
-    @Nonnull
-    public String getSearchStringExpression() {
-        return searchStringExpression;
-    }
-
-    public void setSearchStringExpression(@Nonnull String searchStringExpression) {
-        this.searchStringExpression = searchStringExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getSearchStringNS() {
-        return searchStringNS;
-    }
-
-    public void setSearchStringNS(@Nonnull List<NameSpace> searchStringNS) {
-        this.searchStringNS = searchStringNS;
     }
 
 }

@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes GetAllCellsCSV connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -46,19 +45,17 @@ public class GetAllCellsCSV extends AbstractConnector {
     public static final String ELEMENT_NAME       = "GetAllCellsCSV";
     public static final String SERIALIZATION_NAME = "googlespreadsheet.getAllCellsCSV";
 
+    public static final Key<String>          SPREADSHEET_NAME_KEY            = new Key<>("SpreadsheetName");
+    public static final Key<String>          WORKSHEET_NAME_KEY              = new Key<>("WorksheetName");
+    public static final Key<String>          SPREADSHEET_NAME_EXPRESSION_KEY = new Key<>("SpreadsheetNameExpression");
+    public static final Key<String>          WORKSHEET_NAME_EXPRESSION_KEY   = new Key<>("WorksheetNameExpression");
+    public static final Key<List<NameSpace>> SPREADSHEET_NAME_NS_KEY         = new Key<>("SpreadsheetNameNS");
+    public static final Key<List<NameSpace>> WORKSHEET_NAME_NS_KEY           = new Key<>("WorksheetNameNS");
+
     private static final String SPREADSHEET_NAME = "spreadsheetName";
     private static final String WORKSHEET_NAME   = "worksheetName";
 
     private static final List<String> PROPERTIES = Arrays.asList(WORKSHEET_NAME, SPREADSHEET_NAME);
-
-    private String spreadsheetName;
-    private String worksheetName;
-
-    private String spreadsheetNameExpression;
-    private String worksheetNameExpression;
-
-    private List<NameSpace> spreadsheetNameNS;
-    private List<NameSpace> worksheetNameNS;
 
     @Inject
     public GetAllCellsCSV(EditorResources resources,
@@ -74,14 +71,14 @@ public class GetAllCellsCSV extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        spreadsheetName = "";
-        worksheetName = "";
+        putProperty(SPREADSHEET_NAME_KEY, "");
+        putProperty(WORKSHEET_NAME_KEY, "");
 
-        spreadsheetNameExpression = "";
-        worksheetNameExpression = "";
+        putProperty(SPREADSHEET_NAME_EXPRESSION_KEY, "");
+        putProperty(WORKSHEET_NAME_EXPRESSION_KEY, "");
 
-        spreadsheetNameNS = new ArrayList<>();
-        worksheetNameNS = new ArrayList<>();
+        putProperty(SPREADSHEET_NAME_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(WORKSHEET_NAME_NS_KEY, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -90,10 +87,10 @@ public class GetAllCellsCSV extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(SPREADSHEET_NAME, isInline ? spreadsheetName : spreadsheetNameExpression);
-        properties.put(WORKSHEET_NAME, isInline ? worksheetName : worksheetNameExpression);
+        properties.put(SPREADSHEET_NAME, isInline ? getProperty(SPREADSHEET_NAME_KEY) : getProperty(SPREADSHEET_NAME_EXPRESSION_KEY));
+        properties.put(WORKSHEET_NAME, isInline ? getProperty(WORKSHEET_NAME_KEY) : getProperty(WORKSHEET_NAME_EXPRESSION_KEY));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -103,83 +100,14 @@ public class GetAllCellsCSV extends AbstractConnector {
     protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
-        switch (nodeName) {
-            case SPREADSHEET_NAME:
-                if (isInline) {
-                    spreadsheetName = nodeValue;
-                } else {
-                    spreadsheetNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
-
-            case WORKSHEET_NAME:
-                if (isInline) {
-                    worksheetName = nodeValue;
-                } else {
-                    worksheetNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+        if (SPREADSHEET_NAME.equals(nodeName)) {
+            adaptProperty(nodeValue, SPREADSHEET_NAME_KEY, SPREADSHEET_NAME_EXPRESSION_KEY);
         }
-    }
 
-    @Nonnull
-    public String getSpreadsheetName() {
-        return spreadsheetName;
-    }
-
-    public void setSpreadsheetName(@Nonnull String spreadsheetName) {
-        this.spreadsheetName = spreadsheetName;
-    }
-
-    @Nonnull
-    public String getSpreadsheetNameExpression() {
-        return spreadsheetNameExpression;
-    }
-
-    public void setSpreadsheetNameExpression(@Nonnull String spreadsheetNameExpression) {
-        this.spreadsheetNameExpression = spreadsheetNameExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getSpreadsheetNameNS() {
-        return spreadsheetNameNS;
-    }
-
-    public void setSpreadsheetNameNS(@Nonnull List<NameSpace> spreadsheetNameNS) {
-        this.spreadsheetNameNS = spreadsheetNameNS;
-    }
-
-    @Nonnull
-    public String getWorksheetName() {
-        return worksheetName;
-    }
-
-    public void setWorksheetName(@Nonnull String worksheetName) {
-        this.worksheetName = worksheetName;
-    }
-
-    @Nonnull
-    public String getWorksheetNameExpression() {
-        return worksheetNameExpression;
-    }
-
-    public void setWorksheetNameExpression(@Nonnull String worksheetNameExpression) {
-        this.worksheetNameExpression = worksheetNameExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getWorksheetCountNS() {
-        return worksheetNameNS;
-    }
-
-    public void setWorksheetNameNS(@Nonnull List<NameSpace> worksheetNameNS) {
-        this.worksheetNameNS = worksheetNameNS;
+        if (WORKSHEET_NAME.equals(nodeName)) {
+            adaptProperty(nodeValue, WORKSHEET_NAME_KEY, WORKSHEET_NAME_EXPRESSION_KEY);
+        }
     }
 
 }

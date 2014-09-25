@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes SetRow connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -46,27 +45,27 @@ public class SetRow extends AbstractConnector {
     public static final String ELEMENT_NAME       = "SetRow";
     public static final String SERIALIZATION_NAME = "googlespreadsheet.setRow";
 
+    public static final Key<String> SPREADSHEET_NAME_KEY = new Key<>("SpreadsheetName");
+    public static final Key<String> WORKSHEET_NAME_KEY   = new Key<>("WorksheetName");
+    public static final Key<String> ROW_ID_KEY           = new Key<>("MinRow");
+    public static final Key<String> ROW_DATA_KEY         = new Key<>("MaxRow");
+
+    public static final Key<String> SPREADSHEET_NAME_EXPRESSION_KEY = new Key<>("SpreadsheetNameExpression");
+    public static final Key<String> WORKSHEET_NAME_EXPRESSION_KEY   = new Key<>("WorksheetNameExpression");
+    public static final Key<String> ROW_ID_EXPRESSION_KEY           = new Key<>("MinRowExpression");
+    public static final Key<String> ROW_DATA_EXPRESSION_KEY         = new Key<>("MaxRowExpression");
+
+    public static final Key<List<NameSpace>> SPREADSHEET_NAME_NS_KEY = new Key<>("SpreadsheetNameNS");
+    public static final Key<List<NameSpace>> WORKSHEET_NAME_NS_KEY   = new Key<>("WorksheetNameNS");
+    public static final Key<List<NameSpace>> ROW_ID_NS_KEY           = new Key<>("MinRowNS");
+    public static final Key<List<NameSpace>> ROW_DATA_NS_KEY         = new Key<>("MaxRowNS");
+
     private static final String SPREADSHEET_NAME = "spreadsheetName";
     private static final String WORKSHEET_NAME   = "worksheetName";
     private static final String ROW_ID           = "rowId";
     private static final String ROW_DATA         = "rowData";
 
     private static final List<String> PROPERTIES = Arrays.asList(SPREADSHEET_NAME, WORKSHEET_NAME, ROW_ID, ROW_DATA);
-
-    private String spreadsheetName;
-    private String worksheetName;
-    private String rowId;
-    private String rowData;
-
-    private String spreadsheetNameExpression;
-    private String worksheetNameExpression;
-    private String rowIdExpression;
-    private String rowDataExpression;
-
-    private List<NameSpace> spreadsheetNameNS;
-    private List<NameSpace> worksheetNameNS;
-    private List<NameSpace> rowIdNS;
-    private List<NameSpace> rowDataNS;
 
     @Inject
     public SetRow(EditorResources resources,
@@ -82,20 +81,20 @@ public class SetRow extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        spreadsheetName = "";
-        worksheetName = "";
-        rowId = "";
-        rowData = "";
+        putProperty(SPREADSHEET_NAME_KEY, "");
+        putProperty(WORKSHEET_NAME_KEY, "");
+        putProperty(ROW_ID_KEY, "");
+        putProperty(ROW_DATA_KEY, "");
 
-        spreadsheetNameExpression = "";
-        worksheetNameExpression = "";
-        rowIdExpression = "";
-        rowDataExpression = "";
+        putProperty(SPREADSHEET_NAME_EXPRESSION_KEY, "");
+        putProperty(WORKSHEET_NAME_EXPRESSION_KEY, "");
+        putProperty(ROW_ID_EXPRESSION_KEY, "");
+        putProperty(ROW_DATA_EXPRESSION_KEY, "");
 
-        spreadsheetNameNS = new ArrayList<>();
-        worksheetNameNS = new ArrayList<>();
-        rowIdNS = new ArrayList<>();
-        rowDataNS = new ArrayList<>();
+        putProperty(SPREADSHEET_NAME_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(WORKSHEET_NAME_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(ROW_ID_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(ROW_DATA_NS_KEY, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -104,12 +103,12 @@ public class SetRow extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(SPREADSHEET_NAME, isInline ? spreadsheetName : spreadsheetNameExpression);
-        properties.put(WORKSHEET_NAME, isInline ? worksheetName : worksheetNameExpression);
-        properties.put(ROW_ID, isInline ? rowId : rowIdExpression);
-        properties.put(ROW_DATA, isInline ? rowData : rowDataExpression);
+        properties.put(SPREADSHEET_NAME, isInline ? getProperty(SPREADSHEET_NAME_KEY) : getProperty(SPREADSHEET_NAME_EXPRESSION_KEY));
+        properties.put(WORKSHEET_NAME, isInline ? getProperty(WORKSHEET_NAME_KEY) : getProperty(WORKSHEET_NAME_EXPRESSION_KEY));
+        properties.put(ROW_ID, isInline ? getProperty(ROW_ID_KEY) : getProperty(ROW_ID_EXPRESSION_KEY));
+        properties.put(ROW_DATA, isInline ? getProperty(ROW_DATA_KEY) : getProperty(ROW_DATA_EXPRESSION_KEY));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -119,157 +118,26 @@ public class SetRow extends AbstractConnector {
     protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
         switch (nodeName) {
             case SPREADSHEET_NAME:
-                if (isInline) {
-                    spreadsheetName = nodeValue;
-                } else {
-                    spreadsheetNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, SPREADSHEET_NAME_KEY, SPREADSHEET_NAME_EXPRESSION_KEY);
                 break;
 
             case WORKSHEET_NAME:
-                if (isInline) {
-                    worksheetName = nodeValue;
-                } else {
-                    worksheetNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, WORKSHEET_NAME_KEY, WORKSHEET_NAME_EXPRESSION_KEY);
                 break;
 
             case ROW_ID:
-                if (isInline) {
-                    rowId = nodeValue;
-                } else {
-                    rowIdExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, ROW_ID_KEY, ROW_ID_EXPRESSION_KEY);
                 break;
 
             case ROW_DATA:
-                if (isInline) {
-                    rowData = nodeValue;
-                } else {
-                    rowDataExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, ROW_DATA_KEY, ROW_DATA_EXPRESSION_KEY);
                 break;
+
+            default:
         }
-    }
-
-    @Nonnull
-    public String getSpreadsheetName() {
-        return spreadsheetName;
-    }
-
-    public void setSpreadsheetName(@Nonnull String spreadsheetName) {
-        this.spreadsheetName = spreadsheetName;
-    }
-
-    @Nonnull
-    public String getSpreadsheetNameExpression() {
-        return spreadsheetNameExpression;
-    }
-
-    public void setSpreadsheetNameExpression(@Nonnull String spreadsheetNameExpression) {
-        this.spreadsheetNameExpression = spreadsheetNameExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getSpreadsheetNameNS() {
-        return spreadsheetNameNS;
-    }
-
-    public void setSpreadsheetNameNS(@Nonnull List<NameSpace> spreadsheetNameNS) {
-        this.spreadsheetNameNS = spreadsheetNameNS;
-    }
-
-    @Nonnull
-    public String getWorksheetName() {
-        return worksheetName;
-    }
-
-    public void setWorksheetName(@Nonnull String worksheetName) {
-        this.worksheetName = worksheetName;
-    }
-
-    @Nonnull
-    public String getWorksheetNameExpression() {
-        return worksheetNameExpression;
-    }
-
-    public void setWorksheetNameExpression(@Nonnull String worksheetNameExpression) {
-        this.worksheetNameExpression = worksheetNameExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getWorksheetNameNS() {
-        return worksheetNameNS;
-    }
-
-    public void setWorksheetNameNS(@Nonnull List<NameSpace> worksheetNameNS) {
-        this.worksheetNameNS = worksheetNameNS;
-    }
-
-    @Nonnull
-    public String getRowId() {
-        return rowId;
-    }
-
-    public void setRowId(@Nonnull String rowId) {
-        this.rowId = rowId;
-    }
-
-    @Nonnull
-    public String getRowData() {
-        return rowData;
-    }
-
-    public void setRowData(@Nonnull String rowData) {
-        this.rowData = rowData;
-    }
-
-    @Nonnull
-    public String getRowIdExpression() {
-        return rowIdExpression;
-    }
-
-    public void setRowIdExpression(@Nonnull String rowIdExpression) {
-        this.rowIdExpression = rowIdExpression;
-    }
-
-    @Nonnull
-    public String getRowDataExpression() {
-        return rowDataExpression;
-    }
-
-    public void setRowDataExpression(@Nonnull String rowDataExpression) {
-        this.rowDataExpression = rowDataExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getRowIdNS() {
-        return rowIdNS;
-    }
-
-    public void setRowIdNS(@Nonnull List<NameSpace> rowIdNS) {
-        this.rowIdNS = rowIdNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getRowDataNS() {
-        return rowDataNS;
-    }
-
-    public void setRowDataNS(@Nonnull List<NameSpace> rowDataNS) {
-        this.rowDataNS = rowDataNS;
     }
 
 }

@@ -79,10 +79,19 @@ public class AbstractConnector extends AbstractElement {
         putProperty(CONFIG, attributeValue);
     }
 
+    /**
+     * Apply property from XML node to the diagram element.
+     *
+     * @param nodeValue
+     *         value of XML node that need to be analyzed
+     * @param propertyName
+     *         name of the simple property
+     * @param propertyExpressionName
+     *         name of the name space property
+     */
     protected void adaptProperty(@Nonnull String nodeValue,
                                  @Nonnull Key<String> propertyName,
                                  @Nonnull Key<String> propertyExpressionName) {
-
         if (INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE))) {
             putProperty(propertyName, nodeValue);
         } else {

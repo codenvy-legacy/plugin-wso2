@@ -16,23 +16,44 @@
 package com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRangeCSV;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GoogleSpreadsheetPropertyManager;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRangeCSV.MAX_COLUMN_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRangeCSV.MAX_COLUMN_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRangeCSV.MAX_COLUMN_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRangeCSV.MAX_ROW_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRangeCSV.MAX_ROW_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRangeCSV.MAX_ROW_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRangeCSV.MIN_COLUMN_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRangeCSV.MIN_COLUMN_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRangeCSV.MIN_COLUMN_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRangeCSV.MIN_ROW_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRangeCSV.MIN_ROW_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRangeCSV.MIN_ROW_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRangeCSV.SPREADSHEET_NAME_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRangeCSV.SPREADSHEET_NAME_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRangeCSV.SPREADSHEET_NAME_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRangeCSV.WORKSHEET_NAME_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRangeCSV.WORKSHEET_NAME_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRangeCSV.WORKSHEET_NAME_NS_KEY;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -42,257 +63,84 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * @author Dmitry Shnurenko
  */
 public class GetCellCSVRangeConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<GetCellRangeCSV> {
+    private ComplexPropertyPresenter spreadsheetNameNS;
+    private ComplexPropertyPresenter worksheetNameNS;
+    private ComplexPropertyPresenter minRowNS;
+    private ComplexPropertyPresenter maxRowNS;
+    private ComplexPropertyPresenter minColumnNS;
+    private ComplexPropertyPresenter maxColumnNS;
 
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          spreadsheetNameCallBack;
-    private final AddNameSpacesCallBack          worksheetNameCallBack;
-    private final AddNameSpacesCallBack          minRowCallBack;
-    private final AddNameSpacesCallBack          maxRowNameCallBack;
-    private final AddNameSpacesCallBack          minColumnNameCallBack;
-    private final AddNameSpacesCallBack          maxColumnNameCallBack;
+    private SimplePropertyPresenter spreadsheetName;
+    private SimplePropertyPresenter worksheetName;
+    private SimplePropertyPresenter minRows;
+    private SimplePropertyPresenter maxRows;
+    private SimplePropertyPresenter minColumn;
+    private SimplePropertyPresenter maxColumn;
 
     @Inject
     public GetCellCSVRangeConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                              NameSpaceEditorPresenter nameSpacePresenter,
-                                             GeneralPropertiesPanelView view,
+                                             PropertiesPanelView view,
                                              GoogleSpreadsheetPropertyManager googleSpreadsheetPropertyManager,
                                              ParameterPresenter parameterPresenter,
-                                             PropertyTypeManager propertyTypeManager) {
-        super(view, googleSpreadsheetPropertyManager, parameterPresenter, propertyTypeManager);
+                                             PropertyTypeManager propertyTypeManager,
+                                             PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                             Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                             Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                             Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              googleSpreadsheetPropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.spreadsheetNameCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setSpreadsheetNameNS(nameSpaces);
-                element.setSpreadsheetNameExpression(expression);
-
-                GetCellCSVRangeConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.worksheetNameCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setWorksheetNameNS(nameSpaces);
-                element.setWorksheetNameExpression(expression);
-
-                GetCellCSVRangeConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.minRowCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setMinRowNS(nameSpaces);
-                element.setMinRowExpression(expression);
-
-                GetCellCSVRangeConnectorPresenter.this.view.setThirdTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.maxRowNameCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setMaxRowNS(nameSpaces);
-                element.setMaxRowExpression(expression);
-
-                GetCellCSVRangeConnectorPresenter.this.view.setFourthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.minColumnNameCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setMaxColumnNS(nameSpaces);
-                element.setMinColumnExpression(expression);
-
-                GetCellCSVRangeConnectorPresenter.this.view.setFifthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.maxColumnNameCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setMaxColumnNS(nameSpaces);
-                element.setMaxColumnExpression(expression);
-
-                GetCellCSVRangeConnectorPresenter.this.view.setSixthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
+    private void prepareView() {
+        spreadsheetNameNS = createComplexPanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(),
+                                               SPREADSHEET_NAME_NS_KEY,
+                                               SPREADSHEET_NAME_EXPRESSION_KEY);
+        worksheetNameNS = createComplexPanel(locale.spreadsheetCreateWorksheetWorksheetName(),
+                                             WORKSHEET_NAME_NS_KEY,
+                                             WORKSHEET_NAME_EXPRESSION_KEY);
+        minRowNS = createComplexPanel(locale.spreadsheetGetCellRangeMinRow(), MIN_ROW_NS_KEY, MIN_ROW_EXPRESSION_KEY);
+        maxRowNS = createComplexPanel(locale.spreadsheetGetCellRangeMaxRow(), MAX_ROW_NS_KEY, MAX_ROW_EXPRESSION_KEY);
+        minColumnNS = createComplexPanel(locale.spreadsheetGetCellRangeMinColumn(), MIN_COLUMN_NS_KEY, MIN_COLUMN_EXPRESSION_KEY);
+        maxColumnNS = createComplexPanel(locale.spreadsheetGetCellRangeMaxColumn(), MAX_COLUMN_NS_KEY, MAX_COLUMN_EXPRESSION_KEY);
 
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setSpreadsheetName(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setWorksheetName(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdTextBoxValueChanged() {
-        element.setMinRow(view.getThirdTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthTextBoxValueChanged() {
-        element.setMaxRow(view.getFourthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFifthTextBoxValueChanged() {
-        element.setMinColumn(view.getFifthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSixthTextBoxValueChanged() {
-        element.setMaxColumn(view.getSixthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getSpreadsheetNameNS(),
-                                                    spreadsheetNameCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getSpreadsheetNameExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getWorksheetCountNS(),
-                                                    worksheetNameCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getWorksheetNameExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getMinRowNS(),
-                                                    minRowCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getMinRowExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getMaxRowNS(),
-                                                    maxRowNameCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getMaxRowExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFifthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getMinColumnNS(),
-                                                    minColumnNameCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getMinColumnExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSixthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getMaxColumnNS(),
-                                                    maxColumnNameCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getMaxColumnExpression());
+        spreadsheetName = createSimplePanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(), SPREADSHEET_NAME_KEY);
+        worksheetName = createSimplePanel(locale.spreadsheetCreateWorksheetWorksheetName(), WORKSHEET_NAME_KEY);
+        minRows = createSimplePanel(locale.spreadsheetGetCellRangeMinRow(), MIN_ROW_KEY);
+        maxRows = createSimplePanel(locale.spreadsheetGetCellRangeMaxRow(), MAX_ROW_KEY);
+        minColumn = createSimplePanel(locale.spreadsheetGetCellRangeMinColumn(), MIN_COLUMN_KEY);
+        maxColumn = createSimplePanel(locale.spreadsheetGetCellRangeMaxColumn(), MAX_COLUMN_KEY);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        ParameterEditorType property = element.getProperty(PARAMETER_EDITOR_TYPE);
+        boolean isNameSpaced = NAME_SPACED_PROPERTY_EDITOR.equals(property);
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+        spreadsheetName.setVisible(!isNameSpaced);
+        worksheetName.setVisible(!isNameSpaced);
+        minRows.setVisible(!isNameSpaced);
+        maxRows.setVisible(!isNameSpaced);
+        minColumn.setVisible(!isNameSpaced);
+        maxColumn.setVisible(!isNameSpaced);
 
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-        view.setVisibleFourthButton(isEquals);
-        view.setVisibleFifthButton(isEquals);
-        view.setVisibleSixthButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-        view.setEnableFourthTextBox(!isEquals);
-        view.setEnableFifthTextBox(!isEquals);
-        view.setEnableSixthTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getSpreadsheetNameExpression() : element.getSpreadsheetName());
-        view.setSecondTextBoxValue(isEquals ? element.getWorksheetNameExpression() : element.getWorksheetName());
-        view.setThirdTextBoxValue(isEquals ? element.getMinRowExpression() : element.getMinRow());
-        view.setFourthTextBoxValue(isEquals ? element.getMaxRowExpression() : element.getMaxRow());
-        view.setFifthTextBoxValue(isEquals ? element.getMinColumnExpression() : element.getMinColumn());
-        view.setSixthTextBoxValue(isEquals ? element.getMaxColumnExpression() : element.getMaxColumn());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-        view.setVisibleThirdPanel(true);
-        view.setVisibleFourthPanel(true);
-        view.setVisibleFifthPanel(true);
-        view.setVisibleSixthPanel(true);
-
-        view.setFirstLabelTitle(locale.spreadsheetCreateSpreadsheetSpreadsheetName());
-        view.setSecondLabelTitle(locale.spreadsheetCreateWorksheetWorksheetName());
-        view.setThirdLabelTitle(locale.spreadsheetGetCellRangeMinRow());
-        view.setFourthLabelTitle(locale.spreadsheetGetCellRangeMaxRow());
-        view.setFifthLabelTitle(locale.spreadsheetGetCellRangeMinColumn());
-        view.setSixthLabelTitle(locale.spreadsheetGetCellRangeMaxColumn());
+        spreadsheetNameNS.setVisible(isNameSpaced);
+        worksheetNameNS.setVisible(isNameSpaced);
+        minColumnNS.setVisible(isNameSpaced);
+        maxColumnNS.setVisible(isNameSpaced);
+        minRowNS.setVisible(isNameSpaced);
+        maxRowNS.setVisible(isNameSpaced);
     }
 
     /** {@inheritDoc} */
@@ -300,6 +148,18 @@ public class GetCellCSVRangeConnectorPresenter extends AbstractConnectorProperti
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        spreadsheetName.setProperty(element.getProperty(SPREADSHEET_NAME_KEY));
+        worksheetName.setProperty(element.getProperty(WORKSHEET_NAME_KEY));
+        minRows.setProperty(element.getProperty(MIN_ROW_KEY));
+        maxRows.setProperty(element.getProperty(MAX_ROW_KEY));
+        minColumn.setProperty(element.getProperty(MIN_COLUMN_KEY));
+        maxColumn.setProperty(element.getProperty(MAX_COLUMN_KEY));
+
+        spreadsheetNameNS.setProperty(element.getProperty(SPREADSHEET_NAME_EXPRESSION_KEY));
+        worksheetNameNS.setProperty(element.getProperty(WORKSHEET_NAME_EXPRESSION_KEY));
+        minRows.setProperty(element.getProperty(MIN_ROW_EXPRESSION_KEY));
+        maxRows.setProperty(element.getProperty(MAX_ROW_EXPRESSION_KEY));
+        minColumn.setProperty(element.getProperty(MIN_COLUMN_EXPRESSION_KEY));
+        maxColumn.setProperty(element.getProperty(MAX_COLUMN_EXPRESSION_KEY));
     }
 }

@@ -16,23 +16,41 @@
 package com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GoogleSpreadsheetPropertyManager;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.ImportCSV;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.ImportCSV.BATCH_ENABLE_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.ImportCSV.BATCH_ENABLE_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.ImportCSV.BATCH_ENABLE_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.ImportCSV.BATCH_SIZE_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.ImportCSV.BATCH_SIZE_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.ImportCSV.BATCH_SIZE_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.ImportCSV.FILE_PATH_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.ImportCSV.FILE_PATH_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.ImportCSV.FILE_PATH_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.ImportCSV.SPREADSHEET_NAME_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.ImportCSV.SPREADSHEET_NAME_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.ImportCSV.SPREADSHEET_NAME_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.ImportCSV.WORKSHEET_NAME_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.ImportCSV.WORKSHEET_NAME_KEY;
+import static com.codenvy.ide.client.elements.connectors.googlespreadsheet.ImportCSV.WORKSHEET_NAME_NS_KEY;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -42,222 +60,78 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * @author Dmitry Shnurenko
  */
 public class ImportCSVConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<ImportCSV> {
-
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          spreadsheetNameCallBack;
-    private final AddNameSpacesCallBack          worksheetNameCallBack;
-    private final AddNameSpacesCallBack          filePathCallBack;
-    private final AddNameSpacesCallBack          batchEnableCallBack;
-    private final AddNameSpacesCallBack          batchSizeCallBack;
+    private ComplexPropertyPresenter spreadsheetNameNS;
+    private ComplexPropertyPresenter worksheetNameNS;
+    private ComplexPropertyPresenter filePathNS;
+    private ComplexPropertyPresenter batchEnableNS;
+    private ComplexPropertyPresenter batchSizeNS;
+    private SimplePropertyPresenter  spreadsheetName;
+    private SimplePropertyPresenter  worksheetName;
+    private SimplePropertyPresenter  filePath;
+    private SimplePropertyPresenter  batchEnable;
+    private SimplePropertyPresenter  batchSize;
 
     @Inject
     public ImportCSVConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                        NameSpaceEditorPresenter nameSpacePresenter,
-                                       GeneralPropertiesPanelView view,
+                                       PropertiesPanelView view,
                                        GoogleSpreadsheetPropertyManager googleSpreadsheetPropertyManager,
                                        ParameterPresenter parameterPresenter,
-                                       PropertyTypeManager propertyTypeManager) {
-        super(view, googleSpreadsheetPropertyManager, parameterPresenter, propertyTypeManager);
+                                       PropertyTypeManager propertyTypeManager,
+                                       PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                       Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                       Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                       Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              googleSpreadsheetPropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.spreadsheetNameCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setSpreadsheetNameNS(nameSpaces);
-                element.setSpreadsheetNameExpression(expression);
-
-                ImportCSVConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.worksheetNameCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setWorksheetNameNS(nameSpaces);
-                element.setWorksheetCountExpression(expression);
-
-                ImportCSVConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.filePathCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setFilePathNS(nameSpaces);
-                element.setFilePathExpression(expression);
-
-                ImportCSVConnectorPresenter.this.view.setThirdTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.batchEnableCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setBatchEnableNS(nameSpaces);
-                element.setBatchEnableExpression(expression);
-
-                ImportCSVConnectorPresenter.this.view.setFourthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.batchSizeCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setBatchSizeNS(nameSpaces);
-                element.setBatchSizeExpression(expression);
-
-                ImportCSVConnectorPresenter.this.view.setFifthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
+    private void prepareView() {
+        spreadsheetNameNS = createComplexPanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(),
+                                               SPREADSHEET_NAME_NS_KEY,
+                                               SPREADSHEET_NAME_EXPRESSION_KEY);
 
-        notifyListeners();
-    }
+        worksheetNameNS = createComplexPanel(locale.spreadsheetCreateWorksheetWorksheetName(),
+                                             WORKSHEET_NAME_NS_KEY,
+                                             WORKSHEET_NAME_EXPRESSION_KEY);
+        filePathNS = createComplexPanel(locale.spreadsheetImportCSVFilePath(), FILE_PATH_NS_KEY, FILE_PATH_EXPRESSION_KEY);
+        batchEnableNS = createComplexPanel(locale.spreadsheetImportCSVBatchEnable(), BATCH_ENABLE_NS_KEY, BATCH_ENABLE_EXPRESSION_KEY);
+        batchSizeNS = createComplexPanel(locale.spreadsheetImportCSVBatchSize(), BATCH_SIZE_NS_KEY, BATCH_SIZE_EXPRESSION_KEY);
 
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setSpreadsheetName(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setWorksheetName(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdTextBoxValueChanged() {
-        element.setFilePath(view.getThirdTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthTextBoxValueChanged() {
-        element.setBatchEnable(view.getFourthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFifthTextBoxValueChanged() {
-        element.setBatchSize(view.getFifthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getSpreadsheetNameNS(),
-                                                    spreadsheetNameCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getSpreadsheetNameExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getWorksheetNameNS(),
-                                                    worksheetNameCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getWorksheetNameExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getFilePathNS(),
-                                                    filePathCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getFilePathExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getBatchEnableNS(),
-                                                    batchEnableCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getBatchEnableExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFifthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getBatchSizeNS(),
-                                                    batchSizeCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getBatchSizeExpression());
+        spreadsheetName = createSimplePanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(), SPREADSHEET_NAME_KEY);
+        worksheetName = createSimplePanel(locale.spreadsheetCreateWorksheetWorksheetName(), WORKSHEET_NAME_KEY);
+        filePath = createSimplePanel(locale.spreadsheetImportCSVFilePath(), FILE_PATH_KEY);
+        batchEnable = createSimplePanel(locale.spreadsheetImportCSVBatchEnable(), BATCH_ENABLE_KEY);
+        batchSize = createSimplePanel(locale.spreadsheetImportCSVBatchSize(), BATCH_SIZE_KEY);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        ParameterEditorType property = element.getProperty(PARAMETER_EDITOR_TYPE);
+        boolean isNameSpaced = NAME_SPACED_PROPERTY_EDITOR.equals(property);
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+        spreadsheetName.setVisible(!isNameSpaced);
+        worksheetName.setVisible(!isNameSpaced);
+        filePath.setVisible(!isNameSpaced);
+        batchEnable.setVisible(!isNameSpaced);
+        batchSize.setVisible(!isNameSpaced);
 
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-        view.setVisibleFourthButton(isEquals);
-        view.setVisibleFifthButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-        view.setEnableFourthTextBox(!isEquals);
-        view.setEnableFifthTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getSpreadsheetNameExpression() : element.getSpreadsheetName());
-        view.setSecondTextBoxValue(isEquals ? element.getWorksheetNameExpression() : element.getWorksheetName());
-        view.setThirdTextBoxValue(isEquals ? element.getFilePathExpression() : element.getFilePath());
-        view.setFourthTextBoxValue(isEquals ? element.getBatchEnableExpression() : element.getBatchEnable());
-        view.setFifthTextBoxValue(isEquals ? element.getBatchSizeExpression() : element.getBatchSize());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-        view.setVisibleThirdPanel(true);
-        view.setVisibleFourthPanel(true);
-        view.setVisibleFifthPanel(true);
-
-        view.setFirstLabelTitle(locale.spreadsheetCreateSpreadsheetSpreadsheetName());
-        view.setSecondLabelTitle(locale.spreadsheetCreateWorksheetWorksheetName());
-        view.setThirdLabelTitle(locale.spreadsheetImportCSVFilePath());
-        view.setFourthLabelTitle(locale.spreadsheetImportCSVBatchEnable());
-        view.setFifthLabelTitle(locale.spreadsheetImportCSVBatchSize());
+        spreadsheetNameNS.setVisible(isNameSpaced);
+        worksheetNameNS.setVisible(isNameSpaced);
+        filePathNS.setVisible(isNameSpaced);
+        batchEnableNS.setVisible(isNameSpaced);
+        batchSizeNS.setVisible(isNameSpaced);
     }
 
     /** {@inheritDoc} */
@@ -265,6 +139,16 @@ public class ImportCSVConnectorPresenter extends AbstractConnectorPropertiesPane
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        spreadsheetName.setProperty(element.getProperty(SPREADSHEET_NAME_KEY));
+        worksheetName.setProperty(element.getProperty(WORKSHEET_NAME_KEY));
+        filePath.setProperty(element.getProperty(FILE_PATH_KEY));
+        batchEnable.setProperty(element.getProperty(BATCH_ENABLE_KEY));
+        batchSize.setProperty(element.getProperty(BATCH_SIZE_KEY));
+
+        spreadsheetNameNS.setProperty(element.getProperty(SPREADSHEET_NAME_EXPRESSION_KEY));
+        worksheetNameNS.setProperty(element.getProperty(WORKSHEET_NAME_EXPRESSION_KEY));
+        filePathNS.setProperty(element.getProperty(FILE_PATH_EXPRESSION_KEY));
+        batchEnableNS.setProperty(element.getProperty(BATCH_ENABLE_EXPRESSION_KEY));
+        batchSizeNS.setProperty(element.getProperty(BATCH_SIZE_EXPRESSION_KEY));
     }
 }

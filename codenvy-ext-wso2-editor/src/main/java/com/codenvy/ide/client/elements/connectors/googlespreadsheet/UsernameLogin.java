@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes UsernameLogin connector for GoogleSpreadsheet group connectors. Also the class contains the business logic
@@ -46,19 +45,19 @@ public class UsernameLogin extends AbstractConnector {
     public static final String ELEMENT_NAME       = "UsernameLogin";
     public static final String SERIALIZATION_NAME = "googlespreadsheet.usernameLogin";
 
+    public static final Key<String> USERNAME_KEY = new Key<>("Username");
+    public static final Key<String> PASSWORD_KEY = new Key<>("Password");
+
+    public static final Key<String> USERNAME_EXPRESSION_KEY = new Key<>("UsernameExpression");
+    public static final Key<String> PASSWORD_EXPRESSION_KEY = new Key<>("PasswordExpression");
+
+    public static final Key<List<NameSpace>> USERNAME_NS_KEY = new Key<>("UsernameNS");
+    public static final Key<List<NameSpace>> PASSWORD_NS_KEY = new Key<>("PasswordNS");
+
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
 
     private static final List<String> PROPERTIES = Arrays.asList(USERNAME, PASSWORD);
-
-    private String username;
-    private String password;
-
-    private String usernameExpression;
-    private String passwordExpression;
-
-    private List<NameSpace> usernameNS;
-    private List<NameSpace> passwordNS;
 
     @Inject
     public UsernameLogin(EditorResources resources,
@@ -74,14 +73,14 @@ public class UsernameLogin extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        username = "";
-        password = "";
+        putProperty(USERNAME_KEY, "");
+        putProperty(PASSWORD_KEY, "");
 
-        usernameExpression = "";
-        passwordExpression = "";
+        putProperty(USERNAME_EXPRESSION_KEY, "");
+        putProperty(PASSWORD_EXPRESSION_KEY, "");
 
-        usernameNS = new ArrayList<>();
-        passwordNS = new ArrayList<>();
+        putProperty(USERNAME_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(PASSWORD_NS_KEY, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -90,10 +89,10 @@ public class UsernameLogin extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(USERNAME, isInline ? username : usernameExpression);
-        properties.put(PASSWORD, isInline ? password : passwordExpression);
+        properties.put(USERNAME, isInline ? getProperty(USERNAME_KEY) : getProperty(USERNAME_EXPRESSION_KEY));
+        properties.put(PASSWORD, isInline ? getProperty(PASSWORD_KEY) : getProperty(PASSWORD_KEY));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -103,83 +102,14 @@ public class UsernameLogin extends AbstractConnector {
     protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
-        switch (nodeName) {
-            case USERNAME:
-                if (isInline) {
-                    username = nodeValue;
-                } else {
-                    usernameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
-
-            case PASSWORD:
-                if (isInline) {
-                    password = nodeValue;
-                } else {
-                    passwordExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+        if (USERNAME.equals(nodeName)) {
+            adaptProperty(nodeValue, USERNAME_KEY, USERNAME_EXPRESSION_KEY);
         }
-    }
 
-    @Nonnull
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(@Nonnull String username) {
-        this.username = username;
-    }
-
-    @Nonnull
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(@Nonnull String password) {
-        this.password = password;
-    }
-
-    @Nonnull
-    public String getUsernameExpression() {
-        return usernameExpression;
-    }
-
-    public void setUsernameExpression(@Nonnull String usernameExpression) {
-        this.usernameExpression = usernameExpression;
-    }
-
-    @Nonnull
-    public String getPasswordExpression() {
-        return passwordExpression;
-    }
-
-    public void setPasswordExpression(@Nonnull String passwordExpression) {
-        this.passwordExpression = passwordExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getUsernameNS() {
-        return usernameNS;
-    }
-
-    public void setUsernameNS(@Nonnull List<NameSpace> usernameNS) {
-        this.usernameNS = usernameNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getPasswordNS() {
-        return passwordNS;
-    }
-
-    public void setPasswordNS(@Nonnull List<NameSpace> passwordNS) {
-        this.passwordNS = passwordNS;
+        if (PASSWORD.equals(nodeName)) {
+            adaptProperty(nodeValue, PASSWORD_KEY, PASSWORD_EXPRESSION_KEY);
+        }
     }
 
 }
