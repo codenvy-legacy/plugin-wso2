@@ -81,11 +81,8 @@ public abstract class AbstractEntityElement {
 
         for (Iterator<Map.Entry<String, String>> iterator = attributes.entrySet().iterator(); iterator.hasNext(); ) {
             Map.Entry<String, String> entry = iterator.next();
-            String value = entry.getValue();
 
-            if (value != null && !value.isEmpty()) {
-                content.append(entry.getKey()).append("=\"").append(value).append('"');
-            }
+            appendAttribute(content, entry);
 
             if (iterator.hasNext()) {
                 content.append(' ');
@@ -93,6 +90,16 @@ public abstract class AbstractEntityElement {
         }
 
         return content.toString();
+    }
+
+    private void appendAttribute(@Nonnull StringBuilder content, @Nonnull Map.Entry<String, String> entry) {
+        String value = entry.getValue();
+
+        if (value == null || value.isEmpty()) {
+            return;
+        }
+
+        content.append(entry.getKey()).append("=\"").append(value).append('"');
     }
 
     /**
@@ -108,11 +115,7 @@ public abstract class AbstractEntityElement {
 
         for (Iterator<Map.Entry<String, String>> iterator = properties.entrySet().iterator(); iterator.hasNext(); ) {
             Map.Entry<String, String> entry = iterator.next();
-            String value = entry.getValue();
-
-            if (value != null && !value.isEmpty()) {
-                content.append('<').append(entry.getKey()).append('>').append(value).append("</").append(entry.getKey()).append('>');
-            }
+            appendNode(content, entry);
 
             if (iterator.hasNext()) {
                 content.append('\n');
@@ -120,6 +123,16 @@ public abstract class AbstractEntityElement {
         }
 
         return content.toString();
+    }
+
+    private void appendNode(@Nonnull StringBuilder content, @Nonnull Map.Entry<String, String> entry) {
+        String value = entry.getValue();
+
+        if (value == null || value.isEmpty()) {
+            return;
+        }
+
+        content.append('<').append(entry.getKey()).append('>').append(value).append("</").append(entry.getKey()).append('>');
     }
 
     /**
@@ -160,7 +173,6 @@ public abstract class AbstractEntityElement {
             String nodeValue = attributeNode.getNodeValue();
 
             applyAttribute(nodeName, nodeValue);
-
         }
     }
 

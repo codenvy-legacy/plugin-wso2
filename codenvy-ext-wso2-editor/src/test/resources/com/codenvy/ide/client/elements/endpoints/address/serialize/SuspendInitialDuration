@@ -1,0 +1,11 @@
+<address uri="http://www.example.org/service">
+<suspendOnFailure>
+<initialDuration>
+100
+</initialDuration>
+<maximumDuration>
+0
+</maximumDuration>
+
+</suspendOnFailure>
+</address>

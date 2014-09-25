@@ -1,0 +1,7 @@
+<endpoint>
+<address uri="http://www.example.org/service">
+<markForSuspension>
+<errorCodes>code</errorCodes>
+</markForSuspension>
+</address>
+</endpoint>

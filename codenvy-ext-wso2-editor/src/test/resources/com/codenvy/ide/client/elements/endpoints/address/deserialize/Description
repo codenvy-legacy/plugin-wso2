@@ -1,0 +1,4 @@
+<endpoint>
+<address uri="http://www.example.org/service"/>
+<description>description</description>
+</endpoint>

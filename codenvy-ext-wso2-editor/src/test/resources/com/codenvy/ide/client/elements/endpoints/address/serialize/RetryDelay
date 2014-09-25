@@ -1,0 +1,8 @@
+<address uri="http://www.example.org/service">
+<markForSuspension>
+<retryDelay>
+1
+</retryDelay>
+
+</markForSuspension>
+</address>

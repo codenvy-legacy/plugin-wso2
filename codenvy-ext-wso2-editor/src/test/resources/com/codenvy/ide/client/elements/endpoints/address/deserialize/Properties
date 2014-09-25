@@ -1,0 +1,4 @@
+<endpoint>
+<address uri="http://www.example.org/service"/>
+<property name="property_name" value="property_value"/>
+</endpoint>

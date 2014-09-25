@@ -1,0 +1,18 @@
+<endpoint>
+<address uri="http://www.example.org/service" attr="attr">
+<addTag/>
+<enableAddressing attr="attr"/>
+<enableRM attr="attr"/>
+<enableSec attr="attr"/>
+<timeout>
+<addTag>some text</addTag>
+</timeout>
+<suspendOnFailure>
+<addTag>some text</addTag>
+</suspendOnFailure>
+<markForSuspension>
+<addTag>some text</addTag>
+</markForSuspension>
+</address>
+<addTag/>
+</endpoint>

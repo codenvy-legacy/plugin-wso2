@@ -1,0 +1,3 @@
+<address uri="http://www.example.org/service">
+<enableRM policy="/default/key"/>
+</address>

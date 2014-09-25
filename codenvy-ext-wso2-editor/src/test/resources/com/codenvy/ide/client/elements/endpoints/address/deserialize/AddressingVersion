@@ -1,0 +1,5 @@
+<endpoint>
+<address uri="http://www.example.org/service">
+<enableAddressing version="submission"/>
+</address>
+</endpoint>

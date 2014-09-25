@@ -1,0 +1,3 @@
+<address uri="http://www.example.org/service">
+<enableSec policy="/default/key"/>
+</address>

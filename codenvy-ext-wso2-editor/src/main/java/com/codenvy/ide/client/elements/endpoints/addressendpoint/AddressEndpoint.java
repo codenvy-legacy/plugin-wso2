@@ -135,6 +135,10 @@ public class AddressEndpoint extends AbstractElement {
 
         this.propertyProvider = propertyProvider;
 
+        prepareDefaultElementState();
+    }
+
+    private void prepareDefaultElementState() {
         putProperty(FORMAT, LEAVE_AS_IS);
         putProperty(URI, "http://www.example.org/service");
 
@@ -173,92 +177,143 @@ public class AddressEndpoint extends AbstractElement {
 
         attributes.put(URI_ATTRIBUTE, getProperty(URI));
 
-        Format format = getProperty(FORMAT);
+        addFormatAttributeIfItIsExisted(attributes);
 
-        if (format != null && !LEAVE_AS_IS.equals(format)) {
-            attributes.put(FORMAT_ATTRIBUTE, format.getValue());
-        }
-
-        Optimize optimize = getProperty(OPTIMIZE);
-
-        if (optimize != null && !Optimize.LEAVE_AS_IS.equals(optimize)) {
-            attributes.put(OPTIMIZE_ATTRIBUTE, optimize.getValue());
-        }
+        addOptimizeAttributeIfItIsExisted(attributes);
 
         return convertAttributesToXMLFormat(attributes);
+    }
+
+    private void addFormatAttributeIfItIsExisted(@Nonnull Map<String, String> attributes) {
+        Format format = getProperty(FORMAT);
+
+        if (format == null || LEAVE_AS_IS.equals(format)) {
+            return;
+        }
+
+        attributes.put(FORMAT_ATTRIBUTE, format.getValue());
+    }
+
+    private void addOptimizeAttributeIfItIsExisted(@Nonnull Map<String, String> attributes) {
+        Optimize optimize = getProperty(OPTIMIZE);
+
+        if (optimize == null || Optimize.LEAVE_AS_IS.equals(optimize)) {
+            return;
+        }
+
+        attributes.put(OPTIMIZE_ATTRIBUTE, optimize.getValue());
     }
 
     /** {@inheritDoc} */
     @Nonnull
     @Override
     protected String serializeProperties() {
-        String content = "";
-        String value;
+        StringBuilder content = new StringBuilder();
 
+        serializeAddressingProperties(content);
+
+        serializeReliableMessagingProperties(content);
+
+        serializeSecurityProperties(content);
+
+        serializeTimeoutProperties(content);
+
+        serializeSuspendProperties(content);
+
+        serializeRetryProperties(content);
+
+        return content.toString();
+    }
+
+    private void serializeAddressingProperties(@Nonnull StringBuilder content) {
         Boolean isAddressingEnabled = getProperty(ADDRESSING_ENABLED);
         AddressingVersion addressingVersion = getProperty(ADDRESSING_VERSION);
         Boolean isAddressingSeparateListener = getProperty(ADDRESSING_SEPARATE_LISTENER);
 
-        if (isAddressingEnabled != null && addressingVersion != null && isAddressingSeparateListener != null && isAddressingEnabled) {
-            content += '<' + ENABLE_ADDRESSING_PROPERTY + ' ' +
-                       VERSION_ATTRIBUTE + "=\"" + addressingVersion.getValue() + '"' +
-                       (isAddressingSeparateListener ? ' ' + SEPARATE_LISTENER_ATTRIBUTE + "=\"true\"" : "") + "/>\n";
+        if (isAddressingEnabled == null || addressingVersion == null || isAddressingSeparateListener == null || !isAddressingEnabled) {
+            return;
         }
 
+        content.append('<').append(ENABLE_ADDRESSING_PROPERTY).append(' ')
+               .append(VERSION_ATTRIBUTE).append("=\"").append(addressingVersion.getValue()).append('"')
+               .append(isAddressingSeparateListener ? ' ' + SEPARATE_LISTENER_ATTRIBUTE + "=\"true\"" : "")
+               .append("/>\n");
+    }
+
+    private void serializeReliableMessagingProperties(@Nonnull StringBuilder content) {
         Boolean isReliableMessagingEnabled = getProperty(RELIABLE_MESSAGING_ENABLED);
         String reliableMessagingPolicy = getProperty(RELIABLE_MESSAGING_POLICY);
 
-        if (isReliableMessagingEnabled != null && reliableMessagingPolicy != null && isReliableMessagingEnabled) {
-            content += '<' + ENABLE_RM_PROPERTY + ' ' + POLICY_ATTRIBUTE + "=\"" + reliableMessagingPolicy + "\"/>\n";
+        if (isReliableMessagingEnabled == null || reliableMessagingPolicy == null || !isReliableMessagingEnabled) {
+            return;
         }
 
+        content.append('<').append(ENABLE_RM_PROPERTY).append(' ')
+               .append(POLICY_ATTRIBUTE).append("=\"").append(reliableMessagingPolicy)
+               .append("\"/>\n");
+    }
+
+    private void serializeSecurityProperties(@Nonnull StringBuilder content) {
         Boolean isSecurityEnabled = getProperty(SECURITY_ENABLED);
         String securityPolicy = getProperty(SECURITY_POLICY);
 
-        if (isSecurityEnabled != null && securityPolicy != null && isSecurityEnabled) {
-            content += '<' + ENABLE_SEC_PROPERTY + ' ' + POLICY_ATTRIBUTE + "=\"" + securityPolicy + "\"/>\n";
+        if (isSecurityEnabled == null || securityPolicy == null || !isSecurityEnabled) {
+            return;
         }
 
+        content.append('<').append(ENABLE_SEC_PROPERTY).append(' ')
+               .append(POLICY_ATTRIBUTE).append("=\"").append(securityPolicy)
+               .append("\"/>\n");
+    }
+
+    private void serializeTimeoutProperties(@Nonnull StringBuilder content) {
         Integer timeoutDuration = getProperty(TIMEOUT_DURATION);
         TimeoutAction timeoutAction = getProperty(TIMEOUT_ACTION);
 
-        if (timeoutDuration != null && timeoutAction != null) {
-            value = convertNumberValueToXMLAttribute(timeoutDuration, 1, DURATION_PROPERTY) +
-                    (NEVER.equals(timeoutAction) ?
-                     "" :
-                     convertStringValueToXMLAttribute(timeoutAction.getValue(), ACTION_PROPERTY));
-
-            content += convertStringValueToXMLAttribute(value, TIMEOUT_PROPERTY);
+        if (timeoutDuration == null || timeoutAction == null) {
+            return;
         }
 
+        String value = convertIntegerValueToXMLAttribute(timeoutDuration, 1, DURATION_PROPERTY) +
+                       (NEVER.equals(timeoutAction) ? "" :
+                        convertStringValueToXMLAttribute(timeoutAction.getValue(), ACTION_PROPERTY));
+
+        content.append(convertStringValueToXMLAttribute(value, TIMEOUT_PROPERTY));
+    }
+
+    private void serializeSuspendProperties(@Nonnull StringBuilder content) {
         String suspendErrorCode = getProperty(SUSPEND_ERROR_CODE);
         Integer suspendInitialDuration = getProperty(SUSPEND_INITIAL_DURATION);
         Integer suspendMaximumDuration = getProperty(SUSPEND_MAXIMUM_DURATION);
         Double suspendProgressionFactor = getProperty(SUSPEND_PROGRESSION_FACTORY);
 
-        if (suspendErrorCode != null && suspendInitialDuration != null && suspendMaximumDuration != null &&
-            suspendProgressionFactor != null && (!suspendErrorCode.isEmpty() || suspendInitialDuration >= 0)) {
-            value = convertStringValueToXMLAttribute(suspendErrorCode, ERROR_CODES_PROPERTY) +
-                    convertNumberValueToXMLAttribute(suspendInitialDuration, 0, INITIAL_DURATION_PROPERTY) +
-                    convertNumberValueToXMLAttribute(suspendMaximumDuration, 0, MAXIMUM_DURATION_PROPERTY) +
-                    convertNumberValueToXMLAttribute(suspendProgressionFactor, 0, PROGRESSION_FACTOR_PROPERTY);
-
-            content += convertStringValueToXMLAttribute(value, SUSPEND_ON_FAILURE_PROPERTY);
+        if (suspendErrorCode == null || suspendInitialDuration == null || suspendMaximumDuration == null ||
+            suspendProgressionFactor == null || (suspendErrorCode.isEmpty() && suspendInitialDuration < 0)) {
+            return;
         }
 
+        String value = convertStringValueToXMLAttribute(suspendErrorCode, ERROR_CODES_PROPERTY) +
+                       convertIntegerValueToXMLAttribute(suspendInitialDuration, 0, INITIAL_DURATION_PROPERTY) +
+                       convertIntegerValueToXMLAttribute(suspendMaximumDuration, 0, MAXIMUM_DURATION_PROPERTY) +
+                       convertDoubleValueToXMLAttribute(suspendProgressionFactor, 0, PROGRESSION_FACTOR_PROPERTY);
+
+        content.append(convertStringValueToXMLAttribute(value, SUSPEND_ON_FAILURE_PROPERTY));
+    }
+
+    private void serializeRetryProperties(@Nonnull StringBuilder content) {
         String retryErrorCodes = getProperty(RETRY_ERROR_CODES);
         Integer retryCount = getProperty(RETRY_COUNT);
         Integer retryDelay = getProperty(RETRY_DELAY);
 
-        if (retryErrorCodes != null && retryCount != null && retryDelay != null && (!retryErrorCodes.isEmpty() || retryDelay > 0)) {
-            value = convertStringValueToXMLAttribute(retryErrorCodes, ERROR_CODES_PROPERTY) +
-                    convertNumberValueToXMLAttribute(retryCount, 1, RETRIES_BEFORE_SUSPENSION_PROPERTY) +
-                    convertNumberValueToXMLAttribute(retryDelay, 1, RETRY_DELAY_PROPERTY);
-
-            content += convertStringValueToXMLAttribute(value, MAKE_FOR_SUSPENSION_PROPERTY);
+        if (retryErrorCodes == null || retryCount == null || retryDelay == null || (retryErrorCodes.isEmpty() && retryDelay <= 0)) {
+            return;
         }
 
-        return content;
+        String value = convertStringValueToXMLAttribute(retryErrorCodes, ERROR_CODES_PROPERTY) +
+                       convertIntegerValueToXMLAttribute(retryCount, 1, RETRIES_BEFORE_SUSPENSION_PROPERTY) +
+                       convertIntegerValueToXMLAttribute(retryDelay, 1, RETRY_DELAY_PROPERTY);
+
+        content.append(convertStringValueToXMLAttribute(value, MAKE_FOR_SUSPENSION_PROPERTY));
     }
 
     /** {@inheritDoc} */
@@ -267,21 +322,32 @@ public class AddressEndpoint extends AbstractElement {
     public String serialize() {
         StringBuilder content = new StringBuilder();
 
-        List<Property> properties = getProperty(PROPERTIES);
-
-        if (properties != null) {
-            for (Property property : properties) {
-                content.append(property.serialize());
-            }
-        }
-
-        String description = getProperty(DESCRIPTION);
-
-        if (description != null) {
-            content.append(convertStringValueToXMLAttribute(description, DESCRIPTION_PROPERTY));
-        }
+        serializeProperties(content);
+        serializeDescription(content);
 
         return super.serialize() + content;
+    }
+
+    private void serializeDescription(StringBuilder content) {
+        String description = getProperty(DESCRIPTION);
+
+        if (description == null) {
+            return;
+        }
+
+        content.append(convertStringValueToXMLAttribute(description, DESCRIPTION_PROPERTY));
+    }
+
+    private void serializeProperties(StringBuilder content) {
+        List<Property> properties = getProperty(PROPERTIES);
+
+        if (properties == null) {
+            return;
+        }
+
+        for (Property property : properties) {
+            content.append(property.serialize());
+        }
     }
 
     /**
@@ -294,15 +360,14 @@ public class AddressEndpoint extends AbstractElement {
      */
     @Nonnull
     private String convertStringValueToXMLAttribute(@Nonnull String value, @Nonnull String tagName) {
-        return value.isEmpty() ?
-               "" :
+        return value.isEmpty() ? "" :
                '<' + tagName + ">\n" +
                value + '\n' +
                "</" + tagName + ">\n";
     }
 
     /**
-     * Returns xml representation of attributes of address endpoint which are numbers.
+     * Returns xml representation of attributes of address endpoint which are integer.
      *
      * @param value
      *         value of attribute which need to display
@@ -312,9 +377,26 @@ public class AddressEndpoint extends AbstractElement {
      *         name of tag of attribute which need to display
      */
     @Nonnull
-    private String convertNumberValueToXMLAttribute(double value, double lowLimitValue, @Nonnull String tagName) {
-        return value < lowLimitValue ?
-               "" :
+    private String convertIntegerValueToXMLAttribute(int value, int lowLimitValue, @Nonnull String tagName) {
+        return value < lowLimitValue ? "" :
+               '<' + tagName + ">\n" +
+               value + '\n' +
+               "</" + tagName + ">\n";
+    }
+
+    /**
+     * Returns xml representation of attributes of address endpoint which are double.
+     *
+     * @param value
+     *         value of attribute which need to display
+     * @param lowLimitValue
+     *         minimum value of the attribute
+     * @param tagName
+     *         name of tag of attribute which need to display
+     */
+    @Nonnull
+    private String convertDoubleValueToXMLAttribute(double value, double lowLimitValue, @Nonnull String tagName) {
+        return value < lowLimitValue ? "" :
                '<' + tagName + ">\n" +
                value + '\n' +
                "</" + tagName + ">\n";
@@ -359,7 +441,7 @@ public class AddressEndpoint extends AbstractElement {
 
         switch (nodeName) {
             case SERIALIZATION_NAME:
-                applyElementProperty(node);
+                applyElementProperties(node);
                 break;
 
             case SERIALIZE_NAME:
@@ -391,7 +473,7 @@ public class AddressEndpoint extends AbstractElement {
      * @param node
      *         XML node that need to be analyzed
      */
-    private void applyElementProperty(@Nonnull Node node) {
+    private void applyElementProperties(@Nonnull Node node) {
         readXMLAttributes(node);
 
         NodeList childNodes = node.getChildNodes();
@@ -400,48 +482,63 @@ public class AddressEndpoint extends AbstractElement {
             Node item = childNodes.item(i);
             String name = item.getNodeName();
 
-            switch (name) {
-                case ENABLE_ADDRESSING_PROPERTY:
-                    applyAddressingProperties(item);
-                    break;
+            applyElementProperty(name, item);
+        }
+    }
 
-                case ENABLE_RM_PROPERTY:
-                    putProperty(RELIABLE_MESSAGING_ENABLED, true);
-                    applyPolicyAttribute(item);
-                    break;
+    private void applyElementProperty(@Nonnull String name, @Nonnull Node item) {
+        switch (name) {
+            case ENABLE_ADDRESSING_PROPERTY:
+                applyAddressingProperties(item);
+                break;
 
-                case ENABLE_SEC_PROPERTY:
-                    putProperty(SECURITY_ENABLED, true);
-                    applyPolicyAttribute(item);
-                    break;
+            case ENABLE_RM_PROPERTY:
+                putProperty(RELIABLE_MESSAGING_ENABLED, true);
+                applyPolicyAttribute(item);
+                break;
 
-                case TIMEOUT_PROPERTY:
-                    applyTimeoutProperties(item);
-                    break;
+            case ENABLE_SEC_PROPERTY:
+                putProperty(SECURITY_ENABLED, true);
+                applyPolicyAttribute(item);
+                break;
 
-                case SUSPEND_ON_FAILURE_PROPERTY:
-                    applySuspendOnFailureProperties(item);
-                    break;
+            case TIMEOUT_PROPERTY:
+                applyTimeoutProperties(item);
+                break;
 
-                case MAKE_FOR_SUSPENSION_PROPERTY:
-                    applyRetryProperties(item);
-                    break;
+            case SUSPEND_ON_FAILURE_PROPERTY:
+                applySuspendOnFailureProperties(item);
+                break;
 
-                default:
-            }
+            case MAKE_FOR_SUSPENSION_PROPERTY:
+                applyRetryProperties(item);
+                break;
+
+            default:
         }
     }
 
     private void applyPolicyAttribute(@Nonnull Node node) {
-        if (!node.hasAttributes()) {
+        // we should use condition because it is impossible to use hasAttributes method because it throws exception
+        if (node.getAttributes().getLength() < 1) {
             return;
         }
 
         Node attributeNode = node.getAttributes().item(0);
 
-        boolean isEnableRmProperty = ENABLE_RM_PROPERTY.equals(node.getNodeName());
+        if (!POLICY_ATTRIBUTE.equals(attributeNode.getNodeName())) {
+            return;
+        }
 
-        putProperty(isEnableRmProperty ? RELIABLE_MESSAGING_POLICY : SECURITY_POLICY, attributeNode.getNodeValue());
+        String nodeName = node.getNodeName();
+
+        if (ENABLE_RM_PROPERTY.equals(nodeName)) {
+            putProperty(RELIABLE_MESSAGING_POLICY, attributeNode.getNodeValue());
+        }
+
+        if (ENABLE_SEC_PROPERTY.equals(nodeName)) {
+            putProperty(SECURITY_POLICY, attributeNode.getNodeValue());
+        }
     }
 
     /**
@@ -461,17 +558,17 @@ public class AddressEndpoint extends AbstractElement {
             String attributeName = attributeNode.getNodeName();
             String attributeValue = attributeNode.getNodeValue();
 
-            switch (attributeName) {
-                case VERSION_ATTRIBUTE:
-                    putProperty(ADDRESSING_VERSION, AddressingVersion.getItemByValue(attributeValue));
-                    break;
+            applyAddressingAttribute(attributeName, attributeValue);
+        }
+    }
 
-                case SEPARATE_LISTENER_ATTRIBUTE:
-                    putProperty(ADDRESSING_SEPARATE_LISTENER, true);
-                    break;
+    private void applyAddressingAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        if (VERSION_ATTRIBUTE.equals(attributeName)) {
+            putProperty(ADDRESSING_VERSION, AddressingVersion.getItemByValue(attributeValue));
+        }
 
-                default:
-            }
+        if (SEPARATE_LISTENER_ATTRIBUTE.equals(attributeName)) {
+            putProperty(ADDRESSING_SEPARATE_LISTENER, true);
         }
     }
 
@@ -490,11 +587,17 @@ public class AddressEndpoint extends AbstractElement {
             String propertyName = item.getNodeName();
             String propertyValue = item.getChildNodes().item(0).getNodeValue();
 
-            if (DURATION_PROPERTY.equals(propertyName)) {
-                putProperty(TIMEOUT_DURATION, Integer.valueOf(propertyValue));
-            } else {
-                putProperty(TIMEOUT_ACTION, TimeoutAction.getItemByValue(propertyValue));
-            }
+            applyTimeoutProperty(propertyName, propertyValue);
+        }
+    }
+
+    private void applyTimeoutProperty(@Nonnull String propertyName, @Nonnull String propertyValue) {
+        if (DURATION_PROPERTY.equals(propertyName)) {
+            putProperty(TIMEOUT_DURATION, Integer.valueOf(propertyValue));
+        }
+
+        if (ACTION_PROPERTY.equals(propertyName)) {
+            putProperty(TIMEOUT_ACTION, TimeoutAction.getItemByValue(propertyValue));
         }
     }
 
@@ -513,25 +616,29 @@ public class AddressEndpoint extends AbstractElement {
             String propertyName = item.getNodeName();
             String propertyValue = item.getChildNodes().item(0).getNodeValue();
 
-            switch (propertyName) {
-                case ERROR_CODES_PROPERTY:
-                    putProperty(SUSPEND_ERROR_CODE, propertyValue);
-                    break;
+            applySuspendOnFailureProperty(propertyName, propertyValue);
+        }
+    }
 
-                case INITIAL_DURATION_PROPERTY:
-                    putProperty(SUSPEND_INITIAL_DURATION, Integer.valueOf(propertyValue));
-                    break;
+    private void applySuspendOnFailureProperty(@Nonnull String propertyName, @Nonnull String propertyValue) {
+        switch (propertyName) {
+            case ERROR_CODES_PROPERTY:
+                putProperty(SUSPEND_ERROR_CODE, propertyValue);
+                break;
 
-                case PROGRESSION_FACTOR_PROPERTY:
-                    putProperty(SUSPEND_PROGRESSION_FACTORY, Double.valueOf(propertyValue));
-                    break;
+            case INITIAL_DURATION_PROPERTY:
+                putProperty(SUSPEND_INITIAL_DURATION, Integer.valueOf(propertyValue));
+                break;
 
-                case MAXIMUM_DURATION_PROPERTY:
-                    putProperty(SUSPEND_MAXIMUM_DURATION, Integer.valueOf(propertyValue));
-                    break;
+            case PROGRESSION_FACTOR_PROPERTY:
+                putProperty(SUSPEND_PROGRESSION_FACTORY, Double.valueOf(propertyValue));
+                break;
 
-                default:
-            }
+            case MAXIMUM_DURATION_PROPERTY:
+                putProperty(SUSPEND_MAXIMUM_DURATION, Integer.valueOf(propertyValue));
+                break;
+
+            default:
         }
     }
 
@@ -550,21 +657,25 @@ public class AddressEndpoint extends AbstractElement {
             String propertyName = item.getNodeName();
             String propertyValue = item.getChildNodes().item(0).getNodeValue();
 
-            switch (propertyName) {
-                case ERROR_CODES_PROPERTY:
-                    putProperty(RETRY_ERROR_CODES, propertyValue);
-                    break;
+            applyRetryProperty(propertyName, propertyValue);
+        }
+    }
 
-                case RETRIES_BEFORE_SUSPENSION_PROPERTY:
-                    putProperty(RETRY_COUNT, Integer.valueOf(propertyValue));
-                    break;
+    private void applyRetryProperty(@Nonnull String propertyName, @Nonnull String propertyValue) {
+        switch (propertyName) {
+            case ERROR_CODES_PROPERTY:
+                putProperty(RETRY_ERROR_CODES, propertyValue);
+                break;
 
-                case RETRY_DELAY_PROPERTY:
-                    putProperty(RETRY_DELAY, Integer.valueOf(propertyValue));
-                    break;
+            case RETRIES_BEFORE_SUSPENSION_PROPERTY:
+                putProperty(RETRY_COUNT, Integer.valueOf(propertyValue));
+                break;
 
-                default:
-            }
+            case RETRY_DELAY_PROPERTY:
+                putProperty(RETRY_DELAY, Integer.valueOf(propertyValue));
+                break;
+
+            default:
         }
     }
 

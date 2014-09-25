@@ -1,0 +1,24 @@
+<endpoint>
+<address uri="uri" format="soap11" optimize="mtom">
+<enableAddressing version="submission" separateListener="true"/>
+<enableRM policy="policy value"/>
+<enableSec policy="policy value"/>
+<timeout>
+<duration>1</duration>
+<responseAction>discard</responseAction>
+</timeout>
+<suspendOnFailure>
+<errorCodes>code</errorCodes>
+<initialDuration>100</initialDuration>
+<maximumDuration>1</maximumDuration>
+<progressionFactor>1.0</progressionFactor>
+</suspendOnFailure>
+<markForSuspension>
+<errorCodes>code</errorCodes>
+<retriesBeforeSuspension>1</retriesBeforeSuspension>
+<retryDelay>1</retryDelay>
+</markForSuspension>
+</address>
+<property name="property_name" value="property_value"/>
+<description>description</description>
+</endpoint>

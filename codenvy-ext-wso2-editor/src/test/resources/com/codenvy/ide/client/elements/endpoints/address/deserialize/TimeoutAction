@@ -1,0 +1,7 @@
+<endpoint>
+<address uri="http://www.example.org/service">
+<timeout>
+<responseAction>discard</responseAction>
+</timeout>
+</address>
+</endpoint>

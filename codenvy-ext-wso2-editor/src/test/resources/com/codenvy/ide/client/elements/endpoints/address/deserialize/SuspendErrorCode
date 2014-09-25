@@ -1,0 +1,8 @@
+<endpoint>
+<address uri="http://www.example.org/service">
+<suspendOnFailure>
+<errorCodes>code</errorCodes>
+<maximumDuration>0</maximumDuration>
+</suspendOnFailure>
+</address>
+</endpoint>
