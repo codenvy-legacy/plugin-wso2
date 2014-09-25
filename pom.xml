@@ -67,6 +67,8 @@
                         <exclude>**/com/codenvy/ide/ext/wso2/client/xml.js</exclude>
                         <exclude>**/com/codenvy/ide/ext/wso2/client/esb.xsd</exclude>
                         <exclude>**/com/codenvy/ide/ext/wso2/client/templates/**</exclude>
+                        <exclude>**/serialize/**</exclude>
+                        <exclude>**/deserialize/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>

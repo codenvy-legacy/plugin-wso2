@@ -713,8 +713,11 @@ public class AddressEndpoint extends AbstractElement {
                 case "get":
                     return GET;
 
-                default:
+                case "REST":
                     return REST;
+
+                default:
+                    return LEAVE_AS_IS;
             }
         }
     }
@@ -744,8 +747,11 @@ public class AddressEndpoint extends AbstractElement {
                 case "mtom":
                     return MTOM;
 
-                default:
+                case "swa":
                     return SWA;
+
+                default:
+                    return LEAVE_AS_IS;
             }
         }
     }
@@ -802,8 +808,11 @@ public class AddressEndpoint extends AbstractElement {
                 case "discard":
                     return DISCARD;
 
-                default:
+                case "fault":
                     return FAULT;
+
+                default:
+                    return NEVER;
             }
         }
     }

@@ -38,11 +38,16 @@ import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressE
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.DESCRIPTION;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.FORMAT;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.GET;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.LEAVE_AS_IS;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.POX;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.REST;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.SOUP11;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.SOUP12;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.OPTIMIZE;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Optimize;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Optimize.MTOM;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Optimize.SWA;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.PROPERTIES;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.RELIABLE_MESSAGING_ENABLED;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.RELIABLE_MESSAGING_POLICY;
@@ -59,6 +64,7 @@ import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressE
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TIMEOUT_DURATION;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction.DISCARD;
+import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction.FAULT;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction.NEVER;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.URI;
 import static org.junit.Assert.assertEquals;
@@ -762,6 +768,13 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
     }
 
     @Test
+    public void serializationShouldBeNotDoneWhenPropertiesParamIsNull() throws Exception {
+        entity.putProperty(PROPERTIES, null);
+
+        assertContentAndValue(SERIALIZE_PATH + "DefaultSerialization", entity.serialize());
+    }
+
+    @Test
     public void deserializationShouldBeDoneWhenPropertiesParamIsChanged() throws Exception {
         assertDefaultConfiguration();
 
@@ -834,6 +847,13 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         entity.putProperty(DESCRIPTION, DESCRIPTION_VALUE);
 
         assertContentAndValue(SERIALIZE_PATH + "Description", entity.serialize());
+    }
+
+    @Test
+    public void serializationShouldBeNotDoneWhenDescriptionIsNull() throws Exception {
+        entity.putProperty(DESCRIPTION, null);
+
+        assertContentAndValue(SERIALIZE_PATH + "DefaultSerialization", entity.serialize());
     }
 
     @Test
@@ -910,6 +930,35 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
     }
 
     @Test
+    public void deserializationShouldBeDoneWhenReliableMessagePolicyIsAbsent() throws Exception {
+        assertDefaultConfiguration();
+
+        entity.deserialize(getContent(DESERIALIZE_PATH + "ReliableMessagePolicyEmpty"));
+
+        assertConfiguration(FORMAT_DEFAULT_VALUE,
+                            URI_DEFAULT_VALUE,
+                            SUSPEND_ERROR_CODE_DEFAULT_VALUE,
+                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
+                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
+                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            RETRY_ERROR_CODES_DEFAULT_VALUE,
+                            RETRY_COUNT_DEFAULT_VALUE,
+                            RETRY_DELAY_DEFAULT_VALUE,
+                            PROPERTIES_DEFAULT_VALUE,
+                            OPTIMIZE_DEFAULT_VALUE,
+                            DESCRIPTION_DEFAULT_VALUE,
+                            true,
+                            RELIABLE_MESSAGING_POLICY_DEFAULT_VALUE,
+                            SECURITY_ENABLED_DEFAULT_VALUE,
+                            SECURITY_POLICY_DEFAULT_VALUE,
+                            ADDRESSING_ENABLED_DEFAULT_VALUE,
+                            ADDRESSING_VERSION_DEFAULT_VALUE,
+                            ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
+                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            TIMEOUT_ACTION_DEFAULT_VALUE);
+    }
+
+    @Test
     public void serializationShouldBeNotDoneWhenReliableMessagePolicyIsChangedButGroupIsNotShown() throws Exception {
         entity.putProperty(RELIABLE_MESSAGING_POLICY, RELIABLE_MESSAGING_POLICY_VALUE);
 
@@ -953,6 +1002,35 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             RELIABLE_MESSAGING_POLICY_DEFAULT_VALUE,
                             true,
                             SECURITY_POLICY_VALUE,
+                            ADDRESSING_ENABLED_DEFAULT_VALUE,
+                            ADDRESSING_VERSION_DEFAULT_VALUE,
+                            ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
+                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            TIMEOUT_ACTION_DEFAULT_VALUE);
+    }
+
+    @Test
+    public void deserializationShouldBeDoneWhenSecurityPolicyIsAbsent() throws Exception {
+        assertDefaultConfiguration();
+
+        entity.deserialize(getContent(DESERIALIZE_PATH + "SecurityPolicyEmpty"));
+
+        assertConfiguration(FORMAT_DEFAULT_VALUE,
+                            URI_DEFAULT_VALUE,
+                            SUSPEND_ERROR_CODE_DEFAULT_VALUE,
+                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
+                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
+                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            RETRY_ERROR_CODES_DEFAULT_VALUE,
+                            RETRY_COUNT_DEFAULT_VALUE,
+                            RETRY_DELAY_DEFAULT_VALUE,
+                            PROPERTIES_DEFAULT_VALUE,
+                            OPTIMIZE_DEFAULT_VALUE,
+                            DESCRIPTION_DEFAULT_VALUE,
+                            RELIABLE_MESSAGING_ENABLED_DEFAULT_VALUE,
+                            RELIABLE_MESSAGING_POLICY_DEFAULT_VALUE,
+                            true,
+                            SECURITY_POLICY_DEFAULT_VALUE,
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
@@ -1070,6 +1148,13 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
     }
 
     @Test
+    public void serializationShouldBeNotDoneWhenTimeoutDurationIsNull() throws Exception {
+        entity.putProperty(TIMEOUT_DURATION, null);
+
+        assertContentAndValue(SERIALIZE_PATH + "DefaultSerialization", entity.serialize());
+    }
+
+    @Test
     public void deserializationShouldBeDoneWhenTimeoutDurationIsChanged() throws Exception {
         assertDefaultConfiguration();
 
@@ -1110,6 +1195,13 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         entity.putProperty(TIMEOUT_ACTION, DISCARD);
 
         assertContentAndValue(SERIALIZE_PATH + "TimeoutAction", entity.serialize());
+    }
+
+    @Test
+    public void serializationShouldBeNotDoneWhenTimeoutActionIsNull() throws Exception {
+        entity.putProperty(TIMEOUT_ACTION, null);
+
+        assertContentAndValue(SERIALIZE_PATH + "DefaultSerialization", entity.serialize());
     }
 
     @Test
@@ -1236,6 +1328,96 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
                             TIMEOUT_DURATION_DEFAULT_VALUE,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
+    }
+
+    @Test
+    public void leaveAsIsValueOfFormatShouldBeReturned() throws Exception {
+        assertEquals(LEAVE_AS_IS, Format.getItemByValue("LEAVE_AS_IS"));
+    }
+
+    @Test
+    public void leaveAsIsValueOfFormatShouldBeReturned2() throws Exception {
+        assertEquals(LEAVE_AS_IS, Format.getItemByValue("some text"));
+    }
+
+    @Test
+    public void soup11ValueOfFormatShouldBeReturned() throws Exception {
+        assertEquals(SOUP11, Format.getItemByValue("soap11"));
+    }
+
+    @Test
+    public void soup12ValueOfFormatShouldBeReturned() throws Exception {
+        assertEquals(SOUP12, Format.getItemByValue("soap12"));
+    }
+
+    @Test
+    public void poxValueOfFormatShouldBeReturned() throws Exception {
+        assertEquals(POX, Format.getItemByValue("pox"));
+    }
+
+    @Test
+    public void getValueOfFormatShouldBeReturned() throws Exception {
+        assertEquals(GET, Format.getItemByValue("get"));
+    }
+
+    @Test
+    public void restValueOfFormatShouldBeReturned() throws Exception {
+        assertEquals(REST, Format.getItemByValue("REST"));
+    }
+
+    @Test
+    public void leaveAsIsValueOfOptimizeShouldBeReturned() throws Exception {
+        assertEquals(Optimize.LEAVE_AS_IS, Optimize.getItemByValue("LEAVE_AS_IS"));
+    }
+
+    @Test
+    public void leaveAsIsValueOfOptimizeShouldBeReturned2() throws Exception {
+        assertEquals(Optimize.LEAVE_AS_IS, Optimize.getItemByValue("some text"));
+    }
+
+    @Test
+    public void mtomValueOfOptimizeShouldBeReturned() throws Exception {
+        assertEquals(MTOM, Optimize.getItemByValue("mtom"));
+    }
+
+    @Test
+    public void swaValueOfOptimizeShouldBeReturned() throws Exception {
+        assertEquals(SWA, Optimize.getItemByValue("swa"));
+    }
+
+    @Test
+    public void finalValueOfAddressingVersionShouldBeReturned() throws Exception {
+        assertEquals(FINAL, AddressingVersion.getItemByValue("final"));
+    }
+
+    @Test
+    public void finalValueOfAddressingVersionShouldBeReturned2() throws Exception {
+        assertEquals(FINAL, AddressingVersion.getItemByValue("some text"));
+    }
+
+    @Test
+    public void submissionValueOfAddressingVersionShouldBeReturned() throws Exception {
+        assertEquals(SUBMISSION, AddressingVersion.getItemByValue("submission"));
+    }
+
+    @Test
+    public void neverValueOfTimeoutActionShouldBeReturned() throws Exception {
+        assertEquals(NEVER, TimeoutAction.getItemByValue("never"));
+    }
+
+    @Test
+    public void neverValueOfTimeoutActionShouldBeReturned2() throws Exception {
+        assertEquals(NEVER, TimeoutAction.getItemByValue("some text"));
+    }
+
+    @Test
+    public void discardValueOfTimeoutActionShouldBeReturned() throws Exception {
+        assertEquals(DISCARD, TimeoutAction.getItemByValue("discard"));
+    }
+
+    @Test
+    public void faultValueOfTimeoutActionShouldBeReturned() throws Exception {
+        assertEquals(FAULT, TimeoutAction.getItemByValue("fault"));
     }
 
 }
