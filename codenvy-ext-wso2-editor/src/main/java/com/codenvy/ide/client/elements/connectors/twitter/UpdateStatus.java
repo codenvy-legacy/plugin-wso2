@@ -146,8 +146,10 @@ public class UpdateStatus extends AbstractConnector {
                 adaptProperty(nodeValue, ACCESS_TOKEN_SECRET_INL, ACCESS_TOKEN_SECRET_EXPR);
                 break;
 
-            default:
+            case STATUS:
                 adaptProperty(nodeValue, STATUS_INL, STATUS_EXPR);
+                break;
+            default:
         }
     }
 }

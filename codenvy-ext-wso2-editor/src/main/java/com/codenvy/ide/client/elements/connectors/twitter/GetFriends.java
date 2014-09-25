@@ -118,8 +118,10 @@ public class GetFriends extends AbstractConnector {
                 adaptProperty(nodeValue, USER_ID_INL, USER_ID_EXPR);
                 break;
 
-            default:
+            case CURSOR:
                 adaptProperty(nodeValue, CURSOR_INL, CURSOR_EXPR);
+                break;
+            default:
         }
     }
 }

@@ -146,8 +146,10 @@ public class Retweet extends AbstractConnector {
                 adaptProperty(nodeValue, ACCESS_TOKEN_SECRET_INL, ACCESS_TOKEN_SECRET_EXPR);
                 break;
 
-            default:
+            case ID:
                 adaptProperty(nodeValue, ID_INL, ID_EXPR);
+                break;
+            default:
         }
     }
 }

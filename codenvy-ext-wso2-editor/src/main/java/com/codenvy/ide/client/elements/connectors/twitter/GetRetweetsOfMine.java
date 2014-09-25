@@ -159,8 +159,10 @@ public class GetRetweetsOfMine extends AbstractConnector {
                 adaptProperty(nodeValue, COUNT_INL, COUNT_EXPR);
                 break;
 
-            default:
+            case PAGE:
                 adaptProperty(nodeValue, PAGE_INL, PAGE_EXPR);
+                break;
+            default:
         }
     }
 }

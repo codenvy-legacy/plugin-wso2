@@ -166,8 +166,10 @@ public class SendDirectMessage extends AbstractConnector {
                 adaptProperty(nodeValue, SCREEN_NAME_INL, SCREEN_NAME_EXPR);
                 break;
 
-            default:
+            case MESSAGE:
                 adaptProperty(nodeValue, MESSAGE_INL, MESSAGE_EXPR);
+                break;
+            default:
         }
     }
 }

@@ -187,8 +187,10 @@ public class GetSentDirectMessages extends AbstractConnector {
                 adaptProperty(nodeValue, SINCE_ID_INL, SINCE_ID_EXPR);
                 break;
 
-            default:
+            case MAX_ID:
                 adaptProperty(nodeValue, MAX_ID_INL, MAX_ID_EXPR);
+                break;
+            default:
         }
     }
 }
