@@ -16,23 +16,40 @@
 package com.codenvy.ide.client.propertiespanel.connectors.twitter;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
 import com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus.ACCESS_TOKEN_EXPR;
+import static com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus.ACCESS_TOKEN_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus.ACCESS_TOKEN_NS;
+import static com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus.ACCESS_TOKEN_SECRET_EXPR;
+import static com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus.ACCESS_TOKEN_SECRET_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus.ACCESS_TOKEN_SECRET_NS;
+import static com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus.CONSUMER_KEY_EXPR;
+import static com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus.CONSUMER_KEY_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus.CONSUMER_KEY_NS;
+import static com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus.CONSUMER_SECRET_EXPR;
+import static com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus.CONSUMER_SECRET_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus.CONSUMER_SECRET_NS;
+import static com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus.STATUS_EXPR;
+import static com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus.STATUS_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.UpdateStatus.STATUS_NS;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -43,220 +60,73 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  */
 public class UpdateStatusConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<UpdateStatus> {
 
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          consumerKeyCallBack;
-    private final AddNameSpacesCallBack          consumerSecretCallBack;
-    private final AddNameSpacesCallBack          accessTokenCallBack;
-    private final AddNameSpacesCallBack          accessTokenSecretCallBack;
-    private final AddNameSpacesCallBack          statusCallBack;
+    private SimplePropertyPresenter consumerKey;
+    private SimplePropertyPresenter consumerSecret;
+    private SimplePropertyPresenter accessToken;
+    private SimplePropertyPresenter accessTokenSecret;
+    private SimplePropertyPresenter status;
+
+    private ComplexPropertyPresenter consumerKeyExpr;
+    private ComplexPropertyPresenter consumerSecretExpr;
+    private ComplexPropertyPresenter accessTokenExpr;
+    private ComplexPropertyPresenter accessTokenSecretExpr;
+    private ComplexPropertyPresenter statusExpr;
 
     @Inject
     public UpdateStatusConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                           NameSpaceEditorPresenter nameSpacePresenter,
-                                          GeneralPropertiesPanelView view,
+                                          PropertiesPanelView view,
                                           TwitterPropertyManager twitterPropertyManager,
                                           ParameterPresenter parameterPresenter,
-                                          PropertyTypeManager propertyTypeManager) {
-        super(view, twitterPropertyManager, parameterPresenter, propertyTypeManager);
+                                          PropertyTypeManager propertyTypeManager,
+                                          PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                          Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                          Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                          Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              twitterPropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.consumerKeyCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setConsumerKeyNS(nameSpaces);
-                element.setConsumerKeyExpr(expression);
-
-                UpdateStatusConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.consumerSecretCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setConsumerSecretNS(nameSpaces);
-                element.setConsumerSecretExpr(expression);
-
-                UpdateStatusConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.accessTokenCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setAccessTokenNS(nameSpaces);
-                element.setAccessTokenExpr(expression);
-
-                UpdateStatusConnectorPresenter.this.view.setThirdTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.accessTokenSecretCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setAccessTokenSecretNS(nameSpaces);
-                element.setAccessTokenSecretExpr(expression);
-
-                UpdateStatusConnectorPresenter.this.view.setFourthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.statusCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setStatusIdNS(nameSpaces);
-                element.setStatusIdExpr(expression);
-
-                UpdateStatusConnectorPresenter.this.view.setFifthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
+    private void prepareView() {
+        consumerKey = createSimplePanel(locale.twitterConsumerKey(), CONSUMER_KEY_INL);
+        consumerSecret = createSimplePanel(locale.twitterConsumerSecret(), CONSUMER_SECRET_INL);
+        accessToken = createSimplePanel(locale.twitterAccessToken(), ACCESS_TOKEN_INL);
+        accessTokenSecret = createSimplePanel(locale.twitterAccessTokenSecret(), ACCESS_TOKEN_SECRET_INL);
+        status = createSimplePanel(locale.twitterStatusId(), STATUS_INL);
 
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setConsumerKey(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setConsumerSecret(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdTextBoxValueChanged() {
-        element.setAccessToken(view.getThirdTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthTextBoxValueChanged() {
-        element.setAccessTokenSecret(view.getFourthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFifthTextBoxValueChanged() {
-        element.setStatusId(view.getFifthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getConsumerKeyNS(),
-                                                    consumerKeyCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getConsumerKeyExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getAccessTokenNS(),
-                                                    consumerSecretCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getAccessTokenExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getConsumerSecretNS(),
-                                                    accessTokenCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getConsumerSecretExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getAccessTokenSecretNS(),
-                                                    accessTokenSecretCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getAccessTokenSecretExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFifthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getStatusIdNS(),
-                                                    statusCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getStatusIdExpr());
+        consumerKeyExpr = createComplexPanel(locale.twitterConsumerKey(), CONSUMER_KEY_NS, CONSUMER_KEY_EXPR);
+        consumerSecretExpr = createComplexPanel(locale.twitterConsumerSecret(), CONSUMER_SECRET_NS, CONSUMER_SECRET_EXPR);
+        accessTokenExpr = createComplexPanel(locale.twitterAccessToken(), ACCESS_TOKEN_NS, ACCESS_TOKEN_EXPR);
+        accessTokenSecretExpr = createComplexPanel(locale.twitterAccessTokenSecret(), ACCESS_TOKEN_SECRET_NS, ACCESS_TOKEN_SECRET_EXPR);
+        statusExpr = createComplexPanel(locale.twitterStatusId(), STATUS_NS, STATUS_EXPR);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        boolean isVisible = INLINE.equals(element.getProperty(PARAMETER_EDITOR_TYPE));
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+        consumerKey.setVisible(isVisible);
+        consumerSecret.setVisible(isVisible);
+        accessToken.setVisible(isVisible);
+        accessTokenSecret.setVisible(isVisible);
+        status.setVisible(isVisible);
 
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-        view.setVisibleFourthButton(isEquals);
-        view.setVisibleFifthButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-        view.setEnableFourthTextBox(!isEquals);
-        view.setEnableFifthTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getConsumerKeyExpr() : element.getConsumerKey());
-        view.setSecondTextBoxValue(isEquals ? element.getConsumerSecretExpr() : element.getConsumerSecret());
-        view.setThirdTextBoxValue(isEquals ? element.getAccessTokenExpr() : element.getAccessToken());
-        view.setFourthTextBoxValue(isEquals ? element.getAccessTokenSecretExpr() : element.getAccessTokenSecret());
-        view.setFifthTextBoxValue(isEquals ? element.getStatusIdExpr() : element.getStatusId());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-        view.setVisibleThirdPanel(true);
-        view.setVisibleFourthPanel(true);
-        view.setVisibleFifthPanel(true);
-
-        view.setFirstLabelTitle(locale.twitterConsumerKey());
-        view.setSecondLabelTitle(locale.twitterConsumerSecret());
-        view.setThirdLabelTitle(locale.twitterAccessToken());
-        view.setFourthLabelTitle(locale.twitterAccessTokenSecret());
-        view.setFifthLabelTitle(locale.twitterStatusId());
+        consumerKeyExpr.setVisible(!isVisible);
+        consumerSecretExpr.setVisible(!isVisible);
+        accessTokenExpr.setVisible(!isVisible);
+        accessTokenSecretExpr.setVisible(!isVisible);
+        statusExpr.setVisible(!isVisible);
     }
 
     /** {@inheritDoc} */
@@ -264,6 +134,16 @@ public class UpdateStatusConnectorPresenter extends AbstractConnectorPropertiesP
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        consumerKey.setProperty(element.getProperty(CONSUMER_KEY_INL));
+        consumerSecret.setProperty(element.getProperty(CONSUMER_SECRET_INL));
+        accessToken.setProperty(element.getProperty(ACCESS_TOKEN_INL));
+        accessTokenSecret.setProperty(element.getProperty(ACCESS_TOKEN_SECRET_INL));
+        status.setProperty(element.getProperty(STATUS_INL));
+
+        consumerKey.setProperty(element.getProperty(CONSUMER_KEY_EXPR));
+        consumerSecret.setProperty(element.getProperty(CONSUMER_SECRET_EXPR));
+        accessToken.setProperty(element.getProperty(ACCESS_TOKEN_EXPR));
+        accessTokenSecret.setProperty(element.getProperty(ACCESS_TOKEN_SECRET_EXPR));
+        status.setProperty(element.getProperty(STATUS_EXPR));
     }
 }

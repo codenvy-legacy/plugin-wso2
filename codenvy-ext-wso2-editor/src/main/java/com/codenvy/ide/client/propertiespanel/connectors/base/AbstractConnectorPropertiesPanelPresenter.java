@@ -174,7 +174,7 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
      * @param key
      *         value of key which allows us to get inline parameter of element
      */
-    protected SimplePropertyPresenter prepareSimplePanel(@Nonnull String title, @Nonnull final Key<String> key) {
+    protected SimplePropertyPresenter createSimplePanel(@Nonnull String title, @Nonnull final Key<String> key) {
         final SimplePropertyPresenter simplePanel = simplePropertyProvider.get();
         simplePanel.setTitle(title);
         simplePanel.addPropertyValueChangedListener(new PropertyValueChangedListener() {
@@ -204,9 +204,9 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
      * @param expressionKey
      *         value of key which allows us to get expression parameter of element
      */
-    protected ComplexPropertyPresenter prepareComplexPanel(@Nonnull String title,
-                                                           @Nonnull final Key<List<NameSpace>> nameSpaceKey,
-                                                           @Nonnull final Key<String> expressionKey) {
+    protected ComplexPropertyPresenter createComplexPanel(@Nonnull String title,
+                                                          @Nonnull final Key<List<NameSpace>> nameSpaceKey,
+                                                          @Nonnull final Key<String> expressionKey) {
 
         final ComplexPropertyPresenter complexPanel = complexPropertyProvider.get();
         complexPanel.setTitle(title);

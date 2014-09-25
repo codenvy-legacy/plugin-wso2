@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes GetClosesTrends connector for twitter group of connectors. Also the class contains the business logic
@@ -47,19 +46,17 @@ public class GetClosesTrends extends AbstractConnector {
     public static final String ELEMENT_NAME       = "GetClosesTrends";
     public static final String SERIALIZATION_NAME = "twitter.getClosestTrends";
 
+    public static final Key<String>          LATITUDE_INL   = new Key<>("latitudeInl");
+    public static final Key<String>          LONGITUDE_INL  = new Key<>("longitudeInl");
+    public static final Key<String>          LATITUDE_EXPR  = new Key<>("latitudeExpr");
+    public static final Key<String>          LONGITUDE_EXPR = new Key<>("longitudeExpr");
+    public static final Key<List<NameSpace>> LATITUDE_NS    = new Key<>("latitudeNameSpace");
+    public static final Key<List<NameSpace>> LONGITUDE_NS   = new Key<>("longitudeNameSpace");
+
     private static final String LATITUDE  = "latitude";
     private static final String LONGITUDE = "longitude";
 
     private static final List<String> PROPERTIES = Arrays.asList(LATITUDE, LONGITUDE);
-
-    private String latitude;
-    private String longitude;
-
-    private String latitudeExpr;
-    private String longitudeExpr;
-
-    private List<NameSpace> latitudeNS;
-    private List<NameSpace> longitudeNS;
 
     @Inject
     public GetClosesTrends(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -73,14 +70,12 @@ public class GetClosesTrends extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        latitude = "";
-        longitude = "";
-
-        latitudeExpr = "";
-        longitudeExpr = "";
-
-        latitudeNS = new ArrayList<>();
-        longitudeNS = new ArrayList<>();
+        putProperty(LATITUDE_INL, "");
+        putProperty(LONGITUDE_INL, "");
+        putProperty(LATITUDE_EXPR, "");
+        putProperty(LONGITUDE_EXPR, "");
+        putProperty(LATITUDE_NS, new ArrayList<NameSpace>());
+        putProperty(LONGITUDE_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -89,10 +84,10 @@ public class GetClosesTrends extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(LATITUDE, isInline ? latitude : latitudeExpr);
-        properties.put(LONGITUDE, isInline ? longitude : longitudeExpr);
+        properties.put(LATITUDE, isInline ? getProperty(LATITUDE_INL) : getProperty(LATITUDE_EXPR));
+        properties.put(LONGITUDE, isInline ? getProperty(LONGITUDE_INL) : getProperty(LONGITUDE_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -103,82 +98,12 @@ public class GetClosesTrends extends AbstractConnector {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
-
-        switch (nodeName) {
-            case LATITUDE:
-                if (isInline) {
-                    latitude = nodeValue;
-                } else {
-                    latitudeExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
-
-            case LONGITUDE:
-                if (isInline) {
-                    longitude = nodeValue;
-                } else {
-                    longitudeExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+        if (LATITUDE.equals(nodeName)) {
+            adaptProperty(nodeValue, LATITUDE_INL, LATITUDE_EXPR);
         }
-    }
 
-    @Nonnull
-    public String getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(@Nonnull String latitude) {
-        this.latitude = latitude;
-    }
-
-    @Nonnull
-    public String getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(@Nonnull String longitude) {
-        this.longitude = longitude;
-    }
-
-    @Nonnull
-    public String getLatitudeExpr() {
-        return latitudeExpr;
-    }
-
-    public void setLatitudeExpr(@Nonnull String latitudeExpr) {
-        this.latitudeExpr = latitudeExpr;
-    }
-
-    @Nonnull
-    public String getLongitudeExpr() {
-        return longitudeExpr;
-    }
-
-    public void setLongitudeExpr(@Nonnull String longitudeExpr) {
-        this.longitudeExpr = longitudeExpr;
-    }
-
-    @Nonnull
-    public List<NameSpace> getLatitudeNS() {
-        return latitudeNS;
-    }
-
-    public void setLatitudeNS(@Nonnull List<NameSpace> latitudeNS) {
-        this.latitudeNS = latitudeNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getLongitudeNS() {
-        return longitudeNS;
-    }
-
-    public void setLongitudeNS(@Nonnull List<NameSpace> longitudeNS) {
-        this.longitudeNS = longitudeNS;
+        if (LONGITUDE.equals(nodeName)) {
+            adaptProperty(nodeValue, LONGITUDE_INL, LONGITUDE_EXPR);
+        }
     }
 }

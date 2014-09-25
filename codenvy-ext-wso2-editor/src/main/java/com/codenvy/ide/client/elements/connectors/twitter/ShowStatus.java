@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes ShowStatus connector for jira group connectors. Also the class contains the business logic
@@ -47,13 +46,13 @@ public class ShowStatus extends AbstractConnector {
     public static final String ELEMENT_NAME       = "ShowStatus";
     public static final String SERIALIZATION_NAME = "twitter.showStatus";
 
+    public static final Key<String>          ID_INL  = new Key<>("idInl");
+    public static final Key<String>          ID_EXPR = new Key<>("idExpr");
+    public static final Key<List<NameSpace>> ID_NS   = new Key<>("idNameSpace");
+
     private static final String ID = "id";
 
     private static final List<String> PROPERTIES = Arrays.asList(ID);
-
-    private String          id;
-    private String          idExpression;
-    private List<NameSpace> idNS;
 
     @Inject
     public ShowStatus(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -67,10 +66,9 @@ public class ShowStatus extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        id = "";
-        idExpression = "";
-
-        idNS = new ArrayList<>();
+        putProperty(ID_INL, "");
+        putProperty(ID_EXPR, "");
+        putProperty(ID_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -79,9 +77,9 @@ public class ShowStatus extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(ID, isInline ? id : idExpression);
+        properties.put(ID, isInline ? getProperty(ID_INL) : getProperty(ID_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -89,47 +87,10 @@ public class ShowStatus extends AbstractConnector {
     /** {@inheritDoc} */
     @Override
     protected void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
-        switch (nodeName) {
-            case ID:
-                if (isInline) {
-                    id = nodeValue;
-                } else {
-                    idExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+        if (ID.equals(node.getNodeName())) {
+            adaptProperty(nodeValue, ID_INL, ID_EXPR);
         }
-    }
-
-    @Nonnull
-    public String getId() {
-        return id;
-    }
-
-    public void setId(@Nonnull String id) {
-        this.id = id;
-    }
-
-    @Nonnull
-    public String getIdExpression() {
-        return idExpression;
-    }
-
-    public void setIdExpression(@Nonnull String idExpression) {
-        this.idExpression = idExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getIdNS() {
-        return idNS;
-    }
-
-    public void setIdNS(@Nonnull List<NameSpace> idNS) {
-        this.idNS = idNS;
     }
 }

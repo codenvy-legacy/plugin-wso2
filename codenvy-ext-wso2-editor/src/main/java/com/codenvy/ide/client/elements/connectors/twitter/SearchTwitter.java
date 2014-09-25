@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes Search connector for twitter group of connectors. Also the class contains the business logic
@@ -46,6 +45,42 @@ public class SearchTwitter extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "Search";
     public static final String SERIALIZATION_NAME = "twitter.search";
+
+    public static final Key<String> SEARCH_INL   = new Key<>("searchInl");
+    public static final Key<String> LANG_INL     = new Key<>("langInl");
+    public static final Key<String> LOCALE_INL   = new Key<>("localeInl");
+    public static final Key<String> MAX_ID_INL   = new Key<>("maxIdInl");
+    public static final Key<String> SINCE_INL    = new Key<>("sinceInl");
+    public static final Key<String> SINCE_ID_INL = new Key<>("sinceIdInl");
+    public static final Key<String> GEOCODE_INL  = new Key<>("geocodeInl");
+    public static final Key<String> RADIUS_INL   = new Key<>("radiusInl");
+    public static final Key<String> UNIT_INL     = new Key<>("unitInl");
+    public static final Key<String> UNTIL_INL    = new Key<>("untilInl");
+    public static final Key<String> COUNT_INL    = new Key<>("countInl");
+
+    public static final Key<String> SEARCH_EXPR   = new Key<>("searchExpr");
+    public static final Key<String> LANG_EXPR     = new Key<>("langExpr");
+    public static final Key<String> LOCALE_EXPR   = new Key<>("localeExpr");
+    public static final Key<String> MAX_ID_EXPR   = new Key<>("maxIdExpr");
+    public static final Key<String> SINCE_EXPR    = new Key<>("sinceExpr");
+    public static final Key<String> SINCE_ID_EXPR = new Key<>("sinceIdExpr");
+    public static final Key<String> GEOCODE_EXPR  = new Key<>("geocodeExpr");
+    public static final Key<String> RADIUS_EXPR   = new Key<>("radiusExpr");
+    public static final Key<String> UNIT_EXPR     = new Key<>("unitExpr");
+    public static final Key<String> UNTIL_EXPR    = new Key<>("untilExpr");
+    public static final Key<String> COUNT_EXPR    = new Key<>("countExpr");
+
+    public static final Key<List<NameSpace>> SEARCH_NS   = new Key<>("searchNameSpace");
+    public static final Key<List<NameSpace>> LANG_NS     = new Key<>("searchNameSpace");
+    public static final Key<List<NameSpace>> LOCALE_NS   = new Key<>("searchNameSpace");
+    public static final Key<List<NameSpace>> MAX_ID_NS   = new Key<>("searchNameSpace");
+    public static final Key<List<NameSpace>> SINCE_NS    = new Key<>("searchNameSpace");
+    public static final Key<List<NameSpace>> SINCE_ID_NS = new Key<>("searchNameSpace");
+    public static final Key<List<NameSpace>> GEOCODE_NS  = new Key<>("searchNameSpace");
+    public static final Key<List<NameSpace>> RADIUS_NS   = new Key<>("searchNameSpace");
+    public static final Key<List<NameSpace>> UNIT_NS     = new Key<>("searchNameSpace");
+    public static final Key<List<NameSpace>> UNTIL_NS    = new Key<>("searchNameSpace");
+    public static final Key<List<NameSpace>> COUNT_NS    = new Key<>("searchNameSpace");
 
     private static final String SEARCH   = "search";
     private static final String LANG     = "lang";
@@ -62,42 +97,6 @@ public class SearchTwitter extends AbstractConnector {
     private static final List<String> PROPERTIES =
             Arrays.asList(SEARCH, LANG, LOCALE, MAX_ID, SINCE, SINCE_ID, GEOCODE, RADIUS, UNIT, UNTIL, COUNT);
 
-    private String search;
-    private String lang;
-    private String locale;
-    private String maxId;
-    private String since;
-    private String sinceId;
-    private String geocode;
-    private String radius;
-    private String unit;
-    private String until;
-    private String count;
-
-    private String searchExpr;
-    private String langExpr;
-    private String localeExpr;
-    private String maxIdExpr;
-    private String sinceExpr;
-    private String sinceIdExpr;
-    private String geocodeExpr;
-    private String radiusExpr;
-    private String unitExpr;
-    private String untilExpr;
-    private String countExpr;
-
-    private List<NameSpace> searchNS;
-    private List<NameSpace> langNS;
-    private List<NameSpace> localeNS;
-    private List<NameSpace> maxIdNS;
-    private List<NameSpace> sinceNS;
-    private List<NameSpace> sinceIdNS;
-    private List<NameSpace> geocodeNS;
-    private List<NameSpace> radiusNS;
-    private List<NameSpace> unitNS;
-    private List<NameSpace> untilNS;
-    private List<NameSpace> countNS;
-
     @Inject
     public SearchTwitter(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
         super(ELEMENT_NAME,
@@ -110,41 +109,41 @@ public class SearchTwitter extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        search = "";
-        lang = "";
-        locale = "";
-        maxId = "";
-        since = "";
-        sinceId = "";
-        geocode = "";
-        radius = "";
-        unit = "";
-        until = "";
-        count = "";
+        putProperty(SEARCH_INL, "");
+        putProperty(LANG_INL, "");
+        putProperty(LOCALE_INL, "");
+        putProperty(MAX_ID_INL, "");
+        putProperty(SINCE_INL, "");
+        putProperty(SINCE_ID_INL, "");
+        putProperty(GEOCODE_INL, "");
+        putProperty(RADIUS_INL, "");
+        putProperty(UNIT_INL, "");
+        putProperty(UNTIL_INL, "");
+        putProperty(COUNT_INL, "");
 
-        searchExpr = "";
-        langExpr = "";
-        localeExpr = "";
-        maxIdExpr = "";
-        sinceExpr = "";
-        sinceIdExpr = "";
-        geocodeExpr = "";
-        radiusExpr = "";
-        unitExpr = "";
-        untilExpr = "";
-        countExpr = "";
+        putProperty(SEARCH_EXPR, "");
+        putProperty(LANG_EXPR, "");
+        putProperty(LOCALE_EXPR, "");
+        putProperty(MAX_ID_EXPR, "");
+        putProperty(SINCE_EXPR, "");
+        putProperty(SINCE_ID_EXPR, "");
+        putProperty(GEOCODE_EXPR, "");
+        putProperty(RADIUS_EXPR, "");
+        putProperty(UNIT_EXPR, "");
+        putProperty(UNTIL_EXPR, "");
+        putProperty(COUNT_EXPR, "");
 
-        searchNS = new ArrayList<>();
-        langNS = new ArrayList<>();
-        localeNS = new ArrayList<>();
-        maxIdNS = new ArrayList<>();
-        sinceNS = new ArrayList<>();
-        sinceIdNS = new ArrayList<>();
-        geocodeNS = new ArrayList<>();
-        radiusNS = new ArrayList<>();
-        unitNS = new ArrayList<>();
-        untilNS = new ArrayList<>();
-        countNS = new ArrayList<>();
+        putProperty(SEARCH_NS, new ArrayList<NameSpace>());
+        putProperty(LANG_NS, new ArrayList<NameSpace>());
+        putProperty(LOCALE_NS, new ArrayList<NameSpace>());
+        putProperty(MAX_ID_NS, new ArrayList<NameSpace>());
+        putProperty(SINCE_NS, new ArrayList<NameSpace>());
+        putProperty(SINCE_ID_NS, new ArrayList<NameSpace>());
+        putProperty(GEOCODE_NS, new ArrayList<NameSpace>());
+        putProperty(RADIUS_NS, new ArrayList<NameSpace>());
+        putProperty(UNIT_NS, new ArrayList<NameSpace>());
+        putProperty(UNTIL_NS, new ArrayList<NameSpace>());
+        putProperty(COUNT_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -153,19 +152,19 @@ public class SearchTwitter extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(SEARCH, isInline ? search : searchExpr);
-        properties.put(LANG, isInline ? lang : langExpr);
-        properties.put(LOCALE, isInline ? locale : localeExpr);
-        properties.put(MAX_ID, isInline ? maxId : maxIdExpr);
-        properties.put(SINCE, isInline ? since : sinceExpr);
-        properties.put(SINCE_ID, isInline ? sinceId : sinceIdExpr);
-        properties.put(GEOCODE, isInline ? geocode : geocodeExpr);
-        properties.put(RADIUS, isInline ? radius : radiusExpr);
-        properties.put(UNIT, isInline ? unit : unitExpr);
-        properties.put(UNTIL, isInline ? until : untilExpr);
-        properties.put(COUNT, isInline ? count : countExpr);
+        properties.put(SEARCH, isInline ? getProperty(SEARCH_INL) : getProperty(SEARCH_EXPR));
+        properties.put(LANG, isInline ? getProperty(LANG_INL) : getProperty(LANG_EXPR));
+        properties.put(LOCALE, isInline ? getProperty(LOCALE_INL) : getProperty(LOCALE_EXPR));
+        properties.put(MAX_ID, isInline ? getProperty(MAX_ID_INL) : getProperty(MAX_ID_EXPR));
+        properties.put(SINCE, isInline ? getProperty(SINCE_INL) : getProperty(SINCE_EXPR));
+        properties.put(SINCE_ID, isInline ? getProperty(SINCE_ID_INL) : getProperty(SINCE_ID_EXPR));
+        properties.put(GEOCODE, isInline ? getProperty(GEOCODE_INL) : getProperty(GEOCODE_EXPR));
+        properties.put(RADIUS, isInline ? getProperty(RADIUS_INL) : getProperty(RADIUS_EXPR));
+        properties.put(UNIT, isInline ? getProperty(UNIT_INL) : getProperty(UNIT_EXPR));
+        properties.put(UNTIL, isInline ? getProperty(UNTIL_INL) : getProperty(UNTIL_EXPR));
+        properties.put(COUNT, isInline ? getProperty(COUNT_INL) : getProperty(COUNT_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -173,418 +172,51 @@ public class SearchTwitter extends AbstractConnector {
     /** {@inheritDoc} */
     @Override
     protected void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
-
-        switch (nodeName) {
+        switch (node.getNodeName()) {
             case SEARCH:
-                if (isInline) {
-                    search = nodeValue;
-                } else {
-                    searchExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, SEARCH_INL, SEARCH_EXPR);
                 break;
 
             case LANG:
-                if (isInline) {
-                    lang = nodeValue;
-                } else {
-                    langExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, LANG_INL, LANG_EXPR);
                 break;
 
             case LOCALE:
-                if (isInline) {
-                    locale = nodeValue;
-                } else {
-                    localeExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, LOCALE_INL, LOCALE_EXPR);
                 break;
 
             case MAX_ID:
-                if (isInline) {
-                    maxId = nodeValue;
-                } else {
-                    maxIdExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, MAX_ID_INL, MAX_ID_EXPR);
                 break;
 
             case SINCE:
-                if (isInline) {
-                    since = nodeValue;
-                } else {
-                    sinceExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, SINCE_INL, SINCE_EXPR);
                 break;
 
             case SINCE_ID:
-                if (isInline) {
-                    sinceId = nodeValue;
-                } else {
-                    sinceIdExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, SINCE_ID_INL, SINCE_ID_EXPR);
                 break;
 
             case GEOCODE:
-                if (isInline) {
-                    geocode = nodeValue;
-                } else {
-                    geocodeExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, GEOCODE_INL, GEOCODE_EXPR);
                 break;
 
             case RADIUS:
-                if (isInline) {
-                    radius = nodeValue;
-                } else {
-                    radiusExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, RADIUS_INL, RADIUS_EXPR);
                 break;
 
             case UNIT:
-                if (isInline) {
-                    unit = nodeValue;
-                } else {
-                    unitExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, UNIT_INL, UNIT_EXPR);
                 break;
 
             case UNTIL:
-                if (isInline) {
-                    until = nodeValue;
-                } else {
-                    untilExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, UNTIL_INL, UNTIL_EXPR);
                 break;
 
-            case COUNT:
-                if (isInline) {
-                    count = nodeValue;
-                } else {
-                    countExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+            default:
+                adaptProperty(nodeValue, COUNT_INL, COUNT_EXPR);
         }
-    }
-
-    @Nonnull
-    public String getSearch() {
-        return search;
-    }
-
-    public void setSearch(@Nonnull String search) {
-        this.search = search;
-    }
-
-    @Nonnull
-    public String getLang() {
-        return lang;
-    }
-
-    public void setLang(@Nonnull String lang) {
-        this.lang = lang;
-    }
-
-    @Nonnull
-    public String getLocale() {
-        return locale;
-    }
-
-    public void setLocale(@Nonnull String locale) {
-        this.locale = locale;
-    }
-
-    @Nonnull
-    public String getMaxId() {
-        return maxId;
-    }
-
-    public void setMaxId(@Nonnull String maxId) {
-        this.maxId = maxId;
-    }
-
-    @Nonnull
-    public String getSince() {
-        return since;
-    }
-
-    public void setSince(@Nonnull String since) {
-        this.since = since;
-    }
-
-    @Nonnull
-    public String getSinceId() {
-        return sinceId;
-    }
-
-    public void setSinceId(@Nonnull String sinceId) {
-        this.sinceId = sinceId;
-    }
-
-    @Nonnull
-    public String getGeocode() {
-        return geocode;
-    }
-
-    public void setGeocode(@Nonnull String geocode) {
-        this.geocode = geocode;
-    }
-
-    @Nonnull
-    public String getRadius() {
-        return radius;
-    }
-
-    public void setRadius(@Nonnull String radius) {
-        this.radius = radius;
-    }
-
-    @Nonnull
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(@Nonnull String unit) {
-        this.unit = unit;
-    }
-
-    @Nonnull
-    public String getUntil() {
-        return until;
-    }
-
-    public void setUntil(@Nonnull String until) {
-        this.until = until;
-    }
-
-    @Nonnull
-    public String getCount() {
-        return count;
-    }
-
-    public void setCount(@Nonnull String count) {
-        this.count = count;
-    }
-
-    @Nonnull
-    public String getSearchExpr() {
-        return searchExpr;
-    }
-
-    public void setSearchExpr(@Nonnull String searchExpr) {
-        this.searchExpr = searchExpr;
-    }
-
-    @Nonnull
-    public String getLangExpr() {
-        return langExpr;
-    }
-
-    public void setLangExpr(@Nonnull String langExpr) {
-        this.langExpr = langExpr;
-    }
-
-    @Nonnull
-    public String getLocaleExpr() {
-        return localeExpr;
-    }
-
-    public void setLocaleExpr(@Nonnull String localeExpr) {
-        this.localeExpr = localeExpr;
-    }
-
-    @Nonnull
-    public String getMaxIdExpr() {
-        return maxIdExpr;
-    }
-
-    public void setMaxIdExpr(@Nonnull String maxIdExpr) {
-        this.maxIdExpr = maxIdExpr;
-    }
-
-    @Nonnull
-    public String getSinceExpr() {
-        return sinceExpr;
-    }
-
-    public void setSinceExpr(@Nonnull String sinceExpr) {
-        this.sinceExpr = sinceExpr;
-    }
-
-    @Nonnull
-    public String getSinceIdExpr() {
-        return sinceIdExpr;
-    }
-
-    public void setSinceIdExpr(@Nonnull String sinceIdExpr) {
-        this.sinceIdExpr = sinceIdExpr;
-    }
-
-    @Nonnull
-    public String getGeocodeExpr() {
-        return geocodeExpr;
-    }
-
-    public void setGeocodeExpr(@Nonnull String geocodeExpr) {
-        this.geocodeExpr = geocodeExpr;
-    }
-
-    @Nonnull
-    public String getRadiusExpr() {
-        return radiusExpr;
-    }
-
-    public void setRadiusExpr(@Nonnull String radiusExpr) {
-        this.radiusExpr = radiusExpr;
-    }
-
-    @Nonnull
-    public String getUnitExpr() {
-        return unitExpr;
-    }
-
-    public void setUnitExpr(@Nonnull String unitExpr) {
-        this.unitExpr = unitExpr;
-    }
-
-    @Nonnull
-    public String getUntilExpr() {
-        return untilExpr;
-    }
-
-    public void setUntilExpr(@Nonnull String untilExpr) {
-        this.untilExpr = untilExpr;
-    }
-
-    @Nonnull
-    public String getCountExpr() {
-        return countExpr;
-    }
-
-    public void setCountExpr(@Nonnull String countExpr) {
-        this.countExpr = countExpr;
-    }
-
-    @Nonnull
-    public List<NameSpace> getSearchNS() {
-        return searchNS;
-    }
-
-    public void setSearchNS(@Nonnull List<NameSpace> searchNS) {
-        this.searchNS = searchNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getLangNS() {
-        return langNS;
-    }
-
-    public void setLangNS(@Nonnull List<NameSpace> langNS) {
-        this.langNS = langNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getLocaleNS() {
-        return localeNS;
-    }
-
-    public void setLocaleNS(@Nonnull List<NameSpace> localeNS) {
-        this.localeNS = localeNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getMaxIdNS() {
-        return maxIdNS;
-    }
-
-    public void setMaxIdNS(@Nonnull List<NameSpace> maxIdNS) {
-        this.maxIdNS = maxIdNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getSinceNS() {
-        return sinceNS;
-    }
-
-    public void setSinceNS(@Nonnull List<NameSpace> sinceNS) {
-        this.sinceNS = sinceNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getSinceIdNS() {
-        return sinceIdNS;
-    }
-
-    public void setSinceIdNS(@Nonnull List<NameSpace> sinceIdNS) {
-        this.sinceIdNS = sinceIdNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getGeocodeNS() {
-        return geocodeNS;
-    }
-
-    public void setGeocodeNS(@Nonnull List<NameSpace> geocodeNS) {
-        this.geocodeNS = geocodeNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getRadiusNS() {
-        return radiusNS;
-    }
-
-    public void setRadiusNS(@Nonnull List<NameSpace> radiusNS) {
-        this.radiusNS = radiusNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getUnitNS() {
-        return unitNS;
-    }
-
-    public void setUnitNS(@Nonnull List<NameSpace> unitNS) {
-        this.unitNS = unitNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getUntilNS() {
-        return untilNS;
-    }
-
-    public void setUntilNS(@Nonnull List<NameSpace> untilNS) {
-        this.untilNS = untilNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getCountNS() {
-        return countNS;
-    }
-
-    public void setCountNS(@Nonnull List<NameSpace> countNS) {
-        this.countNS = countNS;
     }
 }

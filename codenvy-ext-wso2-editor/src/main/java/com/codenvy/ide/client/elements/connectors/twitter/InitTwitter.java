@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes Init connector for twitter group of connectors. Also the class contains the business logic
@@ -47,27 +46,30 @@ public class InitTwitter extends AbstractConnector {
     public static final String ELEMENT_NAME       = "Init";
     public static final String SERIALIZATION_NAME = "twitter.init";
 
+    public static final Key<String> CONSUMER_KEY_INL        = new Key<>("ConsumerKey");
+    public static final Key<String> CONSUMER_SECRET_INL     = new Key<>("ConsumerSecret");
+    public static final Key<String> ACCESS_TOKEN_INL        = new Key<>("accessToken");
+    public static final Key<String> ACCESS_TOKEN_SECRET_INL = new Key<>("accessTokenSecret");
+
+    public static final Key<String> CONSUMER_KEY_EXPR        = new Key<>("consumerKeyExpression");
+    public static final Key<String> CONSUMER_SECRET_EXPR     = new Key<>("consumerSecretExpression");
+    public static final Key<String> ACCESS_TOKEN_EXPR        = new Key<>("accessTokenExpression");
+    public static final Key<String> ACCESS_TOKEN_SECRET_EXPR = new Key<>("accessTokenSecretExpression");
+
+    public static final Key<List<NameSpace>> CONSUMER_KEY_NS        = new Key<>("consumerKeyNameSpace");
+    public static final Key<List<NameSpace>> CONSUMER_SECRET_NS     = new Key<>("consumerSecretNameSpace");
+    public static final Key<List<NameSpace>> ACCESS_TOKEN_NS        = new Key<>("accessTokenNameSpace");
+    public static final Key<List<NameSpace>> ACCESS_TOKEN_SECRET_NS = new Key<>("accessTokenSecretNameSpace");
+
     private static final String CONSUMER_KEY        = "consumerKey";
     private static final String CONSUMER_SECRET     = "consumerSecret";
     private static final String ACCESS_TOKEN        = "accessToken";
     private static final String ACCESS_TOKEN_SECRET = "accessTokenSecret";
 
-    private static final List<String> PROPERTIES = Arrays.asList(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
-
-    private String consumerKey;
-    private String consumerSecret;
-    private String accessToken;
-    private String accessTokenSecret;
-
-    private String consumerKeyExpr;
-    private String consumerSecretExpr;
-    private String accessTokenExpr;
-    private String accessTokenSecretExpr;
-
-    private List<NameSpace> consumerKeyNS;
-    private List<NameSpace> consumerSecretNS;
-    private List<NameSpace> accessTokenNS;
-    private List<NameSpace> accessTokenSecretNS;
+    private static final List<String> PROPERTIES = Arrays.asList(CONSUMER_KEY,
+                                                                 CONSUMER_SECRET,
+                                                                 ACCESS_TOKEN,
+                                                                 ACCESS_TOKEN_SECRET);
 
     @Inject
     public InitTwitter(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -81,20 +83,20 @@ public class InitTwitter extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        consumerKey = "";
-        consumerSecret = "";
-        accessToken = "";
-        accessTokenSecret = "";
+        putProperty(CONSUMER_KEY_INL, "");
+        putProperty(CONSUMER_SECRET_INL, "");
+        putProperty(ACCESS_TOKEN_INL, "");
+        putProperty(ACCESS_TOKEN_SECRET_INL, "");
 
-        consumerKeyExpr = "";
-        accessTokenExpr = "";
-        accessTokenSecretExpr = "";
-        consumerSecretExpr = "";
+        putProperty(CONSUMER_KEY_EXPR, "");
+        putProperty(CONSUMER_SECRET_EXPR, "");
+        putProperty(ACCESS_TOKEN_EXPR, "");
+        putProperty(ACCESS_TOKEN_SECRET_EXPR, "");
 
-        consumerKeyNS = new ArrayList<>();
-        consumerSecretNS = new ArrayList<>();
-        accessTokenNS = new ArrayList<>();
-        accessTokenSecretNS = new ArrayList<>();
+        putProperty(CONSUMER_KEY_NS, new ArrayList<NameSpace>());
+        putProperty(CONSUMER_SECRET_NS, new ArrayList<NameSpace>());
+        putProperty(ACCESS_TOKEN_NS, new ArrayList<NameSpace>());
+        putProperty(ACCESS_TOKEN_SECRET_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -103,12 +105,12 @@ public class InitTwitter extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(CONSUMER_KEY, isInline ? consumerKey : consumerKeyExpr);
-        properties.put(CONSUMER_SECRET, isInline ? consumerSecret : consumerSecretExpr);
-        properties.put(ACCESS_TOKEN, isInline ? accessToken : accessTokenExpr);
-        properties.put(ACCESS_TOKEN_SECRET, isInline ? accessTokenSecret : accessTokenSecretExpr);
+        properties.put(CONSUMER_KEY, isInline ? getProperty(CONSUMER_KEY_INL) : getProperty(CONSUMER_KEY_EXPR));
+        properties.put(CONSUMER_SECRET, isInline ? getProperty(CONSUMER_SECRET_INL) : getProperty(CONSUMER_SECRET_EXPR));
+        properties.put(ACCESS_TOKEN, isInline ? getProperty(ACCESS_TOKEN_INL) : getProperty(ACCESS_TOKEN_EXPR));
+        properties.put(ACCESS_TOKEN_SECRET, isInline ? getProperty(ACCESS_TOKEN_SECRET_INL) : getProperty(ACCESS_TOKEN_SECRET_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -116,159 +118,23 @@ public class InitTwitter extends AbstractConnector {
     /** {@inheritDoc} */
     @Override
     protected void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
-
-        switch (nodeName) {
+        switch (node.getNodeName()) {
             case CONSUMER_KEY:
-                if (isInline) {
-                    consumerKey = nodeValue;
-                } else {
-                    consumerKeyExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, CONSUMER_KEY_INL, CONSUMER_KEY_EXPR);
                 break;
 
             case CONSUMER_SECRET:
-                if (isInline) {
-                    consumerSecret = nodeValue;
-                } else {
-                    consumerSecretExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, CONSUMER_SECRET_INL, CONSUMER_SECRET_EXPR);
                 break;
 
             case ACCESS_TOKEN:
-                if (isInline) {
-                    accessToken = nodeValue;
-                } else {
-                    accessTokenExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, ACCESS_TOKEN_INL, ACCESS_TOKEN_EXPR);
                 break;
 
-            case ACCESS_TOKEN_SECRET:
-                if (isInline) {
-                    accessTokenSecret = nodeValue;
-                } else {
-                    accessTokenSecretExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+            default:
+                adaptProperty(nodeValue, ACCESS_TOKEN_SECRET_INL, ACCESS_TOKEN_SECRET_EXPR);
         }
-    }
-
-    @Nonnull
-    public String getConsumerKey() {
-        return consumerKey;
-    }
-
-    public void setConsumerKey(@Nonnull String consumerKey) {
-        this.consumerKey = consumerKey;
-    }
-
-    @Nonnull
-    public String getConsumerSecret() {
-        return consumerSecret;
-    }
-
-    public void setConsumerSecret(@Nonnull String consumerSecret) {
-        this.consumerSecret = consumerSecret;
-    }
-
-    @Nonnull
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public void setAccessToken(@Nonnull String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    @Nonnull
-    public String getAccessTokenSecret() {
-        return accessTokenSecret;
-    }
-
-    public void setAccessTokenSecret(@Nonnull String accessTokenSecret) {
-        this.accessTokenSecret = accessTokenSecret;
-    }
-
-    @Nonnull
-    public String getConsumerKeyExpr() {
-        return consumerKeyExpr;
-    }
-
-    public void setConsumerKeyExpr(@Nonnull String consumerKeyExpr) {
-        this.consumerKeyExpr = consumerKeyExpr;
-    }
-
-    @Nonnull
-    public String getConsumerSecretExpr() {
-        return consumerSecretExpr;
-    }
-
-    public void setConsumerSecretExpr(@Nonnull String consumerSecretExpr) {
-        this.consumerSecretExpr = consumerSecretExpr;
-    }
-
-    @Nonnull
-    public String getAccessTokenExpr() {
-        return accessTokenExpr;
-    }
-
-    public void setAccessTokenExpr(@Nonnull String accessTokenExpr) {
-        this.accessTokenExpr = accessTokenExpr;
-    }
-
-    @Nonnull
-    public String getAccessTokenSecretExpr() {
-        return accessTokenSecretExpr;
-    }
-
-    public void setAccessTokenSecretExpr(@Nonnull String accessTokenSecretExpr) {
-        this.accessTokenSecretExpr = accessTokenSecretExpr;
-    }
-
-    @Nonnull
-    public List<NameSpace> getConsumerKeyNS() {
-        return consumerKeyNS;
-    }
-
-    public void setConsumerKeyNS(@Nonnull List<NameSpace> consumerKeyNS) {
-        this.consumerKeyNS = consumerKeyNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getConsumerSecretNS() {
-        return consumerSecretNS;
-    }
-
-    public void setConsumerSecretNS(@Nonnull List<NameSpace> consumerSecretNS) {
-        this.consumerSecretNS = consumerSecretNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getAccessTokenNS() {
-        return accessTokenNS;
-    }
-
-    public void setAccessTokenNS(@Nonnull List<NameSpace> accessTokenNS) {
-        this.accessTokenNS = accessTokenNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getAccessTokenSecretNS() {
-        return accessTokenSecretNS;
-    }
-
-    public void setAccessTokenSecretNS(@Nonnull List<NameSpace> accessTokenSecretNS) {
-        this.accessTokenSecretNS = accessTokenSecretNS;
     }
 }

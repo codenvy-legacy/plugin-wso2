@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes GetFollowersIds connector for twitter group of connectors. Also the class contains the business logic
@@ -47,23 +46,23 @@ public class GetFollowersIds extends AbstractConnector {
     public static final String ELEMENT_NAME       = "GetFollowersIds";
     public static final String SERIALIZATION_NAME = "twitter.getFollowersIds";
 
+    public static final Key<String> SCREEN_NAME_INL = new Key<>("screenNameInline");
+    public static final Key<String> USER_ID_INL     = new Key<>("userIdInline");
+    public static final Key<String> CURSOR_INL      = new Key<>("cursorInline");
+
+    public static final Key<String> SCREEN_NAME_EXPR = new Key<>("screenNameExpression");
+    public static final Key<String> USER_ID_EXPR     = new Key<>("userIdExpression");
+    public static final Key<String> CURSOR_EXPR      = new Key<>("cursorExpression");
+
+    public static final Key<List<NameSpace>> SCREEN_NAME_NS = new Key<>("screenNameNameSpace");
+    public static final Key<List<NameSpace>> USER_ID_NS     = new Key<>("userIdNameSpace");
+    public static final Key<List<NameSpace>> CURSOR_NS      = new Key<>("cursorNameSpace");
+
     private static final String SCREEN_NAME = "screenName";
     private static final String USER_ID     = "userID";
     private static final String CURSOR      = "cursor";
 
     private static final List<String> PROPERTIES = Arrays.asList(SCREEN_NAME, USER_ID, CURSOR);
-
-    private String screenName;
-    private String userId;
-    private String cursor;
-
-    private String screenNameExpr;
-    private String userIdExpr;
-    private String cursorExpr;
-
-    private List<NameSpace> screenNameNS;
-    private List<NameSpace> userIdNS;
-    private List<NameSpace> cursorNS;
 
     @Inject
     public GetFollowersIds(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -77,17 +76,17 @@ public class GetFollowersIds extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        screenName = "";
-        userId = "";
-        cursor = "";
+        putProperty(SCREEN_NAME_INL, "");
+        putProperty(USER_ID_INL, "");
+        putProperty(CURSOR_INL, "");
 
-        screenNameExpr = "";
-        cursorExpr = "";
-        userIdExpr = "";
+        putProperty(SCREEN_NAME_EXPR, "");
+        putProperty(USER_ID_EXPR, "");
+        putProperty(CURSOR_EXPR, "");
 
-        cursorNS = new ArrayList<>();
-        screenNameNS = new ArrayList<>();
-        userIdNS = new ArrayList<>();
+        putProperty(SCREEN_NAME_NS, new ArrayList<NameSpace>());
+        putProperty(USER_ID_NS, new ArrayList<NameSpace>());
+        putProperty(CURSOR_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -96,11 +95,11 @@ public class GetFollowersIds extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(SCREEN_NAME, isInline ? screenName : screenNameExpr);
-        properties.put(USER_ID, isInline ? userId : userIdExpr);
-        properties.put(CURSOR, isInline ? cursor : cursorExpr);
+        properties.put(SCREEN_NAME, isInline ? getProperty(SCREEN_NAME_INL) : getProperty(SCREEN_NAME_EXPR));
+        properties.put(USER_ID, isInline ? getProperty(USER_ID_INL) : getProperty(USER_ID_EXPR));
+        properties.put(CURSOR, isInline ? getProperty(CURSOR_INL) : getProperty(CURSOR_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -108,122 +107,19 @@ public class GetFollowersIds extends AbstractConnector {
     /** {@inheritDoc} */
     @Override
     protected void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
-
-        switch (nodeName) {
+        switch (node.getNodeName()) {
             case SCREEN_NAME:
-                if (isInline) {
-                    screenName = nodeValue;
-                } else {
-                    screenNameExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, SCREEN_NAME_INL, SCREEN_NAME_EXPR);
                 break;
 
             case USER_ID:
-                if (isInline) {
-                    userId = nodeValue;
-                } else {
-                    userIdExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, USER_ID_INL, USER_ID_EXPR);
                 break;
 
-            case CURSOR:
-                if (isInline) {
-                    cursor = nodeValue;
-                } else {
-                    cursorExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+            default:
+                adaptProperty(nodeValue, CURSOR_INL, CURSOR_EXPR);
         }
-    }
-
-    @Nonnull
-    public String getScreenName() {
-        return screenName;
-    }
-
-    public void setScreenName(@Nonnull String screenName) {
-        this.screenName = screenName;
-    }
-
-    @Nonnull
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(@Nonnull String userId) {
-        this.userId = userId;
-    }
-
-    @Nonnull
-    public String getCursor() {
-        return cursor;
-    }
-
-    public void setCursor(@Nonnull String cursor) {
-        this.cursor = cursor;
-    }
-
-    @Nonnull
-    public String getScreenNameExpr() {
-        return screenNameExpr;
-    }
-
-    public void setScreenNameExpr(@Nonnull String screenNameExpr) {
-        this.screenNameExpr = screenNameExpr;
-    }
-
-    @Nonnull
-    public String getUserIdExpr() {
-        return userIdExpr;
-    }
-
-    public void setUserIdExpr(@Nonnull String userIdExpr) {
-        this.userIdExpr = userIdExpr;
-    }
-
-    @Nonnull
-    public String getCursorExpr() {
-        return cursorExpr;
-    }
-
-    public void setCursorExpr(@Nonnull String cursorExpr) {
-        this.cursorExpr = cursorExpr;
-    }
-
-    @Nonnull
-    public List<NameSpace> getScreenNameNS() {
-        return screenNameNS;
-    }
-
-    public void setScreenNameNS(@Nonnull List<NameSpace> screenNameNS) {
-        this.screenNameNS = screenNameNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getUserIdNS() {
-        return userIdNS;
-    }
-
-    public void setUserIdNS(@Nonnull List<NameSpace> userIdNS) {
-        this.userIdNS = userIdNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getCursorNS() {
-        return cursorNS;
-    }
-
-    public void setCursorNS(@Nonnull List<NameSpace> cursorNS) {
-        this.cursorNS = cursorNS;
     }
 }

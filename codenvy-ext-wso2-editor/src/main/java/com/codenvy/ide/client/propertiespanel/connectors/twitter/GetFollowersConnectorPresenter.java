@@ -16,23 +16,34 @@
 package com.codenvy.ide.client.propertiespanel.connectors.twitter;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.twitter.GetFollowers;
 import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.twitter.GetFollowers.CURSOR_EXPR;
+import static com.codenvy.ide.client.elements.connectors.twitter.GetFollowers.CURSOR_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.GetFollowers.CURSOR_NS;
+import static com.codenvy.ide.client.elements.connectors.twitter.GetFollowers.SCREEN_NAME_EXPR;
+import static com.codenvy.ide.client.elements.connectors.twitter.GetFollowers.SCREEN_NAME_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.GetFollowers.SCREEN_NAME_NS;
+import static com.codenvy.ide.client.elements.connectors.twitter.GetFollowers.USER_ID_EXPR;
+import static com.codenvy.ide.client.elements.connectors.twitter.GetFollowers.USER_ID_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.GetFollowers.USER_ID_NS;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -43,150 +54,61 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  */
 public class GetFollowersConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<GetFollowers> {
 
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          screenNameCallBack;
-    private final AddNameSpacesCallBack          userIdCallBack;
-    private final AddNameSpacesCallBack          cursorCallBack;
+    private SimplePropertyPresenter screenNameInl;
+    private SimplePropertyPresenter userIdInl;
+    private SimplePropertyPresenter cursorInl;
+
+    private ComplexPropertyPresenter screenNameExpr;
+    private ComplexPropertyPresenter userIdExpr;
+    private ComplexPropertyPresenter cursorExpr;
 
     @Inject
     public GetFollowersConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                           NameSpaceEditorPresenter nameSpacePresenter,
-                                          GeneralPropertiesPanelView view,
+                                          PropertiesPanelView view,
                                           TwitterPropertyManager twitterPropertyManager,
                                           ParameterPresenter parameterPresenter,
-                                          PropertyTypeManager propertyTypeManager) {
-        super(view, twitterPropertyManager, parameterPresenter, propertyTypeManager);
+                                          PropertyTypeManager propertyTypeManager,
+                                          PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                          Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                          Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                          Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              twitterPropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.screenNameCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setScreenNameNS(nameSpaces);
-                element.setScreenNameExpr(expression);
-
-                GetFollowersConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.userIdCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setUserIdNS(nameSpaces);
-                element.setUserIdExpr(expression);
-
-                GetFollowersConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.cursorCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setCursorNS(nameSpaces);
-                element.setCursorExpr(expression);
-
-                GetFollowersConnectorPresenter.this.view.setThirdTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
+    private void prepareView() {
+        screenNameInl = createSimplePanel(locale.twitterScreenName(), SCREEN_NAME_INL);
+        userIdInl = createSimplePanel(locale.twitterUserId(), USER_ID_INL);
+        cursorInl = createSimplePanel(locale.twitterCursor(), CURSOR_INL);
 
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setScreenName(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setUserId(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdTextBoxValueChanged() {
-        element.setCursor(view.getThirdTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getScreenNameNS(),
-                                                    screenNameCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getScreenNameExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getUserIdNS(),
-                                                    userIdCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getUserIdExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getCursorNS(),
-                                                    cursorCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getCursorExpr());
+        screenNameExpr = createComplexPanel(locale.twitterScreenName(), SCREEN_NAME_NS, SCREEN_NAME_EXPR);
+        userIdExpr = createComplexPanel(locale.twitterUserId(), USER_ID_NS, USER_ID_EXPR);
+        cursorExpr = createComplexPanel(locale.twitterCursor(), CURSOR_NS, CURSOR_EXPR);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        boolean isVisible = INLINE.equals(element.getProperty(PARAMETER_EDITOR_TYPE));
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+        screenNameInl.setVisible(isVisible);
+        userIdInl.setVisible(isVisible);
+        cursorInl.setVisible(isVisible);
 
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getScreenNameExpr() : element.getScreenName());
-        view.setSecondTextBoxValue(isEquals ? element.getUserIdExpr() : element.getUserId());
-        view.setThirdTextBoxValue(isEquals ? element.getCursorExpr() : element.getCursor());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-        view.setVisibleThirdPanel(true);
-
-        view.setFirstLabelTitle(locale.twitterScreenName());
-        view.setSecondLabelTitle(locale.twitterUserId());
-        view.setThirdLabelTitle(locale.twitterCursor());
+        screenNameExpr.setVisible(!isVisible);
+        userIdExpr.setVisible(!isVisible);
+        cursorExpr.setVisible(!isVisible);
     }
 
     /** {@inheritDoc} */
@@ -194,6 +116,12 @@ public class GetFollowersConnectorPresenter extends AbstractConnectorPropertiesP
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        screenNameInl.setProperty(element.getProperty(SCREEN_NAME_INL));
+        userIdInl.setProperty(element.getProperty(USER_ID_INL));
+        cursorInl.setProperty(element.getProperty(CURSOR_INL));
+
+        screenNameExpr.setProperty(element.getProperty(SCREEN_NAME_EXPR));
+        userIdExpr.setProperty(element.getProperty(USER_ID_EXPR));
+        cursorExpr.setProperty(element.getProperty(CURSOR_EXPR));
     }
 }

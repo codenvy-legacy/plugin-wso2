@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes GetHomeTimeLine connector for twitter group of connectors. Also the class contains the business logic
@@ -46,6 +45,33 @@ public class GetHomeTimeLine extends AbstractConnector {
 
     public static final String ELEMENT_NAME       = "GetHomeTimeLine";
     public static final String SERIALIZATION_NAME = "twitter.getHomeTimeline";
+
+    public static final Key<String> CONSUMER_KEY_INL        = new Key<>("ConsumerKey");
+    public static final Key<String> CONSUMER_SECRET_INL     = new Key<>("ConsumerSecret");
+    public static final Key<String> ACCESS_TOKEN_INL        = new Key<>("accessToken");
+    public static final Key<String> ACCESS_TOKEN_SECRET_INL = new Key<>("accessTokenSecret");
+    public static final Key<String> COUNT_INL               = new Key<>("countInl");
+    public static final Key<String> PAGE_INL                = new Key<>("pageInl");
+    public static final Key<String> SINCE_ID_INL            = new Key<>("sinceIdInl");
+    public static final Key<String> MAX_ID_INL              = new Key<>("maxIdInl");
+
+    public static final Key<String> CONSUMER_KEY_EXPR        = new Key<>("consumerKeyExpression");
+    public static final Key<String> CONSUMER_SECRET_EXPR     = new Key<>("consumerSecretExpression");
+    public static final Key<String> ACCESS_TOKEN_EXPR        = new Key<>("accessTokenExpression");
+    public static final Key<String> ACCESS_TOKEN_SECRET_EXPR = new Key<>("accessTokenSecretExpression");
+    public static final Key<String> COUNT_EXPR               = new Key<>("countExpression");
+    public static final Key<String> PAGE_EXPR                = new Key<>("pageExpression");
+    public static final Key<String> SINCE_ID_EXPR            = new Key<>("sinceIdExpression");
+    public static final Key<String> MAX_ID_EXPR              = new Key<>("maxIdExpression");
+
+    public static final Key<List<NameSpace>> CONSUMER_KEY_NS        = new Key<>("consumerKeyNameSpace");
+    public static final Key<List<NameSpace>> CONSUMER_SECRET_NS     = new Key<>("consumerSecretNameSpace");
+    public static final Key<List<NameSpace>> ACCESS_TOKEN_NS        = new Key<>("accessTokenNameSpace");
+    public static final Key<List<NameSpace>> ACCESS_TOKEN_SECRET_NS = new Key<>("accessTokenSecretNameSpace");
+    public static final Key<List<NameSpace>> COUNT_NS               = new Key<>("countNameSpace");
+    public static final Key<List<NameSpace>> PAGE_NS                = new Key<>("pageNameSpace");
+    public static final Key<List<NameSpace>> SINCE_ID_NS            = new Key<>("sinceIdNameSpace");
+    public static final Key<List<NameSpace>> MAX_ID_NS              = new Key<>("maxIdNameSpace");
 
     private static final String CONSUMER_KEY        = "consumerKey";
     private static final String CONSUMER_SECRET     = "consumerSecret";
@@ -65,33 +91,6 @@ public class GetHomeTimeLine extends AbstractConnector {
                                                                  SINCE_ID,
                                                                  MAX_ID);
 
-    private String consumerKey;
-    private String consumerSecret;
-    private String accessToken;
-    private String accessTokenSecret;
-    private String count;
-    private String page;
-    private String sinceId;
-    private String maxId;
-
-    private String consumerKeyExpr;
-    private String consumerSecretExpr;
-    private String accessTokenExpr;
-    private String accessTokenSecretExpr;
-    private String countExpr;
-    private String pageExpr;
-    private String sinceIdExpr;
-    private String maxIdExpr;
-
-    private List<NameSpace> consumerKeyNS;
-    private List<NameSpace> consumerSecretNS;
-    private List<NameSpace> accessTokenNS;
-    private List<NameSpace> accessTokenSecretNS;
-    private List<NameSpace> countNS;
-    private List<NameSpace> pageNS;
-    private List<NameSpace> sinceIdNS;
-    private List<NameSpace> maxIdNS;
-
     @Inject
     public GetHomeTimeLine(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
         super(ELEMENT_NAME,
@@ -104,32 +103,32 @@ public class GetHomeTimeLine extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        consumerKey = "";
-        consumerSecret = "";
-        accessToken = "";
-        accessTokenSecret = "";
-        count = "";
-        page = "";
-        sinceId = "";
-        maxId = "";
+        putProperty(CONSUMER_KEY_INL, "");
+        putProperty(CONSUMER_SECRET_INL, "");
+        putProperty(ACCESS_TOKEN_INL, "");
+        putProperty(ACCESS_TOKEN_SECRET_INL, "");
+        putProperty(COUNT_INL, "");
+        putProperty(PAGE_INL, "");
+        putProperty(SINCE_ID_INL, "");
+        putProperty(MAX_ID_INL, "");
 
-        consumerKeyExpr = "";
-        accessTokenExpr = "";
-        accessTokenSecretExpr = "";
-        consumerSecretExpr = "";
-        countExpr = "";
-        pageExpr = "";
-        sinceIdExpr = "";
-        maxIdExpr = "";
+        putProperty(CONSUMER_KEY_EXPR, "");
+        putProperty(CONSUMER_SECRET_EXPR, "");
+        putProperty(ACCESS_TOKEN_EXPR, "");
+        putProperty(ACCESS_TOKEN_SECRET_EXPR, "");
+        putProperty(COUNT_EXPR, "");
+        putProperty(PAGE_EXPR, "");
+        putProperty(SINCE_ID_EXPR, "");
+        putProperty(MAX_ID_EXPR, "");
 
-        consumerKeyNS = new ArrayList<>();
-        consumerSecretNS = new ArrayList<>();
-        accessTokenNS = new ArrayList<>();
-        accessTokenSecretNS = new ArrayList<>();
-        countNS = new ArrayList<>();
-        pageNS = new ArrayList<>();
-        sinceIdNS = new ArrayList<>();
-        maxIdNS = new ArrayList<>();
+        putProperty(CONSUMER_KEY_NS, new ArrayList<NameSpace>());
+        putProperty(CONSUMER_SECRET_NS, new ArrayList<NameSpace>());
+        putProperty(ACCESS_TOKEN_NS, new ArrayList<NameSpace>());
+        putProperty(ACCESS_TOKEN_SECRET_NS, new ArrayList<NameSpace>());
+        putProperty(COUNT_NS, new ArrayList<NameSpace>());
+        putProperty(PAGE_NS, new ArrayList<NameSpace>());
+        putProperty(SINCE_ID_NS, new ArrayList<NameSpace>());
+        putProperty(MAX_ID_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -138,16 +137,16 @@ public class GetHomeTimeLine extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(CONSUMER_KEY, isInline ? consumerKey : consumerKeyExpr);
-        properties.put(CONSUMER_SECRET, isInline ? consumerSecret : consumerSecretExpr);
-        properties.put(ACCESS_TOKEN, isInline ? accessToken : accessTokenExpr);
-        properties.put(ACCESS_TOKEN_SECRET, isInline ? accessTokenSecret : accessTokenSecretExpr);
-        properties.put(COUNT, isInline ? count : countExpr);
-        properties.put(PAGE, isInline ? page : pageExpr);
-        properties.put(SINCE_ID, isInline ? sinceId : sinceIdExpr);
-        properties.put(MAX_ID, isInline ? maxId : maxIdExpr);
+        properties.put(CONSUMER_KEY, isInline ? getProperty(CONSUMER_KEY_INL) : getProperty(CONSUMER_KEY_EXPR));
+        properties.put(CONSUMER_SECRET, isInline ? getProperty(CONSUMER_SECRET_INL) : getProperty(CONSUMER_SECRET_EXPR));
+        properties.put(ACCESS_TOKEN, isInline ? getProperty(ACCESS_TOKEN_INL) : getProperty(ACCESS_TOKEN_EXPR));
+        properties.put(ACCESS_TOKEN_SECRET, isInline ? getProperty(ACCESS_TOKEN_SECRET_INL) : getProperty(ACCESS_TOKEN_SECRET_EXPR));
+        properties.put(COUNT, isInline ? getProperty(COUNT_INL) : getProperty(COUNT_EXPR));
+        properties.put(PAGE, isInline ? getProperty(PAGE_INL) : getProperty(PAGE_EXPR));
+        properties.put(SINCE_ID, isInline ? getProperty(SINCE_ID_INL) : getProperty(SINCE_ID_EXPR));
+        properties.put(MAX_ID, isInline ? getProperty(MAX_ID_INL) : getProperty(MAX_ID_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -155,307 +154,39 @@ public class GetHomeTimeLine extends AbstractConnector {
     /** {@inheritDoc} */
     @Override
     protected void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
-
-        switch (nodeName) {
+        switch (node.getNodeName()) {
             case CONSUMER_KEY:
-                if (isInline) {
-                    consumerKey = nodeValue;
-                } else {
-                    consumerKeyExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, CONSUMER_KEY_INL, CONSUMER_KEY_EXPR);
                 break;
 
             case CONSUMER_SECRET:
-                if (isInline) {
-                    consumerSecret = nodeValue;
-                } else {
-                    consumerSecretExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, CONSUMER_SECRET_INL, CONSUMER_SECRET_EXPR);
                 break;
 
             case ACCESS_TOKEN:
-                if (isInline) {
-                    accessToken = nodeValue;
-                } else {
-                    accessTokenExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, ACCESS_TOKEN_INL, ACCESS_TOKEN_EXPR);
                 break;
 
             case ACCESS_TOKEN_SECRET:
-                if (isInline) {
-                    accessTokenSecret = nodeValue;
-                } else {
-                    accessTokenSecretExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, ACCESS_TOKEN_SECRET_INL, ACCESS_TOKEN_SECRET_EXPR);
                 break;
 
             case COUNT:
-                if (isInline) {
-                    count = nodeValue;
-                } else {
-                    countExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, COUNT_INL, COUNT_EXPR);
                 break;
 
             case PAGE:
-                if (isInline) {
-                    page = nodeValue;
-                } else {
-                    pageExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, PAGE_INL, PAGE_EXPR);
                 break;
 
             case SINCE_ID:
-                if (isInline) {
-                    sinceId = nodeValue;
-                } else {
-                    sinceIdExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, SINCE_ID_INL, SINCE_ID_EXPR);
                 break;
 
-            case MAX_ID:
-                if (isInline) {
-                    maxId = nodeValue;
-                } else {
-                    maxIdExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+            default:
+                adaptProperty(nodeValue, MAX_ID_INL, MAX_ID_EXPR);
         }
-    }
-
-    @Nonnull
-    public String getConsumerKey() {
-        return consumerKey;
-    }
-
-    public void setConsumerKey(@Nonnull String consumerKey) {
-        this.consumerKey = consumerKey;
-    }
-
-    @Nonnull
-    public String getConsumerSecret() {
-        return consumerSecret;
-    }
-
-    public void setConsumerSecret(@Nonnull String consumerSecret) {
-        this.consumerSecret = consumerSecret;
-    }
-
-    @Nonnull
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public void setAccessToken(@Nonnull String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    @Nonnull
-    public String getAccessTokenSecret() {
-        return accessTokenSecret;
-    }
-
-    public void setAccessTokenSecret(@Nonnull String accessTokenSecret) {
-        this.accessTokenSecret = accessTokenSecret;
-    }
-
-    @Nonnull
-    public String getCount() {
-        return count;
-    }
-
-    public void setCount(@Nonnull String count) {
-        this.count = count;
-    }
-
-    @Nonnull
-    public String getPage() {
-        return page;
-    }
-
-    public void setPage(@Nonnull String page) {
-        this.page = page;
-    }
-
-    @Nonnull
-    public String getSinceId() {
-        return sinceId;
-    }
-
-    public void setSinceId(@Nonnull String sinceId) {
-        this.sinceId = sinceId;
-    }
-
-    @Nonnull
-    public String getMaxId() {
-        return maxId;
-    }
-
-    public void setMaxId(@Nonnull String maxId) {
-        this.maxId = maxId;
-    }
-
-    @Nonnull
-    public String getConsumerKeyExpr() {
-        return consumerKeyExpr;
-    }
-
-    public void setConsumerKeyExpr(@Nonnull String consumerKeyExpr) {
-        this.consumerKeyExpr = consumerKeyExpr;
-    }
-
-    @Nonnull
-    public String getConsumerSecretExpr() {
-        return consumerSecretExpr;
-    }
-
-    public void setConsumerSecretExpr(@Nonnull String consumerSecretExpr) {
-        this.consumerSecretExpr = consumerSecretExpr;
-    }
-
-    @Nonnull
-    public String getAccessTokenExpr() {
-        return accessTokenExpr;
-    }
-
-    public void setAccessTokenExpr(@Nonnull String accessTokenExpr) {
-        this.accessTokenExpr = accessTokenExpr;
-    }
-
-    @Nonnull
-    public String getAccessTokenSecretExpr() {
-        return accessTokenSecretExpr;
-    }
-
-    public void setAccessTokenSecretExpr(@Nonnull String accessTokenSecretExpr) {
-        this.accessTokenSecretExpr = accessTokenSecretExpr;
-    }
-
-    @Nonnull
-    public String getCountExpr() {
-        return countExpr;
-    }
-
-    public void setCountExpr(@Nonnull String countExpr) {
-        this.countExpr = countExpr;
-    }
-
-    @Nonnull
-    public String getPageExpr() {
-        return pageExpr;
-    }
-
-    public void setPageExpr(@Nonnull String pageExpr) {
-        this.pageExpr = pageExpr;
-    }
-
-    @Nonnull
-    public String getSinceIdExpr() {
-        return sinceIdExpr;
-    }
-
-    public void setSinceIdExpr(@Nonnull String sinceIdExpr) {
-        this.sinceIdExpr = sinceIdExpr;
-    }
-
-    @Nonnull
-    public String getMaxIdExpr() {
-        return maxIdExpr;
-    }
-
-    public void setMaxIdExpr(@Nonnull String maxIdExpr) {
-        this.maxIdExpr = maxIdExpr;
-    }
-
-    @Nonnull
-    public List<NameSpace> getConsumerKeyNS() {
-        return consumerKeyNS;
-    }
-
-    public void setConsumerKeyNS(@Nonnull List<NameSpace> consumerKeyNS) {
-        this.consumerKeyNS = consumerKeyNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getConsumerSecretNS() {
-        return consumerSecretNS;
-    }
-
-    public void setConsumerSecretNS(@Nonnull List<NameSpace> consumerSecretNS) {
-        this.consumerSecretNS = consumerSecretNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getAccessTokenNS() {
-        return accessTokenNS;
-    }
-
-    public void setAccessTokenNS(@Nonnull List<NameSpace> accessTokenNS) {
-        this.accessTokenNS = accessTokenNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getAccessTokenSecretNS() {
-        return accessTokenSecretNS;
-    }
-
-    public void setAccessTokenSecretNS(@Nonnull List<NameSpace> accessTokenSecretNS) {
-        this.accessTokenSecretNS = accessTokenSecretNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getCountNS() {
-        return countNS;
-    }
-
-    public void setCountNS(@Nonnull List<NameSpace> countNS) {
-        this.countNS = countNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getPageNS() {
-        return pageNS;
-    }
-
-    public void setPageNS(@Nonnull List<NameSpace> pageNS) {
-        this.pageNS = pageNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getSinceIdNS() {
-        return sinceIdNS;
-    }
-
-    public void setSinceIdNS(@Nonnull List<NameSpace> sinceIdNS) {
-        this.sinceIdNS = sinceIdNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getMaxIdNS() {
-        return maxIdNS;
-    }
-
-    public void setMaxIdNS(@Nonnull List<NameSpace> maxIdNS) {
-        this.maxIdNS = maxIdNS;
     }
 }

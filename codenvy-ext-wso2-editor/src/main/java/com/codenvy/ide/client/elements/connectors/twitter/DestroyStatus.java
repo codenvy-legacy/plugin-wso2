@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes DestroyStatus connector for twitter group of connectors. Also the class contains the business logic
@@ -47,6 +46,24 @@ public class DestroyStatus extends AbstractConnector {
     public static final String ELEMENT_NAME       = "DestroyStatus";
     public static final String SERIALIZATION_NAME = "twitter.destroyStatus";
 
+    public static final Key<String> KEY_CONSUMER_KEY        = new Key<>("ConsumerKey");
+    public static final Key<String> KEY_CONSUMER_SECRET     = new Key<>("ConsumerSecret");
+    public static final Key<String> KEY_ACCESS_TOKEN        = new Key<>("accessToken");
+    public static final Key<String> KEY_ACCESS_TOKEN_SECRET = new Key<>("accessTokenSecret");
+    public static final Key<String> KEY_STATUS_ID           = new Key<>("statusId");
+
+    public static final Key<String> KEY_CONSUMER_KEY_EXPR        = new Key<>("consumerKeyExpr");
+    public static final Key<String> KEY_CONSUMER_SECRET_EXPR     = new Key<>("consumerSecretExpr");
+    public static final Key<String> KEY_ACCESS_TOKEN_EXPR        = new Key<>("accessTokenExpr");
+    public static final Key<String> KEY_ACCESS_TOKEN_SECRET_EXPR = new Key<>("accessTokenSecretExpr");
+    public static final Key<String> KEY_STATUS_ID_EXPR           = new Key<>("statusIdExpr");
+
+    public static final Key<List<NameSpace>> KEY_CONSUMER_KEY_NS        = new Key<>("consumerKeyNS");
+    public static final Key<List<NameSpace>> KEY_CONSUMER_SECRET_NS     = new Key<>("consumerSecretNS");
+    public static final Key<List<NameSpace>> KEY_ACCESS_TOKEN_NS        = new Key<>("accessTokenNS");
+    public static final Key<List<NameSpace>> KEY_ACCESS_TOKEN_SECRET_NS = new Key<>("accessTokenSecretNS");
+    public static final Key<List<NameSpace>> KEY_STATUS_ID_NS           = new Key<>("statusIdNS");
+
     private static final String CONSUMER_KEY        = "consumerKey";
     private static final String CONSUMER_SECRET     = "consumerSecret";
     private static final String ACCESS_TOKEN        = "accessToken";
@@ -58,24 +75,6 @@ public class DestroyStatus extends AbstractConnector {
                                                                  ACCESS_TOKEN,
                                                                  ACCESS_TOKEN_SECRET,
                                                                  STATUS_ID);
-
-    private String consumerKey;
-    private String consumerSecret;
-    private String accessToken;
-    private String accessTokenSecret;
-    private String statusId;
-
-    private String consumerKeyExpr;
-    private String consumerSecretExpr;
-    private String accessTokenExpr;
-    private String accessTokenSecretExpr;
-    private String statusIdExpr;
-
-    private List<NameSpace> consumerKeyNS;
-    private List<NameSpace> consumerSecretNS;
-    private List<NameSpace> accessTokenNS;
-    private List<NameSpace> accessTokenSecretNS;
-    private List<NameSpace> statusIdNS;
 
     @Inject
     public DestroyStatus(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -89,23 +88,23 @@ public class DestroyStatus extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        consumerKey = "";
-        consumerSecret = "";
-        accessToken = "";
-        accessTokenSecret = "";
-        statusId = "";
+        putProperty(KEY_CONSUMER_KEY, "");
+        putProperty(KEY_CONSUMER_SECRET, "");
+        putProperty(KEY_ACCESS_TOKEN, "");
+        putProperty(KEY_ACCESS_TOKEN_SECRET, "");
+        putProperty(KEY_STATUS_ID, "");
 
-        consumerKeyExpr = "";
-        accessTokenExpr = "";
-        accessTokenSecretExpr = "";
-        consumerSecretExpr = "";
-        statusIdExpr = "";
+        putProperty(KEY_CONSUMER_KEY_EXPR, "");
+        putProperty(KEY_CONSUMER_SECRET_EXPR, "");
+        putProperty(KEY_ACCESS_TOKEN_EXPR, "");
+        putProperty(KEY_ACCESS_TOKEN_SECRET_EXPR, "");
+        putProperty(KEY_STATUS_ID_EXPR, "");
 
-        consumerKeyNS = new ArrayList<>();
-        accessTokenSecretNS = new ArrayList<>();
-        statusIdNS = new ArrayList<>();
-        accessTokenNS = new ArrayList<>();
-        consumerSecretNS = new ArrayList<>();
+        putProperty(KEY_CONSUMER_KEY_NS, new ArrayList<NameSpace>());
+        putProperty(KEY_CONSUMER_SECRET_NS, new ArrayList<NameSpace>());
+        putProperty(KEY_ACCESS_TOKEN_NS, new ArrayList<NameSpace>());
+        putProperty(KEY_ACCESS_TOKEN_SECRET_NS, new ArrayList<NameSpace>());
+        putProperty(KEY_STATUS_ID_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -114,13 +113,13 @@ public class DestroyStatus extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(AbstractConnector.PARAMETER_EDITOR_TYPE));
 
-        properties.put(CONSUMER_KEY, isInline ? consumerKey : consumerKeyExpr);
-        properties.put(CONSUMER_SECRET, isInline ? consumerSecret : consumerSecretExpr);
-        properties.put(ACCESS_TOKEN, isInline ? accessToken : accessTokenExpr);
-        properties.put(ACCESS_TOKEN_SECRET, isInline ? accessTokenSecret : accessTokenSecretExpr);
-        properties.put(STATUS_ID, isInline ? statusId : statusIdExpr);
+        properties.put(CONSUMER_KEY, isInline ? getProperty(KEY_CONSUMER_KEY) : getProperty(KEY_CONSUMER_KEY_EXPR));
+        properties.put(CONSUMER_SECRET, isInline ? getProperty(KEY_CONSUMER_SECRET) : getProperty(KEY_CONSUMER_SECRET_EXPR));
+        properties.put(ACCESS_TOKEN, isInline ? getProperty(KEY_ACCESS_TOKEN) : getProperty(KEY_ACCESS_TOKEN_EXPR));
+        properties.put(ACCESS_TOKEN_SECRET, isInline ? getProperty(KEY_ACCESS_TOKEN_SECRET) : getProperty(KEY_ACCESS_TOKEN_SECRET_EXPR));
+        properties.put(STATUS_ID, isInline ? getProperty(KEY_STATUS_ID) : getProperty(KEY_STATUS_ID_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -128,196 +127,27 @@ public class DestroyStatus extends AbstractConnector {
     /** {@inheritDoc} */
     @Override
     protected void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
-
-        switch (nodeName) {
+        switch (node.getNodeName()) {
             case CONSUMER_KEY:
-                if (isInline) {
-                    consumerKey = nodeValue;
-                } else {
-                    consumerKeyExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
-
-            case ACCESS_TOKEN:
-                if (isInline) {
-                    accessToken = nodeValue;
-                } else {
-                    accessTokenExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, KEY_CONSUMER_KEY, KEY_CONSUMER_KEY_EXPR);
                 break;
 
             case CONSUMER_SECRET:
-                if (isInline) {
-                    consumerSecret = nodeValue;
-                } else {
-                    consumerSecretExpr = nodeValue;
+                adaptProperty(nodeValue, KEY_CONSUMER_SECRET, KEY_CONSUMER_SECRET_EXPR);
+                break;
 
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+            case ACCESS_TOKEN:
+                adaptProperty(nodeValue, KEY_ACCESS_TOKEN, KEY_ACCESS_TOKEN_EXPR);
                 break;
 
             case ACCESS_TOKEN_SECRET:
-                if (isInline) {
-                    accessTokenSecret = nodeValue;
-                } else {
-                    accessTokenSecretExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, KEY_ACCESS_TOKEN_SECRET, KEY_ACCESS_TOKEN_SECRET_EXPR);
                 break;
 
-            case STATUS_ID:
-                if (isInline) {
-                    statusId = nodeValue;
-                } else {
-                    statusIdExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+            default:
+                adaptProperty(nodeValue, KEY_STATUS_ID, KEY_STATUS_ID_EXPR);
         }
-    }
-
-    @Nonnull
-    public String getConsumerKey() {
-        return consumerKey;
-    }
-
-    public void setConsumerKey(@Nonnull String consumerKey) {
-        this.consumerKey = consumerKey;
-    }
-
-    @Nonnull
-    public String getConsumerSecret() {
-        return consumerSecret;
-    }
-
-    public void setConsumerSecret(@Nonnull String consumerSecret) {
-        this.consumerSecret = consumerSecret;
-    }
-
-    @Nonnull
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public void setAccessToken(@Nonnull String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    @Nonnull
-    public String getAccessTokenSecret() {
-        return accessTokenSecret;
-    }
-
-    public void setAccessTokenSecret(@Nonnull String accessTokenSecret) {
-        this.accessTokenSecret = accessTokenSecret;
-    }
-
-    @Nonnull
-    public String getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(@Nonnull String statusId) {
-        this.statusId = statusId;
-    }
-
-    @Nonnull
-    public String getConsumerKeyExpr() {
-        return consumerKeyExpr;
-    }
-
-    public void setConsumerKeyExpr(@Nonnull String consumerKeyExpr) {
-        this.consumerKeyExpr = consumerKeyExpr;
-    }
-
-    @Nonnull
-    public String getConsumerSecretExpr() {
-        return consumerSecretExpr;
-    }
-
-    public void setConsumerSecretExpr(@Nonnull String consumerSecretExpr) {
-        this.consumerSecretExpr = consumerSecretExpr;
-    }
-
-    @Nonnull
-    public String getAccessTokenExpr() {
-        return accessTokenExpr;
-    }
-
-    public void setAccessTokenExpr(@Nonnull String accessTokenExpr) {
-        this.accessTokenExpr = accessTokenExpr;
-    }
-
-    @Nonnull
-    public String getAccessTokenSecretExpr() {
-        return accessTokenSecretExpr;
-    }
-
-    public void setAccessTokenSecretExpr(@Nonnull String accessTokenSecretExpr) {
-        this.accessTokenSecretExpr = accessTokenSecretExpr;
-    }
-
-    @Nonnull
-    public String getStatusIdExpr() {
-        return statusIdExpr;
-    }
-
-    public void setStatusIdExpr(@Nonnull String statusIdExpr) {
-        this.statusIdExpr = statusIdExpr;
-    }
-
-    @Nonnull
-    public List<NameSpace> getConsumerKeyNS() {
-        return consumerKeyNS;
-    }
-
-    public void setConsumerKeyNS(@Nonnull List<NameSpace> consumerKeyNS) {
-        this.consumerKeyNS = consumerKeyNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getConsumerSecretNS() {
-        return consumerSecretNS;
-    }
-
-    public void setConsumerSecretNS(@Nonnull List<NameSpace> consumerSecretNS) {
-        this.consumerSecretNS = consumerSecretNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getAccessTokenNS() {
-        return accessTokenNS;
-    }
-
-    public void setAccessTokenNS(@Nonnull List<NameSpace> accessTokenNS) {
-        this.accessTokenNS = accessTokenNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getAccessTokenSecretNS() {
-        return accessTokenSecretNS;
-    }
-
-    public void setAccessTokenSecretNS(@Nonnull List<NameSpace> accessTokenSecretNS) {
-        this.accessTokenSecretNS = accessTokenSecretNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getStatusIdNS() {
-        return statusIdNS;
-    }
-
-    public void setStatusIdNS(@Nonnull List<NameSpace> statusIdNS) {
-        this.statusIdNS = statusIdNS;
     }
 }

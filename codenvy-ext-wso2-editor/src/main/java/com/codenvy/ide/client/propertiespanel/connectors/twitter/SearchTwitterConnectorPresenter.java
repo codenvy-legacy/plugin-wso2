@@ -16,23 +16,58 @@
 package com.codenvy.ide.client.propertiespanel.connectors.twitter;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter;
 import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.COUNT_EXPR;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.COUNT_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.COUNT_NS;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.GEOCODE_EXPR;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.GEOCODE_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.GEOCODE_NS;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.LANG_EXPR;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.LANG_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.LANG_NS;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.LOCALE_EXPR;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.LOCALE_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.LOCALE_NS;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.MAX_ID_EXPR;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.MAX_ID_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.MAX_ID_NS;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.RADIUS_EXPR;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.RADIUS_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.RADIUS_NS;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.SEARCH_EXPR;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.SEARCH_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.SEARCH_NS;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.SINCE_EXPR;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.SINCE_ID_EXPR;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.SINCE_ID_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.SINCE_ID_NS;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.SINCE_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.SINCE_NS;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.UNIT_EXPR;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.UNIT_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.UNIT_NS;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.UNTIL_EXPR;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.UNTIL_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter.UNTIL_NS;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -43,431 +78,110 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  */
 public class SearchTwitterConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<SearchTwitter> {
 
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          searchCallBack;
-    private final AddNameSpacesCallBack          langCallBack;
-    private final AddNameSpacesCallBack          localeCallBack;
-    private final AddNameSpacesCallBack          maxIdCallBack;
-    private final AddNameSpacesCallBack          sinceCallBack;
-    private final AddNameSpacesCallBack          sinceIdCallBack;
-    private final AddNameSpacesCallBack          geocodeCallBack;
-    private final AddNameSpacesCallBack          radiusCallBack;
-    private final AddNameSpacesCallBack          unitCallBack;
-    private final AddNameSpacesCallBack          untilCallBack;
-    private final AddNameSpacesCallBack          countCallBack;
+    private SimplePropertyPresenter searchInl;
+    private SimplePropertyPresenter langInl;
+    private SimplePropertyPresenter localeInl;
+    private SimplePropertyPresenter maxIdInl;
+    private SimplePropertyPresenter sinceInl;
+    private SimplePropertyPresenter sinceIdInl;
+    private SimplePropertyPresenter geocodeInl;
+    private SimplePropertyPresenter radiusInl;
+    private SimplePropertyPresenter unitInl;
+    private SimplePropertyPresenter untilInl;
+    private SimplePropertyPresenter countInl;
+
+    private ComplexPropertyPresenter searchExpr;
+    private ComplexPropertyPresenter langExpr;
+    private ComplexPropertyPresenter localeExpr;
+    private ComplexPropertyPresenter maxIdExpr;
+    private ComplexPropertyPresenter sinceExpr;
+    private ComplexPropertyPresenter sinceIdExpr;
+    private ComplexPropertyPresenter geocodeExpr;
+    private ComplexPropertyPresenter radiusExpr;
+    private ComplexPropertyPresenter unitExpr;
+    private ComplexPropertyPresenter untilExpr;
+    private ComplexPropertyPresenter countExpr;
 
     @Inject
     public SearchTwitterConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                            NameSpaceEditorPresenter nameSpacePresenter,
-                                           GeneralPropertiesPanelView view,
+                                           PropertiesPanelView view,
                                            TwitterPropertyManager twitterPropertyManager,
                                            ParameterPresenter parameterPresenter,
-                                           PropertyTypeManager propertyTypeManager) {
-        super(view, twitterPropertyManager, parameterPresenter, propertyTypeManager);
+                                           PropertyTypeManager propertyTypeManager,
+                                           PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                           Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                           Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                           Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              twitterPropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.searchCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setSearchNS(nameSpaces);
-                element.setSearchExpr(expression);
-
-                SearchTwitterConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.langCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setLangNS(nameSpaces);
-                element.setLangExpr(expression);
-
-                SearchTwitterConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.localeCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setLocaleNS(nameSpaces);
-                element.setLocaleExpr(expression);
-
-                SearchTwitterConnectorPresenter.this.view.setThirdTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.maxIdCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setMaxIdNS(nameSpaces);
-                element.setMaxIdExpr(expression);
-
-                SearchTwitterConnectorPresenter.this.view.setFourthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.sinceCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setSinceNS(nameSpaces);
-                element.setSinceExpr(expression);
-
-                SearchTwitterConnectorPresenter.this.view.setFifthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.sinceIdCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setSinceIdNS(nameSpaces);
-                element.setSinceIdExpr(expression);
-
-                SearchTwitterConnectorPresenter.this.view.setSixthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.geocodeCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setGeocodeNS(nameSpaces);
-                element.setGeocodeExpr(expression);
-
-                SearchTwitterConnectorPresenter.this.view.setSeventhTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.radiusCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setRadiusNS(nameSpaces);
-                element.setRadiusExpr(expression);
-
-                SearchTwitterConnectorPresenter.this.view.setEighthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.unitCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setUnitNS(nameSpaces);
-                element.setUnitExpr(expression);
-
-                SearchTwitterConnectorPresenter.this.view.setNinthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.untilCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setUntilNS(nameSpaces);
-                element.setUntilExpr(expression);
-
-                SearchTwitterConnectorPresenter.this.view.setTenthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.countCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setCountNS(nameSpaces);
-                element.setCountExpr(expression);
-
-                SearchTwitterConnectorPresenter.this.view.setEleventhTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
+    private void prepareView() {
 
-        notifyListeners();
-    }
+        searchInl = createSimplePanel(locale.twitterSearch(), SEARCH_INL);
+        langInl = createSimplePanel(locale.twitterLang(), LANG_INL);
+        localeInl = createSimplePanel(locale.twitterLocale(), LOCALE_INL);
+        maxIdInl = createSimplePanel(locale.twitterMaxId(), MAX_ID_INL);
+        sinceInl = createSimplePanel(locale.twitterSince(), SINCE_INL);
+        sinceIdInl = createSimplePanel(locale.twitterSinceId(), SINCE_ID_INL);
+        geocodeInl = createSimplePanel(locale.twitterGeocode(), GEOCODE_INL);
+        radiusInl = createSimplePanel(locale.twitterRadius(), RADIUS_INL);
+        unitInl = createSimplePanel(locale.twitterUnit(), UNTIL_INL);
+        untilInl = createSimplePanel(locale.twitterUntil(), UNTIL_INL);
+        countInl = createSimplePanel(locale.twitterCount(), COUNT_INL);
 
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setSearch(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setLang(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdTextBoxValueChanged() {
-        element.setLocale(view.getThirdTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthTextBoxValueChanged() {
-        element.setMaxId(view.getFourthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFifthTextBoxValueChanged() {
-        element.setSince(view.getFifthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSixthTextBoxValueChanged() {
-        element.setSinceId(view.getSixthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSeventhTextBoxValueChanged() {
-        element.setGeocode(view.getSeventhTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onEighthTextBoxValueChanged() {
-        element.setRadius(view.getEighthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onNinthTextBoxValueChanged() {
-        element.setUnit(view.getNinthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onTenthTextBoxValueChanged() {
-        element.setUntil(view.getTenthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onEleventhTextBoxValueChanged() {
-        element.setCount(view.getEleventhTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getSearchNS(),
-                                                    searchCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getSearchExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getLangNS(),
-                                                    langCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getLangExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getLocaleNS(),
-                                                    localeCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getLocaleExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getMaxIdNS(),
-                                                    maxIdCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getMaxIdExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFifthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getSinceNS(),
-                                                    sinceCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getSinceExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSixthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getSinceIdNS(),
-                                                    sinceIdCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getSinceIdExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSeventhButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getGeocodeNS(),
-                                                    geocodeCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getGeocodeExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onEighthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getRadiusNS(),
-                                                    radiusCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getRadiusExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onNinthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getUnitNS(),
-                                                    unitCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getUnitExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onTenthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getUntilNS(),
-                                                    untilCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getUntilExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onEleventhButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getCountNS(),
-                                                    countCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getCountExpr());
+        searchExpr = createComplexPanel(locale.twitterSearch(), SEARCH_NS, SEARCH_EXPR);
+        langExpr = createComplexPanel(locale.twitterLang(), LANG_NS, LANG_EXPR);
+        localeExpr = createComplexPanel(locale.twitterLocale(), LOCALE_NS, LOCALE_EXPR);
+        maxIdExpr = createComplexPanel(locale.twitterMaxId(), MAX_ID_NS, MAX_ID_EXPR);
+        sinceExpr = createComplexPanel(locale.twitterSince(), SINCE_NS, SINCE_EXPR);
+        sinceIdExpr = createComplexPanel(locale.twitterSinceId(), SINCE_ID_NS, SINCE_ID_EXPR);
+        geocodeExpr = createComplexPanel(locale.twitterGeocode(), GEOCODE_NS, GEOCODE_EXPR);
+        radiusExpr = createComplexPanel(locale.twitterRadius(), RADIUS_NS, RADIUS_EXPR);
+        unitExpr = createComplexPanel(locale.twitterUnit(), UNIT_NS, UNIT_EXPR);
+        untilExpr = createComplexPanel(locale.twitterUntil(), UNTIL_NS, UNIT_EXPR);
+        countExpr = createComplexPanel(locale.twitterCount(), COUNT_NS, COUNT_EXPR);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        boolean isVisible = INLINE.equals(element.getProperty(PARAMETER_EDITOR_TYPE));
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+        searchInl.setVisible(isVisible);
+        langInl.setVisible(isVisible);
+        localeInl.setVisible(isVisible);
+        maxIdInl.setVisible(isVisible);
+        sinceInl.setVisible(isVisible);
+        sinceIdInl.setVisible(isVisible);
+        geocodeInl.setVisible(isVisible);
+        radiusInl.setVisible(isVisible);
+        unitInl.setVisible(isVisible);
+        untilInl.setVisible(isVisible);
+        countInl.setVisible(isVisible);
 
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-        view.setVisibleFourthButton(isEquals);
-        view.setVisibleFifthButton(isEquals);
-        view.setVisibleSixthButton(isEquals);
-        view.setVisibleSeventhButton(isEquals);
-        view.setVisibleEighthButton(isEquals);
-        view.setVisibleNinthButton(isEquals);
-        view.setVisibleTenthButton(isEquals);
-        view.setVisibleEleventhButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-        view.setEnableFourthTextBox(!isEquals);
-        view.setEnableFifthTextBox(!isEquals);
-        view.setEnableSixthTextBox(!isEquals);
-        view.setEnableSeventhTextBox(!isEquals);
-        view.setEnableEighthTextBox(!isEquals);
-        view.setEnableNinthTextBox(!isEquals);
-        view.setEnableTenthTextBox(!isEquals);
-        view.setEnableEleventhTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getSearchExpr() : element.getSearch());
-        view.setSecondTextBoxValue(isEquals ? element.getLangExpr() : element.getLang());
-        view.setThirdTextBoxValue(isEquals ? element.getLocaleExpr() : element.getLocale());
-        view.setFourthTextBoxValue(isEquals ? element.getMaxIdExpr() : element.getMaxId());
-        view.setFifthTextBoxValue(isEquals ? element.getSinceExpr() : element.getSince());
-        view.setSixthTextBoxValue(isEquals ? element.getSinceIdExpr() : element.getSinceId());
-        view.setSeventhTextBoxValue(isEquals ? element.getGeocodeExpr() : element.getGeocode());
-        view.setEighthTextBoxValue(isEquals ? element.getRadiusExpr() : element.getRadius());
-        view.setNinthTextBoxValue(isEquals ? element.getUnitExpr() : element.getUnit());
-        view.setFirstTextBoxValue(isEquals ? element.getUntilExpr() : element.getUntil());
-        view.setEleventhTextBoxValue(isEquals ? element.getCountExpr() : element.getCount());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-        view.setVisibleThirdPanel(true);
-        view.setVisibleFourthPanel(true);
-        view.setVisibleFifthPanel(true);
-        view.setVisibleSixthPanel(true);
-        view.setVisibleSeventhPanel(true);
-        view.setVisibleEighthPanel(true);
-        view.setVisibleNinthPanel(true);
-        view.setVisibleTenthPanel(true);
-        view.setVisibleEleventhPanel(true);
-
-        view.setFirstLabelTitle(locale.twitterSearch());
-        view.setSecondLabelTitle(locale.twitterLang());
-        view.setThirdLabelTitle(locale.twitterLocale());
-        view.setFourthLabelTitle(locale.twitterMaxId());
-        view.setFifthLabelTitle(locale.twitterSince());
-        view.setSixthLabelTitle(locale.twitterSinceId());
-        view.setSeventhLabelTitle(locale.twitterGeocode());
-        view.setEighthLabelTitle(locale.twitterRadius());
-        view.setNinthLabelTitle(locale.twitterUnit());
-        view.setTenthLabelTitle(locale.twitterUntil());
-        view.setEleventhLabelTitle(locale.twitterCount());
+        searchExpr.setVisible(!isVisible);
+        langExpr.setVisible(!isVisible);
+        localeExpr.setVisible(!isVisible);
+        maxIdExpr.setVisible(!isVisible);
+        sinceExpr.setVisible(!isVisible);
+        sinceIdExpr.setVisible(!isVisible);
+        geocodeExpr.setVisible(!isVisible);
+        radiusExpr.setVisible(!isVisible);
+        unitExpr.setVisible(!isVisible);
+        untilExpr.setVisible(!isVisible);
+        countExpr.setVisible(!isVisible);
     }
 
     /** {@inheritDoc} */
@@ -475,6 +189,28 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        searchInl.setProperty(element.getProperty(SEARCH_INL));
+        langInl.setProperty(element.getProperty(LANG_INL));
+        localeInl.setProperty(element.getProperty(LOCALE_INL));
+        maxIdInl.setProperty(element.getProperty(MAX_ID_INL));
+        sinceInl.setProperty(element.getProperty(SINCE_INL));
+        sinceIdInl.setProperty(element.getProperty(SINCE_ID_INL));
+        geocodeInl.setProperty(element.getProperty(GEOCODE_INL));
+        radiusInl.setProperty(element.getProperty(RADIUS_INL));
+        unitInl.setProperty(element.getProperty(UNIT_INL));
+        untilInl.setProperty(element.getProperty(UNTIL_INL));
+        countInl.setProperty(element.getProperty(COUNT_INL));
+
+        searchExpr.setProperty(element.getProperty(SEARCH_EXPR));
+        langExpr.setProperty(element.getProperty(LANG_EXPR));
+        localeExpr.setProperty(element.getProperty(LOCALE_EXPR));
+        maxIdExpr.setProperty(element.getProperty(MAX_ID_EXPR));
+        sinceExpr.setProperty(element.getProperty(SINCE_EXPR));
+        sinceIdExpr.setProperty(element.getProperty(SINCE_ID_EXPR));
+        geocodeExpr.setProperty(element.getProperty(GEOCODE_EXPR));
+        radiusExpr.setProperty(element.getProperty(RADIUS_EXPR));
+        unitExpr.setProperty(element.getProperty(UNIT_EXPR));
+        untilExpr.setProperty(element.getProperty(UNTIL_EXPR));
+        countExpr.setProperty(element.getProperty(COUNT_EXPR));
     }
 }

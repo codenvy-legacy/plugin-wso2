@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
 
 /**
  * The class contains state of connectors which are general for all connectors.It contains genera logic of serialization
@@ -76,6 +77,19 @@ public class AbstractConnector extends AbstractElement {
     @Override
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
         putProperty(CONFIG, attributeValue);
+    }
+
+    protected void adaptProperty(@Nonnull String nodeValue,
+                                 @Nonnull Key<String> propertyName,
+                                 @Nonnull Key<String> propertyExpressionName) {
+
+        if (INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE))) {
+            putProperty(propertyName, nodeValue);
+        } else {
+            putProperty(propertyExpressionName, nodeValue);
+
+            putProperty(PARAMETER_EDITOR_TYPE, NAME_SPACED_PROPERTY_EDITOR);
+        }
     }
 
     public enum ParameterEditorType {
