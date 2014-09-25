@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes ResetPassword connector for Salesforce group connectors. Also the class contains the business logic
@@ -47,14 +46,13 @@ public class ResetPassword extends AbstractConnector {
     public static final String ELEMENT_NAME       = "ResetPassword";
     public static final String SERIALIZATION_NAME = "salesforce.resetPassword";
 
+    public static final Key<String>          USER_ID_KEY            = new Key<>("UserId");
+    public static final Key<String>          USER_ID_EXPRESSION_KEY = new Key<>("UserIdExpression");
+    public static final Key<List<NameSpace>> USER_ID_NS_KEY         = new Key<>("UserIdNS");
+
     private static final String USER_ID = "userId";
 
     private static final List<String> PROPERTIES = Arrays.asList(USER_ID);
-
-    private String              userId;
-    private String              userIdExpr;
-    private ParameterEditorType parameterEditorType;
-    private List<NameSpace>     userIdNameSpaces;
 
     @Inject
     public ResetPassword(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -68,12 +66,9 @@ public class ResetPassword extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        userId = "";
-        userIdExpr = "";
-
-        parameterEditorType = Inline;
-
-        userIdNameSpaces = new ArrayList<>();
+        putProperty(USER_ID_KEY, "");
+        putProperty(USER_ID_EXPRESSION_KEY, "");
+        putProperty(USER_ID_NS_KEY, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -82,9 +77,9 @@ public class ResetPassword extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(USER_ID, isInline ? userId : userIdExpr);
+        properties.put(USER_ID, isInline ? getProperty(USER_ID_KEY) : getProperty(USER_ID_EXPRESSION_KEY));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -95,54 +90,9 @@ public class ResetPassword extends AbstractConnector {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
-
-        switch (nodeName) {
-            case USER_ID:
-                if (isInline) {
-                    userId = nodeValue;
-                } else {
-                    userIdExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+        if (USER_ID.equals(nodeName)) {
+            adaptProperty(nodeValue, USER_ID_KEY, USER_ID_EXPRESSION_KEY);
         }
     }
 
-    @Nonnull
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(@Nonnull String batchSize) {
-        this.userId = batchSize;
-    }
-
-    @Nonnull
-    public List<NameSpace> getUserIdNameSpaces() {
-        return userIdNameSpaces;
-    }
-
-    public void setUserIdNameSpaces(@Nonnull List<NameSpace> userIdNameSpaces) {
-        this.userIdNameSpaces = userIdNameSpaces;
-    }
-
-    @Nonnull
-    public ParameterEditorType getParameterEditorType() {
-        return parameterEditorType;
-    }
-
-    public void setParameterEditorType(@Nonnull ParameterEditorType parameterEditorType) {
-        this.parameterEditorType = parameterEditorType;
-    }
-
-    @Nonnull
-    public String getUserIdExpr() {
-        return userIdExpr;
-    }
-
-    public void setUserIdExpr(@Nonnull String userIdExpr) {
-        this.userIdExpr = userIdExpr;
-    }
 }

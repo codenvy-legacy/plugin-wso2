@@ -59,11 +59,6 @@ import com.codenvy.ide.client.elements.connectors.jira.UpdateComment;
 import com.codenvy.ide.client.elements.connectors.jira.UpdateFilterById;
 import com.codenvy.ide.client.elements.connectors.jira.UpdateIssue;
 import com.codenvy.ide.client.elements.connectors.jira.UpdateIssueAssignee;
-import com.codenvy.ide.client.elements.connectors.salesforce.Query;
-import com.codenvy.ide.client.elements.connectors.salesforce.QueryAll;
-import com.codenvy.ide.client.elements.connectors.salesforce.QueryMore;
-import com.codenvy.ide.client.elements.connectors.salesforce.ResetPassword;
-import com.codenvy.ide.client.elements.connectors.salesforce.Retrieve;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.AddAttachmentConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.CreateFilterConnectorPresenter;
@@ -108,24 +103,15 @@ import com.codenvy.ide.client.propertiespanel.connectors.jira.UpdateCommentConne
 import com.codenvy.ide.client.propertiespanel.connectors.jira.UpdateFilterByIdConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.UpdateIssueAssigneeConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.UpdateIssueConnectorPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.QueryAllConnectorPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.QueryConnectorPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.QueryMoreConnectorPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.ResetPasswordConnectorPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.salesforce.RetrieveConnectorPresenter;
 import com.google.inject.Inject;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class JiraConnectorPropertiesPanelInitializer extends AbstractPropertiesPanelInitializer {
 
     private final SearchConnectorPresenter                           searchPropertiesPanel;
-    private final RetrieveConnectorPresenter                         retrievePropertiesPanel;
-    private final QueryConnectorPresenter                            queryPropertiesPanel;
-    private final QueryAllConnectorPresenter                         queryAllPropertiesPanel;
-    private final QueryMoreConnectorPresenter                        queryMorePropertiesPanel;
-    private final ResetPasswordConnectorPresenter                    resetPasswordPropertiesPanel;
     private final AddAttachmentConnectorPresenter                    addAttachmentPropertiesPanel;
     private final CreateFilterConnectorPresenter                     createFilterPropertiesPanel;
     private final CreateIssueConnectorPresenter                      createIssuePropertiesPanel;
@@ -173,11 +159,6 @@ public class JiraConnectorPropertiesPanelInitializer extends AbstractPropertiesP
     @Inject
     public JiraConnectorPropertiesPanelInitializer(PropertiesPanelManager manager,
                                                    SearchConnectorPresenter searchPropertiesPanel,
-                                                   RetrieveConnectorPresenter retrievePropertiesPanel,
-                                                   QueryConnectorPresenter queryPropertiesPanel,
-                                                   QueryAllConnectorPresenter queryAllPropertiesPanel,
-                                                   QueryMoreConnectorPresenter queryMorePropertiesPanel,
-                                                   ResetPasswordConnectorPresenter resetPasswordPropertiesPanel,
                                                    AddAttachmentConnectorPresenter addAttachmentPropertiesPanel,
                                                    CreateFilterConnectorPresenter createFilterPropertiesPanel,
                                                    CreateIssueConnectorPresenter createIssuePropertiesPanel,
@@ -223,11 +204,6 @@ public class JiraConnectorPropertiesPanelInitializer extends AbstractPropertiesP
                                                    UpdateIssueAssigneeConnectorPresenter updateIssueAssigneePropertiesPanel) {
         super(manager);
         this.searchPropertiesPanel = searchPropertiesPanel;
-        this.retrievePropertiesPanel = retrievePropertiesPanel;
-        this.queryPropertiesPanel = queryPropertiesPanel;
-        this.queryAllPropertiesPanel = queryAllPropertiesPanel;
-        this.queryMorePropertiesPanel = queryMorePropertiesPanel;
-        this.resetPasswordPropertiesPanel = resetPasswordPropertiesPanel;
         this.addAttachmentPropertiesPanel = addAttachmentPropertiesPanel;
         this.createFilterPropertiesPanel = createFilterPropertiesPanel;
         this.createIssuePropertiesPanel = createIssuePropertiesPanel;
@@ -276,12 +252,7 @@ public class JiraConnectorPropertiesPanelInitializer extends AbstractPropertiesP
     /** {@inheritDoc} */
     @Override
     public void initialize() {
-        manager.register(Query.class, queryPropertiesPanel);
-        manager.register(QueryAll.class, queryAllPropertiesPanel);
-        manager.register(QueryMore.class, queryMorePropertiesPanel);
-        manager.register(ResetPassword.class, resetPasswordPropertiesPanel);
         manager.register(SearchJira.class, searchPropertiesPanel);
-        manager.register(Retrieve.class, retrievePropertiesPanel);
         manager.register(AddAttachmentToIssueId.class, addAttachmentPropertiesPanel);
         manager.register(CreateFilter.class, createFilterPropertiesPanel);
         manager.register(CreateIssue.class, createIssuePropertiesPanel);

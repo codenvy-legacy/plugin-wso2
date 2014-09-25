@@ -15,13 +15,20 @@
  */
 package com.codenvy.ide.client.propertiespanel.connectors.salesforce;
 
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.salesforce.DescribeGlobal;
 import com.codenvy.ide.client.elements.connectors.salesforce.SalesForcePropertyManager;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 /**
  * The presenter that provides a business logic of 'DescribeGlobal' connector properties panel for salesforce connectors.
@@ -32,10 +39,26 @@ import com.google.inject.Inject;
 public class DescribeGlobalConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<DescribeGlobal> {
 
     @Inject
-    public DescribeGlobalConnectorPresenter(GeneralPropertiesPanelView view,
+    public DescribeGlobalConnectorPresenter(WSO2EditorLocalizationConstant locale,
+                                            NameSpaceEditorPresenter nameSpacePresenter,
+                                            PropertiesPanelView view,
                                             SalesForcePropertyManager salesForcePropertyManager,
                                             ParameterPresenter parameterPresenter,
-                                            PropertyTypeManager propertyTypeManager) {
-        super(view, salesForcePropertyManager, parameterPresenter, propertyTypeManager);
+                                            PropertyTypeManager propertyTypeManager,
+                                            PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                            Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                            Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                            Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              salesForcePropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
     }
+
 }

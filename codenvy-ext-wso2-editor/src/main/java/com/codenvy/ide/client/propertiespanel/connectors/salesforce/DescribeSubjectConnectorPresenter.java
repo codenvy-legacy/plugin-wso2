@@ -16,23 +16,29 @@
 package com.codenvy.ide.client.propertiespanel.connectors.salesforce;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.salesforce.DescribeSubject;
 import com.codenvy.ide.client.elements.connectors.salesforce.SalesForcePropertyManager;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
+import static com.codenvy.ide.client.elements.connectors.salesforce.DescribeSubject.SUBJECT_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.DescribeSubject.SUBJECT_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.DescribeSubject.SUBJECT_NS_KEY;
 
 /**
  * The presenter that provides a business logic of 'DescribeSobject' connector properties panel for salesforce connectors.
@@ -41,81 +47,47 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * @author Dmitry Shnurenko
  */
 public class DescribeSubjectConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<DescribeSubject> {
-
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
-    private final AddNameSpacesCallBack          sobjectCallBack;
+    private ComplexPropertyPresenter subjectNS;
+    private SimplePropertyPresenter  subject;
 
     @Inject
     public DescribeSubjectConnectorPresenter(WSO2EditorLocalizationConstant locale,
-                                             NameSpaceEditorPresenter nameSpaceEditorPresenter,
-                                             GeneralPropertiesPanelView view,
+                                             NameSpaceEditorPresenter nameSpacePresenter,
+                                             PropertiesPanelView view,
                                              SalesForcePropertyManager salesForcePropertyManager,
                                              ParameterPresenter parameterPresenter,
-                                             PropertyTypeManager propertyTypeManager) {
-        super(view, salesForcePropertyManager, parameterPresenter, propertyTypeManager);
+                                             PropertyTypeManager propertyTypeManager,
+                                             PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                             Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                             Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                             Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              salesForcePropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
-
-        this.sobjectCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setSubjectsNameSpaces(nameSpaces);
-                element.setSubject(expression);
-
-                DescribeSubjectConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setSubjectInline(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpaceEditorPresenter.showWindowWithParameters(element.getSubjectsNameSpaces(),
-                                                          sobjectCallBack,
-                                                          locale.connectorExpression(),
-                                                          element.getSubject());
+    private void prepareView() {
+        subjectNS = createComplexPanel(locale.connectorSubjects(), SUBJECT_NS_KEY, SUBJECT_EXPRESSION_KEY);
+        subject = createSimplePanel(locale.connectorSubjects(), SUBJECT_KEY);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        ParameterEditorType property = element.getProperty(PARAMETER_EDITOR_TYPE);
+        boolean isNameSpaced = NAME_SPACED_PROPERTY_EDITOR.equals(property);
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
-
-        view.setVisibleFirstButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getSubject() : element.getSubjectInline());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-
-        view.setFirstLabelTitle(locale.propertiespanelConnectorSubject());
+        subject.setVisible(!isNameSpaced);
+        subjectNS.setVisible(isNameSpaced);
     }
 
     /** {@inheritDoc} */
@@ -123,6 +95,7 @@ public class DescribeSubjectConnectorPresenter extends AbstractConnectorProperti
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        subject.setProperty(element.getProperty(SUBJECT_KEY));
+        subjectNS.setProperty(element.getProperty(SUBJECT_EXPRESSION_KEY));
     }
 }

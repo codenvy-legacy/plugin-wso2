@@ -16,23 +16,35 @@
 package com.codenvy.ide.client.propertiespanel.connectors.salesforce;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.salesforce.Retrieve;
 import com.codenvy.ide.client.elements.connectors.salesforce.SalesForcePropertyManager;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Retrieve.FIELD_LIST_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Retrieve.FIELD_LIST_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Retrieve.FIELD_LIST_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Retrieve.OBJECT_IDS_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Retrieve.OBJECT_IDS_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Retrieve.OBJECT_IDS_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Retrieve.OBJECT_TYPE_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Retrieve.OBJECT_TYPE_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Retrieve.OBJECT_TYPE_NS_KEY;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -42,152 +54,61 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * @author Valeriy Svydenko
  */
 public class RetrieveConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<Retrieve> {
-
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          fieldListCallBack;
-    private final AddNameSpacesCallBack          objectTypeCallBack;
-    private final AddNameSpacesCallBack          objectIDSCallBack;
+    private ComplexPropertyPresenter fieldListNS;
+    private ComplexPropertyPresenter objectTypeNS;
+    private ComplexPropertyPresenter objectIDSNS;
+    private SimplePropertyPresenter  fieldList;
+    private SimplePropertyPresenter  objectType;
+    private SimplePropertyPresenter  objectIDS;
 
     @Inject
     public RetrieveConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                       NameSpaceEditorPresenter nameSpacePresenter,
-                                      GeneralPropertiesPanelView view,
+                                      PropertiesPanelView view,
                                       SalesForcePropertyManager salesForcePropertyManager,
                                       ParameterPresenter parameterPresenter,
-                                      PropertyTypeManager propertyTypeManager) {
-        super(view, salesForcePropertyManager, parameterPresenter, propertyTypeManager);
+                                      PropertyTypeManager propertyTypeManager,
+                                      PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                      Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                      Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                      Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              salesForcePropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.fieldListCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setFieldListNameSpaces(nameSpaces);
-                element.setFieldList(expression);
-
-                RetrieveConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.objectTypeCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setObjectTypeNameSpaces(nameSpaces);
-                element.setObjectType(expression);
-
-                RetrieveConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.objectIDSCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setObjectIDSNameSpaces(nameSpaces);
-                element.setObjectIDS(expression);
-
-                RetrieveConnectorPresenter.this.view.setThirdTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
+    private void prepareView() {
+        fieldListNS = createComplexPanel(locale.connectorFieldList(), FIELD_LIST_NS_KEY, FIELD_LIST_EXPRESSION_KEY);
+        objectTypeNS = createComplexPanel(locale.connectorObjectType(), OBJECT_TYPE_NS_KEY, OBJECT_TYPE_EXPRESSION_KEY);
+        objectIDSNS = createComplexPanel(locale.connectorObjectIDS(), OBJECT_IDS_NS_KEY, OBJECT_IDS_EXPRESSION_KEY);
 
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setFieldListInline(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setObjectTypeInline(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdTextBoxValueChanged() {
-        element.setObjectIDSInline(view.getThirdTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getFieldListNameSpaces(),
-                                                    fieldListCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getFieldList());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getObjectTypeNameSpaces(),
-                                                    objectTypeCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getObjectType());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getObjectIDSNameSpaces(),
-                                                    objectIDSCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getObjectIDS());
+        fieldList = createSimplePanel(locale.connectorFieldList(), FIELD_LIST_KEY);
+        objectType = createSimplePanel(locale.connectorObjectType(), OBJECT_TYPE_KEY);
+        objectIDS = createSimplePanel(locale.connectorObjectIDS(), OBJECT_IDS_KEY);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        ParameterEditorType property = element.getProperty(PARAMETER_EDITOR_TYPE);
+        boolean isNameSpaced = NAME_SPACED_PROPERTY_EDITOR.equals(property);
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+        fieldList.setVisible(!isNameSpaced);
+        objectType.setVisible(!isNameSpaced);
+        objectIDS.setVisible(!isNameSpaced);
 
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getFieldList() : element.getFieldListInline());
-        view.setSecondTextBoxValue(isEquals ? element.getObjectType() : element.getObjectTypeInline());
-        view.setThirdTextBoxValue(isEquals ? element.getObjectIDS() : element.getObjectIDSInline());
-
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-        view.setVisibleThirdPanel(true);
-
-        view.setFirstLabelTitle(locale.connectorFieldList());
-        view.setSecondLabelTitle(locale.connectorObjectType());
-        view.setThirdLabelTitle(locale.connectorObjectIDS());
+        fieldListNS.setVisible(isNameSpaced);
+        objectTypeNS.setVisible(isNameSpaced);
+        objectIDSNS.setVisible(isNameSpaced);
     }
 
     /** {@inheritDoc} */
@@ -195,6 +116,12 @@ public class RetrieveConnectorPresenter extends AbstractConnectorPropertiesPanel
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        fieldList.setProperty(element.getProperty(FIELD_LIST_KEY));
+        objectType.setProperty(element.getProperty(OBJECT_TYPE_KEY));
+        objectIDS.setProperty(element.getProperty(OBJECT_IDS_KEY));
+        fieldListNS.setProperty(element.getProperty(FIELD_LIST_EXPRESSION_KEY));
+        objectTypeNS.setProperty(element.getProperty(OBJECT_TYPE_EXPRESSION_KEY));
+        objectIDSNS.setProperty(element.getProperty(OBJECT_IDS_EXPRESSION_KEY));
     }
+
 }

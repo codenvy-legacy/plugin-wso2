@@ -51,7 +51,5 @@ public class DescribeGlobal extends AbstractConnector {
               resources.salesforce(),
               branchProvider,
               elementCreatorsManager);
-
-        parameterEditorType = ParameterEditorType.Inline;
     }
 }

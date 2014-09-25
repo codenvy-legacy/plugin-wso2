@@ -53,7 +53,6 @@ public class GetUserInformation extends AbstractConnector {
               resources.salesforce(),
               branchProvider,
               elementCreatorsManager);
-
     }
 
 }

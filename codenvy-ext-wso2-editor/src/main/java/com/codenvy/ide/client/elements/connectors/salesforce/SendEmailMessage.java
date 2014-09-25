@@ -25,15 +25,13 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes SendEmailMessageMessage connector for Salesforce group connectors. Also the class contains the business logic
@@ -48,13 +46,13 @@ public class SendEmailMessage extends AbstractConnector {
     public static final String ELEMENT_NAME       = "SendEmailMessage";
     public static final String SERIALIZATION_NAME = "salesforce.sendEmailMessage";
 
+    public static final Key<String>          SEND_EMAIL_MESSAGE_KEY            = new Key<>("SendEmailMessage");
+    public static final Key<String>          SEND_EMAIL_MESSAGE_EXPRESSION_KEY = new Key<>("SendEmailMessageExpression");
+    public static final Key<List<NameSpace>> SEND_EMAIL_MESSAGE_NS_KEY         = new Key<>("SendEmailMessageNS");
+
     private static final String SEND_EMAIL_MESSAGE = "sendEmailMessage";
 
     private static final List<String> PROPERTIES = Arrays.asList(SEND_EMAIL_MESSAGE);
-
-    private String          sendEmailMessage;
-    private String          sendEmailMessageInline;
-    private List<NameSpace> sendEmailMessageNameSpaces;
 
     @Inject
     public SendEmailMessage(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -68,10 +66,9 @@ public class SendEmailMessage extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        sendEmailMessage = "";
-        sendEmailMessageInline = "";
-
-        sendEmailMessageNameSpaces = new ArrayList<>();
+        putProperty(SEND_EMAIL_MESSAGE_KEY, "");
+        putProperty(SEND_EMAIL_MESSAGE_EXPRESSION_KEY, "");
+        putProperty(SEND_EMAIL_MESSAGE_NS_KEY, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -80,9 +77,9 @@ public class SendEmailMessage extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(SEND_EMAIL_MESSAGE, isInline ? sendEmailMessageInline : sendEmailMessage);
+        properties.put(SEND_EMAIL_MESSAGE, isInline ? getProperty(SEND_EMAIL_MESSAGE_KEY) : getProperty(SEND_EMAIL_MESSAGE_EXPRESSION_KEY));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -92,45 +89,10 @@ public class SendEmailMessage extends AbstractConnector {
     protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
-        switch (nodeName) {
-            case SEND_EMAIL_MESSAGE:
-                if (isInline) {
-                    sendEmailMessageInline = nodeValue;
-                } else {
-                    sendEmailMessage = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+        if (SEND_EMAIL_MESSAGE.equals(nodeName)) {
+            adaptProperty(nodeValue, SEND_EMAIL_MESSAGE_KEY, SEND_EMAIL_MESSAGE_EXPRESSION_KEY);
         }
     }
 
-    @Nonnull
-    public String getSendEmailMessage() {
-        return sendEmailMessage;
-    }
-
-    public void setSendEmailMessage(@Nullable String sendEmail) {
-        this.sendEmailMessage = sendEmail;
-    }
-
-    @Nonnull
-    public String getSendEmailMessageInline() {
-        return sendEmailMessageInline;
-    }
-
-    public void setSendEmailMessageInline(@Nonnull String sendEmailInline) {
-        this.sendEmailMessageInline = sendEmailInline;
-    }
-
-    @Nonnull
-    public List<NameSpace> getSendEmailMessageNameSpaces() {
-        return sendEmailMessageNameSpaces;
-    }
-
-    public void setSendEmailNameSpaces(@Nonnull List<NameSpace> searchStringMessageNameSpaces) {
-        this.sendEmailMessageNameSpaces = searchStringMessageNameSpaces;
-    }
 }

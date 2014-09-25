@@ -25,6 +25,12 @@ import com.codenvy.ide.client.elements.connectors.salesforce.EmptyRecycleBin;
 import com.codenvy.ide.client.elements.connectors.salesforce.GetUserInformation;
 import com.codenvy.ide.client.elements.connectors.salesforce.InitSalesforce;
 import com.codenvy.ide.client.elements.connectors.salesforce.LogOut;
+import com.codenvy.ide.client.elements.connectors.salesforce.Query;
+import com.codenvy.ide.client.elements.connectors.salesforce.QueryAll;
+import com.codenvy.ide.client.elements.connectors.salesforce.QueryMore;
+import com.codenvy.ide.client.elements.connectors.salesforce.ResetPassword;
+import com.codenvy.ide.client.elements.connectors.salesforce.Retrieve;
+import com.codenvy.ide.client.elements.connectors.salesforce.Search;
 import com.codenvy.ide.client.elements.connectors.salesforce.SendEmail;
 import com.codenvy.ide.client.elements.connectors.salesforce.SendEmailMessage;
 import com.codenvy.ide.client.elements.connectors.salesforce.SetPassword;
@@ -41,6 +47,12 @@ import com.codenvy.ide.client.propertiespanel.connectors.salesforce.EmptyRecycle
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.GetUserInformationConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.InitSalesforceConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.LogOutConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.QueryAllConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.QueryConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.QueryMoreConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.ResetPasswordConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.RetrieveConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.salesforce.SearchConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.SendEmailConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.SendEmailMessageConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.salesforce.SetPasswordConnectorPresenter;
@@ -51,6 +63,7 @@ import com.google.inject.Inject;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class SalesForceConnectorPropertiesPanelInitializer extends AbstractPropertiesPanelInitializer {
 
@@ -69,6 +82,12 @@ public class SalesForceConnectorPropertiesPanelInitializer extends AbstractPrope
     private final SetPasswordConnectorPresenter        passwordPropertiesPanel;
     private final SendEmailMessageConnectorPresenter   sendEmailMessagePropertiesPanel;
     private final SendEmailConnectorPresenter          sendEmailPropertiesPanel;
+    private final SearchConnectorPresenter             searchConnectorPresenter;
+    private final RetrieveConnectorPresenter           retrievePropertiesPanel;
+    private final QueryConnectorPresenter              queryPropertiesPanel;
+    private final QueryAllConnectorPresenter           queryAllPropertiesPanel;
+    private final QueryMoreConnectorPresenter          queryMorePropertiesPanel;
+    private final ResetPasswordConnectorPresenter      resetPasswordPropertiesPanel;
 
     @Inject
     public SalesForceConnectorPropertiesPanelInitializer(PropertiesPanelManager manager,
@@ -86,7 +105,13 @@ public class SalesForceConnectorPropertiesPanelInitializer extends AbstractPrope
                                                          UndeleteConnectorPresenter undeletePropertiesPanel,
                                                          SetPasswordConnectorPresenter passwordPropertiesPanel,
                                                          SendEmailMessageConnectorPresenter sendEmailMessagePropertiesPanel,
-                                                         SendEmailConnectorPresenter sendEmailPropertiesPanel) {
+                                                         SendEmailConnectorPresenter sendEmailPropertiesPanel,
+                                                         SearchConnectorPresenter searchConnectorPresenter,
+                                                         RetrieveConnectorPresenter retrievePropertiesPanel,
+                                                         QueryConnectorPresenter queryPropertiesPanel,
+                                                         QueryAllConnectorPresenter queryAllPropertiesPanel,
+                                                         QueryMoreConnectorPresenter queryMorePropertiesPanel,
+                                                         ResetPasswordConnectorPresenter resetPasswordPropertiesPanel) {
         super(manager);
         this.initPropertiesPanel = initPropertiesPanel;
         this.createPropertiesPanel = createPropertiesPanel;
@@ -103,6 +128,12 @@ public class SalesForceConnectorPropertiesPanelInitializer extends AbstractPrope
         this.passwordPropertiesPanel = passwordPropertiesPanel;
         this.sendEmailMessagePropertiesPanel = sendEmailMessagePropertiesPanel;
         this.sendEmailPropertiesPanel = sendEmailPropertiesPanel;
+        this.searchConnectorPresenter = searchConnectorPresenter;
+        this.retrievePropertiesPanel = retrievePropertiesPanel;
+        this.queryPropertiesPanel = queryPropertiesPanel;
+        this.queryAllPropertiesPanel = queryAllPropertiesPanel;
+        this.queryMorePropertiesPanel = queryMorePropertiesPanel;
+        this.resetPasswordPropertiesPanel = resetPasswordPropertiesPanel;
     }
 
     /** {@inheritDoc} */
@@ -123,6 +154,12 @@ public class SalesForceConnectorPropertiesPanelInitializer extends AbstractPrope
         manager.register(SetPassword.class, passwordPropertiesPanel);
         manager.register(SendEmailMessage.class, sendEmailMessagePropertiesPanel);
         manager.register(SendEmail.class, sendEmailPropertiesPanel);
+        manager.register(Search.class, searchConnectorPresenter);
+        manager.register(Query.class, queryPropertiesPanel);
+        manager.register(QueryAll.class, queryAllPropertiesPanel);
+        manager.register(QueryMore.class, queryMorePropertiesPanel);
+        manager.register(ResetPassword.class, resetPasswordPropertiesPanel);
+        manager.register(Retrieve.class, retrievePropertiesPanel);
     }
 
 }

@@ -16,23 +16,32 @@
 package com.codenvy.ide.client.propertiespanel.connectors.salesforce;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.salesforce.EmptyRecycleBin;
 import com.codenvy.ide.client.elements.connectors.salesforce.SalesForcePropertyManager;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
+import static com.codenvy.ide.client.elements.connectors.salesforce.EmptyRecycleBin.ALL_OR_NONE_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.EmptyRecycleBin.ALL_OR_NONE_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.EmptyRecycleBin.ALL_OR_NONE_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.EmptyRecycleBin.SUBJECTS_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.EmptyRecycleBin.SUBJECTS_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.EmptyRecycleBin.SUBJECTS_NS_KEY;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of Delete connector
@@ -42,125 +51,65 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * @author Valeriy Svydenko
  */
 public class EmptyRecycleBinConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<EmptyRecycleBin> {
-
-    private final WSO2EditorLocalizationConstant local;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          subjectNameSpacesCallBack;
-    private final AddNameSpacesCallBack          allOrNoneNameSpacesCallBack;
+    private ComplexPropertyPresenter allOrNoneNS;
+    private ComplexPropertyPresenter subjectsNS;
+    private SimplePropertyPresenter  allOrNone;
+    private SimplePropertyPresenter  subjects;
 
     @Inject
-    public EmptyRecycleBinConnectorPresenter(WSO2EditorLocalizationConstant local,
-                                             GeneralPropertiesPanelView generalView,
+    public EmptyRecycleBinConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                              NameSpaceEditorPresenter nameSpacePresenter,
-                                             ParameterPresenter parameterPresenter,
+                                             PropertiesPanelView view,
                                              SalesForcePropertyManager salesForcePropertyManager,
-                                             PropertyTypeManager propertyTypeManager) {
+                                             ParameterPresenter parameterPresenter,
+                                             PropertyTypeManager propertyTypeManager,
+                                             PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                             Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                             Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                             Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              salesForcePropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        super(generalView, salesForcePropertyManager, parameterPresenter, propertyTypeManager);
-
-        this.local = local;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.subjectNameSpacesCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setSubjectsNameSpaces(nameSpaces);
-                element.setSubjectExpression(expression);
-
-                EmptyRecycleBinConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.allOrNoneNameSpacesCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setAllOrNoneNameSpaces(nameSpaces);
-                element.setAllOrNoneExpr(expression);
-
-                EmptyRecycleBinConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
+    private void prepareView() {
+        allOrNoneNS = createComplexPanel(locale.connectorAllOrNone(), ALL_OR_NONE_NS_KEY, ALL_OR_NONE_EXPRESSION_KEY);
+        subjectsNS = createComplexPanel(locale.connectorSubjects(), SUBJECTS_NS_KEY, SUBJECTS_EXPRESSION_KEY);
 
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setAllOrNone(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setSubject(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getAllOrNoneNameSpaces(),
-                                                    allOrNoneNameSpacesCallBack,
-                                                    local.connectorExpression(),
-                                                    element.getAllOrNoneExpr());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getSubjectsNameSpaces(),
-                                                    subjectNameSpacesCallBack,
-                                                    local.connectorExpression(),
-                                                    element.getSubjectExpression());
+        allOrNone = createSimplePanel(locale.connectorAllOrNone(), ALL_OR_NONE_KEY);
+        subjects = createSimplePanel(locale.connectorSubjects(), SUBJECTS_KEY);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        ParameterEditorType property = element.getProperty(PARAMETER_EDITOR_TYPE);
+        boolean isNameSpaced = NAME_SPACED_PROPERTY_EDITOR.equals(property);
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+        allOrNone.setVisible(!isNameSpaced);
+        subjects.setVisible(!isNameSpaced);
 
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getAllOrNoneExpr() : element.getAllOrNone());
-        view.setSecondTextBoxValue(isEquals ? element.getSubjectExpression() : element.getSubject());
+        allOrNoneNS.setVisible(isNameSpaced);
+        subjectsNS.setVisible(isNameSpaced);
     }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-
-        view.setFirstLabelTitle(local.connectorAllOrNone());
-        view.setSecondLabelTitle(local.connectorSubjects());
-    }
-
 
     /** {@inheritDoc} */
     @Override
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        allOrNone.setProperty(element.getProperty(ALL_OR_NONE_KEY));
+        subjects.setProperty(element.getProperty(SUBJECTS_KEY));
+        allOrNoneNS.setProperty(element.getProperty(ALL_OR_NONE_EXPRESSION_KEY));
+        subjectsNS.setProperty(element.getProperty(SUBJECTS_EXPRESSION_KEY));
     }
 }

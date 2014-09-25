@@ -25,14 +25,13 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes SendEmail connector for Salesforce group connectors. Also the class contains the business logic
@@ -47,13 +46,13 @@ public class SendEmail extends AbstractConnector {
     public static final String ELEMENT_NAME       = "SendEmail";
     public static final String SERIALIZATION_NAME = "salesforce.sendEmail";
 
+    public static final Key<String>          SEND_EMAIL_KEY            = new Key<>("SendEmail");
+    public static final Key<String>          SEND_EMAIL_EXPRESSION_KEY = new Key<>("SendEmailExpression");
+    public static final Key<List<NameSpace>> SEND_EMAIL_NS_KEY         = new Key<>("SendEmailNS");
+
     private static final String SEND_EMAIL = "sendEmail";
 
     private static final List<String> PROPERTIES = Arrays.asList(SEND_EMAIL);
-
-    private String          sendEmail;
-    private String          sendEmailInline;
-    private List<NameSpace> sendEmailNameSpaces;
 
     @Inject
     public SendEmail(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -67,10 +66,9 @@ public class SendEmail extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        sendEmail = "";
-        sendEmailInline = "";
-
-        sendEmailNameSpaces = new ArrayList<>();
+        putProperty(SEND_EMAIL_KEY, "");
+        putProperty(SEND_EMAIL_EXPRESSION_KEY, "");
+        putProperty(SEND_EMAIL_NS_KEY, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -79,9 +77,9 @@ public class SendEmail extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(SEND_EMAIL, isInline ? sendEmailInline : sendEmail);
+        properties.put(SEND_EMAIL, isInline ? getProperty(SEND_EMAIL_KEY) : getProperty(SEND_EMAIL_EXPRESSION_KEY));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -91,43 +89,10 @@ public class SendEmail extends AbstractConnector {
     protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
-        switch (nodeName) {
-            case SEND_EMAIL:
-                if (isInline) {
-                    sendEmailInline = nodeValue;
-                } else {
-                    sendEmail = nodeValue;
-                }
-                break;
+        if (SEND_EMAIL.equals(nodeName)) {
+            adaptProperty(nodeValue, SEND_EMAIL_KEY, SEND_EMAIL_EXPRESSION_KEY);
         }
     }
 
-    @Nonnull
-    public String getSendEmail() {
-        return sendEmail;
-    }
-
-    public void setSendEmail(@Nullable String sendEmail) {
-        this.sendEmail = sendEmail;
-    }
-
-    @Nonnull
-    public String getSendEmailInline() {
-        return sendEmailInline;
-    }
-
-    public void setSendEmailInline(@Nonnull String sendEmailInline) {
-        this.sendEmailInline = sendEmailInline;
-    }
-
-    @Nonnull
-    public List<NameSpace> getSendEmailNameSpaces() {
-        return sendEmailNameSpaces;
-    }
-
-    public void setSendEmailNameSpaces(@Nonnull List<NameSpace> searchStringNameSpaces) {
-        this.sendEmailNameSpaces = searchStringNameSpaces;
-    }
 }

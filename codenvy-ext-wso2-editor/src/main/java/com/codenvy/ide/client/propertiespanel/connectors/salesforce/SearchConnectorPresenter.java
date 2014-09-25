@@ -16,23 +16,29 @@
 package com.codenvy.ide.client.propertiespanel.connectors.salesforce;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.salesforce.SalesForcePropertyManager;
 import com.codenvy.ide.client.elements.connectors.salesforce.Search;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Search.SEARCH_STRING_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Search.SEARCH_STRING_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Search.SEARCH_STRING_NS_KEY;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -42,81 +48,47 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * @author Valeriy Svydenko
  */
 public class SearchConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<Search> {
-
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
-    private final AddNameSpacesCallBack          searchCallBack;
+    private ComplexPropertyPresenter searchStringNS;
+    private SimplePropertyPresenter  searchString;
 
     @Inject
     public SearchConnectorPresenter(WSO2EditorLocalizationConstant locale,
-                                    NameSpaceEditorPresenter nameSpaceEditorPresenter,
-                                    GeneralPropertiesPanelView view,
+                                    NameSpaceEditorPresenter nameSpacePresenter,
+                                    PropertiesPanelView view,
                                     SalesForcePropertyManager salesForcePropertyManager,
                                     ParameterPresenter parameterPresenter,
-                                    PropertyTypeManager propertyTypeManager) {
-        super(view, salesForcePropertyManager, parameterPresenter, propertyTypeManager);
+                                    PropertyTypeManager propertyTypeManager,
+                                    PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                    Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                    Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                    Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              salesForcePropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
-
-        this.searchCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setSearchStringNameSpaces(nameSpaces);
-                element.setSearchString(expression);
-
-                SearchConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setSearchStringInline(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpaceEditorPresenter.showWindowWithParameters(element.getSearchStringNameSpaces(),
-                                                          searchCallBack,
-                                                          locale.connectorExpression(),
-                                                          element.getSearchString());
+    private void prepareView() {
+        searchStringNS = createComplexPanel(locale.connectroSearchString(), SEARCH_STRING_NS_KEY, SEARCH_STRING_EXPRESSION_KEY);
+        searchString = createSimplePanel(locale.connectroSearchString(), SEARCH_STRING_KEY);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        ParameterEditorType property = element.getProperty(PARAMETER_EDITOR_TYPE);
+        boolean isNameSpaced = NAME_SPACED_PROPERTY_EDITOR.equals(property);
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
-
-        view.setVisibleFirstButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getSearchString() : element.getSearchStringInline());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-
-        view.setFirstLabelTitle(locale.connectroSearchString());
+        searchString.setVisible(!isNameSpaced);
+        searchStringNS.setVisible(isNameSpaced);
     }
 
     /** {@inheritDoc} */
@@ -124,6 +96,8 @@ public class SearchConnectorPresenter extends AbstractConnectorPropertiesPanelPr
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        searchString.setProperty(element.getProperty(SEARCH_STRING_KEY));
+        searchStringNS.setProperty(element.getProperty(SEARCH_STRING_EXPRESSION_KEY));
     }
+
 }

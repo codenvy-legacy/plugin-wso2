@@ -16,23 +16,29 @@
 package com.codenvy.ide.client.propertiespanel.connectors.salesforce;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.salesforce.QueryMore;
 import com.codenvy.ide.client.elements.connectors.salesforce.SalesForcePropertyManager;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
+import static com.codenvy.ide.client.elements.connectors.salesforce.QueryMore.BATCH_SIZE_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.QueryMore.BATCH_SIZE_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.QueryMore.BATCH_SIZE_NS_KEY;
 
 
 /**
@@ -43,81 +49,47 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * @author Dmitry Shnurenko
  */
 public class QueryMoreConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<QueryMore> {
-
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          batchSizeNameSpacesCallBack;
+    private ComplexPropertyPresenter batchSizeNS;
+    private SimplePropertyPresenter  batchSize;
 
     @Inject
     public QueryMoreConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                        NameSpaceEditorPresenter nameSpacePresenter,
-                                       GeneralPropertiesPanelView view,
+                                       PropertiesPanelView view,
                                        SalesForcePropertyManager salesForcePropertyManager,
                                        ParameterPresenter parameterPresenter,
-                                       PropertyTypeManager propertyTypeManager) {
-        super(view, salesForcePropertyManager, parameterPresenter, propertyTypeManager);
+                                       PropertyTypeManager propertyTypeManager,
+                                       PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                       Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                       Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                       Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              salesForcePropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.batchSizeNameSpacesCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setBatchSizeNameSpaces(nameSpaces);
-                element.setBatchSizeExpr(expression);
-
-                QueryMoreConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setBatchSize(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getBatchSizeNameSpaces(),
-                                                    batchSizeNameSpacesCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getBatchSizeExpr());
+    private void prepareView() {
+        batchSizeNS = createComplexPanel(locale.connectorBatchSize(), BATCH_SIZE_NS_KEY, BATCH_SIZE_EXPRESSION_KEY);
+        batchSize = createSimplePanel(locale.connectorBatchSize(), BATCH_SIZE_KEY);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        ParameterEditorType property = element.getProperty(PARAMETER_EDITOR_TYPE);
+        boolean isNameSpaced = NAME_SPACED_PROPERTY_EDITOR.equals(property);
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
-
-        view.setVisibleFirstButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getBatchSizeExpr() : element.getBatchSize());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-
-        view.setFirstLabelTitle(locale.connectorBatchSize());
+        batchSize.setVisible(!isNameSpaced);
+        batchSizeNS.setVisible(isNameSpaced);
     }
 
     /** {@inheritDoc} */
@@ -125,6 +97,8 @@ public class QueryMoreConnectorPresenter extends AbstractConnectorPropertiesPane
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        batchSize.setProperty(element.getProperty(BATCH_SIZE_KEY));
+        batchSizeNS.setProperty(element.getProperty(BATCH_SIZE_EXPRESSION_KEY));
     }
+
 }

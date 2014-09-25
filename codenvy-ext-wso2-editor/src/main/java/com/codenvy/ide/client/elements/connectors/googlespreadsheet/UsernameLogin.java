@@ -92,7 +92,7 @@ public class UsernameLogin extends AbstractConnector {
         boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
         properties.put(USERNAME, isInline ? getProperty(USERNAME_KEY) : getProperty(USERNAME_EXPRESSION_KEY));
-        properties.put(PASSWORD, isInline ? getProperty(PASSWORD_KEY) : getProperty(PASSWORD_KEY));
+        properties.put(PASSWORD, isInline ? getProperty(PASSWORD_KEY) : getProperty(PASSWORD_EXPRESSION_KEY));
 
         return convertPropertiesToXMLFormat(properties);
     }

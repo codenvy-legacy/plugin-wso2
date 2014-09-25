@@ -16,23 +16,38 @@
 package com.codenvy.ide.client.propertiespanel.connectors.salesforce;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.salesforce.SalesForcePropertyManager;
 import com.codenvy.ide.client.elements.connectors.salesforce.Upset;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Upset.ALLOW_FIELD_TRUNCATE_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Upset.ALLOW_FIELD_TRUNCATE_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Upset.ALLOW_FIELD_TRUNCATE_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Upset.ALL_OR_NONE_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Upset.ALL_OR_NONE_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Upset.ALL_OR_NONE_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Upset.EXTERNAL_ID_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Upset.EXTERNAL_ID_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Upset.EXTERNAL_ID_NS_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Upset.SUBJECTS_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Upset.SUBJECTS_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.Upset.SUBJECTS_NS_KEY;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of Upset connector
@@ -42,186 +57,69 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * @author Valeriy Svydenko
  */
 public class UpsetConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<Upset> {
-
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          allOrNoneCallBack;
-    private final AddNameSpacesCallBack          allowTruncateCallBack;
-    private final AddNameSpacesCallBack          externalidCallBack;
-    private final AddNameSpacesCallBack          sobjectsCallBack;
+    private ComplexPropertyPresenter allOrNoneNS;
+    private ComplexPropertyPresenter truncateNS;
+    private ComplexPropertyPresenter externalIdNS;
+    private ComplexPropertyPresenter subjectsNS;
+    private SimplePropertyPresenter  allOrNone;
+    private SimplePropertyPresenter  truncate;
+    private SimplePropertyPresenter  externalId;
+    private SimplePropertyPresenter  subjects;
 
     @Inject
     public UpsetConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                    NameSpaceEditorPresenter nameSpacePresenter,
-                                   GeneralPropertiesPanelView view,
+                                   PropertiesPanelView view,
                                    SalesForcePropertyManager salesForcePropertyManager,
                                    ParameterPresenter parameterPresenter,
-                                   PropertyTypeManager propertyTypeManager) {
-        super(view, salesForcePropertyManager, parameterPresenter, propertyTypeManager);
+                                   PropertyTypeManager propertyTypeManager,
+                                   PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                   Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                   Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                   Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              salesForcePropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.allOrNoneCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setAllOrNoneNameSpaces(nameSpaces);
-                element.setAllOrNone(expression);
-
-                UpsetConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.allowTruncateCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setTruncateNameSpaces(nameSpaces);
-                element.setTruncate(expression);
-
-                UpsetConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.externalidCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setExternalIdNameSpaces(nameSpaces);
-                element.setExternalId(expression);
-
-                UpsetConnectorPresenter.this.view.setThirdTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.sobjectsCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setSubjectsNameSpaces(nameSpaces);
-                element.setSubjects(expression);
-
-                UpsetConnectorPresenter.this.view.setFourthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
+    private void prepareView() {
+        allOrNoneNS = createComplexPanel(locale.connectorAllOrNone(), ALL_OR_NONE_NS_KEY, ALL_OR_NONE_EXPRESSION_KEY);
+        truncateNS = createComplexPanel(locale.connectorAllowFieldTruncate(),
+                                        ALLOW_FIELD_TRUNCATE_NS_KEY,
+                                        ALLOW_FIELD_TRUNCATE_EXPRESSION_KEY);
+        externalIdNS = createComplexPanel(locale.connectorExternalId(), EXTERNAL_ID_NS_KEY, EXTERNAL_ID_EXPRESSION_KEY);
+        subjectsNS = createComplexPanel(locale.connectorSubjects(), SUBJECTS_NS_KEY, SUBJECTS_EXPRESSION_KEY);
 
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setAllOrNoneInline(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setTruncateInline(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdTextBoxValueChanged() {
-        element.setExternalIdInline(view.getThirdTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthTextBoxValueChanged() {
-        element.setSubjectsInline(view.getFourthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getAllOrNoneNameSpaces(),
-                                                    allOrNoneCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getAllOrNone());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getTruncateNameSpaces(),
-                                                    allowTruncateCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getTruncate());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getExternalIdNameSpaces(),
-                                                    externalidCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getExternalId());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getSubjectsNameSpaces(),
-                                                    sobjectsCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getSubjects());
+        allOrNone = createSimplePanel(locale.connectorAllOrNone(), ALL_OR_NONE_KEY);
+        truncate = createSimplePanel(locale.connectorAllowFieldTruncate(), ALLOW_FIELD_TRUNCATE_KEY);
+        externalId = createSimplePanel(locale.connectorExternalId(), EXTERNAL_ID_KEY);
+        subjects = createSimplePanel(locale.connectorSubjects(), SUBJECTS_KEY);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        ParameterEditorType property = element.getProperty(PARAMETER_EDITOR_TYPE);
+        boolean isNameSpaced = NAME_SPACED_PROPERTY_EDITOR.equals(property);
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+        allOrNone.setVisible(!isNameSpaced);
+        truncate.setVisible(!isNameSpaced);
+        externalId.setVisible(!isNameSpaced);
+        subjects.setVisible(!isNameSpaced);
 
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-        view.setVisibleFourthButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-        view.setEnableFourthTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getAllOrNone() : element.getAllOrNoneInline());
-        view.setSecondTextBoxValue(isEquals ? element.getTruncate() : element.getTruncateInline());
-        view.setThirdTextBoxValue(isEquals ? element.getExternalId() : element.getExternalIdInline());
-        view.setFourthTextBoxValue(isEquals ? element.getSubjects() : element.getSubjectsInline());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-        view.setVisibleThirdPanel(true);
-        view.setVisibleFourthPanel(true);
-
-        view.setFirstLabelTitle(locale.connectorAllOrNone());
-        view.setSecondLabelTitle(locale.connectorAllowFieldTruncate());
-        view.setThirdLabelTitle(locale.connectorExternalId());
-        view.setFourthLabelTitle(locale.connectorSubjects());
+        allOrNoneNS.setVisible(isNameSpaced);
+        truncateNS.setVisible(isNameSpaced);
+        externalIdNS.setVisible(isNameSpaced);
+        subjectsNS.setVisible(isNameSpaced);
     }
 
     /** {@inheritDoc} */
@@ -229,6 +127,15 @@ public class UpsetConnectorPresenter extends AbstractConnectorPropertiesPanelPre
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        allOrNone.setProperty(element.getProperty(ALL_OR_NONE_KEY));
+        truncate.setProperty(element.getProperty(ALLOW_FIELD_TRUNCATE_KEY));
+        externalId.setProperty(element.getProperty(EXTERNAL_ID_KEY));
+        subjects.setProperty(element.getProperty(SUBJECTS_KEY));
+
+        allOrNoneNS.setProperty(element.getProperty(ALL_OR_NONE_EXPRESSION_KEY));
+        truncateNS.setProperty(element.getProperty(ALLOW_FIELD_TRUNCATE_EXPRESSION_KEY));
+        externalIdNS.setProperty(element.getProperty(EXTERNAL_ID_EXPRESSION_KEY));
+        subjectsNS.setProperty(element.getProperty(SUBJECTS_EXPRESSION_KEY));
     }
+
 }

@@ -25,15 +25,13 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes Create connector for Salesforce group connectors. Also the class contains the business logic
@@ -48,21 +46,23 @@ public class Create extends AbstractConnector {
     public static final String ELEMENT_NAME       = "Create";
     public static final String SERIALIZATION_NAME = "salesforce.create";
 
+    public static final Key<String> ALL_OR_NONE_KEY = new Key<>("AllOrNone");
+    public static final Key<String> TRUNCATE_KEY    = new Key<>("Truncate");
+    public static final Key<String> SUBJECTS_KEY    = new Key<>("Subjects");
+
+    public static final Key<String> ALL_OR_NONE_EXPRESSION_KEY = new Key<>("AllOrNoneExpression");
+    public static final Key<String> TRUNCATE_EXPRESSION_KEY    = new Key<>("TruncateExpression");
+    public static final Key<String> SUBJECTS_EXPRESSION_KEY    = new Key<>("SubjectsExpression");
+
+    public static final Key<List<NameSpace>> ALL_OR_NONE_NS_KEY = new Key<>("AllOrNoneNS");
+    public static final Key<List<NameSpace>> TRUNCATE_NS_KEY    = new Key<>("TruncateNS");
+    public static final Key<List<NameSpace>> SUBJECTS_NS_KEY    = new Key<>("SubjectsNS");
+
     private static final String ALL_OR_NONE = "allOrNone";
     private static final String TRUNCATE    = "allowFieldTruncate";
     private static final String SUBJECTS    = "sobjects";
 
     private static final List<String> PROPERTIES = Arrays.asList(ALL_OR_NONE, TRUNCATE, SUBJECTS);
-
-    private String          allOrNone;
-    private String          truncate;
-    private String          subjects;
-    private String          allOrNoneInline;
-    private String          truncateInline;
-    private String          subjectsInline;
-    private List<NameSpace> truncateNameSpaces;
-    private List<NameSpace> subjectsNameSpaces;
-    private List<NameSpace> allOrNoneNameSpaces;
 
     @Inject
     public Create(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -76,16 +76,17 @@ public class Create extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        allOrNone = "";
-        truncate = "";
-        subjects = "";
-        allOrNoneInline = "";
-        truncateInline = "";
-        subjectsInline = "";
+        putProperty(ALL_OR_NONE_KEY, "");
+        putProperty(TRUNCATE_KEY, "");
+        putProperty(SUBJECTS_KEY, "");
 
-        allOrNoneNameSpaces = new ArrayList<>();
-        truncateNameSpaces = new ArrayList<>();
-        subjectsNameSpaces = new ArrayList<>();
+        putProperty(ALL_OR_NONE_EXPRESSION_KEY, "");
+        putProperty(TRUNCATE_EXPRESSION_KEY, "");
+        putProperty(SUBJECTS_EXPRESSION_KEY, "");
+
+        putProperty(ALL_OR_NONE_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(TRUNCATE_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(SUBJECTS_NS_KEY, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -94,11 +95,11 @@ public class Create extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(ALL_OR_NONE, isInline ? allOrNoneInline : allOrNone);
-        properties.put(TRUNCATE, isInline ? truncateInline : truncate);
-        properties.put(SUBJECTS, isInline ? subjectsInline : subjects);
+        properties.put(ALL_OR_NONE, isInline ? getProperty(ALL_OR_NONE_KEY) : getProperty(ALL_OR_NONE_EXPRESSION_KEY));
+        properties.put(TRUNCATE, isInline ? getProperty(TRUNCATE_KEY) : getProperty(TRUNCATE_EXPRESSION_KEY));
+        properties.put(SUBJECTS, isInline ? getProperty(SUBJECTS_KEY) : getProperty(SUBJECTS_EXPRESSION_KEY));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -109,120 +110,22 @@ public class Create extends AbstractConnector {
     protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
         switch (nodeName) {
             case ALL_OR_NONE:
-                if (isInline) {
-                    allOrNoneInline = nodeValue;
-                } else {
-                    allOrNone = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, ALL_OR_NONE_KEY, ALL_OR_NONE_EXPRESSION_KEY);
                 break;
 
             case TRUNCATE:
-                if (isInline) {
-                    truncateInline = nodeValue;
-                } else {
-                    truncate = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, TRUNCATE_KEY, TRUNCATE_EXPRESSION_KEY);
                 break;
 
             case SUBJECTS:
-                if (isInline) {
-                    subjectsInline = nodeValue;
-                } else {
-                    subjects = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, SUBJECTS_KEY, SUBJECTS_EXPRESSION_KEY);
                 break;
+
+            default:
         }
-    }
-
-    @Nonnull
-    public String getAllOrNone() {
-        return allOrNone;
-    }
-
-    public void setAllOrNone(@Nullable String allOrNone) {
-        this.allOrNone = allOrNone;
-    }
-
-    @Nonnull
-    public String getTruncate() {
-        return truncate;
-    }
-
-    public void setTruncate(@Nullable String truncate) {
-        this.truncate = truncate;
-    }
-
-    @Nonnull
-    public String getSubjects() {
-        return subjects;
-    }
-
-    public void setSubjects(@Nullable String subjects) {
-        this.subjects = subjects;
-    }
-
-    @Nonnull
-    public String getAllOrNoneInline() {
-        return allOrNoneInline;
-    }
-
-    public void setAllOrNoneInline(@Nonnull String allOrNoneInline) {
-        this.allOrNoneInline = allOrNoneInline;
-    }
-
-    @Nonnull
-    public String getTruncateInline() {
-        return truncateInline;
-    }
-
-    public void setTruncateInline(@Nonnull String truncateInline) {
-        this.truncateInline = truncateInline;
-    }
-
-    @Nonnull
-    public String getSubjectsInline() {
-        return subjectsInline;
-    }
-
-    public void setSubjectsInline(@Nonnull String subjectsInline) {
-        this.subjectsInline = subjectsInline;
-    }
-
-    @Nonnull
-    public List<NameSpace> getAllOrNoneNameSpaces() {
-        return allOrNoneNameSpaces;
-    }
-
-    public void setAllOrNoneNameSpaces(@Nonnull List<NameSpace> allOrNoneNameSpaces) {
-        this.allOrNoneNameSpaces = allOrNoneNameSpaces;
-    }
-
-    @Nonnull
-    public List<NameSpace> getTruncateNameSpaces() {
-        return truncateNameSpaces;
-    }
-
-    public void setTruncateNameSpaces(@Nonnull List<NameSpace> truncateNameSpaces) {
-        this.truncateNameSpaces = truncateNameSpaces;
-    }
-
-    @Nonnull
-    public List<NameSpace> getSubjectsNameSpaces() {
-        return subjectsNameSpaces;
-    }
-
-    public void setSubjectsNameSpaces(@Nonnull List<NameSpace> subjectsNameSpaces) {
-        this.subjectsNameSpaces = subjectsNameSpaces;
     }
 
 }

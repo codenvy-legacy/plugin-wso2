@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes Delete connector for Salesforce group connectors. Also the class contains the business logic
@@ -43,21 +42,22 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * @author Valeriy Svydenko
  */
 public class Delete extends AbstractConnector {
-
     public static final String ELEMENT_NAME       = "Delete";
     public static final String SERIALIZATION_NAME = "salesforce.delete";
+
+    public static final Key<String> ALL_OR_NONE_KEY = new Key<>("AllOrNone");
+    public static final Key<String> SUBJECTS_KEY    = new Key<>("Subjects");
+
+    public static final Key<String> ALL_OR_NONE_EXPRESSION_KEY = new Key<>("AllOrNoneExpression");
+    public static final Key<String> SUBJECTS_EXPRESSION_KEY    = new Key<>("SubjectsExpression");
+
+    public static final Key<List<NameSpace>> ALL_OR_NONE_NS_KEY = new Key<>("AllOrNoneNS");
+    public static final Key<List<NameSpace>> SUBJECTS_NS_KEY    = new Key<>("SubjectsNS");
 
     private static final String ALL_OR_NONE = "allOrNone";
     private static final String SUBJECTS    = "sobjects";
 
     private static final List<String> PROPERTIES = Arrays.asList(ALL_OR_NONE, SUBJECTS);
-
-    private String          allOrNone;
-    private String          subject;
-    private String          allOrNoneExpr;
-    private String          subjectExpression;
-    private List<NameSpace> allOrNoneNameSpaces;
-    private List<NameSpace> subjectsNameSpaces;
 
     @Inject
     public Delete(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -71,13 +71,14 @@ public class Delete extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        allOrNone = "";
-        subject = "";
-        allOrNoneExpr = "";
-        subjectExpression = "";
+        putProperty(ALL_OR_NONE_KEY, "");
+        putProperty(SUBJECTS_KEY, "");
 
-        allOrNoneNameSpaces = new ArrayList<>();
-        subjectsNameSpaces = new ArrayList<>();
+        putProperty(ALL_OR_NONE_EXPRESSION_KEY, "");
+        putProperty(SUBJECTS_EXPRESSION_KEY, "");
+
+        putProperty(ALL_OR_NONE_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(SUBJECTS_NS_KEY, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -86,10 +87,10 @@ public class Delete extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(ALL_OR_NONE, isInline ? allOrNone : allOrNoneExpr);
-        properties.put(SUBJECTS, isInline ? subject : subjectExpression);
+        properties.put(ALL_OR_NONE, isInline ? getProperty(ALL_OR_NONE_KEY) : getProperty(ALL_OR_NONE_EXPRESSION_KEY));
+        properties.put(SUBJECTS, isInline ? getProperty(SUBJECTS_KEY) : getProperty(SUBJECTS_EXPRESSION_KEY));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -100,83 +101,13 @@ public class Delete extends AbstractConnector {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
-
-        switch (nodeName) {
-            case ALL_OR_NONE:
-                if (isInline) {
-                    allOrNone = nodeValue;
-                } else {
-                    allOrNoneExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
-
-            case SUBJECTS:
-                if (isInline) {
-                    subject = nodeValue;
-                } else {
-                    subjectExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+        if (ALL_OR_NONE.equals(nodeName)) {
+            adaptProperty(nodeValue, ALL_OR_NONE_KEY, ALL_OR_NONE_EXPRESSION_KEY);
         }
-    }
 
-    @Nonnull
-    public String getAllOrNone() {
-        return allOrNone;
-    }
-
-    public void setAllOrNone(@Nonnull String allOrNone) {
-        this.allOrNone = allOrNone;
-    }
-
-    @Nonnull
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(@Nonnull String subjects) {
-        this.subject = subjects;
-    }
-
-    @Nonnull
-    public List<NameSpace> getAllOrNoneNameSpaces() {
-        return allOrNoneNameSpaces;
-    }
-
-    public void setAllOrNoneNameSpaces(@Nonnull List<NameSpace> allOrNoneNameSpaces) {
-        this.allOrNoneNameSpaces = allOrNoneNameSpaces;
-    }
-
-    @Nonnull
-    public List<NameSpace> getSubjectsNameSpaces() {
-        return subjectsNameSpaces;
-    }
-
-    public void setSubjectsNameSpaces(@Nonnull List<NameSpace> subjectsNameSpaces) {
-        this.subjectsNameSpaces = subjectsNameSpaces;
-    }
-
-    @Nonnull
-    public String getAllOrNoneExpr() {
-        return allOrNoneExpr;
-    }
-
-    public void setAllOrNoneExpr(@Nonnull String allOrNoneExpr) {
-        this.allOrNoneExpr = allOrNoneExpr;
-    }
-
-    @Nonnull
-    public String getSubjectExpression() {
-        return subjectExpression;
-    }
-
-    public void setSubjectExpression(@Nonnull String subjectExpression) {
-        this.subjectExpression = subjectExpression;
+        if (SUBJECTS.equals(nodeName)) {
+            adaptProperty(nodeValue, SUBJECTS_KEY, SUBJECTS_EXPRESSION_KEY);
+        }
     }
 
 }

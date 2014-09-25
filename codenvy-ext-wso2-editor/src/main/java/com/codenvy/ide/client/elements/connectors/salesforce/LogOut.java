@@ -52,7 +52,6 @@ public class LogOut extends AbstractConnector {
               resources.salesforce(),
               branchProvider,
               elementCreatorsManager);
-
     }
 
 }

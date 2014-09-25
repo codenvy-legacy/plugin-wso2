@@ -25,14 +25,13 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes Search connector for Salesforce group connectors. Also the class contains the business logic
@@ -47,13 +46,13 @@ public class Search extends AbstractConnector {
     public static final String ELEMENT_NAME       = "Search";
     public static final String SERIALIZATION_NAME = "salesforce.search";
 
+    public static final Key<String>          SEARCH_STRING_KEY            = new Key<>("SearchString");
+    public static final Key<String>          SEARCH_STRING_EXPRESSION_KEY = new Key<>("SearchStringExpression");
+    public static final Key<List<NameSpace>> SEARCH_STRING_NS_KEY         = new Key<>("SearchStringNS");
+
     private static final String SEARCH_STRING = "searchString";
 
     private static final List<String> PROPERTIES = Arrays.asList(SEARCH_STRING);
-
-    private String          searchString;
-    private String          searchStringInline;
-    private List<NameSpace> searchStringNameSpaces;
 
     @Inject
     public Search(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -67,10 +66,9 @@ public class Search extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        searchString = "";
-        searchStringInline = "";
-
-        searchStringNameSpaces = new ArrayList<>();
+        putProperty(SEARCH_STRING_KEY, "");
+        putProperty(SEARCH_STRING_EXPRESSION_KEY, "");
+        putProperty(SEARCH_STRING_NS_KEY, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -79,9 +77,9 @@ public class Search extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(SEARCH_STRING, isInline ? searchStringInline : searchString);
+        properties.put(SEARCH_STRING, isInline ? getProperty(SEARCH_STRING_KEY) : getProperty(SEARCH_STRING_EXPRESSION_KEY));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -91,43 +89,10 @@ public class Search extends AbstractConnector {
     protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
-        switch (nodeName) {
-            case SEARCH_STRING:
-                if (isInline) {
-                    searchStringInline = nodeValue;
-                } else {
-                    searchString = nodeValue;
-                }
-                break;
+        if (SEARCH_STRING.equals(nodeName)) {
+            adaptProperty(nodeValue, SEARCH_STRING_KEY, SEARCH_STRING_EXPRESSION_KEY);
         }
     }
 
-    @Nonnull
-    public String getSearchString() {
-        return searchString;
-    }
-
-    public void setSearchString(@Nullable String subject) {
-        this.searchString = subject;
-    }
-
-    @Nonnull
-    public String getSearchStringInline() {
-        return searchStringInline;
-    }
-
-    public void setSearchStringInline(@Nonnull String searchStringInline) {
-        this.searchStringInline = searchStringInline;
-    }
-
-    @Nonnull
-    public List<NameSpace> getSearchStringNameSpaces() {
-        return searchStringNameSpaces;
-    }
-
-    public void setSearchStringNameSpaces(@Nonnull List<NameSpace> searchStringNameSpaces) {
-        this.searchStringNameSpaces = searchStringNameSpaces;
-    }
 }

@@ -25,15 +25,13 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes Retrieve connector for Salesforce group connectors. Also the class contains the business logic
@@ -48,21 +46,23 @@ public class Retrieve extends AbstractConnector {
     public static final String ELEMENT_NAME       = "Retrieve";
     public static final String SERIALIZATION_NAME = "salesforce.retrieve";
 
+    public static final Key<String> FIELD_LIST_KEY  = new Key<>("FieldList");
+    public static final Key<String> OBJECT_TYPE_KEY = new Key<>("ObjectType");
+    public static final Key<String> OBJECT_IDS_KEY  = new Key<>("ObjectIDS");
+
+    public static final Key<String> FIELD_LIST_EXPRESSION_KEY  = new Key<>("FieldListExpression");
+    public static final Key<String> OBJECT_TYPE_EXPRESSION_KEY = new Key<>("ObjectTypeExpression");
+    public static final Key<String> OBJECT_IDS_EXPRESSION_KEY  = new Key<>("ObjectIDSExpression");
+
+    public static final Key<List<NameSpace>> FIELD_LIST_NS_KEY  = new Key<>("FieldListNS");
+    public static final Key<List<NameSpace>> OBJECT_TYPE_NS_KEY = new Key<>("ObjectTypeNS");
+    public static final Key<List<NameSpace>> OBJECT_IDS_NS_KEY  = new Key<>("ObjectIDSNS");
+
     private static final String FIELD_LIST  = "fieldList";
     private static final String OBJECT_TYPE = "objectType";
     private static final String OBJECT_IDS  = "objectIDS";
 
     private static final List<String> PROPERTIES = Arrays.asList(FIELD_LIST, OBJECT_TYPE, OBJECT_IDS);
-
-    private String          fieldList;
-    private String          objectType;
-    private String          objectIDS;
-    private String          fieldListInline;
-    private String          objectTypeInline;
-    private String          objectIDSInline;
-    private List<NameSpace> objectTypeNameSpaces;
-    private List<NameSpace> objectIDSNameSpaces;
-    private List<NameSpace> fieldListNameSpaces;
 
     @Inject
     public Retrieve(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -76,16 +76,17 @@ public class Retrieve extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        fieldList = "";
-        objectType = "";
-        objectIDS = "";
-        fieldListInline = "";
-        objectTypeInline = "";
-        objectIDSInline = "";
+        putProperty(FIELD_LIST_KEY, "");
+        putProperty(OBJECT_TYPE_KEY, "");
+        putProperty(OBJECT_IDS_KEY, "");
 
-        fieldListNameSpaces = new ArrayList<>();
-        objectTypeNameSpaces = new ArrayList<>();
-        objectIDSNameSpaces = new ArrayList<>();
+        putProperty(FIELD_LIST_EXPRESSION_KEY, "");
+        putProperty(OBJECT_TYPE_EXPRESSION_KEY, "");
+        putProperty(OBJECT_IDS_EXPRESSION_KEY, "");
+
+        putProperty(FIELD_LIST_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(OBJECT_TYPE_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(OBJECT_IDS_NS_KEY, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -94,11 +95,11 @@ public class Retrieve extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(FIELD_LIST, isInline ? fieldListInline : fieldList);
-        properties.put(OBJECT_TYPE, isInline ? objectTypeInline : objectType);
-        properties.put(OBJECT_IDS, isInline ? objectIDSInline : objectIDS);
+        properties.put(FIELD_LIST, isInline ? getProperty(FIELD_LIST_KEY) : getProperty(FIELD_LIST_EXPRESSION_KEY));
+        properties.put(OBJECT_TYPE, isInline ? getProperty(OBJECT_TYPE_KEY) : getProperty(OBJECT_TYPE_EXPRESSION_KEY));
+        properties.put(OBJECT_IDS, isInline ? getProperty(OBJECT_IDS_KEY) : getProperty(OBJECT_IDS_EXPRESSION_KEY));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -108,119 +109,18 @@ public class Retrieve extends AbstractConnector {
     protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
-        switch (nodeName) {
-            case FIELD_LIST:
-                if (isInline) {
-                    fieldListInline = nodeValue;
-                } else {
-                    fieldList = nodeValue;
+        if (FIELD_LIST.equals(nodeName)) {
+            adaptProperty(nodeValue, FIELD_LIST_KEY, FIELD_LIST_EXPRESSION_KEY);
+        }
 
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+        if (OBJECT_TYPE.equals(nodeName)) {
+            adaptProperty(nodeValue, OBJECT_TYPE_KEY, OBJECT_TYPE_EXPRESSION_KEY);
+        }
 
-            case OBJECT_TYPE:
-                if (isInline) {
-                    objectTypeInline = nodeValue;
-                } else {
-                    objectType = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
-
-            case OBJECT_IDS:
-                if (isInline) {
-                    objectIDSInline = nodeValue;
-                } else {
-                    objectIDS = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+        if (OBJECT_IDS.equals(nodeName)) {
+            adaptProperty(nodeValue, OBJECT_IDS_KEY, OBJECT_IDS_EXPRESSION_KEY);
         }
     }
 
-    @Nonnull
-    public String getFieldList() {
-        return fieldList;
-    }
-
-    public void setFieldList(@Nullable String fieldList) {
-        this.fieldList = fieldList;
-    }
-
-    @Nonnull
-    public String getObjectType() {
-        return objectType;
-    }
-
-    public void setObjectType(@Nullable String objectType) {
-        this.objectType = objectType;
-    }
-
-    @Nonnull
-    public String getObjectIDS() {
-        return objectIDS;
-    }
-
-    public void setObjectIDS(@Nullable String objectIDS) {
-        this.objectIDS = objectIDS;
-    }
-
-    @Nonnull
-    public String getFieldListInline() {
-        return fieldListInline;
-    }
-
-    public void setFieldListInline(@Nonnull String fieldListInline) {
-        this.fieldListInline = fieldListInline;
-    }
-
-    @Nonnull
-    public String getObjectTypeInline() {
-        return objectTypeInline;
-    }
-
-    public void setObjectTypeInline(@Nonnull String objectTypeInline) {
-        this.objectTypeInline = objectTypeInline;
-    }
-
-    @Nonnull
-    public String getObjectIDSInline() {
-        return objectIDSInline;
-    }
-
-    public void setObjectIDSInline(@Nonnull String objectIDSInline) {
-        this.objectIDSInline = objectIDSInline;
-    }
-
-    @Nonnull
-    public List<NameSpace> getFieldListNameSpaces() {
-        return fieldListNameSpaces;
-    }
-
-    public void setFieldListNameSpaces(@Nonnull List<NameSpace> fieldListNameSpaces) {
-        this.fieldListNameSpaces = fieldListNameSpaces;
-    }
-
-    @Nonnull
-    public List<NameSpace> getObjectTypeNameSpaces() {
-        return objectTypeNameSpaces;
-    }
-
-    public void setObjectTypeNameSpaces(@Nonnull List<NameSpace> objectTypeNameSpaces) {
-        this.objectTypeNameSpaces = objectTypeNameSpaces;
-    }
-
-    @Nonnull
-    public List<NameSpace> getObjectIDSNameSpaces() {
-        return objectIDSNameSpaces;
-    }
-
-    public void setObjectIDSNameSpaces(@Nonnull List<NameSpace> objectIDSNameSpaces) {
-        this.objectIDSNameSpaces = objectIDSNameSpaces;
-    }
 }

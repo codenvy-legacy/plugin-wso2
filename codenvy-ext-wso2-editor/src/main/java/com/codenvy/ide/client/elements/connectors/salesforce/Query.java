@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes Query connector for Salesforce group connectors. Also the class contains the business logic
@@ -47,18 +46,19 @@ public class Query extends AbstractConnector {
     public static final String ELEMENT_NAME       = "Query";
     public static final String SERIALIZATION_NAME = "salesforce.query";
 
+    public static final Key<String> BATCH_SIZE_KEY   = new Key<>("BatchSize");
+    public static final Key<String> QUERY_STRING_KEY = new Key<>("QueryString");
+
+    public static final Key<String> BATCH_SIZE_EXPRESSION_KEY   = new Key<>("BatchSizeExpression");
+    public static final Key<String> QUERY_STRING_EXPRESSION_KEY = new Key<>("QueryStringExpression");
+
+    public static final Key<List<NameSpace>> BATCH_SIZE_NS_KEY   = new Key<>("BatchSizeNS");
+    public static final Key<List<NameSpace>> QUERY_STRING_NS_KEY = new Key<>("QueryStringNS");
+
     private static final String BATCH_SIZE   = "batchSize";
     private static final String QUERY_STRING = "queryString";
 
     private static final List<String> PROPERTIES = Arrays.asList(BATCH_SIZE, QUERY_STRING);
-
-    private String              batchSize;
-    private String              queryString;
-    private String              batchSizeExpr;
-    private String              queryStringExpr;
-    private ParameterEditorType parameterEditorType;
-    private List<NameSpace>     batchSizeNameSpaces;
-    private List<NameSpace>     queryStringNameSpaces;
 
     @Inject
     public Query(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -72,15 +72,14 @@ public class Query extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        batchSize = "";
-        queryString = "";
-        batchSizeExpr = "";
-        queryStringExpr = "";
+        putProperty(BATCH_SIZE_KEY, "");
+        putProperty(QUERY_STRING_KEY, "");
 
-        parameterEditorType = Inline;
+        putProperty(BATCH_SIZE_EXPRESSION_KEY, "");
+        putProperty(QUERY_STRING_EXPRESSION_KEY, "");
 
-        batchSizeNameSpaces = new ArrayList<>();
-        queryStringNameSpaces = new ArrayList<>();
+        putProperty(BATCH_SIZE_NS_KEY, new ArrayList<NameSpace>());
+        putProperty(QUERY_STRING_NS_KEY, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -89,10 +88,10 @@ public class Query extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(BATCH_SIZE, isInline ? batchSize : batchSizeExpr);
-        properties.put(QUERY_STRING, isInline ? queryString : queryStringExpr);
+        properties.put(BATCH_SIZE, isInline ? getProperty(BATCH_SIZE_KEY) : getProperty(BATCH_SIZE_EXPRESSION_KEY));
+        properties.put(QUERY_STRING, isInline ? getProperty(QUERY_STRING_KEY) : getProperty(QUERY_STRING_EXPRESSION_KEY));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -103,93 +102,13 @@ public class Query extends AbstractConnector {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
-
-        switch (nodeName) {
-            case BATCH_SIZE:
-                if (isInline) {
-                    batchSize = nodeValue;
-                } else {
-                    batchSizeExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
-
-            case QUERY_STRING:
-                if (isInline) {
-                    queryString = nodeValue;
-                } else {
-                    queryStringExpr = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
-
+        if (BATCH_SIZE.equals(nodeName)) {
+            adaptProperty(nodeValue, BATCH_SIZE_KEY, BATCH_SIZE_EXPRESSION_KEY);
         }
-    }
 
-    @Nonnull
-    public String getBatchSize() {
-        return batchSize;
-    }
-
-    public void setBatchSize(@Nonnull String batchSize) {
-        this.batchSize = batchSize;
-    }
-
-    @Nonnull
-    public String getQueryString() {
-        return queryString;
-    }
-
-    public void setQueryString(@Nonnull String queryString) {
-        this.queryString = queryString;
-    }
-
-    @Nonnull
-    public List<NameSpace> getBatchSizeNameSpaces() {
-        return batchSizeNameSpaces;
-    }
-
-    public void setBatchSizeNameSpaces(@Nonnull List<NameSpace> batchSizeNameSpaces) {
-        this.batchSizeNameSpaces = batchSizeNameSpaces;
-    }
-
-    @Nonnull
-    public List<NameSpace> getQueryStringNameSpaces() {
-        return queryStringNameSpaces;
-    }
-
-    public void setQueryStringNameSpaces(@Nonnull List<NameSpace> queryStringNameSpaces) {
-        this.queryStringNameSpaces = queryStringNameSpaces;
-    }
-
-    @Nonnull
-    public ParameterEditorType getParameterEditorType() {
-        return parameterEditorType;
-    }
-
-    public void setParameterEditorType(@Nonnull ParameterEditorType parameterEditorType) {
-        this.parameterEditorType = parameterEditorType;
-    }
-
-    @Nonnull
-    public String getBatchSizeExpr() {
-        return batchSizeExpr;
-    }
-
-    public void setBatchSizeExpr(@Nonnull String batchSizeExpr) {
-        this.batchSizeExpr = batchSizeExpr;
-    }
-
-    @Nonnull
-    public String getQueryStringExpr() {
-        return queryStringExpr;
-    }
-
-    public void setQueryStringExpr(@Nonnull String queryStringExpr) {
-        this.queryStringExpr = queryStringExpr;
+        if (QUERY_STRING.equals(nodeName)) {
+            adaptProperty(nodeValue, QUERY_STRING_KEY, QUERY_STRING_EXPRESSION_KEY);
+        }
     }
 
 }

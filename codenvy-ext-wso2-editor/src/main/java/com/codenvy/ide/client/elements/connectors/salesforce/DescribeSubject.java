@@ -25,15 +25,13 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes DescribeSobject connector for Salesforce group connectors. Also the class contains the business logic
@@ -48,13 +46,13 @@ public class DescribeSubject extends AbstractConnector {
     public static final String ELEMENT_NAME       = "describeSobject";
     public static final String SERIALIZATION_NAME = "salesforce.describeSobject";
 
+    public static final Key<String>          SUBJECT_KEY            = new Key<>("Subject");
+    public static final Key<String>          SUBJECT_EXPRESSION_KEY = new Key<>("SubjectExpression");
+    public static final Key<List<NameSpace>> SUBJECT_NS_KEY         = new Key<>("SubjectNS");
+
     private static final String SUBJECT = "sobject";
 
     private static final List<String> PROPERTIES = Arrays.asList(SUBJECT);
-
-    private String          subject;
-    private String          subjectsInline;
-    private List<NameSpace> subjectsNameSpaces;
 
     @Inject
     public DescribeSubject(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -68,10 +66,9 @@ public class DescribeSubject extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        subject = "";
-        subjectsInline = "";
-
-        subjectsNameSpaces = new ArrayList<>();
+        putProperty(SUBJECT_KEY, "");
+        putProperty(SUBJECT_EXPRESSION_KEY, "");
+        putProperty(SUBJECT_NS_KEY, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -80,9 +77,9 @@ public class DescribeSubject extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(SUBJECT, isInline ? subjectsInline : subject);
+        properties.put(SUBJECT, isInline ? getProperty(SUBJECT_KEY) : getProperty(SUBJECT_EXPRESSION_KEY));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -93,46 +90,9 @@ public class DescribeSubject extends AbstractConnector {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
-
-        switch (nodeName) {
-            case SUBJECT:
-                if (isInline) {
-                    subjectsInline = nodeValue;
-                } else {
-                    subject = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+        if (SUBJECT.equals(nodeName)) {
+            adaptProperty(nodeValue, SUBJECT_KEY, SUBJECT_EXPRESSION_KEY);
         }
-    }
-
-    @Nonnull
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(@Nullable String subject) {
-        this.subject = subject;
-    }
-
-    @Nonnull
-    public String getSubjectInline() {
-        return subjectsInline;
-    }
-
-    public void setSubjectInline(@Nonnull String subjectsInline) {
-        this.subjectsInline = subjectsInline;
-    }
-
-    @Nonnull
-    public List<NameSpace> getSubjectsNameSpaces() {
-        return subjectsNameSpaces;
-    }
-
-    public void setSubjectsNameSpaces(@Nonnull List<NameSpace> subjectsNameSpaces) {
-        this.subjectsNameSpaces = subjectsNameSpaces;
     }
 
 }

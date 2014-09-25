@@ -16,23 +16,29 @@
 package com.codenvy.ide.client.propertiespanel.connectors.salesforce;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.salesforce.SalesForcePropertyManager;
 import com.codenvy.ide.client.elements.connectors.salesforce.SendEmail;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
+import static com.codenvy.ide.client.elements.connectors.salesforce.SendEmail.SEND_EMAIL_EXPRESSION_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.SendEmail.SEND_EMAIL_KEY;
+import static com.codenvy.ide.client.elements.connectors.salesforce.SendEmail.SEND_EMAIL_NS_KEY;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -42,81 +48,47 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * @author Valeriy Svydenko
  */
 public class SendEmailConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<SendEmail> {
-
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
-    private final AddNameSpacesCallBack          sendEmailCallBack;
+    private ComplexPropertyPresenter sendEmailNS;
+    private SimplePropertyPresenter  sendEmail;
 
     @Inject
     public SendEmailConnectorPresenter(WSO2EditorLocalizationConstant locale,
-                                       NameSpaceEditorPresenter nameSpaceEditorPresenter,
-                                       GeneralPropertiesPanelView view,
+                                       NameSpaceEditorPresenter nameSpacePresenter,
+                                       PropertiesPanelView view,
                                        SalesForcePropertyManager salesForcePropertyManager,
                                        ParameterPresenter parameterPresenter,
-                                       PropertyTypeManager propertyTypeManager) {
-        super(view, salesForcePropertyManager, parameterPresenter, propertyTypeManager);
+                                       PropertyTypeManager propertyTypeManager,
+                                       PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                       Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                       Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                       Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              salesForcePropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
-
-        this.sendEmailCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setSendEmailNameSpaces(nameSpaces);
-                element.setSendEmail(expression);
-
-                SendEmailConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setSendEmailInline(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpaceEditorPresenter.showWindowWithParameters(element.getSendEmailNameSpaces(),
-                                                          sendEmailCallBack,
-                                                          locale.connectorExpression(),
-                                                          element.getSendEmail());
+    private void prepareView() {
+        sendEmailNS = createComplexPanel(locale.connectorSendEmail(), SEND_EMAIL_NS_KEY, SEND_EMAIL_EXPRESSION_KEY);
+        sendEmail = createSimplePanel(locale.connectorSendEmail(), SEND_EMAIL_KEY);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        ParameterEditorType property = element.getProperty(PARAMETER_EDITOR_TYPE);
+        boolean isNameSpaced = NAME_SPACED_PROPERTY_EDITOR.equals(property);
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
-
-        view.setVisibleFirstButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getSendEmail() : element.getSendEmailInline());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-
-        view.setFirstLabelTitle(locale.connectorSendEmail());
+        sendEmail.setVisible(!isNameSpaced);
+        sendEmailNS.setVisible(isNameSpaced);
     }
 
     /** {@inheritDoc} */
@@ -124,6 +96,8 @@ public class SendEmailConnectorPresenter extends AbstractConnectorPropertiesPane
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        sendEmail.setProperty(element.getProperty(SEND_EMAIL_KEY));
+        sendEmailNS.setProperty(element.getProperty(SEND_EMAIL_EXPRESSION_KEY));
     }
+
 }
