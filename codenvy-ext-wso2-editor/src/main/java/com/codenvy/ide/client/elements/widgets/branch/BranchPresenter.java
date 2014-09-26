@@ -254,6 +254,8 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     private void displayElements() {
         view.clear();
 
+        showTitleOrNot();
+
         int x = ARROW_PADDING;
         int y = 0;
 
@@ -275,6 +277,11 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         }
     }
 
+    private void showTitleOrNot() {
+        Element parent = branch.getParent();
+        view.setVisibleTitle(parent != null && parent.needsToShowIconAndTitle());
+    }
+
     @Nonnull
     private ElementPresenter createElementPresenter(@Nonnull Element element) {
         ElementPresenter elementPresenter = elementWidgetFactory.createElementPresenter(element);
@@ -291,14 +298,24 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
             detectElementSizeAndResizeView();
         } else {
             view.setHeight(DEFAULT_HEIGHT);
-            view.setWidth(DEFAULT_WIDTH);
+            view.setWidth(DEFAULT_WIDTH + getTitleWidth());
         }
+    }
+
+    private int getTitleWidth() {
+        Element parent = branch.getParent();
+
+        if (parent == null || !parent.needsToShowIconAndTitle()) {
+            return 0;
+        }
+
+        return TITLE_WIDTH;
     }
 
     private void detectElementSizeAndResizeView() {
         List<ElementPresenter> elements = new ArrayList<>(widgetElements.values());
 
-        int width = (elements.size() + 1) * ARROW_PADDING + TITLE_WIDTH;
+        int width = (elements.size() + 1) * ARROW_PADDING + getTitleWidth();
         int height = elements.get(0).getHeight();
 
         for (ElementPresenter element : elements) {

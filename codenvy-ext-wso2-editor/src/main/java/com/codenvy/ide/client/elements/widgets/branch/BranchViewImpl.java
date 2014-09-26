@@ -65,6 +65,8 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
     FlowPanel       body;
     @UiField
     DockLayoutPanel focusPanel;
+    @UiField
+    FlowPanel       titlePanel;
 
     private       DiagramController      controller;
     private       PickupDragController   dragController;
@@ -249,6 +251,13 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
         setWidth(width + "px");
 
         createCanvas();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleTitle(boolean visible) {
+        focusPanel.setWidgetHidden(titlePanel, !visible);
+        focusPanel.onResize();
     }
 
 }
