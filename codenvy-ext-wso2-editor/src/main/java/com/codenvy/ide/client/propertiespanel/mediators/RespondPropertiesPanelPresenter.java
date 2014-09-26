@@ -38,7 +38,7 @@ import static com.codenvy.ide.client.elements.mediators.Respond.DESCRIPTION;
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
-public class RespondPropertiesPanelPresenter extends AbstractPropertiesPanel<Respond, PropertiesPanelView> {
+public class RespondPropertiesPanelPresenter extends AbstractPropertiesPanel<Respond> {
 
     private final SimplePropertyPresenter description;
 

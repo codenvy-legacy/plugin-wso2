@@ -61,7 +61,7 @@ import static com.codenvy.ide.client.elements.mediators.Header.VALUE_TYPE;
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
-public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Header, PropertiesPanelView> {
+public class HeaderPropertiesPanelPresenter extends AbstractPropertiesPanel<Header> {
 
     private final NameSpaceEditorPresenter nameSpacePresenter;
 

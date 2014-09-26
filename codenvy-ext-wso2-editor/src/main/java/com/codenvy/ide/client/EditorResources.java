@@ -49,8 +49,6 @@ public interface EditorResources extends ClientBundle {
 
         String property();
 
-        String propertyButton();
-
         String labelStyle();
 
         String fieldStyle();

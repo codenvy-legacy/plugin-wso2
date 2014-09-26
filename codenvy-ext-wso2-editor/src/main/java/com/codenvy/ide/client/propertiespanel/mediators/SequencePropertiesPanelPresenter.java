@@ -53,7 +53,7 @@ import static com.codenvy.ide.client.elements.mediators.Sequence.STATIC_REFERENC
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
  */
-public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Sequence, PropertiesPanelView> {
+public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Sequence> {
     private final ResourceKeyEditorPresenter     keyPresenter;
     private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
     private final WSO2EditorLocalizationConstant local;

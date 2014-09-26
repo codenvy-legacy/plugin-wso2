@@ -56,12 +56,6 @@
     border: 2px solid #FF0000 !important;
 }
 
-.propertyButton {
-    margin-left: 2px;
-    text-align: center;
-    width: 30px;
-}
-
 .applyCursor {
     cursor: applyCursorURL, auto !important;
 }

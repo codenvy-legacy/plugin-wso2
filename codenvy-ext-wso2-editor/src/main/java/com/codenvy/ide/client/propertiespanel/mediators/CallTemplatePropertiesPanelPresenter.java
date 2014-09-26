@@ -50,7 +50,7 @@ import static com.codenvy.ide.client.elements.mediators.CallTemplate.TARGET_TEMP
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
-public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPanel<CallTemplate, PropertiesPanelView> {
+public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPanel<CallTemplate> {
 
     private final PropertyConfigPresenter        propertyConfigPresenter;
     private final AddPropertyCallback            addPropertyCallback;

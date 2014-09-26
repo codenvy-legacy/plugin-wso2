@@ -62,7 +62,7 @@ import static com.codenvy.ide.client.elements.mediators.ValueType.EXPRESSION;
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
-public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Property, PropertiesPanelView> {
+public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Property> {
 
     private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
     private final WSO2EditorLocalizationConstant locale;

@@ -72,7 +72,7 @@ import static com.codenvy.ide.client.initializers.propertytype.CommonPropertyTyp
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
  */
-public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enrich, PropertiesPanelView> {
+public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enrich> {
 
     private final NameSpaceEditorPresenter     nameSpacePresenter;
     private final ResourceKeyEditorPresenter   keyPresenter;

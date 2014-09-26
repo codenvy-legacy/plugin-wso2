@@ -15,7 +15,6 @@
  */
 package com.codenvy.ide.client.propertiespanel;
 
-import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
@@ -29,13 +28,11 @@ import java.util.List;
  *
  * @param <T>
  *         type of diagram element that this panel supports
- * @param <V>
- *         type of view that is needed for this panel
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
-public abstract class AbstractPropertiesPanel<T extends Element, V extends View> extends AbstractPresenter<V> {
+public abstract class AbstractPropertiesPanel<T extends Element> extends AbstractPresenter<PropertiesPanelView> {
 
     protected T element;
 
@@ -43,7 +40,7 @@ public abstract class AbstractPropertiesPanel<T extends Element, V extends View>
 
     private final List<PropertyChangedListener> listeners;
 
-    protected AbstractPropertiesPanel(@Nonnull V view, @Nonnull PropertyTypeManager propertyTypeManager) {
+    protected AbstractPropertiesPanel(@Nonnull PropertiesPanelView view, @Nonnull PropertyTypeManager propertyTypeManager) {
         super(view);
 
         this.propertyTypeManager = propertyTypeManager;

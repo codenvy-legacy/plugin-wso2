@@ -52,7 +52,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  * @author Valeriy Svydenko
  */
 public abstract class AbstractConnectorPropertiesPanelPresenter<T extends AbstractConnector>
-        extends AbstractPropertiesPanel<T, PropertiesPanelView> implements ConnectorPropertyManager.ConnectorPropertyListener {
+        extends AbstractPropertiesPanel<T> implements ConnectorPropertyManager.ConnectorPropertyListener {
 
     private final PropertiesPanelWidgetFactory       propertiesWidgetFactory;
     private final Provider<ListPropertyPresenter>    listPropertyProvider;

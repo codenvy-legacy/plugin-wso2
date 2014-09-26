@@ -59,7 +59,7 @@ import static com.codenvy.ide.client.elements.mediators.payload.PayloadFactory.F
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
-public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPanel<PayloadFactory, PropertiesPanelView> {
+public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPanel<PayloadFactory> {
 
     private ListPropertyPresenter    payloadFormat;
     private ComplexPropertyPresenter formatInline;

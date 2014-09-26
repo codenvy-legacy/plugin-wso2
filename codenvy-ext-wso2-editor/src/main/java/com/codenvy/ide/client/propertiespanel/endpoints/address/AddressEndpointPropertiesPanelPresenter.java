@@ -71,7 +71,7 @@ import static com.codenvy.ide.client.initializers.propertytype.CommonPropertyTyp
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
  */
-public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesPanel<AddressEndpoint, PropertiesPanelView> {
+public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesPanel<AddressEndpoint> {
 
     private final WSO2EditorLocalizationConstant              locale;
     private final PropertyPresenter                           propertyPresenter;

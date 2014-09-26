@@ -58,7 +58,7 @@ import static com.codenvy.ide.client.elements.mediators.Send.SequenceType.STATIC
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
  */
-public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send, PropertiesPanelView> {
+public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send> {
     private final ResourceKeyEditorPresenter     keyPresenter;
     private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
     private final WSO2EditorLocalizationConstant locale;

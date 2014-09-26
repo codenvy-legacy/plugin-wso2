@@ -50,7 +50,7 @@ import static com.codenvy.ide.client.elements.mediators.Call.X_PATH;
  *
  * @author Valeriy Svydenko
  */
-public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call, PropertiesPanelView> {
+public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call> {
 
     private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
     private final WSO2EditorLocalizationConstant locale;

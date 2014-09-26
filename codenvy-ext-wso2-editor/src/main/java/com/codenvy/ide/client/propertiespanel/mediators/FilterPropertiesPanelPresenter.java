@@ -54,7 +54,7 @@ import static com.codenvy.ide.client.elements.mediators.Filter.X_PATH;
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
  */
-public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filter, PropertiesPanelView> {
+public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filter> {
     private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
     private final WSO2EditorLocalizationConstant local;
 

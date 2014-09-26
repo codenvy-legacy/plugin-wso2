@@ -49,7 +49,7 @@ import static com.codenvy.ide.client.elements.mediators.Switch.SOURCE_XPATH;
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
  */
-public class SwitchPropertiesPanelPresenter extends AbstractPropertiesPanel<Switch, PropertiesPanelView> {
+public class SwitchPropertiesPanelPresenter extends AbstractPropertiesPanel<Switch> {
 
     private final AddNameSpacesCallBack             addNameSpacesCallBack;
     private final NameSpaceEditorPresenter          nameSpaceEditorPresenter;

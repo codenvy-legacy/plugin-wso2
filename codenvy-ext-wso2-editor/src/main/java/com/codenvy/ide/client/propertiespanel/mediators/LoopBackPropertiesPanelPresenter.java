@@ -39,7 +39,7 @@ import static com.codenvy.ide.client.elements.mediators.LoopBack.DESCRIPTION;
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
  */
-public class LoopBackPropertiesPanelPresenter extends AbstractPropertiesPanel<LoopBack, PropertiesPanelView> {
+public class LoopBackPropertiesPanelPresenter extends AbstractPropertiesPanel<LoopBack> {
 
     private final SimplePropertyPresenter description;
 

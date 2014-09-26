@@ -170,13 +170,13 @@ public class GetDirectMessagesConnectorPresenter extends AbstractConnectorProper
         sinceId.setProperty(element.getProperty(SINCE_ID_INL));
         maxId.setProperty(element.getProperty(MAX_ID_INL));
 
-        consumerKey.setProperty(element.getProperty(CONSUMER_KEY_EXPR));
-        consumerSecret.setProperty(element.getProperty(CONSUMER_SECRET_EXPR));
-        accessToken.setProperty(element.getProperty(ACCESS_TOKEN_EXPR));
-        accessTokenSecret.setProperty(element.getProperty(ACCESS_TOKEN_SECRET_EXPR));
-        count.setProperty(element.getProperty(COUNT_EXPR));
-        page.setProperty(element.getProperty(PAGE_EXPR));
-        sinceId.setProperty(element.getProperty(SINCE_ID_EXPR));
-        maxId.setProperty(element.getProperty(MAX_ID_EXPR));
+        consumerKeyExpr.setProperty(element.getProperty(CONSUMER_KEY_EXPR));
+        consumerSecretExpr.setProperty(element.getProperty(CONSUMER_SECRET_EXPR));
+        accessTokenExpr.setProperty(element.getProperty(ACCESS_TOKEN_EXPR));
+        accessTokenSecretExpr.setProperty(element.getProperty(ACCESS_TOKEN_SECRET_EXPR));
+        countExpr.setProperty(element.getProperty(COUNT_EXPR));
+        pageExpr.setProperty(element.getProperty(PAGE_EXPR));
+        sinceIdExpr.setProperty(element.getProperty(SINCE_ID_EXPR));
+        maxIdExpr.setProperty(element.getProperty(MAX_ID_EXPR));
     }
 }

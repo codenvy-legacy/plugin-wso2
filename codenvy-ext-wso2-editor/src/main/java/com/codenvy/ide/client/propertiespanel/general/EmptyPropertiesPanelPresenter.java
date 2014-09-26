@@ -27,7 +27,7 @@ import com.google.inject.Inject;
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
-public class EmptyPropertiesPanelPresenter extends AbstractPropertiesPanel<Element, PropertiesPanelView> {
+public class EmptyPropertiesPanelPresenter extends AbstractPropertiesPanel<Element> {
 
     @Inject
     public EmptyPropertiesPanelPresenter(PropertiesPanelView view, PropertyTypeManager propertyTypeManager) {

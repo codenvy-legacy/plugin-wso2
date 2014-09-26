@@ -54,7 +54,7 @@ import static com.codenvy.ide.client.elements.mediators.log.Property.NAME;
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
  */
-public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log, PropertiesPanelView> {
+public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> {
 
     private final PropertyConfigPresenter        propertyConfigPresenter;
     private final AddPropertyCallback            addPropertyCallback;

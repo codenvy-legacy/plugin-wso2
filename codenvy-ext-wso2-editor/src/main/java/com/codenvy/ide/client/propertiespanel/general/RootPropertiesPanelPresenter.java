@@ -39,7 +39,7 @@ import static com.codenvy.ide.client.elements.RootElement.ON_ERROR;
  *
  * @author Andrey Plotnikov
  */
-public class RootPropertiesPanelPresenter extends AbstractPropertiesPanel<RootElement, PropertiesPanelView> {
+public class RootPropertiesPanelPresenter extends AbstractPropertiesPanel<RootElement> {
 
     private SimplePropertyPresenter name;
     private SimplePropertyPresenter onError;

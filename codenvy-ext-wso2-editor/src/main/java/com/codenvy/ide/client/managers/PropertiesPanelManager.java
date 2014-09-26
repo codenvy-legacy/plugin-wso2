@@ -15,7 +15,6 @@
  */
 package com.codenvy.ide.client.managers;
 
-import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertyChangedListener;
@@ -39,8 +38,8 @@ import java.util.Map;
 @Singleton
 public class PropertiesPanelManager implements SelectionManager.SelectionStateListener, PropertyChangedListener {
 
-    private final Map<Class<?>, AbstractPropertiesPanel<? extends Element, ? extends View>> panels;
-    private final List<PropertyChangedListener>                                             listeners;
+    private final Map<Class<?>, AbstractPropertiesPanel<? extends Element>> panels;
+    private final List<PropertyChangedListener>                             listeners;
 
     private AcceptsOneWidget        container;
     private AbstractPropertiesPanel shownPanel;
@@ -73,8 +72,8 @@ public class PropertiesPanelManager implements SelectionManager.SelectionStateLi
      * @param <T>
      *         type of diagram element
      */
-    public <T extends Element, V extends View> void register(@Nullable Class<T> diagramElement,
-                                                             @Nonnull AbstractPropertiesPanel<T, V> panel) {
+    public <T extends Element> void register(@Nullable Class<T> diagramElement,
+                                             @Nonnull AbstractPropertiesPanel<T> panel) {
         panels.put(diagramElement, panel);
     }
 
