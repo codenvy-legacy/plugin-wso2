@@ -41,7 +41,6 @@ import java.util.List;
 
 import static com.codenvy.ide.client.elements.widgets.element.ElementPresenter.ElementDeleteListener;
 import static com.codenvy.ide.client.elements.widgets.element.ElementPresenter.ElementMoveListener;
-import static com.codenvy.ide.client.elements.widgets.element.ElementView.BRANCHES_PADDING;
 import static com.codenvy.ide.client.elements.widgets.element.ElementView.DEFAULT_HEIGHT;
 import static com.codenvy.ide.client.elements.widgets.element.ElementView.DEFAULT_WIDTH;
 import static org.junit.Assert.assertEquals;
@@ -243,7 +242,7 @@ public class ElementPresenterTest {
 
         branchesShouldBeAddedOnView();
 
-        viewSizeShouldBeChanged(3 * BRANCHES_PADDING + 2 * BRANCH_HEIGHT, BRANCH_WIDTH + 2 * BRANCHES_PADDING + DEFAULT_WIDTH);
+        viewSizeShouldBeChanged(2 * BRANCH_HEIGHT, BRANCH_WIDTH + DEFAULT_WIDTH);
     }
 
     @Test
@@ -308,7 +307,7 @@ public class ElementPresenterTest {
 
         branchesShouldBeAddedOnView();
 
-        viewSizeShouldBeChanged(3 * BRANCHES_PADDING + 2 * BRANCH_HEIGHT, BRANCH_WIDTH + 2 * BRANCHES_PADDING);
+        viewSizeShouldBeChanged(2 * BRANCH_HEIGHT, BRANCH_WIDTH);
     }
 
     @Test
@@ -335,7 +334,7 @@ public class ElementPresenterTest {
 
         branchesShouldBeAddedOnView();
 
-        viewSizeShouldBeChanged(3 * BRANCHES_PADDING + 2 * BRANCH_HEIGHT, MAX_BRANCH_WIDTH + 2 * BRANCHES_PADDING);
+        viewSizeShouldBeChanged(2 * BRANCH_HEIGHT, MAX_BRANCH_WIDTH);
     }
 
     @Test
@@ -362,7 +361,7 @@ public class ElementPresenterTest {
 
         branchesShouldBeAddedOnView();
 
-        viewSizeShouldBeChanged(3 * BRANCHES_PADDING + 2 * BRANCH_HEIGHT, MAX_BRANCH_WIDTH + 2 * BRANCHES_PADDING + DEFAULT_WIDTH);
+        viewSizeShouldBeChanged(2 * BRANCH_HEIGHT, MAX_BRANCH_WIDTH + DEFAULT_WIDTH);
     }
 
     @Test
@@ -591,7 +590,7 @@ public class ElementPresenterTest {
 
         branchesShouldBeAddedOnView();
 
-        viewSizeShouldBeChanged(3 * BRANCHES_PADDING + 2 * BRANCH_HEIGHT, BRANCH_WIDTH + 2 * BRANCHES_PADDING + DEFAULT_WIDTH);
+        viewSizeShouldBeChanged(2 * BRANCH_HEIGHT, BRANCH_WIDTH + DEFAULT_WIDTH);
 
         verify(changingElementListener).onElementChanged();
     }
@@ -611,7 +610,7 @@ public class ElementPresenterTest {
 
         branchesShouldBeAddedOnView();
 
-        viewSizeShouldBeChanged(3 * BRANCHES_PADDING + 2 * BRANCH_HEIGHT, BRANCH_WIDTH + 2 * BRANCHES_PADDING + DEFAULT_WIDTH);
+        viewSizeShouldBeChanged(2 * BRANCH_HEIGHT, BRANCH_WIDTH + DEFAULT_WIDTH);
 
         verify(changingElementListener).onElementChanged();
     }

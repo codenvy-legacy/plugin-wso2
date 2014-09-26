@@ -40,8 +40,10 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -67,21 +69,22 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
     }
 
     @UiField
-    Label     title;
+    Label           title;
     @UiField
-    Image     icon;
+    Image           icon;
     @UiField
-    FlowPanel rightPanel;
+    FlowPanel       rightPanel;
     @UiField
-    FlowPanel mainPanel;
+    DockLayoutPanel mainPanel;
     @UiField
-    FlowPanel leftPanel;
+    FlowPanel       leftPanel;
 
     private final EditorResources resources;
     private final ContextMenu     contextMenu;
 
-    private int height;
-    private int width;
+    private int     height;
+    private int     width;
+    private boolean isBranchAdded;
 
     @Inject
     public ElementViewImpl(ElementViewImplUiBinder ourUiBinder, EditorResources resources, @Assisted boolean isPossibleChangeCases) {
@@ -90,6 +93,7 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
 
         this.height = DEFAULT_HEIGHT;
         this.width = DEFAULT_WIDTH;
+        this.isBranchAdded = false;
 
         this.contextMenu.addItem("Delete", new Command() {
             @Override
@@ -116,14 +120,14 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
         addMouseDownHandler(new MouseDownHandler() {
             @Override
             public void onMouseDown(MouseDownEvent event) {
-                switch (event.getNativeButton()) {
-                    case NativeEvent.BUTTON_RIGHT:
-                        delegate.onMouseRightButtonClicked(event.getClientX(), event.getClientY());
-                        break;
+                int nativeButton = event.getNativeButton();
 
-                    case NativeEvent.BUTTON_LEFT:
-                    default:
-                        delegate.onMouseLeftButtonClicked();
+                if (NativeEvent.BUTTON_RIGHT == nativeButton) {
+                    delegate.onMouseRightButtonClicked(event.getClientX(), event.getClientY());
+                }
+
+                if (NativeEvent.BUTTON_LEFT == nativeButton) {
+                    delegate.onMouseLeftButtonClicked();
                 }
 
                 event.stopPropagation();
@@ -177,12 +181,21 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
     /** {@inheritDoc} */
     @Override
     public void addBranch(@Nonnull BranchPresenter branchPresenter) {
-        rightPanel.add(branchPresenter.getView());
+        IsWidget widget = branchPresenter.getView();
+
+        if (isBranchAdded) {
+            widget.asWidget().addStyleName(resources.editorCSS().topBorder());
+        } else {
+            isBranchAdded = true;
+        }
+
+        rightPanel.add(widget);
     }
 
     /** {@inheritDoc} */
     @Override
     public void removeBranches() {
+        this.isBranchAdded = false;
         rightPanel.clear();
     }
 
@@ -233,11 +246,9 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
     /** {@inheritDoc} */
     @Override
     public void setVisibleTitleAndIcon(boolean visible) {
-        if (visible) {
-            mainPanel.add(leftPanel);
-        } else {
-            mainPanel.remove(leftPanel);
-        }
+        mainPanel.setWidgetHidden(leftPanel, !visible);
+
+        mainPanel.onResize();
     }
 
     /** {@inheritDoc} */

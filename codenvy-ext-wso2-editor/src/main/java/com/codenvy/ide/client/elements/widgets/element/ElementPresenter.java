@@ -33,11 +33,11 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.widgets.element.ElementView.BRANCHES_PADDING;
 import static com.codenvy.ide.client.elements.widgets.element.ElementView.DEFAULT_HEIGHT;
 import static com.codenvy.ide.client.elements.widgets.element.ElementView.DEFAULT_WIDTH;
 
@@ -242,8 +242,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
             branch.setWidth(maxWidth);
         }
 
-        width = maxWidth + 2 * BRANCHES_PADDING + (element.needsToShowIconAndTitle() ? DEFAULT_WIDTH : 0);
-        height += BRANCHES_PADDING * (branchesWidgets.size() + 1);
+        width = maxWidth + (element.needsToShowIconAndTitle() ? DEFAULT_WIDTH : 0);
 
         view.setHeight(height);
         view.setWidth(width);

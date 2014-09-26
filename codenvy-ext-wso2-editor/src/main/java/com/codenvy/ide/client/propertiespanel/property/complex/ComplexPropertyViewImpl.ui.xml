@@ -15,6 +15,7 @@
     limitations under the License.
 
 -->
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
@@ -24,12 +25,18 @@
         .title {
             font-weight: bold;
         }
+
+        .propertyButton {
+            margin-left: 2px;
+            text-align: center;
+            width: 30px;
+        }
     </ui:style>
 
     <g:FlowPanel addStyleNames="{res.editorCSS.property}">
         <g:Label ui:field="title" addStyleNames="{res.editorCSS.fieldStyle} {style.title}"/>
         <g:TextBox enabled="false" ui:field="property" width="235px" addStyleNames="{res.editorCSS.fieldStyle}"/>
-        <g:Button ui:field="btnEdit" addStyleNames="{res.editorCSS.propertyButton}" text="..."/>
+        <g:Button ui:field="btnEdit" addStyleNames="{style.propertyButton}" text="..."/>
     </g:FlowPanel>
 
 </ui:UiBinder>

@@ -16,7 +16,8 @@
 @url applyCursorURL applyCursor;
 @url errorCursorURL errorCursor;
 
-@eval borderColor com.codenvy.ide.api.ui.theme.Style.getPartBackground();
+@eval borderColor com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
+@eval selectionBackgroundColor com.codenvy.ide.api.ui.theme.Style.getSelectionBackground();
 
 .fullSize {
     width: 100%;
@@ -44,7 +45,7 @@
 }
 
 .selectedElement {
-    border: 2px solid #6DAF6D !important;
+    border: 2px solid selectionBackgroundColor !important;
 }
 
 .selectElementBelowCursor {
@@ -77,4 +78,8 @@
 .expandedImage {
     transform: rotate(90deg);
     -webkit-transform: rotate(90deg);
+}
+
+.topBorder {
+    border-top: 2px solid borderColor;
 }

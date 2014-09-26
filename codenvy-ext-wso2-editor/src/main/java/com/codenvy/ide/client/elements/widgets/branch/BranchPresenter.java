@@ -43,7 +43,7 @@ import static com.codenvy.ide.client.elements.widgets.branch.BranchView.ARROW_PA
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_HEIGHT;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_WIDTH;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.ELEMENTS_PADDING;
-import static com.codenvy.ide.client.elements.widgets.branch.BranchView.TITLE_HEIGHT;
+import static com.codenvy.ide.client.elements.widgets.branch.BranchView.TITLE_WIDTH;
 
 /**
  * The class that provides business logic of the element's branch widget.
@@ -290,7 +290,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         if (branch.hasElements()) {
             detectElementSizeAndResizeView();
         } else {
-            view.setHeight(DEFAULT_HEIGHT + TITLE_HEIGHT);
+            view.setHeight(DEFAULT_HEIGHT);
             view.setWidth(DEFAULT_WIDTH);
         }
     }
@@ -298,7 +298,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     private void detectElementSizeAndResizeView() {
         List<ElementPresenter> elements = new ArrayList<>(widgetElements.values());
 
-        int width = (elements.size() + 1) * ARROW_PADDING;
+        int width = (elements.size() + 1) * ARROW_PADDING + TITLE_WIDTH;
         int height = elements.get(0).getHeight();
 
         for (ElementPresenter element : elements) {
@@ -310,14 +310,14 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
             }
         }
 
-        height += ELEMENTS_PADDING + TITLE_HEIGHT;
+        height += ELEMENTS_PADDING;
 
         view.setHeight(height);
         view.setWidth(width);
     }
 
     private void alignElements() {
-        int top = view.getHeight() / 2 - BranchView.TITLE_HEIGHT;
+        int top = view.getHeight() / 2;
 
         for (ElementPresenter element : widgetElements.values()) {
             element.setY(top - element.getHeight() / 2);

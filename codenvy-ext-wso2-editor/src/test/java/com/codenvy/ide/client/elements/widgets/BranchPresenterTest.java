@@ -46,7 +46,7 @@ import static com.codenvy.ide.client.elements.widgets.branch.BranchView.ARROW_PA
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_HEIGHT;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_WIDTH;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.ELEMENTS_PADDING;
-import static com.codenvy.ide.client.elements.widgets.branch.BranchView.TITLE_HEIGHT;
+import static com.codenvy.ide.client.elements.widgets.branch.BranchView.TITLE_WIDTH;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
@@ -213,9 +213,9 @@ public class BranchPresenterTest {
 
         elementsShouldBeAddedOnView();
 
-        viewSizeShouldBeChanged(ELEMENTS_PADDING + TITLE_HEIGHT + ELEMENT_HEIGHT, 3 * ARROW_PADDING + 2 * ELEMENT_WIDTH);
+        viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 3 * ARROW_PADDING + 2 * ELEMENT_WIDTH + TITLE_WIDTH);
 
-        int top = VIEW_ELEMENT_HEIGHT / 2 - TITLE_HEIGHT - ELEMENT_HEIGHT / 2;
+        int top = VIEW_ELEMENT_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
         topPositionOfElementsShouldBeChanged(top, top);
     }
 
@@ -291,9 +291,9 @@ public class BranchPresenterTest {
 
         elementsShouldBeAddedOnView();
 
-        viewSizeShouldBeChanged(ELEMENTS_PADDING + TITLE_HEIGHT + ELEMENT_HEIGHT, 3 * ARROW_PADDING + 2 * ELEMENT_WIDTH);
+        viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 3 * ARROW_PADDING + 2 * ELEMENT_WIDTH + TITLE_WIDTH);
 
-        int top = VIEW_ELEMENT_HEIGHT / 2 - TITLE_HEIGHT - ELEMENT_HEIGHT / 2;
+        int top = VIEW_ELEMENT_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
         topPositionOfElementsShouldBeChanged(top, top);
     }
 
@@ -319,7 +319,7 @@ public class BranchPresenterTest {
 
         verify(view, never()).addElement(anyInt(), anyInt(), any(ElementPresenter.class));
 
-        viewSizeShouldBeChanged(DEFAULT_HEIGHT + TITLE_HEIGHT, DEFAULT_WIDTH);
+        viewSizeShouldBeChanged(DEFAULT_HEIGHT, DEFAULT_WIDTH);
 
         verify(elementPresenter, never()).setY(anyInt());
         verify(elementPresenter2, never()).setY(anyInt());
@@ -354,10 +354,10 @@ public class BranchPresenterTest {
 
         elementsShouldBeAddedOnView();
 
-        viewSizeShouldBeChanged(ELEMENTS_PADDING + TITLE_HEIGHT + MAX_ELEMENT_HEIGHT, 3 * ARROW_PADDING + 2 * ELEMENT_WIDTH);
+        viewSizeShouldBeChanged(ELEMENTS_PADDING + MAX_ELEMENT_HEIGHT, 3 * ARROW_PADDING + 2 * ELEMENT_WIDTH + TITLE_WIDTH);
 
-        int firstTop = VIEW_ELEMENT_HEIGHT / 2 - TITLE_HEIGHT - MAX_ELEMENT_HEIGHT / 2;
-        int secondTop = VIEW_ELEMENT_HEIGHT / 2 - TITLE_HEIGHT - ELEMENT_HEIGHT / 2;
+        int firstTop = VIEW_ELEMENT_HEIGHT / 2 - MAX_ELEMENT_HEIGHT / 2;
+        int secondTop = VIEW_ELEMENT_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
         topPositionOfElementsShouldBeChanged(firstTop, secondTop);
     }
 
@@ -390,10 +390,10 @@ public class BranchPresenterTest {
 
         elementsShouldBeAddedOnView();
 
-        viewSizeShouldBeChanged(ELEMENTS_PADDING + TITLE_HEIGHT + MAX_ELEMENT_HEIGHT, 3 * ARROW_PADDING + 2 * ELEMENT_WIDTH);
+        viewSizeShouldBeChanged(ELEMENTS_PADDING + MAX_ELEMENT_HEIGHT, 3 * ARROW_PADDING + 2 * ELEMENT_WIDTH + TITLE_WIDTH);
 
-        int firstTop = VIEW_ELEMENT_HEIGHT / 2 - TITLE_HEIGHT - ELEMENT_HEIGHT / 2;
-        int secondTop = VIEW_ELEMENT_HEIGHT / 2 - TITLE_HEIGHT - MAX_ELEMENT_HEIGHT / 2;
+        int firstTop = VIEW_ELEMENT_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
+        int secondTop = VIEW_ELEMENT_HEIGHT / 2 - MAX_ELEMENT_HEIGHT / 2;
         topPositionOfElementsShouldBeChanged(firstTop, secondTop);
     }
 
@@ -626,11 +626,11 @@ public class BranchPresenterTest {
         verify(view, never()).addElement(ARROW_PADDING, 0, elementPresenter);
         verify(view).addElement(ARROW_PADDING, 0, elementPresenter2);
 
-        viewSizeShouldBeChanged(ELEMENTS_PADDING + TITLE_HEIGHT + ELEMENT_HEIGHT, 2 * ARROW_PADDING + ELEMENT_WIDTH);
+        viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 2 * ARROW_PADDING + ELEMENT_WIDTH + TITLE_WIDTH);
 
         verify(elementPresenter, never()).setY(anyInt());
 
-        int top = VIEW_ELEMENT_HEIGHT / 2 - TITLE_HEIGHT - ELEMENT_HEIGHT / 2;
+        int top = VIEW_ELEMENT_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
         verify(elementPresenter2).setY(top);
     }
 
@@ -673,11 +673,11 @@ public class BranchPresenterTest {
         verify(view, never()).addElement(ARROW_PADDING, 0, elementPresenter);
         verify(view).addElement(ARROW_PADDING, 0, elementPresenter2);
 
-        viewSizeShouldBeChanged(ELEMENTS_PADDING + TITLE_HEIGHT + ELEMENT_HEIGHT, 2 * ARROW_PADDING + ELEMENT_WIDTH);
+        viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 2 * ARROW_PADDING + ELEMENT_WIDTH + TITLE_WIDTH);
 
         verify(elementPresenter, never()).setY(anyInt());
 
-        int top = VIEW_ELEMENT_HEIGHT / 2 - TITLE_HEIGHT - ELEMENT_HEIGHT / 2;
+        int top = VIEW_ELEMENT_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
         verify(elementPresenter2).setY(top);
     }
 

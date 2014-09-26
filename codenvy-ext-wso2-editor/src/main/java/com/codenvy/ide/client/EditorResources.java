@@ -59,6 +59,8 @@ public interface EditorResources extends ClientBundle {
 
         String normalImage();
 
+        String topBorder();
+
     }
 
     @Source("editor.css")

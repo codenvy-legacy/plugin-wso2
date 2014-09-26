@@ -33,8 +33,8 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -56,15 +56,15 @@ import java.util.List;
 public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> implements BranchView {
 
     @Singleton
-    interface CaseWidgetUiBinder extends UiBinder<Widget, BranchViewImpl> {
+    interface BranchViewImplUiBinder extends UiBinder<Widget, BranchViewImpl> {
     }
 
     @UiField
-    Label      title;
+    Label           title;
     @UiField
-    FlowPanel  body;
+    FlowPanel       body;
     @UiField
-    FocusPanel focusPanel;
+    DockLayoutPanel focusPanel;
 
     private       DiagramController      controller;
     private       PickupDragController   dragController;
@@ -75,7 +75,7 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
     private int width;
 
     @Inject
-    public BranchViewImpl(CaseWidgetUiBinder ourUiBinder, EditorResources resources) {
+    public BranchViewImpl(BranchViewImplUiBinder ourUiBinder, EditorResources resources) {
         this.resources = resources;
         this.elements = new ArrayList<>();
 
@@ -101,7 +101,7 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
             }
         }
 
-        controller = new DiagramController(width, height - TITLE_HEIGHT);
+        controller = new DiagramController(width + TITLE_WIDTH, height);
 
         body.add(controller.getView());
 
@@ -115,47 +115,43 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
     }
 
     private void bind() {
-        focusPanel.addMouseDownHandler(new MouseDownHandler() {
+        focusPanel.addDomHandler(new MouseDownHandler() {
             @Override
             public void onMouseDown(MouseDownEvent event) {
-                switch (event.getNativeButton()) {
-                    case NativeEvent.BUTTON_LEFT:
-                        delegate.onMouseLeftButtonClicked(event.getRelativeX(body.getElement()), event.getRelativeY(body.getElement()));
-                        break;
-
-                    default:
+                if (NativeEvent.BUTTON_LEFT == event.getNativeButton()) {
+                    delegate.onMouseLeftButtonClicked(event.getRelativeX(body.getElement()), event.getRelativeY(body.getElement()));
                 }
 
                 event.stopPropagation();
             }
-        });
+        }, MouseDownEvent.getType());
 
-        focusPanel.addMouseUpHandler(new MouseUpHandler() {
+        focusPanel.addDomHandler(new MouseUpHandler() {
             @Override
             public void onMouseUp(MouseUpEvent event) {
                 event.stopPropagation();
             }
-        });
+        }, MouseUpEvent.getType());
 
-        focusPanel.addMouseMoveHandler(new MouseMoveHandler() {
+        focusPanel.addDomHandler(new MouseMoveHandler() {
             @Override
             public void onMouseMove(MouseMoveEvent event) {
                 delegate.onMouseMoved(event.getRelativeX(body.getElement()), event.getRelativeY(body.getElement()));
 
                 event.stopPropagation();
             }
-        });
+        }, MouseMoveEvent.getType());
 
-        focusPanel.addMouseOutHandler(new MouseOutHandler() {
+        focusPanel.addDomHandler(new MouseOutHandler() {
             @Override
             public void onMouseOut(MouseOutEvent event) {
                 delegate.onMouseOut();
 
                 event.stopPropagation();
             }
-        });
+        }, MouseOutEvent.getType());
 
-        focusPanel.addKeyDownHandler(new KeyDownHandler() {
+        focusPanel.addDomHandler(new KeyDownHandler() {
             @Override
             public void onKeyDown(KeyDownEvent event) {
                 if (event.getNativeKeyCode() == KeyCodes.KEY_DELETE) {
@@ -164,7 +160,7 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
 
                 event.stopPropagation();
             }
-        });
+        }, KeyDownEvent.getType());
     }
 
     /** {@inheritDoc} */

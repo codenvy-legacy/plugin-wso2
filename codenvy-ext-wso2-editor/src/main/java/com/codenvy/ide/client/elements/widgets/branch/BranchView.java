@@ -34,8 +34,8 @@ public interface BranchView extends View<BranchView.ActionDelegate> {
     int ELEMENTS_PADDING = 20;
     int ARROW_PADDING    = 20;
     int DEFAULT_HEIGHT   = 100;
-    int DEFAULT_WIDTH    = 90;
-    int TITLE_HEIGHT     = 20;
+    int TITLE_WIDTH      = 55;
+    int DEFAULT_WIDTH    = TITLE_WIDTH + 100;
 
     /**
      * Changes title on the view.
