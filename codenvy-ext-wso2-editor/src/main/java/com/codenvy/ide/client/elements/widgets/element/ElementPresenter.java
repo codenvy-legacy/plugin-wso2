@@ -232,7 +232,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
         int width;
 
         List<BranchPresenter> branchesWidgets = new ArrayList<>(widgetBranches.values());
-        int maxWidth = branchesWidgets.get(0).getWidth();
+        int maxWidth = -1;
 
         for (BranchPresenter branch : branchesWidgets) {
             branch.resizeView();
