@@ -47,24 +47,49 @@
         .title {
             text-align: center;
             font-weight: bold;
+        }
+
+        .headerPanel {
             background: titleBackground;
+        }
+
+        .headerText {
+            position: relative;
+            top: 50%;
+            margin-top: -10px;
         }
 
         .right-panel {
             float: left;
         }
+
+        .fullSize {
+            width: 100%;
+            height: 100%;
+        }
     </ui:style>
 
     <g:DockLayoutPanel ui:field="mainPanel" width="100px" height="100px" addStyleNames="{style.mainPanel}" unit="PX">
+
         <g:west size="100">
-            <g:FlowPanel ui:field="leftPanel" width="100%" height="100%" addStyleNames="{style.leftPanel}">
+            <g:DockLayoutPanel ui:field="leftPanel" addStyleNames="{style.leftPanel} {style.fullSize}" unit="PX">
 
-                <g:FlowPanel addStyleNames="{style.iconAndTitlePanel}">
-                    <g:Label ui:field="title" addStyleNames="{style.title}"/>
-                    <g:Image ui:field="icon" addStyleNames="{style.icon}"/>
-                </g:FlowPanel>
+                <g:north size="30">
+                    <g:FlowPanel ui:field="headerPanel" addStyleNames="{style.headerPanel} {style.fullSize}">
+                        <g:Label ui:field="header" addStyleNames="{style.title} {style.headerText}"/>
+                    </g:FlowPanel>
+                </g:north>
 
-            </g:FlowPanel>
+                <g:center>
+                    <g:FlowPanel addStyleNames="{style.fullSize}">
+                        <g:FlowPanel addStyleNames="{style.iconAndTitlePanel} {style.fullSize}">
+                            <g:Label ui:field="title" addStyleNames="{style.title}"/>
+                            <g:Image ui:field="icon" addStyleNames="{style.icon}"/>
+                        </g:FlowPanel>
+                    </g:FlowPanel>
+                </g:center>
+
+            </g:DockLayoutPanel>
         </g:west>
 
         <g:center>

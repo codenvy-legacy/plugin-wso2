@@ -167,9 +167,18 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     private void recreateBranches() {
         view.removeBranches();
 
+        chooseTitleAndShowIt();
+
         List<String> branchesId = showWidgetsAndReturnBranchesId();
 
         removeUnnecessaryWidgets(branchesId);
+    }
+
+    private void chooseTitleAndShowIt() {
+        boolean isContainer = element.getBranchesAmount() > 0;
+
+        view.setVisibleHeader(!isContainer);
+        view.setVisibleTitle(isContainer);
     }
 
     @Nonnull
@@ -271,7 +280,9 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     public void onMouseRightButtonClicked(int x, int y) {
         onMouseLeftButtonClicked();
 
-        view.showContextMenu(x, y);
+        if (element.needsToShowIconAndTitle()) {
+            view.showContextMenu(x, y);
+        }
     }
 
     /** {@inheritDoc} */

@@ -77,7 +77,11 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
     @UiField
     DockLayoutPanel mainPanel;
     @UiField
-    FlowPanel       leftPanel;
+    DockLayoutPanel leftPanel;
+    @UiField
+    Label           header;
+    @UiField
+    FlowPanel       headerPanel;
 
     private final EditorResources resources;
     private final ContextMenu     contextMenu;
@@ -166,6 +170,7 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
     @Override
     public void setTitle(@Nonnull String title) {
         this.title.setText(title);
+        header.setText(title);
     }
 
     /** {@inheritDoc} */
@@ -247,8 +252,20 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
     @Override
     public void setVisibleTitleAndIcon(boolean visible) {
         mainPanel.setWidgetHidden(leftPanel, !visible);
-
         mainPanel.onResize();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleTitle(boolean visible) {
+        title.setVisible(visible);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleHeader(boolean visible) {
+        leftPanel.setWidgetHidden(headerPanel, !visible);
+        leftPanel.onResize();
     }
 
     /** {@inheritDoc} */

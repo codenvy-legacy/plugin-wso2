@@ -163,7 +163,9 @@ public class ElementPresenterTest {
         when(element.getElementName()).thenReturn(ELEMENT_NAME);
         when(element.needsToShowIconAndTitle()).thenReturn(needsToShowIconAndTitle);
         when(element.getIcon()).thenReturn(icon);
+
         when(element.getBranches()).thenReturn(branches);
+        when(element.getBranchesAmount()).thenReturn(branches.size());
 
         when(elementWidgetFactory.createElementView(anyBoolean())).thenReturn(view);
     }
@@ -227,6 +229,11 @@ public class ElementPresenterTest {
         verify(view).setWidth(width);
     }
 
+    private void verifyShowTitle(boolean visible) {
+        verify(view).setVisibleHeader(!visible);
+        verify(view).setVisibleTitle(visible);
+    }
+
     @Test
     public void viewShouldBePrepared() throws Exception {
         prepareStartView();
@@ -234,6 +241,8 @@ public class ElementPresenterTest {
         verifyConstructorAction(NEEDS_TO_SHOW_ICON_AND_TITLE);
 
         verify(view).removeBranches();
+
+        verifyShowTitle(true);
 
         elementWidgetsShouldBeCreated();
 
@@ -255,6 +264,8 @@ public class ElementPresenterTest {
 
         verify(view).removeBranches();
 
+        verifyShowTitle(false);
+
         verify(elementWidgetFactory, never()).createContainer(any(Branch.class));
 
         branchPresenterShouldBeNotCreated(branchPresenter);
@@ -273,6 +284,8 @@ public class ElementPresenterTest {
         verifyConstructorAction(false);
 
         verify(view).removeBranches();
+
+        verifyShowTitle(false);
 
         verify(elementWidgetFactory, never()).createContainer(any(Branch.class));
 
@@ -299,6 +312,8 @@ public class ElementPresenterTest {
         verifyConstructorAction(false);
 
         verify(view).removeBranches();
+
+        verifyShowTitle(true);
 
         elementWidgetsShouldBeCreated();
 
@@ -327,6 +342,8 @@ public class ElementPresenterTest {
 
         verify(view).removeBranches();
 
+        verifyShowTitle(true);
+
         elementWidgetsShouldBeCreated();
 
         branchPresenterShouldBeCreatedAndShown(branchPresenter, MAX_BRANCH_WIDTH);
@@ -353,6 +370,8 @@ public class ElementPresenterTest {
         verifyConstructorAction(NEEDS_TO_SHOW_ICON_AND_TITLE);
 
         verify(view).removeBranches();
+
+        verifyShowTitle(true);
 
         elementWidgetsShouldBeCreated();
 
@@ -481,12 +500,28 @@ public class ElementPresenterTest {
     public void contextMenuShouldBeShown() throws Exception {
         prepareDefaultUseCase();
 
+        when(element.needsToShowIconAndTitle()).thenReturn(true);
+
         presenter.onMouseRightButtonClicked(X_POSITION, Y_POSITION);
 
         verify(editorState).resetState();
         verify(selectionManager).setElement(element);
 
         verify(view).showContextMenu(X_POSITION, Y_POSITION);
+    }
+
+    @Test
+    public void contextMenuShouldBeNotShown() throws Exception {
+        prepareDefaultUseCase();
+
+        when(element.needsToShowIconAndTitle()).thenReturn(false);
+
+        presenter.onMouseRightButtonClicked(X_POSITION, Y_POSITION);
+
+        verify(editorState).resetState();
+        verify(selectionManager).setElement(element);
+
+        verify(view, never()).showContextMenu(X_POSITION, Y_POSITION);
     }
 
     @Test
@@ -583,6 +618,8 @@ public class ElementPresenterTest {
 
         verify(view).removeBranches();
 
+        verifyShowTitle(true);
+
         verify(elementWidgetFactory, never()).createContainer(any(Branch.class));
 
         branchPresenterShouldBeNotReCreatedButShown(branchPresenter);
@@ -602,6 +639,8 @@ public class ElementPresenterTest {
         presenter.onElementChanged();
 
         verify(view).removeBranches();
+
+        verifyShowTitle(true);
 
         verify(elementWidgetFactory, never()).createContainer(any(Branch.class));
 

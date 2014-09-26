@@ -102,6 +102,22 @@ public interface ElementView extends View<ElementView.ActionDelegate> {
      */
     void setVisibleTitleAndIcon(boolean visible);
 
+    /**
+     * Changes visible state of title of the view.
+     *
+     * @param visible
+     *         <code>true</code> the title will be shown, <code>false</code> it will not
+     */
+    void setVisibleTitle(boolean visible);
+
+    /**
+     * Changes visible state of header of the view.
+     *
+     * @param visible
+     *         <code>true</code> the header will be shown, <code>false</code> it will not
+     */
+    void setVisibleHeader(boolean visible);
+
     /** @return the width of the view */
     @Nonnegative
     int getWidth();
