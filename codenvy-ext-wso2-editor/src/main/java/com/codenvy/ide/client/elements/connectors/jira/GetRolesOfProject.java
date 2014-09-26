@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes GetRolesOfProject connector for jira group connectors. Also the class contains the business logic
@@ -47,13 +46,13 @@ public class GetRolesOfProject extends AbstractConnector {
     public static final String ELEMENT_NAME       = "GetRolesOfProject";
     public static final String SERIALIZATION_NAME = "jira.getRolesOfProject";
 
+    public static final Key<String>          PROJECT_KEY_INL  = new Key<>("ProjectKeyInl");
+    public static final Key<String>          PROJECT_KEY_EXPR = new Key<>("projectKeyExpr");
+    public static final Key<List<NameSpace>> PROJECT_KEY_NS   = new Key<>("projectKeyNameSpace");
+
     private static final String PROJECT_KEY = "projectKey";
 
     private static final List<String> PROPERTIES = Arrays.asList(PROJECT_KEY);
-
-    private String          projectKey;
-    private String          projectKeyExpression;
-    private List<NameSpace> projectKeyNS;
 
     @Inject
     public GetRolesOfProject(EditorResources resources,
@@ -69,10 +68,9 @@ public class GetRolesOfProject extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        projectKey = "";
-        projectKeyExpression = "";
-
-        projectKeyNS = new ArrayList<>();
+        putProperty(PROJECT_KEY_INL, "");
+        putProperty(PROJECT_KEY_EXPR, "");
+        putProperty(PROJECT_KEY_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -81,9 +79,9 @@ public class GetRolesOfProject extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(PROJECT_KEY, isInline ? projectKey : projectKeyExpression);
+        properties.put(PROJECT_KEY, isInline ? getProperty(PROJECT_KEY_INL) : getProperty(PROJECT_KEY_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -94,46 +92,8 @@ public class GetRolesOfProject extends AbstractConnector {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
-
-        switch (nodeName) {
-            case PROJECT_KEY:
-                if (isInline) {
-                    projectKey = nodeValue;
-                } else {
-                    projectKeyExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+        if (PROJECT_KEY.equals(nodeName)) {
+            adaptProperty(nodeValue, PROJECT_KEY_INL, PROJECT_KEY_EXPR);
         }
     }
-
-    @Nonnull
-    public String getProjectKey() {
-        return projectKey;
-    }
-
-    public void setProjectKey(@Nonnull String projectKey) {
-        this.projectKey = projectKey;
-    }
-
-    @Nonnull
-    public String getProjectKeyExpression() {
-        return projectKeyExpression;
-    }
-
-    public void setProjectKeyExpression(@Nonnull String projectKeyExpression) {
-        this.projectKeyExpression = projectKeyExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getProjectKeyNS() {
-        return projectKeyNS;
-    }
-
-    public void setProjectKeyNS(@Nonnull List<NameSpace> projectKeyNS) {
-        this.projectKeyNS = projectKeyNS;
-    }
-
 }

@@ -31,8 +31,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
 
 /**
  * The Class describes SearchAssignableUser connector for jira group connectors. Also the class contains the business logic
@@ -47,36 +47,38 @@ public class SearchAssignableUser extends AbstractConnector {
     public static final String ELEMENT_NAME       = "SearchAssignableUser";
     public static final String SERIALIZATION_NAME = "jira.searchAssignableUser";
 
-    private static final String USERNAME    = "username";
+    public static final Key<String> USER_NAME_INL   = new Key<>("userNameInl");
+    public static final Key<String> PROJECT_INL     = new Key<>("projectInl");
+    public static final Key<String> ISSUE_KEY_INL   = new Key<>("issueKeyInl");
+    public static final Key<String> START_AT_INL    = new Key<>("startAtInl");
+    public static final Key<String> MAX_RESULTS_INL = new Key<>("maxResultsInl");
+
+    public static final Key<String> USER_NAME_EXPR   = new Key<>("userNameExpr");
+    public static final Key<String> PROJECT_EXPR     = new Key<>("projectExpr");
+    public static final Key<String> ISSUE_KEY_EXPR   = new Key<>("issueKeyExpr");
+    public static final Key<String> START_AT_EXPR    = new Key<>("startAtExpr");
+    public static final Key<String> MAX_RESULTS_EXPR = new Key<>("maxResultsExpr");
+
+    public static final Key<List<NameSpace>> USER_NAME_NS   = new Key<>("userNameSpace");
+    public static final Key<List<NameSpace>> PROJECT_NS     = new Key<>("projectNameSpace");
+    public static final Key<List<NameSpace>> ISSUE_KEY_NS   = new Key<>("issueKeyNameSpace");
+    public static final Key<List<NameSpace>> START_AT_NS    = new Key<>("startAtNameSpace");
+    public static final Key<List<NameSpace>> MAX_RESULTS_NS = new Key<>("maxResultsNameSpace");
+
+    private static final String USER_NAME   = "username";
     private static final String PROJECT     = "project";
     private static final String ISSUE_KEY   = "issueKey";
     private static final String START_AT    = "startAt";
     private static final String MAX_RESULTS = "maxResults";
 
-    private static final List<String> PROPERTIES = Arrays.asList(USERNAME, PROJECT, ISSUE_KEY, START_AT, MAX_RESULTS);
-
-    private String userName;
-    private String project;
-    private String issueKey;
-    private String startAt;
-    private String maxResults;
-
-    private String userNameExpression;
-    private String projectExpression;
-    private String issueKeyExpression;
-    private String startAtExpression;
-    private String maxResultsExpression;
-
-    private List<NameSpace> userNameNS;
-    private List<NameSpace> projectNS;
-    private List<NameSpace> issueKeyNS;
-    private List<NameSpace> startAtNS;
-    private List<NameSpace> maxResultsNS;
+    private static final List<String> PROPERTIES = Arrays.asList(USER_NAME,
+                                                                 PROJECT,
+                                                                 ISSUE_KEY,
+                                                                 START_AT,
+                                                                 MAX_RESULTS);
 
     @Inject
-    public SearchAssignableUser(EditorResources resources,
-                                Provider<Branch> branchProvider,
-                                ElementCreatorsManager elementCreatorsManager) {
+    public SearchAssignableUser(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
         super(ELEMENT_NAME,
               ELEMENT_NAME,
               SERIALIZATION_NAME,
@@ -87,23 +89,23 @@ public class SearchAssignableUser extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        userName = "";
-        project = "";
-        issueKey = "";
-        startAt = "";
-        maxResults = "";
+        putProperty(USER_NAME_INL, "");
+        putProperty(PROJECT_INL, "");
+        putProperty(ISSUE_KEY_INL, "");
+        putProperty(START_AT_INL, "");
+        putProperty(MAX_RESULTS_INL, "");
 
-        userNameExpression = "";
-        projectExpression = "";
-        startAtExpression = "";
-        issueKeyExpression = "";
-        maxResultsExpression = "";
+        putProperty(USER_NAME_EXPR, "");
+        putProperty(PROJECT_EXPR, "");
+        putProperty(ISSUE_KEY_EXPR, "");
+        putProperty(START_AT_EXPR, "");
+        putProperty(MAX_RESULTS_EXPR, "");
 
-        startAtNS = new ArrayList<>();
-        userNameNS = new ArrayList<>();
-        issueKeyNS = new ArrayList<>();
-        projectNS = new ArrayList<>();
-        maxResultsNS = new ArrayList<>();
+        putProperty(USER_NAME_NS, new ArrayList<NameSpace>());
+        putProperty(PROJECT_NS, new ArrayList<NameSpace>());
+        putProperty(ISSUE_KEY_NS, new ArrayList<NameSpace>());
+        putProperty(START_AT_NS, new ArrayList<NameSpace>());
+        putProperty(MAX_RESULTS_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -112,13 +114,13 @@ public class SearchAssignableUser extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(NAME_SPACED_PROPERTY_EDITOR);
 
-        properties.put(USERNAME, isInline ? userName : userNameExpression);
-        properties.put(PROJECT, isInline ? project : projectExpression);
-        properties.put(ISSUE_KEY, isInline ? issueKey : issueKeyExpression);
-        properties.put(START_AT, isInline ? startAt : startAtExpression);
-        properties.put(MAX_RESULTS, isInline ? maxResults : maxResultsExpression);
+        properties.put(USER_NAME, isInline ? getProperty(USER_NAME_INL) : getProperty(USER_NAME_EXPR));
+        properties.put(PROJECT, isInline ? getProperty(PROJECT_INL) : getProperty(PROJECT_EXPR));
+        properties.put(ISSUE_KEY, isInline ? getProperty(ISSUE_KEY_INL) : getProperty(ISSUE_KEY_EXPR));
+        properties.put(START_AT, isInline ? getProperty(START_AT_INL) : getProperty(START_AT_EXPR));
+        properties.put(MAX_RESULTS, isInline ? getProperty(MAX_RESULTS_INL) : getProperty(MAX_RESULTS_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -126,195 +128,30 @@ public class SearchAssignableUser extends AbstractConnector {
     /** {@inheritDoc} */
     @Override
     protected void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
-        switch (nodeName) {
-            case USERNAME:
-                if (isInline) {
-                    userName = nodeValue;
-                } else {
-                    userNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+        switch (node.getNodeName()) {
+            case USER_NAME:
+                adaptProperty(nodeValue, USER_NAME_INL, USER_NAME_EXPR);
                 break;
 
             case PROJECT:
-                if (isInline) {
-                    project = nodeValue;
-                } else {
-                    projectExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, PROJECT_INL, PROJECT_EXPR);
                 break;
 
             case ISSUE_KEY:
-                if (isInline) {
-                    issueKey = nodeValue;
-                } else {
-                    issueKeyExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, ISSUE_KEY_INL, ISSUE_KEY_EXPR);
                 break;
 
             case START_AT:
-                if (isInline) {
-                    startAt = nodeValue;
-                } else {
-                    startAtExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, START_AT_INL, START_AT_EXPR);
                 break;
 
             case MAX_RESULTS:
-                if (isInline) {
-                    maxResults = nodeValue;
-                } else {
-                    maxResultsExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, MAX_RESULTS_INL, MAX_RESULTS_EXPR);
                 break;
+
+            default:
         }
-    }
-
-    @Nonnull
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(@Nonnull String userName) {
-        this.userName = userName;
-    }
-
-    @Nonnull
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(@Nonnull String project) {
-        this.project = project;
-    }
-
-    @Nonnull
-    public String getIssueKey() {
-        return issueKey;
-    }
-
-    public void setIssueKey(@Nonnull String issueKey) {
-        this.issueKey = issueKey;
-    }
-
-    @Nonnull
-    public String getStartAt() {
-        return startAt;
-    }
-
-    public void setStartAt(@Nonnull String startAt) {
-        this.startAt = startAt;
-    }
-
-    @Nonnull
-    public String getMaxResults() {
-        return maxResults;
-    }
-
-    public void setMaxResults(@Nonnull String maxResults) {
-        this.maxResults = maxResults;
-    }
-
-    @Nonnull
-    public String getUserNameExpression() {
-        return userNameExpression;
-    }
-
-    public void setUserNameExpression(@Nonnull String userNameExpression) {
-        this.userNameExpression = userNameExpression;
-    }
-
-    @Nonnull
-    public String getProjectExpression() {
-        return projectExpression;
-    }
-
-    public void setProjectExpression(@Nonnull String projectExpression) {
-        this.projectExpression = projectExpression;
-    }
-
-    @Nonnull
-    public String getIssueKeyExpression() {
-        return issueKeyExpression;
-    }
-
-    public void setIssueKeyExpression(@Nonnull String issueKeyExpression) {
-        this.issueKeyExpression = issueKeyExpression;
-    }
-
-    @Nonnull
-    public String getStartAtExpression() {
-        return startAtExpression;
-    }
-
-    public void setStartAtExpression(@Nonnull String startAtExpression) {
-        this.startAtExpression = startAtExpression;
-    }
-
-    @Nonnull
-    public String getMaxResultsExpression() {
-        return maxResultsExpression;
-    }
-
-    public void setMaxResultsExpression(@Nonnull String maxResultsExpression) {
-        this.maxResultsExpression = maxResultsExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getUserNameNS() {
-        return userNameNS;
-    }
-
-    public void setUserNameNS(@Nonnull List<NameSpace> userNameNS) {
-        this.userNameNS = userNameNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getProjectNS() {
-        return projectNS;
-    }
-
-    public void setProjectNS(@Nonnull List<NameSpace> projectNS) {
-        this.projectNS = projectNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getIssueKeyNS() {
-        return issueKeyNS;
-    }
-
-    public void setIssueKeyNS(@Nonnull List<NameSpace> issueKeyNS) {
-        this.issueKeyNS = issueKeyNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getStartAtNS() {
-        return startAtNS;
-    }
-
-    public void setStartAtNS(@Nonnull List<NameSpace> startAtNS) {
-        this.startAtNS = startAtNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getMaxResultsNS() {
-        return maxResultsNS;
-    }
-
-    public void setMaxResultsNS(@Nonnull List<NameSpace> maxResultsNS) {
-        this.maxResultsNS = maxResultsNS;
     }
 }

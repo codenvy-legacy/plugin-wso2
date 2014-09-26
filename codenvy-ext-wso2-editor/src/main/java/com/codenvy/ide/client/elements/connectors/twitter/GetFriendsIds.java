@@ -121,6 +121,7 @@ public class GetFriendsIds extends AbstractConnector {
             case CURSOR:
                 adaptProperty(nodeValue, CURSOR_INL, CURSOR_EXPR);
                 break;
+
             default:
         }
     }

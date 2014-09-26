@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes DeleteComment connector for jira group connectors. Also the class contains the business logic
@@ -47,19 +46,19 @@ public class DeleteComment extends AbstractConnector {
     public static final String ELEMENT_NAME       = "DeleteComment";
     public static final String SERIALIZATION_NAME = "jira.deleteComment";
 
+    public static final Key<String> ISSUE_ID_OR_KEY_INL = new Key<>("issueIdOrKeyInl");
+    public static final Key<String> COMMENT_ID_INL      = new Key<>("commentIdInl");
+
+    public static final Key<String> ISSUE_ID_OR_KEY_EXPR = new Key<>("issueIdOrKeyExpr");
+    public static final Key<String> COMMENT_ID_EXPR      = new Key<>("commentIdExpr");
+
+    public static final Key<List<NameSpace>> ISSUE_ID_OR_KEY_NS = new Key<>("issueIdOrKeyNameSpace");
+    public static final Key<List<NameSpace>> COMMENT_ID_NS      = new Key<>("commentIdNameSpace");
+
     private static final String ISSUE_ID_OR_KEY = "issueIdOrKey";
     private static final String COMMENT_ID      = "commentId";
 
     private static final List<String> PROPERTIES = Arrays.asList(ISSUE_ID_OR_KEY, COMMENT_ID);
-
-    private String issueIdOrKey;
-    private String commentId;
-
-    private String issueIdOrKeyExpression;
-    private String commentIdExpression;
-
-    private List<NameSpace> issueIdOrKeyNS;
-    private List<NameSpace> commentIdNS;
 
     @Inject
     public DeleteComment(EditorResources resources,
@@ -75,14 +74,14 @@ public class DeleteComment extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        issueIdOrKey = "";
-        commentId = "";
+        putProperty(ISSUE_ID_OR_KEY_INL, "");
+        putProperty(COMMENT_ID_INL, "");
 
-        issueIdOrKeyExpression = "";
-        commentIdExpression = "";
+        putProperty(ISSUE_ID_OR_KEY_EXPR, "");
+        putProperty(COMMENT_ID_EXPR, "");
 
-        issueIdOrKeyNS = new ArrayList<>();
-        commentIdNS = new ArrayList<>();
+        putProperty(ISSUE_ID_OR_KEY_NS, new ArrayList<NameSpace>());
+        putProperty(COMMENT_ID_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -91,10 +90,10 @@ public class DeleteComment extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(ISSUE_ID_OR_KEY, isInline ? issueIdOrKey : issueIdOrKeyExpression);
-        properties.put(COMMENT_ID, isInline ? commentId : commentIdExpression);
+        properties.put(ISSUE_ID_OR_KEY, isInline ? getProperty(ISSUE_ID_OR_KEY_INL) : getProperty(ISSUE_ID_OR_KEY_EXPR));
+        properties.put(COMMENT_ID, isInline ? getProperty(COMMENT_ID_INL) : getProperty(COMMENT_ID_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -104,83 +103,13 @@ public class DeleteComment extends AbstractConnector {
     protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
-        switch (nodeName) {
-            case ISSUE_ID_OR_KEY:
-                if (isInline) {
-                    issueIdOrKey = nodeValue;
-                } else {
-                    issueIdOrKeyExpression = nodeValue;
+        if (ISSUE_ID_OR_KEY.equals(nodeName)) {
+            adaptProperty(nodeValue, ISSUE_ID_OR_KEY_INL, ISSUE_ID_OR_KEY_EXPR);
+        }
 
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
-
-            case COMMENT_ID:
-                if (isInline) {
-                    commentId = nodeValue;
-                } else {
-                    commentIdExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+        if (COMMENT_ID.equals(nodeName)) {
+            adaptProperty(nodeValue, COMMENT_ID_INL, COMMENT_ID_EXPR);
         }
     }
-
-    @Nonnull
-    public String getIssueIdOrKey() {
-        return issueIdOrKey;
-    }
-
-    public void setIssueIdOrKey(@Nonnull String issueIdOrKey) {
-        this.issueIdOrKey = issueIdOrKey;
-    }
-
-    @Nonnull
-    public String getCommentId() {
-        return commentId;
-    }
-
-    public void setCommentId(@Nonnull String commentId) {
-        this.commentId = commentId;
-    }
-
-    @Nonnull
-    public String getIssueIdOrKeyExpression() {
-        return issueIdOrKeyExpression;
-    }
-
-    public void setIssueIdOrKeyExpression(@Nonnull String issueIdOrKeyExpression) {
-        this.issueIdOrKeyExpression = issueIdOrKeyExpression;
-    }
-
-    @Nonnull
-    public String getCommentIdExpression() {
-        return commentIdExpression;
-    }
-
-    public void setCommentIdExpression(@Nonnull String commentIdExpression) {
-        this.commentIdExpression = commentIdExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getIssueIdOrKeyNS() {
-        return issueIdOrKeyNS;
-    }
-
-    public void setIssueIdOrKeyNS(@Nonnull List<NameSpace> issueIdOrKeyNS) {
-        this.issueIdOrKeyNS = issueIdOrKeyNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getCommentIdNS() {
-        return commentIdNS;
-    }
-
-    public void setCommentIdNS(@Nonnull List<NameSpace> commentIdNS) {
-        this.commentIdNS = commentIdNS;
-    }
-
 }

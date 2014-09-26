@@ -136,6 +136,7 @@ public class InitTwitter extends AbstractConnector {
             case ACCESS_TOKEN_SECRET:
                 adaptProperty(nodeValue, ACCESS_TOKEN_SECRET_INL, ACCESS_TOKEN_SECRET_EXPR);
                 break;
+
             default:
         }
     }

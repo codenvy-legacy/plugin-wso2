@@ -16,23 +16,37 @@
 package com.codenvy.ide.client.propertiespanel.connectors.jira;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.jira.GetUserPermissions;
-import com.codenvy.ide.client.elements.connectors.jira.JiraPropertyManager;
+import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserAssignableProjects.PROJECT_KEY_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserAssignableProjects.PROJECT_KEY_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserAssignableProjects.PROJECT_KEY_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserPermissions.ISSUE_ID_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserPermissions.ISSUE_ID_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserPermissions.ISSUE_ID_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserPermissions.ISSUE_KEY_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserPermissions.ISSUE_KEY_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserPermissions.ISSUE_KEY_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserPermissions.PROJECT_ID_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserPermissions.PROJECT_ID_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserPermissions.PROJECT_ID_NS;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -43,185 +57,67 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  */
 public class GetUserPermissionsConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<GetUserPermissions> {
 
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          projectKeyCallBack;
-    private final AddNameSpacesCallBack          projectIdCallBck;
-    private final AddNameSpacesCallBack          issueKeyCallBack;
-    private final AddNameSpacesCallBack          issueIdCallBack;
+    private SimplePropertyPresenter projectKeyInl;
+    private SimplePropertyPresenter projectIdInl;
+    private SimplePropertyPresenter issueKeyInl;
+    private SimplePropertyPresenter issueIdInl;
+
+    private ComplexPropertyPresenter projectKeyExpr;
+    private ComplexPropertyPresenter projectIdExpr;
+    private ComplexPropertyPresenter issueKeyExpr;
+    private ComplexPropertyPresenter issueIdExpr;
 
     @Inject
     public GetUserPermissionsConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                                 NameSpaceEditorPresenter nameSpacePresenter,
-                                                GeneralPropertiesPanelView view,
-                                                JiraPropertyManager jiraPropertyManager,
+                                                PropertiesPanelView view,
+                                                TwitterPropertyManager twitterPropertyManager,
                                                 ParameterPresenter parameterPresenter,
-                                                PropertyTypeManager propertyTypeManager) {
-        super(view, jiraPropertyManager, parameterPresenter, propertyTypeManager);
+                                                PropertyTypeManager propertyTypeManager,
+                                                PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                                Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                                Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                                Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              twitterPropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.projectKeyCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setProjectKeyNS(nameSpaces);
-                element.setProjectKeyExpression(expression);
-
-                GetUserPermissionsConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.projectIdCallBck = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setProjectIdNS(nameSpaces);
-                element.setProjectIdExpression(expression);
-
-                GetUserPermissionsConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.issueKeyCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setIssueKeyNS(nameSpaces);
-                element.setIssueKeyExpression(expression);
-
-                GetUserPermissionsConnectorPresenter.this.view.setThirdTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.issueIdCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setIssueIdNS(nameSpaces);
-                element.setIssueIdExpression(expression);
-
-                GetUserPermissionsConnectorPresenter.this.view.setFourthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
+    private void prepareView() {
+        projectKeyInl = createSimplePanel(locale.jiraProjectKey(), PROJECT_KEY_INL);
+        projectIdInl = createSimplePanel(locale.jiraProjectId(), PROJECT_ID_INL);
+        issueKeyInl = createSimplePanel(locale.jiraIssueKey(), ISSUE_KEY_INL);
+        issueIdInl = createSimplePanel(locale.jiraIssueId(), ISSUE_ID_INL);
 
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setProjectKey(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setProjectId(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdTextBoxValueChanged() {
-        element.setIssueKey(view.getThirdTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthTextBoxValueChanged() {
-        element.setIssueId(view.getFourthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getProjectKeyNS(),
-                                                    projectKeyCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getProjectKeyExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getProjectIdNS(),
-                                                    projectIdCallBck,
-                                                    locale.connectorExpression(),
-                                                    element.getProjectIdExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getIssueKeyNS(),
-                                                    issueKeyCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getIssueKeyExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getIssueIdNS(),
-                                                    issueIdCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getIssueIdExpression());
+        projectKeyExpr = createComplexPanel(locale.jiraProjectKey(), PROJECT_KEY_NS, PROJECT_KEY_EXPR);
+        projectIdExpr = createComplexPanel(locale.jiraProjectId(), PROJECT_ID_NS, PROJECT_ID_EXPR);
+        issueKeyExpr = createComplexPanel(locale.jiraIssueKey(), ISSUE_KEY_NS, ISSUE_KEY_EXPR);
+        issueIdExpr = createComplexPanel(locale.jiraIssueId(), ISSUE_ID_NS, ISSUE_ID_EXPR);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        boolean isVisible = INLINE.equals(element.getProperty(PARAMETER_EDITOR_TYPE));
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+        projectKeyInl.setVisible(isVisible);
+        projectIdInl.setVisible(isVisible);
+        issueKeyInl.setVisible(isVisible);
+        issueIdInl.setVisible(isVisible);
 
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-        view.setVisibleFourthButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-        view.setEnableFourthTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getProjectKeyExpression() : element.getProjectKey());
-        view.setSecondTextBoxValue(isEquals ? element.getProjectIdExpression() : element.getProjectId());
-        view.setThirdTextBoxValue(isEquals ? element.getIssueKeyExpression() : element.getIssueKey());
-        view.setFourthTextBoxValue(isEquals ? element.getIssueIdExpression() : element.getIssueId());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-        view.setVisibleThirdPanel(true);
-        view.setVisibleFourthPanel(true);
-
-        view.setFirstLabelTitle(locale.jiraProjectKey());
-        view.setSecondLabelTitle(locale.jiraProjectId());
-        view.setThirdLabelTitle(locale.jiraIssueKey());
-        view.setFourthLabelTitle(locale.jiraIssueId());
+        projectKeyExpr.setVisible(!isVisible);
+        projectIdExpr.setVisible(!isVisible);
+        issueKeyExpr.setVisible(!isVisible);
+        issueIdExpr.setVisible(!isVisible);
     }
 
     /** {@inheritDoc} */
@@ -229,6 +125,14 @@ public class GetUserPermissionsConnectorPresenter extends AbstractConnectorPrope
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        projectKeyInl.setProperty(element.getProperty(PROJECT_KEY_INL));
+        projectIdInl.setProperty(element.getProperty(PROJECT_ID_INL));
+        issueKeyInl.setProperty(element.getProperty(ISSUE_KEY_INL));
+        issueIdInl.setProperty(element.getProperty(ISSUE_ID_INL));
+
+        projectKeyExpr.setProperty(element.getProperty(PROJECT_KEY_EXPR));
+        projectIdExpr.setProperty(element.getProperty(PROJECT_ID_EXPR));
+        issueKeyExpr.setProperty(element.getProperty(ISSUE_KEY_EXPR));
+        issueIdExpr.setProperty(element.getProperty(ISSUE_ID_EXPR));
     }
 }

@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes GetVotesForIssue connector for jira group connectors. Also the class contains the business logic
@@ -47,16 +46,18 @@ public class GetVotesForIssue extends AbstractConnector {
     public static final String ELEMENT_NAME       = "GetVotesForIssue";
     public static final String SERIALIZATION_NAME = "jira.getVotesForIssue";
 
+    public static final Key<String>          ISSUE_ID_OR_KEY_INL  = new Key<>("issueIdOrKeyInl");
+    public static final Key<String>          ISSUE_ID_OR_KEY_EXPR = new Key<>("issueIdOrKeyExpr");
+    public static final Key<List<NameSpace>> ISSUE_ID_OR_KEY_NS   = new Key<>("issueIdOrKeyNameSpace");
+
     private static final String ISSUE_ID_OR_KEY = "issueIdOrKey";
 
     private static final List<String> PROPERTIES = Arrays.asList(ISSUE_ID_OR_KEY);
 
-    private String          issueIdOrKey;
-    private String          issueIdOrKeyExpression;
-    private List<NameSpace> issueIdOrKeyNameSpaces;
-
     @Inject
-    public GetVotesForIssue(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
+    public GetVotesForIssue(EditorResources resources,
+                            Provider<Branch> branchProvider,
+                            ElementCreatorsManager elementCreatorsManager) {
         super(ELEMENT_NAME,
               ELEMENT_NAME,
               SERIALIZATION_NAME,
@@ -67,10 +68,9 @@ public class GetVotesForIssue extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        issueIdOrKey = "";
-        issueIdOrKeyExpression = "";
-
-        issueIdOrKeyNameSpaces = new ArrayList<>();
+        putProperty(ISSUE_ID_OR_KEY_INL, "");
+        putProperty(ISSUE_ID_OR_KEY_EXPR, "");
+        putProperty(ISSUE_ID_OR_KEY_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -79,9 +79,9 @@ public class GetVotesForIssue extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(ISSUE_ID_OR_KEY, isInline ? issueIdOrKey : issueIdOrKeyExpression);
+        properties.put(ISSUE_ID_OR_KEY, isInline ? getProperty(ISSUE_ID_OR_KEY_INL) : getProperty(ISSUE_ID_OR_KEY_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -91,45 +91,9 @@ public class GetVotesForIssue extends AbstractConnector {
     protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
-        switch (nodeName) {
-            case ISSUE_ID_OR_KEY:
-                if (isInline) {
-                    issueIdOrKey = nodeValue;
-                } else {
-                    issueIdOrKeyExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+        if (ISSUE_ID_OR_KEY.equals(nodeName)) {
+            adaptProperty(nodeValue, ISSUE_ID_OR_KEY_INL, ISSUE_ID_OR_KEY_EXPR);
         }
-    }
-
-    @Nonnull
-    public String getIssueIdOrKey() {
-        return issueIdOrKey;
-    }
-
-    public void setIssueIdOrKey(@Nonnull String issueIdOrKey) {
-        this.issueIdOrKey = issueIdOrKey;
-    }
-
-    @Nonnull
-    public String getIssueIdOrKeyExpression() {
-        return issueIdOrKeyExpression;
-    }
-
-    public void setIssueIdOrKeyExpression(@Nonnull String issueIdOrKeyExpression) {
-        this.issueIdOrKeyExpression = issueIdOrKeyExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getIssueIdOrKeyNameSpaces() {
-        return issueIdOrKeyNameSpaces;
-    }
-
-    public void setIssueIdOrKeyNameSpaces(@Nonnull List<NameSpace> issueIdOrKeyNameSpaces) {
-        this.issueIdOrKeyNameSpaces = issueIdOrKeyNameSpaces;
     }
 }

@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes GetRolesByIdOfProject connector for jira group connectors. Also the class contains the business logic
@@ -47,19 +46,19 @@ public class GetRolesByIdOfProject extends AbstractConnector {
     public static final String ELEMENT_NAME       = "GetRolesByIdOfProject";
     public static final String SERIALIZATION_NAME = "jira.getRolesByIdOfProject";
 
+    public static final Key<String> PROJECT_KEY_INL = new Key<>("ProjectKeyInl");
+    public static final Key<String> ROLE_ID_INL     = new Key<>("roleIdInl");
+
+    public static final Key<String> PROJECT_KEY_EXPR = new Key<>("projectKeyExpr");
+    public static final Key<String> ROLE_ID_EXPR     = new Key<>("roleIdExpr");
+
+    public static final Key<List<NameSpace>> PROJECT_KEY_NS = new Key<>("projectKeyNameSpace");
+    public static final Key<List<NameSpace>> ROLE_ID_NS     = new Key<>("roleIdNameSpace");
+
     private static final String PROJECT_KEY = "projectKey";
     private static final String ROLE_ID     = "roleId";
 
     private static final List<String> PROPERTIES = Arrays.asList(PROJECT_KEY, ROLE_ID);
-
-    private String projectKey;
-    private String roleId;
-
-    private String projectKeyExpression;
-    private String roleIdExpression;
-
-    private List<NameSpace> projectKeyNS;
-    private List<NameSpace> roleIdNS;
 
     @Inject
     public GetRolesByIdOfProject(EditorResources resources,
@@ -75,14 +74,14 @@ public class GetRolesByIdOfProject extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        projectKey = "";
-        roleId = "";
+        putProperty(PROJECT_KEY_INL, "");
+        putProperty(ROLE_ID_INL, "");
 
-        projectKeyExpression = "";
-        roleIdExpression = "";
+        putProperty(PROJECT_KEY_EXPR, "");
+        putProperty(ROLE_ID_EXPR, "");
 
-        projectKeyNS = new ArrayList<>();
-        roleIdNS = new ArrayList<>();
+        putProperty(PROJECT_KEY_NS, new ArrayList<NameSpace>());
+        putProperty(ROLE_ID_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -91,10 +90,10 @@ public class GetRolesByIdOfProject extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(PROJECT_KEY, isInline ? projectKey : projectKeyExpression);
-        properties.put(ROLE_ID, isInline ? roleId : roleIdExpression);
+        properties.put(PROJECT_KEY, isInline ? getProperty(PROJECT_KEY_INL) : getProperty(PROJECT_KEY_EXPR));
+        properties.put(ROLE_ID, isInline ? getProperty(ROLE_ID_INL) : getProperty(ROLE_ID_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -105,83 +104,12 @@ public class GetRolesByIdOfProject extends AbstractConnector {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
+        if (PROJECT_KEY.equals(nodeName)) {
+            adaptProperty(nodeValue, PROJECT_KEY_INL, PROJECT_KEY_EXPR);
+        }
 
-        switch (nodeName) {
-            case PROJECT_KEY:
-                if (isInline) {
-                    projectKey = nodeValue;
-                } else {
-                    projectKeyExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
-
-            case ROLE_ID:
-                if (isInline) {
-                    roleId = nodeValue;
-                } else {
-                    roleIdExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+        if (ROLE_ID.equals(nodeName)) {
+            adaptProperty(nodeValue, ROLE_ID_INL, ROLE_ID_EXPR);
         }
     }
-
-    @Nonnull
-    public String getProjectKey() {
-        return projectKey;
-    }
-
-    public void setProjectKey(@Nonnull String projectKey) {
-        this.projectKey = projectKey;
-    }
-
-    @Nonnull
-    public String getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(@Nonnull String roleId) {
-        this.roleId = roleId;
-    }
-
-    @Nonnull
-    public String getProjectKeyExpression() {
-        return projectKeyExpression;
-    }
-
-    public void setProjectKeyExpression(@Nonnull String projectKeyExpression) {
-        this.projectKeyExpression = projectKeyExpression;
-    }
-
-    @Nonnull
-    public String getRoleIdExpression() {
-        return roleIdExpression;
-    }
-
-    public void setRoleIdExpression(@Nonnull String roleIdExpression) {
-        this.roleIdExpression = roleIdExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getProjectKeyNS() {
-        return projectKeyNS;
-    }
-
-    public void setProjectKeyNS(@Nonnull List<NameSpace> projectKeyNS) {
-        this.projectKeyNS = projectKeyNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getRoleIdNS() {
-        return roleIdNS;
-    }
-
-    public void setRoleIdNS(@Nonnull List<NameSpace> roleIdNS) {
-        this.roleIdNS = roleIdNS;
-    }
-
 }

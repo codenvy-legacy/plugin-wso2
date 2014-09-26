@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes GetUser connector for jira group connectors. Also the class contains the business logic
@@ -47,16 +46,18 @@ public class GetUser extends AbstractConnector {
     public static final String ELEMENT_NAME       = "GetUser";
     public static final String SERIALIZATION_NAME = "jira.getUser";
 
-    private static final String USERNAME = "username";
+    public static final Key<String>          USER_NAME_INL  = new Key<>("userNameInl");
+    public static final Key<String>          USER_NAME_EXPR = new Key<>("userNameExpr");
+    public static final Key<List<NameSpace>> USER_NAME_NS   = new Key<>("userNameNameSpace");
 
-    private static final List<String> PROPERTIES = Arrays.asList(USERNAME);
+    private static final String USER_NAME = "username";
 
-    private String          userName;
-    private String          userNameExpression;
-    private List<NameSpace> userNameNS;
+    private static final List<String> PROPERTIES = Arrays.asList(USER_NAME);
 
     @Inject
-    public GetUser(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
+    public GetUser(EditorResources resources,
+                   Provider<Branch> branchProvider,
+                   ElementCreatorsManager elementCreatorsManager) {
         super(ELEMENT_NAME,
               ELEMENT_NAME,
               SERIALIZATION_NAME,
@@ -67,10 +68,9 @@ public class GetUser extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        userName = "";
-        userNameExpression = "";
-
-        userNameNS = new ArrayList<>();
+        putProperty(USER_NAME_INL, "");
+        putProperty(USER_NAME_EXPR, "");
+        putProperty(USER_NAME_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -79,9 +79,9 @@ public class GetUser extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(USERNAME, isInline ? userName : userNameExpression);
+        properties.put(USER_NAME, isInline ? getProperty(USER_NAME_INL) : getProperty(USER_NAME_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -92,46 +92,8 @@ public class GetUser extends AbstractConnector {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
-
-        switch (nodeName) {
-            case USERNAME:
-                if (isInline) {
-                    userName = nodeValue;
-                } else {
-                    userNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+        if (USER_NAME.equals(nodeName)) {
+            adaptProperty(nodeValue, USER_NAME_INL, USER_NAME_EXPR);
         }
     }
-
-    @Nonnull
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(@Nonnull String userName) {
-        this.userName = userName;
-    }
-
-    @Nonnull
-    public String getUserNameExpression() {
-        return userNameExpression;
-    }
-
-    public void setUserNameExpression(@Nonnull String userNameExpression) {
-        this.userNameExpression = userNameExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getUserNameNS() {
-        return userNameNS;
-    }
-
-    public void setUserNameNS(@Nonnull List<NameSpace> userNameNS) {
-        this.userNameNS = userNameNS;
-    }
-
 }

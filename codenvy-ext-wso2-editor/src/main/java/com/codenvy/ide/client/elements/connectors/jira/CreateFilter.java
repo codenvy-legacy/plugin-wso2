@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes CreateFilter connector for jira group connectors. Also the class contains the business logic
@@ -47,27 +46,27 @@ public class CreateFilter extends AbstractConnector {
     public static final String ELEMENT_NAME       = "CreateFilter";
     public static final String SERIALIZATION_NAME = "jira.createFilter";
 
+    public static final Key<String> FILTER_NAME_INL = new Key<>("filterNameInl");
+    public static final Key<String> JQL_TYPE_INL    = new Key<>("jqlTypeInl");
+    public static final Key<String> DESCRIPTION_INL = new Key<>("descriptionInl");
+    public static final Key<String> FAVOURITE_INL   = new Key<>("favouriteInl");
+
+    public static final Key<String> FILTER_NAME_EXPR = new Key<>("filterNameExpr");
+    public static final Key<String> JQL_TYPE_EXPR    = new Key<>("jqlTypeExpr");
+    public static final Key<String> DESCRIPTION_EXPR = new Key<>("descriptionExpr");
+    public static final Key<String> FAVOURITE_EXPR   = new Key<>("favouriteExpr");
+
+    public static final Key<List<NameSpace>> FILTER_NAME_NS = new Key<>("filterNameNameSpace");
+    public static final Key<List<NameSpace>> JQL_TYPE_NS    = new Key<>("jqlTypeNameSpace");
+    public static final Key<List<NameSpace>> DESCRIPTION_NS = new Key<>("descriptionNameSpace");
+    public static final Key<List<NameSpace>> FAVOURITE_NS   = new Key<>("favouriteNameSpace");
+
     private static final String FILTER_NAME = "filterName";
     private static final String JQL_TYPE    = "jqlType";
     private static final String DESCRIPTION = "description";
     private static final String FAVOURITE   = "favourite";
 
     private static final List<String> PROPERTIES = Arrays.asList(FILTER_NAME, JQL_TYPE, DESCRIPTION, FAVOURITE);
-
-    private String filterName;
-    private String jqlType;
-    private String description;
-    private String favourite;
-
-    private String filterNameExpression;
-    private String jqlTypeExpression;
-    private String descriptionExpression;
-    private String favouriteExpression;
-
-    private List<NameSpace> filterNameNS;
-    private List<NameSpace> jqlTypeNS;
-    private List<NameSpace> descriptionNS;
-    private List<NameSpace> favouriteNS;
 
     @Inject
     public CreateFilter(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -81,20 +80,20 @@ public class CreateFilter extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        filterName = "";
-        jqlType = "";
-        description = "";
-        favourite = "";
+        putProperty(FILTER_NAME_INL, "");
+        putProperty(JQL_TYPE_INL, "");
+        putProperty(DESCRIPTION_INL, "");
+        putProperty(FAVOURITE_INL, "");
 
-        filterNameExpression = "";
-        jqlTypeExpression = "";
-        favouriteExpression = "";
-        descriptionExpression = "";
+        putProperty(FILTER_NAME_EXPR, "");
+        putProperty(JQL_TYPE_EXPR, "");
+        putProperty(DESCRIPTION_EXPR, "");
+        putProperty(FAVOURITE_EXPR, "");
 
-        favouriteNS = new ArrayList<>();
-        filterNameNS = new ArrayList<>();
-        descriptionNS = new ArrayList<>();
-        jqlTypeNS = new ArrayList<>();
+        putProperty(FILTER_NAME_NS, new ArrayList<NameSpace>());
+        putProperty(JQL_TYPE_NS, new ArrayList<NameSpace>());
+        putProperty(DESCRIPTION_NS, new ArrayList<NameSpace>());
+        putProperty(FAVOURITE_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -103,12 +102,12 @@ public class CreateFilter extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(FILTER_NAME, isInline ? filterName : filterNameExpression);
-        properties.put(JQL_TYPE, isInline ? jqlType : jqlTypeExpression);
-        properties.put(DESCRIPTION, isInline ? description : descriptionExpression);
-        properties.put(FAVOURITE, isInline ? favourite : favouriteExpression);
+        properties.put(FILTER_NAME, isInline ? getProperty(FILTER_NAME_INL) : getProperty(FILTER_NAME_EXPR));
+        properties.put(JQL_TYPE, isInline ? getProperty(JQL_TYPE_INL) : getProperty(JQL_TYPE_EXPR));
+        properties.put(DESCRIPTION, isInline ? getProperty(DESCRIPTION_INL) : getProperty(DESCRIPTION_EXPR));
+        properties.put(FAVOURITE, isInline ? getProperty(FAVOURITE_INL) : getProperty(FAVOURITE_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -116,158 +115,26 @@ public class CreateFilter extends AbstractConnector {
     /** {@inheritDoc} */
     @Override
     protected void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
-        switch (nodeName) {
+        switch (node.getNodeName()) {
             case FILTER_NAME:
-                if (isInline) {
-                    filterName = nodeValue;
-                } else {
-                    filterNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, FILTER_NAME_INL, FILTER_NAME_EXPR);
                 break;
 
             case JQL_TYPE:
-                if (isInline) {
-                    jqlType = nodeValue;
-                } else {
-                    jqlTypeExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, JQL_TYPE_INL, JQL_TYPE_EXPR);
                 break;
 
             case DESCRIPTION:
-                if (isInline) {
-                    description = nodeValue;
-                } else {
-                    descriptionExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, DESCRIPTION_INL, DESCRIPTION_EXPR);
                 break;
 
             case FAVOURITE:
-                if (isInline) {
-                    favourite = nodeValue;
-                } else {
-                    favouriteExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, FAVOURITE_INL, FAVOURITE_EXPR);
                 break;
+
+            default:
         }
-    }
-
-    @Nonnull
-    public String getFilterName() {
-        return filterName;
-    }
-
-    public void setFilterName(@Nonnull String filterName) {
-        this.filterName = filterName;
-    }
-
-    @Nonnull
-    public String getJqlType() {
-        return jqlType;
-    }
-
-    public void setJqlType(@Nonnull String jqlType) {
-        this.jqlType = jqlType;
-    }
-
-    @Nonnull
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(@Nonnull String description) {
-        this.description = description;
-    }
-
-    @Nonnull
-    public String getFavourite() {
-        return favourite;
-    }
-
-    public void setFavourite(@Nonnull String favourite) {
-        this.favourite = favourite;
-    }
-
-    @Nonnull
-    public String getFilterNameExpression() {
-        return filterNameExpression;
-    }
-
-    public void setFilterNameExpression(@Nonnull String filterNameExpression) {
-        this.filterNameExpression = filterNameExpression;
-    }
-
-    @Nonnull
-    public String getJqlTypeExpression() {
-        return jqlTypeExpression;
-    }
-
-    public void setJqlTypeExpression(@Nonnull String jqlTypeExpression) {
-        this.jqlTypeExpression = jqlTypeExpression;
-    }
-
-    @Nonnull
-    public String getDescriptionExpression() {
-        return descriptionExpression;
-    }
-
-    public void setDescriptionExpression(@Nonnull String descriptionExpression) {
-        this.descriptionExpression = descriptionExpression;
-    }
-
-    @Nonnull
-    public String getFavouriteExpression() {
-        return favouriteExpression;
-    }
-
-    public void setFavouriteExpression(@Nonnull String favouriteExpression) {
-        this.favouriteExpression = favouriteExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getFilterNameNS() {
-        return filterNameNS;
-    }
-
-    public void setFilterNameNS(@Nonnull List<NameSpace> filterNameNS) {
-        this.filterNameNS = filterNameNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getJqlTypeNS() {
-        return jqlTypeNS;
-    }
-
-    public void setJqlTypeNS(@Nonnull List<NameSpace> jqlTypeNS) {
-        this.jqlTypeNS = jqlTypeNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getDescriptionNS() {
-        return descriptionNS;
-    }
-
-    public void setDescriptionNS(@Nonnull List<NameSpace> descriptionNS) {
-        this.descriptionNS = descriptionNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getFavouriteNS() {
-        return favouriteNS;
-    }
-
-    public void setFavouriteNS(@Nonnull List<NameSpace> favouriteNS) {
-        this.favouriteNS = favouriteNS;
     }
 }

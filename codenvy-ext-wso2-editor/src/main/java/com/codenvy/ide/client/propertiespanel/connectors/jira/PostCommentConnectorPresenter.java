@@ -16,23 +16,35 @@
 package com.codenvy.ide.client.propertiespanel.connectors.jira;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.connectors.jira.JiraPropertyManager;
 import com.codenvy.ide.client.elements.connectors.jira.PostComment;
+import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.jira.PostComment.COMMENT_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.PostComment.COMMENT_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.PostComment.COMMENT_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.PostComment.ISSUE_ID_OR_KEY_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.PostComment.ISSUE_ID_OR_KEY_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.PostComment.ISSUE_ID_OR_KEY_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.PostComment.VISIBLE_ROLE_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.PostComment.VISIBLE_ROLE_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.PostComment.VISIBLE_ROLE_NS;
+
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -43,150 +55,61 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  */
 public class PostCommentConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<PostComment> {
 
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          issueIdOrKeyCallBack;
-    private final AddNameSpacesCallBack          commentCallBack;
-    private final AddNameSpacesCallBack          visibleRoleCallBack;
+    private SimplePropertyPresenter issueIdOrKeyInl;
+    private SimplePropertyPresenter commentInl;
+    private SimplePropertyPresenter visibleRoleInl;
+
+    private ComplexPropertyPresenter issueIdOrKeyExpr;
+    private ComplexPropertyPresenter commentExpr;
+    private ComplexPropertyPresenter visibleRoleExpr;
 
     @Inject
     public PostCommentConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                          NameSpaceEditorPresenter nameSpacePresenter,
-                                         GeneralPropertiesPanelView view,
-                                         JiraPropertyManager jiraPropertyManager,
+                                         PropertiesPanelView view,
+                                         TwitterPropertyManager twitterPropertyManager,
                                          ParameterPresenter parameterPresenter,
-                                         PropertyTypeManager propertyTypeManager) {
-        super(view, jiraPropertyManager, parameterPresenter, propertyTypeManager);
+                                         PropertyTypeManager propertyTypeManager,
+                                         PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                         Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                         Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                         Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              twitterPropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.issueIdOrKeyCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setIssieIOrKeyNS(nameSpaces);
-                element.setIssueIdOrKeyExpression(expression);
-
-                PostCommentConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.commentCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setCommentNS(nameSpaces);
-                element.setCommentExpression(expression);
-
-                PostCommentConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.visibleRoleCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setVisibleRoleNS(nameSpaces);
-                element.setVisibleRoleExpression(expression);
-
-                PostCommentConnectorPresenter.this.view.setThirdTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
+    private void prepareView() {
+        issueIdOrKeyInl = createSimplePanel(locale.jiraIssueIdOrKey(), ISSUE_ID_OR_KEY_INL);
+        commentInl = createSimplePanel(locale.jiraUpdateComment(), COMMENT_INL);
+        visibleRoleInl = createSimplePanel(locale.jiraVisibleRole(), VISIBLE_ROLE_INL);
 
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setIssueIdOrKey(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setComment(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdTextBoxValueChanged() {
-        element.setVisibleRole(view.getThirdTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getIssieIOrKeyNS(),
-                                                    issueIdOrKeyCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getIssueIdOrKeyExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getCommentNS(),
-                                                    commentCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getCommentExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getVisibleRoleNS(),
-                                                    visibleRoleCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getVisibleRoleExpression());
+        issueIdOrKeyExpr = createComplexPanel(locale.jiraIssueIdOrKey(), ISSUE_ID_OR_KEY_NS, ISSUE_ID_OR_KEY_EXPR);
+        commentExpr = createComplexPanel(locale.jiraUpdateComment(), COMMENT_NS, COMMENT_EXPR);
+        visibleRoleExpr = createComplexPanel(locale.jiraVisibleRole(), VISIBLE_ROLE_NS, VISIBLE_ROLE_EXPR);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        boolean isVisible = INLINE.equals(element.getProperty(PARAMETER_EDITOR_TYPE));
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+        issueIdOrKeyInl.setVisible(isVisible);
+        commentInl.setVisible(isVisible);
+        visibleRoleInl.setVisible(isVisible);
 
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getIssueIdOrKeyExpression() : element.getIssueIdOrKey());
-        view.setSecondTextBoxValue(isEquals ? element.getCommentExpression() : element.getComment());
-        view.setThirdTextBoxValue(isEquals ? element.getVisibleRoleExpression() : element.getVisibleRole());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-        view.setVisibleThirdPanel(true);
-
-        view.setFirstLabelTitle(locale.jiraIssueIdOrKey());
-        view.setSecondLabelTitle(locale.jiraComment());
-        view.setThirdLabelTitle(locale.jiraVisibleRole());
+        issueIdOrKeyExpr.setVisible(!isVisible);
+        commentExpr.setVisible(!isVisible);
+        visibleRoleExpr.setVisible(!isVisible);
     }
 
     /** {@inheritDoc} */
@@ -194,6 +117,12 @@ public class PostCommentConnectorPresenter extends AbstractConnectorPropertiesPa
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        issueIdOrKeyInl.setProperty(element.getProperty(ISSUE_ID_OR_KEY_INL));
+        commentInl.setProperty(element.getProperty(COMMENT_INL));
+        visibleRoleInl.setProperty(element.getProperty(VISIBLE_ROLE_INL));
+
+        issueIdOrKeyExpr.setProperty(element.getProperty(ISSUE_ID_OR_KEY_EXPR));
+        commentExpr.setProperty(element.getProperty(COMMENT_EXPR));
+        visibleRoleExpr.setProperty(element.getProperty(VISIBLE_ROLE_EXPR));
     }
 }

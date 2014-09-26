@@ -54,21 +54,21 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
 public abstract class AbstractConnectorPropertiesPanelPresenter<T extends AbstractConnector>
         extends AbstractPropertiesPanel<T, PropertiesPanelView> implements ConnectorPropertyManager.ConnectorPropertyListener {
 
-    protected final PropertiesPanelWidgetFactory       propertiesWidgetFactory;
-    protected final Provider<ListPropertyPresenter>    listPropertyProvider;
-    protected final Provider<SimplePropertyPresenter>  simplePropertyProvider;
-    protected final Provider<ComplexPropertyPresenter> complexPropertyProvider;
-    protected final NameSpaceEditorPresenter           nameSpacePresenter;
-    protected final WSO2EditorLocalizationConstant     locale;
-    protected final PropertyGroupPresenter             basicGroup;
+    private final PropertiesPanelWidgetFactory       propertiesWidgetFactory;
+    private final Provider<ListPropertyPresenter>    listPropertyProvider;
+    private final Provider<SimplePropertyPresenter>  simplePropertyProvider;
+    private final Provider<ComplexPropertyPresenter> complexPropertyProvider;
+    private final NameSpaceEditorPresenter           nameSpacePresenter;
+    private final ParameterPresenter                 parameterPresenter;
+    private final ConnectorPropertyManager           connectorPropertyManager;
+    private final ConnectorParameterCallBack         parameterCallBack;
 
-    private final ParameterPresenter         parameterPresenter;
-    private final ConnectorPropertyManager   connectorPropertyManager;
-    private final ConnectorParameterCallBack parameterCallBack;
+    protected final WSO2EditorLocalizationConstant locale;
 
-    protected SimplePropertyPresenter configRef;
-    protected ListPropertyPresenter   availableConfigs;
-    protected ListPropertyPresenter   parameterEditorType;
+    private PropertyGroupPresenter  basicGroup;
+    private SimplePropertyPresenter configRef;
+    private ListPropertyPresenter   availableConfigs;
+    private ListPropertyPresenter   parameterEditorType;
 
     protected AbstractConnectorPropertiesPanelPresenter(@Nonnull PropertiesPanelView view,
                                                         @Nonnull ConnectorPropertyManager connectorPropertyManager,
@@ -101,14 +101,11 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
             }
         };
 
-        basicGroup = propertiesWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
-        view.addGroup(basicGroup);
-
         prepareView();
     }
 
     private void prepareView() {
-        PropertyGroupPresenter basicGroup = propertiesWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
+        basicGroup = propertiesWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
         view.addGroup(basicGroup);
 
         configRef = simplePropertyProvider.get();
@@ -156,7 +153,9 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
         parameterEditorType.addPropertyValueChangedListener(new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                element.putProperty(PARAMETER_EDITOR_TYPE, ParameterEditorType.valueOf(property));
+                element.putProperty(PARAMETER_EDITOR_TYPE, ParameterEditorType.getItemByValue(property));
+
+                redrawPropertiesPanel();
 
                 notifyListeners();
             }

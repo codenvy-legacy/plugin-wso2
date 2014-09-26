@@ -16,23 +16,41 @@
 package com.codenvy.ide.client.propertiespanel.connectors.jira;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.jira.DoTransition;
-import com.codenvy.ide.client.elements.connectors.jira.JiraPropertyManager;
+import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.jira.DoTransition.ISSUE_ID_OR_KEY_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.DoTransition.ISSUE_ID_OR_KEY_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.DoTransition.ISSUE_ID_OR_KEY_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.DoTransition.RESOLUTION_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.DoTransition.RESOLUTION_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.DoTransition.RESOLUTION_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.DoTransition.TRANSITION_ID_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.DoTransition.TRANSITION_ID_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.DoTransition.TRANSITION_ID_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.DoTransition.UPDATE_ASSIGNEE_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.DoTransition.UPDATE_ASSIGNEE_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.DoTransition.UPDATE_ASSIGNEE_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.DoTransition.UPDATE_COMMENT_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.DoTransition.UPDATE_COMMENT_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.DoTransition.UPDATE_COMMENT_NS;
+
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -43,220 +61,73 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  */
 public class DoTransitionConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<DoTransition> {
 
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          issueIdOrKeyCallBack;
-    private final AddNameSpacesCallBack          updateCommentCallBack;
-    private final AddNameSpacesCallBack          updateAssigneeCallBack;
-    private final AddNameSpacesCallBack          resolutionCallBack;
-    private final AddNameSpacesCallBack          transitionIdCallBack;
+    private SimplePropertyPresenter issueIdOrKeyInl;
+    private SimplePropertyPresenter updateCommentInl;
+    private SimplePropertyPresenter updateAssigneeInl;
+    private SimplePropertyPresenter resolutionInl;
+    private SimplePropertyPresenter transitionIdInl;
+
+    private ComplexPropertyPresenter issueIdOrKeyExpr;
+    private ComplexPropertyPresenter updateCommentExpr;
+    private ComplexPropertyPresenter updateAssigneeExpr;
+    private ComplexPropertyPresenter resolutionExpr;
+    private ComplexPropertyPresenter transitionIdExpr;
 
     @Inject
     public DoTransitionConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                           NameSpaceEditorPresenter nameSpacePresenter,
-                                          GeneralPropertiesPanelView view,
-                                          JiraPropertyManager jiraPropertyManager,
+                                          PropertiesPanelView view,
+                                          TwitterPropertyManager twitterPropertyManager,
                                           ParameterPresenter parameterPresenter,
-                                          PropertyTypeManager propertyTypeManager) {
-        super(view, jiraPropertyManager, parameterPresenter, propertyTypeManager);
+                                          PropertyTypeManager propertyTypeManager,
+                                          PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                          Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                          Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                          Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              twitterPropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.issueIdOrKeyCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setIssieIOrKeyNS(nameSpaces);
-                element.setIssueIdOrKeyExpression(expression);
-
-                DoTransitionConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.updateCommentCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setUpdateCommentNS(nameSpaces);
-                element.setUpdateCommentExpression(expression);
-
-                DoTransitionConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.updateAssigneeCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setUpdateAssigneeNS(nameSpaces);
-                element.setUpdateAssigneeExpression(expression);
-
-                DoTransitionConnectorPresenter.this.view.setThirdTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.resolutionCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setResolutionNS(nameSpaces);
-                element.setResolutionExpression(expression);
-
-                DoTransitionConnectorPresenter.this.view.setFourthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.transitionIdCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setTransitionIdNS(nameSpaces);
-                element.setTransitionIdExpression(expression);
-
-                DoTransitionConnectorPresenter.this.view.setFifthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
+    private void prepareView() {
+        issueIdOrKeyInl = createSimplePanel(locale.jiraIssueIdOrKey(), ISSUE_ID_OR_KEY_INL);
+        updateCommentInl = createSimplePanel(locale.jiraUpdateComment(), UPDATE_COMMENT_INL);
+        updateAssigneeInl = createSimplePanel(locale.jiraUpdateAssignee(), UPDATE_ASSIGNEE_INL);
+        resolutionInl = createSimplePanel(locale.jiraResolution(), RESOLUTION_INL);
+        transitionIdInl = createSimplePanel(locale.jiraTransitionId(), TRANSITION_ID_INL);
 
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setIssueIdOrKey(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setUpdateComment(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdTextBoxValueChanged() {
-        element.setUpdateAssignee(view.getThirdTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthTextBoxValueChanged() {
-        element.setResolution(view.getFourthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFifthTextBoxValueChanged() {
-        element.setTransitionId(view.getFifthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getIssieIOrKeyNS(),
-                                                    issueIdOrKeyCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getIssueIdOrKeyExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getUpdateCommentNS(),
-                                                    updateCommentCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getUpdateCommentExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getUpdateAssigneeNS(),
-                                                    updateAssigneeCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getUpdateAssigneeExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getResolutionNS(),
-                                                    resolutionCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getResolutionExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFifthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getTransitionIdNS(),
-                                                    transitionIdCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getTransitionIdExpression());
+        issueIdOrKeyExpr = createComplexPanel(locale.jiraIssueIdOrKey(), ISSUE_ID_OR_KEY_NS, ISSUE_ID_OR_KEY_EXPR);
+        updateCommentExpr = createComplexPanel(locale.jiraUpdateComment(), UPDATE_COMMENT_NS, UPDATE_COMMENT_EXPR);
+        updateAssigneeExpr = createComplexPanel(locale.jiraUpdateAssignee(), UPDATE_ASSIGNEE_NS, UPDATE_ASSIGNEE_EXPR);
+        resolutionExpr = createComplexPanel(locale.jiraResolution(), RESOLUTION_NS, RESOLUTION_EXPR);
+        transitionIdExpr = createComplexPanel(locale.jiraTransitionId(), TRANSITION_ID_NS, TRANSITION_ID_EXPR);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        boolean isVisible = INLINE.equals(element.getProperty(PARAMETER_EDITOR_TYPE));
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+        issueIdOrKeyInl.setVisible(isVisible);
+        updateCommentInl.setVisible(isVisible);
+        updateAssigneeInl.setVisible(isVisible);
+        resolutionInl.setVisible(isVisible);
+        transitionIdInl.setVisible(isVisible);
 
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-        view.setVisibleFourthButton(isEquals);
-        view.setVisibleFifthButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-        view.setEnableFourthTextBox(!isEquals);
-        view.setEnableFifthTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getIssueIdOrKeyExpression() : element.getIssueIdOrKey());
-        view.setSecondTextBoxValue(isEquals ? element.getUpdateCommentExpression() : element.getUpdateComment());
-        view.setThirdTextBoxValue(isEquals ? element.getUpdateAssigneeExpression() : element.getUpdateAssignee());
-        view.setFourthTextBoxValue(isEquals ? element.getResolutionExpression() : element.getResolution());
-        view.setFifthTextBoxValue(isEquals ? element.getTransitionIdExpression() : element.getTransitionId());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-        view.setVisibleThirdPanel(true);
-        view.setVisibleFourthPanel(true);
-        view.setVisibleFifthPanel(true);
-
-        view.setFirstLabelTitle(locale.jiraIssueIdOrKey());
-        view.setSecondLabelTitle(locale.jiraUpdateComment());
-        view.setThirdLabelTitle(locale.jiraUpdateAssignee());
-        view.setFourthLabelTitle(locale.jiraResolution());
-        view.setFifthLabelTitle(locale.jiraTransitionId());
+        issueIdOrKeyExpr.setVisible(!isVisible);
+        updateCommentExpr.setVisible(!isVisible);
+        updateAssigneeExpr.setVisible(!isVisible);
+        resolutionExpr.setVisible(!isVisible);
+        transitionIdExpr.setVisible(!isVisible);
     }
 
     /** {@inheritDoc} */
@@ -264,6 +135,16 @@ public class DoTransitionConnectorPresenter extends AbstractConnectorPropertiesP
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        issueIdOrKeyInl.setProperty(element.getProperty(ISSUE_ID_OR_KEY_INL));
+        updateCommentInl.setProperty(element.getProperty(UPDATE_COMMENT_INL));
+        updateAssigneeInl.setProperty(element.getProperty(UPDATE_ASSIGNEE_INL));
+        resolutionInl.setProperty(element.getProperty(RESOLUTION_INL));
+        transitionIdInl.setProperty(element.getProperty(TRANSITION_ID_INL));
+
+        issueIdOrKeyExpr.setProperty(element.getProperty(ISSUE_ID_OR_KEY_EXPR));
+        updateCommentExpr.setProperty(element.getProperty(UPDATE_COMMENT_EXPR));
+        updateAssigneeExpr.setProperty(element.getProperty(UPDATE_ASSIGNEE_EXPR));
+        resolutionExpr.setProperty(element.getProperty(RESOLUTION_EXPR));
+        transitionIdExpr.setProperty(element.getProperty(TRANSITION_ID_EXPR));
     }
 }

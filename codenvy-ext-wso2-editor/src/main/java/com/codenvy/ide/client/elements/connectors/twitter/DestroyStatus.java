@@ -149,6 +149,7 @@ public class DestroyStatus extends AbstractConnector {
             case STATUS_ID:
                 adaptProperty(nodeValue, KEY_STATUS_ID, KEY_STATUS_ID_EXPR);
                 break;
+
             default:
         }
     }

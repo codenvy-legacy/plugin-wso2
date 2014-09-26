@@ -31,8 +31,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
 
 /**
  * The Class describes GetUserPermissions connector for jira group connectors. Also the class contains the business logic
@@ -47,27 +47,30 @@ public class GetUserPermissions extends AbstractConnector {
     public static final String ELEMENT_NAME       = "GetUserPermissions";
     public static final String SERIALIZATION_NAME = "jira.getUserPermissions";
 
+    public static final Key<String> PROJECT_KEY_INL = new Key<>("projectKeyInl");
+    public static final Key<String> PROJECT_ID_INL  = new Key<>("projectIdInl");
+    public static final Key<String> ISSUE_KEY_INL   = new Key<>("issueKeyInl");
+    public static final Key<String> ISSUE_ID_INL    = new Key<>("issueIdInl");
+
+    public static final Key<String> PROJECT_KEY_EXPR = new Key<>("projectKeyExpr");
+    public static final Key<String> PROJECT_ID_EXPR  = new Key<>("projectIdExpr");
+    public static final Key<String> ISSUE_KEY_EXPR   = new Key<>("issueKeyExpr");
+    public static final Key<String> ISSUE_ID_EXPR    = new Key<>("issueIdExpr");
+
+    public static final Key<List<NameSpace>> PROJECT_KEY_NS = new Key<>("projectKeyNameSpace");
+    public static final Key<List<NameSpace>> PROJECT_ID_NS  = new Key<>("projectIdNameSpace");
+    public static final Key<List<NameSpace>> ISSUE_KEY_NS   = new Key<>("issueKeyNameSpace");
+    public static final Key<List<NameSpace>> ISSUE_ID_NS    = new Key<>("issueIdNameSpace");
+
     private static final String PROJECT_KEY = "projectKey";
     private static final String PROJECT_ID  = "projectId";
     private static final String ISSUE_KEY   = "issueKey";
     private static final String ISSUE_ID    = "issueId";
 
-    private static final List<String> PROPERTIES = Arrays.asList(PROJECT_KEY, PROJECT_ID, ISSUE_KEY, ISSUE_ID);
-
-    private String projectKey;
-    private String projectId;
-    private String issueKey;
-    private String issueId;
-
-    private String projectKeyExpression;
-    private String projectIdExpression;
-    private String issueKeyExpression;
-    private String issueIdExpression;
-
-    private List<NameSpace> projectKeyNS;
-    private List<NameSpace> projectIdNS;
-    private List<NameSpace> issueKeyNS;
-    private List<NameSpace> issueIdNS;
+    private static final List<String> PROPERTIES = Arrays.asList(PROJECT_ID,
+                                                                 PROJECT_KEY,
+                                                                 ISSUE_KEY,
+                                                                 ISSUE_ID);
 
     @Inject
     public GetUserPermissions(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -81,20 +84,20 @@ public class GetUserPermissions extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        projectId = "";
-        projectKey = "";
-        issueKey = "";
-        issueId = "";
+        putProperty(PROJECT_ID_INL, "");
+        putProperty(PROJECT_KEY_INL, "");
+        putProperty(ISSUE_KEY_INL, "");
+        putProperty(ISSUE_ID_INL, "");
 
-        projectIdExpression = "";
-        projectKeyExpression = "";
-        issueIdExpression = "";
-        issueKeyExpression = "";
+        putProperty(PROJECT_ID_EXPR, "");
+        putProperty(PROJECT_KEY_EXPR, "");
+        putProperty(ISSUE_ID_EXPR, "");
+        putProperty(ISSUE_KEY_EXPR, "");
 
-        issueIdNS = new ArrayList<>();
-        projectIdNS = new ArrayList<>();
-        issueKeyNS = new ArrayList<>();
-        projectKeyNS = new ArrayList<>();
+        putProperty(PROJECT_ID_NS, new ArrayList<NameSpace>());
+        putProperty(PROJECT_KEY_NS, new ArrayList<NameSpace>());
+        putProperty(ISSUE_KEY_NS, new ArrayList<NameSpace>());
+        putProperty(ISSUE_ID_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -103,12 +106,12 @@ public class GetUserPermissions extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(NAME_SPACED_PROPERTY_EDITOR);
 
-        properties.put(PROJECT_KEY, isInline ? projectKey : projectKeyExpression);
-        properties.put(PROJECT_ID, isInline ? projectId : projectIdExpression);
-        properties.put(ISSUE_KEY, isInline ? issueKey : issueKeyExpression);
-        properties.put(ISSUE_ID, isInline ? issueId : issueIdExpression);
+        properties.put(PROJECT_ID, isInline ? getProperty(PROJECT_ID_INL) : getProperty(PROJECT_ID_EXPR));
+        properties.put(PROJECT_KEY, isInline ? getProperty(PROJECT_KEY_INL) : getProperty(PROJECT_KEY_EXPR));
+        properties.put(ISSUE_KEY, isInline ? getProperty(ISSUE_KEY_INL) : getProperty(ISSUE_ID_EXPR));
+        properties.put(ISSUE_ID, isInline ? getProperty(ISSUE_ID_INL) : getProperty(ISSUE_KEY_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -116,160 +119,26 @@ public class GetUserPermissions extends AbstractConnector {
     /** {@inheritDoc} */
     @Override
     protected void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
-
-        switch (nodeName) {
-            case PROJECT_KEY:
-                if (isInline) {
-                    projectId = nodeValue;
-                } else {
-                    projectIdExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+        switch (node.getNodeName()) {
+            case PROJECT_ID:
+                adaptProperty(nodeValue, PROJECT_ID_INL, PROJECT_ID_EXPR);
                 break;
 
-            case PROJECT_ID:
-                if (isInline) {
-                    projectKey = nodeValue;
-                } else {
-                    projectKeyExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+            case PROJECT_KEY:
+                adaptProperty(nodeValue, PROJECT_KEY_INL, PROJECT_KEY_EXPR);
                 break;
 
             case ISSUE_KEY:
-                if (isInline) {
-                    issueKey = nodeValue;
-                } else {
-                    issueKeyExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, ISSUE_KEY_INL, ISSUE_ID_EXPR);
                 break;
 
             case ISSUE_ID:
-                if (isInline) {
-                    issueId = nodeValue;
-                } else {
-                    issueIdExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, ISSUE_ID_INL, ISSUE_KEY_EXPR);
                 break;
+
+            default:
         }
     }
-
-    @Nonnull
-    public String getProjectKey() {
-        return projectKey;
-    }
-
-    public void setProjectKey(@Nonnull String projectKey) {
-        this.projectKey = projectKey;
-    }
-
-    @Nonnull
-    public String getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(@Nonnull String projectId) {
-        this.projectId = projectId;
-    }
-
-    @Nonnull
-    public String getIssueKey() {
-        return issueKey;
-    }
-
-    public void setIssueKey(@Nonnull String issueKey) {
-        this.issueKey = issueKey;
-    }
-
-    @Nonnull
-    public String getIssueId() {
-        return issueId;
-    }
-
-    public void setIssueId(@Nonnull String issueId) {
-        this.issueId = issueId;
-    }
-
-    @Nonnull
-    public String getProjectKeyExpression() {
-        return projectKeyExpression;
-    }
-
-    public void setProjectKeyExpression(@Nonnull String projectKeyExpression) {
-        this.projectKeyExpression = projectKeyExpression;
-    }
-
-    @Nonnull
-    public String getProjectIdExpression() {
-        return projectIdExpression;
-    }
-
-    public void setProjectIdExpression(@Nonnull String projectIdExpression) {
-        this.projectIdExpression = projectIdExpression;
-    }
-
-    @Nonnull
-    public String getIssueKeyExpression() {
-        return issueKeyExpression;
-    }
-
-    public void setIssueKeyExpression(@Nonnull String issueKeyExpression) {
-        this.issueKeyExpression = issueKeyExpression;
-    }
-
-    @Nonnull
-    public String getIssueIdExpression() {
-        return issueIdExpression;
-    }
-
-    public void setIssueIdExpression(@Nonnull String issueIdExpression) {
-        this.issueIdExpression = issueIdExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getProjectKeyNS() {
-        return projectKeyNS;
-    }
-
-    public void setProjectKeyNS(@Nonnull List<NameSpace> projectKeyNS) {
-        this.projectKeyNS = projectKeyNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getProjectIdNS() {
-        return projectIdNS;
-    }
-
-    public void setProjectIdNS(@Nonnull List<NameSpace> projectIdNS) {
-        this.projectIdNS = projectIdNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getIssueKeyNS() {
-        return issueKeyNS;
-    }
-
-    public void setIssueKeyNS(@Nonnull List<NameSpace> issueKeyNS) {
-        this.issueKeyNS = issueKeyNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getIssueIdNS() {
-        return issueIdNS;
-    }
-
-    public void setIssueIdNS(@Nonnull List<NameSpace> issueIdNS) {
-        this.issueIdNS = issueIdNS;
-    }
-
 }

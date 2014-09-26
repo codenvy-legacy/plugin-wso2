@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes CreateIssue connector for jira group connectors. Also the class contains the business logic
@@ -47,27 +46,27 @@ public class CreateIssue extends AbstractConnector {
     public static final String ELEMENT_NAME       = "CreateIssue";
     public static final String SERIALIZATION_NAME = "jira.createIssue";
 
+    public static final Key<String> PROJECT_KEY_INL = new Key<>("ProjectKeyInl");
+    public static final Key<String> SUMMARY_INL     = new Key<>("summaryInl");
+    public static final Key<String> DESCRIPTION_INL = new Key<>("descriptionInl");
+    public static final Key<String> ISSUE_TYPE_INL  = new Key<>("issueTypeInl");
+
+    public static final Key<String> PROJECT_KEY_EXPR = new Key<>("projectKeyExpr");
+    public static final Key<String> SUMMARY_EXPR     = new Key<>("summaryExpr");
+    public static final Key<String> DESCRIPTION_EXPR = new Key<>("descriptionExpr");
+    public static final Key<String> ISSUE_TYPE_EXPR  = new Key<>("issueTypeExpr");
+
+    public static final Key<List<NameSpace>> PROJECT_KEY_NS = new Key<>("projectKeyNameSpace");
+    public static final Key<List<NameSpace>> SUMMARY_NS     = new Key<>("summaryNameSpace");
+    public static final Key<List<NameSpace>> DESCRIPTION_NS = new Key<>("descriptionNameSpace");
+    public static final Key<List<NameSpace>> ISSUE_TYPE_NS  = new Key<>("issueTypeNameSpace");
+
     private static final String PROJECT_KEY = "projectKey";
     private static final String SUMMARY     = "summary";
     private static final String DESCRIPTION = "description";
     private static final String ISSUE_TYPE  = "issueType";
 
     private static final List<String> PROPERTIES = Arrays.asList(PROJECT_KEY, SUMMARY, DESCRIPTION, ISSUE_TYPE);
-
-    private String projectKey;
-    private String summary;
-    private String description;
-    private String issueType;
-
-    private String projectKeyExpression;
-    private String summaryExpression;
-    private String descriptionExpression;
-    private String issueTypeExpression;
-
-    private List<NameSpace> projectKeyNS;
-    private List<NameSpace> summaryNS;
-    private List<NameSpace> descriptionNS;
-    private List<NameSpace> issueTypeNS;
 
     @Inject
     public CreateIssue(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -81,20 +80,20 @@ public class CreateIssue extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        projectKey = "";
-        summary = "";
-        description = "";
-        issueType = "";
+        putProperty(PROJECT_KEY_INL, "");
+        putProperty(SUMMARY_INL, "");
+        putProperty(DESCRIPTION_INL, "");
+        putProperty(ISSUE_TYPE_INL, "");
 
-        projectKeyExpression = "";
-        summaryExpression = "";
-        issueTypeExpression = "";
-        descriptionExpression = "";
+        putProperty(PROJECT_KEY_EXPR, "");
+        putProperty(SUMMARY_EXPR, "");
+        putProperty(DESCRIPTION_EXPR, "");
+        putProperty(ISSUE_TYPE_EXPR, "");
 
-        issueTypeNS = new ArrayList<>();
-        projectKeyNS = new ArrayList<>();
-        descriptionNS = new ArrayList<>();
-        summaryNS = new ArrayList<>();
+        putProperty(PROJECT_KEY_NS, new ArrayList<NameSpace>());
+        putProperty(SUMMARY_NS, new ArrayList<NameSpace>());
+        putProperty(DESCRIPTION_NS, new ArrayList<NameSpace>());
+        putProperty(ISSUE_TYPE_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -103,12 +102,12 @@ public class CreateIssue extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(PROJECT_KEY, isInline ? projectKey : projectKeyExpression);
-        properties.put(SUMMARY, isInline ? summary : summaryExpression);
-        properties.put(DESCRIPTION, isInline ? description : descriptionExpression);
-        properties.put(ISSUE_TYPE, isInline ? issueType : issueTypeExpression);
+        properties.put(PROJECT_KEY, isInline ? getProperty(PROJECT_KEY_INL) : getProperty(PROJECT_KEY_EXPR));
+        properties.put(SUMMARY, isInline ? getProperty(SUMMARY_INL) : getProperty(SUMMARY_EXPR));
+        properties.put(DESCRIPTION, isInline ? getProperty(DESCRIPTION_INL) : getProperty(DESCRIPTION_EXPR));
+        properties.put(ISSUE_TYPE, isInline ? getProperty(ISSUE_TYPE_INL) : getProperty(ISSUE_TYPE_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -116,159 +115,26 @@ public class CreateIssue extends AbstractConnector {
     /** {@inheritDoc} */
     @Override
     protected void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
-        switch (nodeName) {
+        switch (node.getNodeName()) {
             case PROJECT_KEY:
-                if (isInline) {
-                    projectKey = nodeValue;
-                } else {
-                    projectKeyExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, PROJECT_KEY_INL, PROJECT_KEY_EXPR);
                 break;
 
             case SUMMARY:
-                if (isInline) {
-                    summary = nodeValue;
-                } else {
-                    summaryExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, SUMMARY_INL, SUMMARY_EXPR);
                 break;
 
             case DESCRIPTION:
-                if (isInline) {
-                    description = nodeValue;
-                } else {
-                    descriptionExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, DESCRIPTION_INL, DESCRIPTION_EXPR);
                 break;
 
             case ISSUE_TYPE:
-                if (isInline) {
-                    issueType = nodeValue;
-                } else {
-                    issueTypeExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, ISSUE_TYPE_INL, ISSUE_TYPE_EXPR);
                 break;
+
+            default:
         }
     }
-
-    @Nonnull
-    public String getProjectKey() {
-        return projectKey;
-    }
-
-    public void setProjectKey(@Nonnull String projectKey) {
-        this.projectKey = projectKey;
-    }
-
-    @Nonnull
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(@Nonnull String summary) {
-        this.summary = summary;
-    }
-
-    @Nonnull
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(@Nonnull String description) {
-        this.description = description;
-    }
-
-    @Nonnull
-    public String getIssueType() {
-        return issueType;
-    }
-
-    public void setIssueType(@Nonnull String issueType) {
-        this.issueType = issueType;
-    }
-
-    @Nonnull
-    public String getProjectKeyExpression() {
-        return projectKeyExpression;
-    }
-
-    public void setProjectKeyExpression(@Nonnull String projectKeyExpression) {
-        this.projectKeyExpression = projectKeyExpression;
-    }
-
-    @Nonnull
-    public String getSummaryExpression() {
-        return summaryExpression;
-    }
-
-    public void setSummaryExpression(@Nonnull String summaryExpression) {
-        this.summaryExpression = summaryExpression;
-    }
-
-    @Nonnull
-    public String getDescriptionExpression() {
-        return descriptionExpression;
-    }
-
-    public void setDescriptionExpression(@Nonnull String descriptionExpression) {
-        this.descriptionExpression = descriptionExpression;
-    }
-
-    @Nonnull
-    public String getIssueTypeExpression() {
-        return issueTypeExpression;
-    }
-
-    public void setIssueTypeExpression(@Nonnull String issueTypeExpression) {
-        this.issueTypeExpression = issueTypeExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getProjectKeyNS() {
-        return projectKeyNS;
-    }
-
-    public void setProjectKeyNS(@Nonnull List<NameSpace> projectKeyNS) {
-        this.projectKeyNS = projectKeyNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getSummaryNS() {
-        return summaryNS;
-    }
-
-    public void setSummaryNS(@Nonnull List<NameSpace> summaryNS) {
-        this.summaryNS = summaryNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getDescriptionNS() {
-        return descriptionNS;
-    }
-
-    public void setDescriptionNS(@Nonnull List<NameSpace> descriptionNS) {
-        this.descriptionNS = descriptionNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getIssueTypeNS() {
-        return issueTypeNS;
-    }
-
-    public void setIssueTypeNS(@Nonnull List<NameSpace> issueTypeNS) {
-        this.issueTypeNS = issueTypeNS;
-    }
-
 }

@@ -169,6 +169,7 @@ public class SearchPlaces extends AbstractConnector {
             case QUERY:
                 adaptProperty(nodeValue, QUERY_INL, QUERY_EXPR);
                 break;
+
             default:
         }
     }

@@ -16,23 +16,40 @@
 package com.codenvy.ide.client.propertiespanel.connectors.jira;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.connectors.jira.JiraPropertyManager;
 import com.codenvy.ide.client.elements.connectors.jira.SearchUser;
+import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchUser.INCLUDE_ACTIVE_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchUser.INCLUDE_ACTIVE_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchUser.INCLUDE_ACTIVE_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchUser.INCLUDE_INACTIVE_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchUser.INCLUDE_INACTIVE_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchUser.INCLUDE_INACTIVE_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchUser.MAX_RESULTS_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchUser.MAX_RESULTS_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchUser.MAX_RESULTS_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchUser.START_AT_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchUser.START_AT_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchUser.START_AT_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchUser.USER_NAME_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchUser.USER_NAME_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchUser.USER_NAME_NS;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -43,220 +60,73 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  */
 public class SearchUserConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<SearchUser> {
 
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          userNameCallBack;
-    private final AddNameSpacesCallBack          startAtCallBack;
-    private final AddNameSpacesCallBack          maxResultsCallBack;
-    private final AddNameSpacesCallBack          includeActiveCallBack;
-    private final AddNameSpacesCallBack          includeInactiveCallBack;
+    private SimplePropertyPresenter userNameInl;
+    private SimplePropertyPresenter startAtInl;
+    private SimplePropertyPresenter maxResultsInl;
+    private SimplePropertyPresenter includeActiveInl;
+    private SimplePropertyPresenter includeInactiveInl;
+
+    private ComplexPropertyPresenter userNameExpr;
+    private ComplexPropertyPresenter startAtExpr;
+    private ComplexPropertyPresenter maxResultsExpr;
+    private ComplexPropertyPresenter includeActiveExpr;
+    private ComplexPropertyPresenter includeInactiveExpr;
 
     @Inject
     public SearchUserConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                         NameSpaceEditorPresenter nameSpacePresenter,
-                                        GeneralPropertiesPanelView view,
-                                        JiraPropertyManager jiraPropertyManager,
+                                        PropertiesPanelView view,
+                                        TwitterPropertyManager twitterPropertyManager,
                                         ParameterPresenter parameterPresenter,
-                                        PropertyTypeManager propertyTypeManager) {
-        super(view, jiraPropertyManager, parameterPresenter, propertyTypeManager);
+                                        PropertyTypeManager propertyTypeManager,
+                                        PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                        Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                        Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                        Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              twitterPropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.userNameCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setUserNameNS(nameSpaces);
-                element.setUserNameExpression(expression);
-
-                SearchUserConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.startAtCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setStartAtNS(nameSpaces);
-                element.setStartAtExpression(expression);
-
-                SearchUserConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.maxResultsCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setMaxResultsNS(nameSpaces);
-                element.setMaxResultsExpression(expression);
-
-                SearchUserConnectorPresenter.this.view.setThirdTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.includeActiveCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setIncludeActiveNS(nameSpaces);
-                element.setIncludeActiveExpression(expression);
-
-                SearchUserConnectorPresenter.this.view.setFourthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.includeInactiveCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setIncludeInactiveNS(nameSpaces);
-                element.setIncludeInactiveExpression(expression);
-
-                SearchUserConnectorPresenter.this.view.setFifthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
+    private void prepareView() {
+        userNameInl = createSimplePanel(locale.connectorUsername(), USER_NAME_INL);
+        startAtInl = createSimplePanel(locale.jiraStartAt(), START_AT_INL);
+        maxResultsInl = createSimplePanel(locale.jiraMaxResults(), MAX_RESULTS_INL);
+        includeActiveInl = createSimplePanel(locale.jiraIncludeActive(), INCLUDE_ACTIVE_INL);
+        includeInactiveInl = createSimplePanel(locale.jiraIncludeInactive(), INCLUDE_INACTIVE_INL);
 
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setUserName(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setStartAt(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdTextBoxValueChanged() {
-        element.setMaxResults(view.getThirdTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthTextBoxValueChanged() {
-        element.setIncludeActive(view.getFourthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFifthTextBoxValueChanged() {
-        element.setIncludeInactive(view.getFifthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getUserNameNS(),
-                                                    userNameCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getUserNameExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getChartAtNS(),
-                                                    startAtCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getStartAtExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getMaxResultsNS(),
-                                                    maxResultsCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getMaxResultsExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getIncludeActiveNS(),
-                                                    includeActiveCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getIncludeActiveExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFifthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getIncludeInactiveNS(),
-                                                    includeInactiveCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getIncludeInactiveExpression());
+        userNameExpr = createComplexPanel(locale.connectorUsername(), USER_NAME_NS, USER_NAME_EXPR);
+        startAtExpr = createComplexPanel(locale.jiraStartAt(), START_AT_NS, START_AT_EXPR);
+        maxResultsExpr = createComplexPanel(locale.jiraMaxResults(), MAX_RESULTS_NS, MAX_RESULTS_EXPR);
+        includeActiveExpr = createComplexPanel(locale.jiraIncludeActive(), INCLUDE_ACTIVE_NS, INCLUDE_ACTIVE_EXPR);
+        includeInactiveExpr = createComplexPanel(locale.jiraIncludeInactive(), INCLUDE_INACTIVE_NS, INCLUDE_INACTIVE_EXPR);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        boolean isVisible = INLINE.equals(element.getProperty(PARAMETER_EDITOR_TYPE));
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+        userNameInl.setVisible(isVisible);
+        includeActiveInl.setVisible(isVisible);
+        includeInactiveInl.setVisible(isVisible);
+        startAtInl.setVisible(isVisible);
+        maxResultsInl.setVisible(isVisible);
 
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-        view.setVisibleFourthButton(isEquals);
-        view.setVisibleFifthButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-        view.setEnableFourthTextBox(!isEquals);
-        view.setEnableFifthTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getUserNameExpression() : element.getUserName());
-        view.setSecondTextBoxValue(isEquals ? element.getStartAtExpression() : element.getStartAt());
-        view.setThirdTextBoxValue(isEquals ? element.getMaxResultsExpression() : element.getMaxResults());
-        view.setFourthTextBoxValue(isEquals ? element.getIncludeActiveExpression() : element.getIncludeActive());
-        view.setFifthTextBoxValue(isEquals ? element.getIncludeInactiveExpression() : element.getIncludeInactive());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-        view.setVisibleThirdPanel(true);
-        view.setVisibleFourthPanel(true);
-        view.setVisibleFifthPanel(true);
-
-        view.setFirstLabelTitle(locale.connectorUsername());
-        view.setSecondLabelTitle(locale.jiraStartAt());
-        view.setThirdLabelTitle(locale.jiraMaxResults());
-        view.setFourthLabelTitle(locale.jiraIncludeActive());
-        view.setFifthLabelTitle(locale.jiraIncludeInactive());
+        userNameExpr.setVisible(!isVisible);
+        includeActiveExpr.setVisible(!isVisible);
+        includeInactiveExpr.setVisible(!isVisible);
+        startAtExpr.setVisible(!isVisible);
+        maxResultsExpr.setVisible(!isVisible);
     }
 
     /** {@inheritDoc} */
@@ -264,6 +134,16 @@ public class SearchUserConnectorPresenter extends AbstractConnectorPropertiesPan
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        userNameInl.setProperty(element.getProperty(USER_NAME_INL));
+        startAtInl.setProperty(element.getProperty(START_AT_INL));
+        maxResultsInl.setProperty(element.getProperty(MAX_RESULTS_INL));
+        includeActiveInl.setProperty(element.getProperty(INCLUDE_ACTIVE_INL));
+        includeInactiveInl.setProperty(element.getProperty(INCLUDE_INACTIVE_INL));
+
+        userNameExpr.setProperty(element.getProperty(USER_NAME_EXPR));
+        startAtExpr.setProperty(element.getProperty(START_AT_EXPR));
+        maxResultsExpr.setProperty(element.getProperty(MAX_RESULTS_EXPR));
+        includeActiveExpr.setProperty(element.getProperty(INCLUDE_ACTIVE_EXPR));
+        includeInactiveExpr.setProperty(element.getProperty(INCLUDE_INACTIVE_EXPR));
     }
 }

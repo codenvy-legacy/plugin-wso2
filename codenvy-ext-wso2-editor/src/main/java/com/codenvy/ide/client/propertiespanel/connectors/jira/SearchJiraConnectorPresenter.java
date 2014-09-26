@@ -16,7 +16,7 @@
 package com.codenvy.ide.client.propertiespanel.connectors.jira;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.connectors.jira.GetProject;
+import com.codenvy.ide.client.elements.connectors.jira.SearchJira;
 import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
 import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
@@ -35,10 +35,15 @@ import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
-import static com.codenvy.ide.client.elements.connectors.jira.GetProject.PROJECT_KEY_EXPR;
-import static com.codenvy.ide.client.elements.connectors.jira.GetProject.PROJECT_KEY_INL;
-import static com.codenvy.ide.client.elements.connectors.jira.GetProject.PROJECT_KEY_NS;
-
+import static com.codenvy.ide.client.elements.connectors.jira.SearchJira.MAX_RESULT_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchJira.MAX_RESULT_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchJira.MAX_RESULT_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchJira.QUERY_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchJira.QUERY_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchJira.QUERY_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchJira.START_FROM_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchJira.START_FROM_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.SearchJira.START_FROM_NS;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -47,13 +52,18 @@ import static com.codenvy.ide.client.elements.connectors.jira.GetProject.PROJECT
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
  */
-public class GetProjectConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<GetProject> {
+public class SearchJiraConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<SearchJira> {
 
-    private SimplePropertyPresenter projectKeyInl;
-    private ComplexPropertyPresenter projectKeyExpr;
+    private SimplePropertyPresenter queryInl;
+    private SimplePropertyPresenter maxResultInl;
+    private SimplePropertyPresenter startFromInl;
+
+    private ComplexPropertyPresenter queryExpr;
+    private ComplexPropertyPresenter maxResultExpr;
+    private ComplexPropertyPresenter startFromExpr;
 
     @Inject
-    public GetProjectConnectorPresenter(WSO2EditorLocalizationConstant locale,
+    public SearchJiraConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                         NameSpaceEditorPresenter nameSpacePresenter,
                                         PropertiesPanelView view,
                                         TwitterPropertyManager twitterPropertyManager,
@@ -78,8 +88,13 @@ public class GetProjectConnectorPresenter extends AbstractConnectorPropertiesPan
     }
 
     private void prepareView() {
-        projectKeyInl = createSimplePanel(locale.jiraProjectKey(), PROJECT_KEY_INL);
-        projectKeyExpr = createComplexPanel(locale.jiraProjectKey(), PROJECT_KEY_NS, PROJECT_KEY_EXPR);
+        queryInl = createSimplePanel(locale.connectorUsername(), QUERY_INL);
+        maxResultInl = createSimplePanel(locale.jiraMaxResult(), MAX_RESULT_INL);
+        startFromInl = createSimplePanel(locale.jiraStartFrom(), START_FROM_INL);
+
+        queryExpr = createComplexPanel(locale.connectorUsername(), QUERY_NS, QUERY_EXPR);
+        maxResultExpr = createComplexPanel(locale.jiraMaxResult(), MAX_RESULT_NS, MAX_RESULT_EXPR);
+        startFromExpr = createComplexPanel(locale.jiraStartFrom(), START_FROM_NS, START_FROM_EXPR);
     }
 
     /** {@inheritDoc} */
@@ -87,8 +102,13 @@ public class GetProjectConnectorPresenter extends AbstractConnectorPropertiesPan
     protected void redrawPropertiesPanel() {
         boolean isVisible = INLINE.equals(element.getProperty(PARAMETER_EDITOR_TYPE));
 
-        projectKeyInl.setVisible(isVisible);
-        projectKeyExpr.setVisible(!isVisible);
+        queryInl.setVisible(isVisible);
+        maxResultInl.setVisible(isVisible);
+        startFromInl.setVisible(isVisible);
+
+        queryExpr.setVisible(!isVisible);
+        maxResultExpr.setVisible(!isVisible);
+        startFromExpr.setVisible(!isVisible);
     }
 
     /** {@inheritDoc} */
@@ -96,7 +116,12 @@ public class GetProjectConnectorPresenter extends AbstractConnectorPropertiesPan
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        projectKeyInl.setProperty(element.getProperty(PROJECT_KEY_INL));
-        projectKeyExpr.setProperty(element.getProperty(PROJECT_KEY_EXPR));
+        queryInl.setProperty(element.getProperty(QUERY_INL));
+        maxResultInl.setProperty(element.getProperty(MAX_RESULT_INL));
+        startFromInl.setProperty(element.getProperty(START_FROM_INL));
+
+        queryExpr.setProperty(element.getProperty(QUERY_EXPR));
+        maxResultExpr.setProperty(element.getProperty(MAX_RESULT_EXPR));
+        startFromExpr.setProperty(element.getProperty(START_FROM_EXPR));
     }
 }

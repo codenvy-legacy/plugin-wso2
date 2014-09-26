@@ -218,6 +218,7 @@ public class SearchTwitter extends AbstractConnector {
             case COUNT:
                 adaptProperty(nodeValue, COUNT_INL, COUNT_EXPR);
                 break;
+
             default:
         }
     }

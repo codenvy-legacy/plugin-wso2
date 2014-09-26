@@ -16,23 +16,31 @@
 package com.codenvy.ide.client.propertiespanel.connectors.jira;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.jira.DeleteAvatarForProject;
-import com.codenvy.ide.client.elements.connectors.jira.JiraPropertyManager;
+import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.jira.DeleteAvatarForProject.AVATAR_ID_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.DeleteAvatarForProject.AVATAR_ID_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.DeleteAvatarForProject.AVATAR_ID_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.DeleteAvatarForProject.PROJECT_KEY_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.DeleteAvatarForProject.PROJECT_KEY_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.DeleteAvatarForProject.PROJECT_KEY_NS;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -43,115 +51,55 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  */
 public class DeleteAvatarConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<DeleteAvatarForProject> {
 
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          projectKeyCallBack;
-    private final AddNameSpacesCallBack          avatarIdCallBack;
+    private SimplePropertyPresenter projectKeyInl;
+    private SimplePropertyPresenter avatarIdInl;
+
+    private ComplexPropertyPresenter projectKeyExpr;
+    private ComplexPropertyPresenter avatarIdExpr;
 
     @Inject
     public DeleteAvatarConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                           NameSpaceEditorPresenter nameSpacePresenter,
-                                          GeneralPropertiesPanelView view,
-                                          JiraPropertyManager jiraPropertyManager,
+                                          PropertiesPanelView view,
+                                          TwitterPropertyManager twitterPropertyManager,
                                           ParameterPresenter parameterPresenter,
-                                          PropertyTypeManager propertyTypeManager) {
-        super(view, jiraPropertyManager, parameterPresenter, propertyTypeManager);
+                                          PropertyTypeManager propertyTypeManager,
+                                          PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                          Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                          Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                          Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              twitterPropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.projectKeyCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setProjectKeyNS(nameSpaces);
-                element.setProjectKeyExpression(expression);
-
-                DeleteAvatarConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.avatarIdCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setAvatarIdNS(nameSpaces);
-                element.setAvatarIdExpression(expression);
-
-                DeleteAvatarConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
+    private void prepareView() {
+        projectKeyInl = createSimplePanel(locale.jiraProjectKey(), PROJECT_KEY_INL);
+        avatarIdInl = createSimplePanel(locale.jiraAvatarId(), AVATAR_ID_INL);
 
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setProjectKey(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setAvatarId(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getProjectKeyNS(),
-                                                    projectKeyCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getProjectKeyExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getAvatarIdNS(),
-                                                    avatarIdCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getAvatarIdExpression());
+        projectKeyExpr = createComplexPanel(locale.jiraProjectKey(), PROJECT_KEY_NS, PROJECT_KEY_EXPR);
+        avatarIdExpr = createComplexPanel(locale.jiraAvatarId(), AVATAR_ID_NS, AVATAR_ID_EXPR);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        boolean isVisible = INLINE.equals(element.getProperty(PARAMETER_EDITOR_TYPE));
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+        projectKeyInl.setVisible(isVisible);
+        avatarIdInl.setVisible(isVisible);
 
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getProjectKeyExpression() : element.getProjectKey());
-        view.setSecondTextBoxValue(isEquals ? element.getAvatarIdExpression() : element.getAvatarId());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-
-        view.setFirstLabelTitle(locale.jiraProjectKey());
-        view.setSecondLabelTitle(locale.jiraAvatarId());
+        projectKeyExpr.setVisible(!isVisible);
+        avatarIdExpr.setVisible(!isVisible);
     }
 
     /** {@inheritDoc} */
@@ -159,6 +107,10 @@ public class DeleteAvatarConnectorPresenter extends AbstractConnectorPropertiesP
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        projectKeyInl.setProperty(element.getProperty(PROJECT_KEY_INL));
+        avatarIdInl.setProperty(element.getProperty(AVATAR_ID_INL));
+
+        projectKeyExpr.setProperty(element.getProperty(PROJECT_KEY_EXPR));
+        avatarIdExpr.setProperty(element.getProperty(AVATAR_ID_EXPR));
     }
 }

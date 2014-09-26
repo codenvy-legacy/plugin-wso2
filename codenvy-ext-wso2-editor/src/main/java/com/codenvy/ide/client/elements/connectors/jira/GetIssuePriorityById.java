@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes GetIssuePriorityById connector for jira group connectors. Also the class contains the business logic
@@ -47,13 +46,13 @@ public class GetIssuePriorityById extends AbstractConnector {
     public static final String ELEMENT_NAME       = "GetIssuePriorityById";
     public static final String SERIALIZATION_NAME = "jira.getIssuePriorityById";
 
+    public static final Key<String>          ISSUE_PRIORITY_ID_INL  = new Key<>("issuePriorityIdInl");
+    public static final Key<String>          ISSUE_PRIORITY_ID_EXPR = new Key<>("issuePriorityIdExpr");
+    public static final Key<List<NameSpace>> ISSUE_PRIORITY_ID_NS   = new Key<>("issuePriorityIdNameSpace");
+
     private static final String ISSUE_PRIORITY_ID = "issuePriorityId";
 
     private static final List<String> PROPERTIES = Arrays.asList(ISSUE_PRIORITY_ID);
-
-    private String          issuePriorityId;
-    private String          issuePriorityExpression;
-    private List<NameSpace> issuePriorityNS;
 
     @Inject
     public GetIssuePriorityById(EditorResources resources,
@@ -69,10 +68,9 @@ public class GetIssuePriorityById extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        issuePriorityId = "";
-        issuePriorityExpression = "";
-
-        issuePriorityNS = new ArrayList<>();
+        putProperty(ISSUE_PRIORITY_ID_INL, "");
+        putProperty(ISSUE_PRIORITY_ID_EXPR, "");
+        putProperty(ISSUE_PRIORITY_ID_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -81,9 +79,9 @@ public class GetIssuePriorityById extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(ISSUE_PRIORITY_ID, isInline ? issuePriorityId : issuePriorityExpression);
+        properties.put(ISSUE_PRIORITY_ID, isInline ? getProperty(ISSUE_PRIORITY_ID_INL) : getProperty(ISSUE_PRIORITY_ID_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -94,46 +92,8 @@ public class GetIssuePriorityById extends AbstractConnector {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
-
-        switch (nodeName) {
-            case ISSUE_PRIORITY_ID:
-                if (isInline) {
-                    issuePriorityId = nodeValue;
-                } else {
-                    issuePriorityExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+        if (ISSUE_PRIORITY_ID.equals(nodeName)) {
+            adaptProperty(nodeValue, ISSUE_PRIORITY_ID_INL, ISSUE_PRIORITY_ID_EXPR);
         }
     }
-
-    @Nonnull
-    public String getIssuePriorityId() {
-        return issuePriorityId;
-    }
-
-    public void setIssuePriorityId(@Nonnull String issuePriorityId) {
-        this.issuePriorityId = issuePriorityId;
-    }
-
-    @Nonnull
-    public String getIssuePriorityExpression() {
-        return issuePriorityExpression;
-    }
-
-    public void setIssuePriorityExpression(@Nonnull String issuePriorityExpression) {
-        this.issuePriorityExpression = issuePriorityExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getIssuePriorityNS() {
-        return issuePriorityNS;
-    }
-
-    public void setIssuePriorityNS(@Nonnull List<NameSpace> issuePriorityNS) {
-        this.issuePriorityNS = issuePriorityNS;
-    }
-
 }

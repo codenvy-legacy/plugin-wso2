@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes GetIssueTypeById connector for jira group connectors. Also the class contains the business logic
@@ -47,16 +46,18 @@ public class GetIssueTypeById extends AbstractConnector {
     public static final String ELEMENT_NAME       = "GetIssueTypeById";
     public static final String SERIALIZATION_NAME = "jira.getIssueTypeById";
 
+    public static final Key<String>          ISSUE_TYPE_ID_INL  = new Key<>("issueTypeIdInl");
+    public static final Key<String>          ISSUE_TYPE_ID_EXPR = new Key<>("issueTypeIdExpr");
+    public static final Key<List<NameSpace>> ISSUE_TYPE_ID_NS   = new Key<>("issueTypeIdNameSpace");
+
     private static final String ISSUE_TYPE_ID = "issueTypeId";
 
     private static final List<String> PROPERTIES = Arrays.asList(ISSUE_TYPE_ID);
 
-    private String          issueTypeId;
-    private String          issueTypeIdExpression;
-    private List<NameSpace> issueTypeIdNS;
-
     @Inject
-    public GetIssueTypeById(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
+    public GetIssueTypeById(EditorResources resources,
+                            Provider<Branch> branchProvider,
+                            ElementCreatorsManager elementCreatorsManager) {
         super(ELEMENT_NAME,
               ELEMENT_NAME,
               SERIALIZATION_NAME,
@@ -67,10 +68,9 @@ public class GetIssueTypeById extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        issueTypeId = "";
-        issueTypeIdExpression = "";
-
-        issueTypeIdNS = new ArrayList<>();
+        putProperty(ISSUE_TYPE_ID_INL, "");
+        putProperty(ISSUE_TYPE_ID_EXPR, "");
+        putProperty(ISSUE_TYPE_ID_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -79,9 +79,9 @@ public class GetIssueTypeById extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(ISSUE_TYPE_ID, isInline ? issueTypeId : issueTypeIdExpression);
+        properties.put(ISSUE_TYPE_ID, isInline ? getProperty(ISSUE_TYPE_ID_INL) : getProperty(ISSUE_TYPE_ID_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -92,46 +92,8 @@ public class GetIssueTypeById extends AbstractConnector {
         String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
-
-        switch (nodeName) {
-            case ISSUE_TYPE_ID:
-                if (isInline) {
-                    issueTypeId = nodeValue;
-                } else {
-                    issueTypeIdExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
+        if (ISSUE_TYPE_ID.equals(nodeName)) {
+            adaptProperty(nodeValue, ISSUE_TYPE_ID_INL, ISSUE_TYPE_ID_EXPR);
         }
     }
-
-    @Nonnull
-    public String getIssueTypeId() {
-        return issueTypeId;
-    }
-
-    public void setIssueTypeId(@Nonnull String issueTypeId) {
-        this.issueTypeId = issueTypeId;
-    }
-
-    @Nonnull
-    public String getIssueTypeIdExpression() {
-        return issueTypeIdExpression;
-    }
-
-    public void setIssueTypeIdExpression(@Nonnull String issueTypeIdExpression) {
-        this.issueTypeIdExpression = issueTypeIdExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getIssueTypeIdNS() {
-        return issueTypeIdNS;
-    }
-
-    public void setIssueTypeIdNS(@Nonnull List<NameSpace> issueTypeIdNS) {
-        this.issueTypeIdNS = issueTypeIdNS;
-    }
-
 }

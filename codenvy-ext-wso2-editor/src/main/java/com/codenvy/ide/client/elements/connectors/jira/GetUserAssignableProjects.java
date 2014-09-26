@@ -31,8 +31,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
 
 /**
  * The Class describes GetUserAssignableProjects connector for jira group connectors. Also the class contains the business logic
@@ -47,27 +47,30 @@ public class GetUserAssignableProjects extends AbstractConnector {
     public static final String ELEMENT_NAME       = "GetUserAssignableProjects";
     public static final String SERIALIZATION_NAME = "jira.getUserAssignableProjects";
 
-    private static final String USERNAME    = "username";
+    public static final Key<String> USER_NAME_INL   = new Key<>("userNameInl");
+    public static final Key<String> PROJECT_KEY_INL = new Key<>("projectKeyInl");
+    public static final Key<String> MAX_RESULT_INL  = new Key<>("maxResultInl");
+    public static final Key<String> START_FROM_INL  = new Key<>("startFromInl");
+
+    public static final Key<String> USER_NAME_EXPR   = new Key<>("userNameExpr");
+    public static final Key<String> PROJECT_KEY_EXPR = new Key<>("projectKeyExpr");
+    public static final Key<String> MAX_RESULT_EXPR  = new Key<>("maxResultExpr");
+    public static final Key<String> START_FROM_EXPR  = new Key<>("startFromExpr");
+
+    public static final Key<List<NameSpace>> USER_NAME_NS   = new Key<>("userNameNameSpace");
+    public static final Key<List<NameSpace>> PROJECT_KEY_NS = new Key<>("projectKeyNameSpace");
+    public static final Key<List<NameSpace>> MAX_RESULT_NS  = new Key<>("maxResultNameSpace");
+    public static final Key<List<NameSpace>> START_FROM_NS  = new Key<>("startFromNameSpace");
+
+    private static final String USER_NAME   = "username";
     private static final String PROJECT_KEY = "projectKey";
     private static final String MAX_RESULT  = "maxResult";
     private static final String START_FROM  = "startFrom";
 
-    private static final List<String> PROPERTIES = Arrays.asList(USERNAME, PROJECT_KEY, MAX_RESULT, START_FROM);
-
-    private String userName;
-    private String projectKey;
-    private String maxResult;
-    private String startFrom;
-
-    private String userNameExpression;
-    private String projectKeyExpression;
-    private String maxResultExpression;
-    private String startFromExpression;
-
-    private List<NameSpace> userNameNS;
-    private List<NameSpace> projectKeyNS;
-    private List<NameSpace> maxResultNS;
-    private List<NameSpace> startFromNS;
+    private static final List<String> PROPERTIES = Arrays.asList(USER_NAME,
+                                                                 PROJECT_KEY,
+                                                                 MAX_RESULT,
+                                                                 START_FROM);
 
     @Inject
     public GetUserAssignableProjects(EditorResources resources,
@@ -83,20 +86,20 @@ public class GetUserAssignableProjects extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        userName = "";
-        projectKey = "";
-        maxResult = "";
-        startFrom = "";
+        putProperty(USER_NAME_INL, "");
+        putProperty(PROJECT_KEY_INL, "");
+        putProperty(MAX_RESULT_INL, "");
+        putProperty(START_FROM_INL, "");
 
-        userNameExpression = "";
-        projectKeyExpression = "";
-        startFromExpression = "";
-        maxResultExpression = "";
+        putProperty(USER_NAME_EXPR, "");
+        putProperty(PROJECT_KEY_EXPR, "");
+        putProperty(MAX_RESULT_EXPR, "");
+        putProperty(START_FROM_EXPR, "");
 
-        startFromNS = new ArrayList<>();
-        userNameNS = new ArrayList<>();
-        maxResultNS = new ArrayList<>();
-        projectKeyNS = new ArrayList<>();
+        putProperty(USER_NAME_NS, new ArrayList<NameSpace>());
+        putProperty(PROJECT_KEY_NS, new ArrayList<NameSpace>());
+        putProperty(MAX_RESULT_NS, new ArrayList<NameSpace>());
+        putProperty(START_FROM_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -105,12 +108,12 @@ public class GetUserAssignableProjects extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(NAME_SPACED_PROPERTY_EDITOR);
 
-        properties.put(USERNAME, isInline ? userName : userNameExpression);
-        properties.put(PROJECT_KEY, isInline ? projectKey : projectKeyExpression);
-        properties.put(MAX_RESULT, isInline ? maxResult : maxResultExpression);
-        properties.put(START_FROM, isInline ? startFrom : startFromExpression);
+        properties.put(USER_NAME, isInline ? getProperty(USER_NAME_INL) : getProperty(USER_NAME_EXPR));
+        properties.put(PROJECT_KEY, isInline ? getProperty(PROJECT_KEY_INL) : getProperty(PROJECT_KEY_EXPR));
+        properties.put(MAX_RESULT, isInline ? getProperty(MAX_RESULT_INL) : getProperty(MAX_RESULT_EXPR));
+        properties.put(START_FROM, isInline ? getProperty(START_FROM_INL) : getProperty(START_FROM_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -118,160 +121,26 @@ public class GetUserAssignableProjects extends AbstractConnector {
     /** {@inheritDoc} */
     @Override
     protected void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
-
-        switch (nodeName) {
-            case USERNAME:
-                if (isInline) {
-                    userName = nodeValue;
-                } else {
-                    userNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+        switch (node.getNodeName()) {
+            case USER_NAME:
+                adaptProperty(nodeValue, USER_NAME_INL, USER_NAME_EXPR);
                 break;
 
             case PROJECT_KEY:
-                if (isInline) {
-                    projectKey = nodeValue;
-                } else {
-                    projectKeyExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, PROJECT_KEY_INL, PROJECT_KEY_EXPR);
                 break;
 
             case MAX_RESULT:
-                if (isInline) {
-                    maxResult = nodeValue;
-                } else {
-                    maxResultExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, MAX_RESULT_INL, MAX_RESULT_EXPR);
                 break;
 
             case START_FROM:
-                if (isInline) {
-                    startFrom = nodeValue;
-                } else {
-                    startFromExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, START_FROM_INL, START_FROM_EXPR);
                 break;
+
+            default:
         }
     }
-
-    @Nonnull
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(@Nonnull String userName) {
-        this.userName = userName;
-    }
-
-    @Nonnull
-    public String getProjectKey() {
-        return projectKey;
-    }
-
-    public void setProjectKey(@Nonnull String projectKey) {
-        this.projectKey = projectKey;
-    }
-
-    @Nonnull
-    public String getMaxResult() {
-        return maxResult;
-    }
-
-    public void setMaxResult(@Nonnull String maxResult) {
-        this.maxResult = maxResult;
-    }
-
-    @Nonnull
-    public String getStartFrom() {
-        return startFrom;
-    }
-
-    public void setStartFrom(@Nonnull String startFrom) {
-        this.startFrom = startFrom;
-    }
-
-    @Nonnull
-    public String getUserNameExpression() {
-        return userNameExpression;
-    }
-
-    public void setUserNameExpression(@Nonnull String userNameExpression) {
-        this.userNameExpression = userNameExpression;
-    }
-
-    @Nonnull
-    public String getProjectKeyExpression() {
-        return projectKeyExpression;
-    }
-
-    public void setProjectKeyExpression(@Nonnull String projectKeyExpression) {
-        this.projectKeyExpression = projectKeyExpression;
-    }
-
-    @Nonnull
-    public String getMaxResultExpression() {
-        return maxResultExpression;
-    }
-
-    public void setMaxResultExpression(@Nonnull String maxResultExpression) {
-        this.maxResultExpression = maxResultExpression;
-    }
-
-    @Nonnull
-    public String getStartFromExpression() {
-        return startFromExpression;
-    }
-
-    public void setStartFromExpression(@Nonnull String startFromExpression) {
-        this.startFromExpression = startFromExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getUserNameNS() {
-        return userNameNS;
-    }
-
-    public void setUserNameNS(@Nonnull List<NameSpace> userNameNS) {
-        this.userNameNS = userNameNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getProjectKeyNS() {
-        return projectKeyNS;
-    }
-
-    public void setProjectKeyNS(@Nonnull List<NameSpace> projectKeyNS) {
-        this.projectKeyNS = projectKeyNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getMaxResultNS() {
-        return maxResultNS;
-    }
-
-    public void setMaxResultNS(@Nonnull List<NameSpace> maxResultNS) {
-        this.maxResultNS = maxResultNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getStartFromNS() {
-        return startFromNS;
-    }
-
-    public void setStartFromNS(@Nonnull List<NameSpace> startFromNS) {
-        this.startFromNS = startFromNS;
-    }
-
 }

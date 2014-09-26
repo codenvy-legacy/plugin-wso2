@@ -16,23 +16,37 @@
 package com.codenvy.ide.client.propertiespanel.connectors.jira;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.jira.GetUserAssignableProjects;
-import com.codenvy.ide.client.elements.connectors.jira.JiraPropertyManager;
+import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserAssignableProjects.MAX_RESULT_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserAssignableProjects.MAX_RESULT_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserAssignableProjects.MAX_RESULT_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserAssignableProjects.PROJECT_KEY_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserAssignableProjects.PROJECT_KEY_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserAssignableProjects.PROJECT_KEY_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserAssignableProjects.START_FROM_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserAssignableProjects.START_FROM_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserAssignableProjects.START_FROM_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserAssignableProjects.USER_NAME_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserAssignableProjects.USER_NAME_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.GetUserAssignableProjects.USER_NAME_NS;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -43,185 +57,67 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  */
 public class GetUserAssignableProjectsConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<GetUserAssignableProjects> {
 
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          userNameCallBack;
-    private final AddNameSpacesCallBack          projectKeyCallBack;
-    private final AddNameSpacesCallBack          maxResultCallBack;
-    private final AddNameSpacesCallBack          startFromCallBack;
+    private SimplePropertyPresenter userNameInl;
+    private SimplePropertyPresenter projectKeyInl;
+    private SimplePropertyPresenter maxResultInl;
+    private SimplePropertyPresenter startFromInl;
+
+    private ComplexPropertyPresenter userNameExpr;
+    private ComplexPropertyPresenter projectKeyExpr;
+    private ComplexPropertyPresenter maxResultExpr;
+    private ComplexPropertyPresenter startFromExpr;
 
     @Inject
     public GetUserAssignableProjectsConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                                        NameSpaceEditorPresenter nameSpacePresenter,
-                                                       GeneralPropertiesPanelView view,
-                                                       JiraPropertyManager jiraPropertyManager,
+                                                       PropertiesPanelView view,
+                                                       TwitterPropertyManager twitterPropertyManager,
                                                        ParameterPresenter parameterPresenter,
-                                                       PropertyTypeManager propertyTypeManager) {
-        super(view, jiraPropertyManager, parameterPresenter, propertyTypeManager);
+                                                       PropertyTypeManager propertyTypeManager,
+                                                       PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                                       Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                                       Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                                       Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              twitterPropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.userNameCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setUserNameNS(nameSpaces);
-                element.setUserNameExpression(expression);
-
-                GetUserAssignableProjectsConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.projectKeyCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setProjectKeyNS(nameSpaces);
-                element.setProjectKeyExpression(expression);
-
-                GetUserAssignableProjectsConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.maxResultCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setMaxResultNS(nameSpaces);
-                element.setMaxResultExpression(expression);
-
-                GetUserAssignableProjectsConnectorPresenter.this.view.setThirdTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.startFromCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setStartFromNS(nameSpaces);
-                element.setStartFromExpression(expression);
-
-                GetUserAssignableProjectsConnectorPresenter.this.view.setFourthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
+    private void prepareView() {
+        userNameInl = createSimplePanel(locale.connectorUsername(), USER_NAME_INL);
+        projectKeyInl = createSimplePanel(locale.jiraProjectKey(), PROJECT_KEY_INL);
+        maxResultInl = createSimplePanel(locale.jiraMaxResult(), MAX_RESULT_INL);
+        startFromInl = createSimplePanel(locale.jiraStartFrom(), START_FROM_INL);
 
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setUserName(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setProjectKey(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdTextBoxValueChanged() {
-        element.setMaxResult(view.getThirdTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthTextBoxValueChanged() {
-        element.setStartFrom(view.getFourthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getUserNameNS(),
-                                                    userNameCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getUserNameExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getProjectKeyNS(),
-                                                    projectKeyCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getProjectKeyExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getMaxResultNS(),
-                                                    maxResultCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getMaxResultExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getStartFromNS(),
-                                                    startFromCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getStartFromExpression());
+        userNameExpr = createComplexPanel(locale.connectorUsername(), USER_NAME_NS, USER_NAME_EXPR);
+        projectKeyExpr = createComplexPanel(locale.jiraProjectKey(), PROJECT_KEY_NS, PROJECT_KEY_EXPR);
+        maxResultExpr = createComplexPanel(locale.jiraMaxResult(), MAX_RESULT_NS, MAX_RESULT_EXPR);
+        startFromExpr = createComplexPanel(locale.jiraStartFrom(), START_FROM_NS, START_FROM_EXPR);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        boolean isVisible = INLINE.equals(element.getProperty(PARAMETER_EDITOR_TYPE));
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+        userNameInl.setVisible(isVisible);
+        projectKeyInl.setVisible(isVisible);
+        maxResultInl.setVisible(isVisible);
+        startFromInl.setVisible(isVisible);
 
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-        view.setVisibleFourthButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-        view.setEnableFourthTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getUserNameExpression() : element.getUserName());
-        view.setSecondTextBoxValue(isEquals ? element.getProjectKeyExpression() : element.getProjectKey());
-        view.setThirdTextBoxValue(isEquals ? element.getMaxResultExpression() : element.getMaxResult());
-        view.setFourthTextBoxValue(isEquals ? element.getStartFromExpression() : element.getStartFrom());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-        view.setVisibleThirdPanel(true);
-        view.setVisibleFourthPanel(true);
-
-        view.setFirstLabelTitle(locale.connectorUsername());
-        view.setSecondLabelTitle(locale.jiraProjectKey());
-        view.setThirdLabelTitle(locale.jiraMaxResult());
-        view.setFourthLabelTitle(locale.jiraStartFrom());
+        userNameExpr.setVisible(!isVisible);
+        projectKeyExpr.setVisible(!isVisible);
+        maxResultExpr.setVisible(!isVisible);
+        startFromExpr.setVisible(!isVisible);
     }
 
     /** {@inheritDoc} */
@@ -229,6 +125,14 @@ public class GetUserAssignableProjectsConnectorPresenter extends AbstractConnect
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        userNameInl.setProperty(element.getProperty(USER_NAME_INL));
+        projectKeyInl.setProperty(element.getProperty(PROJECT_KEY_INL));
+        maxResultInl.setProperty(element.getProperty(MAX_RESULT_INL));
+        startFromInl.setProperty(element.getProperty(START_FROM_INL));
+
+        userNameExpr.setProperty(element.getProperty(USER_NAME_EXPR));
+        projectKeyExpr.setProperty(element.getProperty(PROJECT_KEY_EXPR));
+        maxResultExpr.setProperty(element.getProperty(MAX_RESULT_EXPR));
+        startFromExpr.setProperty(element.getProperty(START_FROM_EXPR));
     }
 }

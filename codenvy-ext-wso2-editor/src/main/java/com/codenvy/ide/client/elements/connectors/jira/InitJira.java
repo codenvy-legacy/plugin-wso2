@@ -31,8 +31,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
 
 /**
  * The Class describes Init connector for jira group connectors. Also the class contains the business logic
@@ -47,23 +47,23 @@ public class InitJira extends AbstractConnector {
     public static final String ELEMENT_NAME       = "Init";
     public static final String SERIALIZATION_NAME = "jira.init";
 
+    public static final Key<String> USER_NAME_INL = new Key<>("userNameInl");
+    public static final Key<String> PASSWORD_INL  = new Key<>("passwordInl");
+    public static final Key<String> URI_INL       = new Key<>("uriInl");
+
+    public static final Key<String> USER_NAME_EXPR = new Key<>("userNameExpr");
+    public static final Key<String> PASSWORD_EXPR  = new Key<>("passwordExpr");
+    public static final Key<String> URI_EXPR       = new Key<>("uriExpr");
+
+    public static final Key<List<NameSpace>> USER_NAME_NS = new Key<>("userNameNameSpace");
+    public static final Key<List<NameSpace>> PASSWORD_NS  = new Key<>("passwordNameSpace");
+    public static final Key<List<NameSpace>> URI_NS       = new Key<>("uriNameSpace");
+
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
     private static final String URI      = "uri";
 
     private static final List<String> PROPERTIES = Arrays.asList(USERNAME, PASSWORD, URI);
-
-    private String userName;
-    private String password;
-    private String uri;
-
-    private String userNameExpression;
-    private String passwordExpression;
-    private String uriExpression;
-
-    private List<NameSpace> userNameNS;
-    private List<NameSpace> passwordNS;
-    private List<NameSpace> uriNS;
 
     @Inject
     public InitJira(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -77,17 +77,18 @@ public class InitJira extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        password = "";
-        userName = "";
-        uri = "";
+        putProperty(USER_NAME_INL, "");
+        putProperty(PASSWORD_INL, "");
+        putProperty(URI_INL, "");
 
-        passwordExpression = "";
-        userNameExpression = "";
-        uriExpression = "";
 
-        uriNS = new ArrayList<>();
-        passwordNS = new ArrayList<>();
-        userNameNS = new ArrayList<>();
+        putProperty(USER_NAME_EXPR, "");
+        putProperty(PASSWORD_EXPR, "");
+        putProperty(URI_EXPR, "");
+
+        putProperty(USER_NAME_NS, new ArrayList<NameSpace>());
+        putProperty(PASSWORD_NS, new ArrayList<NameSpace>());
+        putProperty(URI_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -96,11 +97,11 @@ public class InitJira extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(NAME_SPACED_PROPERTY_EDITOR);
 
-        properties.put(USERNAME, isInline ? userName : userNameExpression);
-        properties.put(PASSWORD, isInline ? password : passwordExpression);
-        properties.put(URI, isInline ? uri : uriExpression);
+        properties.put(USERNAME, isInline ? getProperty(USER_NAME_INL) : getProperty(USER_NAME_EXPR));
+        properties.put(PASSWORD, isInline ? getProperty(PASSWORD_INL) : getProperty(PASSWORD_EXPR));
+        properties.put(URI, isInline ? getProperty(URI_INL) : getProperty(URI_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -108,122 +109,22 @@ public class InitJira extends AbstractConnector {
     /** {@inheritDoc} */
     @Override
     protected void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
-
-        switch (nodeName) {
+        switch (node.getNodeName()) {
             case USERNAME:
-                if (isInline) {
-                    password = nodeValue;
-                } else {
-                    passwordExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, USER_NAME_INL, USER_NAME_EXPR);
                 break;
 
             case PASSWORD:
-                if (isInline) {
-                    userName = nodeValue;
-                } else {
-                    userNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, PASSWORD_INL, PASSWORD_EXPR);
                 break;
 
             case URI:
-                if (isInline) {
-                    uri = nodeValue;
-                } else {
-                    uriExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, URI_INL, URI_EXPR);
                 break;
+
+            default:
         }
-    }
-
-    @Nonnull
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(@Nonnull String userName) {
-        this.userName = userName;
-    }
-
-    @Nonnull
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(@Nonnull String password) {
-        this.password = password;
-    }
-
-    @Nonnull
-    public String getUri() {
-        return uri;
-    }
-
-    public void setUri(@Nonnull String uri) {
-        this.uri = uri;
-    }
-
-    @Nonnull
-    public String getUserNameExpression() {
-        return userNameExpression;
-    }
-
-    public void setUserNameExpression(@Nonnull String userNameExpression) {
-        this.userNameExpression = userNameExpression;
-    }
-
-    @Nonnull
-    public String getPasswordExpression() {
-        return passwordExpression;
-    }
-
-    public void setPasswordExpression(@Nonnull String passwordExpression) {
-        this.passwordExpression = passwordExpression;
-    }
-
-    @Nonnull
-    public String getUriExpression() {
-        return uriExpression;
-    }
-
-    public void setUriExpression(@Nonnull String uriExpression) {
-        this.uriExpression = uriExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getUserNameNS() {
-        return userNameNS;
-    }
-
-    public void setUserNameNS(@Nonnull List<NameSpace> userNameNS) {
-        this.userNameNS = userNameNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getPasswordNS() {
-        return passwordNS;
-    }
-
-    public void setPasswordNS(@Nonnull List<NameSpace> passwordNS) {
-        this.passwordNS = passwordNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getUriNS() {
-        return uriNS;
-    }
-
-    public void setUriNS(@Nonnull List<NameSpace> uriNS) {
-        this.uriNS = uriNS;
     }
 }

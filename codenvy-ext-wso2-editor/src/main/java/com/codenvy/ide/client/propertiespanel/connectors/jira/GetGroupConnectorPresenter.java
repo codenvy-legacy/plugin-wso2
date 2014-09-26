@@ -16,23 +16,29 @@
 package com.codenvy.ide.client.propertiespanel.connectors.jira;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.jira.GetGroup;
-import com.codenvy.ide.client.elements.connectors.jira.JiraPropertyManager;
+import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.jira.GetGroup.GROUP_NAME_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.GetGroup.GROUP_NAME_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.GetGroup.GROUP_NAME_NS;
+
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -43,80 +49,46 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  */
 public class GetGroupConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<GetGroup> {
 
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          groupNameCallBack;
+    private SimplePropertyPresenter  groupNameInl;
+    private ComplexPropertyPresenter groupNameExpr;
 
     @Inject
     public GetGroupConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                       NameSpaceEditorPresenter nameSpacePresenter,
-                                      GeneralPropertiesPanelView view,
-                                      JiraPropertyManager jiraPropertyManager,
+                                      PropertiesPanelView view,
+                                      TwitterPropertyManager twitterPropertyManager,
                                       ParameterPresenter parameterPresenter,
-                                      PropertyTypeManager propertyTypeManager) {
-        super(view, jiraPropertyManager, parameterPresenter, propertyTypeManager);
+                                      PropertyTypeManager propertyTypeManager,
+                                      PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                      Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                      Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                      Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              twitterPropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.groupNameCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setGroupNameNS(nameSpaces);
-                element.setGroupNameExpression(expression);
-
-                GetGroupConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setGroupName(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getGroupNameNS(),
-                                                    groupNameCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getGroupNameExpression());
+    private void prepareView() {
+        groupNameInl = createSimplePanel(locale.jiraIssueIdOrKey(), GROUP_NAME_INL);
+        groupNameExpr = createComplexPanel(locale.jiraIssueIdOrKey(), GROUP_NAME_NS, GROUP_NAME_EXPR);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        boolean isVisible = INLINE.equals(element.getProperty(PARAMETER_EDITOR_TYPE));
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
-
-        view.setVisibleFirstButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getGroupNameExpression() : element.getGroupName());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-
-        view.setFirstLabelTitle(locale.jiraGroupName());
+        groupNameInl.setVisible(isVisible);
+        groupNameExpr.setVisible(!isVisible);
     }
 
     /** {@inheritDoc} */
@@ -124,6 +96,7 @@ public class GetGroupConnectorPresenter extends AbstractConnectorPropertiesPanel
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        groupNameInl.setProperty(element.getProperty(GROUP_NAME_INL));
+        groupNameExpr.setProperty(element.getProperty(GROUP_NAME_EXPR));
     }
 }

@@ -31,8 +31,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
 
 /**
  * The Class describes SearchUser connector for jira group connectors. Also the class contains the business logic
@@ -47,31 +47,35 @@ public class SearchUser extends AbstractConnector {
     public static final String ELEMENT_NAME       = "SearchUser";
     public static final String SERIALIZATION_NAME = "jira.searchUser";
 
-    private static final String USERNAME         = "username";
+    public static final Key<String> USER_NAME_INL        = new Key<>("userNameInl");
+    public static final Key<String> START_AT_INL         = new Key<>("startAtInl");
+    public static final Key<String> MAX_RESULTS_INL      = new Key<>("maxResultsInl");
+    public static final Key<String> INCLUDE_ACTIVE_INL   = new Key<>("includeActiveInl");
+    public static final Key<String> INCLUDE_INACTIVE_INL = new Key<>("includeInactiveInl");
+
+    public static final Key<String> USER_NAME_EXPR        = new Key<>("userNameExpr");
+    public static final Key<String> START_AT_EXPR         = new Key<>("startAtExpr");
+    public static final Key<String> MAX_RESULTS_EXPR      = new Key<>("maxResultsExpr");
+    public static final Key<String> INCLUDE_ACTIVE_EXPR   = new Key<>("includeActiveExpr");
+    public static final Key<String> INCLUDE_INACTIVE_EXPR = new Key<>("includeInactiveExpr");
+
+    public static final Key<List<NameSpace>> USER_NAME_NS        = new Key<>("userNameSpace");
+    public static final Key<List<NameSpace>> START_AT_NS         = new Key<>("startAtNameSpace");
+    public static final Key<List<NameSpace>> MAX_RESULTS_NS      = new Key<>("maxResultsNameSpace");
+    public static final Key<List<NameSpace>> INCLUDE_ACTIVE_NS   = new Key<>("includeActiveNameSpace");
+    public static final Key<List<NameSpace>> INCLUDE_INACTIVE_NS = new Key<>("includeInactiveNameSpace");
+
+    private static final String USER_NAME        = "username";
     private static final String START_AT         = "startAt";
     private static final String MAX_RESULTS      = "maxResults";
     private static final String INCLUDE_ACTIVE   = "includeActive";
     private static final String INCLUDE_INACTIVE = "includeInactive";
 
-    private static final List<String> PROPERTIES = Arrays.asList(USERNAME, START_AT, MAX_RESULTS, INCLUDE_ACTIVE, INCLUDE_INACTIVE);
-
-    private String userName;
-    private String startAt;
-    private String maxResults;
-    private String includeActive;
-    private String includeInactive;
-
-    private String userNameExpression;
-    private String startAtExpression;
-    private String maxResultsExpression;
-    private String includeActiveExpression;
-    private String includeInactiveExpression;
-
-    private List<NameSpace> userNameNS;
-    private List<NameSpace> includeInactiveNS;
-    private List<NameSpace> includeActiveNS;
-    private List<NameSpace> startAtNS;
-    private List<NameSpace> maxResultsNS;
+    private static final List<String> PROPERTIES = Arrays.asList(USER_NAME,
+                                                                 INCLUDE_INACTIVE,
+                                                                 INCLUDE_ACTIVE,
+                                                                 START_AT,
+                                                                 MAX_RESULTS);
 
     @Inject
     public SearchUser(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -85,23 +89,23 @@ public class SearchUser extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        userName = "";
-        startAt = "";
-        maxResults = "";
-        includeActive = "";
-        includeInactive = "";
+        putProperty(USER_NAME_INL, "");
+        putProperty(START_AT_INL, "");
+        putProperty(MAX_RESULTS_INL, "");
+        putProperty(INCLUDE_ACTIVE_INL, "");
+        putProperty(INCLUDE_INACTIVE_INL, "");
 
-        userNameExpression = "";
-        maxResultsExpression = "";
-        includeActiveExpression = "";
-        startAtExpression = "";
-        includeInactiveExpression = "";
+        putProperty(USER_NAME_EXPR, "");
+        putProperty(START_AT_EXPR, "");
+        putProperty(MAX_RESULTS_EXPR, "");
+        putProperty(INCLUDE_ACTIVE_EXPR, "");
+        putProperty(INCLUDE_INACTIVE_EXPR, "");
 
-        userNameNS = new ArrayList<>();
-        startAtNS = new ArrayList<>();
-        maxResultsNS = new ArrayList<>();
-        includeActiveNS = new ArrayList<>();
-        includeInactiveNS = new ArrayList<>();
+        putProperty(USER_NAME_NS, new ArrayList<NameSpace>());
+        putProperty(START_AT_NS, new ArrayList<NameSpace>());
+        putProperty(MAX_RESULTS_NS, new ArrayList<NameSpace>());
+        putProperty(INCLUDE_ACTIVE_NS, new ArrayList<NameSpace>());
+        putProperty(INCLUDE_INACTIVE_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -110,13 +114,13 @@ public class SearchUser extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(NAME_SPACED_PROPERTY_EDITOR);
 
-        properties.put(USERNAME, isInline ? userName : userNameExpression);
-        properties.put(START_AT, isInline ? startAt : startAtExpression);
-        properties.put(MAX_RESULTS, isInline ? maxResults : maxResultsExpression);
-        properties.put(INCLUDE_ACTIVE, isInline ? includeActive : includeActiveExpression);
-        properties.put(INCLUDE_INACTIVE, isInline ? includeInactive : includeInactiveExpression);
+        properties.put(USER_NAME, isInline ? getProperty(USER_NAME_INL) : getProperty(USER_NAME_EXPR));
+        properties.put(START_AT, isInline ? getProperty(START_AT_INL) : getProperty(START_AT_EXPR));
+        properties.put(MAX_RESULTS, isInline ? getProperty(MAX_RESULTS_INL) : getProperty(MAX_RESULTS_EXPR));
+        properties.put(INCLUDE_ACTIVE, isInline ? getProperty(INCLUDE_ACTIVE_INL) : getProperty(INCLUDE_ACTIVE_EXPR));
+        properties.put(INCLUDE_INACTIVE, isInline ? getProperty(INCLUDE_INACTIVE_INL) : getProperty(INCLUDE_INACTIVE_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -124,196 +128,30 @@ public class SearchUser extends AbstractConnector {
     /** {@inheritDoc} */
     @Override
     protected void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
-
-        switch (nodeName) {
-            case USERNAME:
-                if (isInline) {
-                    userName = nodeValue;
-                } else {
-                    userNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
-
-            case MAX_RESULTS:
-                if (isInline) {
-                    maxResults = nodeValue;
-                } else {
-                    maxResultsExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+        switch (node.getNodeName()) {
+            case USER_NAME:
+                adaptProperty(nodeValue, USER_NAME_INL, USER_NAME_EXPR);
                 break;
 
             case START_AT:
-                if (isInline) {
-                    startAt = nodeValue;
-                } else {
-                    startAtExpression = nodeValue;
+                adaptProperty(nodeValue, START_AT_INL, START_AT_EXPR);
+                break;
 
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+            case MAX_RESULTS:
+                adaptProperty(nodeValue, MAX_RESULTS_INL, MAX_RESULTS_EXPR);
                 break;
 
             case INCLUDE_ACTIVE:
-                if (isInline) {
-                    includeActive = nodeValue;
-                } else {
-                    includeActiveExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, INCLUDE_ACTIVE_INL, INCLUDE_ACTIVE_EXPR);
                 break;
 
             case INCLUDE_INACTIVE:
-                if (isInline) {
-                    includeInactive = nodeValue;
-                } else {
-                    includeInactiveExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, INCLUDE_INACTIVE_INL, INCLUDE_INACTIVE_EXPR);
                 break;
+
+            default:
         }
-    }
-
-    @Nonnull
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(@Nonnull String userName) {
-        this.userName = userName;
-    }
-
-    @Nonnull
-    public String getStartAt() {
-        return startAt;
-    }
-
-    public void setStartAt(@Nonnull String shartAt) {
-        this.startAt = shartAt;
-    }
-
-    @Nonnull
-    public String getMaxResults() {
-        return maxResults;
-    }
-
-    public void setMaxResults(@Nonnull String maxResults) {
-        this.maxResults = maxResults;
-    }
-
-    @Nonnull
-    public String getIncludeActive() {
-        return includeActive;
-    }
-
-    public void setIncludeActive(@Nonnull String includeActive) {
-        this.includeActive = includeActive;
-    }
-
-    @Nonnull
-    public String getIncludeInactive() {
-        return includeInactive;
-    }
-
-    public void setIncludeInactive(@Nonnull String includeInactive) {
-        this.includeInactive = includeInactive;
-    }
-
-    @Nonnull
-    public String getUserNameExpression() {
-        return userNameExpression;
-    }
-
-    public void setUserNameExpression(@Nonnull String userNameExpression) {
-        this.userNameExpression = userNameExpression;
-    }
-
-    @Nonnull
-    public String getStartAtExpression() {
-        return startAtExpression;
-    }
-
-    public void setStartAtExpression(@Nonnull String ctartAtExpression) {
-        this.startAtExpression = ctartAtExpression;
-    }
-
-    @Nonnull
-    public String getMaxResultsExpression() {
-        return maxResultsExpression;
-    }
-
-    public void setMaxResultsExpression(@Nonnull String maxResultsExpression) {
-        this.maxResultsExpression = maxResultsExpression;
-    }
-
-    @Nonnull
-    public String getIncludeActiveExpression() {
-        return includeActiveExpression;
-    }
-
-    public void setIncludeActiveExpression(@Nonnull String includeActiveExpression) {
-        this.includeActiveExpression = includeActiveExpression;
-    }
-
-    @Nonnull
-    public String getIncludeInactiveExpression() {
-        return includeInactiveExpression;
-    }
-
-    public void setIncludeInactiveExpression(@Nonnull String includeInactiveExpression) {
-        this.includeInactiveExpression = includeInactiveExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getUserNameNS() {
-        return userNameNS;
-    }
-
-    public void setUserNameNS(@Nonnull List<NameSpace> userNameNS) {
-        this.userNameNS = userNameNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getIncludeInactiveNS() {
-        return includeInactiveNS;
-    }
-
-    public void setIncludeInactiveNS(@Nonnull List<NameSpace> includeInactiveNS) {
-        this.includeInactiveNS = includeInactiveNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getIncludeActiveNS() {
-        return includeActiveNS;
-    }
-
-    public void setIncludeActiveNS(@Nonnull List<NameSpace> includeActiveNS) {
-        this.includeActiveNS = includeActiveNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getChartAtNS() {
-        return startAtNS;
-    }
-
-    public void setStartAtNS(@Nonnull List<NameSpace> startAtNS) {
-        this.startAtNS = startAtNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getMaxResultsNS() {
-        return maxResultsNS;
-    }
-
-    public void setMaxResultsNS(@Nonnull List<NameSpace> maxResultsNS) {
-        this.maxResultsNS = maxResultsNS;
     }
 }

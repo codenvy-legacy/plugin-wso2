@@ -16,23 +16,31 @@
 package com.codenvy.ide.client.propertiespanel.connectors.jira;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.connectors.jira.JiraPropertyManager;
 import com.codenvy.ide.client.elements.connectors.jira.UpdateComment;
+import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.jira.UpdateComment.COMMENT_ID_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.UpdateComment.COMMENT_ID_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.UpdateComment.COMMENT_ID_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.UpdateComment.ISSUE_ID_OR_KEY_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.UpdateComment.ISSUE_ID_OR_KEY_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.UpdateComment.ISSUE_ID_OR_KEY_NS;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -43,115 +51,55 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  */
 public class UpdateCommentConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<UpdateComment> {
 
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          issueIdOrKeyCallBack;
-    private final AddNameSpacesCallBack          commentIdCallBack;
+    private SimplePropertyPresenter issueIdOrKeyInl;
+    private SimplePropertyPresenter commentIdInl;
+
+    private ComplexPropertyPresenter issueIdOrKeyExpr;
+    private ComplexPropertyPresenter commentIdExpr;
 
     @Inject
     public UpdateCommentConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                            NameSpaceEditorPresenter nameSpacePresenter,
-                                           GeneralPropertiesPanelView view,
-                                           JiraPropertyManager jiraPropertyManager,
+                                           PropertiesPanelView view,
+                                           TwitterPropertyManager twitterPropertyManager,
                                            ParameterPresenter parameterPresenter,
-                                           PropertyTypeManager propertyTypeManager) {
-        super(view, jiraPropertyManager, parameterPresenter, propertyTypeManager);
+                                           PropertyTypeManager propertyTypeManager,
+                                           PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                           Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                           Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                           Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              twitterPropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.issueIdOrKeyCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setIssueIdOrKeyNS(nameSpaces);
-                element.setIssueIdOrKeyExpression(expression);
-
-                UpdateCommentConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.commentIdCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setCommentIdNS(nameSpaces);
-                element.setCommentIdExpression(expression);
-
-                UpdateCommentConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
+    private void prepareView() {
+        issueIdOrKeyInl = createSimplePanel(locale.jiraIssueIdOrKey(), ISSUE_ID_OR_KEY_INL);
+        commentIdInl = createSimplePanel(locale.jiraCommentId(), COMMENT_ID_INL);
 
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setIssueIdOrKey(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setCommentId(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getIssueIdOrKeyNS(),
-                                                    issueIdOrKeyCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getIssueIdOrKeyExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getCommentIdNS(),
-                                                    commentIdCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getCommentIdExpression());
+        issueIdOrKeyExpr = createComplexPanel(locale.jiraIssueIdOrKey(), ISSUE_ID_OR_KEY_NS, ISSUE_ID_OR_KEY_EXPR);
+        commentIdExpr = createComplexPanel(locale.jiraCommentId(), COMMENT_ID_NS, COMMENT_ID_EXPR);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        boolean isVisible = INLINE.equals(element.getProperty(PARAMETER_EDITOR_TYPE));
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+        issueIdOrKeyInl.setVisible(isVisible);
+        commentIdInl.setVisible(isVisible);
 
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getIssueIdOrKeyExpression() : element.getIssueIdOrKey());
-        view.setSecondTextBoxValue(isEquals ? element.getCommentIdExpression() : element.getCommentId());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-
-        view.setFirstLabelTitle(locale.jiraIssueIdOrKey());
-        view.setSecondLabelTitle(locale.jiraCommentId());
+        issueIdOrKeyExpr.setVisible(!isVisible);
+        commentIdExpr.setVisible(!isVisible);
     }
 
     /** {@inheritDoc} */
@@ -159,6 +107,10 @@ public class UpdateCommentConnectorPresenter extends AbstractConnectorProperties
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        issueIdOrKeyInl.setProperty(element.getProperty(ISSUE_ID_OR_KEY_INL));
+        commentIdInl.setProperty(element.getProperty(COMMENT_ID_INL));
+
+        issueIdOrKeyExpr.setProperty(element.getProperty(ISSUE_ID_OR_KEY_EXPR));
+        commentIdExpr.setProperty(element.getProperty(COMMENT_ID_EXPR));
     }
 }

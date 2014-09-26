@@ -31,8 +31,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
 
 /**
  * The Class describes SearchJira connector for jira group connectors. Also the class contains the business logic
@@ -47,23 +47,23 @@ public class SearchJira extends AbstractConnector {
     public static final String ELEMENT_NAME       = "SearchJira";
     public static final String SERIALIZATION_NAME = "jira.searchJira";
 
+    public static final Key<String> QUERY_INL      = new Key<>("queryInl");
+    public static final Key<String> MAX_RESULT_INL = new Key<>("maxResultInl");
+    public static final Key<String> START_FROM_INL = new Key<>("startFromInl");
+
+    public static final Key<String> QUERY_EXPR      = new Key<>("queryExpr");
+    public static final Key<String> MAX_RESULT_EXPR = new Key<>("maxResultExpr");
+    public static final Key<String> START_FROM_EXPR = new Key<>("startFromExpr");
+
+    public static final Key<List<NameSpace>> QUERY_NS      = new Key<>("queryNameSpace");
+    public static final Key<List<NameSpace>> MAX_RESULT_NS = new Key<>("maxResultNameSpace");
+    public static final Key<List<NameSpace>> START_FROM_NS = new Key<>("startFromNameSpace");
+
     private static final String QUERY      = "query";
     private static final String MAX_RESULT = "maxResult";
     private static final String START_FROM = "startFrom";
 
     private static final List<String> PROPERTIES = Arrays.asList(QUERY, MAX_RESULT, START_FROM);
-
-    private String query;
-    private String maxResult;
-    private String startFrom;
-
-    private String queryExpression;
-    private String maxResultExpression;
-    private String startFromExpression;
-
-    private List<NameSpace> queryNS;
-    private List<NameSpace> maxResultNS;
-    private List<NameSpace> startFromNS;
 
     @Inject
     public SearchJira(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -77,17 +77,17 @@ public class SearchJira extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        query = "";
-        maxResult = "";
-        startFrom = "";
+        putProperty(QUERY_INL, "");
+        putProperty(MAX_RESULT_INL, "");
+        putProperty(START_FROM_INL, "");
 
-        queryExpression = "";
-        startFromExpression = "";
-        maxResultExpression = "";
+        putProperty(QUERY_EXPR, "");
+        putProperty(MAX_RESULT_EXPR, "");
+        putProperty(START_FROM_EXPR, "");
 
-        startFromNS = new ArrayList<>();
-        queryNS = new ArrayList<>();
-        maxResultNS = new ArrayList<>();
+        putProperty(QUERY_NS, new ArrayList<NameSpace>());
+        putProperty(MAX_RESULT_NS, new ArrayList<NameSpace>());
+        putProperty(START_FROM_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -96,11 +96,11 @@ public class SearchJira extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(NAME_SPACED_PROPERTY_EDITOR);
 
-        properties.put(QUERY, isInline ? query : queryExpression);
-        properties.put(MAX_RESULT, isInline ? maxResult : maxResultExpression);
-        properties.put(START_FROM, isInline ? startFrom : startFromExpression);
+        properties.put(QUERY, isInline ? getProperty(QUERY_INL) : getProperty(QUERY_EXPR));
+        properties.put(MAX_RESULT, isInline ? getProperty(MAX_RESULT_INL) : getProperty(MAX_RESULT_EXPR));
+        properties.put(START_FROM, isInline ? getProperty(START_FROM_INL) : getProperty(START_FROM_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -108,122 +108,22 @@ public class SearchJira extends AbstractConnector {
     /** {@inheritDoc} */
     @Override
     protected void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
-
-        switch (nodeName) {
+        switch (node.getNodeName()) {
             case QUERY:
-                if (isInline) {
-                    query = nodeValue;
-                } else {
-                    queryExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, QUERY_INL, QUERY_EXPR);
                 break;
 
             case MAX_RESULT:
-                if (isInline) {
-                    maxResult = nodeValue;
-                } else {
-                    maxResultExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, MAX_RESULT_INL, MAX_RESULT_EXPR);
                 break;
 
             case START_FROM:
-                if (isInline) {
-                    startFrom = nodeValue;
-                } else {
-                    startFromExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, START_FROM_INL, START_FROM_EXPR);
                 break;
+
+            default:
         }
-    }
-
-    @Nonnull
-    public String getQuery() {
-        return query;
-    }
-
-    public void setQuery(@Nonnull String query) {
-        this.query = query;
-    }
-
-    @Nonnull
-    public String getMaxResult() {
-        return maxResult;
-    }
-
-    public void setMaxResult(@Nonnull String maxResult) {
-        this.maxResult = maxResult;
-    }
-
-    @Nonnull
-    public String getStartFrom() {
-        return startFrom;
-    }
-
-    public void setStartFrom(@Nonnull String startFrom) {
-        this.startFrom = startFrom;
-    }
-
-    @Nonnull
-    public String getQueryExpression() {
-        return queryExpression;
-    }
-
-    public void setQueryExpression(@Nonnull String queryExpression) {
-        this.queryExpression = queryExpression;
-    }
-
-    @Nonnull
-    public String getMaxResultExpression() {
-        return maxResultExpression;
-    }
-
-    public void setMaxResultExpression(@Nonnull String maxResultExpression) {
-        this.maxResultExpression = maxResultExpression;
-    }
-
-    @Nonnull
-    public String getStartFromExpression() {
-        return startFromExpression;
-    }
-
-    public void setStartFromExpression(@Nonnull String startFromExpression) {
-        this.startFromExpression = startFromExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getQueryNS() {
-        return queryNS;
-    }
-
-    public void setQueryNS(@Nonnull List<NameSpace> queryNS) {
-        this.queryNS = queryNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getMaxResultNS() {
-        return maxResultNS;
-    }
-
-    public void setMaxResultNS(@Nonnull List<NameSpace> maxResultNS) {
-        this.maxResultNS = maxResultNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getStartFromNS() {
-        return startFromNS;
-    }
-
-    public void setStartFromNS(@Nonnull List<NameSpace> startFromNS) {
-        this.startFromNS = startFromNS;
     }
 }

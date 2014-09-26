@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 
 /**
  * The Class describes GetGroup connector for jira group connectors. Also the class contains the business logic
@@ -47,16 +46,18 @@ public class GetGroup extends AbstractConnector {
     public static final String ELEMENT_NAME       = "GetGroup";
     public static final String SERIALIZATION_NAME = "jira.getGroup";
 
+    public static final Key<String>          GROUP_NAME_INL  = new Key<>("groupNameInl");
+    public static final Key<String>          GROUP_NAME_EXPR = new Key<>("groupNameExpr");
+    public static final Key<List<NameSpace>> GROUP_NAME_NS   = new Key<>("groupNameNameSpace");
+
     private static final String GROUP_NAME = "groupName";
 
     private static final List<String> PROPERTIES = Arrays.asList(GROUP_NAME);
 
-    private String          groupName;
-    private String          groupNameExpression;
-    private List<NameSpace> groupNameNS;
-
     @Inject
-    public GetGroup(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
+    public GetGroup(EditorResources resources,
+                    Provider<Branch> branchProvider,
+                    ElementCreatorsManager elementCreatorsManager) {
         super(ELEMENT_NAME,
               ELEMENT_NAME,
               SERIALIZATION_NAME,
@@ -67,10 +68,9 @@ public class GetGroup extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        groupName = "";
-        groupNameExpression = "";
-
-        groupNameNS = new ArrayList<>();
+        putProperty(GROUP_NAME_INL, "");
+        putProperty(GROUP_NAME_EXPR, "");
+        putProperty(GROUP_NAME_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -79,9 +79,9 @@ public class GetGroup extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
-        properties.put(GROUP_NAME, isInline ? groupName : groupNameExpression);
+        properties.put(GROUP_NAME, isInline ? getProperty(GROUP_NAME_INL) : getProperty(GROUP_NAME_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -89,50 +89,10 @@ public class GetGroup extends AbstractConnector {
     /** {@inheritDoc} */
     @Override
     protected void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
 
-        boolean isInline = Inline.equals(parameterEditorType);
-
-        switch (nodeName) {
-            case GROUP_NAME:
-                if (isInline) {
-                    groupName = nodeValue;
-                } else {
-                    groupNameExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
-                break;
-
+        if (GROUP_NAME.equals(node.getNodeName())) {
+            adaptProperty(nodeValue, GROUP_NAME_INL, GROUP_NAME_EXPR);
         }
     }
-
-    @Nonnull
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(@Nonnull String groupName) {
-        this.groupName = groupName;
-    }
-
-    @Nonnull
-    public String getGroupNameExpression() {
-        return groupNameExpression;
-    }
-
-    public void setGroupNameExpression(@Nonnull String groupNameExpression) {
-        this.groupNameExpression = groupNameExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getGroupNameNS() {
-        return groupNameNS;
-    }
-
-    public void setGroupNameNS(@Nonnull List<NameSpace> groupNameNS) {
-        this.groupNameNS = groupNameNS;
-    }
-
 }

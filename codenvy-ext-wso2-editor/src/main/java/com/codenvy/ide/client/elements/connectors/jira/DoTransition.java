@@ -31,8 +31,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
 
 /**
  * The Class describes DoTransition connector for jira group connectors. Also the class contains the business logic
@@ -44,9 +44,26 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  */
 public class DoTransition extends AbstractConnector {
 
-
     public static final String ELEMENT_NAME       = "DoTransition";
     public static final String SERIALIZATION_NAME = "jira.doTransition";
+
+    public static final Key<String> ISSUE_ID_OR_KEY_INL = new Key<>("issueIdOrKeyInl");
+    public static final Key<String> UPDATE_COMMENT_INL  = new Key<>("updateCommentInl");
+    public static final Key<String> UPDATE_ASSIGNEE_INL = new Key<>("updateAssigneeInl");
+    public static final Key<String> RESOLUTION_INL      = new Key<>("resolutionInl");
+    public static final Key<String> TRANSITION_ID_INL   = new Key<>("transitionIdInl");
+
+    public static final Key<String> ISSUE_ID_OR_KEY_EXPR = new Key<>("issueIdOrKeyExpr");
+    public static final Key<String> UPDATE_COMMENT_EXPR  = new Key<>("updateCommentExpr");
+    public static final Key<String> UPDATE_ASSIGNEE_EXPR = new Key<>("updateAssigneeExpr");
+    public static final Key<String> RESOLUTION_EXPR      = new Key<>("resolutionExpr");
+    public static final Key<String> TRANSITION_ID_EXPR   = new Key<>("transitionIdExpr");
+
+    public static final Key<List<NameSpace>> ISSUE_ID_OR_KEY_NS = new Key<>("issueIdOrKeyNameSpace");
+    public static final Key<List<NameSpace>> UPDATE_COMMENT_NS  = new Key<>("updateCommentNameSpace");
+    public static final Key<List<NameSpace>> UPDATE_ASSIGNEE_NS = new Key<>("updateAssigneeNameSpace");
+    public static final Key<List<NameSpace>> RESOLUTION_NS      = new Key<>("resolutionNameSpace");
+    public static final Key<List<NameSpace>> TRANSITION_ID_NS   = new Key<>("transitionIdNameSpace");
 
     private static final String ISSUE_ID_OR_KEY = "issueIdOrKey";
     private static final String UPDATE_COMMENT  = "updateComment";
@@ -59,23 +76,6 @@ public class DoTransition extends AbstractConnector {
                                                                  UPDATE_ASSIGNEE,
                                                                  RESOLUTION,
                                                                  TRANSITION_ID);
-    private String issueIdOrKey;
-    private String updateComment;
-    private String updateAssignee;
-    private String resolution;
-    private String transitionId;
-
-    private String issueIdOrKeyExpression;
-    private String updateCommentExpression;
-    private String updateAssigneeExpression;
-    private String resolutionExpression;
-    private String transitionIdExpression;
-
-    private List<NameSpace> issieIOrKeyNS;
-    private List<NameSpace> updateCommentNS;
-    private List<NameSpace> updateAssigneeNS;
-    private List<NameSpace> resolutionNS;
-    private List<NameSpace> transitionIdNS;
 
     @Inject
     public DoTransition(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -89,23 +89,23 @@ public class DoTransition extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        issueIdOrKey = "";
-        updateComment = "";
-        updateAssignee = "";
-        resolution = "";
-        transitionId = "";
+        putProperty(ISSUE_ID_OR_KEY_INL, "");
+        putProperty(UPDATE_COMMENT_INL, "");
+        putProperty(UPDATE_ASSIGNEE_INL, "");
+        putProperty(RESOLUTION_INL, "");
+        putProperty(TRANSITION_ID_INL, "");
 
-        issueIdOrKeyExpression = "";
-        updateCommentExpression = "";
-        resolutionExpression = "";
-        updateAssigneeExpression = "";
-        transitionIdExpression = "";
+        putProperty(ISSUE_ID_OR_KEY_EXPR, "");
+        putProperty(UPDATE_COMMENT_EXPR, "");
+        putProperty(UPDATE_ASSIGNEE_EXPR, "");
+        putProperty(RESOLUTION_EXPR, "");
+        putProperty(TRANSITION_ID_EXPR, "");
 
-        resolutionNS = new ArrayList<>();
-        issieIOrKeyNS = new ArrayList<>();
-        updateAssigneeNS = new ArrayList<>();
-        updateCommentNS = new ArrayList<>();
-        transitionIdNS = new ArrayList<>();
+        putProperty(ISSUE_ID_OR_KEY_NS, new ArrayList<NameSpace>());
+        putProperty(UPDATE_COMMENT_NS, new ArrayList<NameSpace>());
+        putProperty(UPDATE_ASSIGNEE_NS, new ArrayList<NameSpace>());
+        putProperty(RESOLUTION_NS, new ArrayList<NameSpace>());
+        putProperty(TRANSITION_ID_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -114,13 +114,13 @@ public class DoTransition extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(NAME_SPACED_PROPERTY_EDITOR);
 
-        properties.put(ISSUE_ID_OR_KEY, isInline ? issueIdOrKey : issueIdOrKeyExpression);
-        properties.put(UPDATE_COMMENT, isInline ? updateComment : updateCommentExpression);
-        properties.put(UPDATE_ASSIGNEE, isInline ? updateAssignee : updateAssigneeExpression);
-        properties.put(RESOLUTION, isInline ? resolution : resolutionExpression);
-        properties.put(TRANSITION_ID, isInline ? transitionId : transitionIdExpression);
+        properties.put(ISSUE_ID_OR_KEY, isInline ? getProperty(ISSUE_ID_OR_KEY_INL) : getProperty(ISSUE_ID_OR_KEY_EXPR));
+        properties.put(UPDATE_COMMENT, isInline ? getProperty(UPDATE_COMMENT_INL) : getProperty(UPDATE_COMMENT_EXPR));
+        properties.put(UPDATE_ASSIGNEE, isInline ? getProperty(UPDATE_ASSIGNEE_INL) : getProperty(UPDATE_ASSIGNEE_EXPR));
+        properties.put(RESOLUTION, isInline ? getProperty(RESOLUTION_INL) : getProperty(RESOLUTION_EXPR));
+        properties.put(TRANSITION_ID, isInline ? getProperty(TRANSITION_ID_INL) : getProperty(TRANSITION_ID_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -128,196 +128,30 @@ public class DoTransition extends AbstractConnector {
     /** {@inheritDoc} */
     @Override
     protected void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
-        switch (nodeName) {
+        switch (node.getNodeName()) {
             case ISSUE_ID_OR_KEY:
-                if (isInline) {
-                    issueIdOrKey = nodeValue;
-                } else {
-                    issueIdOrKeyExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, ISSUE_ID_OR_KEY_INL, ISSUE_ID_OR_KEY_EXPR);
                 break;
 
             case UPDATE_COMMENT:
-                if (isInline) {
-                    updateComment = nodeValue;
-                } else {
-                    updateCommentExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, UPDATE_COMMENT_INL, UPDATE_COMMENT_EXPR);
                 break;
 
             case UPDATE_ASSIGNEE:
-                if (isInline) {
-                    updateAssignee = nodeValue;
-                } else {
-                    updateAssigneeExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, UPDATE_ASSIGNEE_INL, UPDATE_ASSIGNEE_EXPR);
                 break;
 
             case RESOLUTION:
-                if (isInline) {
-                    resolution = nodeValue;
-                } else {
-                    resolutionExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, RESOLUTION_INL, RESOLUTION_EXPR);
                 break;
 
             case TRANSITION_ID:
-                if (isInline) {
-                    transitionId = nodeValue;
-                } else {
-                    transitionIdExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, TRANSITION_ID_INL, TRANSITION_ID_EXPR);
                 break;
+
+            default:
         }
     }
-
-    @Nonnull
-    public String getIssueIdOrKey() {
-        return issueIdOrKey;
-    }
-
-    public void setIssueIdOrKey(@Nonnull String issueIdOrKey) {
-        this.issueIdOrKey = issueIdOrKey;
-    }
-
-    @Nonnull
-    public String getUpdateComment() {
-        return updateComment;
-    }
-
-    public void setUpdateComment(@Nonnull String updateComment) {
-        this.updateComment = updateComment;
-    }
-
-    @Nonnull
-    public String getUpdateAssignee() {
-        return updateAssignee;
-    }
-
-    public void setUpdateAssignee(@Nonnull String updateAssignee) {
-        this.updateAssignee = updateAssignee;
-    }
-
-    @Nonnull
-    public String getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(@Nonnull String resolution) {
-        this.resolution = resolution;
-    }
-
-    @Nonnull
-    public String getTransitionId() {
-        return transitionId;
-    }
-
-    public void setTransitionId(@Nonnull String transitionId) {
-        this.transitionId = transitionId;
-    }
-
-    @Nonnull
-    public String getIssueIdOrKeyExpression() {
-        return issueIdOrKeyExpression;
-    }
-
-    public void setIssueIdOrKeyExpression(@Nonnull String issueIdOrKeyExpression) {
-        this.issueIdOrKeyExpression = issueIdOrKeyExpression;
-    }
-
-    @Nonnull
-    public String getUpdateCommentExpression() {
-        return updateCommentExpression;
-    }
-
-    public void setUpdateCommentExpression(@Nonnull String updateCommentExpression) {
-        this.updateCommentExpression = updateCommentExpression;
-    }
-
-    @Nonnull
-    public String getUpdateAssigneeExpression() {
-        return updateAssigneeExpression;
-    }
-
-    public void setUpdateAssigneeExpression(@Nonnull String updateAssigneeExpression) {
-        this.updateAssigneeExpression = updateAssigneeExpression;
-    }
-
-    @Nonnull
-    public String getResolutionExpression() {
-        return resolutionExpression;
-    }
-
-    public void setResolutionExpression(@Nonnull String resolutionExpression) {
-        this.resolutionExpression = resolutionExpression;
-    }
-
-    @Nonnull
-    public String getTransitionIdExpression() {
-        return transitionIdExpression;
-    }
-
-    public void setTransitionIdExpression(@Nonnull String transitionIdExpression) {
-        this.transitionIdExpression = transitionIdExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getIssieIOrKeyNS() {
-        return issieIOrKeyNS;
-    }
-
-    public void setIssieIOrKeyNS(@Nonnull List<NameSpace> issieIOrKeyNS) {
-        this.issieIOrKeyNS = issieIOrKeyNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getUpdateCommentNS() {
-        return updateCommentNS;
-    }
-
-    public void setUpdateCommentNS(@Nonnull List<NameSpace> updateCommentNS) {
-        this.updateCommentNS = updateCommentNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getUpdateAssigneeNS() {
-        return updateAssigneeNS;
-    }
-
-    public void setUpdateAssigneeNS(@Nonnull List<NameSpace> updateAssigneeNS) {
-        this.updateAssigneeNS = updateAssigneeNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getResolutionNS() {
-        return resolutionNS;
-    }
-
-    public void setResolutionNS(@Nonnull List<NameSpace> resolutionNS) {
-        this.resolutionNS = resolutionNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getTransitionIdNS() {
-        return transitionIdNS;
-    }
-
-    public void setTransitionIdNS(@Nonnull List<NameSpace> transitionIdNS) {
-        this.transitionIdNS = transitionIdNS;
-    }
-
 }

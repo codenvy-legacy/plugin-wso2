@@ -149,6 +149,7 @@ public class UpdateStatus extends AbstractConnector {
             case STATUS:
                 adaptProperty(nodeValue, STATUS_INL, STATUS_EXPR);
                 break;
+
             default:
         }
     }

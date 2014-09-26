@@ -188,6 +188,7 @@ public class GetHomeTimeLine extends AbstractConnector {
             case MAX_ID:
                 adaptProperty(nodeValue, MAX_ID_INL, MAX_ID_EXPR);
                 break;
+
             default:
         }
     }

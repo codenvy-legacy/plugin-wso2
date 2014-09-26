@@ -16,24 +16,37 @@
 package com.codenvy.ide.client.propertiespanel.connectors.jira;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.jira.CreateFilter;
-import com.codenvy.ide.client.elements.connectors.jira.JiraPropertyManager;
+import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
+import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.base.GeneralPropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
+import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
-import java.util.List;
-
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.jira.CreateFilter.DESCRIPTION_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.CreateFilter.DESCRIPTION_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.CreateFilter.DESCRIPTION_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.CreateFilter.FAVOURITE_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.CreateFilter.FAVOURITE_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.CreateFilter.FAVOURITE_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.CreateFilter.FILTER_NAME_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.CreateFilter.FILTER_NAME_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.CreateFilter.FILTER_NAME_NS;
+import static com.codenvy.ide.client.elements.connectors.jira.CreateFilter.JQL_TYPE_EXPR;
+import static com.codenvy.ide.client.elements.connectors.jira.CreateFilter.JQL_TYPE_INL;
+import static com.codenvy.ide.client.elements.connectors.jira.CreateFilter.JQL_TYPE_NS;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -44,185 +57,67 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
  */
 public class CreateFilterConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<CreateFilter> {
 
-    private final WSO2EditorLocalizationConstant locale;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          filterNameCallBack;
-    private final AddNameSpacesCallBack          jqlTypeCallBack;
-    private final AddNameSpacesCallBack          descriptionCallBack;
-    private final AddNameSpacesCallBack          favouriteCallBack;
+    private SimplePropertyPresenter filterNameInl;
+    private SimplePropertyPresenter jqlTypeInl;
+    private SimplePropertyPresenter descriptionInl;
+    private SimplePropertyPresenter favouriteInl;
+
+    private ComplexPropertyPresenter filterNameExpr;
+    private ComplexPropertyPresenter jqlTypeExpr;
+    private ComplexPropertyPresenter descriptionExpr;
+    private ComplexPropertyPresenter favouriteExpr;
 
     @Inject
     public CreateFilterConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                           NameSpaceEditorPresenter nameSpacePresenter,
-                                          GeneralPropertiesPanelView view,
-                                          JiraPropertyManager jiraPropertyManager,
+                                          PropertiesPanelView view,
+                                          TwitterPropertyManager twitterPropertyManager,
                                           ParameterPresenter parameterPresenter,
-                                          PropertyTypeManager propertyTypeManager) {
-        super(view, jiraPropertyManager, parameterPresenter, propertyTypeManager);
+                                          PropertyTypeManager propertyTypeManager,
+                                          PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
+                                          Provider<ListPropertyPresenter> listPropertyPresenterProvider,
+                                          Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
+                                          Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+        super(view,
+              twitterPropertyManager,
+              parameterPresenter,
+              nameSpacePresenter,
+              propertyTypeManager,
+              locale,
+              propertiesPanelWidgetFactory,
+              listPropertyPresenterProvider,
+              complexPropertyPresenterProvider,
+              simplePropertyPresenterProvider);
 
-        this.locale = locale;
-
-        this.nameSpacePresenter = nameSpacePresenter;
-
-        this.filterNameCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setFilterNameNS(nameSpaces);
-                element.setFilterNameExpression(expression);
-
-                CreateFilterConnectorPresenter.this.view.setFirstTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.jqlTypeCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setJqlTypeNS(nameSpaces);
-                element.setJqlTypeExpression(expression);
-
-                CreateFilterConnectorPresenter.this.view.setSecondTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.descriptionCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setDescriptionNS(nameSpaces);
-                element.setDescriptionExpression(expression);
-
-                CreateFilterConnectorPresenter.this.view.setThirdTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
-
-        this.favouriteCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                element.setFavouriteNS(nameSpaces);
-                element.setFavouriteExpression(expression);
-
-                CreateFilterConnectorPresenter.this.view.setFourthTextBoxValue(expression);
-
-                notifyListeners();
-            }
-        };
+        prepareView();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onParameterEditorTypeChanged() {
-        redrawPropertiesPanel();
+    private void prepareView() {
+        filterNameInl = createSimplePanel(locale.jiraFilterName(), FILTER_NAME_INL);
+        jqlTypeInl = createSimplePanel(locale.jiraJqlType(), JQL_TYPE_INL);
+        descriptionInl = createSimplePanel(locale.jiraDescription(), DESCRIPTION_INL);
+        favouriteInl = createSimplePanel(locale.jiraFavourite(), FAVOURITE_INL);
 
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstTextBoxValueChanged() {
-        element.setFilterName(view.getFirstTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondTextBoxValueChanged() {
-        element.setJqlType(view.getSecondTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdTextBoxValueChanged() {
-        element.setDescription(view.getThirdTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthTextBoxValueChanged() {
-        element.setFavourite(view.getFourthTextBoxValue());
-
-        notifyListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFirstButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getFilterNameNS(),
-                                                    filterNameCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getFilterNameExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onSecondButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getJqlTypeNS(),
-                                                    jqlTypeCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getJqlTypeExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onThirdButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getDescriptionNS(),
-                                                    descriptionCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getDescriptionExpression());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFourthButtonClicked() {
-        nameSpacePresenter.showWindowWithParameters(element.getFavouriteNS(),
-                                                    favouriteCallBack,
-                                                    locale.connectorExpression(),
-                                                    element.getFavouriteExpression());
+        filterNameExpr = createComplexPanel(locale.jiraFilterName(), FILTER_NAME_NS, FILTER_NAME_EXPR);
+        jqlTypeExpr = createComplexPanel(locale.jiraJqlType(), JQL_TYPE_NS, JQL_TYPE_EXPR);
+        descriptionExpr = createComplexPanel(locale.jiraDescription(), DESCRIPTION_NS, DESCRIPTION_EXPR);
+        favouriteExpr = createComplexPanel(locale.jiraFavourite(), FAVOURITE_NS, FAVOURITE_EXPR);
     }
 
     /** {@inheritDoc} */
     @Override
     protected void redrawPropertiesPanel() {
-        ParameterEditorType editorType = ParameterEditorType.valueOf(view.getParameterEditorType());
-        element.setParameterEditorType(editorType);
+        boolean isVisible = INLINE.equals(element.getProperty(PARAMETER_EDITOR_TYPE));
 
-        boolean isEquals = NamespacedPropertyEditor.equals(editorType);
+        filterNameInl.setVisible(isVisible);
+        jqlTypeInl.setVisible(isVisible);
+        descriptionInl.setVisible(isVisible);
+        favouriteInl.setVisible(isVisible);
 
-        view.setVisibleFirstButton(isEquals);
-        view.setVisibleSecondButton(isEquals);
-        view.setVisibleThirdButton(isEquals);
-        view.setVisibleFourthButton(isEquals);
-
-        view.setEnableFirstTextBox(!isEquals);
-        view.setEnableSecondTextBox(!isEquals);
-        view.setEnableThirdTextBox(!isEquals);
-        view.setEnableFourthTextBox(!isEquals);
-
-        view.setFirstTextBoxValue(isEquals ? element.getFilterNameExpression() : element.getFilterName());
-        view.setSecondTextBoxValue(isEquals ? element.getJqlTypeExpression() : element.getJqlType());
-        view.setThirdTextBoxValue(isEquals ? element.getDescriptionExpression() : element.getDescription());
-        view.setFourthTextBoxValue(isEquals ? element.getFavouriteExpression() : element.getFavourite());
-    }
-
-    private void redesignViewToCurrentConnector() {
-        view.setVisibleFirstPanel(true);
-        view.setVisibleSecondPanel(true);
-        view.setVisibleThirdPanel(true);
-        view.setVisibleFourthPanel(true);
-
-        view.setFirstLabelTitle(locale.jiraFilterName());
-        view.setSecondLabelTitle(locale.jiraJqlType());
-        view.setThirdLabelTitle(locale.jiraDescription());
-        view.setFourthLabelTitle(locale.jiraFavourite());
+        filterNameExpr.setVisible(!isVisible);
+        jqlTypeExpr.setVisible(!isVisible);
+        descriptionExpr.setVisible(!isVisible);
+        favouriteExpr.setVisible(!isVisible);
     }
 
     /** {@inheritDoc} */
@@ -230,6 +125,14 @@ public class CreateFilterConnectorPresenter extends AbstractConnectorPropertiesP
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        redesignViewToCurrentConnector();
+        filterNameInl.setProperty(element.getProperty(FILTER_NAME_INL));
+        jqlTypeInl.setProperty(element.getProperty(JQL_TYPE_INL));
+        descriptionInl.setProperty(element.getProperty(DESCRIPTION_INL));
+        favouriteInl.setProperty(element.getProperty(FAVOURITE_INL));
+
+        filterNameExpr.setProperty(element.getProperty(FILTER_NAME_EXPR));
+        jqlTypeExpr.setProperty(element.getProperty(JQL_TYPE_EXPR));
+        descriptionExpr.setProperty(element.getProperty(DESCRIPTION_EXPR));
+        favouriteExpr.setProperty(element.getProperty(FAVOURITE_EXPR));
     }
 }

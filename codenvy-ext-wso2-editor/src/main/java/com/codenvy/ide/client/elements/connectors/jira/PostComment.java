@@ -31,8 +31,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.Inline;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NamespacedPropertyEditor;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
+import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
 
 /**
  * The Class describes PostComment connector for jira group connectors. Also the class contains the business logic
@@ -47,23 +47,25 @@ public class PostComment extends AbstractConnector {
     public static final String ELEMENT_NAME       = "PostComment";
     public static final String SERIALIZATION_NAME = "jira.postComment";
 
+    public static final Key<String> ISSUE_ID_OR_KEY_INL = new Key<>("issueIdOrKeyInl");
+    public static final Key<String> COMMENT_INL         = new Key<>("updateCommentInl");
+    public static final Key<String> VISIBLE_ROLE_INL    = new Key<>("updateAssigneeInl");
+
+    public static final Key<String> ISSUE_ID_OR_KEY_EXPR = new Key<>("issueIdOrKeyExpr");
+    public static final Key<String> COMMENT_EXPR         = new Key<>("updateCommentExpr");
+    public static final Key<String> VISIBLE_ROLE_EXPR    = new Key<>("updateAssigneeExpr");
+
+    public static final Key<List<NameSpace>> ISSUE_ID_OR_KEY_NS = new Key<>("issueIdOrKeyNameSpace");
+    public static final Key<List<NameSpace>> COMMENT_NS         = new Key<>("updateCommentNameSpace");
+    public static final Key<List<NameSpace>> VISIBLE_ROLE_NS    = new Key<>("updateAssigneeNameSpace");
+
     private static final String ISSUE_ID_OR_KEY = "issueIdOrKey";
     private static final String COMMENT         = "comment";
     private static final String VISIBLE_ROLE    = "visibleRole";
 
-    private static final List<String> PROPERTIES = Arrays.asList(ISSUE_ID_OR_KEY, COMMENT, VISIBLE_ROLE);
-
-    private String issueIdOrKey;
-    private String comment;
-    private String visibleRole;
-
-    private String issueIdOrKeyExpression;
-    private String commentExpression;
-    private String visibleRoleExpression;
-
-    private List<NameSpace> issieIOrKeyNS;
-    private List<NameSpace> commentNS;
-    private List<NameSpace> visibleRoleNS;
+    private static final List<String> PROPERTIES = Arrays.asList(ISSUE_ID_OR_KEY,
+                                                                 COMMENT,
+                                                                 VISIBLE_ROLE);
 
     @Inject
     public PostComment(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
@@ -77,17 +79,17 @@ public class PostComment extends AbstractConnector {
               branchProvider,
               elementCreatorsManager);
 
-        issueIdOrKey = "";
-        comment = "";
-        visibleRole = "";
+        putProperty(ISSUE_ID_OR_KEY_INL, "");
+        putProperty(COMMENT_INL, "");
+        putProperty(VISIBLE_ROLE_INL, "");
 
-        issueIdOrKeyExpression = "";
-        commentExpression = "";
-        visibleRoleExpression = "";
+        putProperty(ISSUE_ID_OR_KEY_EXPR, "");
+        putProperty(COMMENT_EXPR, "");
+        putProperty(VISIBLE_ROLE_EXPR, "");
 
-        issieIOrKeyNS = new ArrayList<>();
-        visibleRoleNS = new ArrayList<>();
-        commentNS = new ArrayList<>();
+        putProperty(ISSUE_ID_OR_KEY_NS, new ArrayList<NameSpace>());
+        putProperty(COMMENT_NS, new ArrayList<NameSpace>());
+        putProperty(VISIBLE_ROLE_NS, new ArrayList<NameSpace>());
     }
 
     /** {@inheritDoc} */
@@ -96,11 +98,11 @@ public class PostComment extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = parameterEditorType.equals(Inline);
+        boolean isInline = INLINE.equals(NAME_SPACED_PROPERTY_EDITOR);
 
-        properties.put(ISSUE_ID_OR_KEY, isInline ? issueIdOrKey : issueIdOrKeyExpression);
-        properties.put(COMMENT, isInline ? comment : commentExpression);
-        properties.put(VISIBLE_ROLE, isInline ? visibleRole : visibleRoleExpression);
+        properties.put(ISSUE_ID_OR_KEY, isInline ? getProperty(ISSUE_ID_OR_KEY_INL) : getProperty(ISSUE_ID_OR_KEY_EXPR));
+        properties.put(COMMENT, isInline ? getProperty(COMMENT_INL) : getProperty(COMMENT_EXPR));
+        properties.put(VISIBLE_ROLE, isInline ? getProperty(VISIBLE_ROLE_INL) : getProperty(VISIBLE_ROLE_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -108,121 +110,22 @@ public class PostComment extends AbstractConnector {
     /** {@inheritDoc} */
     @Override
     protected void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-        boolean isInline = Inline.equals(parameterEditorType);
 
-        switch (nodeName) {
+        switch (node.getNodeName()) {
             case ISSUE_ID_OR_KEY:
-                if (isInline) {
-                    issueIdOrKey = nodeValue;
-                } else {
-                    issueIdOrKeyExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, ISSUE_ID_OR_KEY_INL, ISSUE_ID_OR_KEY_EXPR);
                 break;
 
             case COMMENT:
-                if (isInline) {
-                    comment = nodeValue;
-                } else {
-                    commentExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, COMMENT_INL, COMMENT_EXPR);
                 break;
 
             case VISIBLE_ROLE:
-                if (isInline) {
-                    visibleRole = nodeValue;
-                } else {
-                    visibleRoleExpression = nodeValue;
-
-                    parameterEditorType = NamespacedPropertyEditor;
-                }
+                adaptProperty(nodeValue, VISIBLE_ROLE_INL, VISIBLE_ROLE_EXPR);
                 break;
+
+            default:
         }
-    }
-
-    @Nonnull
-    public String getIssueIdOrKey() {
-        return issueIdOrKey;
-    }
-
-    public void setIssueIdOrKey(@Nonnull String issueIdOrKey) {
-        this.issueIdOrKey = issueIdOrKey;
-    }
-
-    @Nonnull
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(@Nonnull String comment) {
-        this.comment = comment;
-    }
-
-    @Nonnull
-    public String getVisibleRole() {
-        return visibleRole;
-    }
-
-    public void setVisibleRole(@Nonnull String visibleRole) {
-        this.visibleRole = visibleRole;
-    }
-
-    @Nonnull
-    public String getIssueIdOrKeyExpression() {
-        return issueIdOrKeyExpression;
-    }
-
-    public void setIssueIdOrKeyExpression(@Nonnull String issueIdOrKeyExpression) {
-        this.issueIdOrKeyExpression = issueIdOrKeyExpression;
-    }
-
-    @Nonnull
-    public String getCommentExpression() {
-        return commentExpression;
-    }
-
-    public void setCommentExpression(@Nonnull String commentExpression) {
-        this.commentExpression = commentExpression;
-    }
-
-    @Nonnull
-    public String getVisibleRoleExpression() {
-        return visibleRoleExpression;
-    }
-
-    public void setVisibleRoleExpression(@Nonnull String visibleRoleExpression) {
-        this.visibleRoleExpression = visibleRoleExpression;
-    }
-
-    @Nonnull
-    public List<NameSpace> getIssieIOrKeyNS() {
-        return issieIOrKeyNS;
-    }
-
-    public void setIssieIOrKeyNS(@Nonnull List<NameSpace> issieIOrKeyNS) {
-        this.issieIOrKeyNS = issieIOrKeyNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getCommentNS() {
-        return commentNS;
-    }
-
-    public void setCommentNS(@Nonnull List<NameSpace> commentNS) {
-        this.commentNS = commentNS;
-    }
-
-    @Nonnull
-    public List<NameSpace> getVisibleRoleNS() {
-        return visibleRoleNS;
-    }
-
-    public void setVisibleRoleNS(@Nonnull List<NameSpace> visibleRoleNS) {
-        this.visibleRoleNS = visibleRoleNS;
     }
 }

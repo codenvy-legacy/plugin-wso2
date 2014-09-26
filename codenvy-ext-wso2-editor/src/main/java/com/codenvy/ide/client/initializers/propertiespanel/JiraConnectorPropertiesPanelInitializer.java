@@ -91,11 +91,11 @@ import com.codenvy.ide.client.propertiespanel.connectors.jira.GetUserConnectorPr
 import com.codenvy.ide.client.propertiespanel.connectors.jira.GetUserPermissionsConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.GetVersionsOfProjectConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.GetVotesForIssueConnectorPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.jira.InitAbstractConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.InitJiraConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.PostCommentConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchAssignableUserConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchAssignableUserMultiProjectConnectorPresenter;
-import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchConnectorPresenter;
+import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchJiraConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchIssueViewAbleUsersConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.SearchUserConnectorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.jira.SetActorsToRoleOfProjectConnectorPresenter;
@@ -111,7 +111,7 @@ import com.google.inject.Inject;
  */
 public class JiraConnectorPropertiesPanelInitializer extends AbstractPropertiesPanelInitializer {
 
-    private final SearchConnectorPresenter                           searchPropertiesPanel;
+    private final SearchJiraConnectorPresenter                       searchPropertiesPanel;
     private final AddAttachmentConnectorPresenter                    addAttachmentPropertiesPanel;
     private final CreateFilterConnectorPresenter                     createFilterPropertiesPanel;
     private final CreateIssueConnectorPresenter                      createIssuePropertiesPanel;
@@ -143,12 +143,12 @@ public class JiraConnectorPropertiesPanelInitializer extends AbstractPropertiesP
     private final GetUserPermissionsConnectorPresenter               getUserPermissionsPropertiesPanel;
     private final GetVersionsOfProjectConnectorPresenter             getVersionsOfProjectPropertiesPanel;
     private final GetVotesForIssueConnectorPresenter                 getVotesForIssuePropertiesPanel;
-    private final InitAbstractConnectorPresenter                     initJiraPropertiesPanel;
+    private final InitJiraConnectorPresenter                         initJiraPropertiesPanel;
     private final PostCommentConnectorPresenter                      postCommentPropertiesPanel;
     private final SearchAssignableUserConnectorPresenter             searchAssignableUserPropertiesPanel;
     private final SearchAssignableUserMultiProjectConnectorPresenter searchAssignableUserMultiPropertiesPanel;
     private final SearchIssueViewAbleUsersConnectorPresenter         searchIssueViewAbleUsersPropertiesPanel;
-    private final SearchConnectorPresenter                           searchJiraPropertiesPanel;
+    private final SearchJiraConnectorPresenter                       searchJiraPropertiesPanel;
     private final SearchUserConnectorPresenter                       searchUserPropertiesPanel;
     private final SetActorsToRoleOfProjectConnectorPresenter         setActorsToRoleOfProjectPropertiesPanel;
     private final UpdateCommentConnectorPresenter                    updateCommentPropertiesPanel;
@@ -158,7 +158,7 @@ public class JiraConnectorPropertiesPanelInitializer extends AbstractPropertiesP
 
     @Inject
     public JiraConnectorPropertiesPanelInitializer(PropertiesPanelManager manager,
-                                                   SearchConnectorPresenter searchPropertiesPanel,
+                                                   SearchJiraConnectorPresenter searchPropertiesPanel,
                                                    AddAttachmentConnectorPresenter addAttachmentPropertiesPanel,
                                                    CreateFilterConnectorPresenter createFilterPropertiesPanel,
                                                    CreateIssueConnectorPresenter createIssuePropertiesPanel,
@@ -190,12 +190,12 @@ public class JiraConnectorPropertiesPanelInitializer extends AbstractPropertiesP
                                                    GetUserPermissionsConnectorPresenter getUserPermissionsPropertiesPanel,
                                                    GetVersionsOfProjectConnectorPresenter getVersionsOfProjectPropertiesPanel,
                                                    GetVotesForIssueConnectorPresenter getVotesForIssuePropertiesPanel,
-                                                   InitAbstractConnectorPresenter initJiraPropertiesPanel,
+                                                   InitJiraConnectorPresenter initJiraPropertiesPanel,
                                                    PostCommentConnectorPresenter postCommentPropertiesPanel,
                                                    SearchAssignableUserConnectorPresenter searchAssignableUserPropertiesPanel,
                                                    SearchAssignableUserMultiProjectConnectorPresenter searchAssignableUserMultiPropertiesPanel,
                                                    SearchIssueViewAbleUsersConnectorPresenter searchIssueViewAbleUsersPropertiesPanel,
-                                                   SearchConnectorPresenter searchJiraPropertiesPanel,
+                                                   SearchJiraConnectorPresenter searchJiraPropertiesPanel,
                                                    SearchUserConnectorPresenter searchUserPropertiesPanel,
                                                    SetActorsToRoleOfProjectConnectorPresenter setActorsToRoleOfProjectPropertiesPanel,
                                                    UpdateCommentConnectorPresenter updateCommentPropertiesPanel,
