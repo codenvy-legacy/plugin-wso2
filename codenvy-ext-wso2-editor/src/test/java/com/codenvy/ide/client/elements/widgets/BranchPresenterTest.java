@@ -492,7 +492,6 @@ public class BranchPresenterTest {
     public void newElementShouldBeNotCreatedWhenBranchParentIsEmpty() throws Exception {
         prepareDefaultUseCase();
 
-        when(branch.getParent()).thenReturn(element);
         when(innerElementsValidator.canInsertElement(anyString(), anyString())).thenReturn(false);
 
         presenter.onMouseLeftButtonClicked(X_POSITION, Y_POSITION);
@@ -501,6 +500,22 @@ public class BranchPresenterTest {
         verify(view).setDefaultCursor();
 
         verify(selectionManager).setElement(isNull(Element.class));
+        verify(branch, never()).addElement(any(Element.class));
+    }
+
+    @Test
+    public void newElementShouldBeNotCreatedWhenBranchParentIsNotEmptyAndCanNotInsertElement() throws Exception {
+        prepareDefaultUseCase();
+
+        when(branch.getParent()).thenReturn(element2);
+        when(innerElementsValidator.canInsertElement(anyString(), anyString())).thenReturn(false);
+
+        presenter.onMouseLeftButtonClicked(X_POSITION, Y_POSITION);
+
+        verify(editorState).resetState();
+        verify(view).setDefaultCursor();
+
+        verify(selectionManager).setElement(element2);
         verify(branch, never()).addElement(any(Element.class));
     }
 
@@ -525,6 +540,17 @@ public class BranchPresenterTest {
         verify(branch).addElement(creatingElement);
 
         verifyElementChanges();
+    }
+
+    @Test
+    public void parentElementShouldBeSelectedWhenRightMouseButtonIsClicked() throws Exception {
+        prepareDefaultUseCase();
+
+        when(branch.getParent()).thenReturn(element2);
+
+        presenter.onMouseRightButtonClicked();
+
+        verify(selectionManager).setElement(element2);
     }
 
     @Test

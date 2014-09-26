@@ -147,7 +147,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         if (newElement == null || !connectionsValidator.canInsertElement(branch, newElement.getElementName(), x, y)
             || (branchParent != null &&
                 !innerElementsValidator.canInsertElement(branchParent.getElementName(), newElement.getElementName()))) {
-            selectionManager.setElement(null);
+            selectionManager.setElement(branchParent);
             return;
         }
 
@@ -159,6 +159,12 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         branch.addElement(newElement);
 
         onElementChanged();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onMouseRightButtonClicked() {
+        selectionManager.setElement(branch.getParent());
     }
 
     /** {@inheritDoc} */

@@ -120,8 +120,14 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
         focusPanel.addDomHandler(new MouseDownHandler() {
             @Override
             public void onMouseDown(MouseDownEvent event) {
-                if (NativeEvent.BUTTON_LEFT == event.getNativeButton()) {
+                int nativeButton = event.getNativeButton();
+
+                if (NativeEvent.BUTTON_LEFT == nativeButton) {
                     delegate.onMouseLeftButtonClicked(event.getRelativeX(body.getElement()), event.getRelativeY(body.getElement()));
+                }
+
+                if (NativeEvent.BUTTON_RIGHT == nativeButton) {
+                    delegate.onMouseRightButtonClicked();
                 }
 
                 event.stopPropagation();

@@ -113,6 +113,9 @@ public interface BranchView extends View<BranchView.ActionDelegate> {
          */
         void onMouseLeftButtonClicked(int x, int y);
 
+        /** Performs some actions in response to a user's right mouse button clicking on diagram element. */
+        void onMouseRightButtonClicked();
+
         /**
          * Performs some actions in response to a user's moving mouse .
          *
