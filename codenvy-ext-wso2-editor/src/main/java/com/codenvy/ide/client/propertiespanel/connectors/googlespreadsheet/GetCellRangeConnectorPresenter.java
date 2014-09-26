@@ -157,9 +157,9 @@ public class GetCellRangeConnectorPresenter extends AbstractConnectorPropertiesP
 
         spreadsheetNameNS.setProperty(element.getProperty(SPREADSHEET_NAME_EXPRESSION_KEY));
         worksheetNameNS.setProperty(element.getProperty(WORKSHEET_NAME_EXPRESSION_KEY));
-        minRows.setProperty(element.getProperty(MIN_ROW_EXPRESSION_KEY));
-        maxRows.setProperty(element.getProperty(MAX_ROW_EXPRESSION_KEY));
-        minColumn.setProperty(element.getProperty(MIN_COLUMN_EXPRESSION_KEY));
-        maxColumn.setProperty(element.getProperty(MAX_COLUMN_EXPRESSION_KEY));
+        minRowNS.setProperty(element.getProperty(MIN_ROW_EXPRESSION_KEY));
+        maxRowNS.setProperty(element.getProperty(MAX_ROW_EXPRESSION_KEY));
+        minColumnNS.setProperty(element.getProperty(MIN_COLUMN_EXPRESSION_KEY));
+        maxColumnNS.setProperty(element.getProperty(MAX_COLUMN_EXPRESSION_KEY));
     }
 }

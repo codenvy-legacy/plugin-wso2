@@ -93,13 +93,13 @@ public class CreateWorksheetConnectorPresenter extends AbstractConnectorProperti
     }
 
     private void prepareView() {
-        spreadsheetNameNS = createComplexPanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(),
-                                               SPREADSHEET_NAME_NS_KEY,
-                                               SPREADSHEET_NAME_EXPRESSION_KEY);
-
         worksheetNameNS = createComplexPanel(locale.spreadsheetCreateWorksheetWorksheetName(),
                                              WORKSHEET_NAME_NS_KEY,
                                              WORKSHEET_NAME_EXPRESSION_KEY);
+
+        spreadsheetNameNS = createComplexPanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(),
+                                               SPREADSHEET_NAME_NS_KEY,
+                                               SPREADSHEET_NAME_EXPRESSION_KEY);
 
         worksheetRowsNS = createComplexPanel(locale.spreadsheetCreateWorksheetWorksheetRows(),
                                              WORKSHEET_ROWS_NS_KEY,
@@ -109,9 +109,9 @@ public class CreateWorksheetConnectorPresenter extends AbstractConnectorProperti
                                                 WORKSHEET_COLUMNS_NS_KEY,
                                                 WORKSHEET_COLUMNS_EXPRESSION_KEY);
 
-        spreadsheetName = createSimplePanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(), SPREADSHEET_NAME_KEY);
-
         worksheetName = createSimplePanel(locale.spreadsheetCreateWorksheetWorksheetName(), WORKSHEET_NAME_KEY);
+
+        spreadsheetName = createSimplePanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(), SPREADSHEET_NAME_KEY);
 
         worksheetRows = createSimplePanel(locale.spreadsheetCreateWorksheetWorksheetRows(), WORKSHEET_ROWS_KEY);
 

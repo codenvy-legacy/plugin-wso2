@@ -150,11 +150,11 @@ public class GetRetweetsOfMineConnectorPresenter extends AbstractConnectorProper
         count.setProperty(element.getProperty(COUNT_INL));
         page.setProperty(element.getProperty(PAGE_INL));
 
-        consumerKey.setProperty(element.getProperty(CONSUMER_KEY_EXPR));
-        consumerSecret.setProperty(element.getProperty(CONSUMER_SECRET_EXPR));
-        accessToken.setProperty(element.getProperty(ACCESS_TOKEN_EXPR));
-        accessTokenSecret.setProperty(element.getProperty(ACCESS_TOKEN_SECRET_EXPR));
-        count.setProperty(element.getProperty(COUNT_EXPR));
-        page.setProperty(element.getProperty(PAGE_EXPR));
+        consumerKeyExpr.setProperty(element.getProperty(CONSUMER_KEY_EXPR));
+        consumerSecretExpr.setProperty(element.getProperty(CONSUMER_SECRET_EXPR));
+        accessTokenExpr.setProperty(element.getProperty(ACCESS_TOKEN_EXPR));
+        accessTokenSecretExpr.setProperty(element.getProperty(ACCESS_TOKEN_SECRET_EXPR));
+        countExpr.setProperty(element.getProperty(COUNT_EXPR));
+        pageExpr.setProperty(element.getProperty(PAGE_EXPR));
     }
 }

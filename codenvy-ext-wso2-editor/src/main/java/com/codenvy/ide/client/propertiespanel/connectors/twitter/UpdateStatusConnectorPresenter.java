@@ -140,10 +140,10 @@ public class UpdateStatusConnectorPresenter extends AbstractConnectorPropertiesP
         accessTokenSecret.setProperty(element.getProperty(ACCESS_TOKEN_SECRET_INL));
         status.setProperty(element.getProperty(STATUS_INL));
 
-        consumerKey.setProperty(element.getProperty(CONSUMER_KEY_EXPR));
-        consumerSecret.setProperty(element.getProperty(CONSUMER_SECRET_EXPR));
-        accessToken.setProperty(element.getProperty(ACCESS_TOKEN_EXPR));
-        accessTokenSecret.setProperty(element.getProperty(ACCESS_TOKEN_SECRET_EXPR));
-        status.setProperty(element.getProperty(STATUS_EXPR));
+        consumerKeyExpr.setProperty(element.getProperty(CONSUMER_KEY_EXPR));
+        consumerSecretExpr.setProperty(element.getProperty(CONSUMER_SECRET_EXPR));
+        accessTokenExpr.setProperty(element.getProperty(ACCESS_TOKEN_EXPR));
+        accessTokenSecretExpr.setProperty(element.getProperty(ACCESS_TOKEN_SECRET_EXPR));
+        statusExpr.setProperty(element.getProperty(STATUS_EXPR));
     }
 }

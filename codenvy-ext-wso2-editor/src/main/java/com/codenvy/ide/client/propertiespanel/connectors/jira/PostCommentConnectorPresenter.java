@@ -90,11 +90,11 @@ public class PostCommentConnectorPresenter extends AbstractConnectorPropertiesPa
 
     private void prepareView() {
         issueIdOrKeyInl = createSimplePanel(locale.jiraIssueIdOrKey(), ISSUE_ID_OR_KEY_INL);
-        commentInl = createSimplePanel(locale.jiraUpdateComment(), COMMENT_INL);
+        commentInl = createSimplePanel(locale.jiraComment(), COMMENT_INL);
         visibleRoleInl = createSimplePanel(locale.jiraVisibleRole(), VISIBLE_ROLE_INL);
 
         issueIdOrKeyExpr = createComplexPanel(locale.jiraIssueIdOrKey(), ISSUE_ID_OR_KEY_NS, ISSUE_ID_OR_KEY_EXPR);
-        commentExpr = createComplexPanel(locale.jiraUpdateComment(), COMMENT_NS, COMMENT_EXPR);
+        commentExpr = createComplexPanel(locale.jiraComment(), COMMENT_NS, COMMENT_EXPR);
         visibleRoleExpr = createComplexPanel(locale.jiraVisibleRole(), VISIBLE_ROLE_NS, VISIBLE_ROLE_EXPR);
     }
 

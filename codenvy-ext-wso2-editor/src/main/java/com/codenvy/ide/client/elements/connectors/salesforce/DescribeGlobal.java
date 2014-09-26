@@ -22,7 +22,7 @@ import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,7 +38,7 @@ public class DescribeGlobal extends AbstractConnector {
     public static final String ELEMENT_NAME       = "describeGlobal";
     public static final String SERIALIZATION_NAME = "salesforce.describeGlobal";
 
-    private static final List<String> PROPERTIES = Arrays.asList();
+    private static final List<String> PROPERTIES = Collections.emptyList();
 
     @Inject
     public DescribeGlobal(EditorResources resources, Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {

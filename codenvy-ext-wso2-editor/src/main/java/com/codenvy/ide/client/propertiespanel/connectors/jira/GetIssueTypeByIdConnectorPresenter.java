@@ -49,7 +49,7 @@ import static com.codenvy.ide.client.elements.connectors.jira.GetIssueTypeById.I
  */
 public class GetIssueTypeByIdConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<GetIssueTypeById> {
 
-    private SimplePropertyPresenter issueTypeIdInl;
+    private SimplePropertyPresenter  issueTypeIdInl;
     private ComplexPropertyPresenter issueTypeIdExpr;
 
     @Inject
@@ -78,8 +78,8 @@ public class GetIssueTypeByIdConnectorPresenter extends AbstractConnectorPropert
     }
 
     private void prepareView() {
-        issueTypeIdInl = createSimplePanel(locale.jiraIssueIdOrKey(), ISSUE_TYPE_ID_INL);
-        issueTypeIdExpr = createComplexPanel(locale.jiraIssueIdOrKey(), ISSUE_TYPE_ID_NS, ISSUE_TYPE_ID_EXPR);
+        issueTypeIdInl = createSimplePanel(locale.jiraIssueTypeId(), ISSUE_TYPE_ID_INL);
+        issueTypeIdExpr = createComplexPanel(locale.jiraIssueTypeId(), ISSUE_TYPE_ID_NS, ISSUE_TYPE_ID_EXPR);
     }
 
     /** {@inheritDoc} */

@@ -160,10 +160,10 @@ public class SendDirectMessageConnectorPresenter extends AbstractConnectorProper
         screenName.setProperty(element.getProperty(SCREEN_NAME_INL));
         message.setProperty(element.getProperty(MESSAGE_INL));
 
-        consumerKey.setProperty(element.getProperty(CONSUMER_KEY_EXPR));
-        consumerSecret.setProperty(element.getProperty(CONSUMER_SECRET_EXPR));
-        accessToken.setProperty(element.getProperty(ACCESS_TOKEN_EXPR));
-        accessTokenSecret.setProperty(element.getProperty(ACCESS_TOKEN_SECRET_EXPR));
+        consumerKeyExpr.setProperty(element.getProperty(CONSUMER_KEY_EXPR));
+        consumerSecretExpr.setProperty(element.getProperty(CONSUMER_SECRET_EXPR));
+        accessTokenExpr.setProperty(element.getProperty(ACCESS_TOKEN_EXPR));
+        accessTokenSecretExpr.setProperty(element.getProperty(ACCESS_TOKEN_SECRET_EXPR));
         userIdExpr.setProperty(element.getProperty(USER_ID_EXPR));
         screenNameExpr.setProperty(element.getProperty(SCREEN_NAME_EXPR));
         messageExpr.setProperty(element.getProperty(MESSAGE_EXPR));

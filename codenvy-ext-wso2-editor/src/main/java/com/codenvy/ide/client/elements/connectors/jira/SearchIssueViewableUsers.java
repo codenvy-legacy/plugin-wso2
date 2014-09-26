@@ -116,7 +116,7 @@ public class SearchIssueViewableUsers extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = INLINE.equals(NAME_SPACED_PROPERTY_EDITOR);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
         properties.put(USER_NAME, isInline ? getProperty(USER_NAME_INL) : getProperty(USER_NAME_EXPR));
         properties.put(ISSUE_KEY, isInline ? getProperty(ISSUE_KEY_INL) : getProperty(ISSUE_KEY_EXPR));

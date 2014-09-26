@@ -111,7 +111,6 @@ import com.google.inject.Inject;
  */
 public class JiraConnectorPropertiesPanelInitializer extends AbstractPropertiesPanelInitializer {
 
-    private final SearchJiraConnectorPresenter                       searchPropertiesPanel;
     private final AddAttachmentConnectorPresenter                    addAttachmentPropertiesPanel;
     private final CreateFilterConnectorPresenter                     createFilterPropertiesPanel;
     private final CreateIssueConnectorPresenter                      createIssuePropertiesPanel;
@@ -158,7 +157,6 @@ public class JiraConnectorPropertiesPanelInitializer extends AbstractPropertiesP
 
     @Inject
     public JiraConnectorPropertiesPanelInitializer(PropertiesPanelManager manager,
-                                                   SearchJiraConnectorPresenter searchPropertiesPanel,
                                                    AddAttachmentConnectorPresenter addAttachmentPropertiesPanel,
                                                    CreateFilterConnectorPresenter createFilterPropertiesPanel,
                                                    CreateIssueConnectorPresenter createIssuePropertiesPanel,
@@ -203,7 +201,6 @@ public class JiraConnectorPropertiesPanelInitializer extends AbstractPropertiesP
                                                    UpdateIssueConnectorPresenter updateIssuePropertiesPanel,
                                                    UpdateIssueAssigneeConnectorPresenter updateIssueAssigneePropertiesPanel) {
         super(manager);
-        this.searchPropertiesPanel = searchPropertiesPanel;
         this.addAttachmentPropertiesPanel = addAttachmentPropertiesPanel;
         this.createFilterPropertiesPanel = createFilterPropertiesPanel;
         this.createIssuePropertiesPanel = createIssuePropertiesPanel;
@@ -252,7 +249,6 @@ public class JiraConnectorPropertiesPanelInitializer extends AbstractPropertiesP
     /** {@inheritDoc} */
     @Override
     public void initialize() {
-        manager.register(SearchJira.class, searchPropertiesPanel);
         manager.register(AddAttachmentToIssueId.class, addAttachmentPropertiesPanel);
         manager.register(CreateFilter.class, createFilterPropertiesPanel);
         manager.register(CreateIssue.class, createIssuePropertiesPanel);

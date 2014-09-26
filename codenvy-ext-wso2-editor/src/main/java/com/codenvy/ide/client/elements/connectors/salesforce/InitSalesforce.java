@@ -106,8 +106,8 @@ public class InitSalesforce extends AbstractConnector {
 
         properties.put(USERNAME, isInline ? getProperty(USERNAME_KEY) : getProperty(USERNAME_EXPRESSION_KEY));
         properties.put(PASSWORD, isInline ? getProperty(PASSWORD_KEY) : getProperty(PASSWORD_EXPRESSION_KEY));
-        properties.put(LOGIN_URL, isInline ? getProperty(LOGIN_URL_KEY) : getProperty(LOGIN_URL_KEY));
-        properties.put(FORCE_LOGIN, isInline ? getProperty(FORCE_LOGIN_KEY) : getProperty(FORCE_LOGIN_KEY));
+        properties.put(LOGIN_URL, isInline ? getProperty(LOGIN_URL_KEY) : getProperty(LOGIN_URL_EXPRESSION_KEY));
+        properties.put(FORCE_LOGIN, isInline ? getProperty(FORCE_LOGIN_KEY) : getProperty(FORCE_LOGIN_EXPRESSION_KEY));
 
         return convertPropertiesToXMLFormat(properties);
     }

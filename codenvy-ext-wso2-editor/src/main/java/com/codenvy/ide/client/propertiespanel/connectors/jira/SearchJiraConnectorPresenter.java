@@ -88,11 +88,11 @@ public class SearchJiraConnectorPresenter extends AbstractConnectorPropertiesPan
     }
 
     private void prepareView() {
-        queryInl = createSimplePanel(locale.connectorUsername(), QUERY_INL);
+        queryInl = createSimplePanel(locale.jiraQuery(), QUERY_INL);
         maxResultInl = createSimplePanel(locale.jiraMaxResult(), MAX_RESULT_INL);
         startFromInl = createSimplePanel(locale.jiraStartFrom(), START_FROM_INL);
 
-        queryExpr = createComplexPanel(locale.connectorUsername(), QUERY_NS, QUERY_EXPR);
+        queryExpr = createComplexPanel(locale.jiraQuery(), QUERY_NS, QUERY_EXPR);
         maxResultExpr = createComplexPanel(locale.jiraMaxResult(), MAX_RESULT_NS, MAX_RESULT_EXPR);
         startFromExpr = createComplexPanel(locale.jiraStartFrom(), START_FROM_NS, START_FROM_EXPR);
     }

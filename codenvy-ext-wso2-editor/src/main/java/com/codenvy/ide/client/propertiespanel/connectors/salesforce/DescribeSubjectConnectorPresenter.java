@@ -76,8 +76,8 @@ public class DescribeSubjectConnectorPresenter extends AbstractConnectorProperti
     }
 
     private void prepareView() {
-        subjectNS = createComplexPanel(locale.connectorSubjects(), SUBJECT_NS_KEY, SUBJECT_EXPRESSION_KEY);
-        subject = createSimplePanel(locale.connectorSubjects(), SUBJECT_KEY);
+        subjectNS = createComplexPanel(locale.propertiespanelConnectorSubject(), SUBJECT_NS_KEY, SUBJECT_EXPRESSION_KEY);
+        subject = createSimplePanel(locale.propertiespanelConnectorSubject(), SUBJECT_KEY);
     }
 
     /** {@inheritDoc} */

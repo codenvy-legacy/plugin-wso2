@@ -94,12 +94,12 @@ public class InitSalesforceConnectorPresenter extends AbstractConnectorPropertie
         usernameNS = createComplexPanel(locale.connectorUsername(), USERNAME_NS_KEY, USERNAME_EXPRESSION_KEY);
         passwordNS = createComplexPanel(locale.connectorPassword(), PASSWORD_NS_KEY, PASSWORD_EXPRESSION_KEY);
         loginUrlNS = createComplexPanel(locale.connectorLoginUrl(), LOGIN_URL_NS_KEY, LOGIN_URL_EXPRESSION_KEY);
-        forceLoginNS = createComplexPanel(locale.connectorPassword(), FORCE_LOGIN_NS_KEY, FORCE_LOGIN_EXPRESSION_KEY);
+        forceLoginNS = createComplexPanel(locale.connectorForceLogin(), FORCE_LOGIN_NS_KEY, FORCE_LOGIN_EXPRESSION_KEY);
 
         username = createSimplePanel(locale.connectorUsername(), USERNAME_KEY);
         password = createSimplePanel(locale.connectorPassword(), PASSWORD_KEY);
-        loginUrl = createSimplePanel(locale.connectorPassword(), LOGIN_URL_KEY);
-        forceLogin = createSimplePanel(locale.connectorPassword(), FORCE_LOGIN_KEY);
+        loginUrl = createSimplePanel(locale.connectorLoginUrl(), LOGIN_URL_KEY);
+        forceLogin = createSimplePanel(locale.connectorForceLogin(), FORCE_LOGIN_KEY);
     }
 
     /** {@inheritDoc} */

@@ -46,10 +46,10 @@ public class GetHomeTimeLine extends AbstractConnector {
     public static final String ELEMENT_NAME       = "GetHomeTimeLine";
     public static final String SERIALIZATION_NAME = "twitter.getHomeTimeline";
 
-    public static final Key<String> CONSUMER_KEY_INL        = new Key<>("ConsumerKey");
-    public static final Key<String> CONSUMER_SECRET_INL     = new Key<>("ConsumerSecret");
-    public static final Key<String> ACCESS_TOKEN_INL        = new Key<>("accessToken");
-    public static final Key<String> ACCESS_TOKEN_SECRET_INL = new Key<>("accessTokenSecret");
+    public static final Key<String> CONSUMER_KEY_INL        = new Key<>("ConsumerKeyInl");
+    public static final Key<String> CONSUMER_SECRET_INL     = new Key<>("ConsumerSecretInl");
+    public static final Key<String> ACCESS_TOKEN_INL        = new Key<>("accessTokenInl");
+    public static final Key<String> ACCESS_TOKEN_SECRET_INL = new Key<>("accessTokenSecretInl");
     public static final Key<String> COUNT_INL               = new Key<>("countInl");
     public static final Key<String> PAGE_INL                = new Key<>("pageInl");
     public static final Key<String> SINCE_ID_INL            = new Key<>("sinceIdInl");

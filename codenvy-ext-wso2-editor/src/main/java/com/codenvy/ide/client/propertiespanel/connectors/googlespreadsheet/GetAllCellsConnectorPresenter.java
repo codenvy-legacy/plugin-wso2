@@ -82,17 +82,17 @@ public class GetAllCellsConnectorPresenter extends AbstractConnectorPropertiesPa
     }
 
     private void prepareView() {
-        spreadsheetNameNS = createComplexPanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(),
-                                               SPREADSHEET_NAME_NS_KEY,
-                                               SPREADSHEET_NAME_EXPRESSION_KEY);
-
         worksheetNameNS = createComplexPanel(locale.spreadsheetCreateWorksheetWorksheetName(),
                                              WORKSHEET_NAME_NS_KEY,
                                              WORKSHEET_NAME_EXPRESSION_KEY);
 
-        spreadsheetName = createSimplePanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(), SPREADSHEET_NAME_KEY);
+        spreadsheetNameNS = createComplexPanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(),
+                                               SPREADSHEET_NAME_NS_KEY,
+                                               SPREADSHEET_NAME_EXPRESSION_KEY);
 
         worksheetName = createSimplePanel(locale.spreadsheetCreateWorksheetWorksheetName(), WORKSHEET_NAME_KEY);
+
+        spreadsheetName = createSimplePanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(), SPREADSHEET_NAME_KEY);
     }
 
     /** {@inheritDoc} */

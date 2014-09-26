@@ -78,8 +78,8 @@ public class GetDashBoardByIdConnectorPresenter extends AbstractConnectorPropert
     }
 
     private void prepareView() {
-        idInl = createSimplePanel(locale.jiraIssueIdOrKey(), ID_INL);
-        idExpr = createComplexPanel(locale.jiraIssueIdOrKey(), ID_NS, ID_EXPR);
+        idInl = createSimplePanel(locale.jiraId(), ID_INL);
+        idExpr = createComplexPanel(locale.jiraId(), ID_NS, ID_EXPR);
     }
 
     /** {@inheritDoc} */

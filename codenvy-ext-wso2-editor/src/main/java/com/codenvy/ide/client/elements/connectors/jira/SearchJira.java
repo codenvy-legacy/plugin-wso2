@@ -96,7 +96,7 @@ public class SearchJira extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = INLINE.equals(NAME_SPACED_PROPERTY_EDITOR);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
         properties.put(QUERY, isInline ? getProperty(QUERY_INL) : getProperty(QUERY_EXPR));
         properties.put(MAX_RESULT, isInline ? getProperty(MAX_RESULT_INL) : getProperty(MAX_RESULT_EXPR));

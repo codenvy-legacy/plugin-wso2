@@ -49,7 +49,7 @@ import static com.codenvy.ide.client.elements.connectors.jira.GetIssuePriorityBy
  */
 public class GetIssuePriorityByIdConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<GetIssuePriorityById> {
 
-    private SimplePropertyPresenter issuePriorityIdInl;
+    private SimplePropertyPresenter  issuePriorityIdInl;
     private ComplexPropertyPresenter issuePriorityIdExpr;
 
     @Inject
@@ -78,8 +78,8 @@ public class GetIssuePriorityByIdConnectorPresenter extends AbstractConnectorPro
     }
 
     private void prepareView() {
-        issuePriorityIdInl = createSimplePanel(locale.jiraIssueIdOrKey(), ISSUE_PRIORITY_ID_INL);
-        issuePriorityIdExpr = createComplexPanel(locale.jiraIssueIdOrKey(), ISSUE_PRIORITY_ID_NS, ISSUE_PRIORITY_ID_EXPR);
+        issuePriorityIdInl = createSimplePanel(locale.jiraIssuePriorityId(), ISSUE_PRIORITY_ID_INL);
+        issuePriorityIdExpr = createComplexPanel(locale.jiraIssuePriorityId(), ISSUE_PRIORITY_ID_NS, ISSUE_PRIORITY_ID_EXPR);
     }
 
     /** {@inheritDoc} */

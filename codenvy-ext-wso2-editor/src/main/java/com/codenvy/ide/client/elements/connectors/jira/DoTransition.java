@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
 
 /**
  * The Class describes DoTransition connector for jira group connectors. Also the class contains the business logic
@@ -114,7 +113,7 @@ public class DoTransition extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = INLINE.equals(NAME_SPACED_PROPERTY_EDITOR);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
         properties.put(ISSUE_ID_OR_KEY, isInline ? getProperty(ISSUE_ID_OR_KEY_INL) : getProperty(ISSUE_ID_OR_KEY_EXPR));
         properties.put(UPDATE_COMMENT, isInline ? getProperty(UPDATE_COMMENT_INL) : getProperty(UPDATE_COMMENT_EXPR));

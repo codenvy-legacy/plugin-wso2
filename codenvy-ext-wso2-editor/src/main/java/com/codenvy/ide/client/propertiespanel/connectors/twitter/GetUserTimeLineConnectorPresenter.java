@@ -37,6 +37,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAM
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 import static com.codenvy.ide.client.elements.connectors.twitter.GetUserTimeLine.USER_ID_EXPR;
 import static com.codenvy.ide.client.elements.connectors.twitter.GetUserTimeLine.USER_ID_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.GetUserTimeLine.USER_ID_NS;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -47,8 +48,8 @@ import static com.codenvy.ide.client.elements.connectors.twitter.GetUserTimeLine
  */
 public class GetUserTimeLineConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<GetUserTimeLine> {
 
-    private SimplePropertyPresenter userIdInl;
-    private SimplePropertyPresenter userIdExpr;
+    private SimplePropertyPresenter  userIdInl;
+    private ComplexPropertyPresenter userIdExpr;
 
     @Inject
     public GetUserTimeLineConnectorPresenter(WSO2EditorLocalizationConstant locale,
@@ -77,7 +78,7 @@ public class GetUserTimeLineConnectorPresenter extends AbstractConnectorProperti
 
     private void prepareView() {
         userIdInl = createSimplePanel(locale.twitterUserId(), USER_ID_INL);
-        userIdExpr = createSimplePanel(locale.twitterUserId(), USER_ID_EXPR);
+        userIdExpr = createComplexPanel(locale.twitterUserId(), USER_ID_NS, USER_ID_EXPR);
     }
 
     /** {@inheritDoc} */

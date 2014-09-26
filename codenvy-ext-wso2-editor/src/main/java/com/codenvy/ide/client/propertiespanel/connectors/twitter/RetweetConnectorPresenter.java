@@ -140,10 +140,10 @@ public class RetweetConnectorPresenter extends AbstractConnectorPropertiesPanelP
         accessTokenSecret.setProperty(element.getProperty(ACCESS_TOKEN_SECRET_INL));
         id.setProperty(element.getProperty(ID_INL));
 
-        consumerKey.setProperty(element.getProperty(CONSUMER_KEY_EXPR));
-        consumerSecret.setProperty(element.getProperty(CONSUMER_SECRET_EXPR));
-        accessToken.setProperty(element.getProperty(ACCESS_TOKEN_EXPR));
-        accessTokenSecret.setProperty(element.getProperty(ACCESS_TOKEN_SECRET_EXPR));
-        id.setProperty(element.getProperty(ID_EXPR));
+        consumerKeyExpr.setProperty(element.getProperty(CONSUMER_KEY_EXPR));
+        consumerSecretExpr.setProperty(element.getProperty(CONSUMER_SECRET_EXPR));
+        accessTokenExpr.setProperty(element.getProperty(ACCESS_TOKEN_EXPR));
+        accessTokenSecretExpr.setProperty(element.getProperty(ACCESS_TOKEN_SECRET_EXPR));
+        idExpr.setProperty(element.getProperty(ID_EXPR));
     }
 }

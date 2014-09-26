@@ -282,12 +282,6 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("propertiespanel.filter.source.title")
     String filterSourceTitle();
 
-    @Key("propertiespanel.enrich.source.misc")
-    String enrichSourceMisc();
-
-    @Key("propertiespanel.enrich.source")
-    String enrichSource();
-
     @Key("propertiespanel.enrich.source.description")
     String enrichDescription();
 
@@ -311,9 +305,6 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.enrich.source.inlineRegistryKey")
     String enrichInlineRegistryKey();
-
-    @Key("propertiespanel.enrich.target")
-    String enrichTarget();
 
     @Key("propertiespanel.enrich.target.targetAction")
     String enrichTargetAction();
@@ -353,9 +344,6 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.payload.mediaType")
     String payloadMediaType();
-
-    @Key("propertiespanel.payload.description")
-    String payloadDescription();
 
     @Key("propertiespanel.payload.factoryArguments")
     String payloadFactoryArguments();
@@ -1388,9 +1376,6 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.connector.spreadsheet.createWorksheet.worksheetName")
     String spreadsheetCreateWorksheetWorksheetName();
-
-    @Key("propertiespanel.connector.spreadsheet.createWorksheet.spreadsheetName")
-    String spreadsheetCreateWorksheetSpreadsheetName();
 
     @Key("propertiespanel.connector.spreadsheet.createWorksheet.worksheetRows")
     String spreadsheetCreateWorksheetWorksheetRows();

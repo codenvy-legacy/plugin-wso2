@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
-import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.NAME_SPACED_PROPERTY_EDITOR;
 
 /**
  * The Class describes GetUserPermissions connector for jira group connectors. Also the class contains the business logic
@@ -106,12 +105,12 @@ public class GetUserPermissions extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = INLINE.equals(NAME_SPACED_PROPERTY_EDITOR);
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
         properties.put(PROJECT_ID, isInline ? getProperty(PROJECT_ID_INL) : getProperty(PROJECT_ID_EXPR));
         properties.put(PROJECT_KEY, isInline ? getProperty(PROJECT_KEY_INL) : getProperty(PROJECT_KEY_EXPR));
-        properties.put(ISSUE_KEY, isInline ? getProperty(ISSUE_KEY_INL) : getProperty(ISSUE_ID_EXPR));
-        properties.put(ISSUE_ID, isInline ? getProperty(ISSUE_ID_INL) : getProperty(ISSUE_KEY_EXPR));
+        properties.put(ISSUE_KEY, isInline ? getProperty(ISSUE_KEY_INL) : getProperty(ISSUE_KEY_EXPR));
+        properties.put(ISSUE_ID, isInline ? getProperty(ISSUE_ID_INL) : getProperty(ISSUE_ID_EXPR));
 
         return convertPropertiesToXMLFormat(properties);
     }
@@ -131,11 +130,11 @@ public class GetUserPermissions extends AbstractConnector {
                 break;
 
             case ISSUE_KEY:
-                adaptProperty(nodeValue, ISSUE_KEY_INL, ISSUE_ID_EXPR);
+                adaptProperty(nodeValue, ISSUE_KEY_INL, ISSUE_KEY_EXPR);
                 break;
 
             case ISSUE_ID:
-                adaptProperty(nodeValue, ISSUE_ID_INL, ISSUE_KEY_EXPR);
+                adaptProperty(nodeValue, ISSUE_ID_INL, ISSUE_ID_EXPR);
                 break;
 
             default:

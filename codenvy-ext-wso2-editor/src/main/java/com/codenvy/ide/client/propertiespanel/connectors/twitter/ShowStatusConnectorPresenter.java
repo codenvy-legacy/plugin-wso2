@@ -37,6 +37,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAM
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType.INLINE;
 import static com.codenvy.ide.client.elements.connectors.twitter.ShowStatus.ID_EXPR;
 import static com.codenvy.ide.client.elements.connectors.twitter.ShowStatus.ID_INL;
+import static com.codenvy.ide.client.elements.connectors.twitter.ShowStatus.ID_NS;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -47,8 +48,8 @@ import static com.codenvy.ide.client.elements.connectors.twitter.ShowStatus.ID_I
  */
 public class ShowStatusConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<ShowStatus> {
 
-    private SimplePropertyPresenter idInl;
-    private SimplePropertyPresenter idExpr;
+    private SimplePropertyPresenter  idInl;
+    private ComplexPropertyPresenter idExpr;
 
     @Inject
     public ShowStatusConnectorPresenter(WSO2EditorLocalizationConstant locale,
@@ -77,7 +78,7 @@ public class ShowStatusConnectorPresenter extends AbstractConnectorPropertiesPan
 
     private void prepareView() {
         idInl = createSimplePanel(locale.jiraId(), ID_INL);
-        idExpr = createSimplePanel(locale.jiraId(), ID_EXPR);
+        idExpr = createComplexPanel(locale.jiraId(), ID_NS, ID_EXPR);
     }
 
     /** {@inheritDoc} */

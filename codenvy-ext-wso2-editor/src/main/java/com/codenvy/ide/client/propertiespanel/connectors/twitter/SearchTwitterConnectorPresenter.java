@@ -137,7 +137,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
         sinceIdInl = createSimplePanel(locale.twitterSinceId(), SINCE_ID_INL);
         geocodeInl = createSimplePanel(locale.twitterGeocode(), GEOCODE_INL);
         radiusInl = createSimplePanel(locale.twitterRadius(), RADIUS_INL);
-        unitInl = createSimplePanel(locale.twitterUnit(), UNTIL_INL);
+        unitInl = createSimplePanel(locale.twitterUnit(), UNIT_INL);
         untilInl = createSimplePanel(locale.twitterUntil(), UNTIL_INL);
         countInl = createSimplePanel(locale.twitterCount(), COUNT_INL);
 
@@ -150,7 +150,7 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
         geocodeExpr = createComplexPanel(locale.twitterGeocode(), GEOCODE_NS, GEOCODE_EXPR);
         radiusExpr = createComplexPanel(locale.twitterRadius(), RADIUS_NS, RADIUS_EXPR);
         unitExpr = createComplexPanel(locale.twitterUnit(), UNIT_NS, UNIT_EXPR);
-        untilExpr = createComplexPanel(locale.twitterUntil(), UNTIL_NS, UNIT_EXPR);
+        untilExpr = createComplexPanel(locale.twitterUntil(), UNTIL_NS, UNTIL_EXPR);
         countExpr = createComplexPanel(locale.twitterCount(), COUNT_NS, COUNT_EXPR);
     }
 

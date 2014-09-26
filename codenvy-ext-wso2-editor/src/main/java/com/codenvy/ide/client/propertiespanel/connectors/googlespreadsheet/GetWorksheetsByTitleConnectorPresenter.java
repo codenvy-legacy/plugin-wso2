@@ -85,10 +85,10 @@ public class GetWorksheetsByTitleConnectorPresenter extends AbstractConnectorPro
         spreadsheetNameNS = createComplexPanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(),
                                                SPREADSHEET_NAME_NS_KEY,
                                                SPREADSHEET_NAME_EXPRESSION_KEY);
-        titleNS = createComplexPanel(locale.toolbarSpreadsheetGetWorksheetByTitleTitle(), TITLE_NS_KEY, TITLE_EXPRESSION_KEY);
+        titleNS = createComplexPanel(locale.spreadsheetGetSpreadsheetsTitle(), TITLE_NS_KEY, TITLE_EXPRESSION_KEY);
 
         spreadsheetName = createSimplePanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(), SPREADSHEET_NAME_KEY);
-        title = createSimplePanel(locale.toolbarSpreadsheetGetWorksheetByTitleTitle(), TITLE_KEY);
+        title = createSimplePanel(locale.spreadsheetGetSpreadsheetsTitle(), TITLE_KEY);
     }
 
     /** {@inheritDoc} */

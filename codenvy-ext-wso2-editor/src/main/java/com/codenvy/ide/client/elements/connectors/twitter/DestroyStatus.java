@@ -113,7 +113,7 @@ public class DestroyStatus extends AbstractConnector {
     protected String serializeProperties() {
         Map<String, String> properties = new LinkedHashMap<>();
 
-        boolean isInline = INLINE.equals(getProperty(AbstractConnector.PARAMETER_EDITOR_TYPE));
+        boolean isInline = INLINE.equals(getProperty(PARAMETER_EDITOR_TYPE));
 
         properties.put(CONSUMER_KEY, isInline ? getProperty(KEY_CONSUMER_KEY) : getProperty(KEY_CONSUMER_KEY_EXPR));
         properties.put(CONSUMER_SECRET, isInline ? getProperty(KEY_CONSUMER_SECRET) : getProperty(KEY_CONSUMER_SECRET_EXPR));

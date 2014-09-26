@@ -160,10 +160,10 @@ public class SearchPlacesConnectorPresenter extends AbstractConnectorPropertiesP
         longitude.setProperty(element.getProperty(LONGITUDE_INL));
         query.setProperty(element.getProperty(QUERY_INL));
 
-        consumerKey.setProperty(element.getProperty(CONSUMER_KEY_EXPR));
-        consumerSecret.setProperty(element.getProperty(CONSUMER_SECRET_EXPR));
-        accessToken.setProperty(element.getProperty(ACCESS_TOKEN_EXPR));
-        accessTokenSecret.setProperty(element.getProperty(ACCESS_TOKEN_SECRET_EXPR));
+        consumerKeyExpr.setProperty(element.getProperty(CONSUMER_KEY_EXPR));
+        consumerSecretExpr.setProperty(element.getProperty(CONSUMER_SECRET_EXPR));
+        accessTokenExpr.setProperty(element.getProperty(ACCESS_TOKEN_EXPR));
+        accessTokenSecretExpr.setProperty(element.getProperty(ACCESS_TOKEN_SECRET_EXPR));
         latitudeExpr.setProperty(element.getProperty(LATITUDE_EXPR));
         longitudeExpr.setProperty(element.getProperty(LONGITUDE_EXPR));
         queryExpr.setProperty(element.getProperty(QUERY_EXPR));

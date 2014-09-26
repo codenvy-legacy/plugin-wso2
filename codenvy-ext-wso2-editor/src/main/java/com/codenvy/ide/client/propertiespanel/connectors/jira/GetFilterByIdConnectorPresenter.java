@@ -77,8 +77,8 @@ public class GetFilterByIdConnectorPresenter extends AbstractConnectorProperties
     }
 
     private void prepareView() {
-        filterIdInl = createSimplePanel(locale.jiraIssueIdOrKey(), FILTER_ID_INL);
-        filterIdExpr = createComplexPanel(locale.jiraIssueIdOrKey(), FILTER_ID_NS, FILTER_ID_EXPR);
+        filterIdInl = createSimplePanel(locale.jiraFilterId(), FILTER_ID_INL);
+        filterIdExpr = createComplexPanel(locale.jiraFilterId(), FILTER_ID_NS, FILTER_ID_EXPR);
     }
 
     /** {@inheritDoc} */

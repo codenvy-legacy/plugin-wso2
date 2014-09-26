@@ -78,8 +78,8 @@ public class GetGroupConnectorPresenter extends AbstractConnectorPropertiesPanel
     }
 
     private void prepareView() {
-        groupNameInl = createSimplePanel(locale.jiraIssueIdOrKey(), GROUP_NAME_INL);
-        groupNameExpr = createComplexPanel(locale.jiraIssueIdOrKey(), GROUP_NAME_NS, GROUP_NAME_EXPR);
+        groupNameInl = createSimplePanel(locale.jiraGroupName(), GROUP_NAME_INL);
+        groupNameExpr = createComplexPanel(locale.jiraGroupName(), GROUP_NAME_NS, GROUP_NAME_EXPR);
     }
 
     /** {@inheritDoc} */

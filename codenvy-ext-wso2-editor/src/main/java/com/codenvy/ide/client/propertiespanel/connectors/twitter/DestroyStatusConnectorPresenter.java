@@ -105,7 +105,7 @@ public class DestroyStatusConnectorPresenter extends AbstractConnectorProperties
         statusId = createSimplePanel(locale.twitterStatusId(), KEY_STATUS_ID);
 
         consumerKeyExpr = createComplexPanel(locale.twitterConsumerKey(), KEY_CONSUMER_KEY_NS, KEY_CONSUMER_KEY_EXPR);
-        consumerSecretExpr = createComplexPanel(locale.twitterConsumerSecret(), KEY_CONSUMER_SECRET_NS, KEY_CONSUMER_KEY_EXPR);
+        consumerSecretExpr = createComplexPanel(locale.twitterConsumerSecret(), KEY_CONSUMER_SECRET_NS, KEY_CONSUMER_SECRET_EXPR);
         accessTokenExpr = createComplexPanel(locale.twitterAccessToken(), KEY_ACCESS_TOKEN_NS, KEY_ACCESS_TOKEN_EXPR);
         accessTokenSecretExpr = createComplexPanel(locale.twitterAccessTokenSecret(),
                                                    KEY_ACCESS_TOKEN_SECRET_NS,

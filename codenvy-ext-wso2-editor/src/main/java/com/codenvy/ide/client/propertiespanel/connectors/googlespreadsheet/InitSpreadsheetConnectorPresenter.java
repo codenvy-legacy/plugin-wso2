@@ -109,7 +109,7 @@ public class InitSpreadsheetConnectorPresenter extends AbstractConnectorProperti
 
         oauthConsumerKey = createSimplePanel(locale.spreadsheetInitOauthConsumerKey(), OAUTH_CONSUMER_KEY_KEY);
         oauthConsumerSecret = createSimplePanel(locale.spreadsheetInitOauthConsumerSecret(), OAUTH_CONSUMER_SECRET_KEY);
-        oauthAccessToken = createSimplePanel(locale.spreadsheetImportCSVFilePath(), OAUTH_ACCESS_TOKEN_KEY);
+        oauthAccessToken = createSimplePanel(locale.spreadsheetInitOauthAccessToken(), OAUTH_ACCESS_TOKEN_KEY);
         oauthAccessTokenSecret = createSimplePanel(locale.spreadsheetInitOauthAccessTokenSecret(), OAUTH_ACCESS_TOKEN_SECRET_KEY);
     }
 

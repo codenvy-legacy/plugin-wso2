@@ -76,8 +76,8 @@ public class GetSpreadsheetsByTitleConnectorPresenter extends AbstractConnectorP
     }
 
     private void prepareView() {
-        titleNS = createComplexPanel(locale.toolbarSpreadsheetGetSpreadsheetByTitleTitle(), TITLE_NS_KEY, TITLE_EXPRESSION_KEY);
-        title = createSimplePanel(locale.toolbarSpreadsheetGetSpreadsheetByTitleTitle(), TITLE_KEY);
+        titleNS = createComplexPanel(locale.spreadsheetGetSpreadsheetsTitle(), TITLE_NS_KEY, TITLE_EXPRESSION_KEY);
+        title = createSimplePanel(locale.spreadsheetGetSpreadsheetsTitle(), TITLE_KEY);
     }
 
     /** {@inheritDoc} */
