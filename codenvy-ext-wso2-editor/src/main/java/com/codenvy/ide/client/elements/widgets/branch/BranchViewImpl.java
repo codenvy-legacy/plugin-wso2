@@ -154,8 +154,6 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
             @Override
             public void onMouseOut(MouseOutEvent event) {
                 delegate.onMouseOut();
-
-                event.stopPropagation();
             }
         }, MouseOutEvent.getType());
 
