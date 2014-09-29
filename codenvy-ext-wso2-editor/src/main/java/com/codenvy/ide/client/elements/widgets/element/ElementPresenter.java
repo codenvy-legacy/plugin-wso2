@@ -337,9 +337,8 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
         onElementChanged();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onRemovedWidget() {
+    /** Unsubsribe from notifications. */
+    public void unsubscribeWidget() {
         selectionManager.removeListener(this);
     }
 

@@ -187,9 +187,6 @@ public interface ElementView extends View<ElementView.ActionDelegate> {
         /** Performs some actions in response to a user's clicking on 'Number of branches' action in the context menu. */
         void onChangeNumberBranchesActionClicked();
 
-        /** Performs some actions in response to a widget is being removed from DOM. */
-        void onRemovedWidget();
-
     }
 
 }

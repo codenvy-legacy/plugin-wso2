@@ -270,14 +270,6 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
 
     /** {@inheritDoc} */
     @Override
-    protected void onDetach() {
-        delegate.onRemovedWidget();
-
-        super.onDetach();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public int getHeight() {
         return height;
     }

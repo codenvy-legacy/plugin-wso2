@@ -716,6 +716,7 @@ public class BranchPresenterTest {
         viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 2 * ARROW_PADDING + ELEMENT_WIDTH);
 
         verify(elementPresenter, never()).setY(anyInt());
+        verify(elementPresenter).unsubscribeWidget();
 
         int top = VIEW_ELEMENT_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
         verify(elementPresenter2).setY(top);

@@ -151,14 +151,14 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
             return;
         }
 
-        selectionManager.setElement(newElement);
-
         newElement.setX(x);
         newElement.setY(y);
 
         branch.addElement(newElement);
 
         onElementChanged();
+
+        selectionManager.setElement(newElement);
     }
 
     /** {@inheritDoc} */
@@ -233,7 +233,6 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     @Nullable
     private Element getCreatingElement() {
         Provider<? extends Element> provider = elementCreatorsManager.getProviderByState(editorState.getState());
-
         return provider == null ? null : provider.get();
     }
 
@@ -243,7 +242,10 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         }
 
         branch.removeElement(element);
-        widgetElements.remove(element.getId());
+
+        ElementPresenter elementPresenter = widgetElements.remove(element.getId());
+        elementPresenter.unsubscribeWidget();
+
         selectionManager.setElement(null);
 
         onElementChanged();

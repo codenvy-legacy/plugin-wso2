@@ -605,7 +605,7 @@ public class ElementPresenterTest {
     public void widgetShouldBeUnSubscribedFromSelectionManager() throws Exception {
         prepareDefaultUseCase();
 
-        presenter.onRemovedWidget();
+        presenter.unsubscribeWidget();
 
         verify(selectionManager).removeListener(presenter);
     }
