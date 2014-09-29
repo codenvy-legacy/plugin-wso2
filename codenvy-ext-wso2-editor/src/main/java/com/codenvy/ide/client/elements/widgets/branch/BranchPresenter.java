@@ -349,6 +349,11 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         }
     }
 
+    /** Performs actions which change state of widget to default. */
+    public void resetToDefaultState() {
+        view.setDefaultCursor();
+    }
+
     /**
      * Adds listener that listens to changing of the current element.
      *

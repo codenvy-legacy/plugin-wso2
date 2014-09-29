@@ -260,11 +260,18 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     @Override
     public void onStateChanged(@Nullable Element element) {
         view.unselectBelowCursor();
+        resetCursors();
 
         if (this.element.equals(element)) {
             view.select();
         } else {
             view.unselect();
+        }
+    }
+
+    private void resetCursors() {
+        for (BranchPresenter branch : widgetBranches.values()) {
+            branch.resetToDefaultState();
         }
     }
 

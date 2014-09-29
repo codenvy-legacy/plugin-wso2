@@ -470,6 +470,9 @@ public class ElementPresenterTest {
 
         verify(view).unselectBelowCursor();
 
+        verify(branchPresenter).resetToDefaultState();
+        verify(branchPresenter2).resetToDefaultState();
+
         verify(view).select();
         verify(view, never()).unselect();
     }
@@ -481,6 +484,9 @@ public class ElementPresenterTest {
         presenter.onStateChanged(mock(Element.class));
 
         verify(view).unselectBelowCursor();
+
+        verify(branchPresenter).resetToDefaultState();
+        verify(branchPresenter2).resetToDefaultState();
 
         verify(view, never()).select();
         verify(view).unselect();

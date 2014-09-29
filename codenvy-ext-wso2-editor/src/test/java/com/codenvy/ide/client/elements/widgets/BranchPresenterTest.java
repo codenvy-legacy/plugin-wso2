@@ -778,4 +778,13 @@ public class BranchPresenterTest {
         verify(changingElementListener).onElementChanged();
     }
 
+    @Test
+    public void defaultStateShouldBeApplied() throws Exception {
+        prepareDefaultUseCase();
+
+        presenter.resetToDefaultState();
+
+        verify(view).setDefaultCursor();
+    }
+
 }
