@@ -29,6 +29,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The abstract implementation of {@link Element}. It contains the implementation of general methods which might not be changed.
@@ -203,13 +204,13 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
     /** {@inheritDoc} */
     @Override
     public int compareTo(@Nonnull AbstractElement element) {
-        if (x < element.getX() || (x == element.getX() && y < element.getY())) {
-            return -1;
-        } else if (x > element.getX() || (x == element.getX() && y > element.getY())) {
-            return 1;
+        int diff = Integer.compare(this.getX(), element.getX());
+
+        if (diff != 0) {
+            return diff;
         }
 
-        return 0;
+        return Integer.compare(this.getY(), element.getY());
     }
 
     /** {@inheritDoc} */
@@ -225,20 +226,20 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
 
         AbstractElement that = (AbstractElement)o;
 
-        boolean result = isPossibleToAddBranches == that.isPossibleToAddBranches;
-        result &= needsToShowIconAndTitle == that.needsToShowIconAndTitle;
-        result &= x == that.x;
-        result &= y == that.y;
-        result &= branchProvider.equals(that.branchProvider);
-        result &= branches.equals(that.branches);
-        result &= elementCreatorsManager.equals(that.elementCreatorsManager);
-        result &= elementName.equals(that.elementName);
-        result &= id.equals(that.id);
-        result &= imageResources != null ? !imageResources.equals(that.imageResources) : that.imageResources != null;
-        result &= parent != null ? !parent.equals(that.parent) : that.parent != null;
-        result &= properties.equals(that.properties);
-        result &= serializationName.equals(that.serializationName);
-        result &= title.equals(that.title);
+        boolean result = Objects.equals(isPossibleToAddBranches, that.isPossibleToAddBranches);
+        result &= Objects.equals(needsToShowIconAndTitle, that.needsToShowIconAndTitle);
+        result &= Objects.equals(x, that.x);
+        result &= Objects.equals(y, that.y);
+        result &= Objects.equals(branchProvider, that.branchProvider);
+        result &= Objects.equals(branches, that.branches);
+        result &= Objects.equals(elementCreatorsManager, that.elementCreatorsManager);
+        result &= Objects.equals(elementName, that.elementName);
+        result &= Objects.equals(id, that.id);
+        result &= Objects.equals(imageResources, that.imageResources);
+        result &= Objects.equals(parent, that.parent);
+        result &= Objects.equals(properties, that.properties);
+        result &= Objects.equals(serializationName, that.serializationName);
+        result &= Objects.equals(title, that.title);
 
         return result;
     }
@@ -246,21 +247,20 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + (parent != null ? parent.hashCode() : 0);
-        result = 31 * result + title.hashCode();
-        result = 31 * result + x;
-        result = 31 * result + y;
-        result = 31 * result + elementName.hashCode();
-        result = 31 * result + properties.hashCode();
-        result = 31 * result + serializationName.hashCode();
-        result = 31 * result + (isPossibleToAddBranches ? 1 : 0);
-        result = 31 * result + (needsToShowIconAndTitle ? 1 : 0);
-        result = 31 * result + elementCreatorsManager.hashCode();
-        result = 31 * result + (imageResources != null ? imageResources.hashCode() : 0);
-        result = 31 * result + branchProvider.hashCode();
-        result = 31 * result + branches.hashCode();
-        return result;
+        return Objects.hash(id,
+                            parent,
+                            title,
+                            x,
+                            y,
+                            elementName,
+                            properties,
+                            serializationName,
+                            isPossibleToAddBranches,
+                            needsToShowIconAndTitle,
+                            elementCreatorsManager,
+                            imageResources,
+                            branchProvider,
+                            branches);
     }
 
     /** {@inheritDoc} */
