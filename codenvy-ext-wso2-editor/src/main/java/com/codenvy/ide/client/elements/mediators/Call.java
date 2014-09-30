@@ -207,6 +207,8 @@ public class Call extends AbstractElement {
                 branch.addElement(element);
             }
         }
+
+        branches.add(branch);
     }
 
     /** {@inheritDoc} */

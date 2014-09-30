@@ -107,7 +107,7 @@ public class Target extends AbstractEntityElement {
     /** @return serialized representation of the target element */
     @Nonnull
     public String serialize() {
-        return '<' + TARGET_SERIALIZATION_NAME + convertNameSpacesToXML(getProperty(TARGET_NAMESPACES)) +
+        return '<' + TARGET_SERIALIZATION_NAME + ' ' + convertNameSpacesToXML(getProperty(TARGET_NAMESPACES)) +
                ' ' + serializeAttributes() + "/>\n";
     }
 
