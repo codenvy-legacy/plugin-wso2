@@ -17,7 +17,6 @@ package com.codenvy.ide.client.elements.mediators.enrich;
 
 import com.codenvy.ide.client.elements.AbstractEntityElement;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -28,9 +27,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
-import static com.codenvy.ide.client.elements.NameSpace.URI;
+import static com.codenvy.ide.client.elements.NameSpace.applyNameSpace;
+import static com.codenvy.ide.client.elements.NameSpace.convertNameSpacesToXML;
 import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetAction.REPLACE;
 import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetType.CUSTOM;
 import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetType.PROPERTY;
@@ -103,13 +101,13 @@ public class Target extends AbstractEntityElement {
                 break;
         }
 
-        return convertAttributesToXMLFormat(prop);
+        return convertAttributesToXML(prop);
     }
 
     /** @return serialized representation of the target element */
     @Nonnull
     public String serialize() {
-        return '<' + TARGET_SERIALIZATION_NAME + convertNameSpaceToXMLFormat(getProperty(TARGET_NAMESPACES)) +
+        return '<' + TARGET_SERIALIZATION_NAME + convertNameSpacesToXML(getProperty(TARGET_NAMESPACES)) +
                ' ' + serializeAttributes() + "/>\n";
     }
 
@@ -145,27 +143,9 @@ public class Target extends AbstractEntityElement {
                 break;
 
             default:
-                applyNameSpaces(attributeName, attributeValue);
+                applyNameSpace(nameSpaceProvider, getProperty(TARGET_NAMESPACES), attributeName, attributeValue);
         }
     }
-
-    private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        List<NameSpace> nameSpaces = getProperty(TARGET_NAMESPACES);
-
-        if (!StringUtils.startsWith(PREFIX, attributeName, true) || nameSpaces == null) {
-            return;
-        }
-
-        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
-
-        NameSpace nameSpace = nameSpaceProvider.get();
-
-        nameSpace.putProperty(PREFIX_KEY, name);
-        nameSpace.putProperty(URI, attributeValue);
-
-        nameSpaces.add(nameSpace);
-    }
-
 
     public enum TargetAction {
         REPLACE("replace"), CHILD("child"), SIBLING("sibling");

@@ -80,7 +80,7 @@ public class RootElement extends AbstractElement {
         Map<String, String> attributes = new LinkedHashMap<>();
         attributes.put(ON_ERROR_ATTRIBUTE_NAME, getProperty(ON_ERROR));
 
-        String onErrorAttribute = convertAttributesToXMLFormat(attributes);
+        String onErrorAttribute = convertAttributesToXML(attributes);
 
         return NAME_ATTRIBUTE_NAME + "=\"" + getProperty(NAME) + "\"" + (onErrorAttribute.isEmpty() ? "" : ' ' + onErrorAttribute);
     }

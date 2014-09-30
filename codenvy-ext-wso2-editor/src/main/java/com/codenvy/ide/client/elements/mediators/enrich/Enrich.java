@@ -84,7 +84,7 @@ public class Enrich extends AbstractElement {
 
         attributes.put(DESCRIPTION_ATTRIBUTE_NAME, getProperty(DESCRIPTION));
 
-        return convertAttributesToXMLFormat(attributes);
+        return convertAttributesToXML(attributes);
     }
 
     /** {@inheritDoc} */

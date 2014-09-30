@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.elements;
 
+import com.codenvy.ide.util.StringUtils;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
@@ -28,6 +29,7 @@ import java.util.List;
  *
  * @author Dmitry Shnurenko
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class NameSpace extends AbstractEntityElement {
 
@@ -54,6 +56,68 @@ public class NameSpace extends AbstractEntityElement {
         nameSpace.putProperty(URI, getProperty(URI));
 
         return nameSpace;
+    }
+
+    /**
+     * Check if input string is a serialized Name Space element.
+     *
+     * @param name
+     *         inputting attribute
+     * @return true if inputting string is a name space element
+     */
+    public static boolean isNameSpace(@Nonnull String name) {
+        return StringUtils.startsWith(PREFIX, name, true);
+    }
+
+    /**
+     * Adds new property into Name Space element.
+     *
+     * @param nameSpaceProvider
+     *         provider of Name Space
+     * @param nameSpaces
+     *         current list of Name Spaces
+     * @param attributeName
+     *         name of Name Space attribute
+     * @param attributeValue
+     *         value of Name Space attribute
+     */
+    public static void applyNameSpace(@Nonnull Provider<NameSpace> nameSpaceProvider,
+                                      @Nullable List<NameSpace> nameSpaces,
+                                      @Nonnull String attributeName,
+                                      @Nonnull String attributeValue) {
+        if (!isNameSpace(attributeName) || nameSpaces == null) {
+            return;
+        }
+
+        NameSpace nameSpace = nameSpaceProvider.get();
+
+        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
+
+        nameSpace.putProperty(PREFIX_KEY, name);
+        nameSpace.putProperty(URI, attributeValue);
+        nameSpaces.add(nameSpace);
+    }
+
+    /**
+     * Convert name spaces of element to string.
+     *
+     * @param nameSpaces
+     *         element's name spaces
+     * @return name spaces parameters as string
+     */
+    @Nonnull
+    public static String convertNameSpacesToXML(@Nullable List<NameSpace> nameSpaces) {
+        if (nameSpaces == null) {
+            return "";
+        }
+
+        StringBuilder result = new StringBuilder();
+
+        for (NameSpace nameSpace : nameSpaces) {
+            result.append(nameSpace.toString()).append(' ');
+        }
+
+        return result.toString();
     }
 
     /** @return string representation of the namespace */

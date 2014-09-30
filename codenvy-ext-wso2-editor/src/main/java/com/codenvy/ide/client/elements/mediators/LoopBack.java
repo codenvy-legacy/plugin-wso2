@@ -72,7 +72,7 @@ public class LoopBack extends AbstractElement {
 
         prop.put(DESCRIPTION_ATTRIBUTE, getProperty(DESCRIPTION));
 
-        return convertAttributesToXMLFormat(prop);
+        return convertAttributesToXML(prop);
     }
 
     /** {@inheritDoc} */

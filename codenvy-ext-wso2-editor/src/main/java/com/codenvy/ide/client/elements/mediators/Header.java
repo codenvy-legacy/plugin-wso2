@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -32,9 +31,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
-import static com.codenvy.ide.client.elements.NameSpace.URI;
+import static com.codenvy.ide.client.elements.NameSpace.applyNameSpace;
+import static com.codenvy.ide.client.elements.NameSpace.convertNameSpacesToXML;
 import static com.codenvy.ide.client.elements.mediators.Action.REMOVE;
 import static com.codenvy.ide.client.elements.mediators.Action.SET;
 import static com.codenvy.ide.client.elements.mediators.Header.HeaderValueType.INLINE;
@@ -142,7 +140,7 @@ public class Header extends AbstractElement {
         List<NameSpace> expressionNamespaces = getProperty(EXPRESSION_NAMESPACES);
 
         if (expressionNamespaces != null) {
-            result.append(convertNameSpaceToXMLFormat(expressionNamespaces));
+            result.append(convertNameSpacesToXML(expressionNamespaces));
         }
 
         setDefaultAttributes(attributes);
@@ -165,11 +163,11 @@ public class Header extends AbstractElement {
                 attributes.remove(VALUE_ATTRIBUTE);
                 attributes.remove(NAME_ATTRIBUTE);
                 attributes.remove(EXPRESSION_ATTRIBUTE);
-                return convertAttributesToXMLFormat(attributes);
+                return convertAttributesToXML(attributes);
             }
         }
 
-        return result + convertAttributesToXMLFormat(attributes);
+        return result + convertAttributesToXML(attributes);
     }
 
     /**
@@ -227,29 +225,11 @@ public class Header extends AbstractElement {
     }
 
     private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        if (!StringUtils.startsWith(PREFIX, attributeName, true)) {
-            return;
-        }
-
-        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
-
-        NameSpace nameSpace = nameSpaceProvider.get();
-
-        nameSpace.putProperty(PREFIX_KEY, name);
-        nameSpace.putProperty(URI, attributeValue);
-
-        List<NameSpace> headerNamespaces = getProperty(HEADER_NAMESPACES);
-        List<NameSpace> expressionNamespaces = getProperty(EXPRESSION_NAMESPACES);
-
-        if (headerNamespaces == null || expressionNamespaces == null) {
-            return;
-        }
-
         if (isFirstNamespace) {
-            headerNamespaces.add(nameSpace);
+            applyNameSpace(nameSpaceProvider, getProperty(HEADER_NAMESPACES), attributeName, attributeValue);
             isFirstNamespace = false;
         } else {
-            expressionNamespaces.add(nameSpace);
+            applyNameSpace(nameSpaceProvider, getProperty(EXPRESSION_NAMESPACES), attributeName, attributeValue);
         }
     }
 

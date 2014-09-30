@@ -18,7 +18,6 @@ package com.codenvy.ide.client.elements.endpoints.addressendpoint;
 import com.codenvy.ide.client.elements.AbstractEntityElement;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.ValueType;
-import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -28,9 +27,8 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
-import static com.codenvy.ide.client.elements.NameSpace.URI;
+import static com.codenvy.ide.client.elements.NameSpace.applyNameSpace;
+import static com.codenvy.ide.client.elements.NameSpace.convertNameSpacesToXML;
 import static com.codenvy.ide.client.elements.NameSpace.copyNameSpaceList;
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.Scope.DEFAULT;
 import static com.codenvy.ide.client.elements.mediators.ValueType.LITERAL;
@@ -109,7 +107,7 @@ public class Property extends AbstractEntityElement {
                    scopeValue + "/>\n";
         }
 
-        return startTag + convertNameSpaceToXMLFormat(getProperty(NAMESPACES)) + nameAttr +
+        return startTag + convertNameSpacesToXML(getProperty(NAMESPACES)) + nameAttr +
                EXPRESSION_ATTRIBUTE + "=\"" + getProperty(EXPRESSION) + "\" " + scopeValue + "/>\n";
     }
 
@@ -146,24 +144,8 @@ public class Property extends AbstractEntityElement {
                 break;
 
             default:
-                applyNameSpaces(attributeName, attributeValue);
+                applyNameSpace(nameSpaceProvider, getProperty(NAMESPACES), attributeName, attributeValue);
         }
-    }
-
-    private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        List<NameSpace> nameSpaces = getProperty(NAMESPACES);
-        if (!StringUtils.startsWith(PREFIX, attributeName, true) || nameSpaces == null) {
-            return;
-        }
-
-        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
-
-        NameSpace nameSpace = nameSpaceProvider.get();
-
-        nameSpace.putProperty(PREFIX_KEY, name);
-        nameSpace.putProperty(URI, attributeValue);
-
-        nameSpaces.add(nameSpace);
     }
 
     /**

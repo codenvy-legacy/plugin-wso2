@@ -17,7 +17,6 @@ package com.codenvy.ide.client.elements.mediators.payload;
 
 import com.codenvy.ide.client.elements.AbstractEntityElement;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -29,9 +28,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
-import static com.codenvy.ide.client.elements.NameSpace.URI;
+import static com.codenvy.ide.client.elements.NameSpace.applyNameSpace;
+import static com.codenvy.ide.client.elements.NameSpace.convertNameSpacesToXML;
 import static com.codenvy.ide.client.elements.NameSpace.copyNameSpaceList;
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.ArgType.EXPRESSION;
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.ArgType.VALUE;
@@ -93,7 +91,7 @@ public class Arg extends AbstractEntityElement {
             prop.put(VALUE_ATTRIBUTE_NAME, getProperty(ARG_VALUE));
         }
 
-        return convertNameSpaceToXMLFormat(getProperty(ARG_NAMESPACES)) + convertAttributesToXMLFormat(prop);
+        return convertNameSpacesToXML(getProperty(ARG_NAMESPACES)) + convertAttributesToXML(prop);
     }
 
     /** @return serialization representation of element */
@@ -120,7 +118,7 @@ public class Arg extends AbstractEntityElement {
                 break;
 
             default:
-                applyNameSpaces(attributeName, attributeValue);
+                applyNameSpace(nameSpaceProvider, getProperty(ARG_NAMESPACES), attributeName, attributeValue);
         }
     }
 
@@ -132,23 +130,6 @@ public class Arg extends AbstractEntityElement {
      */
     public void applyAttributes(@Nonnull Node node) {
         readXMLAttributes(node);
-    }
-
-    private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        List<NameSpace> nameSpaces = getProperty(ARG_NAMESPACES);
-
-        if (!StringUtils.startsWith(PREFIX, attributeName, true) || nameSpaces == null) {
-            return;
-        }
-
-        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
-
-        NameSpace nameSpace = nameSpaceProvider.get();
-
-        nameSpace.putProperty(PREFIX_KEY, name);
-        nameSpace.putProperty(URI, attributeValue);
-
-        nameSpaces.add(nameSpace);
     }
 
     /** Returns copy of element. */

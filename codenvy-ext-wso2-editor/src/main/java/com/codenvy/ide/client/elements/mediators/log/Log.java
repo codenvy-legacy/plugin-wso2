@@ -111,7 +111,7 @@ public class Log extends AbstractElement {
         attributes.put(SEPARATOR_ATTRIBUTE_NAME, getProperty(LOG_SEPARATOR));
         attributes.put(DESCRIPTION_ATTRIBUTE_NAME, getProperty(DESCRIPTION));
 
-        return convertAttributesToXMLFormat(attributes);
+        return convertAttributesToXML(attributes);
     }
 
     /** {@inheritDoc} */

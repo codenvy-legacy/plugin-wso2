@@ -181,7 +181,7 @@ public class AddressEndpoint extends AbstractElement {
 
         addOptimizeAttributeIfItIsExisted(attributes);
 
-        return convertAttributesToXMLFormat(attributes);
+        return convertAttributesToXML(attributes);
     }
 
     private void addFormatAttributeIfItIsExisted(@Nonnull Map<String, String> attributes) {

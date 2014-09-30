@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,9 +32,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
-import static com.codenvy.ide.client.elements.NameSpace.URI;
+import static com.codenvy.ide.client.elements.NameSpace.applyNameSpace;
+import static com.codenvy.ide.client.elements.NameSpace.convertNameSpacesToXML;
 import static com.codenvy.ide.client.elements.mediators.Filter.ConditionType.SOURCE_AND_REGEX;
 import static com.codenvy.ide.client.elements.mediators.Filter.ConditionType.XPATH;
 
@@ -131,14 +129,14 @@ public class Filter extends AbstractElement {
 
         if (XPATH.equals(conditionType)) {
             attributes.put(XPATH_ATTRIBUTE_NAME, getProperty(X_PATH));
-            result = convertNameSpaceToXMLFormat(getProperty(XPATH_NAMESPACE));
+            result = convertNameSpacesToXML(getProperty(XPATH_NAMESPACE));
         } else {
             attributes.put(SOURCE_ATTRIBUTE_NAME, getProperty(SOURCE));
             attributes.put(REGULAR_EXPRESSION_ATTRIBUTE_NAME, getProperty(REGULAR_EXPRESSION));
-            result = convertNameSpaceToXMLFormat(getProperty(SOURCE_NAMESPACE));
+            result = convertNameSpacesToXML(getProperty(SOURCE_NAMESPACE));
         }
 
-        return result + convertAttributesToXMLFormat(attributes);
+        return result + convertAttributesToXML(attributes);
     }
 
     /** {@inheritDoc} */
@@ -178,25 +176,7 @@ public class Filter extends AbstractElement {
                 break;
 
             default:
-                applyNameSpaces(attributeName, attributeValue);
-        }
-    }
-
-    private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        if (!StringUtils.startsWith(PREFIX, attributeName, true)) {
-            return;
-        }
-
-        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
-
-        NameSpace nameSpace = nameSpaceProvider.get();
-
-        nameSpace.putProperty(PREFIX_KEY, name);
-        nameSpace.putProperty(URI, attributeValue);
-
-        List<NameSpace> nameSpaces = getProperty(NAMESPACES);
-        if (nameSpaces != null) {
-            nameSpaces.add(nameSpace);
+                applyNameSpace(nameSpaceProvider, getProperty(NAMESPACES), attributeName, attributeValue);
         }
     }
 

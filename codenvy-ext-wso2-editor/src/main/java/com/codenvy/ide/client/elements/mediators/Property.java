@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.util.StringUtils;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -31,9 +30,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
-import static com.codenvy.ide.client.elements.NameSpace.URI;
+import static com.codenvy.ide.client.elements.NameSpace.applyNameSpace;
+import static com.codenvy.ide.client.elements.NameSpace.convertNameSpacesToXML;
 import static com.codenvy.ide.client.elements.mediators.Action.SET;
 import static com.codenvy.ide.client.elements.mediators.Property.DataType.STRING;
 import static com.codenvy.ide.client.elements.mediators.Property.Scope.SYNAPSE;
@@ -132,7 +130,7 @@ public class Property extends AbstractElement {
             attributes.remove(DATA_TYPE_ATTRIBUTE);
         }
 
-        return convertNameSpaceToXMLFormat(getProperty(NAMESPACES)) + convertAttributesToXMLFormat(attributes);
+        return convertNameSpacesToXML(getProperty(NAMESPACES)) + convertAttributesToXML(attributes);
     }
 
     /**
@@ -199,25 +197,7 @@ public class Property extends AbstractElement {
                 break;
 
             default:
-                applyNameSpaces(attributeName, attributeValue);
-        }
-    }
-
-    private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        if (!StringUtils.startsWith(PREFIX, attributeName, true)) {
-            return;
-        }
-
-        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
-
-        NameSpace nameSpace = nameSpaceProvider.get();
-
-        nameSpace.putProperty(PREFIX_KEY, name);
-        nameSpace.putProperty(URI, attributeValue);
-
-        List<NameSpace> nameSpaces = getProperty(NAMESPACES);
-        if (nameSpaces != null) {
-            nameSpaces.add(nameSpace);
+                applyNameSpace(nameSpaceProvider, getProperty(NAMESPACES), attributeName, attributeValue);
         }
     }
 

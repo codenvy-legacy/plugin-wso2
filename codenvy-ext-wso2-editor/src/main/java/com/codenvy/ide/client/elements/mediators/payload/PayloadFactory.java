@@ -108,7 +108,7 @@ public class PayloadFactory extends AbstractElement {
         prop.put(MEDIA_TYPE_ATTRIBUTE_NAME, mediaType.getValue());
         prop.put(DESCRIPTION_ATTRIBUTE_NAME, getProperty(DESCRIPTION));
 
-        return convertAttributesToXMLFormat(prop);
+        return convertAttributesToXML(prop);
     }
 
     /** {@inheritDoc} */

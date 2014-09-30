@@ -21,7 +21,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -31,9 +30,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
-import static com.codenvy.ide.client.elements.NameSpace.URI;
+import static com.codenvy.ide.client.elements.NameSpace.applyNameSpace;
+import static com.codenvy.ide.client.elements.NameSpace.convertNameSpacesToXML;
 import static com.codenvy.ide.client.elements.mediators.Call.EndpointType.INLINE;
 import static com.codenvy.ide.client.elements.mediators.Call.EndpointType.NONE;
 import static com.codenvy.ide.client.elements.mediators.Call.EndpointType.REGISTRYKEY;
@@ -138,7 +136,7 @@ public class Call extends AbstractElement {
 
     private String serializeXPathParameter(@Nonnull String content) {
         List<NameSpace> nameSpaces = getProperty(NAMESPACES);
-        String serializedNameSpaces = convertNameSpaceToXMLFormat(nameSpaces);
+        String serializedNameSpaces = convertNameSpacesToXML(nameSpaces);
 
         return content + ">\n" +
                '<' + ENDPOINT_PROPERTY_NAME + ' ' + serializedNameSpaces +
@@ -175,39 +173,39 @@ public class Call extends AbstractElement {
     protected void applyProperty(@Nonnull Node node) {
         String nodeName = node.getNodeName();
 
-        switch (nodeName) {
-            case ENDPOINT_PROPERTY_NAME:
-                isKeyAttributeFound = false;
-                isKeyExpressionAttributeFound = false;
+        if (!ENDPOINT_PROPERTY_NAME.equals(nodeName)) {
+            return;
+        }
 
-                readXMLAttributes(node);
+        applyEndpointPropertyType(node);
+    }
 
-                if (isKeyAttributeFound) {
-                    putProperty(ENDPOINT_TYPE, REGISTRYKEY);
-                } else if (isKeyExpressionAttributeFound) {
-                    putProperty(ENDPOINT_TYPE, XPATH);
-                } else {
-                    putProperty(ENDPOINT_TYPE, INLINE);
-                }
+    private void applyEndpointPropertyType(@Nonnull Node node) {
+        isKeyAttributeFound = false;
+        isKeyExpressionAttributeFound = false;
 
-                Branch branch = branchProvider.get();
-                branch.setParent(this);
+        readXMLAttributes(node);
 
-                if (node.hasChildNodes()) {
-                    Node item = node.getChildNodes().item(0);
+        if (isKeyAttributeFound) {
+            putProperty(ENDPOINT_TYPE, REGISTRYKEY);
+        } else if (isKeyExpressionAttributeFound) {
+            putProperty(ENDPOINT_TYPE, XPATH);
+        } else {
+            putProperty(ENDPOINT_TYPE, INLINE);
+        }
 
-                    Element element = createElement(item.getNodeName());
+        Branch branch = branchProvider.get();
+        branch.setParent(this);
 
-                    if (element != null) {
-                        element.deserialize(node);
-                        branch.addElement(element);
-                    }
-                }
+        if (node.hasChildNodes()) {
+            Node item = node.getChildNodes().item(0);
 
-                branches.add(branch);
-                break;
+            Element element = createElement(item.getNodeName());
 
-            default:
+            if (element != null) {
+                element.deserialize(node);
+                branch.addElement(element);
+            }
         }
     }
 
@@ -230,25 +228,7 @@ public class Call extends AbstractElement {
                 break;
 
             default:
-                applyNameSpaces(attributeName, attributeValue);
-        }
-    }
-
-    private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        if (!StringUtils.startsWith(PREFIX, attributeName, true)) {
-            return;
-        }
-
-        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
-
-        NameSpace nameSpace = nameSpaceProvider.get();
-
-        nameSpace.putProperty(PREFIX_KEY, name);
-        nameSpace.putProperty(URI, attributeValue);
-
-        List<NameSpace> nameSpaces = getProperty(NAMESPACES);
-        if (nameSpaces != null) {
-            nameSpaces.add(nameSpace);
+                applyNameSpace(nameSpaceProvider, getProperty(NAMESPACES), attributeName, attributeValue);
         }
     }
 

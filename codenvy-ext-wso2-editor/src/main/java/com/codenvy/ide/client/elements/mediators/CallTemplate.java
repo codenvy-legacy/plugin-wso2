@@ -91,7 +91,7 @@ public class CallTemplate extends AbstractElement {
         prop.put(TARGET_ATTRIBUTE_NAME, getProperty(TARGET_TEMPLATES));
         prop.put(DESCRIPTION_ATTRIBUTE_NAME, getProperty(DESCRIPTION));
 
-        return convertAttributesToXMLFormat(prop);
+        return convertAttributesToXML(prop);
     }
 
     /** {@inheritDoc} */

@@ -20,7 +20,6 @@ import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -32,9 +31,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
-import static com.codenvy.ide.client.elements.NameSpace.URI;
+import static com.codenvy.ide.client.elements.NameSpace.applyNameSpace;
+import static com.codenvy.ide.client.elements.NameSpace.convertNameSpacesToXML;
 
 /**
  * The class which describes state of Switch mediator and also has methods for changing it. Also the class contains the business
@@ -70,9 +68,8 @@ public class Switch extends AbstractElement {
 
     private final Provider<NameSpace> nameSpaceProvider;
 
-    private Branch          firstBranch;
-    private Branch          defaultBranch;
-    private List<NameSpace> nameSpaces;
+    private Branch firstBranch;
+    private Branch defaultBranch;
 
     @Inject
     public Switch(EditorResources resources,
@@ -151,13 +148,15 @@ public class Switch extends AbstractElement {
 
         List<NameSpace> nameSpaces = getProperty(NAMESPACES);
 
-        return nameSpaces == null ? "" : convertNameSpaceToXMLFormat(nameSpaces) + convertAttributesToXMLFormat(attributes);
+        return nameSpaces == null ? "" : convertNameSpacesToXML(nameSpaces) + convertAttributesToXML(attributes);
     }
 
     /** {@inheritDoc} */
     @Override
     public void deserialize(@Nonnull Node node) {
-        nameSpaces.clear();
+        List<NameSpace> nameSpaces = new ArrayList<>();
+
+        putProperty(NAMESPACES, nameSpaces);
 
         super.deserialize(node);
 
@@ -172,25 +171,7 @@ public class Switch extends AbstractElement {
         if (SOURCE_ATTRIBUTE_NAME.equals(attributeName)) {
             putProperty(SOURCE_XPATH, attributeValue);
         } else {
-            applyNameSpaces(attributeName, attributeValue);
-        }
-    }
-
-    private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        if (!StringUtils.startsWith(PREFIX, attributeName, true)) {
-            return;
-        }
-
-        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
-
-        NameSpace nameSpace = nameSpaceProvider.get();
-
-        nameSpace.putProperty(PREFIX_KEY, name);
-        nameSpace.putProperty(URI, attributeValue);
-
-        nameSpaces = getProperty(NAMESPACES);
-        if (nameSpaces != null) {
-            nameSpaces.add(nameSpace);
+            applyNameSpace(nameSpaceProvider, getProperty(NAMESPACES), attributeName, attributeValue);
         }
     }
 

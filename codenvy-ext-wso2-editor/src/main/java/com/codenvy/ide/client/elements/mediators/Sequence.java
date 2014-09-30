@@ -30,9 +30,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
-import static com.codenvy.ide.client.elements.NameSpace.URI;
+import static com.codenvy.ide.client.elements.NameSpace.applyNameSpace;
+import static com.codenvy.ide.client.elements.NameSpace.convertNameSpacesToXML;
 import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType.DYNAMIC;
 import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType.STATIC;
 
@@ -43,7 +42,6 @@ import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType.S
  * <a href=" https://docs.wso2.com/display/ESB460/Sequence+Mediator"> https://docs.wso2.com/display/ESB460/Sequence+Mediator</a>
  *
  * @author Andrey Plotnikov
- * @author Valeriy Svydenko
  * @author Valeriy Svydenko
  */
 public class Sequence extends AbstractElement {
@@ -95,7 +93,7 @@ public class Sequence extends AbstractElement {
             return KEY_ATTRIBUTE_NAME + "=\"" + getProperty(STATIC_REFERENCE_TYPE) + '"';
         }
 
-        return convertNameSpaceToXMLFormat(getProperty(NAMESPACES)) + KEY_ATTRIBUTE_NAME + "=\"{" +
+        return convertNameSpacesToXML(getProperty(NAMESPACES)) + KEY_ATTRIBUTE_NAME + "=\"{" +
                getProperty(DYNAMIC_REFERENCE_TYPE) + "}\"";
     }
 
@@ -115,7 +113,7 @@ public class Sequence extends AbstractElement {
         if (KEY_ATTRIBUTE_NAME.equals(attributeName)) {
             adaptKeyNameAttribute(attributeValue);
         } else {
-            adaptNameSpaceAttribute(attributeName, attributeValue);
+            applyNameSpace(nameSpaceProvider, getProperty(NAMESPACES), attributeName, attributeValue);
         }
     }
 
@@ -130,24 +128,6 @@ public class Sequence extends AbstractElement {
         } else {
             putProperty(REFERRING_TYPE, STATIC);
             putProperty(STATIC_REFERENCE_TYPE, value);
-        }
-    }
-
-    private void adaptNameSpaceAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        if (!StringUtils.startsWith(PREFIX, attributeName, true)) {
-            return;
-        }
-
-        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
-
-        NameSpace nameSpace = nameSpaceProvider.get();
-
-        nameSpace.putProperty(PREFIX_KEY, name);
-        nameSpace.putProperty(URI, attributeValue);
-
-        List<NameSpace> nameSpaces = getProperty(NAMESPACES);
-        if (nameSpaces != null) {
-            nameSpaces.add(nameSpace);
         }
     }
 

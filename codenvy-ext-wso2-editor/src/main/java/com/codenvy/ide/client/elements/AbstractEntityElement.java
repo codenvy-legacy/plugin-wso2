@@ -22,7 +22,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -76,7 +75,7 @@ public abstract class AbstractEntityElement {
      * @return XML format of element's attributes
      */
     @Nonnull
-    protected String convertAttributesToXMLFormat(@Nonnull Map<String, String> attributes) {
+    protected String convertAttributesToXML(@Nonnull Map<String, String> attributes) {
         StringBuilder content = new StringBuilder();
 
         for (Iterator<Map.Entry<String, String>> iterator = attributes.entrySet().iterator(); iterator.hasNext(); ) {
@@ -133,28 +132,6 @@ public abstract class AbstractEntityElement {
         }
 
         content.append('<').append(entry.getKey()).append('>').append(value).append("</").append(entry.getKey()).append('>');
-    }
-
-    /**
-     * Convert name spaces of element to string.
-     *
-     * @param nameSpaces
-     *         element's name spaces
-     * @return name spaces parameters as string
-     */
-    @Nonnull
-    protected String convertNameSpaceToXMLFormat(@Nullable List<NameSpace> nameSpaces) {
-        if (nameSpaces == null) {
-            return "";
-        }
-
-        StringBuilder result = new StringBuilder();
-
-        for (NameSpace nameSpace : nameSpaces) {
-            result.append(nameSpace.toString()).append(' ');
-        }
-
-        return result.toString();
     }
 
     /**

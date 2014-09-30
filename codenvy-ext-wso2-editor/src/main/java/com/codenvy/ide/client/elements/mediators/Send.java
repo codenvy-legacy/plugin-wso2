@@ -21,7 +21,6 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
-import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -33,9 +32,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
-import static com.codenvy.ide.client.elements.NameSpace.URI;
+import static com.codenvy.ide.client.elements.NameSpace.applyNameSpace;
+import static com.codenvy.ide.client.elements.NameSpace.convertNameSpacesToXML;
 import static com.codenvy.ide.client.elements.mediators.Send.SequenceType.DEFAULT;
 import static com.codenvy.ide.client.elements.mediators.Send.SequenceType.DYNAMIC;
 import static com.codenvy.ide.client.elements.mediators.Send.SequenceType.STATIC;
@@ -119,7 +117,7 @@ public class Send extends AbstractElement {
 
         prop.put(DESCRIPTION_ATTRIBUTE_NAME, getProperty(DESCRIPTION));
 
-        return result.append(convertAttributesToXMLFormat(prop)).toString();
+        return result.append(convertAttributesToXML(prop)).toString();
     }
 
     private void serializeSequenceTypeAttribute(@Nonnull Map<String, String> prop, @Nonnull StringBuilder result) {
@@ -132,7 +130,7 @@ public class Send extends AbstractElement {
             prop.put(EXPRESSION_ATTRIBUTE_NAME, getProperty(STATIC_EXPRESSION));
         } else if (sType.equals(DYNAMIC)) {
             prop.put(EXPRESSION_ATTRIBUTE_NAME, getProperty(DYNAMIC_EXPRESSION));
-            result.append(convertNameSpaceToXMLFormat(getProperty(NAMESPACES)));
+            result.append(convertNameSpacesToXML(getProperty(NAMESPACES)));
         }
     }
 
@@ -179,7 +177,7 @@ public class Send extends AbstractElement {
                 break;
 
             default:
-                applyNameSpaces(attributeName, attributeValue);
+                applyNameSpace(nameSpaceProvider, getProperty(NAMESPACES), attributeName, attributeValue);
         }
     }
 
@@ -192,24 +190,6 @@ public class Send extends AbstractElement {
             putProperty(STATIC_EXPRESSION, attributeValue);
 
             putProperty(SEQUENCE_TYPE, SequenceType.STATIC);
-        }
-    }
-
-    private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        if (!StringUtils.startsWith(PREFIX, attributeName, true)) {
-            return;
-        }
-
-        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
-
-        NameSpace nameSpace = nameSpaceProvider.get();
-
-        nameSpace.putProperty(PREFIX_KEY, name);
-        nameSpace.putProperty(URI, attributeValue);
-
-        List<NameSpace> nameSpaces = getProperty(NAMESPACES);
-        if (nameSpaces != null) {
-            nameSpaces.add(nameSpace);
         }
     }
 

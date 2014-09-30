@@ -17,7 +17,6 @@ package com.codenvy.ide.client.elements.mediators.enrich;
 
 import com.codenvy.ide.client.elements.AbstractEntityElement;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -29,8 +28,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
-import static com.codenvy.ide.client.elements.NameSpace.URI;
+import static com.codenvy.ide.client.elements.NameSpace.applyNameSpace;
+import static com.codenvy.ide.client.elements.NameSpace.convertNameSpacesToXML;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType.REGISTRY_KEY;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType.CUSTOM;
 
@@ -113,7 +112,7 @@ public class Source extends AbstractEntityElement {
 
         }
 
-        return convertAttributesToXMLFormat(prop);
+        return convertAttributesToXML(prop);
     }
 
     private void serializeInlineTypeAttributes(@Nonnull Map<String, String> prop) {
@@ -140,7 +139,7 @@ public class Source extends AbstractEntityElement {
         StringBuilder result = new StringBuilder();
 
         result.append('<').append(SOURCE_SERIALIZATION_NAME).append(' ')
-              .append(convertNameSpaceToXMLFormat(nameSpaces)).append(serializeAttributes()).append(">\n");
+              .append(convertNameSpacesToXML(nameSpaces)).append(serializeAttributes()).append(">\n");
 
         if (SourceType.INLINE.equals(type) && InlineType.SOURCE_XML.equals(inlineType)) {
 
@@ -185,7 +184,7 @@ public class Source extends AbstractEntityElement {
                 break;
 
             default:
-                applyNameSpaces(attributeName, attributeValue);
+                applyNameSpace(nameSpaceProvider, getProperty(SOURCE_NAMESPACES), attributeName, attributeValue);
         }
     }
 
@@ -193,23 +192,6 @@ public class Source extends AbstractEntityElement {
         putProperty(SOURCE_INLINE_REGISTER_KEY, attributeValue);
         putProperty(SOURCE_TYPE, SourceType.INLINE);
         putProperty(SOURCE_INLINE_TYPE, InlineType.REGISTRY_KEY);
-    }
-
-    private void applyNameSpaces(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        List<NameSpace> nameSpaces = getProperty(SOURCE_NAMESPACES);
-
-        if (!StringUtils.startsWith(PREFIX, attributeName, true) || nameSpaces == null) {
-            return;
-        }
-
-        String name = StringUtils.trimStart(attributeName, PREFIX + ':');
-
-        NameSpace nameSpace = nameSpaceProvider.get();
-
-        nameSpace.putProperty(PREFIX_KEY, name);
-        nameSpace.putProperty(URI, attributeValue);
-
-        nameSpaces.add(nameSpace);
     }
 
     /**

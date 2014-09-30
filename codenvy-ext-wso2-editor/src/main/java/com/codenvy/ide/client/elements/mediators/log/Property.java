@@ -17,7 +17,6 @@ package com.codenvy.ide.client.elements.mediators.log;
 
 import com.codenvy.ide.client.elements.AbstractEntityElement;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.util.StringUtils;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
@@ -28,9 +27,8 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
-import static com.codenvy.ide.client.elements.NameSpace.PREFIX_KEY;
-import static com.codenvy.ide.client.elements.NameSpace.URI;
+import static com.codenvy.ide.client.elements.NameSpace.applyNameSpace;
+import static com.codenvy.ide.client.elements.NameSpace.convertNameSpacesToXML;
 import static com.codenvy.ide.client.elements.NameSpace.copyNameSpaceList;
 
 /**
@@ -70,7 +68,7 @@ public class Property extends AbstractEntityElement {
     /** Returns serialization representation CallTemplate element's property. */
     @Nonnull
     public String serializeWithParam() {
-        return '<' + WITH_PARAM_SERIALIZATION_NAME + ' ' + convertNameSpaceToXMLFormat(getProperty(NAMESPACES)) +
+        return '<' + WITH_PARAM_SERIALIZATION_NAME + ' ' + convertNameSpacesToXML(getProperty(NAMESPACES)) +
                "name=\"" + getProperty(NAME) + "\" value=\"" + getProperty(EXPRESSION) + "\"/>";
 
     }
@@ -78,7 +76,7 @@ public class Property extends AbstractEntityElement {
     /** Returns serialization representation element's property. */
     @Nonnull
     public String serializeProperty() {
-        return '<' + PROPERTY_SERIALIZATION_NAME + ' ' + convertNameSpaceToXMLFormat(getProperty(NAMESPACES)) +
+        return '<' + PROPERTY_SERIALIZATION_NAME + ' ' + convertNameSpacesToXML(getProperty(NAMESPACES)) +
                "name=\"" + getProperty(NAME) + "\" value=\"" + getProperty(EXPRESSION) + "\"/>";
     }
 
@@ -107,26 +105,9 @@ public class Property extends AbstractEntityElement {
                     break;
 
                 default:
-                    applyNameSpaces(nodeName, nodeValue);
+                    applyNameSpace(nameSpaceProvider, getProperty(NAMESPACES), nodeName, nodeValue);
             }
         }
-    }
-
-    private void applyNameSpaces(@Nonnull String nodeName, @Nonnull String nodeValue) {
-        List<NameSpace> nameSpaces = getProperty(NAMESPACES);
-
-        if (!StringUtils.startsWith(PREFIX, nodeName, true) || nameSpaces == null) {
-            return;
-        }
-
-        String name = StringUtils.trimStart(nodeName, PREFIX + ':');
-
-        NameSpace nameSpace = nameSpaceProvider.get();
-
-        nameSpace.putProperty(PREFIX_KEY, name);
-        nameSpace.putProperty(URI, nodeValue);
-
-        nameSpaces.add(nameSpace);
     }
 
     /** Returns copy of element. */
