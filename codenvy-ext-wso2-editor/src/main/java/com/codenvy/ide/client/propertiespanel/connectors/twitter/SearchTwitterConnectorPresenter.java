@@ -18,18 +18,16 @@ package com.codenvy.ide.client.propertiespanel.connectors.twitter;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.twitter.SearchTwitter;
 import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -109,49 +107,43 @@ public class SearchTwitterConnectorPresenter extends AbstractConnectorProperties
                                            TwitterPropertyManager twitterPropertyManager,
                                            ParameterPresenter parameterPresenter,
                                            PropertyTypeManager propertyTypeManager,
-                                           PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                           Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                           Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                           Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+                                           PropertyPanelFactory propertyPanelFactory) {
         super(view,
               twitterPropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertiesPanelWidgetFactory,
-              listPropertyPresenterProvider,
-              complexPropertyPresenterProvider,
-              simplePropertyPresenterProvider);
+              propertyPanelFactory);
 
         prepareView();
     }
 
     private void prepareView() {
 
-        searchInl = createSimplePanel(locale.twitterSearch(), SEARCH_INL);
-        langInl = createSimplePanel(locale.twitterLang(), LANG_INL);
-        localeInl = createSimplePanel(locale.twitterLocale(), LOCALE_INL);
-        maxIdInl = createSimplePanel(locale.twitterMaxId(), MAX_ID_INL);
-        sinceInl = createSimplePanel(locale.twitterSince(), SINCE_INL);
-        sinceIdInl = createSimplePanel(locale.twitterSinceId(), SINCE_ID_INL);
-        geocodeInl = createSimplePanel(locale.twitterGeocode(), GEOCODE_INL);
-        radiusInl = createSimplePanel(locale.twitterRadius(), RADIUS_INL);
-        unitInl = createSimplePanel(locale.twitterUnit(), UNIT_INL);
-        untilInl = createSimplePanel(locale.twitterUntil(), UNTIL_INL);
-        countInl = createSimplePanel(locale.twitterCount(), COUNT_INL);
+        searchInl = createSimpleConnectorProperty(locale.twitterSearch(), SEARCH_INL);
+        langInl = createSimpleConnectorProperty(locale.twitterLang(), LANG_INL);
+        localeInl = createSimpleConnectorProperty(locale.twitterLocale(), LOCALE_INL);
+        maxIdInl = createSimpleConnectorProperty(locale.twitterMaxId(), MAX_ID_INL);
+        sinceInl = createSimpleConnectorProperty(locale.twitterSince(), SINCE_INL);
+        sinceIdInl = createSimpleConnectorProperty(locale.twitterSinceId(), SINCE_ID_INL);
+        geocodeInl = createSimpleConnectorProperty(locale.twitterGeocode(), GEOCODE_INL);
+        radiusInl = createSimpleConnectorProperty(locale.twitterRadius(), RADIUS_INL);
+        unitInl = createSimpleConnectorProperty(locale.twitterUnit(), UNIT_INL);
+        untilInl = createSimpleConnectorProperty(locale.twitterUntil(), UNTIL_INL);
+        countInl = createSimpleConnectorProperty(locale.twitterCount(), COUNT_INL);
 
-        searchExpr = createComplexPanel(locale.twitterSearch(), SEARCH_NS, SEARCH_EXPR);
-        langExpr = createComplexPanel(locale.twitterLang(), LANG_NS, LANG_EXPR);
-        localeExpr = createComplexPanel(locale.twitterLocale(), LOCALE_NS, LOCALE_EXPR);
-        maxIdExpr = createComplexPanel(locale.twitterMaxId(), MAX_ID_NS, MAX_ID_EXPR);
-        sinceExpr = createComplexPanel(locale.twitterSince(), SINCE_NS, SINCE_EXPR);
-        sinceIdExpr = createComplexPanel(locale.twitterSinceId(), SINCE_ID_NS, SINCE_ID_EXPR);
-        geocodeExpr = createComplexPanel(locale.twitterGeocode(), GEOCODE_NS, GEOCODE_EXPR);
-        radiusExpr = createComplexPanel(locale.twitterRadius(), RADIUS_NS, RADIUS_EXPR);
-        unitExpr = createComplexPanel(locale.twitterUnit(), UNIT_NS, UNIT_EXPR);
-        untilExpr = createComplexPanel(locale.twitterUntil(), UNTIL_NS, UNTIL_EXPR);
-        countExpr = createComplexPanel(locale.twitterCount(), COUNT_NS, COUNT_EXPR);
+        searchExpr = createComplexConnectorProperty(locale.twitterSearch(), SEARCH_NS, SEARCH_EXPR);
+        langExpr = createComplexConnectorProperty(locale.twitterLang(), LANG_NS, LANG_EXPR);
+        localeExpr = createComplexConnectorProperty(locale.twitterLocale(), LOCALE_NS, LOCALE_EXPR);
+        maxIdExpr = createComplexConnectorProperty(locale.twitterMaxId(), MAX_ID_NS, MAX_ID_EXPR);
+        sinceExpr = createComplexConnectorProperty(locale.twitterSince(), SINCE_NS, SINCE_EXPR);
+        sinceIdExpr = createComplexConnectorProperty(locale.twitterSinceId(), SINCE_ID_NS, SINCE_ID_EXPR);
+        geocodeExpr = createComplexConnectorProperty(locale.twitterGeocode(), GEOCODE_NS, GEOCODE_EXPR);
+        radiusExpr = createComplexConnectorProperty(locale.twitterRadius(), RADIUS_NS, RADIUS_EXPR);
+        unitExpr = createComplexConnectorProperty(locale.twitterUnit(), UNIT_NS, UNIT_EXPR);
+        untilExpr = createComplexConnectorProperty(locale.twitterUntil(), UNTIL_NS, UNTIL_EXPR);
+        countExpr = createComplexConnectorProperty(locale.twitterCount(), COUNT_NS, COUNT_EXPR);
     }
 
     /** {@inheritDoc} */

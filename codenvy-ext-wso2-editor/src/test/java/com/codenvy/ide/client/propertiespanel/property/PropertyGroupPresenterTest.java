@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.property;
 
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
+import com.codenvy.ide.client.inject.factories.PropertiesGroupFactory;
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupView;
 
@@ -40,24 +40,24 @@ public class PropertyGroupPresenterTest {
     private static final String STRING = "some text";
 
     @Mock
-    private AbstractPropertyPresenter    property;
+    private AbstractPropertyPresenter property;
     @Mock
-    private PropertyGroupView            view;
+    private PropertyGroupView         view;
     @Mock
-    private PropertiesPanelWidgetFactory propertiesPanelWidgetFactory;
+    private PropertiesGroupFactory    propertiesGroupFactory;
 
     private PropertyGroupPresenter presenter;
 
     @Before
     public void setUp() throws Exception {
-        when(propertiesPanelWidgetFactory.createPropertyGroupView(anyString())).thenReturn(view);
+        when(propertiesGroupFactory.createPropertyGroupView(anyString())).thenReturn(view);
 
-        presenter = new PropertyGroupPresenter(propertiesPanelWidgetFactory, STRING);
+        presenter = new PropertyGroupPresenter(propertiesGroupFactory, STRING);
     }
 
     @Test
     public void viewShouldBePrepared() throws Exception {
-        verify(propertiesPanelWidgetFactory).createPropertyGroupView(STRING);
+        verify(propertiesGroupFactory).createPropertyGroupView(STRING);
 
         verify(view).setDelegate(presenter);
 

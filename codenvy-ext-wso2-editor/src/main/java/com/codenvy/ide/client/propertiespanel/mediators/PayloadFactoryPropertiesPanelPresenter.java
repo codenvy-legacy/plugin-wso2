@@ -19,10 +19,10 @@ import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.mediators.payload.Arg;
 import com.codenvy.ide.client.elements.mediators.payload.Format;
 import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.mediators.arguments.AddArgumentCallBack;
 import com.codenvy.ide.client.propertiespanel.mediators.arguments.ArgumentsConfigPresenter;
 import com.codenvy.ide.client.propertiespanel.mediators.inline.ChangeInlineFormatCallBack;
@@ -36,7 +36,6 @@ import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresente
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -50,6 +49,7 @@ import static com.codenvy.ide.client.elements.mediators.payload.Format.MediaType
 import static com.codenvy.ide.client.elements.mediators.payload.PayloadFactory.ARGS;
 import static com.codenvy.ide.client.elements.mediators.payload.PayloadFactory.DESCRIPTION;
 import static com.codenvy.ide.client.elements.mediators.payload.PayloadFactory.FORMAT;
+import static com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter.EditButtonClickedListener;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of PayloadFactory mediator
@@ -61,13 +61,6 @@ import static com.codenvy.ide.client.elements.mediators.payload.PayloadFactory.F
  */
 public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPanel<PayloadFactory> {
 
-    private ListPropertyPresenter    payloadFormat;
-    private ComplexPropertyPresenter formatInline;
-    private ComplexPropertyPresenter formatKey;
-    private ComplexPropertyPresenter args;
-    private ListPropertyPresenter    mediaType;
-    private SimplePropertyPresenter  description;
-
     private final ChangeInlineFormatCallBack changeInlineFormatCallBack;
     private final ChangeResourceKeyCallBack  changeResourceKeyCallBack;
     private final AddArgumentCallBack        argumentCallBack;
@@ -76,7 +69,12 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
     private final ResourceKeyEditorPresenter   resourceKeyEditorPresenter;
     private final ArgumentsConfigPresenter     argumentsConfigPresenter;
 
-    private final WSO2EditorLocalizationConstant locale;
+    private ListPropertyPresenter    payloadFormat;
+    private ComplexPropertyPresenter formatInline;
+    private ComplexPropertyPresenter formatKey;
+    private ComplexPropertyPresenter args;
+    private ListPropertyPresenter    mediaType;
+    private SimplePropertyPresenter  description;
 
     private Format format;
 
@@ -87,13 +85,9 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
                                                   ResourceKeyEditorPresenter resourceKeyEditorPresenter,
                                                   ArgumentsConfigPresenter argumentsConfigPresenter,
                                                   final WSO2EditorLocalizationConstant locale,
-                                                  PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                                  Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
-                                                  Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                                  Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider) {
-        super(view, propertyTypeManager);
+                                                  PropertyPanelFactory propertyPanelFactory) {
 
-        this.locale = locale;
+        super(view, propertyTypeManager, locale, propertyPanelFactory);
 
         this.inlineConfigurationPresenter = inlineConfigurationPresenter;
         this.resourceKeyEditorPresenter = resourceKeyEditorPresenter;
@@ -132,23 +126,13 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
             }
         };
 
-        prepareView(propertiesPanelWidgetFactory,
-                    simplePropertyPresenterProvider,
-                    listPropertyPresenterProvider,
-                    complexPropertyPresenterProvider);
+        prepareView();
     }
 
-    private void prepareView(@Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                             @Nonnull Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
-                             @Nonnull Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                             @Nonnull Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider) {
+    private void prepareView() {
+        PropertyGroupPresenter basicGroup = createGroup(locale.miscGroupTitle());
 
-        PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
-        view.addGroup(basicGroup);
-
-        payloadFormat = listPropertyPresenterProvider.get();
-        payloadFormat.setTitle(locale.payloadFormat());
-        payloadFormat.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener formatTypeListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 format.putProperty(FORMAT_TYPE, FormatType.getItemByValue(property));
@@ -157,12 +141,10 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
 
                 notifyListeners();
             }
-        });
-        basicGroup.addItem(payloadFormat);
+        };
+        payloadFormat = createListProperty(basicGroup, locale.payloadFormat(), formatTypeListener);
 
-        formatInline = complexPropertyPresenterProvider.get();
-        formatInline.setTitle(locale.format());
-        formatInline.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+        EditButtonClickedListener formatInlineBtnListener = new EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 String inline = format.getProperty(FORMAT_INLINE);
@@ -173,12 +155,10 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
 
                 inlineConfigurationPresenter.showDialog(inline, locale.inlineTitle(), changeInlineFormatCallBack);
             }
-        });
-        basicGroup.addItem(formatInline);
+        };
+        formatInline = createComplexProperty(basicGroup, locale.format(), formatInlineBtnListener);
 
-        formatKey = complexPropertyPresenterProvider.get();
-        formatKey.setTitle(locale.payloadFormatKey());
-        formatKey.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+        EditButtonClickedListener formatKeyBtnListener = new EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 String key = format.getProperty(FORMAT_KEY);
@@ -189,12 +169,10 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
 
                 resourceKeyEditorPresenter.showDialog(key, changeResourceKeyCallBack);
             }
-        });
-        basicGroup.addItem(formatKey);
+        };
+        formatKey = createComplexProperty(basicGroup, locale.payloadFormatKey(), formatKeyBtnListener);
 
-        args = complexPropertyPresenterProvider.get();
-        args.setTitle(locale.payloadArgs());
-        args.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+        EditButtonClickedListener argsPropertyBtnListener = new EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 List<Arg> args = element.getProperty(ARGS);
@@ -205,33 +183,28 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
 
                 argumentsConfigPresenter.showConfigWindow(args, argumentCallBack);
             }
-        });
-        basicGroup.addItem(args);
+        };
+        args = createComplexProperty(basicGroup, locale.payloadArgs(), argsPropertyBtnListener);
 
-        mediaType = listPropertyPresenterProvider.get();
-        mediaType.setTitle(locale.payloadMediaType());
-        mediaType.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener mediaTypeListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 format.putProperty(FORMAT_MEDIA_TYPE, MediaType.getItemByValue(property));
 
                 notifyListeners();
             }
-        });
-        basicGroup.addItem(mediaType);
+        };
+        mediaType = createListProperty(basicGroup, locale.payloadMediaType(), mediaTypeListener);
 
-        description = simplePropertyPresenterProvider.get();
-        description.setTitle(locale.description());
-        description.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener descriptionListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(DESCRIPTION, property);
 
                 notifyListeners();
             }
-        });
-        basicGroup.addItem(description);
-
+        };
+        description = createSimpleProperty(basicGroup, locale.description(), descriptionListener);
     }
 
     /**

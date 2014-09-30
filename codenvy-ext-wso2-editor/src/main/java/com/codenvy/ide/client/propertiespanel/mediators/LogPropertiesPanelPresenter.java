@@ -18,10 +18,10 @@ package com.codenvy.ide.client.propertiespanel.mediators;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.mediators.log.Log;
 import com.codenvy.ide.client.elements.mediators.log.Property;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.AddPropertyCallback;
 import com.codenvy.ide.client.propertiespanel.common.propertyconfig.PropertyConfigPresenter;
 import com.codenvy.ide.client.propertiespanel.property.PropertyValueChangedListener;
@@ -31,7 +31,6 @@ import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresente
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,6 +44,7 @@ import static com.codenvy.ide.client.elements.mediators.log.Log.LOG_SEPARATOR;
 import static com.codenvy.ide.client.elements.mediators.log.Log.LogCategory;
 import static com.codenvy.ide.client.elements.mediators.log.Log.LogLevel;
 import static com.codenvy.ide.client.elements.mediators.log.Property.NAME;
+import static com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter.EditButtonClickedListener;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of Log mediator
@@ -56,9 +56,8 @@ import static com.codenvy.ide.client.elements.mediators.log.Property.NAME;
  */
 public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> {
 
-    private final PropertyConfigPresenter        propertyConfigPresenter;
-    private final AddPropertyCallback            addPropertyCallback;
-    private final WSO2EditorLocalizationConstant locale;
+    private final PropertyConfigPresenter propertyConfigPresenter;
+    private final AddPropertyCallback     addPropertyCallback;
 
     private ListPropertyPresenter    category;
     private ListPropertyPresenter    level;
@@ -71,14 +70,11 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> {
                                        PropertyTypeManager propertyTypeManager,
                                        PropertyConfigPresenter propertyConfigPresenter,
                                        WSO2EditorLocalizationConstant locale,
-                                       PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                       Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
-                                       Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                       Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider) {
-        super(view, propertyTypeManager);
+                                       PropertyPanelFactory propertyPanelFactory) {
+
+        super(view, propertyTypeManager, locale, propertyPanelFactory);
 
         this.propertyConfigPresenter = propertyConfigPresenter;
-        this.locale = locale;
 
         this.addPropertyCallback = new AddPropertyCallback() {
             @Override
@@ -89,59 +85,43 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> {
             }
         };
 
-        prepareView(propertiesPanelWidgetFactory,
-                    simplePropertyPresenterProvider,
-                    listPropertyPresenterProvider,
-                    complexPropertyPresenterProvider);
+        prepareView();
     }
 
-    private void prepareView(@Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                             @Nonnull Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
-                             @Nonnull Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                             @Nonnull Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider) {
+    private void prepareView() {
+        PropertyGroupPresenter basicGroup = createGroup(locale.miscGroupTitle());
 
-        PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
-        view.addGroup(basicGroup);
-
-        category = listPropertyPresenterProvider.get();
-        category.setTitle(locale.logCategory());
-        category.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener categoryListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(LOG_CATEGORY, LogCategory.valueOf(property));
 
                 notifyListeners();
             }
-        });
-        basicGroup.addItem(category);
+        };
+        category = createListProperty(basicGroup, locale.logCategory(), categoryListener);
 
-        level = listPropertyPresenterProvider.get();
-        level.setTitle(locale.logLevel());
-        level.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener levelListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(LOG_LEVEL, LogLevel.valueOf(property));
 
                 notifyListeners();
             }
-        });
-        basicGroup.addItem(level);
+        };
+        level = createListProperty(basicGroup, locale.logLevel(), levelListener);
 
-        separator = simplePropertyPresenterProvider.get();
-        separator.setTitle(locale.logSeparator());
-        separator.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener separatorListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(LOG_SEPARATOR, property);
 
                 notifyListeners();
             }
-        });
-        basicGroup.addItem(separator);
+        };
+        separator = createSimpleProperty(basicGroup, locale.logSeparator(), separatorListener);
 
-        logProperties = complexPropertyPresenterProvider.get();
-        logProperties.setTitle(locale.properties());
-        logProperties.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+        EditButtonClickedListener propertiesBtnListener = new EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 List<Property> properties = element.getProperty(LOG_PROPERTIES);
@@ -150,20 +130,18 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> {
                     propertyConfigPresenter.showConfigWindow(properties, locale.properties(), addPropertyCallback);
                 }
             }
-        });
-        basicGroup.addItem(logProperties);
+        };
+        logProperties = createComplexProperty(basicGroup, locale.properties(), propertiesBtnListener);
 
-        description = simplePropertyPresenterProvider.get();
-        description.setTitle(locale.description());
-        description.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener descriptionListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(DESCRIPTION, property);
 
                 notifyListeners();
             }
-        });
-        basicGroup.addItem(description);
+        };
+        description = createSimpleProperty(basicGroup, locale.description(), descriptionListener);
     }
 
     /** {@inheritDoc} */
@@ -171,25 +149,38 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> {
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        category.setValues(propertyTypeManager.getValuesByName(LogCategory.TYPE_NAME));
-        LogCategory categoryValue = element.getProperty(LOG_CATEGORY);
+        displayCategoryParameter();
 
-        if (categoryValue != null) {
-            category.selectValue(categoryValue.name());
-        }
-
-        level.setValues(propertyTypeManager.getValuesByName(LogLevel.TYPE_NAME));
-        LogLevel levelValue = element.getProperty(LOG_LEVEL);
-
-        if (levelValue != null) {
-            level.selectValue(levelValue.name());
-        }
+        displayLevelValueParameter();
 
         separator.setProperty(element.getProperty(LOG_SEPARATOR));
 
         showProperties(element.getProperty(LOG_PROPERTIES));
 
         description.setProperty(element.getProperty(DESCRIPTION));
+    }
+
+    private void displayCategoryParameter() {
+        category.setValues(propertyTypeManager.getValuesByName(LogCategory.TYPE_NAME));
+        LogCategory categoryValue = element.getProperty(LOG_CATEGORY);
+
+        if (categoryValue == null) {
+            return;
+        }
+
+        category.selectValue(categoryValue.name());
+
+    }
+
+    private void displayLevelValueParameter() {
+        level.setValues(propertyTypeManager.getValuesByName(LogLevel.TYPE_NAME));
+        LogLevel levelValue = element.getProperty(LOG_LEVEL);
+
+        if (levelValue == null) {
+            return;
+        }
+
+        level.selectValue(levelValue.name());
     }
 
     /**

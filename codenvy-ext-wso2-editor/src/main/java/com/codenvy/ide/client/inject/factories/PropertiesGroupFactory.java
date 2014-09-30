@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  *
  * @author Andrey Plotnikov
  */
-public interface PropertiesPanelWidgetFactory {
+public interface PropertiesGroupFactory {
 
     /**
      * Create an instance of {@link PropertyGroupView} with a given title.

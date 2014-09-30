@@ -20,10 +20,10 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.Action;
 import com.codenvy.ide.client.elements.mediators.Property;
 import com.codenvy.ide.client.elements.mediators.ValueType;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.property.PropertyValueChangedListener;
@@ -33,7 +33,6 @@ import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresente
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,6 +52,7 @@ import static com.codenvy.ide.client.elements.mediators.Property.VALUE_STRING_CA
 import static com.codenvy.ide.client.elements.mediators.Property.VALUE_STRING_PATTERN;
 import static com.codenvy.ide.client.elements.mediators.Property.VALUE_TYPE;
 import static com.codenvy.ide.client.elements.mediators.ValueType.EXPRESSION;
+import static com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter.EditButtonClickedListener;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of Property mediator
@@ -64,8 +64,8 @@ import static com.codenvy.ide.client.elements.mediators.ValueType.EXPRESSION;
  */
 public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Property> {
 
-    private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
-    private final WSO2EditorLocalizationConstant locale;
+    private final NameSpaceEditorPresenter nameSpaceEditorPresenter;
+    private final AddNameSpacesCallBack    addNameSpacesCallBack;
 
     private SimplePropertyPresenter  propertyName;
     private ListPropertyPresenter    propertyAction;
@@ -81,47 +81,43 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
     @Inject
     public PropertyPropertiesPanelPresenter(PropertiesPanelView view,
                                             PropertyTypeManager propertyTypeManager,
+                                            WSO2EditorLocalizationConstant locale,
                                             NameSpaceEditorPresenter nameSpaceEditorPresenter,
-                                            PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                            ComplexPropertyPresenter valueExpression,
-                                            Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                            Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
-                                            WSO2EditorLocalizationConstant wso2EditorLocalizationConstant) {
-        super(view, propertyTypeManager);
+                                            PropertyPanelFactory propertyPanelFactory) {
+
+        super(view, propertyTypeManager, locale, propertyPanelFactory);
 
         this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
-        this.locale = wso2EditorLocalizationConstant;
 
-        prepareView(propertiesPanelWidgetFactory,
-                    simplePropertyPresenterProvider,
-                    valueExpression,
-                    listPropertyPresenterProvider);
+        addNameSpacesCallBack = new AddNameSpacesCallBack() {
+            @Override
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nullable String expression) {
+                element.putProperty(NAMESPACES, nameSpaces);
+                element.putProperty(VALUE_EXPRESSION, expression != null ? expression : "");
+
+                valueExpression.setProperty(expression);
+
+                notifyListeners();
+            }
+        };
+
+        prepareView();
     }
 
-    private void prepareView(@Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                             @Nonnull Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
-                             @Nonnull final ComplexPropertyPresenter valueExpressionPropertyPresenter,
-                             @Nonnull Provider<ListPropertyPresenter> listPropertyPresenterProvider) {
+    private void prepareView() {
+        PropertyGroupPresenter basicGroup = createGroup(locale.miscGroupTitle());
 
-        PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
-        this.view.addGroup(basicGroup);
-
-        propertyName = simplePropertyPresenterProvider.get();
-        propertyName.setTitle(locale.propertyName());
-        propertyName.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener propertyNameListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(PROPERTY_NAME, property);
 
                 notifyListeners();
             }
-        });
+        };
+        propertyName = createSimpleProperty(basicGroup, locale.propertyName(), propertyNameListener);
 
-        basicGroup.addItem(propertyName);
-
-        propertyAction = listPropertyPresenterProvider.get();
-        propertyAction.setTitle(locale.propertyAction());
-        propertyAction.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener actionListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(PROPERTY_ACTION, Action.getItemByValue(property));
@@ -130,13 +126,10 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
 
                 notifyListeners();
             }
-        });
+        };
+        propertyAction = createListProperty(basicGroup, locale.propertyAction(), actionListener);
 
-        basicGroup.addItem(propertyAction);
-
-        valueType = listPropertyPresenterProvider.get();
-        valueType.setTitle(locale.propertyValueType());
-        valueType.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener valueTypeListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(VALUE_TYPE, ValueType.valueOf(property));
@@ -145,51 +138,30 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
 
                 notifyListeners();
             }
-        });
+        };
+        valueType = createListProperty(basicGroup, locale.propertyValueType(), valueTypeListener);
 
-        basicGroup.addItem(valueType);
-
-        propertyDataType = listPropertyPresenterProvider.get();
-        propertyDataType.setTitle(locale.propertyDataType());
-        propertyDataType.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener dataTypeListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(PROPERTY_DATA_TYPE, DataType.valueOf(property));
 
                 notifyListeners();
             }
-        });
+        };
+        propertyDataType = createListProperty(basicGroup, locale.propertyDataType(), dataTypeListener);
 
-        basicGroup.addItem(propertyDataType);
-
-        valueLiteral = simplePropertyPresenterProvider.get();
-        valueLiteral.setTitle(locale.propertyValueLiteral());
-        valueLiteral.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener valueLiteralListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(VALUE_LITERAL, property);
 
                 notifyListeners();
             }
-        });
-
-        basicGroup.addItem(valueLiteral);
-
-        final AddNameSpacesCallBack addNameSpacesCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nullable String expression) {
-                element.putProperty(NAMESPACES, nameSpaces);
-                element.putProperty(VALUE_EXPRESSION, expression != null ? expression : "");
-
-                valueExpressionPropertyPresenter.setProperty(expression);
-
-                notifyListeners();
-            }
         };
+        valueLiteral = createSimpleProperty(basicGroup, locale.propertyValueLiteral(), valueLiteralListener);
 
-        valueExpression = valueExpressionPropertyPresenter;
-        valueExpression.setTitle(locale.valueStringPattern());
-        this.valueExpression.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+        EditButtonClickedListener valueExprBtnListener = new EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 List<NameSpace> nameSpaces = element.getProperty(NAMESPACES);
@@ -204,61 +176,48 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
                                                                   locale.propertyExpression(),
                                                                   vExpression);
             }
-        });
+        };
+        valueExpression = createComplexProperty(basicGroup, locale.valueExpression(), valueExprBtnListener);
 
-        basicGroup.addItem(valueExpressionPropertyPresenter);
-
-        valueStringPattern = simplePropertyPresenterProvider.get();
-        valueStringPattern.setTitle(locale.valueStringPattern());
-        valueStringPattern.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener valuePatternListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(VALUE_STRING_PATTERN, property);
 
                 notifyListeners();
             }
-        });
+        };
+        valueStringPattern = createSimpleProperty(basicGroup, locale.valueStringPattern(), valuePatternListener);
 
-        basicGroup.addItem(valueStringPattern);
-
-        valueStringCaptureGroup = simplePropertyPresenterProvider.get();
-        valueStringCaptureGroup.setTitle(locale.capturingGroup());
-        valueStringCaptureGroup.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener valueCapturingListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(VALUE_STRING_CAPTURE_GROUP, property);
 
                 notifyListeners();
             }
-        });
+        };
+        valueStringCaptureGroup = createSimpleProperty(basicGroup, locale.capturingGroup(), valueCapturingListener);
 
-        basicGroup.addItem(valueStringCaptureGroup);
-
-        propertyScope = listPropertyPresenterProvider.get();
-        propertyScope.setTitle(locale.propertyScope());
-        propertyScope.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener scopeListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(PROPERTY_SCOPE, Scope.getItemByValue(property));
 
                 notifyListeners();
             }
-        });
+        };
+        propertyScope = createListProperty(basicGroup, locale.propertyScope(), scopeListener);
 
-        basicGroup.addItem(propertyScope);
-
-        description = simplePropertyPresenterProvider.get();
-        description.setTitle(locale.addressEndpointDescription());
-        description.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener descriptionListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(DESCRIPTION, property);
 
                 notifyListeners();
             }
-        });
-
-        basicGroup.addItem(description);
+        };
+        description = createSimpleProperty(basicGroup, locale.description(), descriptionListener);
     }
 
     /** Sets value type to element from special place of view and displaying properties panel to a certain value of value type */
@@ -291,31 +250,15 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
     public void go(@Nonnull AcceptsOneWidget container) {
         super.go(container);
 
-        valueType.setValues(propertyTypeManager.getValuesByName(ValueType.TYPE_NAME));
-        ValueType type = element.getProperty(VALUE_TYPE);
-        if (type != null) {
-            valueType.selectValue(type.name());
-        }
+        displayValueTypeParameter();
+
+        displayPropertyActionParameter();
+
+        displayPropertyDataTypeParameter();
+
+        displayPropertyScopeParameter();
 
         applyValueTypes();
-
-        propertyAction.setValues(propertyTypeManager.getValuesByName(Action.TYPE_NAME));
-        Action action = element.getProperty(PROPERTY_ACTION);
-        if (action != null) {
-            propertyAction.selectValue(action.getValue());
-        }
-
-        propertyDataType.setValues(propertyTypeManager.getValuesByName(DataType.TYPE_NAME));
-        DataType dType = element.getProperty(PROPERTY_DATA_TYPE);
-        if (dType != null) {
-            propertyDataType.selectValue(dType.name());
-        }
-
-        propertyScope.setValues(propertyTypeManager.getValuesByName(Scope.TYPE_NAME));
-        Scope scope = element.getProperty(PROPERTY_SCOPE);
-        if (scope != null) {
-            propertyScope.selectValue(scope.getValue());
-        }
 
         propertyName.setProperty(element.getProperty(PROPERTY_NAME));
         valueLiteral.setProperty(element.getProperty(VALUE_LITERAL));
@@ -323,6 +266,50 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
         valueStringPattern.setProperty(element.getProperty(VALUE_STRING_PATTERN));
         valueStringCaptureGroup.setProperty(element.getProperty(VALUE_STRING_CAPTURE_GROUP));
         description.setProperty(element.getProperty(DESCRIPTION));
+    }
+
+    private void displayValueTypeParameter() {
+        valueType.setValues(propertyTypeManager.getValuesByName(ValueType.TYPE_NAME));
+        ValueType type = element.getProperty(VALUE_TYPE);
+
+        if (type == null) {
+            return;
+        }
+
+        valueType.selectValue(type.name());
+    }
+
+    private void displayPropertyActionParameter() {
+        propertyAction.setValues(propertyTypeManager.getValuesByName(Action.TYPE_NAME));
+        Action action = element.getProperty(PROPERTY_ACTION);
+
+        if (action == null) {
+            return;
+        }
+
+        propertyAction.selectValue(action.getValue());
+    }
+
+    private void displayPropertyDataTypeParameter() {
+        propertyDataType.setValues(propertyTypeManager.getValuesByName(DataType.TYPE_NAME));
+        DataType dataType = element.getProperty(PROPERTY_DATA_TYPE);
+
+        if (dataType == null) {
+            return;
+        }
+
+        propertyDataType.selectValue(dataType.name());
+    }
+
+    private void displayPropertyScopeParameter() {
+        propertyScope.setValues(propertyTypeManager.getValuesByName(Scope.TYPE_NAME));
+        Scope scope = element.getProperty(PROPERTY_SCOPE);
+
+        if (scope == null) {
+            return;
+        }
+
+        propertyScope.selectValue(scope.getValue());
     }
 
 }

@@ -18,10 +18,10 @@ package com.codenvy.ide.client.propertiespanel.mediators;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.Filter;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.property.PropertyValueChangedListener;
@@ -31,7 +31,6 @@ import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresente
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,6 +44,7 @@ import static com.codenvy.ide.client.elements.mediators.Filter.SOURCE;
 import static com.codenvy.ide.client.elements.mediators.Filter.SOURCE_NAMESPACE;
 import static com.codenvy.ide.client.elements.mediators.Filter.XPATH_NAMESPACE;
 import static com.codenvy.ide.client.elements.mediators.Filter.X_PATH;
+import static com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter.EditButtonClickedListener;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of Filter mediator
@@ -55,53 +55,29 @@ import static com.codenvy.ide.client.elements.mediators.Filter.X_PATH;
  * @author Valeriy Svydenko
  */
 public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filter> {
-    private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
-    private final WSO2EditorLocalizationConstant local;
+
+    private final NameSpaceEditorPresenter nameSpaceEditorPresenter;
+
+    private final AddNameSpacesCallBack addSourceNameSpacesCallBack;
+    private final AddNameSpacesCallBack addXPathNameSpacesCallBack;
 
     private ListPropertyPresenter    conditionType;
     private ComplexPropertyPresenter source;
     private ComplexPropertyPresenter xPath;
     private SimplePropertyPresenter  regularExpression;
 
-
     @Inject
     public FilterPropertiesPanelPresenter(PropertiesPanelView view,
                                           PropertyTypeManager propertyTypeManager,
                                           NameSpaceEditorPresenter nameSpaceEditorPresenter,
-                                          PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                          WSO2EditorLocalizationConstant local,
-                                          ListPropertyPresenter conditionType,
-                                          Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                          SimplePropertyPresenter regularExpression) {
-        super(view, propertyTypeManager);
+                                          WSO2EditorLocalizationConstant locale,
+                                          PropertyPanelFactory propertyPanelFactory) {
+
+        super(view, propertyTypeManager, locale, propertyPanelFactory);
 
         this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
-        this.local = local;
 
-        prepareView(propertiesPanelWidgetFactory, conditionType, complexPropertyPresenterProvider, regularExpression);
-    }
-
-    private void prepareView(@Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                             @Nonnull ListPropertyPresenter conditionTypePropertyPresenter,
-                             @Nonnull Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                             @Nonnull SimplePropertyPresenter regularExpressionPropertyPresenter) {
-        PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(local.miscGroupTitle());
-        this.view.addGroup(basicGroup);
-
-        conditionType = conditionTypePropertyPresenter;
-        conditionType.setTitle(local.conditionType());
-        conditionType.addPropertyValueChangedListener(new PropertyValueChangedListener() {
-            @Override
-            public void onPropertyChanged(@Nonnull String property) {
-                redesignViewToConditionType(ConditionType.valueOf(property));
-
-                notifyListeners();
-            }
-        });
-
-        basicGroup.addItem(conditionType);
-
-        final AddNameSpacesCallBack addSourceNameSpacesCallBack = new AddNameSpacesCallBack() {
+        addSourceNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
             public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nullable String expression) {
                 element.putProperty(SOURCE_NAMESPACE, nameSpaces);
@@ -113,9 +89,35 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
             }
         };
 
-        source = complexPropertyPresenterProvider.get();
-        source.setTitle(local.filterSource());
-        source.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+        addXPathNameSpacesCallBack = new AddNameSpacesCallBack() {
+            @Override
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
+                element.putProperty(XPATH_NAMESPACE, nameSpaces);
+                element.putProperty(X_PATH, expression);
+
+                xPath.setProperty(expression);
+
+                notifyListeners();
+            }
+        };
+
+        prepareView();
+    }
+
+    private void prepareView() {
+        PropertyGroupPresenter basicGroup = createGroup(locale.miscGroupTitle());
+
+        PropertyValueChangedListener conditionTypeListener = new PropertyValueChangedListener() {
+            @Override
+            public void onPropertyChanged(@Nonnull String property) {
+                redesignViewToConditionType(ConditionType.valueOf(property));
+
+                notifyListeners();
+            }
+        };
+        conditionType = createListProperty(basicGroup, locale.conditionType(), conditionTypeListener);
+
+        EditButtonClickedListener sourceNameSpaceBtnListener = new EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 List<NameSpace> nameSpaces = element.getProperty(SOURCE_NAMESPACE);
@@ -127,41 +129,24 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
 
                 nameSpaceEditorPresenter.showWindowWithParameters(nameSpaces,
                                                                   addSourceNameSpacesCallBack,
-                                                                  local.filterSourceTitle(),
+                                                                  locale.filterSourceTitle(),
                                                                   source);
             }
-        });
+        };
 
-        basicGroup.addItem(this.source);
+        source = createComplexProperty(basicGroup, locale.filterSource(), sourceNameSpaceBtnListener);
 
-        regularExpression = regularExpressionPropertyPresenter;
-        regularExpression.setTitle(local.regularExpression());
-        regularExpression.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener regularExprListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(REGULAR_EXPRESSION, property);
 
                 notifyListeners();
             }
-        });
-
-        basicGroup.addItem(regularExpression);
-
-        final AddNameSpacesCallBack addXPathNameSpacesCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nullable String expression) {
-                element.putProperty(XPATH_NAMESPACE, nameSpaces);
-                element.putProperty(X_PATH, expression != null ? expression : "");
-
-                xPath.setProperty(expression);
-
-                notifyListeners();
-            }
         };
+        regularExpression = createSimpleProperty(basicGroup, locale.regularExpression(), regularExprListener);
 
-        xPath = complexPropertyPresenterProvider.get();
-        xPath.setTitle(local.filterXpath());
-        xPath.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+        EditButtonClickedListener xpathBtnListener = new EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 List<NameSpace> nameSpaces = element.getProperty(XPATH_NAMESPACE);
@@ -173,12 +158,12 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
 
                 nameSpaceEditorPresenter.showWindowWithParameters(nameSpaces,
                                                                   addXPathNameSpacesCallBack,
-                                                                  local.filterXpathTitle(),
+                                                                  locale.filterXpathTitle(),
                                                                   xPath);
             }
-        });
+        };
 
-        basicGroup.addItem(xPath);
+        xPath = createComplexProperty(basicGroup, locale.filterXpath(), xpathBtnListener);
     }
 
     /** Modifies the view of the property panel depending on the condition type of filter element. */

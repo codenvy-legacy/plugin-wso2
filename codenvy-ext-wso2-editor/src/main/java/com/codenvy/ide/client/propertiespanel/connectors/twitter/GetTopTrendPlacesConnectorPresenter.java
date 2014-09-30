@@ -18,18 +18,16 @@ package com.codenvy.ide.client.propertiespanel.connectors.twitter;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.twitter.GetTopTrendPlaces;
 import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -58,27 +56,21 @@ public class GetTopTrendPlacesConnectorPresenter extends AbstractConnectorProper
                                                TwitterPropertyManager twitterPropertyManager,
                                                ParameterPresenter parameterPresenter,
                                                PropertyTypeManager propertyTypeManager,
-                                               PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                               Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                               Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                               Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+                                               PropertyPanelFactory propertyPanelFactory) {
         super(view,
               twitterPropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertiesPanelWidgetFactory,
-              listPropertyPresenterProvider,
-              complexPropertyPresenterProvider,
-              simplePropertyPresenterProvider);
+              propertyPanelFactory);
 
         prepareView();
     }
 
     private void prepareView() {
-        idInl = createSimplePanel(locale.jiraId(), ID_INL);
-        idExpr = createComplexPanel(locale.jiraId(), ID_NS, ID_EXPR);
+        idInl = createSimpleConnectorProperty(locale.jiraId(), ID_INL);
+        idExpr = createComplexConnectorProperty(locale.jiraId(), ID_NS, ID_EXPR);
     }
 
     /** {@inheritDoc} */

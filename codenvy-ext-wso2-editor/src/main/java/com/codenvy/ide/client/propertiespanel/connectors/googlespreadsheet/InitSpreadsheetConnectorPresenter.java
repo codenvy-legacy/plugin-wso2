@@ -18,18 +18,16 @@ package com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GoogleSpreadsheetPropertyManager;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.InitSpreadsheet;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -74,43 +72,38 @@ public class InitSpreadsheetConnectorPresenter extends AbstractConnectorProperti
                                              GoogleSpreadsheetPropertyManager googleSpreadsheetPropertyManager,
                                              ParameterPresenter parameterPresenter,
                                              PropertyTypeManager propertyTypeManager,
-                                             PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                             Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                             Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                             Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+                                             PropertyPanelFactory propertyPanelFactory) {
         super(view,
               googleSpreadsheetPropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertiesPanelWidgetFactory,
-              listPropertyPresenterProvider,
-              complexPropertyPresenterProvider,
-              simplePropertyPresenterProvider);
+              propertyPanelFactory);
 
         prepareView();
     }
 
     private void prepareView() {
-        oauthConsumerKeyNS = createComplexPanel(locale.spreadsheetInitOauthConsumerKey(),
-                                                OAUTH_CONSUMER_KEY_NS_KEY,
-                                                OAUTH_CONSUMER_KEY_EXPRESSION_KEY);
+        oauthConsumerKeyNS = createComplexConnectorProperty(locale.spreadsheetInitOauthConsumerKey(),
+                                                            OAUTH_CONSUMER_KEY_NS_KEY,
+                                                            OAUTH_CONSUMER_KEY_EXPRESSION_KEY);
 
-        oauthConsumerSecretNS = createComplexPanel(locale.spreadsheetInitOauthConsumerSecret(),
-                                                   OAUTH_CONSUMER_SECRET_NS_KEY,
-                                                   OAUTH_CONSUMER_SECRET_EXPRESSION_KEY);
-        oauthAccessTokenNS = createComplexPanel(locale.spreadsheetInitOauthAccessToken(),
-                                                OAUTH_ACCESS_TOKEN_NS_KEY,
-                                                OAUTH_ACCESS_TOKEN_EXPRESSION_KEY);
-        oauthAccessTokenSecretNS = createComplexPanel(locale.spreadsheetInitOauthAccessTokenSecret(),
-                                                      OAUTH_ACCESS_TOKEN_SECRET_NS_KEY,
-                                                      OAUTH_ACCESS_TOKEN_SECRET_EXPRESSION_KEY);
+        oauthConsumerSecretNS = createComplexConnectorProperty(locale.spreadsheetInitOauthConsumerSecret(),
+                                                               OAUTH_CONSUMER_SECRET_NS_KEY,
+                                                               OAUTH_CONSUMER_SECRET_EXPRESSION_KEY);
+        oauthAccessTokenNS = createComplexConnectorProperty(locale.spreadsheetInitOauthAccessToken(),
+                                                            OAUTH_ACCESS_TOKEN_NS_KEY,
+                                                            OAUTH_ACCESS_TOKEN_EXPRESSION_KEY);
+        oauthAccessTokenSecretNS = createComplexConnectorProperty(locale.spreadsheetInitOauthAccessTokenSecret(),
+                                                                  OAUTH_ACCESS_TOKEN_SECRET_NS_KEY,
+                                                                  OAUTH_ACCESS_TOKEN_SECRET_EXPRESSION_KEY);
 
-        oauthConsumerKey = createSimplePanel(locale.spreadsheetInitOauthConsumerKey(), OAUTH_CONSUMER_KEY_KEY);
-        oauthConsumerSecret = createSimplePanel(locale.spreadsheetInitOauthConsumerSecret(), OAUTH_CONSUMER_SECRET_KEY);
-        oauthAccessToken = createSimplePanel(locale.spreadsheetInitOauthAccessToken(), OAUTH_ACCESS_TOKEN_KEY);
-        oauthAccessTokenSecret = createSimplePanel(locale.spreadsheetInitOauthAccessTokenSecret(), OAUTH_ACCESS_TOKEN_SECRET_KEY);
+        oauthConsumerKey = createSimpleConnectorProperty(locale.spreadsheetInitOauthConsumerKey(), OAUTH_CONSUMER_KEY_KEY);
+        oauthConsumerSecret = createSimpleConnectorProperty(locale.spreadsheetInitOauthConsumerSecret(), OAUTH_CONSUMER_SECRET_KEY);
+        oauthAccessToken = createSimpleConnectorProperty(locale.spreadsheetInitOauthAccessToken(), OAUTH_ACCESS_TOKEN_KEY);
+        oauthAccessTokenSecret = createSimpleConnectorProperty(locale.spreadsheetInitOauthAccessTokenSecret(),
+                                                               OAUTH_ACCESS_TOKEN_SECRET_KEY);
     }
 
     /** {@inheritDoc} */

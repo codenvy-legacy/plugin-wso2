@@ -18,10 +18,10 @@ package com.codenvy.ide.client.propertiespanel.mediators;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.Call;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.property.PropertyValueChangedListener;
@@ -31,7 +31,6 @@ import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresente
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,6 +42,7 @@ import static com.codenvy.ide.client.elements.mediators.Call.EndpointType;
 import static com.codenvy.ide.client.elements.mediators.Call.NAMESPACES;
 import static com.codenvy.ide.client.elements.mediators.Call.REGISTRY_KEY;
 import static com.codenvy.ide.client.elements.mediators.Call.X_PATH;
+import static com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter.EditButtonClickedListener;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of Call mediator
@@ -52,8 +52,9 @@ import static com.codenvy.ide.client.elements.mediators.Call.X_PATH;
  */
 public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call> {
 
-    private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
-    private final WSO2EditorLocalizationConstant locale;
+    private final NameSpaceEditorPresenter nameSpaceEditorPresenter;
+    private final AddNameSpacesCallBack    addNameSpacesCallBack;
+
 
     private ListPropertyPresenter    endpointType;
     private SimplePropertyPresenter  endpointRegistryKeyPanel;
@@ -64,69 +65,52 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call> 
     public CallPropertiesPanelPresenter(PropertiesPanelView view,
                                         PropertyTypeManager propertyTypeManager,
                                         NameSpaceEditorPresenter nameSpaceEditorPresenter,
-                                        WSO2EditorLocalizationConstant localizationConstant,
-                                        PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                        final ComplexPropertyPresenter endpointXpathPanel,
-                                        Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
-                                        final ListPropertyPresenter endpointTypeListPropertyPresenter) {
-        super(view, propertyTypeManager);
+                                        WSO2EditorLocalizationConstant locale,
+                                        PropertyPanelFactory propertyPanelFactory) {
+
+        super(view, propertyTypeManager, locale, propertyPanelFactory);
 
         this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
-        this.locale = localizationConstant;
 
-        prepareView(propertiesPanelWidgetFactory,
-                    simplePropertyPresenterProvider,
-                    endpointTypeListPropertyPresenter,
-                    endpointXpathPanel);
+        addNameSpacesCallBack = new AddNameSpacesCallBack() {
+            @Override
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nullable String expression) {
+                element.putProperty(NAMESPACES, nameSpaces);
+                element.putProperty(X_PATH, expression != null ? expression : "");
+
+                endpointXpathPanel.setProperty(expression);
+
+                notifyListeners();
+            }
+        };
+
+        prepareView();
     }
 
-    private void prepareView(@Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                             @Nonnull Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
-                             @Nonnull ListPropertyPresenter endpointTypeListProperty,
-                             @Nonnull final ComplexPropertyPresenter endpointXpathComplexProperty) {
+    private void prepareView() {
+        PropertyGroupPresenter basicGroup = createGroup(locale.miscGroupTitle());
 
-        PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
-        this.view.addGroup(basicGroup);
-
-        endpointType = endpointTypeListProperty;
-        endpointType.setTitle(locale.endpointType());
-        endpointType.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener endPointTypeListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 redesignViewToEndpointType(property);
 
                 notifyListeners();
             }
-        });
-        basicGroup.addItem(endpointType);
+        };
+        endpointType = createListProperty(basicGroup, locale.endpointType(), endPointTypeListener);
 
-        endpointRegistryKeyPanel = simplePropertyPresenterProvider.get();
-        endpointRegistryKeyPanel.setTitle(locale.endpointRegistryKey());
-        endpointRegistryKeyPanel.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener registryKeyListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(REGISTRY_KEY, property);
 
                 notifyListeners();
             }
-        });
-        basicGroup.addItem(endpointRegistryKeyPanel);
-
-        final AddNameSpacesCallBack addNameSpacesCallBack = new AddNameSpacesCallBack() {
-            @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nullable String expression) {
-                element.putProperty(NAMESPACES, nameSpaces);
-                element.putProperty(X_PATH, expression != null ? expression : "");
-
-                endpointXpathComplexProperty.setProperty(expression);
-
-                notifyListeners();
-            }
         };
+        endpointRegistryKeyPanel = createSimpleProperty(basicGroup, locale.endpointRegistryKey(), registryKeyListener);
 
-        endpointXpathPanel = endpointXpathComplexProperty;
-        endpointXpathPanel.setTitle(locale.endpointXpath());
-        endpointXpathPanel.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+        EditButtonClickedListener xpathBtnListener = new EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 List<NameSpace> nameSpaces = element.getProperty(NAMESPACES);
@@ -140,20 +124,18 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call> 
                                                                   locale.callExpressionTitle(),
                                                                   xPath);
             }
-        });
-        basicGroup.addItem(endpointXpathPanel);
+        };
+        endpointXpathPanel = createComplexProperty(basicGroup, locale.endpointXpath(), xpathBtnListener);
 
-        description = simplePropertyPresenterProvider.get();
-        description.setTitle(locale.addressEndpointDescription());
-        description.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener descriptionListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(DESCRIPTION, property);
 
                 notifyListeners();
             }
-        });
-        basicGroup.addItem(description);
+        };
+        description = createSimpleProperty(basicGroup, locale.addressEndpointDescription(), descriptionListener);
     }
 
     /** Modifies the view of the panel depending on the type of endpoint of call element. */

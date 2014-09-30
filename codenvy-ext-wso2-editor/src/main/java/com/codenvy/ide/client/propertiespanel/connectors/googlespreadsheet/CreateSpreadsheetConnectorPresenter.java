@@ -18,18 +18,16 @@ package com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.CreateSpreadsheet;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GoogleSpreadsheetPropertyManager;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -63,36 +61,30 @@ public class CreateSpreadsheetConnectorPresenter extends AbstractConnectorProper
                                                GoogleSpreadsheetPropertyManager googleSpreadsheetPropertyManager,
                                                ParameterPresenter parameterPresenter,
                                                PropertyTypeManager propertyTypeManager,
-                                               PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                               Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                               Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                               Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+                                               PropertyPanelFactory propertyPanelFactory) {
         super(view,
               googleSpreadsheetPropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertiesPanelWidgetFactory,
-              listPropertyPresenterProvider,
-              complexPropertyPresenterProvider,
-              simplePropertyPresenterProvider);
+              propertyPanelFactory);
 
         prepareView();
     }
 
     private void prepareView() {
-        spreadsheetNameNS = createComplexPanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(),
-                                               SPREADSHEET_NAME_NS,
-                                               SPREADSHEET_NAME_EXPRESSION);
+        spreadsheetNameNS = createComplexConnectorProperty(locale.spreadsheetCreateSpreadsheetSpreadsheetName(),
+                                                           SPREADSHEET_NAME_NS,
+                                                           SPREADSHEET_NAME_EXPRESSION);
 
-        worksheetCountNS = createComplexPanel(locale.spreadsheetCreateSpreadsheetWorksheetCount(),
-                                              WORKSHEET_COUNT_NS,
-                                              WORKSHEET_COUNT_EXPRESSION);
+        worksheetCountNS = createComplexConnectorProperty(locale.spreadsheetCreateSpreadsheetWorksheetCount(),
+                                                          WORKSHEET_COUNT_NS,
+                                                          WORKSHEET_COUNT_EXPRESSION);
 
-        spreadsheetName = createSimplePanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(), SPREADSHEET_NAME);
+        spreadsheetName = createSimpleConnectorProperty(locale.spreadsheetCreateSpreadsheetSpreadsheetName(), SPREADSHEET_NAME);
 
-        worksheetCount = createSimplePanel(locale.spreadsheetCreateSpreadsheetWorksheetCount(), WORKSHEET_COUNT);
+        worksheetCount = createSimpleConnectorProperty(locale.spreadsheetCreateSpreadsheetWorksheetCount(), WORKSHEET_COUNT);
     }
 
     /** {@inheritDoc} */

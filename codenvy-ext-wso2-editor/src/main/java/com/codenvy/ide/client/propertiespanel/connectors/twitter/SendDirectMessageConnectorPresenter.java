@@ -18,18 +18,16 @@ package com.codenvy.ide.client.propertiespanel.connectors.twitter;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.twitter.SendDirectMessage;
 import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -89,40 +87,35 @@ public class SendDirectMessageConnectorPresenter extends AbstractConnectorProper
                                                TwitterPropertyManager twitterPropertyManager,
                                                ParameterPresenter parameterPresenter,
                                                PropertyTypeManager propertyTypeManager,
-                                               PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                               Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                               Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                               Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+                                               PropertyPanelFactory propertyPanelFactory) {
         super(view,
               twitterPropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertiesPanelWidgetFactory,
-              listPropertyPresenterProvider,
-              complexPropertyPresenterProvider,
-              simplePropertyPresenterProvider);
+              propertyPanelFactory);
 
         prepareView();
     }
 
     private void prepareView() {
-        consumerKey = createSimplePanel(locale.twitterConsumerKey(), CONSUMER_KEY_INL);
-        consumerSecret = createSimplePanel(locale.twitterConsumerSecret(), CONSUMER_SECRET_INL);
-        accessToken = createSimplePanel(locale.twitterAccessToken(), ACCESS_TOKEN_INL);
-        accessTokenSecret = createSimplePanel(locale.twitterAccessTokenSecret(), ACCESS_TOKEN_SECRET_INL);
-        userId = createSimplePanel(locale.twitterUserId(), USER_ID_INL);
-        screenName = createSimplePanel(locale.twitterScreenName(), SCREEN_NAME_INL);
-        message = createSimplePanel(locale.twitterMessage(), MESSAGE_INL);
+        consumerKey = createSimpleConnectorProperty(locale.twitterConsumerKey(), CONSUMER_KEY_INL);
+        consumerSecret = createSimpleConnectorProperty(locale.twitterConsumerSecret(), CONSUMER_SECRET_INL);
+        accessToken = createSimpleConnectorProperty(locale.twitterAccessToken(), ACCESS_TOKEN_INL);
+        accessTokenSecret = createSimpleConnectorProperty(locale.twitterAccessTokenSecret(), ACCESS_TOKEN_SECRET_INL);
+        userId = createSimpleConnectorProperty(locale.twitterUserId(), USER_ID_INL);
+        screenName = createSimpleConnectorProperty(locale.twitterScreenName(), SCREEN_NAME_INL);
+        message = createSimpleConnectorProperty(locale.twitterMessage(), MESSAGE_INL);
 
-        consumerKeyExpr = createComplexPanel(locale.twitterConsumerKey(), CONSUMER_KEY_NS, CONSUMER_KEY_EXPR);
-        consumerSecretExpr = createComplexPanel(locale.twitterConsumerSecret(), CONSUMER_SECRET_NS, CONSUMER_SECRET_EXPR);
-        accessTokenExpr = createComplexPanel(locale.twitterAccessToken(), ACCESS_TOKEN_NS, ACCESS_TOKEN_EXPR);
-        accessTokenSecretExpr = createComplexPanel(locale.twitterAccessTokenSecret(), ACCESS_TOKEN_SECRET_NS, ACCESS_TOKEN_SECRET_EXPR);
-        userIdExpr = createComplexPanel(locale.twitterUserId(), USER_ID_NS, USER_ID_EXPR);
-        screenNameExpr = createComplexPanel(locale.twitterScreenName(), SCREEN_NAME_NS, SCREEN_NAME_EXPR);
-        messageExpr = createComplexPanel(locale.twitterMessage(), MESSAGE_NS, MESSAGE_EXPR);
+        consumerKeyExpr = createComplexConnectorProperty(locale.twitterConsumerKey(), CONSUMER_KEY_NS, CONSUMER_KEY_EXPR);
+        consumerSecretExpr = createComplexConnectorProperty(locale.twitterConsumerSecret(), CONSUMER_SECRET_NS, CONSUMER_SECRET_EXPR);
+        accessTokenExpr = createComplexConnectorProperty(locale.twitterAccessToken(), ACCESS_TOKEN_NS, ACCESS_TOKEN_EXPR);
+        accessTokenSecretExpr = createComplexConnectorProperty(locale.twitterAccessTokenSecret(), ACCESS_TOKEN_SECRET_NS,
+                                                               ACCESS_TOKEN_SECRET_EXPR);
+        userIdExpr = createComplexConnectorProperty(locale.twitterUserId(), USER_ID_NS, USER_ID_EXPR);
+        screenNameExpr = createComplexConnectorProperty(locale.twitterScreenName(), SCREEN_NAME_NS, SCREEN_NAME_EXPR);
+        messageExpr = createComplexConnectorProperty(locale.twitterMessage(), MESSAGE_NS, MESSAGE_EXPR);
     }
 
     /** {@inheritDoc} */

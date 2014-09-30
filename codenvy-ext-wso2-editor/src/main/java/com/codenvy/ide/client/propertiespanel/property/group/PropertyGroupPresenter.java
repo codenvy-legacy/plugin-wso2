@@ -16,7 +16,7 @@
 
 package com.codenvy.ide.client.propertiespanel.property.group;
 
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
+import com.codenvy.ide.client.inject.factories.PropertiesGroupFactory;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.propertiespanel.property.AbstractPropertyPresenter;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -35,8 +35,8 @@ public class PropertyGroupPresenter extends AbstractPresenter<PropertyGroupView>
     private boolean isFolded;
 
     @Inject
-    public PropertyGroupPresenter(PropertiesPanelWidgetFactory propertiesPanelWidgetFactory, @Assisted String title) {
-        super(propertiesPanelWidgetFactory.createPropertyGroupView(title));
+    public PropertyGroupPresenter(PropertiesGroupFactory propertiesGroupFactory, @Assisted String title) {
+        super(propertiesGroupFactory.createPropertyGroupView(title));
 
         fold();
     }

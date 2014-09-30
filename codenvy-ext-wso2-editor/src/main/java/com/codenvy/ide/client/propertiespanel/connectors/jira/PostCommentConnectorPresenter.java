@@ -18,18 +18,16 @@ package com.codenvy.ide.client.propertiespanel.connectors.jira;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.jira.PostComment;
 import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -70,32 +68,26 @@ public class PostCommentConnectorPresenter extends AbstractConnectorPropertiesPa
                                          TwitterPropertyManager twitterPropertyManager,
                                          ParameterPresenter parameterPresenter,
                                          PropertyTypeManager propertyTypeManager,
-                                         PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                         Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                         Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                         Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+                                         PropertyPanelFactory propertyPanelFactory) {
         super(view,
               twitterPropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertiesPanelWidgetFactory,
-              listPropertyPresenterProvider,
-              complexPropertyPresenterProvider,
-              simplePropertyPresenterProvider);
+              propertyPanelFactory);
 
         prepareView();
     }
 
     private void prepareView() {
-        issueIdOrKeyInl = createSimplePanel(locale.jiraIssueIdOrKey(), ISSUE_ID_OR_KEY_INL);
-        commentInl = createSimplePanel(locale.jiraComment(), COMMENT_INL);
-        visibleRoleInl = createSimplePanel(locale.jiraVisibleRole(), VISIBLE_ROLE_INL);
+        issueIdOrKeyInl = createSimpleConnectorProperty(locale.jiraIssueIdOrKey(), ISSUE_ID_OR_KEY_INL);
+        commentInl = createSimpleConnectorProperty(locale.jiraComment(), COMMENT_INL);
+        visibleRoleInl = createSimpleConnectorProperty(locale.jiraVisibleRole(), VISIBLE_ROLE_INL);
 
-        issueIdOrKeyExpr = createComplexPanel(locale.jiraIssueIdOrKey(), ISSUE_ID_OR_KEY_NS, ISSUE_ID_OR_KEY_EXPR);
-        commentExpr = createComplexPanel(locale.jiraComment(), COMMENT_NS, COMMENT_EXPR);
-        visibleRoleExpr = createComplexPanel(locale.jiraVisibleRole(), VISIBLE_ROLE_NS, VISIBLE_ROLE_EXPR);
+        issueIdOrKeyExpr = createComplexConnectorProperty(locale.jiraIssueIdOrKey(), ISSUE_ID_OR_KEY_NS, ISSUE_ID_OR_KEY_EXPR);
+        commentExpr = createComplexConnectorProperty(locale.jiraComment(), COMMENT_NS, COMMENT_EXPR);
+        visibleRoleExpr = createComplexConnectorProperty(locale.jiraVisibleRole(), VISIBLE_ROLE_NS, VISIBLE_ROLE_EXPR);
     }
 
     /** {@inheritDoc} */

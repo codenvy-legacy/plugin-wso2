@@ -17,10 +17,10 @@ package com.codenvy.ide.client.propertiespanel.mediators;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.mediators.Respond;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.property.PropertyValueChangedListener;
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
@@ -45,25 +45,22 @@ public class RespondPropertiesPanelPresenter extends AbstractPropertiesPanel<Res
     @Inject
     public RespondPropertiesPanelPresenter(PropertiesPanelView view,
                                            PropertyTypeManager propertyTypeManager,
-                                           PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                           SimplePropertyPresenter descriptionPropertyPresenter,
-                                           WSO2EditorLocalizationConstant locale) {
-        super(view, propertyTypeManager);
+                                           WSO2EditorLocalizationConstant locale,
+                                           PropertyPanelFactory propertyPanelFactory) {
 
-        PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
-        this.view.addGroup(basicGroup);
+        super(view, propertyTypeManager, locale, propertyPanelFactory);
 
-        description = descriptionPropertyPresenter;
-        description.setTitle(locale.addressEndpointDescription());
-        description.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyGroupPresenter basicGroup = createGroup(locale.miscGroupTitle());
+
+        PropertyValueChangedListener descriptionListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(DESCRIPTION, property);
 
                 notifyListeners();
             }
-        });
-        basicGroup.addItem(descriptionPropertyPresenter);
+        };
+        description = createSimpleProperty(basicGroup, locale.description(), descriptionListener);
     }
 
     /** {@inheritDoc} */

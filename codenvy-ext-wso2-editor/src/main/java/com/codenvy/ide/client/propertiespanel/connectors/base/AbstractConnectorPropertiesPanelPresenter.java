@@ -19,10 +19,10 @@ import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.elements.connectors.ConnectorPropertyManager;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ConnectorParameterCallBack;
@@ -33,7 +33,6 @@ import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresen
 import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -43,6 +42,7 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Avail
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.CONFIG;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.PARAMETER_EDITOR_TYPE;
 import static com.codenvy.ide.client.elements.connectors.AbstractConnector.ParameterEditorType;
+import static com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter.EditButtonClickedListener;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of connector
@@ -54,21 +54,19 @@ import static com.codenvy.ide.client.elements.connectors.AbstractConnector.Param
 public abstract class AbstractConnectorPropertiesPanelPresenter<T extends AbstractConnector>
         extends AbstractPropertiesPanel<T> implements ConnectorPropertyManager.ConnectorPropertyListener {
 
-    private final PropertiesPanelWidgetFactory       propertiesWidgetFactory;
-    private final Provider<ListPropertyPresenter>    listPropertyProvider;
-    private final Provider<SimplePropertyPresenter>  simplePropertyProvider;
-    private final Provider<ComplexPropertyPresenter> complexPropertyProvider;
-    private final NameSpaceEditorPresenter           nameSpacePresenter;
-    private final ParameterPresenter                 parameterPresenter;
-    private final ConnectorPropertyManager           connectorPropertyManager;
-    private final ConnectorParameterCallBack         parameterCallBack;
+    private final NameSpaceEditorPresenter   nameSpacePresenter;
+    private final ParameterPresenter         parameterPresenter;
+    private final ConnectorPropertyManager   connectorPropertyManager;
+    private final ConnectorParameterCallBack parameterCallBack;
+    private final PropertyPanelFactory       propertyPanelFactory;
 
     protected final WSO2EditorLocalizationConstant locale;
 
-    private PropertyGroupPresenter  basicGroup;
-    private SimplePropertyPresenter configRef;
-    private ListPropertyPresenter   availableConfigs;
-    private ListPropertyPresenter   parameterEditorType;
+    private PropertyGroupPresenter   basicGroup;
+    private SimplePropertyPresenter  configRef;
+    private ListPropertyPresenter    availableConfigs;
+    private ComplexPropertyPresenter newConfig;
+    private ListPropertyPresenter    parameterEditorType;
 
     protected AbstractConnectorPropertiesPanelPresenter(@Nonnull PropertiesPanelView view,
                                                         @Nonnull ConnectorPropertyManager connectorPropertyManager,
@@ -76,23 +74,19 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
                                                         @Nonnull NameSpaceEditorPresenter nameSpaceEditorPresenter,
                                                         @Nonnull PropertyTypeManager propertyTypeManager,
                                                         @Nonnull WSO2EditorLocalizationConstant localizationConstant,
-                                                        @Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                                        @Nonnull Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                                        @Nonnull Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                                        @Nonnull Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
-        super(view, propertyTypeManager);
+                                                        @Nonnull PropertyPanelFactory propertyPanelFactory) {
 
-        propertiesWidgetFactory = propertiesPanelWidgetFactory;
-        listPropertyProvider = listPropertyPresenterProvider;
-        complexPropertyProvider = complexPropertyPresenterProvider;
-        simplePropertyProvider = simplePropertyPresenterProvider;
-        nameSpacePresenter = nameSpaceEditorPresenter;
+        super(view, propertyTypeManager, localizationConstant, propertyPanelFactory);
+
+        this.nameSpacePresenter = nameSpaceEditorPresenter;
+        this.parameterPresenter = parameterPresenter;
+
         locale = localizationConstant;
 
         this.connectorPropertyManager = connectorPropertyManager;
         this.connectorPropertyManager.addListener(this);
 
-        this.parameterPresenter = parameterPresenter;
+        this.propertyPanelFactory = propertyPanelFactory;
 
         this.parameterCallBack = new ConnectorParameterCallBack() {
             @Override
@@ -105,25 +99,19 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
     }
 
     private void prepareView() {
-        basicGroup = propertiesWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
-        view.addGroup(basicGroup);
+        basicGroup = createGroup(locale.miscGroupTitle());
 
-        configRef = simplePropertyProvider.get();
-        configRef.setTitle(locale.connectorConfigRef());
-        configRef.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener configRefListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(CONFIG, property);
 
                 notifyListeners();
             }
-        });
+        };
+        configRef = createSimpleProperty(basicGroup, locale.connectorConfigRef(), configRefListener);
 
-        basicGroup.addItem(configRef);
-
-        availableConfigs = listPropertyProvider.get();
-        availableConfigs.setTitle(locale.connectorAvailableConfigs());
-        availableConfigs.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener availableConfigListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 if (!SELECT_FROM_CONFIG.getValue().equals(property)) {
@@ -133,24 +121,18 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
 
                 notifyListeners();
             }
-        });
+        };
+        availableConfigs = createListProperty(basicGroup, locale.connectorAvailableConfigs(), availableConfigListener);
 
-        basicGroup.addItem(availableConfigs);
-
-        ComplexPropertyPresenter newConfig = complexPropertyProvider.get();
-        newConfig.setTitle(locale.connectorNewConfig());
-        newConfig.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+        EditButtonClickedListener newConfigListener = new EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 parameterPresenter.showDialog(parameterCallBack);
             }
-        });
+        };
+        newConfig = createComplexProperty(basicGroup, locale.connectorNewConfig(), newConfigListener);
 
-        basicGroup.addItem(newConfig);
-
-        parameterEditorType = listPropertyProvider.get();
-        parameterEditorType.setTitle(locale.connectorParameterEditorType());
-        parameterEditorType.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener parameterEditTypeListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(PARAMETER_EDITOR_TYPE, ParameterEditorType.getItemByValue(property));
@@ -159,9 +141,8 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
 
                 notifyListeners();
             }
-        });
-
-        basicGroup.addItem(parameterEditorType);
+        };
+        parameterEditorType = createListProperty(basicGroup, locale.connectorParameterEditorType(), parameterEditTypeListener);
     }
 
     /**
@@ -173,10 +154,10 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
      * @param key
      *         value of key which allows us to get inline parameter of element
      */
-    protected SimplePropertyPresenter createSimplePanel(@Nonnull String title, @Nonnull final Key<String> key) {
-        final SimplePropertyPresenter simplePanel = simplePropertyProvider.get();
-        simplePanel.setTitle(title);
-        simplePanel.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+    protected SimplePropertyPresenter createSimpleConnectorProperty(@Nonnull String title, @Nonnull final Key<String> key) {
+        final SimplePropertyPresenter simplePanel = propertyPanelFactory.createSimplePanelWithoutListener(title);
+
+        PropertyValueChangedListener listener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(key, property);
@@ -185,7 +166,8 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
 
                 notifyListeners();
             }
-        });
+        };
+        simplePanel.addPropertyValueChangedListener(listener);
         basicGroup.addItem(simplePanel);
 
         return simplePanel;
@@ -203,12 +185,11 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
      * @param expressionKey
      *         value of key which allows us to get expression parameter of element
      */
-    protected ComplexPropertyPresenter createComplexPanel(@Nonnull String title,
-                                                          @Nonnull final Key<List<NameSpace>> nameSpaceKey,
-                                                          @Nonnull final Key<String> expressionKey) {
+    protected ComplexPropertyPresenter createComplexConnectorProperty(@Nonnull String title,
+                                                                      @Nonnull final Key<List<NameSpace>> nameSpaceKey,
+                                                                      @Nonnull final Key<String> expressionKey) {
 
-        final ComplexPropertyPresenter complexPanel = complexPropertyProvider.get();
-        complexPanel.setTitle(title);
+        final ComplexPropertyPresenter complexPanel = propertyPanelFactory.createComplexPanelWithoutListener(title);
 
         final AddNameSpacesCallBack nameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
@@ -222,7 +203,7 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
             }
         };
 
-        complexPanel.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+        complexPanel.addEditButtonClickedListener(new EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 List<NameSpace> nameSpaces = element.getProperty(nameSpaceKey);
@@ -261,6 +242,8 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
         configRef.setProperty(element.getProperty(CONFIG));
         availableConfigs.setValues(connectorPropertyManager.getAvailableConfigs());
         parameterEditorType.setValues(propertyTypeManager.getValuesByName(ParameterEditorType.TYPE_NAME));
+
+        newConfig.setProperty(element.getProperty(CONFIG));
 
         ParameterEditorType parameterEditor = element.getProperty(PARAMETER_EDITOR_TYPE);
         if (parameterEditor != null) {

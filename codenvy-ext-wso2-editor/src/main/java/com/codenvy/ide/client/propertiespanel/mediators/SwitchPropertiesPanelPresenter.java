@@ -19,10 +19,10 @@ import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.Switch;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.property.PropertyValueChangedListener;
@@ -40,6 +40,7 @@ import java.util.List;
 import static com.codenvy.ide.client.elements.mediators.Switch.NAMESPACES;
 import static com.codenvy.ide.client.elements.mediators.Switch.REGEXP_ATTRIBUTE_NAME;
 import static com.codenvy.ide.client.elements.mediators.Switch.SOURCE_XPATH;
+import static com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter.EditButtonClickedListener;
 
 /**
  * The presenter that provides a business logic of 'Switch' mediator properties panel. It provides an ability to work with all properties
@@ -51,8 +52,9 @@ import static com.codenvy.ide.client.elements.mediators.Switch.SOURCE_XPATH;
  */
 public class SwitchPropertiesPanelPresenter extends AbstractPropertiesPanel<Switch> {
 
-    private final AddNameSpacesCallBack             addNameSpacesCallBack;
-    private final NameSpaceEditorPresenter          nameSpaceEditorPresenter;
+    private final NameSpaceEditorPresenter nameSpaceEditorPresenter;
+    private final AddNameSpacesCallBack    addNameSpacesCallBack;
+
     private final Provider<SimplePropertyPresenter> simplePropertyPresenterProvider;
     private final List<SimplePropertyPresenter>     regExpFields;
 
@@ -62,15 +64,16 @@ public class SwitchPropertiesPanelPresenter extends AbstractPropertiesPanel<Swit
     @Inject
     public SwitchPropertiesPanelPresenter(PropertiesPanelView view,
                                           PropertyTypeManager propertyTypeManager,
-                                          PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
                                           NameSpaceEditorPresenter nameSpaceEditorPresenter,
+                                          Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
                                           WSO2EditorLocalizationConstant locale,
-                                          Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                          Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
-        super(view, propertyTypeManager);
-        this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
+                                          PropertyPanelFactory propertyPanelFactory) {
 
+        super(view, propertyTypeManager, locale, propertyPanelFactory);
+
+        this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
         this.simplePropertyPresenterProvider = simplePropertyPresenterProvider;
+
         this.regExpFields = new ArrayList<>();
 
         this.addNameSpacesCallBack = new AddNameSpacesCallBack() {
@@ -85,18 +88,13 @@ public class SwitchPropertiesPanelPresenter extends AbstractPropertiesPanel<Swit
             }
         };
 
-        prepareView(propertiesPanelWidgetFactory, complexPropertyPresenterProvider, locale);
+        prepareView();
     }
 
-    private void prepareView(@Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                             @Nonnull Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                             @Nonnull final WSO2EditorLocalizationConstant locale) {
-        basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
-        view.addGroup(basicGroup);
+    private void prepareView() {
+        basicGroup = createGroup(locale.miscGroupTitle());
 
-        sourceXPath = complexPropertyPresenterProvider.get();
-        sourceXPath.setTitle(locale.switchSourceXPath());
-        sourceXPath.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+        EditButtonClickedListener sourceXpathListener = new EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 List<NameSpace> nameSpaces = element.getProperty(NAMESPACES);
@@ -109,10 +107,9 @@ public class SwitchPropertiesPanelPresenter extends AbstractPropertiesPanel<Swit
                                                                   addNameSpacesCallBack,
                                                                   locale.switchXpathTitle(),
                                                                   sourceXPathValue);
-
             }
-        });
-        basicGroup.addItem(sourceXPath);
+        };
+        sourceXPath = createComplexProperty(basicGroup, locale.switchSourceXPath(), sourceXpathListener);
     }
 
     /** {@inheritDoc} */
@@ -132,21 +129,27 @@ public class SwitchPropertiesPanelPresenter extends AbstractPropertiesPanel<Swit
                 continue;
             }
 
-            SimplePropertyPresenter field = simplePropertyPresenterProvider.get();
-            field.setTitle(branch.getTitle() + ' ' + i);
-            field.setProperty(branch.getAttributeByName(REGEXP_ATTRIBUTE_NAME));
-            field.addPropertyValueChangedListener(new PropertyValueChangedListener() {
-                @Override
-                public void onPropertyChanged(@Nonnull String property) {
-                    branch.addAttribute(REGEXP_ATTRIBUTE_NAME, property);
-
-                    notifyListeners();
-                }
-            });
-
-            regExpFields.add(field);
-            basicGroup.addItem(field);
+            createSimplePanel(branch, i);
         }
+    }
+
+    private void createSimplePanel(@Nonnull final Branch branch, int panelNumber) {
+        SimplePropertyPresenter panel = simplePropertyPresenterProvider.get();
+
+        panel.setTitle(branch.getTitle() + ' ' + panelNumber);
+        panel.setProperty(branch.getAttributeByName(REGEXP_ATTRIBUTE_NAME));
+
+        panel.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+            @Override
+            public void onPropertyChanged(@Nonnull String property) {
+                branch.addAttribute(REGEXP_ATTRIBUTE_NAME, property);
+
+                notifyListeners();
+            }
+        });
+
+        regExpFields.add(panel);
+        basicGroup.addItem(panel);
     }
 
     private void clearPanel() {

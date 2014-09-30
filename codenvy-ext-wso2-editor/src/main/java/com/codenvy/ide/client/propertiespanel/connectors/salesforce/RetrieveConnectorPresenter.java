@@ -18,18 +18,16 @@ package com.codenvy.ide.client.propertiespanel.connectors.salesforce;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.salesforce.Retrieve;
 import com.codenvy.ide.client.elements.connectors.salesforce.SalesForcePropertyManager;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -68,32 +66,26 @@ public class RetrieveConnectorPresenter extends AbstractConnectorPropertiesPanel
                                       SalesForcePropertyManager salesForcePropertyManager,
                                       ParameterPresenter parameterPresenter,
                                       PropertyTypeManager propertyTypeManager,
-                                      PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                      Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                      Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                      Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+                                      PropertyPanelFactory propertyPanelFactory) {
         super(view,
               salesForcePropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertiesPanelWidgetFactory,
-              listPropertyPresenterProvider,
-              complexPropertyPresenterProvider,
-              simplePropertyPresenterProvider);
+              propertyPanelFactory);
 
         prepareView();
     }
 
     private void prepareView() {
-        fieldListNS = createComplexPanel(locale.connectorFieldList(), FIELD_LIST_NS_KEY, FIELD_LIST_EXPRESSION_KEY);
-        objectTypeNS = createComplexPanel(locale.connectorObjectType(), OBJECT_TYPE_NS_KEY, OBJECT_TYPE_EXPRESSION_KEY);
-        objectIDSNS = createComplexPanel(locale.connectorObjectIDS(), OBJECT_IDS_NS_KEY, OBJECT_IDS_EXPRESSION_KEY);
+        fieldListNS = createComplexConnectorProperty(locale.connectorFieldList(), FIELD_LIST_NS_KEY, FIELD_LIST_EXPRESSION_KEY);
+        objectTypeNS = createComplexConnectorProperty(locale.connectorObjectType(), OBJECT_TYPE_NS_KEY, OBJECT_TYPE_EXPRESSION_KEY);
+        objectIDSNS = createComplexConnectorProperty(locale.connectorObjectIDS(), OBJECT_IDS_NS_KEY, OBJECT_IDS_EXPRESSION_KEY);
 
-        fieldList = createSimplePanel(locale.connectorFieldList(), FIELD_LIST_KEY);
-        objectType = createSimplePanel(locale.connectorObjectType(), OBJECT_TYPE_KEY);
-        objectIDS = createSimplePanel(locale.connectorObjectIDS(), OBJECT_IDS_KEY);
+        fieldList = createSimpleConnectorProperty(locale.connectorFieldList(), FIELD_LIST_KEY);
+        objectType = createSimpleConnectorProperty(locale.connectorObjectType(), OBJECT_TYPE_KEY);
+        objectIDS = createSimpleConnectorProperty(locale.connectorObjectIDS(), OBJECT_IDS_KEY);
     }
 
     /** {@inheritDoc} */

@@ -18,18 +18,16 @@ package com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.CreateWorksheet;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GoogleSpreadsheetPropertyManager;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -66,7 +64,6 @@ public class CreateWorksheetConnectorPresenter extends AbstractConnectorProperti
     private SimplePropertyPresenter  worksheetRows;
     private SimplePropertyPresenter  worksheetColumns;
 
-
     @Inject
     public CreateWorksheetConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                              NameSpaceEditorPresenter nameSpacePresenter,
@@ -74,48 +71,42 @@ public class CreateWorksheetConnectorPresenter extends AbstractConnectorProperti
                                              GoogleSpreadsheetPropertyManager googleSpreadsheetPropertyManager,
                                              ParameterPresenter parameterPresenter,
                                              PropertyTypeManager propertyTypeManager,
-                                             PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                             Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                             Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                             Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+                                             PropertyPanelFactory propertyPanelFactory) {
         super(view,
               googleSpreadsheetPropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertiesPanelWidgetFactory,
-              listPropertyPresenterProvider,
-              complexPropertyPresenterProvider,
-              simplePropertyPresenterProvider);
+              propertyPanelFactory);
 
         prepareView();
     }
 
     private void prepareView() {
-        worksheetNameNS = createComplexPanel(locale.spreadsheetCreateWorksheetWorksheetName(),
-                                             WORKSHEET_NAME_NS_KEY,
-                                             WORKSHEET_NAME_EXPRESSION_KEY);
+        worksheetNameNS = createComplexConnectorProperty(locale.spreadsheetCreateWorksheetWorksheetName(),
+                                                         WORKSHEET_NAME_NS_KEY,
+                                                         WORKSHEET_NAME_EXPRESSION_KEY);
 
-        spreadsheetNameNS = createComplexPanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(),
-                                               SPREADSHEET_NAME_NS_KEY,
-                                               SPREADSHEET_NAME_EXPRESSION_KEY);
+        spreadsheetNameNS = createComplexConnectorProperty(locale.spreadsheetCreateSpreadsheetSpreadsheetName(),
+                                                           SPREADSHEET_NAME_NS_KEY,
+                                                           SPREADSHEET_NAME_EXPRESSION_KEY);
 
-        worksheetRowsNS = createComplexPanel(locale.spreadsheetCreateWorksheetWorksheetRows(),
-                                             WORKSHEET_ROWS_NS_KEY,
-                                             WORKSHEET_ROWS_EXPRESSION_KEY);
+        worksheetRowsNS = createComplexConnectorProperty(locale.spreadsheetCreateWorksheetWorksheetRows(),
+                                                         WORKSHEET_ROWS_NS_KEY,
+                                                         WORKSHEET_ROWS_EXPRESSION_KEY);
 
-        worksheetColumnsNS = createComplexPanel(locale.spreadsheetCreateWorksheetWorksheetColumns(),
-                                                WORKSHEET_COLUMNS_NS_KEY,
-                                                WORKSHEET_COLUMNS_EXPRESSION_KEY);
+        worksheetColumnsNS = createComplexConnectorProperty(locale.spreadsheetCreateWorksheetWorksheetColumns(),
+                                                            WORKSHEET_COLUMNS_NS_KEY,
+                                                            WORKSHEET_COLUMNS_EXPRESSION_KEY);
 
-        worksheetName = createSimplePanel(locale.spreadsheetCreateWorksheetWorksheetName(), WORKSHEET_NAME_KEY);
+        worksheetName = createSimpleConnectorProperty(locale.spreadsheetCreateWorksheetWorksheetName(), WORKSHEET_NAME_KEY);
 
-        spreadsheetName = createSimplePanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(), SPREADSHEET_NAME_KEY);
+        spreadsheetName = createSimpleConnectorProperty(locale.spreadsheetCreateSpreadsheetSpreadsheetName(), SPREADSHEET_NAME_KEY);
 
-        worksheetRows = createSimplePanel(locale.spreadsheetCreateWorksheetWorksheetRows(), WORKSHEET_ROWS_KEY);
+        worksheetRows = createSimpleConnectorProperty(locale.spreadsheetCreateWorksheetWorksheetRows(), WORKSHEET_ROWS_KEY);
 
-        worksheetColumns = createSimplePanel(locale.spreadsheetCreateWorksheetWorksheetColumns(), WORKSHEET_COLUMNS_KEY);
+        worksheetColumns = createSimpleConnectorProperty(locale.spreadsheetCreateWorksheetWorksheetColumns(), WORKSHEET_COLUMNS_KEY);
     }
 
     /** {@inheritDoc} */

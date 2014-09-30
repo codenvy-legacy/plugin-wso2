@@ -18,18 +18,16 @@ package com.codenvy.ide.client.propertiespanel.connectors.twitter;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.twitter.DestroyStatus;
 import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -79,38 +77,33 @@ public class DestroyStatusConnectorPresenter extends AbstractConnectorProperties
                                            TwitterPropertyManager twitterPropertyManager,
                                            ParameterPresenter parameterPresenter,
                                            PropertyTypeManager propertyTypeManager,
-                                           PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                           Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                           Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                           Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+                                           PropertyPanelFactory propertyPanelFactory) {
         super(view,
               twitterPropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertiesPanelWidgetFactory,
-              listPropertyPresenterProvider,
-              complexPropertyPresenterProvider,
-              simplePropertyPresenterProvider);
+              propertyPanelFactory);
 
         prepareView();
     }
 
     private void prepareView() {
-        consumerKey = createSimplePanel(locale.twitterConsumerKey(), KEY_CONSUMER_KEY);
-        consumerSecret = createSimplePanel(locale.twitterConsumerSecret(), KEY_CONSUMER_SECRET);
-        accessToken = createSimplePanel(locale.twitterAccessToken(), KEY_ACCESS_TOKEN);
-        accessTokenSecret = createSimplePanel(locale.twitterAccessTokenSecret(), KEY_ACCESS_TOKEN_SECRET);
-        statusId = createSimplePanel(locale.twitterStatusId(), KEY_STATUS_ID);
+        consumerKey = createSimpleConnectorProperty(locale.twitterConsumerKey(), KEY_CONSUMER_KEY);
+        consumerSecret = createSimpleConnectorProperty(locale.twitterConsumerSecret(), KEY_CONSUMER_SECRET);
+        accessToken = createSimpleConnectorProperty(locale.twitterAccessToken(), KEY_ACCESS_TOKEN);
+        accessTokenSecret = createSimpleConnectorProperty(locale.twitterAccessTokenSecret(), KEY_ACCESS_TOKEN_SECRET);
+        statusId = createSimpleConnectorProperty(locale.twitterStatusId(), KEY_STATUS_ID);
 
-        consumerKeyExpr = createComplexPanel(locale.twitterConsumerKey(), KEY_CONSUMER_KEY_NS, KEY_CONSUMER_KEY_EXPR);
-        consumerSecretExpr = createComplexPanel(locale.twitterConsumerSecret(), KEY_CONSUMER_SECRET_NS, KEY_CONSUMER_SECRET_EXPR);
-        accessTokenExpr = createComplexPanel(locale.twitterAccessToken(), KEY_ACCESS_TOKEN_NS, KEY_ACCESS_TOKEN_EXPR);
-        accessTokenSecretExpr = createComplexPanel(locale.twitterAccessTokenSecret(),
-                                                   KEY_ACCESS_TOKEN_SECRET_NS,
-                                                   KEY_ACCESS_TOKEN_SECRET_EXPR);
-        statusIdExpr = createComplexPanel(locale.twitterStatusId(), KEY_STATUS_ID_NS, KEY_STATUS_ID_EXPR);
+        consumerKeyExpr = createComplexConnectorProperty(locale.twitterConsumerKey(), KEY_CONSUMER_KEY_NS, KEY_CONSUMER_KEY_EXPR);
+        consumerSecretExpr = createComplexConnectorProperty(locale.twitterConsumerSecret(), KEY_CONSUMER_SECRET_NS,
+                                                            KEY_CONSUMER_SECRET_EXPR);
+        accessTokenExpr = createComplexConnectorProperty(locale.twitterAccessToken(), KEY_ACCESS_TOKEN_NS, KEY_ACCESS_TOKEN_EXPR);
+        accessTokenSecretExpr = createComplexConnectorProperty(locale.twitterAccessTokenSecret(),
+                                                               KEY_ACCESS_TOKEN_SECRET_NS,
+                                                               KEY_ACCESS_TOKEN_SECRET_EXPR);
+        statusIdExpr = createComplexConnectorProperty(locale.twitterStatusId(), KEY_STATUS_ID_NS, KEY_STATUS_ID_EXPR);
     }
 
     /** {@inheritDoc} */

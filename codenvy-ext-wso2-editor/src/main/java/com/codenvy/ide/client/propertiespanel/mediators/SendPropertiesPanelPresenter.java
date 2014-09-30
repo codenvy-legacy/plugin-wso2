@@ -19,10 +19,10 @@ import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.Send;
 import com.codenvy.ide.client.initializers.propertytype.CommonPropertyTypeInitializer;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.mediators.resourcekeyeditor.ChangeResourceKeyCallBack;
@@ -34,7 +34,6 @@ import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresente
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -49,6 +48,7 @@ import static com.codenvy.ide.client.elements.mediators.Send.STATIC_EXPRESSION;
 import static com.codenvy.ide.client.elements.mediators.Send.SequenceType;
 import static com.codenvy.ide.client.elements.mediators.Send.SequenceType.DYNAMIC;
 import static com.codenvy.ide.client.elements.mediators.Send.SequenceType.STATIC;
+import static com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter.EditButtonClickedListener;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of Send mediator
@@ -59,9 +59,12 @@ import static com.codenvy.ide.client.elements.mediators.Send.SequenceType.STATIC
  * @author Valeriy Svydenko
  */
 public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send> {
-    private final ResourceKeyEditorPresenter     keyPresenter;
-    private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
-    private final WSO2EditorLocalizationConstant locale;
+
+    private final ResourceKeyEditorPresenter keyPresenter;
+    private final NameSpaceEditorPresenter   nameSpaceEditorPresenter;
+
+    private final AddNameSpacesCallBack     addNameSpacesCallBack;
+    private final ChangeResourceKeyCallBack keyCallBack;
 
     private ListPropertyPresenter    skipSerialization;
     private ListPropertyPresenter    receivingSequencerType;
@@ -76,71 +79,14 @@ public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send> 
                                         ResourceKeyEditorPresenter keyPresenter,
                                         NameSpaceEditorPresenter nameSpacePresenter,
                                         WSO2EditorLocalizationConstant locale,
-                                        PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                        Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                        SimplePropertyPresenter description,
-                                        Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider) {
+                                        PropertyPanelFactory propertyPanelFactory) {
 
-        super(view, propertyTypeManager);
+        super(view, propertyTypeManager, locale, propertyPanelFactory);
 
-        this.locale = locale;
         this.keyPresenter = keyPresenter;
         this.nameSpaceEditorPresenter = nameSpacePresenter;
 
-        prepareView(propertiesPanelWidgetFactory,
-                    listPropertyPresenterProvider,
-                    description,
-                    complexPropertyPresenterProvider);
-    }
-
-    private void prepareView(@Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                             @Nonnull Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                             @Nonnull SimplePropertyPresenter description,
-                             @Nonnull Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider) {
-        PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
-        this.view.addGroup(basicGroup);
-
-        skipSerialization = listPropertyPresenterProvider.get();
-        skipSerialization.setTitle(locale.skipSerialization());
-        skipSerialization.addPropertyValueChangedListener(new PropertyValueChangedListener() {
-            @Override
-            public void onPropertyChanged(@Nonnull String property) {
-                Boolean skipSerialization = Boolean.valueOf(property);
-
-                element.putProperty(SKIP_SERIALIZATION, skipSerialization);
-                showSerializationFields(skipSerialization);
-            }
-        });
-
-        basicGroup.addItem(skipSerialization);
-
-        receivingSequencerType = listPropertyPresenterProvider.get();
-        receivingSequencerType.setTitle(locale.receivingSequenceType());
-        receivingSequencerType.addPropertyValueChangedListener(new PropertyValueChangedListener() {
-            @Override
-            public void onPropertyChanged(@Nonnull String property) {
-                applySequenceType(SequenceType.getItemByValue(property));
-
-                notifyListeners();
-            }
-        });
-
-        basicGroup.addItem(receivingSequencerType);
-
-        buildMessageBeforeSending = listPropertyPresenterProvider.get();
-        buildMessageBeforeSending.setTitle(locale.buildMessageBeforeSending());
-        buildMessageBeforeSending.addPropertyValueChangedListener(new PropertyValueChangedListener() {
-            @Override
-            public void onPropertyChanged(@Nonnull String property) {
-                element.putProperty(BUILD_MESSAGE, Boolean.valueOf(property));
-
-                notifyListeners();
-            }
-        });
-
-        basicGroup.addItem(buildMessageBeforeSending);
-
-        final AddNameSpacesCallBack addNameSpacesCallBack = new AddNameSpacesCallBack() {
+        addNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
             public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.putProperty(DYNAMIC_EXPRESSION, expression);
@@ -152,9 +98,55 @@ public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send> 
             }
         };
 
-        dynamicRec = complexPropertyPresenterProvider.get();
-        dynamicRec.setTitle(locale.dynamicReceivingSequence());
-        dynamicRec.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+        keyCallBack = new ChangeResourceKeyCallBack() {
+            @Override
+            public void onFormatKeyChanged(@Nonnull String key) {
+                element.putProperty(STATIC_EXPRESSION, key);
+
+                staticRec.setProperty(key);
+
+                notifyListeners();
+            }
+        };
+
+        prepareView();
+    }
+
+    private void prepareView() {
+        PropertyGroupPresenter basicGroup = createGroup(locale.miscGroupTitle());
+
+        PropertyValueChangedListener skipSerializationListener = new PropertyValueChangedListener() {
+            @Override
+            public void onPropertyChanged(@Nonnull String property) {
+                Boolean skipSerialization = Boolean.valueOf(property);
+
+                element.putProperty(SKIP_SERIALIZATION, skipSerialization);
+                showSerializationFields(skipSerialization);
+            }
+        };
+        skipSerialization = createListProperty(basicGroup, locale.skipSerialization(), skipSerializationListener);
+
+        PropertyValueChangedListener recevSequenceListener = new PropertyValueChangedListener() {
+            @Override
+            public void onPropertyChanged(@Nonnull String property) {
+                applySequenceType(SequenceType.getItemByValue(property));
+
+                notifyListeners();
+            }
+        };
+        receivingSequencerType = createListProperty(basicGroup, locale.receivingSequenceType(), recevSequenceListener);
+
+        PropertyValueChangedListener buildMessageListener = new PropertyValueChangedListener() {
+            @Override
+            public void onPropertyChanged(@Nonnull String property) {
+                element.putProperty(BUILD_MESSAGE, Boolean.valueOf(property));
+
+                notifyListeners();
+            }
+        };
+        buildMessageBeforeSending = createListProperty(basicGroup, locale.buildMessageBeforeSending(), buildMessageListener);
+
+        EditButtonClickedListener dynamicRecListener = new EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 List<NameSpace> nameSpaces = element.getProperty(NAMESPACES);
@@ -167,24 +159,10 @@ public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send> 
                                                                       expression);
                 }
             }
-        });
-
-        basicGroup.addItem(dynamicRec);
-
-        final ChangeResourceKeyCallBack keyCallBack = new ChangeResourceKeyCallBack() {
-            @Override
-            public void onFormatKeyChanged(@Nonnull String key) {
-                element.putProperty(STATIC_EXPRESSION, key);
-
-                staticRec.setProperty(key);
-
-                notifyListeners();
-            }
         };
+        dynamicRec = createComplexProperty(basicGroup, locale.dynamicReceivingSequence(), dynamicRecListener);
 
-        staticRec = complexPropertyPresenterProvider.get();
-        staticRec.setTitle(locale.staticReceivingSequence());
-        staticRec.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+        EditButtonClickedListener staticRecListener = new EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 String expression = element.getProperty(STATIC_EXPRESSION);
@@ -192,22 +170,18 @@ public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send> 
                     keyPresenter.showDialog(expression, keyCallBack);
                 }
             }
-        });
+        };
+        staticRec = createComplexProperty(basicGroup, locale.staticReceivingSequence(), staticRecListener);
 
-        basicGroup.addItem(staticRec);
-
-        this.description = description;
-        this.description.setTitle(locale.addressEndpointDescription());
-        this.description.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener descriptionListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(DESCRIPTION, property);
 
                 notifyListeners();
             }
-        });
-
-        basicGroup.addItem(description);
+        };
+        description = createSimpleProperty(basicGroup, locale.description(), descriptionListener);
     }
 
     private void showSerializationFields(@Nonnull Boolean skipSerialization) {
@@ -263,19 +237,9 @@ public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send> 
 
         List<String> booleanValues = propertyTypeManager.getValuesByName(CommonPropertyTypeInitializer.BOOLEAN_TYPE_NAME);
 
-        receivingSequencerType.setValues(propertyTypeManager.getValuesByName(SequenceType.TYPE_NAME));
-        SequenceType sType = element.getProperty(SEQUENCE_TYPE);
-        if (sType != null) {
-            receivingSequencerType.selectValue(sType.getValue());
-            applySequenceType(sType);
-        }
+        displayReceiveSequenceTypeParameter();
 
-        skipSerialization.setValues(booleanValues);
-        Boolean serialization = element.getProperty(SKIP_SERIALIZATION);
-        if (serialization != null) {
-            skipSerialization.selectValue(serialization.toString());
-            showSerializationFields(serialization);
-        }
+        displaySkipSerializeParameter(booleanValues);
 
         buildMessageBeforeSending.setValues(booleanValues);
         buildMessageBeforeSending.selectValue(String.valueOf(element.getProperty(BUILD_MESSAGE)));
@@ -288,6 +252,30 @@ public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send> 
 
         String dynamicExpression = element.getProperty(DYNAMIC_EXPRESSION);
         dynamicRec.setProperty(dynamicExpression != null ? dynamicExpression : "");
+    }
+
+    private void displayReceiveSequenceTypeParameter() {
+        receivingSequencerType.setValues(propertyTypeManager.getValuesByName(SequenceType.TYPE_NAME));
+        SequenceType sType = element.getProperty(SEQUENCE_TYPE);
+        if (sType == null) {
+            return;
+        }
+
+        applySequenceType(sType);
+
+        receivingSequencerType.selectValue(sType.getValue());
+    }
+
+    private void displaySkipSerializeParameter(@Nonnull List<String> booleanValues) {
+        skipSerialization.setValues(booleanValues);
+        Boolean serialization = element.getProperty(SKIP_SERIALIZATION);
+        if (serialization == null) {
+            return;
+        }
+
+        showSerializationFields(serialization);
+
+        skipSerialization.selectValue(serialization.toString());
     }
 
 }

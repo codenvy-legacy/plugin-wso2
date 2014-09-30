@@ -18,18 +18,16 @@ package com.codenvy.ide.client.propertiespanel.connectors.jira;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.jira.SearchAssignableUser;
 import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -80,36 +78,30 @@ public class SearchAssignableUserConnectorPresenter extends AbstractConnectorPro
                                                   TwitterPropertyManager twitterPropertyManager,
                                                   ParameterPresenter parameterPresenter,
                                                   PropertyTypeManager propertyTypeManager,
-                                                  PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                                  Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                                  Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                                  Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+                                                  PropertyPanelFactory propertyPanelFactory) {
         super(view,
               twitterPropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertiesPanelWidgetFactory,
-              listPropertyPresenterProvider,
-              complexPropertyPresenterProvider,
-              simplePropertyPresenterProvider);
+              propertyPanelFactory);
 
         prepareView();
     }
 
     private void prepareView() {
-        userNameInl = createSimplePanel(locale.connectorUsername(), USER_NAME_INL);
-        projectInl = createSimplePanel(locale.jiraProject(), PROJECT_INL);
-        issueKeyInl = createSimplePanel(locale.jiraIssueKey(), ISSUE_KEY_INL);
-        startAtInl = createSimplePanel(locale.jiraStartAt(), START_AT_INL);
-        maxResultsInl = createSimplePanel(locale.jiraMaxResults(), MAX_RESULTS_INL);
+        userNameInl = createSimpleConnectorProperty(locale.connectorUsername(), USER_NAME_INL);
+        projectInl = createSimpleConnectorProperty(locale.jiraProject(), PROJECT_INL);
+        issueKeyInl = createSimpleConnectorProperty(locale.jiraIssueKey(), ISSUE_KEY_INL);
+        startAtInl = createSimpleConnectorProperty(locale.jiraStartAt(), START_AT_INL);
+        maxResultsInl = createSimpleConnectorProperty(locale.jiraMaxResults(), MAX_RESULTS_INL);
 
-        userNameExpr = createComplexPanel(locale.connectorUsername(), USER_NAME_NS, USER_NAME_EXPR);
-        projectExpr = createComplexPanel(locale.jiraProject(), PROJECT_NS, PROJECT_EXPR);
-        issueKeyExpr = createComplexPanel(locale.jiraIssueKey(), ISSUE_KEY_NS, ISSUE_KEY_EXPR);
-        startAtExpr = createComplexPanel(locale.jiraStartAt(), START_AT_NS, START_AT_EXPR);
-        maxResultsExpr = createComplexPanel(locale.jiraMaxResults(), MAX_RESULTS_NS, MAX_RESULTS_EXPR);
+        userNameExpr = createComplexConnectorProperty(locale.connectorUsername(), USER_NAME_NS, USER_NAME_EXPR);
+        projectExpr = createComplexConnectorProperty(locale.jiraProject(), PROJECT_NS, PROJECT_EXPR);
+        issueKeyExpr = createComplexConnectorProperty(locale.jiraIssueKey(), ISSUE_KEY_NS, ISSUE_KEY_EXPR);
+        startAtExpr = createComplexConnectorProperty(locale.jiraStartAt(), START_AT_NS, START_AT_EXPR);
+        maxResultsExpr = createComplexConnectorProperty(locale.jiraMaxResults(), MAX_RESULTS_NS, MAX_RESULTS_EXPR);
     }
 
     /** {@inheritDoc} */

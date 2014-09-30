@@ -18,18 +18,16 @@ package com.codenvy.ide.client.propertiespanel.connectors.salesforce;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.salesforce.InitSalesforce;
 import com.codenvy.ide.client.elements.connectors.salesforce.SalesForcePropertyManager;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -72,34 +70,28 @@ public class InitSalesforceConnectorPresenter extends AbstractConnectorPropertie
                                             SalesForcePropertyManager salesForcePropertyManager,
                                             ParameterPresenter parameterPresenter,
                                             PropertyTypeManager propertyTypeManager,
-                                            PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                            Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                            Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                            Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+                                            PropertyPanelFactory propertyPanelFactory) {
         super(view,
               salesForcePropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertiesPanelWidgetFactory,
-              listPropertyPresenterProvider,
-              complexPropertyPresenterProvider,
-              simplePropertyPresenterProvider);
+              propertyPanelFactory);
 
         prepareView();
     }
 
     private void prepareView() {
-        usernameNS = createComplexPanel(locale.connectorUsername(), USERNAME_NS_KEY, USERNAME_EXPRESSION_KEY);
-        passwordNS = createComplexPanel(locale.connectorPassword(), PASSWORD_NS_KEY, PASSWORD_EXPRESSION_KEY);
-        loginUrlNS = createComplexPanel(locale.connectorLoginUrl(), LOGIN_URL_NS_KEY, LOGIN_URL_EXPRESSION_KEY);
-        forceLoginNS = createComplexPanel(locale.connectorForceLogin(), FORCE_LOGIN_NS_KEY, FORCE_LOGIN_EXPRESSION_KEY);
+        usernameNS = createComplexConnectorProperty(locale.connectorUsername(), USERNAME_NS_KEY, USERNAME_EXPRESSION_KEY);
+        passwordNS = createComplexConnectorProperty(locale.connectorPassword(), PASSWORD_NS_KEY, PASSWORD_EXPRESSION_KEY);
+        loginUrlNS = createComplexConnectorProperty(locale.connectorLoginUrl(), LOGIN_URL_NS_KEY, LOGIN_URL_EXPRESSION_KEY);
+        forceLoginNS = createComplexConnectorProperty(locale.connectorForceLogin(), FORCE_LOGIN_NS_KEY, FORCE_LOGIN_EXPRESSION_KEY);
 
-        username = createSimplePanel(locale.connectorUsername(), USERNAME_KEY);
-        password = createSimplePanel(locale.connectorPassword(), PASSWORD_KEY);
-        loginUrl = createSimplePanel(locale.connectorLoginUrl(), LOGIN_URL_KEY);
-        forceLogin = createSimplePanel(locale.connectorForceLogin(), FORCE_LOGIN_KEY);
+        username = createSimpleConnectorProperty(locale.connectorUsername(), USERNAME_KEY);
+        password = createSimpleConnectorProperty(locale.connectorPassword(), PASSWORD_KEY);
+        loginUrl = createSimpleConnectorProperty(locale.connectorLoginUrl(), LOGIN_URL_KEY);
+        forceLogin = createSimpleConnectorProperty(locale.connectorForceLogin(), FORCE_LOGIN_KEY);
     }
 
     /** {@inheritDoc} */

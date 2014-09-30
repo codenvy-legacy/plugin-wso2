@@ -17,16 +17,15 @@ package com.codenvy.ide.client.propertiespanel.general;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.RootElement;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.property.PropertyValueChangedListener;
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -48,43 +47,35 @@ public class RootPropertiesPanelPresenter extends AbstractPropertiesPanel<RootEl
     public RootPropertiesPanelPresenter(PropertiesPanelView view,
                                         PropertyTypeManager propertyTypeManager,
                                         WSO2EditorLocalizationConstant locale,
-                                        PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                        Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
-        super(view, propertyTypeManager);
+                                        PropertyPanelFactory propertyPanelFactory) {
 
-        prepareView(propertiesPanelWidgetFactory, simplePropertyPresenterProvider, locale);
+        super(view, propertyTypeManager, locale, propertyPanelFactory);
+
+        prepareView();
     }
 
-    private void prepareView(@Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                             @Nonnull Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
-                             @Nonnull WSO2EditorLocalizationConstant locale) {
-        PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.miscGroupTitle());
-        view.addGroup(basicGroup);
+    private void prepareView() {
+        PropertyGroupPresenter basicGroup = createGroup(locale.miscGroupTitle());
 
-        name = simplePropertyPresenterProvider.get();
-        name.setTitle(locale.rootName());
-        name.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener nameListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(NAME, property);
 
                 notifyListeners();
             }
-        });
-        basicGroup.addItem(name);
+        };
+        name = createSimpleProperty(basicGroup, locale.rootName(), nameListener);
 
-        onError = simplePropertyPresenterProvider.get();
-        onError.setTitle(locale.rootOnError());
-        onError.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener onErrorListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(ON_ERROR, property);
 
                 notifyListeners();
             }
-        });
-        basicGroup.addItem(onError);
-
+        };
+        onError = createSimpleProperty(basicGroup, locale.rootOnError(), onErrorListener);
     }
 
     /** {@inheritDoc} */

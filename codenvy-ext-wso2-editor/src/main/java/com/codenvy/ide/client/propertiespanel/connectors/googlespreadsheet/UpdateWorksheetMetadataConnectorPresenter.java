@@ -18,18 +18,16 @@ package com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GoogleSpreadsheetPropertyManager;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.UpdateWorksheetMetadata;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -78,46 +76,42 @@ public class UpdateWorksheetMetadataConnectorPresenter extends AbstractConnector
                                                      GoogleSpreadsheetPropertyManager googleSpreadsheetPropertyManager,
                                                      ParameterPresenter parameterPresenter,
                                                      PropertyTypeManager propertyTypeManager,
-                                                     PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                                     Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                                     Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                                     Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+                                                     PropertyPanelFactory propertyPanelFactory) {
         super(view,
               googleSpreadsheetPropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertiesPanelWidgetFactory,
-              listPropertyPresenterProvider,
-              complexPropertyPresenterProvider,
-              simplePropertyPresenterProvider);
+              propertyPanelFactory);
 
         prepareView();
     }
 
     private void prepareView() {
-        spreadsheetNameNS = createComplexPanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(),
-                                               SPREADSHEET_NAME_NS_KEY,
-                                               SPREADSHEET_NAME_EXPRESSION_KEY);
-        worksheetOldNameNS = createComplexPanel(locale.spreadsheetUpdateWorksheetMetadataWorksheetOldName(),
-                                                WORKSHEET_OLD_NAME_NS_KEY,
-                                                WORKSHEET_OLD_NAME_EXPRESSION_KEY);
-        worksheetNewNameNS = createComplexPanel(locale.spreadsheetUpdateWorksheetMetadataWorksheetNewName(),
-                                                WORKSHEET_NEW_NAME_NS_KEY,
-                                                WORKSHEET_NEW_NAME_EXPRESSION_KEY);
-        worksheetRowsNS = createComplexPanel(locale.spreadsheetUpdateWorksheetMetadataWorksheetRows(),
-                                             WORKSHEET_ROWS_NS_KEY,
-                                             WORKSHEET_ROWS_EXPRESSION_KEY);
-        worksheetColumnsNS = createComplexPanel(locale.spreadsheetUpdateWorksheetMetadataWorksheetColumns(),
-                                                WORKSHEET_COLUMNS_NS_KEY,
-                                                WORKSHEET_COLUMNS_EXPRESSION_KEY);
+        spreadsheetNameNS = createComplexConnectorProperty(locale.spreadsheetCreateSpreadsheetSpreadsheetName(),
+                                                           SPREADSHEET_NAME_NS_KEY,
+                                                           SPREADSHEET_NAME_EXPRESSION_KEY);
+        worksheetOldNameNS = createComplexConnectorProperty(locale.spreadsheetUpdateWorksheetMetadataWorksheetOldName(),
+                                                            WORKSHEET_OLD_NAME_NS_KEY,
+                                                            WORKSHEET_OLD_NAME_EXPRESSION_KEY);
+        worksheetNewNameNS = createComplexConnectorProperty(locale.spreadsheetUpdateWorksheetMetadataWorksheetNewName(),
+                                                            WORKSHEET_NEW_NAME_NS_KEY,
+                                                            WORKSHEET_NEW_NAME_EXPRESSION_KEY);
+        worksheetRowsNS = createComplexConnectorProperty(locale.spreadsheetUpdateWorksheetMetadataWorksheetRows(),
+                                                         WORKSHEET_ROWS_NS_KEY,
+                                                         WORKSHEET_ROWS_EXPRESSION_KEY);
+        worksheetColumnsNS = createComplexConnectorProperty(locale.spreadsheetUpdateWorksheetMetadataWorksheetColumns(),
+                                                            WORKSHEET_COLUMNS_NS_KEY,
+                                                            WORKSHEET_COLUMNS_EXPRESSION_KEY);
 
-        spreadsheetName = createSimplePanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(), SPREADSHEET_NAME_KEY);
-        worksheetOldName = createSimplePanel(locale.spreadsheetUpdateWorksheetMetadataWorksheetOldName(), WORKSHEET_OLD_NAME_KEY);
-        worksheetNewName = createSimplePanel(locale.spreadsheetUpdateWorksheetMetadataWorksheetNewName(), WORKSHEET_NEW_NAME_KEY);
-        worksheetRows = createSimplePanel(locale.spreadsheetUpdateWorksheetMetadataWorksheetRows(), WORKSHEET_ROWS_KEY);
-        worksheetColumns = createSimplePanel(locale.spreadsheetUpdateWorksheetMetadataWorksheetColumns(), WORKSHEET_COLUMNS_KEY);
+        spreadsheetName = createSimpleConnectorProperty(locale.spreadsheetCreateSpreadsheetSpreadsheetName(), SPREADSHEET_NAME_KEY);
+        worksheetOldName = createSimpleConnectorProperty(locale.spreadsheetUpdateWorksheetMetadataWorksheetOldName(),
+                                                         WORKSHEET_OLD_NAME_KEY);
+        worksheetNewName = createSimpleConnectorProperty(locale.spreadsheetUpdateWorksheetMetadataWorksheetNewName(),
+                                                         WORKSHEET_NEW_NAME_KEY);
+        worksheetRows = createSimpleConnectorProperty(locale.spreadsheetUpdateWorksheetMetadataWorksheetRows(), WORKSHEET_ROWS_KEY);
+        worksheetColumns = createSimpleConnectorProperty(locale.spreadsheetUpdateWorksheetMetadataWorksheetColumns(), WORKSHEET_COLUMNS_KEY);
     }
 
     /** {@inheritDoc} */

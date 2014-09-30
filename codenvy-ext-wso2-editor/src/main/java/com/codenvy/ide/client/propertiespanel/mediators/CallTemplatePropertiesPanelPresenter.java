@@ -18,10 +18,10 @@ package com.codenvy.ide.client.propertiespanel.mediators;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.mediators.CallTemplate;
 import com.codenvy.ide.client.elements.mediators.log.Property;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.AddPropertyCallback;
 import com.codenvy.ide.client.propertiespanel.common.propertyconfig.PropertyConfigPresenter;
 import com.codenvy.ide.client.propertiespanel.property.PropertyValueChangedListener;
@@ -31,7 +31,6 @@ import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresente
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -41,6 +40,7 @@ import static com.codenvy.ide.client.elements.mediators.CallTemplate.AvailableTe
 import static com.codenvy.ide.client.elements.mediators.CallTemplate.DESCRIPTION;
 import static com.codenvy.ide.client.elements.mediators.CallTemplate.PARAMETERS;
 import static com.codenvy.ide.client.elements.mediators.CallTemplate.TARGET_TEMPLATES;
+import static com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter.EditButtonClickedListener;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of CallTemplate mediator
@@ -52,9 +52,8 @@ import static com.codenvy.ide.client.elements.mediators.CallTemplate.TARGET_TEMP
  */
 public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPanel<CallTemplate> {
 
-    private final PropertyConfigPresenter        propertyConfigPresenter;
-    private final AddPropertyCallback            addPropertyCallback;
-    private final WSO2EditorLocalizationConstant local;
+    private final PropertyConfigPresenter propertyConfigPresenter;
+    private final AddPropertyCallback     addPropertyCallback;
 
     private ListPropertyPresenter    availableTemplates;
     private SimplePropertyPresenter  targetTemplate;
@@ -65,90 +64,71 @@ public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPane
     public CallTemplatePropertiesPanelPresenter(PropertiesPanelView view,
                                                 PropertyTypeManager propertyTypeManager,
                                                 PropertyConfigPresenter propertyConfigPresenter,
-                                                WSO2EditorLocalizationConstant local,
-                                                PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                                Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
-                                                Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                                Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider) {
-        super(view, propertyTypeManager);
+                                                final WSO2EditorLocalizationConstant locale,
+                                                PropertyPanelFactory propertyPanelFactory) {
+
+        super(view, propertyTypeManager, locale, propertyPanelFactory);
 
         this.propertyConfigPresenter = propertyConfigPresenter;
-        this.local = local;
 
         this.addPropertyCallback = new AddPropertyCallback() {
             @Override
             public void onPropertiesChanged(@Nonnull List<Property> properties) {
                 element.putProperty(PARAMETERS, properties);
 
-                parameters.setProperty(properties.isEmpty() ? "" :
-                                       CallTemplatePropertiesPanelPresenter.this.local.calltemplateLabelParameters());
+                parameters.setProperty(properties.isEmpty() ? "" : locale.calltemplateLabelParameters());
 
                 notifyListeners();
             }
         };
 
-        prepareView(propertiesPanelWidgetFactory,
-                    simplePropertyPresenterProvider,
-                    listPropertyPresenterProvider,
-                    complexPropertyPresenterProvider);
+        prepareView();
     }
 
-    private void prepareView(@Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                             @Nonnull Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
-                             @Nonnull Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                             @Nonnull Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider) {
-        PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(local.miscGroupTitle());
-        view.addGroup(basicGroup);
+    private void prepareView() {
+        PropertyGroupPresenter basicGroup = createGroup(locale.miscGroupTitle());
 
-        availableTemplates = listPropertyPresenterProvider.get();
-        availableTemplates.setTitle(local.availableTemplate());
-        availableTemplates.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener availableTemplatesListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(AVAILABLE_TEMPLATES, AvailableTemplates.getItemByValue(property));
 
                 notifyListeners();
             }
-        });
-        basicGroup.addItem(availableTemplates);
+        };
+        availableTemplates = createListProperty(basicGroup, locale.availableTemplate(), availableTemplatesListener);
 
-        targetTemplate = simplePropertyPresenterProvider.get();
-        targetTemplate.setTitle(local.targetTemplate());
-        targetTemplate.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener targetTemplateListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(TARGET_TEMPLATES, property);
 
                 notifyListeners();
             }
-        });
-        basicGroup.addItem(targetTemplate);
+        };
+        targetTemplate = createSimpleProperty(basicGroup, locale.targetTemplate(), targetTemplateListener);
 
-        parameters = complexPropertyPresenterProvider.get();
-        parameters.setTitle(local.calltemplateParameters());
-        parameters.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+        EditButtonClickedListener parametersBtnListener = new EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 List<Property> parameters = element.getProperty(PARAMETERS);
 
                 if (parameters != null) {
-                    propertyConfigPresenter.showConfigWindow(parameters, local.calltemplateParameters(), addPropertyCallback);
+                    propertyConfigPresenter.showConfigWindow(parameters, locale.calltemplateParameters(), addPropertyCallback);
                 }
             }
-        });
-        basicGroup.addItem(parameters);
+        };
+        parameters = createComplexProperty(basicGroup, locale.calltemplateParameters(), parametersBtnListener);
 
-        description = simplePropertyPresenterProvider.get();
-        description.setTitle(local.description());
-        description.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener descriptionListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(DESCRIPTION, property);
 
                 notifyListeners();
             }
-        });
-        basicGroup.addItem(description);
+        };
+        description = createSimpleProperty(basicGroup, locale.description(), descriptionListener);
     }
 
     /** {@inheritDoc} */
@@ -164,7 +144,7 @@ public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPane
         }
 
         targetTemplate.setProperty(element.getProperty(TARGET_TEMPLATES));
-        parameters.setProperty(local.calltemplateLabelParameters());
+        parameters.setProperty(locale.calltemplateLabelParameters());
         description.setProperty(element.getProperty(DESCRIPTION));
     }
 

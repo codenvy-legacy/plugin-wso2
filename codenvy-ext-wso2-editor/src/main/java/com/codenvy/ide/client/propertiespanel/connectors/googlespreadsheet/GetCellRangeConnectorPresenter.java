@@ -18,18 +18,16 @@ package com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GetCellRange;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GoogleSpreadsheetPropertyManager;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -84,42 +82,38 @@ public class GetCellRangeConnectorPresenter extends AbstractConnectorPropertiesP
                                           GoogleSpreadsheetPropertyManager googleSpreadsheetPropertyManager,
                                           ParameterPresenter parameterPresenter,
                                           PropertyTypeManager propertyTypeManager,
-                                          PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                          Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                          Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                          Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+                                          PropertyPanelFactory propertyPanelFactory) {
         super(view,
               googleSpreadsheetPropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertiesPanelWidgetFactory,
-              listPropertyPresenterProvider,
-              complexPropertyPresenterProvider,
-              simplePropertyPresenterProvider);
+              propertyPanelFactory);
 
         prepareView();
     }
 
     private void prepareView() {
-        spreadsheetNameNS = createComplexPanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(),
-                                               SPREADSHEET_NAME_NS_KEY,
-                                               SPREADSHEET_NAME_EXPRESSION_KEY);
-        worksheetNameNS = createComplexPanel(locale.spreadsheetCreateWorksheetWorksheetName(),
-                                             WORKSHEET_NAME_NS_KEY,
-                                             WORKSHEET_NAME_EXPRESSION_KEY);
-        minRowNS = createComplexPanel(locale.spreadsheetGetCellRangeMinRow(), MIN_ROW_NS_KEY, MIN_ROW_EXPRESSION_KEY);
-        maxRowNS = createComplexPanel(locale.spreadsheetGetCellRangeMaxRow(), MAX_ROW_NS_KEY, MAX_ROW_EXPRESSION_KEY);
-        minColumnNS = createComplexPanel(locale.spreadsheetGetCellRangeMinColumn(), MIN_COLUMN_NS_KEY, MIN_COLUMN_EXPRESSION_KEY);
-        maxColumnNS = createComplexPanel(locale.spreadsheetGetCellRangeMaxColumn(), MAX_COLUMN_NS_KEY, MAX_COLUMN_EXPRESSION_KEY);
+        spreadsheetNameNS = createComplexConnectorProperty(locale.spreadsheetCreateSpreadsheetSpreadsheetName(),
+                                                           SPREADSHEET_NAME_NS_KEY,
+                                                           SPREADSHEET_NAME_EXPRESSION_KEY);
+        worksheetNameNS = createComplexConnectorProperty(locale.spreadsheetCreateWorksheetWorksheetName(),
+                                                         WORKSHEET_NAME_NS_KEY,
+                                                         WORKSHEET_NAME_EXPRESSION_KEY);
+        minRowNS = createComplexConnectorProperty(locale.spreadsheetGetCellRangeMinRow(), MIN_ROW_NS_KEY, MIN_ROW_EXPRESSION_KEY);
+        maxRowNS = createComplexConnectorProperty(locale.spreadsheetGetCellRangeMaxRow(), MAX_ROW_NS_KEY, MAX_ROW_EXPRESSION_KEY);
+        minColumnNS = createComplexConnectorProperty(locale.spreadsheetGetCellRangeMinColumn(), MIN_COLUMN_NS_KEY,
+                                                     MIN_COLUMN_EXPRESSION_KEY);
+        maxColumnNS = createComplexConnectorProperty(locale.spreadsheetGetCellRangeMaxColumn(), MAX_COLUMN_NS_KEY,
+                                                     MAX_COLUMN_EXPRESSION_KEY);
 
-        spreadsheetName = createSimplePanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(), SPREADSHEET_NAME_KEY);
-        worksheetName = createSimplePanel(locale.spreadsheetCreateWorksheetWorksheetName(), WORKSHEET_NAME_KEY);
-        minRows = createSimplePanel(locale.spreadsheetGetCellRangeMinRow(), MIN_ROW_KEY);
-        maxRows = createSimplePanel(locale.spreadsheetGetCellRangeMaxRow(), MAX_ROW_KEY);
-        minColumn = createSimplePanel(locale.spreadsheetGetCellRangeMinColumn(), MIN_COLUMN_KEY);
-        maxColumn = createSimplePanel(locale.spreadsheetGetCellRangeMaxColumn(), MAX_COLUMN_KEY);
+        spreadsheetName = createSimpleConnectorProperty(locale.spreadsheetCreateSpreadsheetSpreadsheetName(), SPREADSHEET_NAME_KEY);
+        worksheetName = createSimpleConnectorProperty(locale.spreadsheetCreateWorksheetWorksheetName(), WORKSHEET_NAME_KEY);
+        minRows = createSimpleConnectorProperty(locale.spreadsheetGetCellRangeMinRow(), MIN_ROW_KEY);
+        maxRows = createSimpleConnectorProperty(locale.spreadsheetGetCellRangeMaxRow(), MAX_ROW_KEY);
+        minColumn = createSimpleConnectorProperty(locale.spreadsheetGetCellRangeMinColumn(), MIN_COLUMN_KEY);
+        maxColumn = createSimpleConnectorProperty(locale.spreadsheetGetCellRangeMaxColumn(), MAX_COLUMN_KEY);
     }
 
     /** {@inheritDoc} */

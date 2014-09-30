@@ -18,18 +18,16 @@ package com.codenvy.ide.client.propertiespanel.connectors.jira;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.jira.CreateIssue;
 import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -74,34 +72,28 @@ public class CreateIssueConnectorPresenter extends AbstractConnectorPropertiesPa
                                          TwitterPropertyManager twitterPropertyManager,
                                          ParameterPresenter parameterPresenter,
                                          PropertyTypeManager propertyTypeManager,
-                                         PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                         Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                         Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                         Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+                                         PropertyPanelFactory propertyPanelFactory) {
         super(view,
               twitterPropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertiesPanelWidgetFactory,
-              listPropertyPresenterProvider,
-              complexPropertyPresenterProvider,
-              simplePropertyPresenterProvider);
+              propertyPanelFactory);
 
         prepareView();
     }
 
     private void prepareView() {
-        projectKeyInl = createSimplePanel(locale.jiraProjectKey(), PROJECT_KEY_INL);
-        summaryInl = createSimplePanel(locale.jiraSummary(), SUMMARY_INL);
-        descriptionInl = createSimplePanel(locale.jiraDescription(), DESCRIPTION_INL);
-        issueTypeInl = createSimplePanel(locale.jiraIssueType(), ISSUE_TYPE_INL);
+        projectKeyInl = createSimpleConnectorProperty(locale.jiraProjectKey(), PROJECT_KEY_INL);
+        summaryInl = createSimpleConnectorProperty(locale.jiraSummary(), SUMMARY_INL);
+        descriptionInl = createSimpleConnectorProperty(locale.jiraDescription(), DESCRIPTION_INL);
+        issueTypeInl = createSimpleConnectorProperty(locale.jiraIssueType(), ISSUE_TYPE_INL);
 
-        projectKeyExpr = createComplexPanel(locale.jiraProjectKey(), PROJECT_KEY_NS, PROJECT_KEY_EXPR);
-        summaryExpr = createComplexPanel(locale.jiraSummary(), SUMMARY_NS, SUMMARY_EXPR);
-        descriptionExpr = createComplexPanel(locale.jiraDescription(), DESCRIPTION_NS, DESCRIPTION_EXPR);
-        issueTypeExpr = createComplexPanel(locale.jiraIssueType(), ISSUE_TYPE_NS, ISSUE_TYPE_EXPR);
+        projectKeyExpr = createComplexConnectorProperty(locale.jiraProjectKey(), PROJECT_KEY_NS, PROJECT_KEY_EXPR);
+        summaryExpr = createComplexConnectorProperty(locale.jiraSummary(), SUMMARY_NS, SUMMARY_EXPR);
+        descriptionExpr = createComplexConnectorProperty(locale.jiraDescription(), DESCRIPTION_NS, DESCRIPTION_EXPR);
+        issueTypeExpr = createComplexConnectorProperty(locale.jiraIssueType(), ISSUE_TYPE_NS, ISSUE_TYPE_EXPR);
     }
 
     /** {@inheritDoc} */

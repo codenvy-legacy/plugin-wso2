@@ -18,18 +18,16 @@ package com.codenvy.ide.client.propertiespanel.connectors.jira;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.jira.GetAvatarsForProject;
 import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -48,7 +46,7 @@ import static com.codenvy.ide.client.elements.connectors.jira.GetAvatarsForProje
  */
 public class GetAvatarsConnectorPresenter extends AbstractConnectorPropertiesPanelPresenter<GetAvatarsForProject> {
 
-    private SimplePropertyPresenter projectKeyInl;
+    private SimplePropertyPresenter  projectKeyInl;
     private ComplexPropertyPresenter projectKeyExpr;
 
     @Inject
@@ -58,27 +56,21 @@ public class GetAvatarsConnectorPresenter extends AbstractConnectorPropertiesPan
                                         TwitterPropertyManager twitterPropertyManager,
                                         ParameterPresenter parameterPresenter,
                                         PropertyTypeManager propertyTypeManager,
-                                        PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                        Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                        Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                        Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+                                        PropertyPanelFactory propertyPanelFactory) {
         super(view,
               twitterPropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertiesPanelWidgetFactory,
-              listPropertyPresenterProvider,
-              complexPropertyPresenterProvider,
-              simplePropertyPresenterProvider);
+              propertyPanelFactory);
 
         prepareView();
     }
 
     private void prepareView() {
-        projectKeyInl = createSimplePanel(locale.jiraProjectKey(), PROJECT_KEY_INL);
-        projectKeyExpr = createComplexPanel(locale.jiraProjectKey(), PROJECT_KEY_NS, PROJECT_KEY_EXPR);
+        projectKeyInl = createSimpleConnectorProperty(locale.jiraProjectKey(), PROJECT_KEY_INL);
+        projectKeyExpr = createComplexConnectorProperty(locale.jiraProjectKey(), PROJECT_KEY_NS, PROJECT_KEY_EXPR);
     }
 
     /** {@inheritDoc} */

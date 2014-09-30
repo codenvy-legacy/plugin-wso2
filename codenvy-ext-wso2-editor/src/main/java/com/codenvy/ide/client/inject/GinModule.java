@@ -44,7 +44,7 @@ import com.codenvy.ide.client.initializers.toolbar.TwitterToolbarInitializer;
 import com.codenvy.ide.client.initializers.validators.ConnectionsValidatorInitializer;
 import com.codenvy.ide.client.initializers.validators.InnerElementsValidatorInitializer;
 import com.codenvy.ide.client.inject.factories.ElementWidgetFactory;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
+import com.codenvy.ide.client.inject.factories.PropertiesGroupFactory;
 import com.codenvy.ide.client.inject.factories.ToolbarFactory;
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupView;
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupViewImpl;
@@ -71,7 +71,7 @@ public class GinModule extends AbstractGinModule {
                                              .build(ToolbarFactory.class));
 
         install(new GinFactoryModuleBuilder().implement(PropertyGroupView.class, PropertyGroupViewImpl.class)
-                                             .build(PropertiesPanelWidgetFactory.class));
+                                             .build(PropertiesGroupFactory.class));
 
         GinMultibinder<Initializer> initializers = GinMultibinder.newSetBinder(binder(), Initializer.class);
 

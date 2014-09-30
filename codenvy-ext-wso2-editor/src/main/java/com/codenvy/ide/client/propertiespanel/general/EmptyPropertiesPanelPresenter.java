@@ -15,10 +15,12 @@
  */
 package com.codenvy.ide.client.propertiespanel.general;
 
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.google.inject.Inject;
 
 /**
@@ -30,8 +32,12 @@ import com.google.inject.Inject;
 public class EmptyPropertiesPanelPresenter extends AbstractPropertiesPanel<Element> {
 
     @Inject
-    public EmptyPropertiesPanelPresenter(PropertiesPanelView view, PropertyTypeManager propertyTypeManager) {
-        super(view, propertyTypeManager);
+    public EmptyPropertiesPanelPresenter(PropertiesPanelView view,
+                                         PropertyTypeManager propertyTypeManager,
+                                         WSO2EditorLocalizationConstant locale,
+                                         PropertyPanelFactory propertyPanelFactory) {
+
+        super(view, propertyTypeManager, locale, propertyPanelFactory);
     }
 
 }

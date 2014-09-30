@@ -18,18 +18,16 @@ package com.codenvy.ide.client.propertiespanel.connectors.twitter;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.twitter.GetFollowersIds;
 import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -69,32 +67,26 @@ public class GetFollowersIdsConnectorPresenter extends AbstractConnectorProperti
                                              TwitterPropertyManager twitterPropertyManager,
                                              ParameterPresenter parameterPresenter,
                                              PropertyTypeManager propertyTypeManager,
-                                             PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                             Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                             Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                             Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+                                             PropertyPanelFactory propertyPanelFactory) {
         super(view,
               twitterPropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertiesPanelWidgetFactory,
-              listPropertyPresenterProvider,
-              complexPropertyPresenterProvider,
-              simplePropertyPresenterProvider);
+              propertyPanelFactory);
 
         prepareView();
     }
 
     private void prepareView() {
-        screenNameInl = createSimplePanel(locale.twitterScreenName(), SCREEN_NAME_INL);
-        userIdInl = createSimplePanel(locale.twitterUserId(), USER_ID_INL);
-        cursorInl = createSimplePanel(locale.twitterCursor(), CURSOR_INL);
+        screenNameInl = createSimpleConnectorProperty(locale.twitterScreenName(), SCREEN_NAME_INL);
+        userIdInl = createSimpleConnectorProperty(locale.twitterUserId(), USER_ID_INL);
+        cursorInl = createSimpleConnectorProperty(locale.twitterCursor(), CURSOR_INL);
 
-        screenNameExpr = createComplexPanel(locale.twitterScreenName(), SCREEN_NAME_NS, SCREEN_NAME_EXPR);
-        userIdExpr = createComplexPanel(locale.twitterUserId(), USER_ID_NS, USER_ID_EXPR);
-        cursorExpr = createComplexPanel(locale.twitterCursor(), CURSOR_NS, CURSOR_EXPR);
+        screenNameExpr = createComplexConnectorProperty(locale.twitterScreenName(), SCREEN_NAME_NS, SCREEN_NAME_EXPR);
+        userIdExpr = createComplexConnectorProperty(locale.twitterUserId(), USER_ID_NS, USER_ID_EXPR);
+        cursorExpr = createComplexConnectorProperty(locale.twitterCursor(), CURSOR_NS, CURSOR_EXPR);
     }
 
     /** {@inheritDoc} */

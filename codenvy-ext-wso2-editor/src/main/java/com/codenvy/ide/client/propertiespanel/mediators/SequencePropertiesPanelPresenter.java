@@ -18,10 +18,10 @@ package com.codenvy.ide.client.propertiespanel.mediators;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.Sequence;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.mediators.resourcekeyeditor.ChangeResourceKeyCallBack;
@@ -32,7 +32,6 @@ import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresen
 import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,6 +43,7 @@ import static com.codenvy.ide.client.elements.mediators.Sequence.REFERRING_TYPE;
 import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType;
 import static com.codenvy.ide.client.elements.mediators.Sequence.ReferringType.STATIC;
 import static com.codenvy.ide.client.elements.mediators.Sequence.STATIC_REFERENCE_TYPE;
+import static com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter.EditButtonClickedListener;
 
 /**
  * The presenter that provides a business logic of 'Sequence' mediator properties panel. It provides an ability to work with all properties
@@ -54,9 +54,11 @@ import static com.codenvy.ide.client.elements.mediators.Sequence.STATIC_REFERENC
  * @author Valeriy Svydenko
  */
 public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Sequence> {
-    private final ResourceKeyEditorPresenter     keyPresenter;
-    private final NameSpaceEditorPresenter       nameSpaceEditorPresenter;
-    private final WSO2EditorLocalizationConstant local;
+    private final ResourceKeyEditorPresenter keyPresenter;
+    private final NameSpaceEditorPresenter   nameSpaceEditorPresenter;
+
+    private final ChangeResourceKeyCallBack keyCallBack;
+    private final AddNameSpacesCallBack     addNameSpacesCallBack;
 
     private ListPropertyPresenter    referringType;
     private ComplexPropertyPresenter staticReferenceKey;
@@ -65,42 +67,17 @@ public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Se
     @Inject
     public SequencePropertiesPanelPresenter(PropertiesPanelView view,
                                             PropertyTypeManager propertyTypeManager,
-                                            NameSpaceEditorPresenter nameSpaceEditorPresenter,
-                                            PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                            ListPropertyPresenter referringType,
                                             ResourceKeyEditorPresenter keyPresenter,
-                                            Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                            WSO2EditorLocalizationConstant local) {
-        super(view, propertyTypeManager);
+                                            NameSpaceEditorPresenter nameSpaceEditorPresenter,
+                                            WSO2EditorLocalizationConstant locale,
+                                            PropertyPanelFactory propertyPanelFactory) {
+
+        super(view, propertyTypeManager, locale, propertyPanelFactory);
 
         this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
         this.keyPresenter = keyPresenter;
-        this.local = local;
 
-        prepareView(propertiesPanelWidgetFactory, referringType, complexPropertyPresenterProvider);
-    }
-
-    private void prepareView(@Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                             @Nonnull ListPropertyPresenter referringTypePropertyPresenter,
-                             @Nonnull Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider) {
-        PropertyGroupPresenter basicGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(local.miscGroupTitle());
-        view.addGroup(basicGroup);
-
-        referringType = referringTypePropertyPresenter;
-        referringType.setTitle(local.referringType());
-        referringType.addPropertyValueChangedListener(new PropertyValueChangedListener() {
-            @Override
-            public void onPropertyChanged(@Nonnull String property) {
-                ReferringType referringType = ReferringType.getItemByValue(property);
-                redrawPropertiesPanel(referringType);
-
-                notifyListeners();
-            }
-        });
-
-        basicGroup.addItem(referringType);
-
-        final ChangeResourceKeyCallBack keyCallBack = new ChangeResourceKeyCallBack() {
+        keyCallBack = new ChangeResourceKeyCallBack() {
             @Override
             public void onFormatKeyChanged(@Nonnull String key) {
                 element.putProperty(STATIC_REFERENCE_TYPE, key);
@@ -111,23 +88,7 @@ public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Se
             }
         };
 
-        staticReferenceKey = complexPropertyPresenterProvider.get();
-        staticReferenceKey.setTitle(local.staticReferenceKey());
-        staticReferenceKey.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
-            @Override
-            public void onEditButtonClicked() {
-                String expression = element.getProperty(STATIC_REFERENCE_TYPE);
-                if (expression != null) {
-                    keyPresenter.showDialog(expression, keyCallBack);
-                }
-
-                notifyListeners();
-            }
-        });
-
-        basicGroup.addItem(staticReferenceKey);
-
-        final AddNameSpacesCallBack addNameSpacesCallBack = new AddNameSpacesCallBack() {
+        addNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
             public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nullable String expression) {
                 element.putProperty(NAMESPACES, nameSpaces);
@@ -139,9 +100,37 @@ public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Se
             }
         };
 
-        dynamicReferenceKey = complexPropertyPresenterProvider.get();
-        dynamicReferenceKey.setTitle(local.dynamicReferenceKey());
-        dynamicReferenceKey.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+        prepareView();
+    }
+
+    private void prepareView() {
+        PropertyGroupPresenter basicGroup = createGroup(locale.miscGroupTitle());
+
+        PropertyValueChangedListener refferingTypeListener = new PropertyValueChangedListener() {
+            @Override
+            public void onPropertyChanged(@Nonnull String property) {
+                ReferringType referringType = ReferringType.getItemByValue(property);
+                redrawPropertiesPanel(referringType);
+
+                notifyListeners();
+            }
+        };
+        referringType = createListProperty(basicGroup, locale.referringType(), refferingTypeListener);
+
+        EditButtonClickedListener staticRefKeyListener = new EditButtonClickedListener() {
+            @Override
+            public void onEditButtonClicked() {
+                String expression = element.getProperty(STATIC_REFERENCE_TYPE);
+                if (expression != null) {
+                    keyPresenter.showDialog(expression, keyCallBack);
+                }
+
+                notifyListeners();
+            }
+        };
+        staticReferenceKey = createComplexProperty(basicGroup, locale.staticReferenceKey(), staticRefKeyListener);
+
+        EditButtonClickedListener dynamicRefKeyListener = new EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 List<NameSpace> nameSpaces = element.getProperty(NAMESPACES);
@@ -153,12 +142,11 @@ public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Se
 
                 nameSpaceEditorPresenter.showWindowWithParameters(nameSpaces,
                                                                   addNameSpacesCallBack,
-                                                                  local.callExpressionTitle(),
+                                                                  locale.callExpressionTitle(),
                                                                   dynamicRefKey);
             }
-        });
-
-        basicGroup.addItem(dynamicReferenceKey);
+        };
+        dynamicReferenceKey = createComplexProperty(basicGroup, locale.dynamicReferenceKey(), dynamicRefKeyListener);
     }
 
     private void redrawPropertiesPanel(@Nonnull ReferringType property) {

@@ -18,18 +18,16 @@ package com.codenvy.ide.client.propertiespanel.connectors.googlespreadsheet;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GoogleSpreadsheetPropertyManager;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.ImportCSV;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -78,41 +76,36 @@ public class ImportCSVConnectorPresenter extends AbstractConnectorPropertiesPane
                                        GoogleSpreadsheetPropertyManager googleSpreadsheetPropertyManager,
                                        ParameterPresenter parameterPresenter,
                                        PropertyTypeManager propertyTypeManager,
-                                       PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                       Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                       Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                       Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+                                       PropertyPanelFactory propertyPanelFactory) {
         super(view,
               googleSpreadsheetPropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertiesPanelWidgetFactory,
-              listPropertyPresenterProvider,
-              complexPropertyPresenterProvider,
-              simplePropertyPresenterProvider);
+              propertyPanelFactory);
 
         prepareView();
     }
 
     private void prepareView() {
-        spreadsheetNameNS = createComplexPanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(),
-                                               SPREADSHEET_NAME_NS_KEY,
-                                               SPREADSHEET_NAME_EXPRESSION_KEY);
+        spreadsheetNameNS = createComplexConnectorProperty(locale.spreadsheetCreateSpreadsheetSpreadsheetName(),
+                                                           SPREADSHEET_NAME_NS_KEY,
+                                                           SPREADSHEET_NAME_EXPRESSION_KEY);
 
-        worksheetNameNS = createComplexPanel(locale.spreadsheetCreateWorksheetWorksheetName(),
-                                             WORKSHEET_NAME_NS_KEY,
-                                             WORKSHEET_NAME_EXPRESSION_KEY);
-        filePathNS = createComplexPanel(locale.spreadsheetImportCSVFilePath(), FILE_PATH_NS_KEY, FILE_PATH_EXPRESSION_KEY);
-        batchEnableNS = createComplexPanel(locale.spreadsheetImportCSVBatchEnable(), BATCH_ENABLE_NS_KEY, BATCH_ENABLE_EXPRESSION_KEY);
-        batchSizeNS = createComplexPanel(locale.spreadsheetImportCSVBatchSize(), BATCH_SIZE_NS_KEY, BATCH_SIZE_EXPRESSION_KEY);
+        worksheetNameNS = createComplexConnectorProperty(locale.spreadsheetCreateWorksheetWorksheetName(),
+                                                         WORKSHEET_NAME_NS_KEY,
+                                                         WORKSHEET_NAME_EXPRESSION_KEY);
+        filePathNS = createComplexConnectorProperty(locale.spreadsheetImportCSVFilePath(), FILE_PATH_NS_KEY, FILE_PATH_EXPRESSION_KEY);
+        batchEnableNS = createComplexConnectorProperty(locale.spreadsheetImportCSVBatchEnable(), BATCH_ENABLE_NS_KEY,
+                                                       BATCH_ENABLE_EXPRESSION_KEY);
+        batchSizeNS = createComplexConnectorProperty(locale.spreadsheetImportCSVBatchSize(), BATCH_SIZE_NS_KEY, BATCH_SIZE_EXPRESSION_KEY);
 
-        spreadsheetName = createSimplePanel(locale.spreadsheetCreateSpreadsheetSpreadsheetName(), SPREADSHEET_NAME_KEY);
-        worksheetName = createSimplePanel(locale.spreadsheetCreateWorksheetWorksheetName(), WORKSHEET_NAME_KEY);
-        filePath = createSimplePanel(locale.spreadsheetImportCSVFilePath(), FILE_PATH_KEY);
-        batchEnable = createSimplePanel(locale.spreadsheetImportCSVBatchEnable(), BATCH_ENABLE_KEY);
-        batchSize = createSimplePanel(locale.spreadsheetImportCSVBatchSize(), BATCH_SIZE_KEY);
+        spreadsheetName = createSimpleConnectorProperty(locale.spreadsheetCreateSpreadsheetSpreadsheetName(), SPREADSHEET_NAME_KEY);
+        worksheetName = createSimpleConnectorProperty(locale.spreadsheetCreateWorksheetWorksheetName(), WORKSHEET_NAME_KEY);
+        filePath = createSimpleConnectorProperty(locale.spreadsheetImportCSVFilePath(), FILE_PATH_KEY);
+        batchEnable = createSimpleConnectorProperty(locale.spreadsheetImportCSVBatchEnable(), BATCH_ENABLE_KEY);
+        batchSize = createSimpleConnectorProperty(locale.spreadsheetImportCSVBatchSize(), BATCH_SIZE_KEY);
     }
 
     /** {@inheritDoc} */

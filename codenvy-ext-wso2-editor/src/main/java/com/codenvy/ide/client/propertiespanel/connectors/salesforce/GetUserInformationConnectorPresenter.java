@@ -18,17 +18,13 @@ package com.codenvy.ide.client.propertiespanel.connectors.salesforce;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.salesforce.GetUserInformation;
 import com.codenvy.ide.client.elements.connectors.salesforce.SalesForcePropertyManager;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
-import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of GetUserInformation connector
@@ -45,20 +41,14 @@ public class GetUserInformationConnectorPresenter extends AbstractConnectorPrope
                                                 SalesForcePropertyManager salesForcePropertyManager,
                                                 ParameterPresenter parameterPresenter,
                                                 PropertyTypeManager propertyTypeManager,
-                                                PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                                Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                                Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                                Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+                                                PropertyPanelFactory propertyPanelFactory) {
         super(view,
               salesForcePropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertiesPanelWidgetFactory,
-              listPropertyPresenterProvider,
-              complexPropertyPresenterProvider,
-              simplePropertyPresenterProvider);
+              propertyPanelFactory);
     }
 
 }

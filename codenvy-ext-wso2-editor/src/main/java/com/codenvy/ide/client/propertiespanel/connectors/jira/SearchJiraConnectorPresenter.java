@@ -18,18 +18,16 @@ package com.codenvy.ide.client.propertiespanel.connectors.jira;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.jira.SearchJira;
 import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -69,32 +67,26 @@ public class SearchJiraConnectorPresenter extends AbstractConnectorPropertiesPan
                                         TwitterPropertyManager twitterPropertyManager,
                                         ParameterPresenter parameterPresenter,
                                         PropertyTypeManager propertyTypeManager,
-                                        PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                        Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                        Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                        Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+                                        PropertyPanelFactory propertyPanelFactory) {
         super(view,
               twitterPropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertiesPanelWidgetFactory,
-              listPropertyPresenterProvider,
-              complexPropertyPresenterProvider,
-              simplePropertyPresenterProvider);
+              propertyPanelFactory);
 
         prepareView();
     }
 
     private void prepareView() {
-        queryInl = createSimplePanel(locale.jiraQuery(), QUERY_INL);
-        maxResultInl = createSimplePanel(locale.jiraMaxResult(), MAX_RESULT_INL);
-        startFromInl = createSimplePanel(locale.jiraStartFrom(), START_FROM_INL);
+        queryInl = createSimpleConnectorProperty(locale.jiraQuery(), QUERY_INL);
+        maxResultInl = createSimpleConnectorProperty(locale.jiraMaxResult(), MAX_RESULT_INL);
+        startFromInl = createSimpleConnectorProperty(locale.jiraStartFrom(), START_FROM_INL);
 
-        queryExpr = createComplexPanel(locale.jiraQuery(), QUERY_NS, QUERY_EXPR);
-        maxResultExpr = createComplexPanel(locale.jiraMaxResult(), MAX_RESULT_NS, MAX_RESULT_EXPR);
-        startFromExpr = createComplexPanel(locale.jiraStartFrom(), START_FROM_NS, START_FROM_EXPR);
+        queryExpr = createComplexConnectorProperty(locale.jiraQuery(), QUERY_NS, QUERY_EXPR);
+        maxResultExpr = createComplexConnectorProperty(locale.jiraMaxResult(), MAX_RESULT_NS, MAX_RESULT_EXPR);
+        startFromExpr = createComplexConnectorProperty(locale.jiraStartFrom(), START_FROM_NS, START_FROM_EXPR);
     }
 
     /** {@inheritDoc} */

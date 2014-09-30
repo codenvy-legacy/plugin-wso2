@@ -18,18 +18,16 @@ package com.codenvy.ide.client.propertiespanel.connectors.jira;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.jira.DoTransition;
 import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.AbstractConnectorPropertiesPanelPresenter;
 import com.codenvy.ide.client.propertiespanel.connectors.base.parameter.ParameterPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -80,36 +78,30 @@ public class DoTransitionConnectorPresenter extends AbstractConnectorPropertiesP
                                           TwitterPropertyManager twitterPropertyManager,
                                           ParameterPresenter parameterPresenter,
                                           PropertyTypeManager propertyTypeManager,
-                                          PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                          Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                          Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider,
-                                          Provider<SimplePropertyPresenter> simplePropertyPresenterProvider) {
+                                          PropertyPanelFactory propertyPanelFactory) {
         super(view,
               twitterPropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertiesPanelWidgetFactory,
-              listPropertyPresenterProvider,
-              complexPropertyPresenterProvider,
-              simplePropertyPresenterProvider);
+              propertyPanelFactory);
 
         prepareView();
     }
 
     private void prepareView() {
-        issueIdOrKeyInl = createSimplePanel(locale.jiraIssueIdOrKey(), ISSUE_ID_OR_KEY_INL);
-        updateCommentInl = createSimplePanel(locale.jiraUpdateComment(), UPDATE_COMMENT_INL);
-        updateAssigneeInl = createSimplePanel(locale.jiraUpdateAssignee(), UPDATE_ASSIGNEE_INL);
-        resolutionInl = createSimplePanel(locale.jiraResolution(), RESOLUTION_INL);
-        transitionIdInl = createSimplePanel(locale.jiraTransitionId(), TRANSITION_ID_INL);
+        issueIdOrKeyInl = createSimpleConnectorProperty(locale.jiraIssueIdOrKey(), ISSUE_ID_OR_KEY_INL);
+        updateCommentInl = createSimpleConnectorProperty(locale.jiraUpdateComment(), UPDATE_COMMENT_INL);
+        updateAssigneeInl = createSimpleConnectorProperty(locale.jiraUpdateAssignee(), UPDATE_ASSIGNEE_INL);
+        resolutionInl = createSimpleConnectorProperty(locale.jiraResolution(), RESOLUTION_INL);
+        transitionIdInl = createSimpleConnectorProperty(locale.jiraTransitionId(), TRANSITION_ID_INL);
 
-        issueIdOrKeyExpr = createComplexPanel(locale.jiraIssueIdOrKey(), ISSUE_ID_OR_KEY_NS, ISSUE_ID_OR_KEY_EXPR);
-        updateCommentExpr = createComplexPanel(locale.jiraUpdateComment(), UPDATE_COMMENT_NS, UPDATE_COMMENT_EXPR);
-        updateAssigneeExpr = createComplexPanel(locale.jiraUpdateAssignee(), UPDATE_ASSIGNEE_NS, UPDATE_ASSIGNEE_EXPR);
-        resolutionExpr = createComplexPanel(locale.jiraResolution(), RESOLUTION_NS, RESOLUTION_EXPR);
-        transitionIdExpr = createComplexPanel(locale.jiraTransitionId(), TRANSITION_ID_NS, TRANSITION_ID_EXPR);
+        issueIdOrKeyExpr = createComplexConnectorProperty(locale.jiraIssueIdOrKey(), ISSUE_ID_OR_KEY_NS, ISSUE_ID_OR_KEY_EXPR);
+        updateCommentExpr = createComplexConnectorProperty(locale.jiraUpdateComment(), UPDATE_COMMENT_NS, UPDATE_COMMENT_EXPR);
+        updateAssigneeExpr = createComplexConnectorProperty(locale.jiraUpdateAssignee(), UPDATE_ASSIGNEE_NS, UPDATE_ASSIGNEE_EXPR);
+        resolutionExpr = createComplexConnectorProperty(locale.jiraResolution(), RESOLUTION_NS, RESOLUTION_EXPR);
+        transitionIdExpr = createComplexConnectorProperty(locale.jiraTransitionId(), TRANSITION_ID_NS, TRANSITION_ID_EXPR);
     }
 
     /** {@inheritDoc} */

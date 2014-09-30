@@ -20,10 +20,10 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.enrich.Enrich;
 import com.codenvy.ide.client.elements.mediators.enrich.Source;
 import com.codenvy.ide.client.elements.mediators.enrich.Target;
-import com.codenvy.ide.client.inject.factories.PropertiesPanelWidgetFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
+import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
 import com.codenvy.ide.client.propertiespanel.mediators.inline.ChangeInlineFormatCallBack;
@@ -37,7 +37,6 @@ import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresente
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -63,6 +62,7 @@ import static com.codenvy.ide.client.elements.mediators.enrich.Target.TARGET_XPA
 import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetAction;
 import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetType;
 import static com.codenvy.ide.client.initializers.propertytype.CommonPropertyTypeInitializer.BOOLEAN_TYPE_NAME;
+import static com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter.EditButtonClickedListener;
 
 /**
  * The class provides the business logic that allows editor to react on user's action and to change state of Call mediator
@@ -78,13 +78,10 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
     private final ResourceKeyEditorPresenter   keyPresenter;
     private final InlineConfigurationPresenter inlinePresenter;
 
-    private final AddNameSpacesCallBack sourceXPathCallBack;
-    private final AddNameSpacesCallBack targetXPathCallBack;
-
+    private final AddNameSpacesCallBack      sourceXPathCallBack;
+    private final AddNameSpacesCallBack      targetXPathCallBack;
     private final ChangeInlineFormatCallBack sourceInlineCallback;
     private final ChangeResourceKeyCallBack  sourceKeyCallBack;
-
-    private final WSO2EditorLocalizationConstant locale;
 
     private SimplePropertyPresenter description;
 
@@ -99,7 +96,6 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
     private ListPropertyPresenter    targetAction;
     private ListPropertyPresenter    targetType;
     private SimplePropertyPresenter  targetProperty;
-
     private ComplexPropertyPresenter targetXpath;
 
     private Source source;
@@ -109,16 +105,13 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
     public EnrichPropertiesPanelPresenter(PropertiesPanelView view,
                                           PropertyTypeManager propertyTypeManager,
                                           NameSpaceEditorPresenter nameSpacePresenter,
-                                          WSO2EditorLocalizationConstant locale,
                                           ResourceKeyEditorPresenter keyPresenter,
                                           InlineConfigurationPresenter inlinePresenter,
-                                          PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                                          Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
-                                          Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                                          Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider) {
-        super(view, propertyTypeManager);
+                                          WSO2EditorLocalizationConstant locale,
+                                          PropertyPanelFactory propertyPanelFactory) {
 
-        this.locale = locale;
+        super(view, propertyTypeManager, locale, propertyPanelFactory);
+
         this.keyPresenter = keyPresenter;
         this.inlinePresenter = inlinePresenter;
         this.nameSpacePresenter = nameSpacePresenter;
@@ -169,50 +162,45 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
             }
         };
 
-        prepareView(propertiesPanelWidgetFactory,
-                    simplePropertyPresenterProvider,
-                    listPropertyPresenterProvider,
-                    complexPropertyPresenterProvider);
+        prepareView();
     }
 
-    private void prepareView(@Nonnull PropertiesPanelWidgetFactory propertiesPanelWidgetFactory,
-                             @Nonnull Provider<SimplePropertyPresenter> simplePropertyPresenterProvider,
-                             @Nonnull Provider<ListPropertyPresenter> listPropertyPresenterProvider,
-                             @Nonnull Provider<ComplexPropertyPresenter> complexPropertyPresenterProvider) {
+    private void prepareView() {
+        prepareMiscGroupView();
 
-        PropertyGroupPresenter miscGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.enrichGroupMisc());
-        view.addGroup(miscGroup);
+        prepareSourceGroupView();
 
-        description = simplePropertyPresenterProvider.get();
-        description.setTitle(locale.enrichDescription());
-        description.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        prepareTargetGroupView();
+    }
+
+    private void prepareMiscGroupView() {
+        PropertyGroupPresenter miscGroup = createGroup(locale.enrichGroupMisc());
+
+        PropertyValueChangedListener descriptionListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 element.putProperty(DESCRIPTION, property);
 
                 notifyListeners();
             }
-        });
-        miscGroup.addItem(description);
+        };
+        description = createSimpleProperty(miscGroup, locale.description(), descriptionListener);
+    }
 
-        PropertyGroupPresenter sourceGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.enrichGroupSource());
-        view.addGroup(sourceGroup);
+    private void prepareSourceGroupView() {
+        PropertyGroupPresenter sourceGroup = createGroup(locale.enrichGroupSource());
 
-        sourceClone = listPropertyPresenterProvider.get();
-        sourceClone.setTitle(locale.enrichCloneSource());
-        sourceClone.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener sourceCloneListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 source.putProperty(SOURCE_CLONE, Boolean.valueOf(property));
 
                 notifyListeners();
             }
-        });
-        sourceGroup.addItem(sourceClone);
+        };
+        sourceClone = createListProperty(sourceGroup, locale.enrichCloneSource(), sourceCloneListener);
 
-        sourceType = listPropertyPresenterProvider.get();
-        sourceType.setTitle(locale.enrichSourceType());
-        sourceType.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener sourceTypeListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 source.putProperty(SOURCE_TYPE, SourceType.getItemByValue(property));
@@ -221,24 +209,20 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
 
                 notifyListeners();
             }
-        });
-        sourceGroup.addItem(sourceType);
+        };
+        sourceType = createListProperty(sourceGroup, locale.enrichSourceType(), sourceTypeListener);
 
-        sourceProperty = simplePropertyPresenterProvider.get();
-        sourceProperty.setTitle(locale.enrichSourceProperty());
-        sourceProperty.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener sourcePropertyListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 source.putProperty(SOURCE_PROPERTY, property);
 
                 notifyListeners();
             }
-        });
-        sourceGroup.addItem(sourceProperty);
+        };
+        sourceProperty = createSimpleProperty(sourceGroup, locale.enrichSourceProperty(), sourcePropertyListener);
 
-        sourceInlineType = listPropertyPresenterProvider.get();
-        sourceInlineType.setTitle(locale.enrichSourceInlineType());
-        sourceInlineType.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener inlineTypeListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 source.putProperty(SOURCE_INLINE_TYPE, InlineType.getItemByValue(property));
@@ -247,12 +231,10 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
 
                 notifyListeners();
             }
-        });
-        sourceGroup.addItem(sourceInlineType);
+        };
+        sourceInlineType = createListProperty(sourceGroup, locale.enrichSourceInlineType(), inlineTypeListener);
 
-        sourceXml = complexPropertyPresenterProvider.get();
-        sourceXml.setTitle(locale.enrichSourceXml());
-        sourceXml.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+        EditButtonClickedListener xmlBtnListener = new EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 String sourceXml = source.getProperty(SOURCE_XML);
@@ -263,12 +245,10 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
 
                 inlinePresenter.showDialog(sourceXml, locale.titleEnrichInline(), sourceInlineCallback);
             }
-        });
-        sourceGroup.addItem(sourceXml);
+        };
+        sourceXml = createComplexProperty(sourceGroup, locale.enrichSourceXml(), xmlBtnListener);
 
-        sourceXPath = complexPropertyPresenterProvider.get();
-        sourceXPath.setTitle(locale.enrichSourceXPath());
-        sourceXPath.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+        EditButtonClickedListener xpathBtnListener = new EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 String sourceXPath = source.getProperty(SOURCE_XPATH);
@@ -280,12 +260,10 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
 
                 nameSpacePresenter.showWindowWithParameters(nameSpaces, sourceXPathCallBack, locale.enrichSrcLabel(), sourceXPath);
             }
-        });
-        sourceGroup.addItem(sourceXPath);
+        };
+        sourceXPath = createComplexProperty(sourceGroup, locale.enrichSourceXPath(), xpathBtnListener);
 
-        sourceInlineRegistryKey = complexPropertyPresenterProvider.get();
-        sourceInlineRegistryKey.setTitle(locale.enrichInlineRegistryKey());
-        sourceInlineRegistryKey.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+        EditButtonClickedListener registryKeyBtnListener = new EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 String sourceKey = source.getProperty(SOURCE_INLINE_REGISTER_KEY);
@@ -296,27 +274,24 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
 
                 keyPresenter.showDialog(sourceKey, sourceKeyCallBack);
             }
-        });
-        sourceGroup.addItem(sourceInlineRegistryKey);
+        };
+        sourceInlineRegistryKey = createComplexProperty(sourceGroup, locale.enrichInlineRegistryKey(), registryKeyBtnListener);
+    }
 
-        PropertyGroupPresenter targetGroup = propertiesPanelWidgetFactory.createPropertyGroupPresenter(locale.enrichGroupTarget());
-        view.addGroup(targetGroup);
+    private void prepareTargetGroupView() {
+        PropertyGroupPresenter targetGroup = createGroup(locale.enrichGroupTarget());
 
-        targetAction = listPropertyPresenterProvider.get();
-        targetAction.setTitle(locale.enrichTargetAction());
-        targetAction.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener actionListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 target.putProperty(TARGET_ACTION, TargetAction.getItemByValue(property));
 
                 notifyListeners();
             }
-        });
-        targetGroup.addItem(targetAction);
+        };
+        targetAction = createListProperty(targetGroup, locale.enrichTargetAction(), actionListener);
 
-        targetType = listPropertyPresenterProvider.get();
-        targetType.setTitle(locale.enrichTargetType());
-        targetType.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener typeListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 target.putProperty(TARGET_TYPE, TargetType.getItemByValue(property));
@@ -325,24 +300,20 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
 
                 notifyListeners();
             }
-        });
-        targetGroup.addItem(targetType);
+        };
+        targetType = createListProperty(targetGroup, locale.enrichTargetType(), typeListener);
 
-        targetProperty = simplePropertyPresenterProvider.get();
-        targetProperty.setTitle(locale.enrichTargetProperty());
-        targetProperty.addPropertyValueChangedListener(new PropertyValueChangedListener() {
+        PropertyValueChangedListener targetPropertyListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 target.putProperty(TARGET_PROPERTY, property);
 
                 notifyListeners();
             }
-        });
-        targetGroup.addItem(targetProperty);
+        };
+        targetProperty = createSimpleProperty(targetGroup, locale.enrichTargetProperty(), targetPropertyListener);
 
-        targetXpath = complexPropertyPresenterProvider.get();
-        targetXpath.setTitle(locale.enrichTargetXPath());
-        targetXpath.addEditButtonClickedListener(new ComplexPropertyPresenter.EditButtonClickedListener() {
+        EditButtonClickedListener targetXpathBtnListener = new EditButtonClickedListener() {
             @Override
             public void onEditButtonClicked() {
                 List<NameSpace> targetNamespaces = target.getProperty(TARGET_NAMESPACES);
@@ -355,8 +326,8 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
                 nameSpacePresenter
                         .showWindowWithParameters(targetNamespaces, targetXPathCallBack, locale.namespacedProperty(), targetXPath);
             }
-        });
-        targetGroup.addItem(targetXpath);
+        };
+        targetXpath = createComplexProperty(targetGroup, locale.enrichTargetXPath(), targetXpathBtnListener);
     }
 
     /** Sets source type value to element from special place of view and displaying properties panel to a certain value of source type */
@@ -485,17 +456,21 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
             return;
         }
 
+        description.setProperty(element.getProperty(DESCRIPTION));
+
+        displaySourceGroup();
+
+        displayTargetGroup();
+    }
+
+    private void displaySourceGroup() {
         InlineType inlineType = source.getProperty(SOURCE_INLINE_TYPE);
         SourceType sourceTypeValue = source.getProperty(SOURCE_TYPE);
         Boolean sourceCloneValue = source.getProperty(SOURCE_CLONE);
-        TargetAction targetActionValue = target.getProperty(TARGET_ACTION);
-        TargetType targetTypeValue = target.getProperty(TARGET_TYPE);
 
-        if (inlineType == null || sourceTypeValue == null || targetActionValue == null || targetTypeValue == null || sourceCloneValue == null) {
+        if (inlineType == null || sourceTypeValue == null || sourceCloneValue == null) {
             return;
         }
-
-        description.setProperty(element.getProperty(DESCRIPTION));
 
         sourceClone.setValues(propertyTypeManager.getValuesByName(BOOLEAN_TYPE_NAME));
         sourceClone.selectValue(sourceCloneValue.toString());
@@ -514,6 +489,21 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
 
         sourceInlineRegistryKey.setProperty(source.getProperty(SOURCE_INLINE_REGISTER_KEY));
 
+        if (SourceType.INLINE.equals(sourceTypeValue)) {
+            applySourceInlineType();
+        }
+
+        applySourceType();
+    }
+
+    private void displayTargetGroup() {
+        TargetAction targetActionValue = target.getProperty(TARGET_ACTION);
+        TargetType targetTypeValue = target.getProperty(TARGET_TYPE);
+
+        if (targetActionValue == null || targetTypeValue == null) {
+            return;
+        }
+
         targetAction.setValues(propertyTypeManager.getValuesByName(TargetAction.TYPE_NAME));
         targetAction.selectValue(targetActionValue.getValue());
 
@@ -524,11 +514,6 @@ public class EnrichPropertiesPanelPresenter extends AbstractPropertiesPanel<Enri
 
         targetXpath.setProperty(target.getProperty(TARGET_XPATH));
 
-        if (SourceType.INLINE.equals(sourceTypeValue)) {
-            applySourceInlineType();
-        }
-
-        applySourceType();
         applyTargetType();
     }
 
