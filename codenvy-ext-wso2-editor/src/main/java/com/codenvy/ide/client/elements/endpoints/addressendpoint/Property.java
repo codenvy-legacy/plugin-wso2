@@ -170,7 +170,7 @@ public class Property extends AbstractEntityElement {
     }
 
     public enum Scope {
-        DEFAULT("default"), TRANSPORT("transport"), AXIS2("axis2"), AXIS2_CLIENT("axis2_client");
+        DEFAULT("default"), TRANSPORT("transport"), AXIS2("axis2"), AXIS2_CLIENT("axis2-client");
 
         public static final String TYPE_NAME = "EndpointScopeType";
 
@@ -194,8 +194,11 @@ public class Property extends AbstractEntityElement {
                 case "axis2":
                     return AXIS2;
 
-                case "axis2_client":
+                case "axis2-client":
                     return AXIS2_CLIENT;
+
+                case "default":
+                    return DEFAULT;
 
                 default:
                     return DEFAULT;
