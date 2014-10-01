@@ -24,6 +24,7 @@ import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPr
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public abstract class AbstractPropertiesPanel<T extends Element> extends Abstrac
 
     private final PropertyPanelFactory          propertyPanelFactory;
     private final List<PropertyChangedListener> listeners;
+    private final List<PropertyGroupPresenter>  groups;
 
     protected final PropertyTypeManager            propertyTypeManager;
     protected final WSO2EditorLocalizationConstant locale;
@@ -61,6 +63,7 @@ public abstract class AbstractPropertiesPanel<T extends Element> extends Abstrac
         this.locale = locale;
         this.propertyTypeManager = propertyTypeManager;
         this.listeners = new ArrayList<>();
+        this.groups = new ArrayList<>();
     }
 
     /**
@@ -73,6 +76,8 @@ public abstract class AbstractPropertiesPanel<T extends Element> extends Abstrac
     protected PropertyGroupPresenter createGroup(@Nonnull String title) {
         PropertyGroupPresenter basicGroup = propertyPanelFactory.createGroupProperty(title);
         view.addGroup(basicGroup);
+
+        groups.add(basicGroup);
 
         return basicGroup;
     }
@@ -177,6 +182,31 @@ public abstract class AbstractPropertiesPanel<T extends Element> extends Abstrac
     public void notifyListeners() {
         for (PropertyChangedListener listener : listeners) {
             listener.onPropertyChanged();
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void go(@Nonnull AcceptsOneWidget container) {
+        super.go(container);
+
+        if (groups.size() == 1) {
+            openOneGroup();
+        } else {
+            openAllGroups();
+        }
+    }
+
+    private void openOneGroup() {
+        PropertyGroupPresenter group = groups.get(0);
+
+        group.unfold();
+        group.setTitleVisible(false);
+    }
+
+    private void openAllGroups() {
+        for (PropertyGroupPresenter group : groups) {
+            group.unfold();
         }
     }
 

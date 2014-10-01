@@ -24,6 +24,8 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The class that provides business logic of the toolbar group widget.
@@ -32,11 +34,15 @@ import javax.annotation.Nonnull;
  */
 public class ToolbarGroupPresenter extends AbstractPresenter<ToolbarGroupView> implements ToolbarGroupView.ActionDelegate {
 
+    private final List<OpenGroupToolbarListener> listeners;
+
     private boolean isFolded;
 
     @Inject
     public ToolbarGroupPresenter(ToolbarFactory toolbarFactory, @Assisted String title) {
         super(toolbarFactory.createToolbarGroupView(title));
+
+        listeners = new ArrayList<>();
 
         fold();
     }
@@ -47,13 +53,15 @@ public class ToolbarGroupPresenter extends AbstractPresenter<ToolbarGroupView> i
         return view;
     }
 
-    private void fold() {
+    /** The method folds group of elements which it contains. */
+    public void fold() {
         isFolded = true;
         view.setVisibleItemsPanel(false);
         view.defaultIcon();
     }
 
-    private void unfold() {
+    /** The method display group of elements which it contains. */
+    public void unfold() {
         isFolded = false;
         view.setVisibleItemsPanel(true);
         view.rotateIcon();
@@ -74,9 +82,39 @@ public class ToolbarGroupPresenter extends AbstractPresenter<ToolbarGroupView> i
     public void onItemClicked() {
         if (isFolded) {
             unfold();
+
+            notifyListeners();
         } else {
             fold();
         }
+    }
+
+    /**
+     * Adds a listener to list of listeners of toolbar group presenter.
+     *
+     * @param listener
+     *         listener which needs to be added
+     */
+    public void addListener(@Nonnull OpenGroupToolbarListener listener) {
+        listeners.add(listener);
+    }
+
+    /** Notify all listeners of group toolbar presenter when user clicked on any group of elements. */
+    public void notifyListeners() {
+        for (OpenGroupToolbarListener listener : listeners) {
+            listener.onOpenToolbarGroup(this);
+        }
+    }
+
+    /** Listener which need to trace a toolbar group state. If one group of elements is open, another must be closed. */
+    public interface OpenGroupToolbarListener {
+        /**
+         * Method which calls when we open any group. The method opens the group which we select and closes another.
+         *
+         * @param toolbarGroupPresenter
+         *         selected group of properties
+         */
+        void onOpenToolbarGroup(@Nonnull ToolbarGroupPresenter toolbarGroupPresenter);
     }
 
 }

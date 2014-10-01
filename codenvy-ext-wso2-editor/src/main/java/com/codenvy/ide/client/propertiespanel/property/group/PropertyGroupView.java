@@ -58,6 +58,14 @@ public interface PropertyGroupView extends View<PropertyGroupView.ActionDelegate
     /** Reset default view of the fold/unfold icon on the view. */
     void defaultIcon();
 
+    /**
+     * Sets visibility part of group which contains title and icon.
+     *
+     * @param isVisible
+     *         value of visibility which need to set.<code>true</code> part of group is visible, <code>false</code> part of group invisible
+     */
+    void setTitleVisible(boolean isVisible);
+
     public interface ActionDelegate {
         /** Performs some actions in response to a user's clicking on the main panel of the view. */
         void onItemClicked();

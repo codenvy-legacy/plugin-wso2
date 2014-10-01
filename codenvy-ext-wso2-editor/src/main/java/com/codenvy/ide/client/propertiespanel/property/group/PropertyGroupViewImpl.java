@@ -50,6 +50,8 @@ public class PropertyGroupViewImpl extends AbstractView<PropertyGroupView.Action
     @UiField
     SimpleLayoutPanel icon;
     @UiField
+    FlowPanel         groupNamePanel;
+    @UiField
     FlowPanel         propertiesPanel;
 
     private final EditorResources resources;
@@ -111,6 +113,12 @@ public class PropertyGroupViewImpl extends AbstractView<PropertyGroupView.Action
     public void defaultIcon() {
         icon.removeStyleName(resources.editorCSS().expandedImage());
         icon.addStyleName(resources.editorCSS().normalImage());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setTitleVisible(boolean isVisible) {
+        groupNamePanel.setVisible(isVisible);
     }
 
 }

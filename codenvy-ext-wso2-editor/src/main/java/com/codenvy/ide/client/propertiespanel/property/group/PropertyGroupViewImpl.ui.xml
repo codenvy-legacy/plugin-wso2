@@ -68,7 +68,7 @@
 
     <g:FlowPanel ui:field="mainPanel" addStyleNames="{style.mainPanel}">
 
-        <g:FlowPanel addStyleNames="{style.headerPanel}">
+        <g:FlowPanel ui:field="groupNamePanel" addStyleNames="{style.headerPanel}">
             <g:Label ui:field="title" addStyleNames="{style.title}"/>
 
             <g:FlowPanel addStyleNames="{style.iconPanel}">

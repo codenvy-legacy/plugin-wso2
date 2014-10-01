@@ -47,16 +47,28 @@ public class PropertyGroupPresenter extends AbstractPresenter<PropertyGroupView>
         return view;
     }
 
-    private void fold() {
+    /** The method folds group of parameters which it contains. */
+    public void fold() {
         isFolded = true;
         view.setVisibleItemsPanel(false);
         view.defaultIcon();
     }
 
-    private void unfold() {
+    /** The method display group of parameters which it contains. */
+    public void unfold() {
         isFolded = false;
         view.setVisibleItemsPanel(true);
         view.rotateIcon();
+    }
+
+    /**
+     * The method calls special method on view which set visibility of group's title part.
+     *
+     * @param isVisible
+     *         <code>true</code> title is visible,<code>false</code> title is invisible
+     */
+    public void setTitleVisible(boolean isVisible) {
+        view.setTitleVisible(isVisible);
     }
 
     /**

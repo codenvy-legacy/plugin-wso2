@@ -27,6 +27,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static com.codenvy.ide.client.toolbar.group.ToolbarGroupPresenter.OpenGroupToolbarListener;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -87,7 +88,6 @@ public class ToolbarGroupPresenterTest {
 
         verify(view).setVisibleItemsPanel(true);
         verify(view).rotateIcon();
-
     }
 
     @Test
@@ -97,6 +97,37 @@ public class ToolbarGroupPresenterTest {
         reset(view);
 
         presenter.onItemClicked();
+
+        verify(view).setVisibleItemsPanel(false);
+        verify(view).defaultIcon();
+    }
+
+    @Test
+    public void notifyMethodShouldBeCalled() throws Exception {
+        OpenGroupToolbarListener listener = mock(OpenGroupToolbarListener.class);
+
+        presenter.addListener(listener);
+
+        presenter.onItemClicked();
+
+        verify(listener).onOpenToolbarGroup(presenter);
+    }
+
+    @Test
+    public void itemsPanelShouldBeUnfolded() {
+        reset(view);
+
+        presenter.unfold();
+
+        verify(view).setVisibleItemsPanel(true);
+        verify(view).rotateIcon();
+    }
+
+    @Test
+    public void itemsPanelShouldBeFolded() {
+        reset(view);
+
+        presenter.fold();
 
         verify(view).setVisibleItemsPanel(false);
         verify(view).defaultIcon();

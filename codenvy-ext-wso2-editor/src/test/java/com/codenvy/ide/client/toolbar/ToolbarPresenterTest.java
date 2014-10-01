@@ -29,6 +29,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static com.codenvy.ide.client.toolbar.group.ToolbarGroupPresenter.OpenGroupToolbarListener;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -43,10 +45,12 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ToolbarPresenterTest {
 
-    private static final String GROUP_ID     = "group id";
-    private static final String TITLE        = "title";
-    private static final String TOOLTIP      = "tooltip";
-    private static final String EDITOR_STATE = "editor state";
+    private static final String FIRST_GROUP_ID  = "group id one";
+    private static final String FIRST_TITLE     = "title one";
+    private static final String SECOND_GROUP_ID = "group id two";
+    private static final String SECOND_TITLE    = "title two";
+    private static final String TOOLTIP         = "tooltip";
+    private static final String EDITOR_STATE    = "editor state";
 
     @Mock
     private ImageResource                  icon;
@@ -66,58 +70,58 @@ public class ToolbarPresenterTest {
 
     @Test
     public void toolbarGroupShouldBeAdded() throws Exception {
-        presenter.addGroup(GROUP_ID, TITLE);
+        presenter.addGroup(FIRST_GROUP_ID, FIRST_TITLE);
 
-        verify(locale, never()).errorToolbarGroupWasAlreadyRegistered(GROUP_ID);
-        verify(toolbarFactory).createToolbarGroupPresenter(TITLE);
+        verify(locale, never()).errorToolbarGroupWasAlreadyRegistered(FIRST_GROUP_ID);
+        verify(toolbarFactory).createToolbarGroupPresenter(FIRST_TITLE);
     }
 
     @Test
     public void toolbarGroupShouldBeNotAdded() throws Exception {
-        presenter.addGroup(GROUP_ID, TITLE);
+        presenter.addGroup(FIRST_GROUP_ID, FIRST_TITLE);
 
         reset(toolbarFactory);
 
-        presenter.addGroup(GROUP_ID, TITLE);
+        presenter.addGroup(FIRST_GROUP_ID, FIRST_TITLE);
 
-        verify(locale).errorToolbarGroupWasAlreadyRegistered(GROUP_ID);
-        verify(toolbarFactory, never()).createToolbarGroupPresenter(TITLE);
+        verify(locale).errorToolbarGroupWasAlreadyRegistered(FIRST_GROUP_ID);
+        verify(toolbarFactory, never()).createToolbarGroupPresenter(FIRST_TITLE);
     }
 
     @Test
     public void toolbarItemShouldBeAdded() throws Exception {
-        presenter.addGroup(GROUP_ID, TITLE);
+        presenter.addGroup(FIRST_GROUP_ID, FIRST_TITLE);
 
         reset(toolbarFactory);
 
-        presenter.addItem(GROUP_ID, TITLE, TOOLTIP, icon, EDITOR_STATE);
+        presenter.addItem(FIRST_GROUP_ID, FIRST_TITLE, TOOLTIP, icon, EDITOR_STATE);
 
-        verify(locale, never()).errorToolbarGroupHasNotRegisteredYet(GROUP_ID);
+        verify(locale, never()).errorToolbarGroupHasNotRegisteredYet(FIRST_GROUP_ID);
         verify(locale, never()).errorToolbarEditorStateWasAlreadyAdded(EDITOR_STATE);
-        verify(toolbarFactory).createToolbarItemPresenter(TITLE, TOOLTIP, icon, EDITOR_STATE);
+        verify(toolbarFactory).createToolbarItemPresenter(FIRST_TITLE, TOOLTIP, icon, EDITOR_STATE);
     }
 
     @Test
     public void toolbarItemShouldBeNotAddedWhenGroupHasNotRegistered() throws Exception {
-        presenter.addItem(GROUP_ID, TITLE, TOOLTIP, icon, EDITOR_STATE);
+        presenter.addItem(FIRST_GROUP_ID, FIRST_TITLE, TOOLTIP, icon, EDITOR_STATE);
 
-        verify(locale).errorToolbarGroupHasNotRegisteredYet(GROUP_ID);
+        verify(locale).errorToolbarGroupHasNotRegisteredYet(FIRST_GROUP_ID);
         verify(locale, never()).errorToolbarEditorStateWasAlreadyAdded(EDITOR_STATE);
-        verify(toolbarFactory, never()).createToolbarItemPresenter(TITLE, TOOLTIP, icon, EDITOR_STATE);
+        verify(toolbarFactory, never()).createToolbarItemPresenter(FIRST_TITLE, TOOLTIP, icon, EDITOR_STATE);
     }
 
     @Test
     public void toolbarItemShouldBeNotAddedWhenEditorStateHasBeenRegistered() throws Exception {
-        presenter.addGroup(GROUP_ID, TITLE);
-        presenter.addItem(GROUP_ID, TITLE, TOOLTIP, icon, EDITOR_STATE);
+        presenter.addGroup(FIRST_GROUP_ID, FIRST_TITLE);
+        presenter.addItem(FIRST_GROUP_ID, FIRST_TITLE, TOOLTIP, icon, EDITOR_STATE);
 
         reset(toolbarFactory);
 
-        presenter.addItem(GROUP_ID, TITLE, TOOLTIP, icon, EDITOR_STATE);
+        presenter.addItem(FIRST_GROUP_ID, FIRST_TITLE, TOOLTIP, icon, EDITOR_STATE);
 
-        verify(locale, never()).errorToolbarGroupHasNotRegisteredYet(GROUP_ID);
+        verify(locale, never()).errorToolbarGroupHasNotRegisteredYet(FIRST_GROUP_ID);
         verify(locale).errorToolbarEditorStateWasAlreadyAdded(EDITOR_STATE);
-        verify(toolbarFactory, never()).createToolbarItemPresenter(TITLE, TOOLTIP, icon, EDITOR_STATE);
+        verify(toolbarFactory, never()).createToolbarItemPresenter(FIRST_TITLE, TOOLTIP, icon, EDITOR_STATE);
     }
 
     @Test
@@ -126,12 +130,34 @@ public class ToolbarPresenterTest {
         ToolbarGroupPresenter toolbarGroup = mock(ToolbarGroupPresenter.class);
 
         when(toolbarFactory.createToolbarGroupPresenter(anyString())).thenReturn(toolbarGroup);
-        presenter.addGroup(GROUP_ID, TITLE);
+        presenter.addGroup(FIRST_GROUP_ID, FIRST_TITLE);
 
         presenter.go(container);
 
         verify(container).setWidget(view);
         verify(view).addGroup(toolbarGroup);
+    }
+
+    @Test
+    public void onlyOneGroupShouldBeOpened() throws Exception {
+        ToolbarGroupPresenter toolbarGroupOne = mock(ToolbarGroupPresenter.class);
+        ToolbarGroupPresenter toolbarGroupTwo = mock(ToolbarGroupPresenter.class);
+
+        when(toolbarFactory.createToolbarGroupPresenter(FIRST_TITLE)).thenReturn(toolbarGroupOne);
+        when(toolbarFactory.createToolbarGroupPresenter(SECOND_TITLE)).thenReturn(toolbarGroupTwo);
+
+        presenter.addGroup(FIRST_GROUP_ID, FIRST_TITLE);
+        presenter.addGroup(SECOND_GROUP_ID, SECOND_TITLE);
+
+        presenter.onOpenToolbarGroup(toolbarGroupOne);
+
+        verify(toolbarGroupOne).unfold();
+        verify(toolbarGroupOne, never()).fold();
+        verify(toolbarGroupOne).addListener(any(OpenGroupToolbarListener.class));
+
+        verify(toolbarGroupTwo, never()).unfold();
+        verify(toolbarGroupTwo).fold();
+        verify(toolbarGroupTwo).addListener(any(OpenGroupToolbarListener.class));
     }
 
 }

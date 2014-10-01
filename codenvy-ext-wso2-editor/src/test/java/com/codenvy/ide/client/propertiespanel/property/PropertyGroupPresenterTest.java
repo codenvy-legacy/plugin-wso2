@@ -106,4 +106,31 @@ public class PropertyGroupPresenterTest {
         verify(view).defaultIcon();
     }
 
+    @Test
+    public void itemsPanelShouldBeUnfolded() {
+        reset(view);
+
+        presenter.unfold();
+
+        verify(view).setVisibleItemsPanel(true);
+        verify(view).rotateIcon();
+    }
+
+    @Test
+    public void itemsPanelShouldBeFolded() {
+        reset(view);
+
+        presenter.fold();
+
+        verify(view).setVisibleItemsPanel(false);
+        verify(view).defaultIcon();
+    }
+
+    @Test
+    public void visibleTitlePanelShouldBeSet() throws Exception {
+        presenter.setTitleVisible(true);
+
+        verify(view).setTitleVisible(true);
+    }
+
 }

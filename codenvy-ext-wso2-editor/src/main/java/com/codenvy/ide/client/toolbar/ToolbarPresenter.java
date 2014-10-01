@@ -31,6 +31,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static com.codenvy.ide.client.toolbar.group.ToolbarGroupPresenter.OpenGroupToolbarListener;
+
 /**
  * The presenter that provides a business logic of toolbar. It provides an ability to add a toolbar item.
  *
@@ -39,7 +41,7 @@ import java.util.Set;
  * @author Valeriy Svydenko
  */
 @Singleton
-public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements ToolbarView.ActionDelegate {
+public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements ToolbarView.ActionDelegate, OpenGroupToolbarListener {
 
     private final Map<String, ToolbarGroupPresenter> groups;
     private final ToolbarFactory                     toolbarFactory;
@@ -70,7 +72,10 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
             return;
         }
 
-        groups.put(groupId, toolbarFactory.createToolbarGroupPresenter(title));
+        ToolbarGroupPresenter group = toolbarFactory.createToolbarGroupPresenter(title);
+        group.addListener(this);
+
+        groups.put(groupId, group);
     }
 
     /**
@@ -107,6 +112,22 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
 
         states.add(editorState);
         group.addItem(toolbarFactory.createToolbarItemPresenter(title, tooltip, icon, editorState));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onOpenToolbarGroup(@Nonnull ToolbarGroupPresenter toolbarGroupPresenter) {
+        for (ToolbarGroupPresenter group : groups.values()) {
+            changeToolbarGroupState(group, toolbarGroupPresenter);
+        }
+    }
+
+    private void changeToolbarGroupState(@Nonnull ToolbarGroupPresenter group, @Nonnull ToolbarGroupPresenter toolbarGroupPresenter) {
+        if (group.equals(toolbarGroupPresenter)) {
+            group.unfold();
+        } else {
+            group.fold();
+        }
     }
 
     /** {@inheritDoc} */
