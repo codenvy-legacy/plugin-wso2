@@ -105,7 +105,7 @@ public class Arg extends AbstractEntityElement {
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
         switch (attributeName) {
             case EVALUATOR_ATTRIBUTE_NAME:
-                putProperty(ARG_EVALUATOR, Evaluator.valueOf(attributeValue));
+                putProperty(ARG_EVALUATOR, Evaluator.getItemByValue(attributeValue));
                 break;
 
             case EXPRESSION_ATTRIBUTE_NAME:
@@ -217,4 +217,5 @@ public class Arg extends AbstractEntityElement {
             }
         }
     }
+
 }
