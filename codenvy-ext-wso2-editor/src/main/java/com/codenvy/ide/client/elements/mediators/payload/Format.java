@@ -57,11 +57,14 @@ public class Format extends AbstractEntityElement {
      *         XML node that need to be analyzed
      */
     public void applyAttributes(@Nonnull Node node) {
-        if (node.hasAttributes()) {
-            Node attribute = node.getAttributes().item(0);
-
-            putProperty(FORMAT_KEY, attribute.getNodeValue());
+        // we should use condition because it is impossible to use hasAttributes method because it throws exception
+        if (node.getAttributes().getLength() < 1) {
+            return;
         }
+
+        Node attribute = node.getAttributes().item(0);
+
+        putProperty(FORMAT_KEY, attribute.getNodeValue());
     }
 
     /**
@@ -71,20 +74,24 @@ public class Format extends AbstractEntityElement {
      *         XML node that need to be analyzed
      */
     public void applyProperty(@Nonnull Node node) {
-        if (node.hasChildNodes()) {
-            String item = node.getChildNodes().item(0).toString();
-
-            int indexFirst = item.indexOf(" ");
-            int indexLast = item.indexOf(">");
-
-            String tagName = item.substring(0, indexLast);
-
-            String xmlns = tagName.substring(indexFirst, tagName.contains("/") ? indexLast - 1 : indexLast);
-
-            String formatInline = item.replace(xmlns, "");
-
-            putProperty(FORMAT_INLINE, formatInline);
+        if (!node.hasChildNodes()) {
+            return;
         }
+
+        putProperty(FORMAT_INLINE, convertNodeToString(node));
+    }
+
+    private String convertNodeToString(@Nonnull Node node) {
+        String item = node.getChildNodes().item(0).toString();
+
+        int indexFirst = item.indexOf(' ');
+        int indexLast = item.indexOf('>');
+
+        String tagName = item.substring(0, indexLast);
+
+        String xmlns = tagName.substring(indexFirst, tagName.contains("/") ? indexLast - 1 : indexLast);
+
+        return item.replace(xmlns, "");
     }
 
     /** @return serialization representation of element attributes */
@@ -103,7 +110,6 @@ public class Format extends AbstractEntityElement {
         }
 
         StringBuilder xml = new StringBuilder();
-        String json = "";
 
         boolean isInline = INLINE.equals(getProperty(FORMAT_TYPE));
         boolean isInlineJson = isJson && isInline;
@@ -111,27 +117,33 @@ public class Format extends AbstractEntityElement {
         xml.append('<').append(FORMAT_SERIALIZATION_NAME);
 
         if (isInline) {
-            xml.append('>');
+            serializeInlineFormat(xml, formatInline);
 
-            int index = formatInline.indexOf(">");
-
-            String tag = formatInline.substring(0, index);
-
-            String tagName = formatInline.substring(0, tag.contains("/") ? index - 1 : index);
-            String restString = formatInline.substring(tag.contains("/") ? index - 1 : index);
-
-            xml.append(tagName).append(' ' + PREFIX + "=\"\"").append(restString)
-               .append("</").append(FORMAT_SERIALIZATION_NAME).append('>');
         } else {
             xml.append(' ').append(serializeAttributes()).append("/>\n");
         }
 
-        if (isInlineJson) {
-            json = '<' + FORMAT_SERIALIZATION_NAME + '>' + formatInline.replace("<", "&lt;").replace(">", "&gt;") +
-                   "</" + FORMAT_SERIALIZATION_NAME + '>';
-        }
+        return isInlineJson ? serializeInlineJsonFormat(formatInline) : xml.toString();
+    }
 
-        return isInlineJson ? json : xml.toString();
+    private void serializeInlineFormat(@Nonnull StringBuilder stringBuilder, @Nonnull String formatInline) {
+        stringBuilder.append('>');
+
+        int index = formatInline.indexOf(">");
+
+        String tag = formatInline.substring(0, index);
+
+        String tagName = formatInline.substring(0, tag.contains("/") ? index - 1 : index);
+        String restString = formatInline.substring(tag.contains("/") ? index - 1 : index);
+
+        stringBuilder.append(tagName).append(' ' + PREFIX + "=\"\"").append(restString)
+                     .append("</").append(FORMAT_SERIALIZATION_NAME).append('>');
+    }
+
+    private String serializeInlineJsonFormat(@Nonnull String formatInline) {
+
+        return '<' + FORMAT_SERIALIZATION_NAME + '>' + formatInline.replace("<", "&lt;").replace(">", "&gt;") +
+               "</" + FORMAT_SERIALIZATION_NAME + '>';
     }
 
     public enum FormatType {
