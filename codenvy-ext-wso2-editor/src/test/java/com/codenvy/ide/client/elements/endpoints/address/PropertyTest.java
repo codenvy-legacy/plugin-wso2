@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package com.codenvy.ide.client.elements.endpoints;
+package com.codenvy.ide.client.elements.endpoints.address;
 
 import com.codenvy.ide.client.elements.AbstractEntityTest;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.endpoints.addressendpoint.Property;
 import com.codenvy.ide.client.elements.mediators.ValueType;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
@@ -34,17 +33,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.EXPRESSION;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.NAME;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.NAMESPACES;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.SCOPE;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.Scope;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.Scope.AXIS2;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.Scope.AXIS2_CLIENT;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.Scope.DEFAULT;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.Scope.TRANSPORT;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.TYPE;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.VALUE;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.EXPRESSION;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.NAME;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.NAMESPACES;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.SCOPE;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.Scope;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.Scope.AXIS2;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.Scope.AXIS2_CLIENT;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.Scope.DEFAULT;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.Scope.TRANSPORT;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.TYPE;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.VALUE;
 import static com.codenvy.ide.client.elements.mediators.ValueType.LITERAL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
@@ -291,6 +290,20 @@ public class PropertyTest extends AbstractEntityTest<Property> {
 
         assertEquals(propertyList, copyPropertyList);
         assertNotSame(propertyList, copyPropertyList);
+    }
+
+    @Test
+    public void serializationShouldBeDoneWhenNameSpaceNotEmpty() throws Exception {
+        List<NameSpace> nameSpaces = new ArrayList<>();
+
+        entity.putProperty(NAMESPACES, nameSpaces);
+
+        assertTrue(nameSpaces.isEmpty());
+
+        entity.applyAttribute("xmlns:a", "b");
+
+        assertEquals(1, nameSpaces.size());
+        assertEquals(nameSpace, nameSpaces.get(0));
     }
 
     @Test

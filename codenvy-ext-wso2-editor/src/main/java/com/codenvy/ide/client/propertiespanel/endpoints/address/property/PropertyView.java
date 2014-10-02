@@ -16,7 +16,7 @@
 package com.codenvy.ide.client.propertiespanel.endpoints.address.property;
 
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.client.elements.endpoints.addressendpoint.Property;
+import com.codenvy.ide.client.elements.endpoints.address.Property;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;

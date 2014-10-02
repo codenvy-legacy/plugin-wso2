@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.endpoints.address.property;
 
-import com.codenvy.ide.client.elements.endpoints.addressendpoint.Property;
+import com.codenvy.ide.client.elements.endpoints.address.Property;
 import com.codenvy.ide.client.propertiespanel.endpoints.address.editoraddressproperty.EditorAddressPropertyCallBack;
 import com.codenvy.ide.client.propertiespanel.endpoints.address.editoraddressproperty.EditorAddressPropertyPresenter;
 import com.google.inject.Inject;
@@ -23,8 +23,8 @@ import com.google.inject.Inject;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.NAME;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.copyEndPointPropertyList;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.NAME;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.copyEndPointPropertyList;
 
 /**
  * The class provides the business logic that allows editor to react on user's action related to change of Address's

@@ -16,7 +16,7 @@
 
 package com.codenvy.ide.client.initializers.validators;
 
-import com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint;
+import com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint;
 import com.codenvy.ide.client.elements.mediators.LoopBack;
 import com.codenvy.ide.client.elements.mediators.Respond;
 import com.codenvy.ide.client.initializers.Initializer;

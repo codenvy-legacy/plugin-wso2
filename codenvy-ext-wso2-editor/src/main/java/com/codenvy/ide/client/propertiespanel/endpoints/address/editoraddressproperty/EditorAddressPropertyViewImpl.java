@@ -17,7 +17,7 @@ package com.codenvy.ide.client.propertiespanel.endpoints.address.editoraddresspr
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.endpoints.addressendpoint.Property;
+import com.codenvy.ide.client.elements.endpoints.address.Property;
 import com.codenvy.ide.client.elements.mediators.ValueType;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.event.dom.client.ChangeEvent;

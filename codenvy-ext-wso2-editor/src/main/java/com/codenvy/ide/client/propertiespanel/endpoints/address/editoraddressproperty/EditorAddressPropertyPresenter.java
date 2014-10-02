@@ -17,7 +17,7 @@ package com.codenvy.ide.client.propertiespanel.endpoints.address.editoraddresspr
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.client.elements.endpoints.addressendpoint.Property;
+import com.codenvy.ide.client.elements.endpoints.address.Property;
 import com.codenvy.ide.client.elements.mediators.ValueType;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
@@ -28,12 +28,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.NAME;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.NAMESPACES;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.SCOPE;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.Scope;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.TYPE;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.VALUE;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.NAME;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.NAMESPACES;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.SCOPE;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.Scope;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.TYPE;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.VALUE;
 import static com.codenvy.ide.client.elements.mediators.ValueType.EXPRESSION;
 
 /**

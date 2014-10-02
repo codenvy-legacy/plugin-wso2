@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.elements.endpoints.addressendpoint;
+package com.codenvy.ide.client.elements.endpoints.address;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.AbstractElement;
@@ -32,10 +32,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion.FINAL;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format.LEAVE_AS_IS;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction.NEVER;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.SERIALIZE_NAME;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.AddressingVersion.FINAL;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.Format.LEAVE_AS_IS;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.TimeoutAction.NEVER;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.SERIALIZE_NAME;
 
 /**
  * The class which describes state of Address endpoint and also has methods for changing it. Also the class contains the business logic

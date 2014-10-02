@@ -17,7 +17,7 @@
 package com.codenvy.ide.client.initializers.validators;
 
 import com.codenvy.ide.client.elements.RootElement;
-import com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint;
+import com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint;
 import com.codenvy.ide.client.elements.mediators.Call;
 import com.codenvy.ide.client.elements.mediators.Filter;
 import com.codenvy.ide.client.elements.mediators.Send;

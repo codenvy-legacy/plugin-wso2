@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.elements.endpoints.addressendpoint;
+package com.codenvy.ide.client.elements.endpoints.address;
 
 import com.codenvy.ide.client.elements.AbstractEntityElement;
 import com.codenvy.ide.client.elements.NameSpace;
@@ -30,7 +30,7 @@ import java.util.List;
 import static com.codenvy.ide.client.elements.NameSpace.applyNameSpace;
 import static com.codenvy.ide.client.elements.NameSpace.convertNameSpacesToXML;
 import static com.codenvy.ide.client.elements.NameSpace.copyNameSpaceList;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.Scope.DEFAULT;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.Scope.DEFAULT;
 import static com.codenvy.ide.client.elements.mediators.ValueType.LITERAL;
 
 /**

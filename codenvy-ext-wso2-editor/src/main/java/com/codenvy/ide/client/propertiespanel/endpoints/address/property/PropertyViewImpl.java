@@ -16,7 +16,7 @@
 package com.codenvy.ide.client.propertiespanel.endpoints.address.property;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.endpoints.addressendpoint.Property;
+import com.codenvy.ide.client.elements.endpoints.address.Property;
 import com.codenvy.ide.client.elements.mediators.ValueType;
 import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.ui.window.Window;
@@ -39,11 +39,11 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.EXPRESSION;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.NAME;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.SCOPE;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.TYPE;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.VALUE;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.EXPRESSION;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.NAME;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.SCOPE;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.TYPE;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.VALUE;
 
 /**
  * Provides a graphical representation of dialog window for editing property of address endpoint.

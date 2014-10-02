@@ -21,10 +21,10 @@ import com.google.inject.Inject;
 
 import java.util.Arrays;
 
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.AddressingVersion;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Format;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.Optimize;
-import static com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint.TimeoutAction;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.AddressingVersion;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.Format;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.Optimize;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.TimeoutAction;
 
 /**
  * @author Andrey Plotnikov

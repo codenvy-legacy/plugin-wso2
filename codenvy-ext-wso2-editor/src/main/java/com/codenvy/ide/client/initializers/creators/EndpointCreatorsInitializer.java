@@ -17,7 +17,7 @@
 package com.codenvy.ide.client.initializers.creators;
 
 import com.codenvy.ide.client.constants.EndpointCreatingState;
-import com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint;
+import com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
