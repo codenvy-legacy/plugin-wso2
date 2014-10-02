@@ -1,0 +1,6 @@
+<payloadFactory media-type="xml" >
+<format>
+<a xmlns="">text</a>
+</format>
+<args/>
+</payloadFactory>

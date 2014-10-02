@@ -294,17 +294,17 @@ public class PropertyTest extends AbstractEntityTest<Property> {
     }
 
     @Test
-    public void transportValueOfScopeShouldBeReturned1() throws Exception {
+    public void transportValueOfScopeShouldBeReturned() throws Exception {
         assertEquals(TRANSPORT, Scope.getItemByValue("transport"));
     }
 
     @Test
-    public void axis2ValueOfScopeShouldBeReturned1() throws Exception {
+    public void axis2ValueOfScopeShouldBeReturned() throws Exception {
         assertEquals(AXIS2, Scope.getItemByValue("axis2"));
     }
 
     @Test
-    public void axis2ClientValueOfScopeShouldBeReturned1() throws Exception {
+    public void axis2ClientValueOfScopeShouldBeReturned() throws Exception {
         assertEquals(AXIS2_CLIENT, Scope.getItemByValue("axis2-client"));
     }
 

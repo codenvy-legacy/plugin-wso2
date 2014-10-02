@@ -17,7 +17,6 @@
 package com.codenvy.ide.client.elements;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.elements.endpoints.addressendpoint.Property;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Provider;
@@ -40,6 +39,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public abstract class AbstractElementTest<T extends AbstractElement> extends AbstractEntityTest<T> {
 
@@ -49,8 +49,6 @@ public abstract class AbstractElementTest<T extends AbstractElement> extends Abs
     protected Provider<Branch>       branchProvider;
     @Mock
     protected ElementCreatorsManager elementCreatorsManager;
-    @Mock
-    protected Provider<Property>     propertyProvider;
     @Mock
     protected ImageResource          icon;
 

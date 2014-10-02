@@ -23,8 +23,6 @@ import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.client.elements.NameSpace.PREFIX;
 import static com.codenvy.ide.client.elements.mediators.payload.Format.FormatType.INLINE;
-import static com.codenvy.ide.client.elements.mediators.payload.Format.MediaType.JSON;
-import static com.codenvy.ide.client.elements.mediators.payload.Format.MediaType.XML;
 
 /**
  * The class which describes state of Format property of PayloadFactory mediator and also has methods for changing it. Also the class
@@ -39,10 +37,9 @@ public class Format extends AbstractEntityElement {
 
     public static final String FORMAT_SERIALIZATION_NAME = "format";
 
-    public static final Key<MediaType>  FORMAT_MEDIA_TYPE = new Key<>("PayloadFormatMediaType");
-    public static final Key<FormatType> FORMAT_TYPE       = new Key<>("PayloadFormatType");
-    public static final Key<String>     FORMAT_KEY        = new Key<>("PayloadFormatKey");
-    public static final Key<String>     FORMAT_INLINE     = new Key<>("PayloadFormatInline");
+    public static final Key<FormatType> FORMAT_TYPE   = new Key<>("PayloadFormatType");
+    public static final Key<String>     FORMAT_KEY    = new Key<>("PayloadFormatKey");
+    public static final Key<String>     FORMAT_INLINE = new Key<>("PayloadFormatInline");
 
     private static final String FORMAT_KEY_ATTRIBUTE_NAME = "key";
 
@@ -51,7 +48,6 @@ public class Format extends AbstractEntityElement {
         putProperty(FORMAT_TYPE, INLINE);
         putProperty(FORMAT_KEY, "default/key");
         putProperty(FORMAT_INLINE, "<inline/>");
-        putProperty(FORMAT_MEDIA_TYPE, XML);
     }
 
     /**
@@ -99,7 +95,7 @@ public class Format extends AbstractEntityElement {
 
     /** @return serialized representation of the source element */
     @Nonnull
-    public String serialize() {
+    public String serialize(boolean isJson) {
         String formatInline = getProperty(FORMAT_INLINE);
 
         if (formatInline == null) {
@@ -110,7 +106,7 @@ public class Format extends AbstractEntityElement {
         String json = "";
 
         boolean isInline = INLINE.equals(getProperty(FORMAT_TYPE));
-        boolean isInlineJson = JSON.equals(getProperty(FORMAT_MEDIA_TYPE)) && isInline;
+        boolean isInlineJson = isJson && isInline;
 
         xml.append('<').append(FORMAT_SERIALIZATION_NAME);
 
@@ -164,29 +160,4 @@ public class Format extends AbstractEntityElement {
         }
     }
 
-    public enum MediaType {
-        XML("xml"), JSON("json");
-
-        public static final String TYPE_NAME = "MediaType";
-
-        private final String value;
-
-        MediaType(@Nonnull String value) {
-            this.value = value;
-        }
-
-        @Nonnull
-        public String getValue() {
-            return value;
-        }
-
-        @Nonnull
-        public static MediaType getItemByValue(@Nonnull String value) {
-            if ("xml".equals(value)) {
-                return XML;
-            } else {
-                return JSON;
-            }
-        }
-    }
 }

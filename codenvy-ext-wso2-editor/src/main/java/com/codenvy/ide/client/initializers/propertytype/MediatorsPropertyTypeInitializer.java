@@ -39,7 +39,7 @@ import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetType
 import static com.codenvy.ide.client.elements.mediators.log.Log.LogCategory;
 import static com.codenvy.ide.client.elements.mediators.log.Log.LogLevel;
 import static com.codenvy.ide.client.elements.mediators.payload.Format.FormatType;
-import static com.codenvy.ide.client.elements.mediators.payload.Format.MediaType;
+import static com.codenvy.ide.client.elements.mediators.payload.PayloadFactory.MediaType;
 
 /**
  * @author Andrey Plotnikov

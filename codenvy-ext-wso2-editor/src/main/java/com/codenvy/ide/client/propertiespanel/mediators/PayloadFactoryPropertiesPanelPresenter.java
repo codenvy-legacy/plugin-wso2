@@ -42,13 +42,13 @@ import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.payload.Format.FORMAT_INLINE;
 import static com.codenvy.ide.client.elements.mediators.payload.Format.FORMAT_KEY;
-import static com.codenvy.ide.client.elements.mediators.payload.Format.FORMAT_MEDIA_TYPE;
 import static com.codenvy.ide.client.elements.mediators.payload.Format.FORMAT_TYPE;
 import static com.codenvy.ide.client.elements.mediators.payload.Format.FormatType;
-import static com.codenvy.ide.client.elements.mediators.payload.Format.MediaType;
 import static com.codenvy.ide.client.elements.mediators.payload.PayloadFactory.ARGS;
 import static com.codenvy.ide.client.elements.mediators.payload.PayloadFactory.DESCRIPTION;
 import static com.codenvy.ide.client.elements.mediators.payload.PayloadFactory.FORMAT;
+import static com.codenvy.ide.client.elements.mediators.payload.PayloadFactory.MEDIA_TYPE;
+import static com.codenvy.ide.client.elements.mediators.payload.PayloadFactory.MediaType;
 import static com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter.EditButtonClickedListener;
 
 /**
@@ -189,7 +189,7 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
         PropertyValueChangedListener mediaTypeListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                format.putProperty(FORMAT_MEDIA_TYPE, MediaType.getItemByValue(property));
+                element.putProperty(MEDIA_TYPE, MediaType.getItemByValue(property));
 
                 notifyListeners();
             }
@@ -231,7 +231,7 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
         }
 
         FormatType formatType = format.getProperty(FORMAT_TYPE);
-        MediaType formatMediaType = format.getProperty(FORMAT_MEDIA_TYPE);
+        MediaType formatMediaType = element.getProperty(MEDIA_TYPE);
 
         if (formatType == null || formatMediaType == null) {
             return;
@@ -244,14 +244,14 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
 
         formatKey.setProperty(format.getProperty(FORMAT_KEY));
 
-        mediaType.setValues(propertyTypeManager.getValuesByName(MediaType.TYPE_NAME));
-        mediaType.selectValue(formatMediaType.getValue());
-
         List<Arg> argsArray = element.getProperty(ARGS);
 
         if (argsArray != null && !argsArray.isEmpty()) {
             args.setProperty(locale.payloadFactoryArguments());
         }
+
+        mediaType.setValues(propertyTypeManager.getValuesByName(MediaType.TYPE_NAME));
+        mediaType.selectValue(formatMediaType.getValue());
 
         description.setProperty(element.getProperty(DESCRIPTION));
 

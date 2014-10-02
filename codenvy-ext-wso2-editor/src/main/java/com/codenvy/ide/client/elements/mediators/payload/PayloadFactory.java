@@ -31,11 +31,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.mediators.payload.Format.FORMAT_MEDIA_TYPE;
 import static com.codenvy.ide.client.elements.mediators.payload.Format.FORMAT_TYPE;
 import static com.codenvy.ide.client.elements.mediators.payload.Format.FormatType.INLINE;
 import static com.codenvy.ide.client.elements.mediators.payload.Format.FormatType.REGISTRY;
-import static com.codenvy.ide.client.elements.mediators.payload.Format.MediaType;
+import static com.codenvy.ide.client.elements.mediators.payload.PayloadFactory.MediaType.JSON;
+import static com.codenvy.ide.client.elements.mediators.payload.PayloadFactory.MediaType.XML;
 
 /**
  * The class which describes state of PayloadFactory mediator and also has methods for changing it. Also the class contains the business
@@ -51,6 +51,7 @@ public class PayloadFactory extends AbstractElement {
     public static final String ELEMENT_NAME       = "PayloadFactory";
     public static final String SERIALIZATION_NAME = "payloadFactory";
 
+    public static final Key<MediaType> MEDIA_TYPE  = new Key<>("PayloadFormatMediaType");
     public static final Key<Format>    FORMAT      = new Key<>("PayloadFormat");
     public static final Key<String>    DESCRIPTION = new Key<>("PayloadDescription");
     public static final Key<List<Arg>> ARGS        = new Key<>("PayloadArgs");
@@ -86,18 +87,14 @@ public class PayloadFactory extends AbstractElement {
         putProperty(FORMAT, format);
         putProperty(DESCRIPTION, "");
         putProperty(ARGS, new ArrayList<Arg>());
+        putProperty(MEDIA_TYPE, XML);
     }
 
     /** {@inheritDoc} */
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        Format format = getProperty(FORMAT);
-        if (format == null) {
-            return "";
-        }
-
-        MediaType mediaType = format.getProperty(FORMAT_MEDIA_TYPE);
+        MediaType mediaType = getProperty(MEDIA_TYPE);
 
         if (mediaType == null) {
             return "";
@@ -117,39 +114,34 @@ public class PayloadFactory extends AbstractElement {
     protected String serializeProperties() {
         List<Arg> args = getProperty(ARGS);
         Format format = getProperty(FORMAT);
+        MediaType mediaType = getProperty(MEDIA_TYPE);
 
-        if (args == null || format == null) {
+        if (args == null || format == null || mediaType == null) {
             return "";
         }
 
         StringBuilder result = new StringBuilder();
 
         if (!args.isEmpty()) {
-            result.append('<').append(ARGS_PROPERTY_NAME).append('>');
+            result.append('<').append(ARGS_PROPERTY_NAME).append(">\n");
 
             for (Arg arg : args) {
                 result.append(arg.serialize());
             }
 
-            result.append("</").append(ARGS_PROPERTY_NAME).append('>');
+            result.append("</").append(ARGS_PROPERTY_NAME).append(">\n");
         } else {
-            result.append('<').append(ARGS_PROPERTY_NAME).append("/>");
+            result.append('<').append(ARGS_PROPERTY_NAME).append("/>\n");
         }
 
-        return format.serialize() + result.toString();
+        return format.serialize(JSON.equals(mediaType)) + result.toString();
     }
 
     /** {@inheritDoc} */
     @Override
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
-        Format format = getProperty(FORMAT);
-
-        if (format == null) {
-            return;
-        }
-
         if (MEDIA_TYPE_ATTRIBUTE_NAME.equals(attributeName)) {
-            format.putProperty(FORMAT_MEDIA_TYPE, MediaType.getItemByValue(attributeValue));
+            putProperty(MEDIA_TYPE, MediaType.getItemByValue(attributeValue));
         } else {
             putProperty(DESCRIPTION, attributeValue);
         }
@@ -199,6 +191,32 @@ public class PayloadFactory extends AbstractElement {
             arg.applyAttributes(childNode);
 
             args.add(arg);
+        }
+    }
+
+    public enum MediaType {
+        XML("xml"), JSON("json");
+
+        public static final String TYPE_NAME = "MediaType";
+
+        private final String value;
+
+        MediaType(@Nonnull String value) {
+            this.value = value;
+        }
+
+        @Nonnull
+        public String getValue() {
+            return value;
+        }
+
+        @Nonnull
+        public static MediaType getItemByValue(@Nonnull String value) {
+            if ("xml".equals(value)) {
+                return XML;
+            } else {
+                return JSON;
+            }
         }
     }
 

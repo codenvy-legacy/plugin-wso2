@@ -20,6 +20,7 @@ import com.codenvy.ide.client.elements.AbstractElementTest;
 import com.codenvy.ide.client.elements.endpoints.addressendpoint.AddressEndpoint;
 import com.codenvy.ide.client.elements.endpoints.addressendpoint.Property;
 import com.google.gwt.xml.client.Node;
+import com.google.inject.Provider;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -76,6 +77,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
 
@@ -120,7 +122,9 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
     private static final String PROPERTY_SERIALIZE_CONTENT = "<property name=\"property_name\" value=\"property_value\"/>\n";
 
     @Mock
-    private Property property;
+    private Provider<Property> propertyProvider;
+    @Mock
+    private Property           property;
 
     @Before
     public void setUp() throws Exception {

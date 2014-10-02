@@ -1,0 +1,8 @@
+<payloadFactory media-type="xml" >
+<format>
+<inline xmlns=""/>
+</format>
+<args>
+<arg value="default"/>
+</args>
+</payloadFactory>
