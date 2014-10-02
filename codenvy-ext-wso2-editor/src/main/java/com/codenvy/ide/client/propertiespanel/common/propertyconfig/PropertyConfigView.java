@@ -64,7 +64,7 @@ public interface PropertyConfigView extends View<PropertyConfigView.ActionDelega
 
     /** @return expression value from the special place on the view which uses for showing expression parameter */
     @Nonnull
-    String getValueExpression();
+    String getValue();
 
     /**
      * Sets expression value to the special place on the view which uses for showing expression parameter.
@@ -72,7 +72,7 @@ public interface PropertyConfigView extends View<PropertyConfigView.ActionDelega
      * @param text
      *         value which need to set to special place of view
      */
-    void setValueExpression(@Nonnull String text);
+    void setValue(@Nonnull String text);
 
     /**
      * Interface defines methods of {@link PropertyConfigPresenter} which calls from view. These methods defines

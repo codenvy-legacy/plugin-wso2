@@ -17,6 +17,7 @@ package com.codenvy.ide.client.elements.mediators.log;
 
 import com.codenvy.ide.client.elements.AbstractEntityElement;
 import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.client.elements.mediators.ValueType;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Inject;
@@ -30,6 +31,7 @@ import java.util.List;
 import static com.codenvy.ide.client.elements.NameSpace.applyNameSpace;
 import static com.codenvy.ide.client.elements.NameSpace.convertNameSpacesToXML;
 import static com.codenvy.ide.client.elements.NameSpace.copyNameSpaceList;
+import static com.codenvy.ide.client.elements.mediators.ValueType.LITERAL;
 
 /**
  * The class which describes state of property element of Log mediator and also has methods for changing it. Also the class contains the
@@ -43,11 +45,14 @@ import static com.codenvy.ide.client.elements.NameSpace.copyNameSpaceList;
 public class Property extends AbstractEntityElement {
 
     public static final Key<String>          NAME       = new Key<>("MediatorPropertyName");
+    public static final Key<ValueType>       TYPE       = new Key<>("MediatorPropertyType");
+    public static final Key<String>          VALUE      = new Key<>("MediatorPropertyValue");
     public static final Key<String>          EXPRESSION = new Key<>("MediatorPropertyExpression");
     public static final Key<List<NameSpace>> NAMESPACES = new Key<>("MediatorPropertyNameSpaces");
 
-    private static final String NAME_ATTRIBUTE  = "name";
-    private static final String VALUE_ATTRIBUTE = "value";
+    private static final String NAME_ATTRIBUTE       = "name";
+    private static final String VALUE_ATTRIBUTE      = "value";
+    private static final String EXPRESSION_ATTRIBUTE = "expression";
 
     private static final String WITH_PARAM_SERIALIZATION_NAME = "with-param";
     private static final String PROPERTY_SERIALIZATION_NAME   = "property";
@@ -60,24 +65,43 @@ public class Property extends AbstractEntityElement {
         this.propertyProvider = propertyProvider;
         this.nameSpaceProvider = nameSpaceProvider;
 
-        putProperty(NAME, "");
-        putProperty(EXPRESSION, "");
+        putProperty(NAME, "property_name");
+        putProperty(TYPE, LITERAL);
+        putProperty(VALUE, "property_value");
+        putProperty(EXPRESSION, "/default/expression");
         putProperty(NAMESPACES, new ArrayList<NameSpace>());
     }
 
     /** Returns serialization representation CallTemplate element's property. */
     @Nonnull
     public String serializeWithParam() {
-        return '<' + WITH_PARAM_SERIALIZATION_NAME + ' ' + convertNameSpacesToXML(getProperty(NAMESPACES)) +
-               "name=\"" + getProperty(NAME) + "\" value=\"" + getProperty(EXPRESSION) + "\"/>";
+        return serializePropertyParameter(WITH_PARAM_SERIALIZATION_NAME);
 
     }
 
     /** Returns serialization representation element's property. */
     @Nonnull
     public String serializeProperty() {
-        return '<' + PROPERTY_SERIALIZATION_NAME + ' ' + convertNameSpacesToXML(getProperty(NAMESPACES)) +
-               "name=\"" + getProperty(NAME) + "\" value=\"" + getProperty(EXPRESSION) + "\"/>";
+        return serializePropertyParameter(PROPERTY_SERIALIZATION_NAME);
+    }
+
+    private String serializePropertyParameter(@Nonnull String propertyName) {
+        ValueType type = getProperty(TYPE);
+
+        StringBuilder result = new StringBuilder();
+
+        result.append('<').append(propertyName).append(' ').append(convertNameSpacesToXML(getProperty(NAMESPACES)))
+              .append("name=\"").append(getProperty(NAME));
+
+        if (LITERAL.equals(type)) {
+            result.append("\" value=\"").append(getProperty(VALUE));
+        } else {
+            result.append("\" expression=\"").append(getProperty(EXPRESSION));
+        }
+
+        result.append("\"/>");
+
+        return result.toString();
     }
 
     /**
@@ -100,8 +124,12 @@ public class Property extends AbstractEntityElement {
                     putProperty(NAME, nodeValue);
                     break;
 
-                case VALUE_ATTRIBUTE:
+                case EXPRESSION_ATTRIBUTE:
                     putProperty(EXPRESSION, nodeValue);
+                    break;
+
+                case VALUE_ATTRIBUTE:
+                    putProperty(VALUE, nodeValue);
                     break;
 
                 default:
@@ -115,6 +143,8 @@ public class Property extends AbstractEntityElement {
         Property property = propertyProvider.get();
 
         property.putProperty(NAME, getProperty(NAME));
+        property.putProperty(TYPE, getProperty(TYPE));
+        property.putProperty(VALUE, getProperty(VALUE));
         property.putProperty(EXPRESSION, getProperty(EXPRESSION));
         property.putProperty(NAMESPACES, copyNameSpaceList(getProperty(NAMESPACES)));
 

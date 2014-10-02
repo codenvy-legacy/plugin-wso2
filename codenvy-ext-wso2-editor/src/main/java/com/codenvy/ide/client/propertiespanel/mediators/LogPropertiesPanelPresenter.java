@@ -81,6 +81,8 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> {
             public void onPropertiesChanged(@Nonnull List<Property> properties) {
                 element.putProperty(LOG_PROPERTIES, properties);
 
+                showProperties(properties);
+
                 notifyListeners();
             }
         };
@@ -154,8 +156,6 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> {
         displayLevelValueParameter();
 
         separator.setProperty(element.getProperty(LOG_SEPARATOR));
-
-        showProperties(element.getProperty(LOG_PROPERTIES));
 
         description.setProperty(element.getProperty(DESCRIPTION));
     }

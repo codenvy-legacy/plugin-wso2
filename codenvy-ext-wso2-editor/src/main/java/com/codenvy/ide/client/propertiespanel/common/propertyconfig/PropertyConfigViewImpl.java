@@ -44,6 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.log.Property.NAME;
+import static com.codenvy.ide.client.elements.mediators.log.Property.TYPE;
+import static com.codenvy.ide.client.elements.mediators.log.Property.VALUE;
 
 /**
  * Provides a graphical representation of dialog window for editing property.
@@ -126,9 +128,9 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
         TextColumn<Property> expression = new TextColumn<Property>() {
             @Override
             public String getValue(Property property) {
-                String expression = property.getProperty(NAME);
+                String value = property.getProperty(VALUE);
 
-                return expression == null ? "" : expression;
+                return value == null ? "" : value;
             }
         };
 
@@ -152,13 +154,23 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
         typeProperty.add(ValueType.LITERAL.name());
         typeProperty.add(ValueType.EXPRESSION.name());
         SelectionCell categoryCell = new SelectionCell(typeProperty);
-
         Column<Property, String> type = new Column<Property, String>(categoryCell) {
             @Override
-            public String getValue(Property object) {
-                return "";
+            public String getValue(Property property) {
+                ValueType type = property.getProperty(TYPE);
+
+                if (type == null) {
+                    return "";
+                }
+                return type.name();
             }
         };
+        type.setFieldUpdater(new FieldUpdater<Property, String>() {
+            @Override
+            public void update(int index, Property property, String value) {
+                property.putProperty(TYPE, ValueType.valueOf(value));
+            }
+        });
 
         table.addColumn(name, localizationConstant.columnName());
         table.addColumn(type, localizationConstant.columnType());
@@ -237,13 +249,13 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
     /** {@inheritDoc} */
     @Override
     @Nonnull
-    public String getValueExpression() {
+    public String getValue() {
         return valueExpressionTextBox.getText();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setValueExpression(@Nonnull String text) {
+    public void setValue(@Nonnull String text) {
         this.valueExpressionTextBox.setText(text);
     }
 

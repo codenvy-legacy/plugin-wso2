@@ -47,6 +47,7 @@ import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property
 import static com.codenvy.ide.client.elements.endpoints.addressendpoint.Property.VALUE;
 import static com.codenvy.ide.client.elements.mediators.ValueType.LITERAL;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -286,7 +287,10 @@ public class PropertyTest extends AbstractEntityTest<Property> {
     @Test
     public void copyEndPointPropertyListShouldBeDone() throws Exception {
         List<Property> propertyList = Arrays.asList(entity);
-        assertEquals(propertyList, Property.copyEndPointPropertyList(propertyList));
+        List<Property> copyPropertyList = Property.copyEndPointPropertyList(propertyList);
+
+        assertEquals(propertyList, copyPropertyList);
+        assertNotSame(propertyList, copyPropertyList);
     }
 
     @Test

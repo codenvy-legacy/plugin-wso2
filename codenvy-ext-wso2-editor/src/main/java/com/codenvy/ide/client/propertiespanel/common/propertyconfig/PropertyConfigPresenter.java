@@ -29,6 +29,7 @@ import java.util.List;
 import static com.codenvy.ide.client.elements.mediators.log.Property.EXPRESSION;
 import static com.codenvy.ide.client.elements.mediators.log.Property.NAME;
 import static com.codenvy.ide.client.elements.mediators.log.Property.NAMESPACES;
+import static com.codenvy.ide.client.elements.mediators.log.Property.VALUE;
 import static com.codenvy.ide.client.elements.mediators.log.Property.copyPropertyList;
 
 /**
@@ -66,6 +67,7 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
             @Override
             public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nullable String expression) {
                 selectedProperty.putProperty(NAMESPACES, nameSpaces);
+                selectedProperty.putProperty(EXPRESSION, expression);
             }
         };
     }
@@ -86,15 +88,15 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
     @Override
     public void onAddPropertyButtonClicked() {
         String name = propertiesView.getName().isEmpty() ? "property_name" : propertiesView.getName();
-        String expression = propertiesView.getValueExpression().isEmpty() ? "property_value" : propertiesView.getValueExpression();
+        String value = propertiesView.getValue().isEmpty() ? "property_value" : propertiesView.getValue();
 
         Property property = propertyProvider.get();
 
         property.putProperty(NAME, name);
-        property.putProperty(EXPRESSION, expression);
+        property.putProperty(VALUE, value);
 
         propertiesView.setName("");
-        propertiesView.setValueExpression("");
+        propertiesView.setValue("");
 
         if (index != -1) {
             arrayTemporary.set(index, property);
@@ -145,7 +147,7 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
         }
 
         propertiesView.setName(name);
-        propertiesView.setValueExpression(expression);
+        propertiesView.setValue(expression);
 
         index = arrayTemporary.indexOf(selectedProperty);
 

@@ -1,0 +1,3 @@
+<log level="headers" category="DEBUG" separator="separator" description="description">
+<property name="property_name" value="property_value"/>
+</log>

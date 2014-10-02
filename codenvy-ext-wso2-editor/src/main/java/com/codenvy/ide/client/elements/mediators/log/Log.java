@@ -96,16 +96,16 @@ public class Log extends AbstractElement {
     protected String serializeAttributes() {
         Map<String, String> attributes = new LinkedHashMap<>();
 
+        LogLevel logLevel = getProperty(LOG_LEVEL);
+
+        if (logLevel != null && !logLevel.equals(SIMPLE)) {
+            attributes.put(LEVEL_ATTRIBUTE_NAME, logLevel.getValue());
+        }
+
         LogCategory logCategory = getProperty(LOG_CATEGORY);
 
         if (logCategory != null && !logCategory.equals(INFO)) {
             attributes.put(CATEGORY_ATTRIBUTE_NAME, logCategory.name());
-        }
-
-        LogLevel logLevel = getProperty(LOG_LEVEL);
-
-        if (logLevel != null && !logLevel.equals(SIMPLE)) {
-            attributes.put(LEVEL_ATTRIBUTE_NAME, logLevel.name().toLowerCase());
         }
 
         attributes.put(SEPARATOR_ATTRIBUTE_NAME, getProperty(LOG_SEPARATOR));
@@ -160,7 +160,7 @@ public class Log extends AbstractElement {
                 break;
 
             case LEVEL_ATTRIBUTE_NAME:
-                putProperty(LOG_LEVEL, LogLevel.valueOf(attributeValue));
+                putProperty(LOG_LEVEL, LogLevel.getItemByValue(attributeValue));
                 break;
 
             case SEPARATOR_ATTRIBUTE_NAME:
@@ -182,9 +182,37 @@ public class Log extends AbstractElement {
     }
 
     public enum LogLevel {
-        SIMPLE, HEADERS, FULL, CUSTOM;
+        SIMPLE("simple"), HEADERS("headers"), FULL("full"), CUSTOM("custom");
 
         public static final String TYPE_NAME = "LogLevel";
+
+        private final String value;
+
+        LogLevel(@Nonnull String value) {
+            this.value = value;
+        }
+
+        @Nonnull
+        public String getValue() {
+            return value;
+        }
+
+        @Nonnull
+        public static LogLevel getItemByValue(@Nonnull String value) {
+            switch (value) {
+                case "simple":
+                    return SIMPLE;
+
+                case "headers":
+                    return HEADERS;
+
+                case "full":
+                    return FULL;
+
+                default:
+                    return CUSTOM;
+            }
+        }
     }
 
 }
