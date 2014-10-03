@@ -232,11 +232,9 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
             connectionsValidator.canInsertElement(branch, element.getElementName(), x, y)) {
             element.setX(x);
             element.setY(y);
-
-            onElementChanged();
-        } else {
-            redrawElements();
         }
+
+        onElementChanged();
     }
 
     /** {@inheritDoc} */

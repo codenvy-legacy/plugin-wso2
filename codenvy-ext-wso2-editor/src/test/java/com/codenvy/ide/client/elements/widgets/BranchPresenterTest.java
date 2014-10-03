@@ -749,7 +749,7 @@ public class BranchPresenterTest {
 
         elementShouldBeNotChangedXYPosition(element, X_POSITION, Y_POSITION);
 
-        verifyViewRedraw();
+        verifyElementChanges();
     }
 
     @Test
@@ -762,7 +762,7 @@ public class BranchPresenterTest {
 
         elementShouldBeNotChangedXYPosition(element, X_POSITION, Y_POSITION);
 
-        verifyViewRedraw();
+        verifyElementChanges();
     }
 
     @Test
