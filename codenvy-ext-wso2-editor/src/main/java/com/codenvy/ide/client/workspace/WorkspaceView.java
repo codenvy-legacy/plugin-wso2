@@ -20,6 +20,7 @@ import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
 import com.google.inject.ImplementedBy;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
 /**
@@ -39,6 +40,14 @@ public interface WorkspaceView extends View<WorkspaceView.ActionDelegate> {
      *         element widget that needs to be shown
      */
     void setElement(@Nonnull ElementPresenter elementPresenter);
+
+    /** @return height of a parent widget */
+    @Nonnegative
+    int getParentHeight();
+
+    /** @return width of a parent widget */
+    @Nonnegative
+    int getParentWidth();
 
     public interface ActionDelegate {
     }

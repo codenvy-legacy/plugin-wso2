@@ -89,29 +89,17 @@ public class WorkspacePresenter extends AbstractPresenter<WorkspaceView> impleme
     public void resize() {
         elementWidget.updateView();
 
-        int parentHeight = getParentHeight();
+        int parentHeight = view.getParentHeight();
 
-        if (isFirstValueBigger(parentHeight, elementWidget.getHeight())) {
+        if (parentHeight > elementWidget.getHeight()) {
             elementWidget.setHeight(parentHeight - SIZE_OF_TWO_BORDER_LINES);
         }
 
-        int parentWidth = getParentWidth();
+        int parentWidth = view.getParentWidth();
 
-        if (isFirstValueBigger(parentWidth, elementWidget.getWidth())) {
+        if (parentWidth > elementWidget.getWidth()) {
             elementWidget.setWidth(parentWidth - SIZE_OF_TWO_BORDER_LINES);
         }
-    }
-
-    private boolean isFirstValueBigger(int firstValue, int secondValue) {
-        return firstValue > secondValue;
-    }
-
-    private int getParentHeight() {
-        return view.asWidget().getParent().getElement().getOffsetHeight();
-    }
-
-    private int getParentWidth() {
-        return view.asWidget().getParent().getElement().getOffsetWidth();
     }
 
     /** {@inheritDoc} */
