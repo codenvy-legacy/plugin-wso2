@@ -42,6 +42,9 @@ public interface WSO2EditorView extends View<WSO2EditorView.ActionDelegate> {
         /** Performs some actions in response to user's clicking on show panel button. */
         void onShowPropertyButtonClicked();
 
+        /** Performs some actions in response to DOM of editor is changed. */
+        void onEditorDOMChanged();
+
     }
 
     /** @return place where toolbar need to be located */

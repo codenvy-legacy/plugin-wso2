@@ -17,10 +17,12 @@ package com.codenvy.ide.client.editor;
 
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.client.mvp.AbstractView;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
@@ -103,15 +105,22 @@ public class WSO2EditorViewImpl extends AbstractView<WSO2EditorView.ActionDelega
         mainPanel.setWidgetHidden(showButtonPanel, isVisible);
 
         mainPanel.onResize();
+
+        Scheduler.get().scheduleDeferred(new Command() {
+            @Override
+            public void execute() {
+                delegate.onEditorDOMChanged();
+            }
+        });
     }
 
     @UiHandler("hideBtn")
-    public void onHideButtonClicked(ClickEvent event) {
+    public void onHideButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onHidePanelButtonClicked();
     }
 
     @UiHandler("showBtn")
-    public void onShowButtonClicked(ClickEvent event) {
+    public void onShowButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onShowPropertyButtonClicked();
     }
 

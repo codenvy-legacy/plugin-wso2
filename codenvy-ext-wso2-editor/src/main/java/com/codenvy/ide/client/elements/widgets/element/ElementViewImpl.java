@@ -43,7 +43,6 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -86,9 +85,8 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
     private final EditorResources resources;
     private final ContextMenu     contextMenu;
 
-    private int     height;
-    private int     width;
-    private boolean isBranchAdded;
+    private int height;
+    private int width;
 
     @Inject
     public ElementViewImpl(ElementViewImplUiBinder ourUiBinder, EditorResources resources, @Assisted boolean isPossibleChangeCases) {
@@ -97,7 +95,6 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
 
         this.height = DEFAULT_HEIGHT;
         this.width = DEFAULT_WIDTH;
-        this.isBranchAdded = false;
 
         this.contextMenu.addItem("Delete", new Command() {
             @Override
@@ -186,21 +183,12 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
     /** {@inheritDoc} */
     @Override
     public void addBranch(@Nonnull BranchPresenter branchPresenter) {
-        IsWidget widget = branchPresenter.getView();
-
-        if (isBranchAdded) {
-            widget.asWidget().addStyleName(resources.editorCSS().topBorder());
-        } else {
-            isBranchAdded = true;
-        }
-
-        rightPanel.add(widget);
+        rightPanel.add(branchPresenter.getView());
     }
 
     /** {@inheritDoc} */
     @Override
     public void removeBranches() {
-        this.isBranchAdded = false;
         rightPanel.clear();
     }
 

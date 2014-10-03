@@ -264,4 +264,16 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
         focusPanel.onResize();
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleTopBorder(boolean visible) {
+        String style = resources.editorCSS().topBorder();
+
+        if (visible) {
+            addStyleName(style);
+        } else {
+            removeStyleName(style);
+        }
+    }
+
 }

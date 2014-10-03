@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.ARROW_PADDING;
+import static com.codenvy.ide.client.elements.widgets.branch.BranchView.BORDER_SIZE;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_HEIGHT;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_WIDTH;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.ELEMENTS_PADDING;
@@ -69,6 +70,8 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
 
     private final Map<String, ElementPresenter> widgetElements;
 
+    private boolean isBorderVisible;
+
     @Inject
     public BranchPresenter(BranchView view,
                            ConnectionsValidator connectionsValidator,
@@ -93,6 +96,8 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         this.branch = branch;
 
         this.view.setTitle(branch.getTitle());
+
+        this.isBorderVisible = false;
 
         redrawElements();
     }
@@ -122,7 +127,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     /** @return the height of the widget */
     @Nonnegative
     public int getHeight() {
-        return view.getHeight();
+        return view.getHeight() + (isBorderVisible ? BORDER_SIZE : 0);
     }
 
     /**
@@ -133,6 +138,19 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
      */
     public void setHeight(@Nonnegative int height) {
         view.setHeight(height);
+
+        alignElements();
+    }
+
+    /**
+     * Change visible state of border at the top of element.
+     *
+     * @param visible
+     *         visible state of border
+     */
+    public void setVisibleTopBorder(boolean visible) {
+        view.setVisibleTopBorder(visible);
+        isBorderVisible = visible;
     }
 
     /** {@inheritDoc} */

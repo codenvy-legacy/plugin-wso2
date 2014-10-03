@@ -222,6 +222,9 @@ public class ElementPresenterTest {
     private void branchesShouldBeAddedOnView() {
         verify(view).addBranch(branchPresenter);
         verify(view).addBranch(branchPresenter2);
+
+        verify(branchPresenter, never()).setVisibleTopBorder(anyBoolean());
+        verify(branchPresenter2).setVisibleTopBorder(true);
     }
 
     private void viewSizeShouldBeChanged(int height, int width) {
@@ -408,6 +411,10 @@ public class ElementPresenterTest {
         presenter.setHeight(BRANCH_HEIGHT);
 
         verify(view).setHeight(BRANCH_HEIGHT);
+
+        int branchHeight = BRANCH_HEIGHT / 2;
+        verify(branchPresenter).setHeight(branchHeight);
+        verify(branchPresenter2).setHeight(branchHeight);
     }
 
     @Test
@@ -428,6 +435,9 @@ public class ElementPresenterTest {
         presenter.setWidth(BRANCH_WIDTH);
 
         verify(view).setWidth(BRANCH_WIDTH);
+
+        verify(branchPresenter).setWidth(BRANCH_WIDTH);
+        verify(branchPresenter2).setWidth(BRANCH_WIDTH);
     }
 
     @Test

@@ -43,6 +43,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.ARROW_PADDING;
+import static com.codenvy.ide.client.elements.widgets.branch.BranchView.BORDER_SIZE;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_HEIGHT;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_WIDTH;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.ELEMENTS_PADDING;
@@ -64,16 +65,16 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class BranchPresenterTest {
 
-    private static final String TITLE               = "title";
-    private static final String ELEMENT_NAME        = "element name";
-    private static final String ELEMENT1_ID         = "element1 id";
-    private static final String ELEMENT2_ID         = "element2 id";
-    private static final int    ELEMENT_WIDTH       = 100;
-    private static final int    ELEMENT_HEIGHT      = 100;
-    private static final int    VIEW_ELEMENT_HEIGHT = 1000;
-    private static final int    MAX_ELEMENT_HEIGHT  = 200;
-    private static final int    X_POSITION          = 100;
-    private static final int    Y_POSITION          = 100;
+    private static final String TITLE              = "title";
+    private static final String ELEMENT_NAME       = "element name";
+    private static final String ELEMENT1_ID        = "element1 id";
+    private static final String ELEMENT2_ID        = "element2 id";
+    private static final int    ELEMENT_WIDTH      = 100;
+    private static final int    ELEMENT_HEIGHT     = 100;
+    private static final int    VIEW_HEIGHT        = 1000;
+    private static final int    MAX_ELEMENT_HEIGHT = 200;
+    private static final int    X_POSITION         = 100;
+    private static final int    Y_POSITION         = 100;
 
     @Mock
     private BranchView             view;
@@ -135,7 +136,7 @@ public class BranchPresenterTest {
 
         prepareCreateElementWidgetFactory();
 
-        when(view.getHeight()).thenReturn(VIEW_ELEMENT_HEIGHT);
+        when(view.getHeight()).thenReturn(VIEW_HEIGHT);
     }
 
     private void prepareElementPresenterSize(ElementPresenter elementPresenter, int height, int width) {
@@ -215,7 +216,7 @@ public class BranchPresenterTest {
 
         viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 3 * ARROW_PADDING + 2 * ELEMENT_WIDTH);
 
-        int top = VIEW_ELEMENT_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
+        int top = VIEW_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
         topPositionOfElementsShouldBeChanged(top, top);
     }
 
@@ -297,7 +298,7 @@ public class BranchPresenterTest {
 
         elementsShouldBeAddedOnView();
 
-        int top = VIEW_ELEMENT_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
+        int top = VIEW_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
         topPositionOfElementsShouldBeChanged(top, top);
     }
 
@@ -315,7 +316,7 @@ public class BranchPresenterTest {
     public void viewShouldBePreparedWhenBranchDoesNotHaveAnyElements() throws Exception {
         prepareBranchMock(branch, Collections.<Element>emptyList());
 
-        when(view.getHeight()).thenReturn(VIEW_ELEMENT_HEIGHT);
+        when(view.getHeight()).thenReturn(VIEW_HEIGHT);
 
         createPresenter();
 
@@ -350,7 +351,7 @@ public class BranchPresenterTest {
 
         prepareCreateElementWidgetFactory();
 
-        when(view.getHeight()).thenReturn(VIEW_ELEMENT_HEIGHT);
+        when(view.getHeight()).thenReturn(VIEW_HEIGHT);
 
         createPresenter();
 
@@ -370,8 +371,8 @@ public class BranchPresenterTest {
 
         viewSizeShouldBeChanged(ELEMENTS_PADDING + MAX_ELEMENT_HEIGHT, 3 * ARROW_PADDING + 2 * ELEMENT_WIDTH);
 
-        int firstTop = VIEW_ELEMENT_HEIGHT / 2 - MAX_ELEMENT_HEIGHT / 2;
-        int secondTop = VIEW_ELEMENT_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
+        int firstTop = VIEW_HEIGHT / 2 - MAX_ELEMENT_HEIGHT / 2;
+        int secondTop = VIEW_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
         topPositionOfElementsShouldBeChanged(firstTop, secondTop);
     }
 
@@ -386,7 +387,7 @@ public class BranchPresenterTest {
 
         prepareCreateElementWidgetFactory();
 
-        when(view.getHeight()).thenReturn(VIEW_ELEMENT_HEIGHT);
+        when(view.getHeight()).thenReturn(VIEW_HEIGHT);
 
         createPresenter();
 
@@ -406,8 +407,8 @@ public class BranchPresenterTest {
 
         viewSizeShouldBeChanged(ELEMENTS_PADDING + MAX_ELEMENT_HEIGHT, 3 * ARROW_PADDING + 2 * ELEMENT_WIDTH);
 
-        int firstTop = VIEW_ELEMENT_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
-        int secondTop = VIEW_ELEMENT_HEIGHT / 2 - MAX_ELEMENT_HEIGHT / 2;
+        int firstTop = VIEW_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
+        int secondTop = VIEW_HEIGHT / 2 - MAX_ELEMENT_HEIGHT / 2;
         topPositionOfElementsShouldBeChanged(firstTop, secondTop);
     }
 
@@ -430,12 +431,30 @@ public class BranchPresenterTest {
     }
 
     @Test
+    public void viewSizeShouldBeWithTopBorder() throws Exception {
+        prepareDefaultUseCase();
+
+        when(view.getHeight()).thenReturn(ELEMENT_HEIGHT);
+        presenter.setVisibleTopBorder(true);
+
+        assertEquals(ELEMENT_HEIGHT + BORDER_SIZE, presenter.getHeight());
+
+        verify(view).getHeight();
+    }
+
+    @Test
     public void heightShouldBeChanged() throws Exception {
         prepareDefaultUseCase();
 
         presenter.setHeight(ELEMENT_HEIGHT);
 
         verify(view).setHeight(ELEMENT_HEIGHT);
+
+        verify(view).getHeight();
+
+        int top = VIEW_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
+        verify(elementPresenter).setY(top);
+        verify(elementPresenter2).setY(top);
     }
 
     @Test
@@ -641,7 +660,7 @@ public class BranchPresenterTest {
 
         prepareCreateElementWidgetFactory();
 
-        when(view.getHeight()).thenReturn(VIEW_ELEMENT_HEIGHT);
+        when(view.getHeight()).thenReturn(VIEW_HEIGHT);
 
         when(selectionManager.getElement()).thenReturn(element);
         when(connectionsValidator.canRemoveElement(any(Branch.class), anyString())).thenReturn(true);
@@ -670,7 +689,7 @@ public class BranchPresenterTest {
 
         verify(elementPresenter, never()).setY(anyInt());
 
-        int top = VIEW_ELEMENT_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
+        int top = VIEW_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
         verify(elementPresenter2).setY(top);
     }
 
@@ -688,7 +707,7 @@ public class BranchPresenterTest {
 
         prepareCreateElementWidgetFactory();
 
-        when(view.getHeight()).thenReturn(VIEW_ELEMENT_HEIGHT);
+        when(view.getHeight()).thenReturn(VIEW_HEIGHT);
 
         when(selectionManager.getElement()).thenReturn(element);
         when(connectionsValidator.canRemoveElement(any(Branch.class), anyString())).thenReturn(true);
@@ -718,7 +737,7 @@ public class BranchPresenterTest {
         verify(elementPresenter, never()).setY(anyInt());
         verify(elementPresenter).unsubscribeWidget();
 
-        int top = VIEW_ELEMENT_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
+        int top = VIEW_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
         verify(elementPresenter2).setY(top);
     }
 
@@ -785,6 +804,15 @@ public class BranchPresenterTest {
         presenter.resetToDefaultState();
 
         verify(view).setDefaultCursor();
+    }
+
+    @Test
+    public void visibleTopBorderStateShouldBeChanged() throws Exception {
+        prepareDefaultUseCase();
+
+        presenter.setVisibleTopBorder(true);
+
+        verify(view).setVisibleTopBorder(true);
     }
 
 }

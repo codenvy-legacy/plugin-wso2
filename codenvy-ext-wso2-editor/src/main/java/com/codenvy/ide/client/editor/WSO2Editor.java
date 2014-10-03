@@ -15,15 +15,13 @@
  */
 package com.codenvy.ide.client.editor;
 
-import com.codenvy.ide.client.elements.RootElement;
 import com.codenvy.ide.client.elements.widgets.element.ElementChangedListener;
-import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
 import com.codenvy.ide.client.initializers.Initializer;
-import com.codenvy.ide.client.inject.factories.ElementWidgetFactory;
 import com.codenvy.ide.client.managers.PropertiesPanelManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.propertiespanel.PropertyChangedListener;
 import com.codenvy.ide.client.toolbar.ToolbarPresenter;
+import com.codenvy.ide.client.workspace.WorkspacePresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
@@ -44,26 +42,25 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Pro
                                                                              ElementChangedListener {
 
     private final ToolbarPresenter           toolbar;
-    private final RootElement                rootElement;
-    private final ElementPresenter           rootElementPresenter;
+    private final WorkspacePresenter         workspace;
     private final List<EditorChangeListener> listeners;
 
     @Inject
     public WSO2Editor(WSO2EditorView view,
-                      ElementWidgetFactory elementWidgetFactory,
+                      WorkspacePresenter workspace,
                       ToolbarPresenter toolbar,
-                      RootElement rootElement,
                       PropertiesPanelManager propertiesPanelManager,
                       Set<Initializer> initializers) {
         super(view);
+
         onShowPropertyButtonClicked();
 
         this.listeners = new ArrayList<>();
-        this.toolbar = toolbar;
-        this.rootElement = rootElement;
 
-        this.rootElementPresenter = elementWidgetFactory.createElementPresenter(rootElement);
-        this.rootElementPresenter.addElementChangedListener(this);
+        this.workspace = workspace;
+        this.workspace.addElementChangedListener(this);
+
+        this.toolbar = toolbar;
 
         propertiesPanelManager.addPropertyChangedListener(this);
         propertiesPanelManager.setContainer(view.getPropertiesPanel());
@@ -77,7 +74,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Pro
     @Override
     public void go(@Nonnull AcceptsOneWidget container) {
         toolbar.go(view.getToolbarPanel());
-        rootElementPresenter.go(view.getWorkspacePanel());
+        workspace.go(view.getWorkspacePanel());
 
         super.go(container);
     }
@@ -114,7 +111,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Pro
     /** @return a serialized text type of diagram */
     @Nonnull
     public String serialize() {
-        return rootElement.serialize();
+        return workspace.serialize();
     }
 
     /**
@@ -124,8 +121,7 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Pro
      *         content that need to be parsed
      */
     public void deserialize(@Nonnull String content) {
-        rootElement.deserialize(content);
-        rootElementPresenter.updateView();
+        workspace.deserialize(content);
     }
 
     /** {@inheritDoc} */
@@ -138,6 +134,12 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Pro
     @Override
     public void onShowPropertyButtonClicked() {
         view.setVisiblePropertyPanel(true);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onEditorDOMChanged() {
+        workspace.resize();
     }
 
     public interface EditorChangeListener {

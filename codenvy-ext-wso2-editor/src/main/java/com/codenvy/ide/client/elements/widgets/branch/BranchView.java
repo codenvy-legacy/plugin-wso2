@@ -36,6 +36,7 @@ public interface BranchView extends View<BranchView.ActionDelegate> {
     int DEFAULT_HEIGHT   = 100;
     int TITLE_WIDTH      = 55;
     int DEFAULT_WIDTH    = 100;
+    int BORDER_SIZE      = 2;
 
     /**
      * Changes title on the view.
@@ -100,6 +101,14 @@ public interface BranchView extends View<BranchView.ActionDelegate> {
      *         <code>true</code> the panel will be shown, <code>false</code> it will not
      */
     void setVisibleTitle(boolean visible);
+
+    /**
+     * Changes visible state of top border of the view.
+     *
+     * @param visible
+     *         <code>true</code> the border will be shown, <code>false</code> it will not
+     */
+    void setVisibleTopBorder(boolean visible);
 
     public interface ActionDelegate {
 

@@ -33,6 +33,7 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,6 +118,14 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
      */
     public void setWidth(@Nonnegative int width) {
         view.setWidth(width);
+
+        updateBranchesWidth(width);
+    }
+
+    private void updateBranchesWidth(@Nonnegative int width) {
+        for (BranchPresenter branch : widgetBranches.values()) {
+            branch.setWidth(width);
+        }
     }
 
     /** @return the height of the widget */
@@ -133,6 +142,18 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
      */
     public void setHeight(@Nonnegative int height) {
         view.setHeight(height);
+
+        updateBranchesHeight(height);
+    }
+
+    private void updateBranchesHeight(@Nonnegative int height) {
+        Collection<BranchPresenter> branches = widgetBranches.values();
+
+        int branchHeight = height / branches.size();
+
+        for (BranchPresenter branch : branches) {
+            branch.setHeight(branchHeight);
+        }
     }
 
     /** @return x-position of the widget */
@@ -184,22 +205,36 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     @Nonnull
     private List<String> showWidgetsAndReturnBranchesId() {
         List<String> branchesId = new ArrayList<>();
+        boolean isFirst = true;
 
         for (Branch branch : element.getBranches()) {
-            String branchId = branch.getId();
-            BranchPresenter branchPresenter = widgetBranches.get(branchId);
+            branchesId.add(showWidgetAndReturnBranchId(branch, isFirst));
 
-            if (branchPresenter == null) {
-                branchPresenter = createBranchPresenter(branch);
-                widgetBranches.put(branchId, branchPresenter);
+            if (isFirst) {
+                isFirst = false;
             }
-
-            branchesId.add(branchId);
-
-            view.addBranch(branchPresenter);
         }
 
         return branchesId;
+    }
+
+    @Nonnull
+    private String showWidgetAndReturnBranchId(@Nonnull Branch branch, boolean isFirst) {
+        String branchId = branch.getId();
+        BranchPresenter branchPresenter = widgetBranches.get(branchId);
+
+        if (branchPresenter == null) {
+            branchPresenter = createBranchPresenter(branch);
+            widgetBranches.put(branchId, branchPresenter);
+        }
+
+        if (!isFirst) {
+            branchPresenter.setVisibleTopBorder(true);
+        }
+
+        view.addBranch(branchPresenter);
+
+        return branchId;
     }
 
     @Nonnull
