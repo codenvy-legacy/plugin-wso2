@@ -148,7 +148,11 @@ public class PropertyTest extends AbstractEntityTest<Property> {
         Document xml = XMLParser.parse(getContent(PATH_TO_RESOURCES + "ExpressionParameter"));
         entity.applyAttributes(xml.getFirstChild());
 
-        assertDefaultConfiguration();
+        assertConfiguration(ValueType.EXPRESSION,
+                            NAME_DEFAULT_VALUE,
+                            VALUE_DEFAULT_VALUE,
+                            EXPRESSION_DEFAULT_VALUE,
+                            NAME_SPACES_DEFAULT_VALUE);
     }
 
     @Test

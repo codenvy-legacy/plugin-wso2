@@ -27,9 +27,7 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The class which describes state of CallTemplate mediator and also has methods for changing it. Also the class contains the business
@@ -43,7 +41,7 @@ import java.util.Map;
  */
 public class CallTemplate extends AbstractElement {
     public static final String ELEMENT_NAME       = "CallTemplate";
-    public static final String SERIALIZATION_NAME = "callTemplate";
+    public static final String SERIALIZATION_NAME = "call-template";
 
     public static final Key<AvailableTemplates> AVAILABLE_TEMPLATES = new Key<>("AvailableTemplates");
     public static final Key<String>             TARGET_TEMPLATES    = new Key<>("TargetTemplates");
@@ -86,12 +84,15 @@ public class CallTemplate extends AbstractElement {
     @Override
     @Nonnull
     protected String serializeAttributes() {
-        Map<String, String> prop = new LinkedHashMap<>();
+        String result = TARGET_ATTRIBUTE_NAME + "=\"" + getProperty(TARGET_TEMPLATES) + '"';
 
-        prop.put(TARGET_ATTRIBUTE_NAME, getProperty(TARGET_TEMPLATES));
-        prop.put(DESCRIPTION_ATTRIBUTE_NAME, getProperty(DESCRIPTION));
+        String description = getProperty(DESCRIPTION);
 
-        return convertAttributesToXML(prop);
+        if (description != null && !description.isEmpty()) {
+            result = result + ' ' + DESCRIPTION_ATTRIBUTE_NAME + "=\"" + description + '"';
+        }
+
+        return result;
     }
 
     /** {@inheritDoc} */
@@ -161,7 +162,6 @@ public class CallTemplate extends AbstractElement {
                 case "sdf":
                     return SDF;
 
-                case "":
                 default:
                     return EMPTY;
             }

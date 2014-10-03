@@ -126,6 +126,7 @@ public class Property extends AbstractEntityElement {
 
                 case EXPRESSION_ATTRIBUTE:
                     putProperty(EXPRESSION, nodeValue);
+                    putProperty(TYPE, ValueType.EXPRESSION);
                     break;
 
                 case VALUE_ATTRIBUTE:
