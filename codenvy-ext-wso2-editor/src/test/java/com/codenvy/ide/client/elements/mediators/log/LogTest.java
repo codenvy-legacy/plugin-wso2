@@ -73,7 +73,6 @@ public class LogTest extends AbstractElementTest<Log> {
         entity = new Log(resources, branchProvider, elementCreatorsManager, propertyProvider);
     }
 
-
     @Override
     public void elementTitleShouldBeInitializedWithDefaultValue() throws Exception {
         assertEquals(Log.ELEMENT_NAME, entity.getTitle());
@@ -249,6 +248,15 @@ public class LogTest extends AbstractElementTest<Log> {
         entity.deserialize(getContent(PATH_TO_EXAMPLES + "AllParameters"));
 
         assertConfiguration(DEBUG, HEADERS, SEPARATOR_VALUE, DESCRIPTION_VALUE, Arrays.asList(property));
+    }
+
+    @Test
+    public void deserializationShouldBeDoneWithIncorrectNode() throws Exception {
+        assertDefaultConfiguration();
+
+        entity.deserialize(getContent(PATH_TO_EXAMPLES + "IncorrectAttribute"));
+
+        assertDefaultConfiguration();
     }
 
     @Test

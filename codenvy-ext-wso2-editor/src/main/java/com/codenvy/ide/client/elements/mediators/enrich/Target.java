@@ -92,8 +92,8 @@ public class Target extends AbstractEntityElement {
                 break;
 
             case PROPERTY:
-                prop.put(PROPERTY_ATTRIBUTE_NAME, getProperty(TARGET_PROPERTY));
                 prop.put(TYPE_ATTRIBUTE_NAME, targetType.getValue());
+                prop.put(PROPERTY_ATTRIBUTE_NAME, getProperty(TARGET_PROPERTY));
                 break;
 
             default:

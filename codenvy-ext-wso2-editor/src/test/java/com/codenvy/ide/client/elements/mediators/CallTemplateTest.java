@@ -228,6 +228,15 @@ public class CallTemplateTest extends AbstractElementTest<CallTemplate> {
     }
 
     @Test
+    public void deserializationShouldBeDoneWithIncorrectNode() throws Exception {
+        assertDefaultConfiguration();
+
+        entity.deserialize(getContent(PATH_TO_EXAMPLES + "IncorrectAttribute"));
+
+        assertDefaultConfiguration();
+    }
+
+    @Test
     public void sdfShouldBeReturned() throws Exception {
         assertEquals(SDF, AvailableTemplates.getItemByValue("sdf"));
     }

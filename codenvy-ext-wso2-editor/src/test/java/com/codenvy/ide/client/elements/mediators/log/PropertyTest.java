@@ -171,6 +171,26 @@ public class PropertyTest extends AbstractEntityTest<Property> {
     }
 
     @Test
+    public void deserializationShouldBeDoneWithIncorrectPropertyAttrybute() throws Exception {
+        assertDefaultConfiguration();
+
+        Document xml = XMLParser.parse(getContent(PATH_TO_RESOURCES + "IncorrectPropertyAttribute"));
+        entity.applyAttributes(xml.getFirstChild());
+
+        assertDefaultConfiguration();
+    }
+
+    @Test
+    public void deserializationShouldBeDoneWithIncorrectWithParamAttrybute() throws Exception {
+        assertDefaultConfiguration();
+
+        Document xml = XMLParser.parse(getContent(PATH_TO_RESOURCES + "IncorrectWithParamAttribute"));
+        entity.applyAttributes(xml.getFirstChild());
+
+        assertDefaultConfiguration();
+    }
+
+    @Test
     public void copyPropertyListShouldBeReturnEmptyListWhenListToCopyIsNull() throws Exception {
         assertTrue(Property.copyPropertyList(null).isEmpty());
     }

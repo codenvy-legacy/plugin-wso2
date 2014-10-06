@@ -132,7 +132,9 @@ public class CallTemplate extends AbstractElement {
         if (TARGET_ATTRIBUTE_NAME.equals(attributeName)) {
             putProperty(TARGET_TEMPLATES, attributeValue);
 
-        } else {
+        }
+
+        if (DESCRIPTION_ATTRIBUTE_NAME.equals(attributeName)) {
             putProperty(DESCRIPTION, attributeValue);
         }
     }

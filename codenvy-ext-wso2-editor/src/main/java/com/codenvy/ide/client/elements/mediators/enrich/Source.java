@@ -22,6 +22,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,6 +33,8 @@ import static com.codenvy.ide.client.elements.NameSpace.applyNameSpace;
 import static com.codenvy.ide.client.elements.NameSpace.convertNameSpacesToXML;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.InlineType.REGISTRY_KEY;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType.CUSTOM;
+import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType.INLINE;
+import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType.PROPERTY;
 
 /**
  * The class which describes state of Source element of Enrich mediator and also has methods for changing it. Also the class contains
@@ -127,35 +130,36 @@ public class Source extends AbstractEntityElement {
     /** @return serialized representation of the source element */
     @Nonnull
     public String serialize() {
-        List<NameSpace> nameSpaces = getProperty(SOURCE_NAMESPACES);
-        SourceType type = getProperty(SOURCE_TYPE);
-        InlineType inlineType = getProperty(SOURCE_INLINE_TYPE);
-        String sourceXML = getProperty(SOURCE_XML);
-
-        if (sourceXML == null) {
-            return "";
-        }
-
         StringBuilder result = new StringBuilder();
 
         result.append('<').append(SOURCE_SERIALIZATION_NAME).append(' ')
-              .append(convertNameSpacesToXML(nameSpaces)).append(serializeAttributes()).append(">\n");
+              .append(convertNameSpacesToXML(getProperty(SOURCE_NAMESPACES))).append(serializeAttributes()).append(">\n");
 
-        if (SourceType.INLINE.equals(type) && InlineType.SOURCE_XML.equals(inlineType)) {
+        boolean isInline = INLINE.equals(getProperty(SOURCE_TYPE));
+        boolean isSourceXml = InlineType.SOURCE_XML.equals(getProperty(SOURCE_INLINE_TYPE));
 
-            int index = sourceXML.indexOf(">");
-
-            String tag = sourceXML.substring(0, index);
-
-            String tagName = sourceXML.substring(0, tag.contains("/") ? index - 1 : index);
-            String restString = sourceXML.substring(tag.contains("/") ? index - 1 : index);
-
-            result.append(tagName).append(" " + PREFIX + "=\"\"").append(restString);
+        if (isInline && isSourceXml) {
+            result.append(serializeInnerXml(getProperty(SOURCE_XML)));
         }
 
         result.append("</").append(SOURCE_SERIALIZATION_NAME).append('>');
 
         return result.toString();
+    }
+
+    private String serializeInnerXml(@Nullable String sourceXML) {
+        if (sourceXML == null) {
+            return "";
+        }
+
+        int index = sourceXML.indexOf(">");
+
+        String tag = sourceXML.substring(0, index);
+
+        String tagName = sourceXML.substring(0, tag.contains("/") ? index - 1 : index);
+        String restString = sourceXML.substring(tag.contains("/") ? index - 1 : index);
+
+        return tagName+' ' + PREFIX + "=\"\""+restString;
     }
 
 
@@ -181,6 +185,7 @@ public class Source extends AbstractEntityElement {
 
             case PROPERTY_ATTRIBUTE_NAME:
                 putProperty(SOURCE_PROPERTY, attributeValue);
+                putProperty(SOURCE_TYPE, PROPERTY);
                 break;
 
             default:
@@ -190,7 +195,7 @@ public class Source extends AbstractEntityElement {
 
     private void applyInlineRegistryKeyAttribute(@Nonnull String attributeValue) {
         putProperty(SOURCE_INLINE_REGISTER_KEY, attributeValue);
-        putProperty(SOURCE_TYPE, SourceType.INLINE);
+        putProperty(SOURCE_TYPE, INLINE);
         putProperty(SOURCE_INLINE_TYPE, InlineType.REGISTRY_KEY);
     }
 
@@ -278,7 +283,6 @@ public class Source extends AbstractEntityElement {
 
         @Nonnull
         public static InlineType getItemByValue(@Nonnull String value) {
-
             if ("SourceXML".equals(value)) {
                 return SOURCE_XML;
             } else {

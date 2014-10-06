@@ -116,13 +116,19 @@ public class Enrich extends AbstractElement {
         NodeList childNodes = node.getChildNodes();
 
         for (int i = 0; i < childNodes.getLength(); i++) {
-            Node childNode = childNodes.item(i);
+            deserializeChildNode(childNodes.item(i), source, target);
+        }
+    }
 
-            if (TARGET_SERIALIZATION_NAME.equals(childNode.getNodeName())) {
-                target.deserialize(childNode);
-            } else {
-                source.applyProperty(childNode);
-            }
+    private void deserializeChildNode(@Nonnull Node childNode, @Nonnull Source source, @Nonnull Target target) {
+        String nodeName = childNode.getNodeName();
+
+        if (TARGET_SERIALIZATION_NAME.equals(nodeName)) {
+            target.deserialize(childNode);
+        }
+
+        if (SOURCE_SERIALIZATION_NAME.equals(nodeName)) {
+            source.applyProperty(childNode);
         }
     }
 

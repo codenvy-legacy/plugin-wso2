@@ -1,0 +1,5 @@
+<enrich>
+<source xpath="/default/xpath"/>
+<target xpath="/default/xpath"/>
+<another xpath="/default/xpath"/>
+</enrich>

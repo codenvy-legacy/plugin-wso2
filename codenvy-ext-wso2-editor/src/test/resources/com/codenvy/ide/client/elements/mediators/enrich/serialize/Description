@@ -1,0 +1,4 @@
+<enrich description="description">
+<source xpath="/default/xpath"/>
+<target xpath="/default/xpath"/>
+</enrich>
