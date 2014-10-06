@@ -438,14 +438,4 @@ public class PropertyTest extends AbstractElementTest<Property> {
         assertEquals(SYNAPSE, Scope.getItemByValue(SOME_STRING));
     }
 
-    @Test
-    public void setValueOfActionShouldBeReturned() throws Exception {
-        assertEquals(SET, Action.getItemByValue("set"));
-    }
-
-    @Test
-    public void removeValueOfActionShouldBeReturned() throws Exception {
-        assertEquals(REMOVE, Action.getItemByValue("remove"));
-    }
-
 }
