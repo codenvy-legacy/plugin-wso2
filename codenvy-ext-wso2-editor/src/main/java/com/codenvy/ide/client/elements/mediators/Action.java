@@ -40,7 +40,6 @@ public enum Action {
 
     @Nonnull
     public static Action getItemByValue(@Nonnull String value) {
-
         if ("set".equals(value)) {
             return SET;
         } else {

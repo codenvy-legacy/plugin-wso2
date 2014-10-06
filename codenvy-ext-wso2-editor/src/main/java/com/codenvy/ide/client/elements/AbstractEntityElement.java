@@ -81,9 +81,7 @@ public abstract class AbstractEntityElement {
         for (Iterator<Map.Entry<String, String>> iterator = attributes.entrySet().iterator(); iterator.hasNext(); ) {
             Map.Entry<String, String> entry = iterator.next();
 
-            appendAttribute(content, entry);
-
-            if (iterator.hasNext()) {
+            if (isAddedAttribute(content, entry) && iterator.hasNext()) {
                 content.append(' ');
             }
         }
@@ -91,14 +89,16 @@ public abstract class AbstractEntityElement {
         return content.toString();
     }
 
-    private void appendAttribute(@Nonnull StringBuilder content, @Nonnull Map.Entry<String, String> entry) {
+    private boolean isAddedAttribute(@Nonnull StringBuilder content, @Nonnull Map.Entry<String, String> entry) {
         String value = entry.getValue();
 
         if (value == null || value.isEmpty()) {
-            return;
+            return false;
         }
 
         content.append(entry.getKey()).append("=\"").append(value).append('"');
+
+        return true;
     }
 
     /**

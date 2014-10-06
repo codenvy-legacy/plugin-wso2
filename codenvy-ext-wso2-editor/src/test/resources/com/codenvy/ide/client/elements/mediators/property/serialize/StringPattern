@@ -1,0 +1,2 @@
+<property name="property_name" value="value" scope="Synapse" type="STRING" pattern="string" >
+</property>

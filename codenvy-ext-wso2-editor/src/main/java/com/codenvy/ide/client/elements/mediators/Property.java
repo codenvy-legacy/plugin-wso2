@@ -32,6 +32,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.client.elements.NameSpace.applyNameSpace;
 import static com.codenvy.ide.client.elements.NameSpace.convertNameSpacesToXML;
+import static com.codenvy.ide.client.elements.mediators.Action.REMOVE;
 import static com.codenvy.ide.client.elements.mediators.Action.SET;
 import static com.codenvy.ide.client.elements.mediators.Property.DataType.STRING;
 import static com.codenvy.ide.client.elements.mediators.Property.Scope.SYNAPSE;
@@ -104,8 +105,8 @@ public class Property extends AbstractElement {
         putProperty(VALUE_LITERAL, "value");
         putProperty(VALUE_EXPRESSION, "/default/expression");
         putProperty(VALUE_STRING_PATTERN, "");
-        putProperty(VALUE_STRING_PATTERN, "");
         putProperty(VALUE_STRING_CAPTURE_GROUP, "");
+        putProperty(DESCRIPTION, "");
         putProperty(NAMESPACES, new ArrayList<NameSpace>());
     }
 
@@ -124,7 +125,9 @@ public class Property extends AbstractElement {
 
         if (SET.equals(propAction)) {
             attributes.remove(ACTION_ATTRIBUTE);
-        } else {
+        }
+
+        if (REMOVE.equals(propAction)) {
             attributes.remove(VALUE_EXPRESSION_ATTRIBUTE);
             attributes.remove(VALUE_LITERAL_ATTRIBUTE);
             attributes.remove(DATA_TYPE_ATTRIBUTE);
@@ -208,7 +211,7 @@ public class Property extends AbstractElement {
     }
 
     public enum Scope {
-        SYNAPSE("Synapse"), TRANSPORT("transport"), AXIS2("axis2"), AXIS2_CLIENT("axis2_client"), OPERATION("operation");
+        SYNAPSE("Synapse"), TRANSPORT("transport"), AXIS2("axis2"), AXIS2_CLIENT("axis2-client"), OPERATION("operation");
 
         public static final String TYPE_NAME = "PropertyScopeType";
 
@@ -232,11 +235,14 @@ public class Property extends AbstractElement {
                 case "axis2":
                     return AXIS2;
 
-                case "axis2_client":
+                case "axis2-client":
                     return AXIS2_CLIENT;
 
                 case "operation":
                     return OPERATION;
+
+                case "Synapse":
+                    return SYNAPSE;
 
                 default:
                     return SYNAPSE;
