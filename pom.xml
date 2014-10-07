@@ -16,32 +16,33 @@
     limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <artifactId>maven-depmgt-pom</artifactId>
         <groupId>com.codenvy</groupId>
         <version>1.8.16</version>
     </parent>
-
     <groupId>com.codenvy.plugin-wso2</groupId>
     <artifactId>codenvy-ext-wso2-parent</artifactId>
     <version>1.0.0-M1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Codenvy :: WSO2 Plugin</name>
-
     <modules>
         <module>codenvy-ext-wso2-core</module>
         <module>codenvy-ext-wso2-cmf-editor</module>
         <module>codenvy-ext-wso2-editor</module>
     </modules>
-
     <properties>
         <license_years>2014</license_years>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <!-- The destination file for the code coverage report has to be set to the same value
+             in the parent pom and in each module pom. Then JaCoCo will add up information in
+             the same report, so that, it will give the cross-module code coverage. -->
+        <sonar.jacoco.itReportPath>${project.basedir}/../target/jacoco-it.exec</sonar.jacoco.itReportPath>
+        <!-- Sonar -->
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.language>java</sonar.language>
         <version.cmf>1.0.0-M1-SNAPSHOT</version.cmf>
         <version.google.findbugs>2.0.2</version.google.findbugs>
         <version.gwt.dnd>3.3.0</version.gwt.dnd>
@@ -51,7 +52,6 @@
         <version.license-bundle>3</version.license-bundle>
         <version.license-header>codenvy-apache2-license-resource-bundle</version.license-header>
     </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -95,7 +95,6 @@
                     </plugin>
                 </plugins>
             </build>
-
             <dependencies>
                 <dependency>
                     <groupId>org.codehaus.sonar-plugins.java</groupId>
@@ -106,5 +105,4 @@
             </dependencies>
         </profile>
     </profiles>
-
 </project>
