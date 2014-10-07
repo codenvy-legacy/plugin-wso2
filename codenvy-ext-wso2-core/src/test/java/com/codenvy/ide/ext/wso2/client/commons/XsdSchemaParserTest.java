@@ -15,18 +15,20 @@
  */
 package com.codenvy.ide.ext.wso2.client.commons;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Answers.RETURNS_DEEP_STUBS;
+import static org.mockito.Mockito.when;
+
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.ext.wso2.client.SonarAwareGwtRunner;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Answers.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.when;
 
 /**
  * Here we're testing {@link XsdSchemaParser}.
@@ -35,6 +37,7 @@ import static org.mockito.Mockito.when;
  * @author Andrey Plotnikov
  */
 @GwtModule("com.codenvy.ide.ext.wso2.WSO2")
+@RunWith(SonarAwareGwtRunner.class)
 public class XsdSchemaParserTest extends GwtTestWithMockito {
 
     @Mock(answer = RETURNS_DEEP_STUBS)
