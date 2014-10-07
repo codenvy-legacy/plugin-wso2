@@ -33,12 +33,14 @@ import java.util.Set;
 
 import static com.codenvy.ide.client.editor.WSO2Editor.EditorChangeListener;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 @RunWith(MockitoJUnitRunner.class)
 public class WSO2EditorTest {
@@ -130,9 +132,11 @@ public class WSO2EditorTest {
     public void propertiesPanelShouldBeShown() throws Exception {
         reset(view);
 
-        presenter.onShowPropertyButtonClicked();
+        presenter.changePropertyPanelVisibility();
+        verify(view).setVisiblePropertyPanel(eq(false));
 
-        verify(view).setVisiblePropertyPanel(true);
+        presenter.changePropertyPanelVisibility();
+        verify(view).setVisiblePropertyPanel(eq(true));
     }
 
     @Test

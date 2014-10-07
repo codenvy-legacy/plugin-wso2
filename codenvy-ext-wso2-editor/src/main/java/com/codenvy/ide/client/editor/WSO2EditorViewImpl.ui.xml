@@ -62,43 +62,8 @@
         }
 
         .buttonHideStyle:hover {
-            border-color: tabBackgroundColor;
-        }
-
-        .buttonShowStyle {
-            background: backgroundColor;
-            float: right;
-            margin-right: 5px;
-            border: 0;
-        }
-
-        .buttonShowStyle:active {
-            box-shadow: none;
-            border: 0;
-        }
-
-        .buttonShowStyle:hover {
-            border-color: tabBackgroundColor;
-        }
-
-        .buttonHideStyle > svg {
-            -webkit-transform: rotate(0deg);
-            -moz-transform: rotate(0deg);
-            transform: rotate(0deg);
-
-            float: left;
-            margin-top: 2px;
-            margin-left: 2px;
-        }
-
-        .buttonShowStyle > svg {
-            -webkit-transform: rotate(180deg);
-            -moz-transform: rotate(180deg);
-            transform: rotate(180deg);
-
-            float: left;
-            margin-top: 2px;
-            margin-left: 2px;
+            background: tabBackgroundColor;
+            border: 0 tabBackgroundColor;
         }
 
         .mainPropertiesPanel {
@@ -111,12 +76,6 @@
         <g:west size="275">
             <g:SimpleLayoutPanel ui:field="toolbar" addStyleNames="{style.fullSize}"/>
         </g:west>
-
-        <g:east size="50">
-            <g:FlowPanel ui:field="showButtonPanel">
-                <g:Button ui:field="showBtn" addStyleNames="{style.buttonShowStyle}"/>
-            </g:FlowPanel>
-        </g:east>
 
         <g:east size="300">
             <g:FlowPanel ui:field="mainPropertiesPanel" addStyleNames="{style.mainPropertiesPanel}">

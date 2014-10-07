@@ -67,6 +67,9 @@ public interface EditorResources extends ClientBundle {
     @Source("icons/Iterate.gif")
     ImageResource iterate();
 
+    @Source("icons/toolbar/closebtn.png")
+    ImageResource toolbarPanelClose();
+
     @Source("icons/СonditionalRouter.gif")
     ImageResource сonditionalRouter();
 

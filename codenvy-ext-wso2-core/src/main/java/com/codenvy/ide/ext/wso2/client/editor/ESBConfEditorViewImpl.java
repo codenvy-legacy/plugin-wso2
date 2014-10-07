@@ -38,6 +38,7 @@ import javax.annotation.Nonnull;
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorView {
 
@@ -53,6 +54,8 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
     Button               graphicalEditorChoose;
     @UiField
     Button               associateEditorChoose;
+    @UiField
+    Button               showPropertyPanel;
     @UiField(provided = true)
     LocalizationConstant locale;
 
@@ -123,17 +126,22 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
     }
 
     @UiHandler("textEditorChoose")
-    public void onTextEditorButtonClicked(ClickEvent event) {
+    public void onTextEditorButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onSourceViewButtonClicked();
     }
 
     @UiHandler("graphicalEditorChoose")
-    public void onGraphicalEditorButtonClicked(ClickEvent event) {
+    public void onGraphicalEditorButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onDesignViewButtonClicked();
     }
 
     @UiHandler("associateEditorChoose")
-    public void onAssociateEditorButtonClicked(ClickEvent event) {
+    public void onAssociateEditorButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onDualViewButtonClicked();
+    }
+
+    @UiHandler("showPropertyPanel")
+    public void onPropertyButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
+        delegate.onPropertyButtonClicked();
     }
 }

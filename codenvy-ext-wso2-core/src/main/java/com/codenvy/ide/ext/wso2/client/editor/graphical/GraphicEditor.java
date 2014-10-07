@@ -31,6 +31,7 @@ import javax.validation.constraints.NotNull;
  * The graphical editor for ESB configuration.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class GraphicEditor extends AbstractEditorPresenter implements GraphicEditorView.ActionDelegate,
                                                                       WSO2Editor.EditorChangeListener {
@@ -122,6 +123,11 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     @Override
     public void onChanged() {
         updateDirtyState(true);
+    }
+
+    /** Changes visible state of the property panel. */
+    public void changePropertyPanelVisibility() {
+        editor.changePropertyPanelVisibility();
     }
 
 }

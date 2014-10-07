@@ -187,6 +187,12 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
 
     /** {@inheritDoc} */
     @Override
+    public void onPropertyButtonClicked() {
+        graphicEditor.changePropertyPanelVisibility();
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public boolean onClose() {
         return graphicEditor.onClose() && textEditor.onClose() && super.onClose();
     }

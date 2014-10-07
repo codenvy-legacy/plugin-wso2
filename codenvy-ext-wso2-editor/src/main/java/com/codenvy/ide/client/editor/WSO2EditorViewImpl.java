@@ -27,13 +27,12 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.vectomatic.dom.svg.ui.SVGImage;
 
 import javax.annotation.Nonnull;
 
@@ -42,6 +41,7 @@ import javax.annotation.Nonnull;
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class WSO2EditorViewImpl extends AbstractView<WSO2EditorView.ActionDelegate> implements WSO2EditorView {
 
@@ -58,10 +58,6 @@ public class WSO2EditorViewImpl extends AbstractView<WSO2EditorView.ActionDelega
     @UiField
     Button            hideBtn;
     @UiField
-    Button            showBtn;
-    @UiField
-    FlowPanel         showButtonPanel;
-    @UiField
     DockLayoutPanel   mainPanel;
     @UiField
     FlowPanel         mainPropertiesPanel;
@@ -70,10 +66,8 @@ public class WSO2EditorViewImpl extends AbstractView<WSO2EditorView.ActionDelega
     public WSO2EditorViewImpl(EditorViewImplUiBinder ourUiBinder, PartStackUIResources resources) {
         initWidget(ourUiBinder.createAndBindUi(this));
 
-        SVGImage image = new SVGImage(resources.minimize());
-        image.getElement().setAttribute("name", "workBenchIconMinimize");
+        Image image = new Image(resources.close());
 
-        showBtn.getElement().setInnerHTML(image.toString());
         hideBtn.getElement().setInnerHTML(image.toString());
     }
 
@@ -102,7 +96,6 @@ public class WSO2EditorViewImpl extends AbstractView<WSO2EditorView.ActionDelega
     @Override
     public void setVisiblePropertyPanel(boolean isVisible) {
         mainPanel.setWidgetHidden(mainPropertiesPanel, !isVisible);
-        mainPanel.setWidgetHidden(showButtonPanel, isVisible);
 
         mainPanel.onResize();
 
@@ -117,11 +110,6 @@ public class WSO2EditorViewImpl extends AbstractView<WSO2EditorView.ActionDelega
     @UiHandler("hideBtn")
     public void onHideButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onHidePanelButtonClicked();
-    }
-
-    @UiHandler("showBtn")
-    public void onShowButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
-        delegate.onShowPropertyButtonClicked();
     }
 
 }

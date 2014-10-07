@@ -169,4 +169,7 @@ public interface LocalizationConstant extends Messages {
 
     @Key("modifyingFileMessage")
     String modifyingFileMessage();
+
+    @Key("editor.property.panel")
+    String editorProperty();
 }
