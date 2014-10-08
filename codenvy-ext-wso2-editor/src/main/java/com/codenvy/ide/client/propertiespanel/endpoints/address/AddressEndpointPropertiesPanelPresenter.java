@@ -33,6 +33,7 @@ import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Iterator;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.ADDRESSING_ENABLED;
@@ -72,7 +73,8 @@ import static com.codenvy.ide.client.propertiespanel.property.complex.ComplexPro
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
  */
-public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesPanel<AddressEndpoint> {
+public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesPanel<AddressEndpoint>
+        implements PropertiesPanelView.ActionDelegate {
 
     private final PropertyPresenter         propertyPresenter;
     private final PropertiesChangedCallback callback;
@@ -110,8 +112,8 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
     public AddressEndpointPropertiesPanelPresenter(PropertiesPanelView view,
                                                    PropertyTypeManager propertyTypeManager,
                                                    WSO2EditorLocalizationConstant locale,
-                                                   PropertyPresenter propertyPresenter,
-                                                   PropertyPanelFactory propertyPanelFactory) {
+                                                   PropertyPanelFactory propertyPanelFactory,
+                                                   PropertyPresenter propertyPresenter) {
         super(view, propertyTypeManager, locale, propertyPanelFactory);
 
         this.propertyPresenter = propertyPresenter;
@@ -217,7 +219,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
                                                       locale.addressEndpointSuspendMaximumDuration(),
                                                       suspendMaxDurListener);
 
-        PropertyValueChangedListener suspendProgrFactoryListener = new PropertyValueChangedListener() {
+        PropertyValueChangedListener suspendProgressFactoryListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
                 try {
@@ -233,7 +235,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         };
         suspendProgressionFactory = createSimpleProperty(suspendStateGroup,
                                                          locale.addressEndpointSuspendProgressionFactory(),
-                                                         suspendProgrFactoryListener);
+                                                         suspendProgressFactoryListener);
     }
 
     private void prepareTimeoutStateGroupView() {
@@ -556,16 +558,14 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         }
 
         StringBuilder content = new StringBuilder();
-        int size = propertiesArray.size() - 1;
 
-        for (int i = 0; i <= size; i++) {
-            Property property = propertiesArray.get(i);
-
+        for (Iterator<Property> iterator = propertiesArray.iterator(); iterator.hasNext(); ) {
+            Property property = iterator.next();
             String name = property.getProperty(Property.NAME);
 
             if (name != null) {
                 content.append(locale.addressEndpointEndpointProperty(name));
-                content.append(i != size ? ", " : "");
+                content.append(iterator.hasNext() ? ", " : "");
             }
         }
 
