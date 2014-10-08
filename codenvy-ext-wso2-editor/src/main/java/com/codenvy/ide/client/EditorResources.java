@@ -59,6 +59,19 @@ public interface EditorResources extends ClientBundle {
 
         String topBorder();
 
+        String toolbarPalette();
+
+        String toolbarMainPanel();
+
+        String toolbarGroupHeaderPanelStyle();
+
+        String toolbarGroupIconColor();
+
+        String toolbarItemMainPanel();
+
+        String toolbarTitleStyle();
+
+        String toolbarTitleBold();
     }
 
     @Source("editor.css")
@@ -408,6 +421,9 @@ public interface EditorResources extends ClientBundle {
 
     @Source("icons/twitterIcon.gif")
     ImageResource twitterElement();
+
+    @Source("icons/toolbar/closeButton.png")
+    ImageResource toolbarPanelClose();
 
     @Source("icons/GoogleSpreadsheetToolbar.gif")
     ImageResource googleSpreadsheetToolbar();

@@ -25,11 +25,11 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
+import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -49,6 +49,8 @@ public class WSO2EditorViewImpl extends AbstractView<WSO2EditorView.ActionDelega
     interface EditorViewImplUiBinder extends UiBinder<Widget, WSO2EditorViewImpl> {
     }
 
+    private static final int SIZE_OF_SEPARATOR = 1;
+
     @UiField
     SimpleLayoutPanel toolbar;
     @UiField
@@ -57,13 +59,19 @@ public class WSO2EditorViewImpl extends AbstractView<WSO2EditorView.ActionDelega
     ScrollPanel       workspace;
     @UiField
     Button            hideBtn;
-    @UiField
-    DockLayoutPanel   mainPanel;
+    @UiField(provided = true)
+    SplitLayoutPanel  mainPanel;
     @UiField
     FlowPanel         mainPropertiesPanel;
+    @UiField
+    Image             closeToolbarBtn;
+    @UiField
+    FlowPanel         toolbarPanel;
 
     @Inject
     public WSO2EditorViewImpl(EditorViewImplUiBinder ourUiBinder, PartStackUIResources resources) {
+        mainPanel = new SplitLayoutPanel(SIZE_OF_SEPARATOR);
+
         initWidget(ourUiBinder.createAndBindUi(this));
 
         Image image = new Image(resources.close());
@@ -97,6 +105,26 @@ public class WSO2EditorViewImpl extends AbstractView<WSO2EditorView.ActionDelega
     public void setVisiblePropertyPanel(boolean isVisible) {
         mainPanel.setWidgetHidden(mainPropertiesPanel, !isVisible);
 
+        resizeMainPanel();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setToolbarPanelVisibility(boolean isVisible) {
+        mainPanel.setWidgetHidden(toolbarPanel, !isVisible);
+
+        resizeMainPanel();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void hideToolbarPanel() {
+        mainPanel.setWidgetHidden(toolbarPanel, true);
+
+        resizeMainPanel();
+    }
+
+    private void resizeMainPanel() {
         mainPanel.onResize();
 
         Scheduler.get().scheduleDeferred(new Command() {
@@ -110,6 +138,16 @@ public class WSO2EditorViewImpl extends AbstractView<WSO2EditorView.ActionDelega
     @UiHandler("hideBtn")
     public void onHideButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onHidePanelButtonClicked();
+    }
+
+    @UiHandler("showBtn")
+    public void onShowButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
+        delegate.onShowPropertyButtonClicked();
+    }
+
+    @UiHandler("closeToolbarBtn")
+    public void onCloseToolbarBtnClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
+        delegate.onCloseToolbarButtonClicked();
     }
 
 }

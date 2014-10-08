@@ -21,6 +21,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:with field="locale" type="com.codenvy.ide.client.WSO2EditorLocalizationConstant"/>
+    <ui:with field="resource" type="com.codenvy.ide.client.EditorResources"/>
 
     <ui:style>
         @eval backgroundColor com.codenvy.ide.api.ui.theme.Style.getPartBackground();
@@ -30,7 +31,6 @@
         .fullSize {
             width: 100%;
             height: 100%;
-            background: backgroundColor;
         }
 
         .labelStyle {
@@ -69,12 +69,43 @@
         .mainPropertiesPanel {
             border: 1px groove tabBackgroundColor;
         }
+
+        .closeToolbarBtnStyle {
+            width: 6px;
+            height: 6px;
+            float: right;
+            margin-top: 7px;
+            margin-right: 5px;
+        }
+
+        .labelToolbarStyle {
+            width: 50%;
+            float: left;
+            margin-top: 1px;
+            margin-left: 12px;
+            position: relative;
+        }
+
+        .palettePanel {
+            width: 100%;
+            height: 20px;
+        }
     </ui:style>
 
-    <g:DockLayoutPanel unit="PX" ui:field="mainPanel" addStyleNames="{style.fullSize}">
+    <g:SplitLayoutPanel ui:field="mainPanel" addStyleNames="{style.fullSize}">
 
-        <g:west size="275">
-            <g:SimpleLayoutPanel ui:field="toolbar" addStyleNames="{style.fullSize}"/>
+        <g:west size="180">
+            <g:FlowPanel ui:field="toolbarPanel">
+
+                <g:FlowPanel addStyleNames="{style.palettePanel},{resource.editorCSS.toolbarPalette}">
+                    <g:Label text="{locale.toolbarPalette}"
+                             addStyleNames="{style.labelToolbarStyle},{resource.editorCSS.toolbarTitleStyle}"/>
+                    <g:Image ui:field="closeToolbarBtn" resource="{resource.toolbarPanelClose}"
+                             addStyleNames="{style.closeToolbarBtnStyle}"/>
+                </g:FlowPanel>
+
+                <g:SimpleLayoutPanel ui:field="toolbar" addStyleNames="{resource.editorCSS.toolbarMainPanel},{style.fullSize}"/>
+            </g:FlowPanel>
         </g:west>
 
         <g:east size="300">
@@ -94,6 +125,6 @@
             <g:ScrollPanel ui:field="workspace" addStyleNames="{style.fullSize}"/>
         </g:center>
 
-    </g:DockLayoutPanel>
+    </g:SplitLayoutPanel>
 
 </ui:UiBinder>

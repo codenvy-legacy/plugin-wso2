@@ -155,4 +155,22 @@ public class WSO2EditorTest {
         verify(workspace).resize();
     }
 
+    @Test
+    public void toolbarShouldBeShown() {
+        reset(view);
+
+        presenter.changeToolbarPanelVisibility();
+        verify(view).setToolbarPanelVisibility(eq(false));
+
+        presenter.changeToolbarPanelVisibility();
+        verify(view).setToolbarPanelVisibility(eq(true));
+    }
+
+    @Test
+    public void toolbarPanelShouldBeHidden() {
+        presenter.onCloseToolbarButtonClicked();
+
+        verify(view).hideToolbarPanel();
+    }
+
 }

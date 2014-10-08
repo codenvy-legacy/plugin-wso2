@@ -15,40 +15,6 @@
  */
 package com.codenvy.ide.ext.wso2.client.upload;
 
-import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.ide.api.event.ResourceChangedEvent;
-import com.codenvy.ide.api.notification.Notification;
-import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.File;
-import com.codenvy.ide.api.resources.model.Folder;
-import com.codenvy.ide.api.resources.model.Project;
-import com.codenvy.ide.api.resources.model.Resource;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
-import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
-import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
-import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter;
-import com.codenvy.ide.ext.wso2.shared.FileInfo;
-import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.web.bindery.event.shared.EventBus;
-import com.googlecode.gwt.test.GwtModule;
-import com.googlecode.gwt.test.GwtTestWithMockito;
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Matchers;
-import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-
-import java.lang.reflect.Method;
-
 import static com.codenvy.ide.ext.wso2.client.upload.ImportFilePresenter.ViewCloseHandler;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ENDPOINTS_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.MAIN_FOLDER_NAME;
@@ -68,6 +34,42 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.event.ResourceChangedEvent;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Resource;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
+import com.codenvy.ide.ext.wso2.client.SonarAwareGwtRunner;
+import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
+import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
+import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter;
+import com.codenvy.ide.ext.wso2.shared.FileInfo;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.event.shared.EventBus;
+import com.googlecode.gwt.test.GwtModule;
+import com.googlecode.gwt.test.GwtTestWithMockito;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Matchers;
+import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import java.lang.reflect.Method;
+
 /**
  * Here we're testing {@link ImportFilePresenter}.
  *
@@ -75,6 +77,7 @@ import static org.mockito.Mockito.when;
  * @author Andrey Plotnikov
  */
 @GwtModule("com.codenvy.ide.ext.wso2.WSO2")
+@RunWith(SonarAwareGwtRunner.class)
 public class ImportFilePresenterTest extends GwtTestWithMockito {
 
     private static final String MESSAGE        = "message";

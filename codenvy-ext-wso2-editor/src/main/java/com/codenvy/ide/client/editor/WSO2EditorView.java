@@ -37,12 +37,23 @@ public interface WSO2EditorView extends View<WSO2EditorView.ActionDelegate> {
      */
     public interface ActionDelegate {
 
+        /** Performs some actions in response to user's clicking on hide toolbar button. */
+        void onCloseToolbarButtonClicked();
+
         /** Performs some actions in response to user's clicking on hide panel button. */
         void onHidePanelButtonClicked();
 
         /** Performs some actions in response to DOM of editor is changed. */
         void onEditorDOMChanged();
     }
+
+    /**
+     * Changes visible state of the toolbar panel.
+     *
+     * @param isVisible
+     *         <code>true</code> the panel will be shown, <code>false</code> it will not
+     */
+    void setToolbarPanelVisibility(boolean isVisible);
 
     /** @return place where toolbar need to be located */
     @Nonnull
@@ -63,5 +74,8 @@ public interface WSO2EditorView extends View<WSO2EditorView.ActionDelegate> {
      *         <code>true</code> the panel will be shown, <code>false</code> it will not
      */
     void setVisiblePropertyPanel(boolean isVisible);
+
+    /** Hides the toolbar panel. */
+    void hideToolbarPanel();
 
 }

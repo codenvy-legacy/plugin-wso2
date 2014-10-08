@@ -16,10 +16,12 @@
 
 package com.codenvy.ide.client.elements;
 
+import com.codenvy.ide.client.SonarAwareGwtRunner;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -39,6 +41,7 @@ import static org.junit.Assert.assertTrue;
  * @author Andrey Plotnikov
  */
 @GwtModule("com.codenvy.ide.WSO2Editor")
+@RunWith(SonarAwareGwtRunner.class)
 public abstract class AbstractEntityTest<T extends AbstractEntityElement> extends GwtTestWithMockito {
 
     private static final Key<Boolean>      BOOLEAN_PROPERTY = new Key<>("BooleanProperty");

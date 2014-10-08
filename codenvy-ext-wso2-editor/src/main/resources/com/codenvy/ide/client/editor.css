@@ -77,3 +77,66 @@
 .topBorder {
     border-top: 2px solid borderColor;
 }
+
+.toolbarPalette {
+    background-color: #2c2c2c;
+    border-bottom: 1px solid #545454;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.5);
+}
+
+.toolbarMainPanel {
+    background: #545454;
+    border-left: 1px solid #2f2f2f;
+    border-right: 1px solid #2f2f2f;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.3);
+}
+
+.toolbarTitleStyle {
+    font-family: "Helvetica Neue", serif;
+    font-size: 11pt;
+    color: #dbdbdb;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.toolbarTitleBold {
+    font-weight: bold;
+}
+
+.toolbarGroupHeaderPanelStyle {
+    cursor: pointer;
+    background: #545454;
+    border-bottom: 1px solid #303030;
+    border-top: 1px solid #878787;
+}
+
+.toolbarGroupHeaderPanelStyle:hover {
+    background: #365a73;
+}
+
+.toolbarGroupHeaderPanelStyle:active {
+    border-top: 1px solid #303030;
+    border-bottom: 1px solid #878787;
+}
+
+.toolbarGroupIconColor {
+    color: #ffffff;
+}
+
+.toolbarItemMainPanel {
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.5);
+    background: #656565;
+    border-top: 1px solid #878787;
+    border-bottom: 1px solid #535353;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.toolbarItemMainPanel:hover {
+    background: #365a73;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.5);
+}
+
+.toolbarItemMainPanel:active {
+    border-bottom: 1px solid #878787;
+    border-top: 1px solid #535353;
+}

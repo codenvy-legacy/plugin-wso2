@@ -48,7 +48,7 @@ public class EnrichTest extends AbstractElementTest<Enrich> {
     @Mock
     private Source source;
     @Mock
-    Node node;
+    private Node   node;
 
     @Before
     public void setUp() {

@@ -45,6 +45,8 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Pro
     private final WorkspacePresenter         workspace;
     private final List<EditorChangeListener> listeners;
 
+    private boolean isVisibleToolbarPanel;
+
     private boolean isVisiblePropertyPanel;
 
     @Inject
@@ -57,6 +59,11 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Pro
 
         isVisiblePropertyPanel = false;
         changePropertyPanelVisibility();
+        
+        isVisibleToolbarPanel = false;
+        changeToolbarPanelVisibility();
+
+        onShowPropertyButtonClicked();
 
         this.listeners = new ArrayList<>();
 
@@ -129,10 +136,26 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Pro
 
     /** {@inheritDoc} */
     @Override
+    public void onCloseToolbarButtonClicked() {
+        isVisibleToolbarPanel = false;
+        view.hideToolbarPanel();
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void onHidePanelButtonClicked() {
         view.setVisiblePropertyPanel(isVisiblePropertyPanel = false);
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void onShowPropertyButtonClicked() {
+        view.setVisiblePropertyPanel(true);
+    }
+
+    /** Performs some actions in response to user's clicking on palette panel button. */
+    public void changeToolbarPanelVisibility() {
+        view.setToolbarPanelVisibility(isVisibleToolbarPanel = !isVisibleToolbarPanel);
     /** Performs some actions in response to user's clicking on hide panel button. */
     public void changePropertyPanelVisibility() {
         view.setVisiblePropertyPanel(isVisiblePropertyPanel = !isVisiblePropertyPanel);

@@ -187,6 +187,12 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
 
     /** {@inheritDoc} */
     @Override
+    public void onChangeToolbarVisibilityClicked() {
+        graphicEditor.changeToolbarVisibility();
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void onPropertyButtonClicked() {
         graphicEditor.changePropertyPanelVisibility();
     }

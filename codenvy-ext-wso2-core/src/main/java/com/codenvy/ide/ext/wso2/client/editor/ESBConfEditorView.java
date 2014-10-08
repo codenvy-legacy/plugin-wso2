@@ -27,6 +27,7 @@ import javax.annotation.Nonnull;
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 @ImplementedBy(ESBConfEditorViewImpl.class)
 public interface ESBConfEditorView extends View<ESBConfEditorView.ActionDelegate> {
@@ -48,6 +49,9 @@ public interface ESBConfEditorView extends View<ESBConfEditorView.ActionDelegate
 
         /** Performs some actions in response to user clicked on property button. */
         void onPropertyButtonClicked();
+
+        /** Performs some actions in response to user clicked on palette button. */
+        void onChangeToolbarVisibilityClicked();
     }
 
     /**

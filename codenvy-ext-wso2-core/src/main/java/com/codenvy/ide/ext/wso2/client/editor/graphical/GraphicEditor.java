@@ -31,6 +31,7 @@ import javax.validation.constraints.NotNull;
  * The graphical editor for ESB configuration.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
  */
 public class GraphicEditor extends AbstractEditorPresenter implements GraphicEditorView.ActionDelegate,
@@ -123,6 +124,11 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     @Override
     public void onChanged() {
         updateDirtyState(true);
+    }
+
+    /** Calls method from {@link ESBConfEditor} which changes visibility of toolbar panel. */
+    public void changeToolbarVisibility() {
+        editor.changeToolbarPanelVisibility();
     }
 
     /** Changes visible state of the property panel. */
