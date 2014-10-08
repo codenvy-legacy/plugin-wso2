@@ -140,11 +140,6 @@ public class WSO2EditorViewImpl extends AbstractView<WSO2EditorView.ActionDelega
         delegate.onHidePanelButtonClicked();
     }
 
-    @UiHandler("showBtn")
-    public void onShowButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
-        delegate.onShowPropertyButtonClicked();
-    }
-
     @UiHandler("closeToolbarBtn")
     public void onCloseToolbarBtnClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onCloseToolbarButtonClicked();

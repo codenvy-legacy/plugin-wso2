@@ -21,14 +21,33 @@
 
     <ui:with field="locale" type="com.codenvy.ide.ext.wso2.client.LocalizationConstant"/>
 
+    <ui:style>
+        .mainPanel {
+            width: 100%;
+            height: 20px;
+            border-top: 1px solid #000000;
+            background: #2c2c2c;
+        }
+
+        .buttonStyle {
+            height: 14px;
+            width: 90px;
+            background-color: #515151;
+            font: "Helvetica Neue";
+            font-size: 11pt;
+            color: #ffffff;
+            border: 1px solid #1a1b1c;
+        }
+    </ui:style>
+
     <g:DockLayoutPanel height="100%" width="100%" unit="PX">
         <g:south size="30">
-            <g:FlowPanel>
-                <g:Button text="{locale.toolbarPalette}" ui:field="toolbarBtn" width="95px"/>
-                <g:Button text="{locale.editorText}" ui:field="textEditorChoose" width="95px"/>
-                <g:Button text="{locale.editorGraphical}" ui:field="graphicalEditorChoose" width="95px"/>
-                <g:Button text="{locale.editorAssociate}" ui:field="associateEditorChoose" width="95px"/>
-                <g:Button text="{locale.editorProperty}" ui:field="showPropertyPanel" width="95px"/>
+            <g:FlowPanel addStyleNames="{style.mainPanel}">
+                <g:Button text="{locale.toolbarPalette}" ui:field="toolbarBtn" addStyleNames="{style.buttonStyle}"/>
+                <g:Button text="{locale.editorText}" ui:field="textEditorChoose" addStyleNames="{style.buttonStyle}"/>
+                <g:Button text="{locale.editorGraphical}" ui:field="graphicalEditorChoose" addStyleNames="{style.buttonStyle}"/>
+                <g:Button text="{locale.editorAssociate}" ui:field="associateEditorChoose" addStyleNames="{style.buttonStyle}"/>
+                <g:Button text="{locale.editorProperty}" ui:field="showPropertyPanel" addStyleNames="{style.buttonStyle}"/>
             </g:FlowPanel>
         </g:south>
         <g:center>
