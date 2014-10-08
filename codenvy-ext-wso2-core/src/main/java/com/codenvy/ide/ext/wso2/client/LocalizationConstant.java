@@ -22,6 +22,7 @@ import com.google.inject.Singleton;
  * Contains all message needed for WSO2 plugin.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 @Singleton
 public interface LocalizationConstant extends Messages {
@@ -169,4 +170,7 @@ public interface LocalizationConstant extends Messages {
 
     @Key("modifyingFileMessage")
     String modifyingFileMessage();
+
+    @Key("toolbar.palette")
+    String toolbarPalette();
 }

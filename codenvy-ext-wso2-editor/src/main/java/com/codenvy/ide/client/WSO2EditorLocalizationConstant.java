@@ -1529,4 +1529,7 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.mediators.enrich.group.target")
     String enrichGroupTarget();
+
+    @Key("toolbar.palette")
+    String toolbarPalette();
 }

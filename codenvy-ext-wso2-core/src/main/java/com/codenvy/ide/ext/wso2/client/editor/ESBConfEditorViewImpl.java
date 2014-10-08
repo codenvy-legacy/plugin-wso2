@@ -53,6 +53,8 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
     Button               graphicalEditorChoose;
     @UiField
     Button               associateEditorChoose;
+    @UiField
+    Button               toolbarBtn;
     @UiField(provided = true)
     LocalizationConstant locale;
 
@@ -136,4 +138,10 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
     public void onAssociateEditorButtonClicked(ClickEvent event) {
         delegate.onDualViewButtonClicked();
     }
+
+    @UiHandler("toolbarBtn")
+    public void onChangeToolbarVisibilityClicked(@SuppressWarnings("UnusedParameters") ClickEvent event){
+        delegate.onChangeToolbarVisibilityClicked();
+    }
+
 }

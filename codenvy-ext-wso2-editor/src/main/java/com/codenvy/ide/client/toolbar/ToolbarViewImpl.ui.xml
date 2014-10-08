@@ -20,15 +20,19 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
+    <ui:with field="res" type="com.codenvy.ide.client.EditorResources"/>
+
     <ui:style>
         .fullSize {
-            height: 100%;
             width: 100%;
+            height: 100%;
         }
     </ui:style>
 
-    <g:ScrollPanel addStyleNames="{style.fullSize}" alwaysShowScrollBars="true">
-        <g:FlowPanel ui:field="mainPanel" addStyleNames="{style.fullSize}"/>
-    </g:ScrollPanel>
+    <g:FlowPanel>
+        <g:ScrollPanel addStyleNames="{style.fullSize}">
+            <g:FlowPanel ui:field="mainPanel" addStyleNames="{style.fullSize} {res.editorCSS.toolbarPalette}"/>
+        </g:ScrollPanel>
+    </g:FlowPanel>
 
 </ui:UiBinder>

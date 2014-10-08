@@ -33,6 +33,7 @@ import java.util.Set;
 
 import static com.codenvy.ide.client.editor.WSO2Editor.EditorChangeListener;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -149,6 +150,24 @@ public class WSO2EditorTest {
         presenter.onEditorDOMChanged();
 
         verify(workspace).resize();
+    }
+
+    @Test
+    public void toolbarShouldBeShown() {
+        reset(view);
+
+        presenter.changeToolbarPanelVisibility();
+        verify(view).setToolbarPanelVisibility(eq(false));
+
+        presenter.changeToolbarPanelVisibility();
+        verify(view).setToolbarPanelVisibility(eq(true));
+    }
+
+    @Test
+    public void toolbarPanelShouldBeHidden() {
+        presenter.onCloseToolbarButtonClicked();
+
+        verify(view).hideToolbarPanel();
     }
 
 }
