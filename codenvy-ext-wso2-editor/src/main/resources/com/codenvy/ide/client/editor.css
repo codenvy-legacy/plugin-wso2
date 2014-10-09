@@ -17,7 +17,6 @@
 @url errorCursorURL errorCursor;
 
 @eval borderColor com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
-@eval selectionBackgroundColor com.codenvy.ide.api.ui.theme.Style.getSelectionBackground();
 
 .fullSize {
     width: 100%;
@@ -40,7 +39,7 @@
 }
 
 .selectedElement {
-    border: 1px solid selectionBackgroundColor !important;
+    border: 1px solid #34bad7 !important;
 }
 
 .selectElementBelowCursor {

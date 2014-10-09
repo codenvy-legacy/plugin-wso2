@@ -21,17 +21,13 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:style>
-        @eval elementBackground com.codenvy.ide.api.ui.theme.Style.getPartBackground();
-        @eval titleBackground com.codenvy.ide.api.ui.theme.Style.getWindowHeaderBackground();
-        @eval borderColor com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
-
         .mainPanel {
             border: 1px solid #000000;
             box-shadow: 0 1px 7px 0 rgba(0, 0, 0, 0.75);
         }
 
         .leftPanel {
-            background: elementBackground;
+            background: #2a2a2a;
         }
 
         .iconAndTitlePanel {
@@ -41,26 +37,34 @@
         }
 
         .icon {
-            padding-left: 23px;
+            padding-left: 15px;
             padding-top: 8px;
         }
 
         .title {
             text-align: center;
             font-weight: bold;
+            font-family: "Helvetica Neue", serif;
+            font-size: 11px;
+            color: #dbdbdb;
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
         }
 
         .headerPanel {
-            background: titleBackground;
-            border-bottom: 2px solid borderColor;
+            background: #545454;
             width: 100%;
             height: 28px;
+            border-bottom: 1px solid #404040;
+        }
+
+        .headerInnerPanel {
+            border-bottom: 1px solid #000000;
+            position: absolute;
         }
 
         .headerText {
             position: relative;
-            top: 50%;
-            margin-top: -10px;
+            top: 2px;
         }
 
         .fullSize {
@@ -69,14 +73,16 @@
         }
     </ui:style>
 
-    <g:DockLayoutPanel ui:field="mainPanel" width="100px" height="100px" addStyleNames="{style.mainPanel}" unit="PX">
+    <g:DockLayoutPanel ui:field="mainPanel" width="86px" height="100px" addStyleNames="{style.mainPanel}" unit="PX">
 
-        <g:west size="100">
+        <g:west size="86">
             <g:DockLayoutPanel ui:field="leftPanel" addStyleNames="{style.leftPanel} {style.fullSize}" unit="PX">
 
-                <g:north size="30">
-                    <g:FlowPanel ui:field="headerPanel" addStyleNames="{style.headerPanel}">
-                        <g:Label ui:field="header" addStyleNames="{style.title} {style.headerText}"/>
+                <g:north size="20">
+                    <g:FlowPanel ui:field="headerPanel" width="100%" height="19px" addStyleNames="{style.headerPanel}">
+                        <g:FlowPanel width="100%" height="18px" addStyleNames="{style.headerInnerPanel}">
+                            <g:Label ui:field="header" addStyleNames="{style.title} {style.headerText}"/>
+                        </g:FlowPanel>
                     </g:FlowPanel>
                 </g:north>
 
