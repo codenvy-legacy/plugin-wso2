@@ -45,15 +45,15 @@
 }
 
 .selectedElement {
-    border: 2px solid selectionBackgroundColor !important;
+    border: 1px solid selectionBackgroundColor !important;
 }
 
 .selectElementBelowCursor {
-    border: 2px solid #6DAF6D !important;
+    border: 1px solid #6DAF6D !important;
 }
 
 .selectErrorElementBelowCursor {
-    border: 2px solid #FF0000 !important;
+    border: 1px solid #FF0000 !important;
 }
 
 .applyCursor {
@@ -139,4 +139,18 @@
 .toolbarItemMainPanel:active {
     border-bottom: 1px solid #878787;
     border-top: 1px solid #535353;
+}
+
+.dottedBackground {
+    background-image: -webkit-repeating-radial-gradient(center center, rgba(61, 61, 61, 1), rgba(61, 61, 61, 1) 1px, transparent 1px, transparent 100%);
+    background-image: -moz-repeating-radial-gradient(center center, rgba(61, 61, 61, 1), rgba(61, 61, 61, 1) 1px, transparent 1px, transparent 100%);
+    background-image: -ms-repeating-radial-gradient(center center, rgba(61, 61, 61, 1), rgba(61, 61, 61, 1) 1px, transparent 1px, transparent 100%);
+    background-image: repeating-radial-gradient(center center, rgba(61, 61, 61, 1), rgba(61, 61, 61, 1) 1px, transparent 1px, transparent 100%);
+    -webkit-background-size: 8px 8px;
+    -moz-background-size: 8px 8px;
+    background-size: 8px 8px;
+}
+
+.branchBackground {
+    background-color: #2a2a2a;
 }

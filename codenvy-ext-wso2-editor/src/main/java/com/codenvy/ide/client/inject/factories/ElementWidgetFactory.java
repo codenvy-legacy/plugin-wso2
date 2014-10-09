@@ -19,6 +19,7 @@ package com.codenvy.ide.client.inject.factories;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.widgets.branch.BranchPresenter;
+import com.codenvy.ide.client.elements.widgets.branch.BranchView;
 import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
 import com.codenvy.ide.client.elements.widgets.element.ElementView;
 import com.google.inject.Singleton;
@@ -34,7 +35,7 @@ import javax.annotation.Nonnull;
 public interface ElementWidgetFactory {
 
     /**
-     * Create an instance of {@link BranchPresenter} with a given state of editor.
+     * Create an instance of {@link BranchPresenter} with a given branch model instance.
      *
      * @param branch
      *         element which need to be used
@@ -42,6 +43,16 @@ public interface ElementWidgetFactory {
      */
     @Nonnull
     BranchPresenter createContainer(@Nonnull Branch branch);
+
+    /**
+     * Create an instance of {@link BranchView} with a given branch model instance.
+     *
+     * @param branch
+     *         element which need to be used
+     * @return an instance of {@link BranchView}
+     */
+    @Nonnull
+    BranchView createContainerView(@Nonnull Branch branch);
 
     /**
      * Create an instance of {@link ElementPresenter} for a given element.

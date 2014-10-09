@@ -73,15 +73,14 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     private boolean isBorderVisible;
 
     @Inject
-    public BranchPresenter(BranchView view,
-                           ConnectionsValidator connectionsValidator,
+    public BranchPresenter(ConnectionsValidator connectionsValidator,
                            InnerElementsValidator innerElementsValidator,
                            ElementWidgetFactory elementWidgetFactory,
                            ElementCreatorsManager elementCreatorsManager,
                            EditorState editorState,
                            SelectionManager selectionManager,
                            @Assisted Branch branch) {
-        super(view);
+        super(elementWidgetFactory.createContainerView(branch));
 
         this.connectionsValidator = connectionsValidator;
         this.innerElementsValidator = innerElementsValidator;

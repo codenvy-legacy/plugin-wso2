@@ -72,6 +72,10 @@ public interface EditorResources extends ClientBundle {
         String toolbarTitleStyle();
 
         String toolbarTitleBold();
+
+        String dottedBackground();
+
+        String branchBackground();
     }
 
     @Source("editor.css")

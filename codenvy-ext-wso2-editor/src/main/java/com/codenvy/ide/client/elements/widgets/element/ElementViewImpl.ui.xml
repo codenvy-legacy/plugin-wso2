@@ -26,7 +26,8 @@
         @eval borderColor com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
 
         .mainPanel {
-            border: 2px solid borderColor;
+            border: 1px solid #000000;
+            box-shadow: 0 1px 7px 0 rgba(0, 0, 0, 0.75);
         }
 
         .leftPanel {

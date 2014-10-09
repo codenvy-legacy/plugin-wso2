@@ -67,6 +67,11 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
     interface ElementViewImplUiBinder extends UiBinder<Widget, ElementViewImpl> {
     }
 
+    private static final int BORDER_SIZE = 1;
+    private static final int SHADOW_SIZE = 1;
+    private static final int SHADOW_BLUR = 7;
+    private static final int MARGIN      = 2 * BORDER_SIZE + 2 * SHADOW_SIZE + 2 * SHADOW_BLUR;
+
     @UiField
     Label           title;
     @UiField
@@ -259,13 +264,13 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
     /** {@inheritDoc} */
     @Override
     public int getHeight() {
-        return height;
+        return height + MARGIN;
     }
 
     /** {@inheritDoc} */
     @Override
     public void setHeight(@Nonnegative int height) {
-        this.height = height;
+        this.height = height - MARGIN;
 
         setHeight(height + "px");
     }
@@ -279,13 +284,13 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
     /** {@inheritDoc} */
     @Override
     public int getWidth() {
-        return width;
+        return width + MARGIN;
     }
 
     /** {@inheritDoc} */
     @Override
     public void setWidth(@Nonnegative int width) {
-        this.width = width;
+        this.width = width - MARGIN;
 
         setWidth(width + "px");
     }

@@ -28,7 +28,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static com.codenvy.ide.client.workspace.WorkspaceView.SIZE_OF_TWO_BORDER_LINES;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
@@ -72,8 +71,8 @@ public class WorkspacePresenterTest {
     }
 
     private void prepareViewSize(int height, int width) {
-        when(view.getParentHeight()).thenReturn(height);
-        when(view.getParentWidth()).thenReturn(width);
+        when(view.getHeight()).thenReturn(height);
+        when(view.getWidth()).thenReturn(width);
     }
 
     private void prepareElementWidget(int height, int width) {
@@ -106,8 +105,8 @@ public class WorkspacePresenterTest {
 
         presenter.resize();
 
-        verify(elementWidget).setHeight(VIEW_HEIGHT - SIZE_OF_TWO_BORDER_LINES);
-        verify(elementWidget).setWidth(VIEW_WIDTH - SIZE_OF_TWO_BORDER_LINES);
+        verify(elementWidget).setHeight(VIEW_HEIGHT);
+        verify(elementWidget).setWidth(VIEW_WIDTH);
     }
 
     @Test
