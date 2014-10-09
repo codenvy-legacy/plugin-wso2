@@ -126,7 +126,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
         updateDirtyState(true);
     }
 
-    /** Calls method from {@link ESBConfEditor} which changes visibility of toolbar panel. */
+    /** Calls method which changes visibility of toolbar panel. */
     public void changeToolbarVisibility() {
         editor.changeToolbarPanelVisibility();
     }
@@ -134,6 +134,11 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     /** Changes visible state of the property panel. */
     public void changePropertyPanelVisibility() {
         editor.changePropertyPanelVisibility();
+    }
+
+    /** Calls method which changes size of workspace. */
+    public void resizeEditor() {
+        editor.onEditorDOMChanged();
     }
 
 }
