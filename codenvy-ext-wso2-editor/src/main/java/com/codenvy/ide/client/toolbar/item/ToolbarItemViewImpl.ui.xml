@@ -39,7 +39,7 @@
 
         .title {
             position: relative;
-            top: 1px;
+            top: 4px;
         }
     </ui:style>
 

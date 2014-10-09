@@ -48,12 +48,14 @@
             float: right;
             margin-top: 7px;
             margin-right: 5px;
+            cursor: pointer;
         }
 
         .labelStyle {
-            margin-top: 2px;
-            margin-left: 5px;
             float: left;
+            margin-top: 4px;
+            margin-left: 12px;
+            position: relative;
         }
 
         .workspace {
@@ -92,7 +94,7 @@
         </g:east>
 
         <g:center>
-            <g:ScrollPanel ui:field="workspace" addStyleNames="{style.fullSize} {style.workspace}"/>
+            <g:ScrollPanel ui:field="workspace" addStyleNames="{style.fullSize} {style.workspace}" width="calc(100%-15px)"/>
         </g:center>
 
     </g:SplitLayoutPanel>

@@ -18,14 +18,17 @@ package com.codenvy.ide.ext.wso2.client.editor;
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
+import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -55,11 +58,13 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
     @UiField
     Button               associateEditorChoose;
     @UiField
-    Button               toolbarBtn;
+    FlowPanel            toolbarBtn;
     @UiField
-    Button               showPropertyPanel;
+    FlowPanel            showPropertyPanel;
     @UiField(provided = true)
     LocalizationConstant locale;
+    @UiField(provided = true)
+    WSO2Resources        resources;
 
     private ActionDelegate  delegate;
     private DockLayoutPanel bothEditorPanel;
@@ -67,8 +72,9 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
     private SimplePanel     textEditorPanel;
 
     @Inject
-    public ESBConfEditorViewImpl(ESBConfEditorViewImplUiBinder ourUiBinder, LocalizationConstant locale) {
+    public ESBConfEditorViewImpl(ESBConfEditorViewImplUiBinder ourUiBinder, LocalizationConstant locale, WSO2Resources resources) {
         this.locale = locale;
+        this.resources = resources;
 
         initWidget(ourUiBinder.createAndBindUi(this));
 
@@ -80,6 +86,20 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
 
         bothEditorPanel.addWest(textEditorPanel, 50);
         bothEditorPanel.add(graphicalEditorPanel);
+
+        toolbarBtn.addDomHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onChangeToolbarVisibilityClicked();
+            }
+        }, ClickEvent.getType());
+
+        showPropertyPanel.addDomHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onPropertyButtonClicked();
+            }
+        }, ClickEvent.getType());
     }
 
     /** {@inheritDoc} */
@@ -140,16 +160,6 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
     @UiHandler("associateEditorChoose")
     public void onAssociateEditorButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onDualViewButtonClicked();
-    }
-
-    @UiHandler("showPropertyPanel")
-    public void onPropertyButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
-        delegate.onPropertyButtonClicked();
-    }
-
-    @UiHandler("toolbarBtn")
-    public void onChangeToolbarVisibilityClicked(@SuppressWarnings("UnusedParameters") ClickEvent event){
-        delegate.onChangeToolbarVisibilityClicked();
     }
 
 }
