@@ -23,24 +23,21 @@
     <ui:with field="resources" type="com.codenvy.ide.client.EditorResources"/>
 
     <ui:style>
-        @eval titleBackground com.codenvy.ide.api.ui.theme.Style.getWindowHeaderBackground();
-        @eval borderColor com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
-
         .titlePanel {
             text-align: center;
             vertical-align: middle;
             font-weight: bold;
-            width: 51px;
+            width: 100%;
             height: 100%;
-            background: titleBackground;
-            border-right: 2px solid borderColor;
-            border-left: 2px solid borderColor;
+            background: #545454;
+            border-right: 1px solid #000000;
+            border-left: 1px solid #000000;
         }
 
         .title {
             position: relative;
             top: 50%;
-            margin-top: -10px;
+            margin-top: -8px;
         }
 
         .focusPanel:focus {
@@ -49,9 +46,9 @@
     </ui:style>
 
     <g:DockLayoutPanel ui:field="focusPanel" addStyleNames="{style.focusPanel} {resources.editorCSS.branchBackground}" unit="PX">
-        <g:west size="55">
+        <g:west size="40">
             <g:FlowPanel ui:field="titlePanel" addStyleNames="{style.titlePanel}">
-                <g:Label ui:field="title" addStyleNames="{style.title}"/>
+                <g:Label ui:field="title" addStyleNames="{style.title} {resources.editorCSS.fontStyle}"/>
             </g:FlowPanel>
         </g:west>
 

@@ -88,6 +88,8 @@ public interface EditorResources extends ClientBundle {
         String dottedBackground();
 
         String branchBackground();
+
+        String complexMediatorBackground();
     }
 
     @Source("editor.css")

@@ -31,12 +31,12 @@ import javax.annotation.Nullable;
 @ImplementedBy(BranchViewImpl.class)
 public interface BranchView extends View<BranchView.ActionDelegate> {
 
-    int ELEMENTS_PADDING = 20;
-    int ARROW_PADDING    = 20;
+    int ELEMENTS_PADDING = 25;
+    int ARROW_PADDING    = 15;
     int DEFAULT_HEIGHT   = 100;
     int DEFAULT_WIDTH    = 100;
-    int TITLE_WIDTH      = 55;
-    int BORDER_SIZE      = 2;
+    int TITLE_WIDTH      = 40;
+    int BORDER_SIZE      = 1;
 
     /**
      * Changes title on the view.

@@ -93,6 +93,8 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
     private int height;
     private int width;
 
+    private boolean isComplexMediator;
+
     @Inject
     public ElementViewImpl(ElementViewImplUiBinder ourUiBinder, EditorResources resources, @Assisted boolean isPossibleChangeCases) {
         this.resources = resources;
@@ -120,6 +122,8 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
         initWidget(ourUiBinder.createAndBindUi(this));
 
         bind();
+
+        this.isComplexMediator = false;
     }
 
     private void bind() {
@@ -188,12 +192,19 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
     /** {@inheritDoc} */
     @Override
     public void addBranch(@Nonnull BranchPresenter branchPresenter) {
+        if (!isComplexMediator) {
+            leftPanel.addStyleName(resources.editorCSS().complexMediatorBackground());
+            isComplexMediator = true;
+        }
+
         rightPanel.add(branchPresenter.getView());
     }
 
     /** {@inheritDoc} */
     @Override
     public void removeBranches() {
+        isComplexMediator = false;
+        leftPanel.removeStyleName(resources.editorCSS().complexMediatorBackground());
         rightPanel.clear();
     }
 
