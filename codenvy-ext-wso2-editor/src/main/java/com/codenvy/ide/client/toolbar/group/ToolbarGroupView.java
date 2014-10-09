@@ -52,6 +52,14 @@ public interface ToolbarGroupView extends View<ToolbarGroupView.ActionDelegate> 
     /** Reset default view of the fold/unfold icon on the view. */
     void defaultIcon();
 
+    /**
+     * Folds or unfolds toolbar group.
+     *
+     * @param expanded
+     *         <code>true</code> the panel is expanded, <code>false</code> the panel is collapsed
+     */
+    void expandOrCollapse(boolean expanded);
+
     public interface ActionDelegate {
         /** Performs some actions in response to a user's clicking on the main panel of the view. */
         void onItemClicked();

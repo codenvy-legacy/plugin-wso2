@@ -21,15 +21,9 @@
 
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
 
-    <ui:style>
-        .title {
-            font-weight: bold;
-        }
-    </ui:style>
-
     <g:FlowPanel addStyleNames="{res.editorCSS.property}">
-        <g:Label ui:field="title" addStyleNames="{res.editorCSS.fieldStyle} {style.title}"/>
-        <g:TextBox ui:field="property" width="265px" addStyleNames="{res.editorCSS.fieldStyle}"/>
+        <g:Label ui:field="title" addStyleNames="{res.editorCSS.fontStyle} {res.editorCSS.propertyItem}"/>
+        <g:TextBox ui:field="property" width="calc(100% - 25px)" addStyleNames="{res.editorCSS.propertyField}, {res.editorCSS.fontStyle}"/>
     </g:FlowPanel>
 
 </ui:UiBinder>

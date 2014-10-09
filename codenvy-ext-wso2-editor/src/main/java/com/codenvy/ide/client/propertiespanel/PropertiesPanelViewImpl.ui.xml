@@ -19,15 +19,10 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
-    <ui:style>
-        .fullSize {
-            height: 100%;
-            width: 100%;
-        }
-    </ui:style>
+    <ui:with field="resource" type="com.codenvy.ide.client.EditorResources"/>
 
-    <g:ScrollPanel addStyleNames="{style.fullSize}" alwaysShowScrollBars="true">
-        <g:FlowPanel ui:field="mainPanel" addStyleNames="{style.fullSize}"/>
+    <g:ScrollPanel alwaysShowScrollBars="true" addStyleNames="{resource.editorCSS.fullSize}">
+        <g:FlowPanel ui:field="mainPanel" addStyleNames="{resource.editorCSS.fullSize}"/>
     </g:ScrollPanel>
 
 </ui:UiBinder>

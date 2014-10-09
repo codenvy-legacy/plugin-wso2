@@ -62,8 +62,7 @@ public class ToolbarGroupPresenterTest {
         verify(toolbarFactory).createToolbarGroupView(STRING);
         verify(view).setDelegate(presenter);
 
-        verify(view).setVisibleItemsPanel(false);
-        verify(view).defaultIcon();
+        verify(view).expandOrCollapse(true);
     }
 
     @Test
@@ -86,7 +85,7 @@ public class ToolbarGroupPresenterTest {
 
         presenter.onItemClicked();
 
-        verify(view).setVisibleItemsPanel(true);
+        verify(view).expandOrCollapse(false);
         verify(view).rotateIcon();
     }
 
@@ -98,8 +97,7 @@ public class ToolbarGroupPresenterTest {
 
         presenter.onItemClicked();
 
-        verify(view).setVisibleItemsPanel(false);
-        verify(view).defaultIcon();
+        verify(view).expandOrCollapse(true);
     }
 
     @Test
@@ -119,7 +117,7 @@ public class ToolbarGroupPresenterTest {
 
         presenter.unfold();
 
-        verify(view).setVisibleItemsPanel(true);
+        verify(view).expandOrCollapse(false);
         verify(view).rotateIcon();
     }
 
@@ -129,8 +127,7 @@ public class ToolbarGroupPresenterTest {
 
         presenter.fold();
 
-        verify(view).setVisibleItemsPanel(false);
-        verify(view).defaultIcon();
+        verify(view).expandOrCollapse(true);
     }
 
 }

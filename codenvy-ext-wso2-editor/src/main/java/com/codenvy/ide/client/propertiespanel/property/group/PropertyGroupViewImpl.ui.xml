@@ -19,11 +19,9 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
-    <ui:style>
-        @eval backgroundColor com.codenvy.ide.api.ui.theme.Style.getWindowHeaderBackground();
-        @eval borderColor com.codenvy.ide.api.ui.theme.Style.getPartBackground();
-        @eval selectionBackgroundColor com.codenvy.ide.api.ui.theme.Style.getSelectionBackground();
+    <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
 
+    <ui:style>
         .mainPanel {
             width: 100%;
             margin: 1px 0 1px 0;
@@ -31,24 +29,22 @@
 
         .headerPanel {
             width: 100%;
-            height: 30px;
-            background: backgroundColor;
-            border: 1px groove borderColor;
-            cursor: pointer;
+            height: 18px;
         }
 
         .headerPanel:hover {
-            background: selectionBackgroundColor;
+            background: #365a73;
         }
 
         .icon {
             height: 12px;
-            width: 12px;
+            width: 15px;
             float: left;
             transition: all 300ms;
             position: relative;
             top: 50%;
-            margin-top: -6px;
+            margin-top: -10px;
+            margin-right: -5px;
         }
 
         .iconPanel {
@@ -57,17 +53,14 @@
         }
 
         .title {
-            position: relative;
-            top: 7px;
-            margin-left: 12px;
-            font-size: 12px;
-            font-weight: bold;
+            margin-left: 7px;
         }
     </ui:style>
 
     <g:FlowPanel ui:field="mainPanel" addStyleNames="{style.mainPanel}">
 
-        <g:FlowPanel ui:field="groupNamePanel" addStyleNames="{style.headerPanel}">
+        <g:FlowPanel ui:field="groupNamePanel"
+                     addStyleNames="{style.headerPanel}, {res.editorCSS.propertyHeaderPanel}, {res.editorCSS.fontStyle}">
             <g:Label ui:field="title" addStyleNames="{style.title}"/>
 
             <g:FlowPanel addStyleNames="{style.iconPanel}">

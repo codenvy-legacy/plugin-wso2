@@ -24,24 +24,19 @@
     height: 100%;
 }
 
-.property {
-    width: 100%;
-    height: 40px;
-    margin: 1px 0 1px 0;
-    padding: 3px 3px 3px 3px;
-
-    border-bottom: 1px groove borderColor;
-    border-top: 1px groove borderColor;
+.mainPropertiesPanel {
+    background: #373737;
+    border-left: 1px solid #2f2f2f;
+    border-right: 1px solid #2f2f2f;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.3);
 }
 
-.labelStyle {
-    margin-left: 6px;
-    margin-top: 6px;
-    margin-bottom: 6px;
+.propertyBackground {
+    background: #373737;
 }
 
-.fieldStyle {
-    margin-left: 6px;
+.propertyHeaderPanel:hover {
+    background: selectionBackgroundColor;
 }
 
 .selectedElement {
@@ -92,9 +87,6 @@
 }
 
 .toolbarTitleStyle {
-    font-family: "Helvetica Neue", serif;
-    font-size: 11pt;
-    color: #dbdbdb;
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
 }
 
@@ -139,6 +131,76 @@
 .toolbarItemMainPanel:active {
     border-bottom: 1px solid #878787;
     border-top: 1px solid #535353;
+}
+
+.property {
+    width: 100%;
+    height: 40px;
+    margin: 1px 0 1px 0;
+    border-bottom: 1px solid #272727;
+    border-top: 1px solid #5a5c5c;
+    padding: 8px 3px 10px;
+}
+
+.propertyItem {
+    width: 100%;
+    font-weight: normal;
+    color: #a0a0a0 !important;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+    background: #373737;
+    margin-left: 5px;
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.propertyField {
+    border-radius: 2px;
+    border: 1px solid #191c1e;
+    font-weight: normal;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.19) inset, 0 1px 0 0 rgba(223, 223, 223, 0.4);
+    margin-left: 5px;
+    padding-left: 5px;
+    padding-top: 5px;
+    background: #272727 !important;
+}
+
+.propertyHeaderPanel {
+    font-weight: bold;
+    background: #545454;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.3);
+    border-top: 1px solid #2c2c2c;
+    cursor: pointer;
+}
+
+.propertyButtonPanelStyle {
+    background: #2c2c2c;
+    font-weight: bold;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid #545454;
+    border-top: 1px solid #545454;
+}
+
+.propertyButtonHideStyle {
+    box-shadow: none;
+    background: #2c2c2c;
+    border: 0;
+    float: right;
+    margin-right: 5px;
+}
+
+.propertyButtonHideStyle:hover {
+    background: #2c2c2c;
+    border: 0 solid #2c2c2c;
+    box-shadow: none;
+}
+
+.fontStyle {
+    font-family: "Helvetica Neue", serif;
+    font-size: 11px;
+    color: #dbdbdb;
 }
 
 .dottedBackground {
