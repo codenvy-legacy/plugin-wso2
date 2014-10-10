@@ -25,16 +25,15 @@ import javax.annotation.Nonnull;
  * The abstract view that represents the property group visual part of the widget.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public interface PropertyGroupView extends View<PropertyGroupView.ActionDelegate> {
 
-    /**
-     * Changes visible state of item's panel of the view.
-     *
-     * @param visible
-     *         <code>true</code> the panel will be shown, <code>false</code> it will not
-     */
-    void setVisibleItemsPanel(boolean visible);
+    /** Changes state of property groups. When user clicks on group panel it expands. */
+    void expendPropertyGroup();
+
+    /** Changes state of property groups. When user clicks on group panel it collapses. */
+    void collapsePropertyGroup();
 
     /**
      * Adds a property widget on the view.
@@ -52,12 +51,6 @@ public interface PropertyGroupView extends View<PropertyGroupView.ActionDelegate
      */
     void removeProperty(@Nonnull AbstractPropertyPresenter property);
 
-    /** Rotate fold/unfold icon on the view. */
-    void rotateIcon();
-
-    /** Reset default view of the fold/unfold icon on the view. */
-    void defaultIcon();
-
     /**
      * Sets visibility part of group which contains title and icon.
      *
@@ -67,8 +60,9 @@ public interface PropertyGroupView extends View<PropertyGroupView.ActionDelegate
     void setTitleVisible(boolean isVisible);
 
     public interface ActionDelegate {
-        /** Performs some actions in response to a user's clicking on the main panel of the view. */
-        void onItemClicked();
+
+        /** Calls method on view which expand or collapse property group related to current state */
+        void onPropertyGroupClicked();
     }
 
 }

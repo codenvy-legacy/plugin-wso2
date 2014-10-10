@@ -27,12 +27,14 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 @RunWith(MockitoJUnitRunner.class)
 public class PropertyGroupPresenterTest {
@@ -61,8 +63,7 @@ public class PropertyGroupPresenterTest {
 
         verify(view).setDelegate(presenter);
 
-        verify(view).setVisibleItemsPanel(false);
-        verify(view).defaultIcon();
+        verify(view).collapsePropertyGroup();
     }
 
     @Test
@@ -85,25 +86,24 @@ public class PropertyGroupPresenterTest {
     }
 
     @Test
-    public void itemsPanelShouldBeShown() throws Exception {
+    public void itemsPanelShouldBeExpended() throws Exception {
         reset(view);
 
-        presenter.onItemClicked();
+        presenter.onPropertyGroupClicked();
 
-        verify(view).setVisibleItemsPanel(true);
-        verify(view).rotateIcon();
+        verify(view).expendPropertyGroup();
     }
 
     @Test
-    public void itemsPanelShouldBeNotShown() throws Exception {
-        presenter.onItemClicked();
+    public void itemsPanelShouldBeNotCollapses() throws Exception {
+        presenter.onPropertyGroupClicked();
 
         reset(view);
 
-        presenter.onItemClicked();
+        presenter.onPropertyGroupClicked();
 
-        verify(view).setVisibleItemsPanel(false);
-        verify(view).defaultIcon();
+        verify(view, never()).expendPropertyGroup();
+        verify(view).collapsePropertyGroup();
     }
 
     @Test
@@ -112,8 +112,7 @@ public class PropertyGroupPresenterTest {
 
         presenter.unfold();
 
-        verify(view).setVisibleItemsPanel(true);
-        verify(view).rotateIcon();
+        verify(view).collapsePropertyGroup();
     }
 
     @Test
@@ -122,8 +121,7 @@ public class PropertyGroupPresenterTest {
 
         presenter.fold();
 
-        verify(view).setVisibleItemsPanel(false);
-        verify(view).defaultIcon();
+        verify(view).expendPropertyGroup();
     }
 
     @Test

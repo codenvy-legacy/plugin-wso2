@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
  * The class that provides the business logic of the property group. It provides an ability to add a new property to this group.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class PropertyGroupPresenter extends AbstractPresenter<PropertyGroupView> implements PropertyGroupView.ActionDelegate {
 
@@ -38,7 +39,7 @@ public class PropertyGroupPresenter extends AbstractPresenter<PropertyGroupView>
     public PropertyGroupPresenter(PropertiesGroupFactory propertiesGroupFactory, @Assisted String title) {
         super(propertiesGroupFactory.createPropertyGroupView(title));
 
-        fold();
+        unfold();
     }
 
     /** @return the GWT widget that is controlled by the presenter */
@@ -50,15 +51,15 @@ public class PropertyGroupPresenter extends AbstractPresenter<PropertyGroupView>
     /** The method folds group of parameters which it contains. */
     public void fold() {
         isFolded = true;
-        view.setVisibleItemsPanel(false);
-        view.defaultIcon();
+
+        view.expendPropertyGroup();
     }
 
     /** The method display group of parameters which it contains. */
     public void unfold() {
         isFolded = false;
-        view.setVisibleItemsPanel(true);
-        view.rotateIcon();
+
+        view.collapsePropertyGroup();
     }
 
     /**
@@ -93,12 +94,11 @@ public class PropertyGroupPresenter extends AbstractPresenter<PropertyGroupView>
 
     /** {@inheritDoc} */
     @Override
-    public void onItemClicked() {
+    public void onPropertyGroupClicked() {
         if (isFolded) {
             unfold();
         } else {
             fold();
         }
     }
-
 }

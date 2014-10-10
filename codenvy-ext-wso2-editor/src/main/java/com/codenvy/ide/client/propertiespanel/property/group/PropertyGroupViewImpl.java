@@ -38,6 +38,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class PropertyGroupViewImpl extends AbstractView<PropertyGroupView.ActionDelegate> implements PropertyGroupView {
 
@@ -60,13 +61,11 @@ public class PropertyGroupViewImpl extends AbstractView<PropertyGroupView.Action
 
     private final AnimationController animator;
 
-    private boolean expanded;
-
     @Inject
     public PropertyGroupViewImpl(PropertyGroupViewImplUiBinder ourUiBinder,
                                  EditorResources resources,
                                  @Assisted String title) {
-        this.res = resources;
+        res = resources;
 
         initWidget(ourUiBinder.createAndBindUi(this));
 
@@ -74,16 +73,16 @@ public class PropertyGroupViewImpl extends AbstractView<PropertyGroupView.Action
         this.icon.getElement().setInnerHTML(image.toString());
         this.title.setText(title);
 
-        defaultIcon();
-
         mainPanel.addDomHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                expandOrCollapse();
+                delegate.onPropertyGroupClicked();
+
+                event.stopPropagation();
             }
         }, ClickEvent.getType());
 
-        this.propertiesPanel.addDomHandler(new ClickHandler() {
+        propertiesPanel.addDomHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 event.stopPropagation();
@@ -94,25 +93,25 @@ public class PropertyGroupViewImpl extends AbstractView<PropertyGroupView.Action
         animator.hideWithoutAnimating((elemental.dom.Element)propertiesPanel.getElement());
         animator.showWithoutAnimating((elemental.dom.Element)propertiesPanel.getElement());
 
-        expanded = true;
-    }
-
-    private void expandOrCollapse() {
-        if (!expanded) {
-            animator.show((elemental.dom.Element)propertiesPanel.getElement());
-            expanded = true;
-            rotateIcon();
-        } else {
-            animator.hide((elemental.dom.Element)propertiesPanel.getElement());
-            expanded = false;
-            defaultIcon();
-        }
+        collapsePropertyGroup();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setVisibleItemsPanel(boolean visible) {
-        propertiesPanel.setVisible(visible);
+    public void expendPropertyGroup() {
+        animator.hide((elemental.dom.Element)propertiesPanel.getElement());
+
+        icon.removeStyleName(res.editorCSS().normalImage());
+        icon.addStyleName(res.editorCSS().expandedImage());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void collapsePropertyGroup() {
+        animator.show((elemental.dom.Element)propertiesPanel.getElement());
+
+        icon.removeStyleName(res.editorCSS().expandedImage());
+        icon.addStyleName(res.editorCSS().normalImage());
     }
 
     /** {@inheritDoc} */
@@ -125,20 +124,6 @@ public class PropertyGroupViewImpl extends AbstractView<PropertyGroupView.Action
     @Override
     public void removeProperty(@Nonnull AbstractPropertyPresenter property) {
         propertiesPanel.remove(property.getView());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void rotateIcon() {
-        icon.removeStyleName(res.editorCSS().normalImage());
-        icon.addStyleName(res.editorCSS().expandedImage());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void defaultIcon() {
-        icon.removeStyleName(res.editorCSS().expandedImage());
-        icon.addStyleName(res.editorCSS().normalImage());
     }
 
     /** {@inheritDoc} */

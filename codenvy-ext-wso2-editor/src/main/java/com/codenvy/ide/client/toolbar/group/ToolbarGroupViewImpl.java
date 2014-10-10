@@ -40,6 +40,7 @@ import javax.annotation.Nonnull;
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class ToolbarGroupViewImpl extends AbstractView<ToolbarGroupView.ActionDelegate> implements ToolbarGroupView {
 
@@ -100,15 +101,15 @@ public class ToolbarGroupViewImpl extends AbstractView<ToolbarGroupView.ActionDe
     /** {@inheritDoc} */
     @Override
     public void rotateIcon() {
-        icon.removeStyleName(resources.editorCSS().normalImage());
-        icon.addStyleName(resources.editorCSS().expandedImage());
+        icon.removeStyleName(resources.editorCSS().expandedImage());
+        icon.addStyleName(resources.editorCSS().normalImage());
     }
 
     /** {@inheritDoc} */
     @Override
     public void defaultIcon() {
-        icon.removeStyleName(resources.editorCSS().expandedImage());
-        icon.addStyleName(resources.editorCSS().normalImage());
+        icon.removeStyleName(resources.editorCSS().normalImage());
+        icon.addStyleName(resources.editorCSS().expandedImage());
     }
 
     /** {@inheritDoc} */
