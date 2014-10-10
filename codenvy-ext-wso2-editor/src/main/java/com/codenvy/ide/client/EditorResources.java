@@ -79,9 +79,9 @@ public interface EditorResources extends ClientBundle {
 
         String toolbarItemMainPanel();
 
-        String toolbarTitleStyle();
+        String titleBold();
 
-        String toolbarTitleBold();
+        String textAlign();
 
         String fontStyle();
 
@@ -89,7 +89,19 @@ public interface EditorResources extends ClientBundle {
 
         String branchBackground();
 
+        String elementMainPanel();
+
+        String elementHeaderPanel();
+
+        String elementHeaderInnerPanel();
+
         String complexMediatorBackground();
+
+        String branchTitlePanel();
+
+        String workspaceBackground();
+
+        String panelHover();
     }
 
     @Source("editor.css")

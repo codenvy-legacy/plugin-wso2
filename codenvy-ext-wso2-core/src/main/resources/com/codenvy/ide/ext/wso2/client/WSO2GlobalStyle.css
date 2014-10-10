@@ -18,13 +18,14 @@
 .importErrorFont {
     cursor: default;
     font-family: mainFontFamily;
-    font-size: fontSize;
+    font-size: 13px;
     font-style: normal;
     font-weight: normal;
     color: #d21a1a;
 }
 
 .editorButtonStyle {
+    -o-border-radius: 2px;
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
     -khtml-border-radius: 2px;

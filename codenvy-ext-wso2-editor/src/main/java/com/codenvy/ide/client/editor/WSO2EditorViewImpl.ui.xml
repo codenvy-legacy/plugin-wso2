@@ -24,11 +24,6 @@
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
 
     <ui:style>
-        .fullSize {
-            width: 100%;
-            height: 100%;
-        }
-
         .palettePanel {
             width: 100%;
             height: 20px;
@@ -57,25 +52,21 @@
             margin-left: 12px;
             position: relative;
         }
-
-        .workspace {
-            background-color: #373737;
-        }
     </ui:style>
 
-    <g:SplitLayoutPanel ui:field="mainPanel" addStyleNames="{style.fullSize}, {res.editorCSS.propertyBackground}">
+    <g:SplitLayoutPanel ui:field="mainPanel" addStyleNames="{res.editorCSS.fullSize}, {res.editorCSS.propertyBackground}">
 
         <g:west size="180">
             <g:FlowPanel ui:field="toolbarPanel">
 
                 <g:FlowPanel addStyleNames="{style.palettePanel}, {res.editorCSS.toolbarPalette}">
                     <g:Label text="{locale.toolbarPalette}"
-                             addStyleNames="{style.labelToolbarStyle}, {res.editorCSS.toolbarTitleStyle}, {res.editorCSS.fontStyle}"/>
+                             addStyleNames="{style.labelToolbarStyle} {res.editorCSS.fontStyle} {res.editorCSS.fontStyle}"/>
                     <g:Image ui:field="closeToolbarBtn" resource="{res.toolbarPanelClose}"
                              addStyleNames="{style.closeToolbarBtnStyle}"/>
                 </g:FlowPanel>
 
-                <g:SimpleLayoutPanel ui:field="toolbar" addStyleNames="{res.editorCSS.toolbarMainPanel},{style.fullSize}"/>
+                <g:SimpleLayoutPanel ui:field="toolbar" addStyleNames="{res.editorCSS.toolbarMainPanel} {res.editorCSS.fullSize}"/>
             </g:FlowPanel>
         </g:west>
 
@@ -88,13 +79,15 @@
                     <g:Button ui:field="hideBtn" height="20px" addStyleNames="{res.editorCSS.propertyButtonHideStyle}"/>
                 </g:FlowPanel>
 
-                <g:SimpleLayoutPanel ui:field="propertiesPanel" addStyleNames="{style.fullSize}, {res.editorCSS.propertyBackground}"/>
+                <g:SimpleLayoutPanel ui:field="propertiesPanel"
+                                     addStyleNames="{res.editorCSS.fullSize} {res.editorCSS.propertyBackground}"/>
 
             </g:FlowPanel>
         </g:east>
 
         <g:center>
-            <g:ScrollPanel ui:field="workspace" addStyleNames="{style.fullSize} {style.workspace}" width="calc(100%-15px)"/>
+            <g:ScrollPanel ui:field="workspace"
+                           addStyleNames="{res.editorCSS.fullSize} {res.editorCSS.workspaceBackground}" width="calc(100%-15px)"/>
         </g:center>
 
     </g:SplitLayoutPanel>

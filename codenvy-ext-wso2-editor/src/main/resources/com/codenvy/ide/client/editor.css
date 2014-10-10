@@ -34,10 +34,6 @@
     background: #373737;
 }
 
-.propertyHeaderPanel:hover {
-    background: selectionBackgroundColor;
-}
-
 .selectedElement {
     border: 1px solid #34bad7 !important;
 }
@@ -60,16 +56,46 @@
 
 .normalImage {
     transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
     -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
 }
 
 .expandedImage {
     transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
     -webkit-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
 }
 
 .topBorder {
     border-top: 1px solid #000000;
+}
+
+.elementHeaderPanel {
+    background: #545454;
+    border-bottom: 1px solid #404040;
+}
+
+.elementHeaderInnerPanel {
+    position: absolute;
+    border-bottom: 1px solid #000000;
+}
+
+.elementMainPanel {
+    border: 1px solid #000000;
+    box-shadow: 0 1px 7px 0 rgba(0, 0, 0, 0.75);
+}
+
+.branchTitlePanel {
+    text-align: center;
+    vertical-align: middle;
+    font-weight: bold;
+    background: #545454;
+    border-right: 1px solid #000000;
+    border-left: 1px solid #000000;
 }
 
 .toolbarPalette {
@@ -85,15 +111,17 @@
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.3);
 }
 
-.toolbarTitleStyle {
-    font-family: "Helvetica Neue", serif;
-    font-size: 11px;
-    color: #dbdbdb;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+.titleBold {
+    font-weight: bold;
 }
 
-.toolbarTitleBold {
-    font-weight: bold;
+.textAlign {
+    text-align: center;
+}
+
+.panelHover:hover {
+    background: #365a73;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.5);
 }
 
 .toolbarGroupHeaderPanelStyle {
@@ -101,10 +129,6 @@
     background: #545454;
     border-bottom: 1px solid #303030;
     border-top: 1px solid #878787;
-}
-
-.toolbarGroupHeaderPanelStyle:hover {
-    background: #365a73;
 }
 
 .toolbarGroupHeaderPanelStyle:active {
@@ -123,11 +147,6 @@
     border-bottom: 1px solid #535353;
     cursor: pointer;
     overflow: hidden;
-}
-
-.toolbarItemMainPanel:hover {
-    background: #365a73;
-    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.5);
 }
 
 .toolbarItemMainPanel:active {
@@ -203,6 +222,7 @@
     font-family: "Helvetica Neue", serif;
     font-size: 11px;
     color: #dbdbdb;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
 }
 
 .dottedBackground {
@@ -217,6 +237,10 @@
 
 .branchBackground {
     background-color: #2a2a2a;
+}
+
+.workspaceBackground {
+    background-color: #373737;
 }
 
 .complexMediatorBackground {

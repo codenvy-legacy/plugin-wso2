@@ -23,7 +23,7 @@
 
     <g:FlowPanel addStyleNames="{res.editorCSS.property}">
         <g:Label ui:field="title" addStyleNames="{res.editorCSS.fontStyle} {res.editorCSS.propertyItem}"/>
-        <g:ListBox ui:field="property" width="calc(100% - 15px)" addStyleNames="{res.editorCSS.propertyField}, {res.editorCSS.fontStyle}"/>
+        <g:ListBox ui:field="property" width="calc(100% - 15px)" addStyleNames="{res.editorCSS.propertyField} {res.editorCSS.fontStyle}"/>
     </g:FlowPanel>
 
 </ui:UiBinder>
