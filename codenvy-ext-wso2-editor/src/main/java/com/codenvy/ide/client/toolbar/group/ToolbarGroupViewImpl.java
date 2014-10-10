@@ -75,6 +75,8 @@ public class ToolbarGroupViewImpl extends AbstractView<ToolbarGroupView.ActionDe
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onItemClicked();
+
+                event.stopPropagation();
             }
         }, ClickEvent.getType());
 

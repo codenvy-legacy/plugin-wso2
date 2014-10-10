@@ -19,6 +19,7 @@ import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.salesforce.DescribeSubjects;
 import com.codenvy.ide.client.elements.connectors.salesforce.SalesForcePropertyManager;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
@@ -55,14 +56,16 @@ public class DescribeConnectorPresenter extends AbstractConnectorPropertiesPanel
                                       SalesForcePropertyManager salesForcePropertyManager,
                                       ParameterPresenter parameterPresenter,
                                       PropertyTypeManager propertyTypeManager,
-                                      PropertyPanelFactory propertyPanelFactory) {
+                                      PropertyPanelFactory propertyPanelFactory,
+                                      SelectionManager selectionManager) {
         super(view,
               salesForcePropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertyPanelFactory);
+              propertyPanelFactory,
+              selectionManager);
 
         prepareView();
     }

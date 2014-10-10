@@ -18,6 +18,7 @@ package com.codenvy.ide.client.propertiespanel;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.propertiespanel.property.PropertyValueChangedListener;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
@@ -41,9 +42,11 @@ import static com.codenvy.ide.client.propertiespanel.property.complex.ComplexPro
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
-public abstract class AbstractPropertiesPanel<T extends Element> extends AbstractPresenter<PropertiesPanelView> {
+public abstract class AbstractPropertiesPanel<T extends Element> extends AbstractPresenter<PropertiesPanelView>
+        implements PropertiesPanelView.ActionDelegate {
 
     private final PropertyPanelFactory          propertyPanelFactory;
+    private final SelectionManager              selectionManager;
     private final List<PropertyChangedListener> listeners;
     private final List<PropertyGroupPresenter>  groups;
 
@@ -55,13 +58,15 @@ public abstract class AbstractPropertiesPanel<T extends Element> extends Abstrac
     protected AbstractPropertiesPanel(@Nonnull PropertiesPanelView view,
                                       @Nonnull PropertyTypeManager propertyTypeManager,
                                       @Nonnull WSO2EditorLocalizationConstant locale,
-                                      @Nonnull PropertyPanelFactory propertyPanelFactory) {
+                                      @Nonnull PropertyPanelFactory propertyPanelFactory,
+                                      @Nonnull SelectionManager selectionManager) {
         super(view);
 
         this.propertyPanelFactory = propertyPanelFactory;
 
         this.locale = locale;
         this.propertyTypeManager = propertyTypeManager;
+        this.selectionManager = selectionManager;
         this.listeners = new ArrayList<>();
         this.groups = new ArrayList<>();
     }
@@ -208,6 +213,12 @@ public abstract class AbstractPropertiesPanel<T extends Element> extends Abstrac
         for (PropertyGroupPresenter group : groups) {
             group.unfold();
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onMainPanelClicked() {
+        selectionManager.setElement(null);
     }
 
 }

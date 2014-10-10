@@ -19,6 +19,7 @@ import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.Filter;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
@@ -71,9 +72,10 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
                                           PropertyTypeManager propertyTypeManager,
                                           NameSpaceEditorPresenter nameSpaceEditorPresenter,
                                           WSO2EditorLocalizationConstant locale,
-                                          PropertyPanelFactory propertyPanelFactory) {
+                                          PropertyPanelFactory propertyPanelFactory,
+                                          SelectionManager selectionManager) {
 
-        super(view, propertyTypeManager, locale, propertyPanelFactory);
+        super(view, propertyTypeManager, locale, propertyPanelFactory, selectionManager);
 
         this.nameSpaceEditorPresenter = nameSpaceEditorPresenter;
 

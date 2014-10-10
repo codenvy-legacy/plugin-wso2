@@ -18,7 +18,9 @@ package com.codenvy.ide.client.propertiespanel;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.AbstractElement;
+import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.propertiespanel.property.AbstractPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.PropertyValueChangedListener;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
@@ -43,6 +45,7 @@ import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
@@ -69,6 +72,8 @@ public abstract class AbstractPropertiesPanelTest<V extends AbstractPropertiesPa
     protected PropertyChangedListener        listener;
     @Mock
     protected AcceptsOneWidget               container;
+    @Mock
+    protected SelectionManager               selectionManager;
 
     protected V presenter;
 
@@ -236,5 +241,12 @@ public abstract class AbstractPropertiesPanelTest<V extends AbstractPropertiesPa
 
     @Test
     public abstract void groupsShouldBeShown();
+
+    @Test
+    public void noElementShouldBeSelectedWhenOneClickedOnEmptyPlace() throws Exception {
+        presenter.onMainPanelClicked();
+
+        verify(selectionManager).setElement(isNull(Element.class));
+    }
 
 }

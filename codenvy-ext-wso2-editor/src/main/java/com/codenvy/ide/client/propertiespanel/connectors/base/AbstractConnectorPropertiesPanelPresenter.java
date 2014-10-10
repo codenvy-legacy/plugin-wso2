@@ -20,6 +20,7 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.connectors.AbstractConnector;
 import com.codenvy.ide.client.elements.connectors.ConnectorPropertyManager;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
@@ -74,9 +75,10 @@ public abstract class AbstractConnectorPropertiesPanelPresenter<T extends Abstra
                                                         @Nonnull NameSpaceEditorPresenter nameSpaceEditorPresenter,
                                                         @Nonnull PropertyTypeManager propertyTypeManager,
                                                         @Nonnull WSO2EditorLocalizationConstant localizationConstant,
-                                                        @Nonnull PropertyPanelFactory propertyPanelFactory) {
+                                                        @Nonnull PropertyPanelFactory propertyPanelFactory,
+                                                        @Nonnull SelectionManager selectionManager) {
 
-        super(view, propertyTypeManager, localizationConstant, propertyPanelFactory);
+        super(view, propertyTypeManager, localizationConstant, propertyPanelFactory, selectionManager);
 
         this.nameSpacePresenter = nameSpaceEditorPresenter;
         this.parameterPresenter = parameterPresenter;

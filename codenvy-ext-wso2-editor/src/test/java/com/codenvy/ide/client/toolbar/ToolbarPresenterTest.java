@@ -17,7 +17,9 @@
 package com.codenvy.ide.client.toolbar;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
+import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.inject.factories.ToolbarFactory;
+import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.toolbar.group.ToolbarGroupPresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -32,6 +34,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static com.codenvy.ide.client.toolbar.group.ToolbarGroupPresenter.OpenGroupToolbarListener;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -60,6 +63,8 @@ public class ToolbarPresenterTest {
     private ToolbarFactory                 toolbarFactory;
     @Mock
     private WSO2EditorLocalizationConstant locale;
+    @Mock
+    private SelectionManager               selectionManager;
     @InjectMocks
     private ToolbarPresenter               presenter;
 
@@ -158,6 +163,13 @@ public class ToolbarPresenterTest {
         verify(toolbarGroupTwo, never()).unfold();
         verify(toolbarGroupTwo).fold();
         verify(toolbarGroupTwo).addListener(any(OpenGroupToolbarListener.class));
+    }
+
+    @Test
+    public void noElementShouldBeSelectedWhenOneClickedOnEmptyPlace() throws Exception {
+        presenter.onMainPanelClicked();
+
+        verify(selectionManager).setElement(isNull(Element.class));
     }
 
 }

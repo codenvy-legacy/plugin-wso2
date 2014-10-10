@@ -39,6 +39,8 @@ public interface PropertiesPanelView extends View<PropertiesPanelView.ActionDele
     void addGroup(@Nonnull PropertyGroupPresenter propertyGroup);
 
     public interface ActionDelegate {
+        /** Performs some actions in response to a user's clicking on the main panel of the view. */
+        void onMainPanelClicked();
     }
 
 }

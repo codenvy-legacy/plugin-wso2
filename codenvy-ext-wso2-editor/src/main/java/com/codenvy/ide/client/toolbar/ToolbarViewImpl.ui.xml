@@ -30,7 +30,7 @@
     </ui:style>
 
     <g:FlowPanel>
-        <g:ScrollPanel addStyleNames="{style.fullSize}" alwaysShowScrollBars="true">
+        <g:ScrollPanel ui:field="scrollPanel" addStyleNames="{style.fullSize}" alwaysShowScrollBars="true">
             <g:FlowPanel ui:field="mainPanel" addStyleNames="{style.fullSize} {res.editorCSS.toolbarPalette}" width="calc(100% - 1px)"/>
         </g:ScrollPanel>
     </g:FlowPanel>

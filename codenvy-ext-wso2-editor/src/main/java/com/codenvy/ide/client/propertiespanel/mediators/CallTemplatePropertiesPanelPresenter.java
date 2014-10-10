@@ -19,6 +19,7 @@ import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.mediators.CallTemplate;
 import com.codenvy.ide.client.elements.mediators.log.Property;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
@@ -65,9 +66,10 @@ public class CallTemplatePropertiesPanelPresenter extends AbstractPropertiesPane
                                                 PropertyTypeManager propertyTypeManager,
                                                 PropertyConfigPresenter propertyConfigPresenter,
                                                 final WSO2EditorLocalizationConstant locale,
-                                                PropertyPanelFactory propertyPanelFactory) {
+                                                PropertyPanelFactory propertyPanelFactory,
+                                                SelectionManager selectionManager) {
 
-        super(view, propertyTypeManager, locale, propertyPanelFactory);
+        super(view, propertyTypeManager, locale, propertyPanelFactory, selectionManager);
 
         this.propertyConfigPresenter = propertyConfigPresenter;
 

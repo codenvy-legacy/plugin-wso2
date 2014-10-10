@@ -18,6 +18,7 @@ package com.codenvy.ide.client.propertiespanel.mediators;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.mediators.Respond;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
@@ -46,9 +47,10 @@ public class RespondPropertiesPanelPresenter extends AbstractPropertiesPanel<Res
     public RespondPropertiesPanelPresenter(PropertiesPanelView view,
                                            PropertyTypeManager propertyTypeManager,
                                            WSO2EditorLocalizationConstant locale,
-                                           PropertyPanelFactory propertyPanelFactory) {
+                                           PropertyPanelFactory propertyPanelFactory,
+                                           SelectionManager selectionManager) {
 
-        super(view, propertyTypeManager, locale, propertyPanelFactory);
+        super(view, propertyTypeManager, locale, propertyPanelFactory, selectionManager);
 
         PropertyGroupPresenter basicGroup = createGroup(locale.miscGroupTitle());
 
