@@ -19,6 +19,7 @@ import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.GoogleSpreadsheetPropertyManager;
 import com.codenvy.ide.client.elements.connectors.googlespreadsheet.InitSpreadsheet;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
@@ -72,14 +73,16 @@ public class InitSpreadsheetConnectorPresenter extends AbstractConnectorProperti
                                              GoogleSpreadsheetPropertyManager googleSpreadsheetPropertyManager,
                                              ParameterPresenter parameterPresenter,
                                              PropertyTypeManager propertyTypeManager,
-                                             PropertyPanelFactory propertyPanelFactory) {
+                                             PropertyPanelFactory propertyPanelFactory,
+                                             SelectionManager selectionManager) {
         super(view,
               googleSpreadsheetPropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertyPanelFactory);
+              propertyPanelFactory,
+              selectionManager);
 
         prepareView();
     }

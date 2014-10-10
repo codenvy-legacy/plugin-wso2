@@ -33,6 +33,12 @@
             height: 18px;
         }
 
+        .label {
+            position: relative;
+            top: 50%;
+            margin-top: -6px;
+        }
+
         .icon {
             height: 12px;
             width: 12px;
@@ -47,9 +53,11 @@
 
     <g:FlowPanel ui:field="mainPanel" addStyleNames="{style.mainPanel}">
 
-        <g:FlowPanel addStyleNames="{style.headerPanel} {resource.editorCSS.toolbarGroupHeaderPanelStyle}">
+        <g:FlowPanel addStyleNames="{style.headerPanel} {resource.editorCSS.toolbarGroupHeaderPanelStyle} {resource.editorCSS.panelHover}">
             <g:SimpleLayoutPanel ui:field="icon" addStyleNames="{style.icon} {resource.editorCSS.toolbarGroupIconColor}"/>
-            <g:Label ui:field="title" addStyleNames="{resource.editorCSS.toolbarTitleStyle} {resource.editorCSS.toolbarTitleBold}"/>
+            <g:Label ui:field="title"
+                     addStyleNames="{resource.editorCSS.fontStyle} {resource.editorCSS.titleBold}
+                     {resource.editorCSS.fontStyle} {style.label}"/>
         </g:FlowPanel>
 
         <g:FlowPanel ui:field="itemsPanel"/>

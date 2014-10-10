@@ -19,7 +19,6 @@ import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.client.editor.WSO2Editor;
 import com.codenvy.ide.client.inject.Injector;
-import com.codenvy.ide.ext.wso2.client.editor.ESBConfEditor;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -33,6 +32,7 @@ import javax.validation.constraints.NotNull;
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class GraphicEditor extends AbstractEditorPresenter implements GraphicEditorView.ActionDelegate,
                                                                       WSO2Editor.EditorChangeListener {
@@ -126,9 +126,19 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
         updateDirtyState(true);
     }
 
-    /** Calls method from {@link ESBConfEditor} which changes visibility of toolbar panel. */
+    /** Calls method which changes visibility of toolbar panel. */
     public void changeToolbarVisibility() {
         editor.changeToolbarPanelVisibility();
+    }
+
+    /** Changes visible state of the property panel. */
+    public void changePropertyPanelVisibility() {
+        editor.changePropertyPanelVisibility();
+    }
+
+    /** Calls method which changes size of workspace. */
+    public void resizeEditor() {
+        editor.onEditorDOMChanged();
     }
 
 }

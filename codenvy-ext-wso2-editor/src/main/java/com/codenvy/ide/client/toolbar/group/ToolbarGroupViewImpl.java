@@ -18,6 +18,7 @@ package com.codenvy.ide.client.toolbar.group;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.codenvy.ide.client.toolbar.item.ToolbarItemPresenter;
+import com.codenvy.ide.util.AnimationController;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -38,6 +39,7 @@ import javax.annotation.Nonnull;
  * Provides a graphical representation of the toolbar group.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class ToolbarGroupViewImpl extends AbstractView<ToolbarGroupView.ActionDelegate> implements ToolbarGroupView {
 
@@ -54,7 +56,8 @@ public class ToolbarGroupViewImpl extends AbstractView<ToolbarGroupView.ActionDe
     @UiField
     FlowPanel         itemsPanel;
 
-    private final EditorResources resources;
+    private final AnimationController animator;
+    private final EditorResources     resources;
 
     @Inject
     public ToolbarGroupViewImpl(ToolbarGroupViewImplUiBinder ourUiBinder, EditorResources resources, @Assisted String title) {
@@ -68,12 +71,18 @@ public class ToolbarGroupViewImpl extends AbstractView<ToolbarGroupView.ActionDe
 
         defaultIcon();
 
-        this.mainPanel.addDomHandler(new ClickHandler() {
+        mainPanel.addDomHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onItemClicked();
+
+                event.stopPropagation();
             }
         }, ClickEvent.getType());
+
+        animator = new AnimationController.Builder().setCollapse(true).setFade(true).build();
+        animator.showWithoutAnimating((elemental.dom.Element)itemsPanel.getElement());
+        animator.hideWithoutAnimating((elemental.dom.Element)itemsPanel.getElement());
     }
 
     /** {@inheritDoc} */
@@ -100,6 +109,18 @@ public class ToolbarGroupViewImpl extends AbstractView<ToolbarGroupView.ActionDe
     public void defaultIcon() {
         icon.removeStyleName(resources.editorCSS().expandedImage());
         icon.addStyleName(resources.editorCSS().normalImage());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void expandOrCollapse(boolean expanded) {
+        if (!expanded) {
+            animator.show((elemental.dom.Element)itemsPanel.getElement());
+            rotateIcon();
+        } else {
+            animator.hide((elemental.dom.Element)itemsPanel.getElement());
+            defaultIcon();
+        }
     }
 
 }

@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
  * The abstract view's representation of esb editor. It provides an ability to show all available properties of editor.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
 @ImplementedBy(ESBConfEditorViewImpl.class)
@@ -45,6 +46,9 @@ public interface ESBConfEditorView extends View<ESBConfEditorView.ActionDelegate
 
         /** Performs some actions in response to user clicked on dual view button. */
         void onDualViewButtonClicked();
+
+        /** Performs some actions in response to user clicked on property button. */
+        void onPropertyButtonClicked();
 
         /** Performs some actions in response to user clicked on palette button. */
         void onChangeToolbarVisibilityClicked();

@@ -31,8 +31,6 @@ import javax.annotation.Nonnull;
 @ImplementedBy(WorkspaceViewImpl.class)
 public interface WorkspaceView extends View<WorkspaceView.ActionDelegate> {
 
-    int SIZE_OF_TWO_BORDER_LINES = 4;
-
     /**
      * Set element widget on the view.
      *
@@ -43,11 +41,11 @@ public interface WorkspaceView extends View<WorkspaceView.ActionDelegate> {
 
     /** @return height of a parent widget */
     @Nonnegative
-    int getParentHeight();
+    int getHeight();
 
     /** @return width of a parent widget */
     @Nonnegative
-    int getParentWidth();
+    int getWidth();
 
     public interface ActionDelegate {
     }

@@ -19,6 +19,7 @@ import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint;
 import com.codenvy.ide.client.elements.endpoints.address.Property;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
@@ -113,8 +114,9 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
                                                    PropertyTypeManager propertyTypeManager,
                                                    WSO2EditorLocalizationConstant locale,
                                                    PropertyPanelFactory propertyPanelFactory,
-                                                   PropertyPresenter propertyPresenter) {
-        super(view, propertyTypeManager, locale, propertyPanelFactory);
+                                                   PropertyPresenter propertyPresenter,
+                                                   SelectionManager selectionManager) {
+        super(view, propertyTypeManager, locale, propertyPanelFactory, selectionManager);
 
         this.propertyPresenter = propertyPresenter;
 

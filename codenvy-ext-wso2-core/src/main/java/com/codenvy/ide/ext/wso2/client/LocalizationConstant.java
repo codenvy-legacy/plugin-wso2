@@ -173,4 +173,7 @@ public interface LocalizationConstant extends Messages {
 
     @Key("toolbar.palette")
     String toolbarPalette();
+
+    @Key("editor.property.panel")
+    String editorProperty();
 }

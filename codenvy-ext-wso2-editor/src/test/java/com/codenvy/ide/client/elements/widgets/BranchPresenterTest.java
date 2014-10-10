@@ -110,8 +110,9 @@ public class BranchPresenterTest {
     private BranchPresenter presenter;
 
     private void createPresenter() {
-        presenter = new BranchPresenter(view,
-                                        connectionsValidator,
+        when(elementWidgetFactory.createContainerView(any(Branch.class))).thenReturn(view);
+
+        presenter = new BranchPresenter(connectionsValidator,
                                         innerElementsValidator,
                                         elementWidgetFactory,
                                         elementCreatorsManager,

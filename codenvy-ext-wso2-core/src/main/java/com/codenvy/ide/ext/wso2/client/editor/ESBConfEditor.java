@@ -163,6 +163,8 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         view.setEnableDualViewButton(true);
 
         view.showSourceView(textEditor);
+
+        graphicEditor.resizeEditor();
     }
 
     /** {@inheritDoc} */
@@ -173,6 +175,8 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         view.setEnableDualViewButton(true);
 
         view.showDesignView(graphicEditor);
+
+        graphicEditor.resizeEditor();
     }
 
     /** {@inheritDoc} */
@@ -183,12 +187,20 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         view.setEnableDualViewButton(false);
 
         view.showDualView(graphicEditor, textEditor);
+
+        graphicEditor.resizeEditor();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onChangeToolbarVisibilityClicked() {
         graphicEditor.changeToolbarVisibility();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onPropertyButtonClicked() {
+        graphicEditor.changePropertyPanelVisibility();
     }
 
     /** {@inheritDoc} */

@@ -20,6 +20,7 @@ import com.codenvy.ide.client.elements.mediators.payload.Arg;
 import com.codenvy.ide.client.elements.mediators.payload.Format;
 import com.codenvy.ide.client.elements.mediators.payload.PayloadFactory;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
@@ -85,9 +86,10 @@ public class PayloadFactoryPropertiesPanelPresenter extends AbstractPropertiesPa
                                                   ResourceKeyEditorPresenter resourceKeyEditorPresenter,
                                                   ArgumentsConfigPresenter argumentsConfigPresenter,
                                                   final WSO2EditorLocalizationConstant locale,
-                                                  PropertyPanelFactory propertyPanelFactory) {
+                                                  PropertyPanelFactory propertyPanelFactory,
+                                                  SelectionManager selectionManager) {
 
-        super(view, propertyTypeManager, locale, propertyPanelFactory);
+        super(view, propertyTypeManager, locale, propertyPanelFactory, selectionManager);
 
         this.inlineConfigurationPresenter = inlineConfigurationPresenter;
         this.resourceKeyEditorPresenter = resourceKeyEditorPresenter;

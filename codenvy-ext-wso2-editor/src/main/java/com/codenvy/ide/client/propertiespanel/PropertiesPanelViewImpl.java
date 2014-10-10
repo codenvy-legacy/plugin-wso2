@@ -17,9 +17,12 @@ package com.codenvy.ide.client.propertiespanel;
 
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -36,11 +39,22 @@ public class PropertiesPanelViewImpl extends AbstractView<PropertiesPanelView.Ac
     }
 
     @UiField
-    FlowPanel mainPanel;
+    FlowPanel   mainPanel;
+    @UiField
+    ScrollPanel scrollPanel;
 
     @Inject
     public PropertiesPanelViewImpl(PropertiesPanelViewImplUiBinder ourUiBinder) {
         initWidget(ourUiBinder.createAndBindUi(this));
+
+        scrollPanel.addDomHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onMainPanelClicked();
+
+                event.stopPropagation();
+            }
+        }, ClickEvent.getType());
     }
 
     /** {@inheritDoc} */

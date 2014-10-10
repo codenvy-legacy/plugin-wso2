@@ -18,8 +18,39 @@
 .importErrorFont {
     cursor: default;
     font-family: mainFontFamily;
-    font-size: fontSize;
+    font-size: 13px;
     font-style: normal;
     font-weight: normal;
     color: #d21a1a;
+}
+
+.editorButtonStyle {
+    -o-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -khtml-border-radius: 2px;
+    border-radius: 2px;
+    background-color: #515151;
+    border: 1px solid #1a1b1c;
+    font: "Helvetica Neue";
+    font-size: 11px;
+    color: #ffffff;
+}
+
+.editorButtonStyle:hover {
+    background: #365a73;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.43);
+}
+
+.editorButtonStyle:active {
+    border: 1px solid #515151;
+}
+
+.editorButtonStyle:disabled {
+    background: #365a73;
+}
+
+.palettePropertyBtnStyle {
+    cursor: pointer;
+    background: #365a73 !important;
 }

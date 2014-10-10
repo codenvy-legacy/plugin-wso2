@@ -18,6 +18,7 @@ package com.codenvy.ide.client.propertiespanel.property.group;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.codenvy.ide.client.propertiespanel.property.AbstractPropertyPresenter;
+import com.codenvy.ide.util.AnimationController;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -36,6 +37,7 @@ import javax.annotation.Nonnull;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class PropertyGroupViewImpl extends AbstractView<PropertyGroupView.ActionDelegate> implements PropertyGroupView {
 
@@ -53,12 +55,18 @@ public class PropertyGroupViewImpl extends AbstractView<PropertyGroupView.Action
     FlowPanel         groupNamePanel;
     @UiField
     FlowPanel         propertiesPanel;
+    @UiField(provided = true)
+    EditorResources   res;
 
-    private final EditorResources resources;
+    private final AnimationController animator;
+
+    private boolean expanded;
 
     @Inject
-    public PropertyGroupViewImpl(PropertyGroupViewImplUiBinder ourUiBinder, EditorResources resources, @Assisted String title) {
-        this.resources = resources;
+    public PropertyGroupViewImpl(PropertyGroupViewImplUiBinder ourUiBinder,
+                                 EditorResources resources,
+                                 @Assisted String title) {
+        this.res = resources;
 
         initWidget(ourUiBinder.createAndBindUi(this));
 
@@ -68,10 +76,10 @@ public class PropertyGroupViewImpl extends AbstractView<PropertyGroupView.Action
 
         defaultIcon();
 
-        this.mainPanel.addDomHandler(new ClickHandler() {
+        mainPanel.addDomHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                delegate.onItemClicked();
+                expandOrCollapse();
             }
         }, ClickEvent.getType());
 
@@ -81,6 +89,24 @@ public class PropertyGroupViewImpl extends AbstractView<PropertyGroupView.Action
                 event.stopPropagation();
             }
         }, ClickEvent.getType());
+
+        animator = new AnimationController.Builder().setCollapse(true).setFade(true).build();
+        animator.hideWithoutAnimating((elemental.dom.Element)propertiesPanel.getElement());
+        animator.showWithoutAnimating((elemental.dom.Element)propertiesPanel.getElement());
+
+        expanded = true;
+    }
+
+    private void expandOrCollapse() {
+        if (!expanded) {
+            animator.show((elemental.dom.Element)propertiesPanel.getElement());
+            expanded = true;
+            rotateIcon();
+        } else {
+            animator.hide((elemental.dom.Element)propertiesPanel.getElement());
+            expanded = false;
+            defaultIcon();
+        }
     }
 
     /** {@inheritDoc} */
@@ -104,15 +130,15 @@ public class PropertyGroupViewImpl extends AbstractView<PropertyGroupView.Action
     /** {@inheritDoc} */
     @Override
     public void rotateIcon() {
-        icon.removeStyleName(resources.editorCSS().normalImage());
-        icon.addStyleName(resources.editorCSS().expandedImage());
+        icon.removeStyleName(res.editorCSS().normalImage());
+        icon.addStyleName(res.editorCSS().expandedImage());
     }
 
     /** {@inheritDoc} */
     @Override
     public void defaultIcon() {
-        icon.removeStyleName(resources.editorCSS().expandedImage());
-        icon.addStyleName(resources.editorCSS().normalImage());
+        icon.removeStyleName(res.editorCSS().expandedImage());
+        icon.addStyleName(res.editorCSS().normalImage());
     }
 
     /** {@inheritDoc} */

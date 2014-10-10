@@ -49,15 +49,25 @@ public interface EditorResources extends ClientBundle {
 
         String property();
 
-        String labelStyle();
-
-        String fieldStyle();
+        String propertyField();
 
         String expandedImage();
 
         String normalImage();
 
         String topBorder();
+
+        String propertyItem();
+
+        String propertyHeaderPanel();
+
+        String propertyButtonPanelStyle();
+
+        String propertyButtonHideStyle();
+
+        String mainPropertiesPanel();
+
+        String propertyBackground();
 
         String toolbarPalette();
 
@@ -69,9 +79,29 @@ public interface EditorResources extends ClientBundle {
 
         String toolbarItemMainPanel();
 
-        String toolbarTitleStyle();
+        String titleBold();
 
-        String toolbarTitleBold();
+        String textAlign();
+
+        String fontStyle();
+
+        String dottedBackground();
+
+        String branchBackground();
+
+        String elementMainPanel();
+
+        String elementHeaderPanel();
+
+        String elementHeaderInnerPanel();
+
+        String complexMediatorBackground();
+
+        String branchTitlePanel();
+
+        String workspaceBackground();
+
+        String panelHover();
     }
 
     @Source("editor.css")

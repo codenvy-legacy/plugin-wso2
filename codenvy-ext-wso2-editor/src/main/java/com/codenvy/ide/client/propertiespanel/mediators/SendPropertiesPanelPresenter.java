@@ -20,6 +20,7 @@ import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.Send;
 import com.codenvy.ide.client.initializers.propertytype.CommonPropertyTypeInitializer;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.propertiespanel.AbstractPropertiesPanel;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
@@ -79,9 +80,10 @@ public class SendPropertiesPanelPresenter extends AbstractPropertiesPanel<Send> 
                                         ResourceKeyEditorPresenter keyPresenter,
                                         NameSpaceEditorPresenter nameSpacePresenter,
                                         WSO2EditorLocalizationConstant locale,
-                                        PropertyPanelFactory propertyPanelFactory) {
+                                        PropertyPanelFactory propertyPanelFactory,
+                                        SelectionManager selectionManager) {
 
-        super(view, propertyTypeManager, locale, propertyPanelFactory);
+        super(view, propertyTypeManager, locale, propertyPanelFactory, selectionManager);
 
         this.keyPresenter = keyPresenter;
         this.nameSpaceEditorPresenter = nameSpacePresenter;

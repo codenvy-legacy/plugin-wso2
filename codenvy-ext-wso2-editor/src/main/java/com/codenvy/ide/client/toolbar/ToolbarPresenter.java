@@ -17,6 +17,7 @@ package com.codenvy.ide.client.toolbar;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.inject.factories.ToolbarFactory;
+import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.toolbar.group.ToolbarGroupPresenter;
 import com.codenvy.ide.util.loging.Log;
@@ -45,14 +46,19 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
 
     private final Map<String, ToolbarGroupPresenter> groups;
     private final ToolbarFactory                     toolbarFactory;
+    private final SelectionManager                   selectionManager;
     private final Set<String>                        states;
     private final WSO2EditorLocalizationConstant     locale;
 
     @Inject
-    public ToolbarPresenter(ToolbarView view, ToolbarFactory toolbarFactory, WSO2EditorLocalizationConstant locale) {
+    public ToolbarPresenter(ToolbarView view,
+                            ToolbarFactory toolbarFactory,
+                            WSO2EditorLocalizationConstant locale,
+                            SelectionManager selectionManager) {
         super(view);
 
         this.toolbarFactory = toolbarFactory;
+        this.selectionManager = selectionManager;
         this.groups = new LinkedHashMap<>();
         this.states = new HashSet<>();
         this.locale = locale;
@@ -138,6 +144,12 @@ public class ToolbarPresenter extends AbstractPresenter<ToolbarView> implements 
         for (Map.Entry<String, ToolbarGroupPresenter> item : groups.entrySet()) {
             view.addGroup(item.getValue());
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onMainPanelClicked() {
+        selectionManager.setElement(null);
     }
 
 }

@@ -35,6 +35,10 @@ public interface WSO2Resources extends ClientBundle {
 
         String importErrorFont();
 
+        String editorButtonStyle();
+
+        String palettePropertyBtnStyle();
+
     }
 
     @Source("esb.xsd")
@@ -103,4 +107,9 @@ public interface WSO2Resources extends ClientBundle {
     @Source("icons/synapse-icon.png")
     ImageResource synapseIcon();
 
+    @Source("icons/paletteIcon.png")
+    ImageResource paletteIcon();
+
+    @Source("icons/propertiesIcon.png")
+    ImageResource propertiesIcon();
 }

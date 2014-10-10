@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 @ImplementedBy(WSO2EditorViewImpl.class)
 public interface WSO2EditorView extends View<WSO2EditorView.ActionDelegate> {
@@ -42,12 +43,8 @@ public interface WSO2EditorView extends View<WSO2EditorView.ActionDelegate> {
         /** Performs some actions in response to user's clicking on hide panel button. */
         void onHidePanelButtonClicked();
 
-        /** Performs some actions in response to user's clicking on show panel button. */
-        void onShowPropertyButtonClicked();
-
         /** Performs some actions in response to DOM of editor is changed. */
         void onEditorDOMChanged();
-
     }
 
     /**

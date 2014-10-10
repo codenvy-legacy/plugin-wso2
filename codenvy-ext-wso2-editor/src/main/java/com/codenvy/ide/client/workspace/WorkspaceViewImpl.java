@@ -54,14 +54,15 @@ public class WorkspaceViewImpl extends AbstractView<WorkspaceView.ActionDelegate
 
     /** {@inheritDoc} */
     @Override
-    public int getParentHeight() {
-        return getParent().getElement().getOffsetHeight();
+    public int getHeight() {
+        // we have to use parent size because element size isn't full. Minus margin size and border size.
+        return getParent().getElement().getOffsetHeight() - 22;
     }
 
     /** {@inheritDoc} */
     @Override
-    public int getParentWidth() {
-        return getParent().getElement().getOffsetWidth();
+    public int getWidth() {
+        return getElement().getOffsetWidth();
     }
 
 }

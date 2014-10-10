@@ -17,9 +17,12 @@ package com.codenvy.ide.client.toolbar;
 
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.codenvy.ide.client.toolbar.group.ToolbarGroupPresenter;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -40,11 +43,22 @@ public class ToolbarViewImpl extends AbstractView<ToolbarView.ActionDelegate> im
     }
 
     @UiField
-    FlowPanel mainPanel;
+    FlowPanel   mainPanel;
+    @UiField
+    ScrollPanel scrollPanel;
 
     @Inject
     public ToolbarViewImpl(ToolbarViewImplUiBinder ourUiBinder) {
         initWidget(ourUiBinder.createAndBindUi(this));
+
+        scrollPanel.addDomHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onMainPanelClicked();
+
+                event.stopPropagation();
+            }
+        }, ClickEvent.getType());
     }
 
     /** {@inheritDoc} */
@@ -52,4 +66,5 @@ public class ToolbarViewImpl extends AbstractView<ToolbarView.ActionDelegate> im
     public void addGroup(@Nonnull ToolbarGroupPresenter toolbarGroup) {
         mainPanel.add(toolbarGroup.getView());
     }
+
 }

@@ -220,7 +220,12 @@ public class AddressEndpointPropertiesPanelPresenterTest extends AbstractPropert
     public void setUp() throws Exception {
         prepareMocks();
 
-        presenter = new AddressEndpointPropertiesPanelPresenter(view, propertyTypeManager, locale, propertyPanelFactory, propertyPresenter);
+        presenter = new AddressEndpointPropertiesPanelPresenter(view,
+                                                                propertyTypeManager,
+                                                                locale,
+                                                                propertyPanelFactory,
+                                                                propertyPresenter,
+                                                                selectionManager);
         presenter.addListener(listener);
         presenter.setElement(element);
 

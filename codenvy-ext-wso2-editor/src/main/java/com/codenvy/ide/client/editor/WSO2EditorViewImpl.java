@@ -34,8 +34,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.vectomatic.dom.svg.ui.SVGImage;
-
 import javax.annotation.Nonnull;
 
 /**
@@ -43,6 +41,7 @@ import javax.annotation.Nonnull;
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class WSO2EditorViewImpl extends AbstractView<WSO2EditorView.ActionDelegate> implements WSO2EditorView {
 
@@ -60,10 +59,6 @@ public class WSO2EditorViewImpl extends AbstractView<WSO2EditorView.ActionDelega
     ScrollPanel       workspace;
     @UiField
     Button            hideBtn;
-    @UiField
-    Button            showBtn;
-    @UiField
-    FlowPanel         showButtonPanel;
     @UiField(provided = true)
     SplitLayoutPanel  mainPanel;
     @UiField
@@ -79,10 +74,8 @@ public class WSO2EditorViewImpl extends AbstractView<WSO2EditorView.ActionDelega
 
         initWidget(ourUiBinder.createAndBindUi(this));
 
-        SVGImage image = new SVGImage(resources.minimize());
-        image.getElement().setAttribute("name", "workBenchIconMinimize");
+        Image image = new Image(resources.close());
 
-        showBtn.getElement().setInnerHTML(image.toString());
         hideBtn.getElement().setInnerHTML(image.toString());
     }
 
@@ -111,7 +104,6 @@ public class WSO2EditorViewImpl extends AbstractView<WSO2EditorView.ActionDelega
     @Override
     public void setVisiblePropertyPanel(boolean isVisible) {
         mainPanel.setWidgetHidden(mainPropertiesPanel, !isVisible);
-        mainPanel.setWidgetHidden(showButtonPanel, isVisible);
 
         resizeMainPanel();
     }
@@ -146,11 +138,6 @@ public class WSO2EditorViewImpl extends AbstractView<WSO2EditorView.ActionDelega
     @UiHandler("hideBtn")
     public void onHideButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onHidePanelButtonClicked();
-    }
-
-    @UiHandler("showBtn")
-    public void onShowButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
-        delegate.onShowPropertyButtonClicked();
     }
 
     @UiHandler("closeToolbarBtn")

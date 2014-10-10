@@ -28,8 +28,6 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.codenvy.ide.client.workspace.WorkspaceView.SIZE_OF_TWO_BORDER_LINES;
-
 /**
  * The class that provides business logic of the workspace element of the editor. The workspace is the center part of UI. It has an ability
  * to show root element of diagram. The main function of workspace is detect position and size of root element and change it.
@@ -89,16 +87,16 @@ public class WorkspacePresenter extends AbstractPresenter<WorkspaceView> impleme
     public void resize() {
         elementWidget.updateView();
 
-        int parentHeight = view.getParentHeight();
+        int parentHeight = view.getHeight();
 
         if (parentHeight > elementWidget.getHeight()) {
-            elementWidget.setHeight(parentHeight - SIZE_OF_TWO_BORDER_LINES);
+            elementWidget.setHeight(parentHeight);
         }
 
-        int parentWidth = view.getParentWidth();
+        int parentWidth = view.getWidth();
 
         if (parentWidth > elementWidget.getWidth()) {
-            elementWidget.setWidth(parentWidth - SIZE_OF_TWO_BORDER_LINES);
+            elementWidget.setWidth(parentWidth);
         }
     }
 

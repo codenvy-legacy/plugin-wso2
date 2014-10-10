@@ -17,6 +17,8 @@ package com.codenvy.ide.client.elements.widgets.branch;
 
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.elements.Branch;
+import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.dom.client.NativeEvent;
@@ -39,6 +41,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.assistedinject.Assisted;
 import com.orange.links.client.DiagramController;
 
 import javax.annotation.Nonnegative;
@@ -67,17 +70,18 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
     DockLayoutPanel focusPanel;
     @UiField
     FlowPanel       titlePanel;
+    @UiField(provided = true)
+    final EditorResources resources;
 
     private       DiagramController      controller;
     private       PickupDragController   dragController;
-    private final EditorResources        resources;
     private final List<ElementPresenter> elements;
 
     private int height;
     private int width;
 
     @Inject
-    public BranchViewImpl(BranchViewImplUiBinder ourUiBinder, EditorResources resources) {
+    public BranchViewImpl(BranchViewImplUiBinder ourUiBinder, EditorResources resources, @Assisted Branch branch) {
         this.resources = resources;
         this.elements = new ArrayList<>();
 
@@ -87,6 +91,12 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
         initWidget(ourUiBinder.createAndBindUi(this));
 
         createCanvas();
+
+        Element branchParent = branch.getParent();
+
+        if (branchParent != null && !branchParent.needsToShowIconAndTitle()) {
+            this.addStyleName(resources.editorCSS().dottedBackground());
+        }
 
         bind();
     }

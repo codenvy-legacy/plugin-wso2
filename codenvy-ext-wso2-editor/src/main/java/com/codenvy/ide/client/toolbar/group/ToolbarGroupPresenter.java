@@ -56,14 +56,13 @@ public class ToolbarGroupPresenter extends AbstractPresenter<ToolbarGroupView> i
     /** The method folds group of elements which it contains. */
     public void fold() {
         isFolded = true;
-        view.setVisibleItemsPanel(false);
-        view.defaultIcon();
+        view.expandOrCollapse(true);
     }
 
     /** The method display group of elements which it contains. */
     public void unfold() {
         isFolded = false;
-        view.setVisibleItemsPanel(true);
+        view.expandOrCollapse(false);
         view.rotateIcon();
     }
 

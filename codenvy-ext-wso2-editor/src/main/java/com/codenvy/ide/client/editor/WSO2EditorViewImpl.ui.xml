@@ -21,96 +21,12 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:with field="locale" type="com.codenvy.ide.client.WSO2EditorLocalizationConstant"/>
-    <ui:with field="resource" type="com.codenvy.ide.client.EditorResources"/>
+    <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
 
     <ui:style>
-        @eval backgroundColor com.codenvy.ide.api.ui.theme.Style.getPartBackground();
-        @eval tabBackgroundColor com.codenvy.ide.api.ui.theme.Style.getWindowHeaderBackground();
-        @eval tabBorderColor com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
-
-        .fullSize {
+        .palettePanel {
             width: 100%;
-            height: 100%;
-        }
-
-        .labelStyle {
-            margin-top: 3px;
-            margin-left: 5px;
-            float: left;
-        }
-
-        .buttonPanelStyle {
-            background-color: tabBackgroundColor;
-            border-bottom: 1px solid tabBorderColor;
-            box-shadow: 0 2px 5px 0 rgba(50, 50, 50, 0.75);
-            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .buttonHideStyle {
-            box-shadow: none;
-            background: tabBackgroundColor;
-            float: right;
-            margin-right: 5px;
-            border: 0;
-        }
-
-        .buttonHideStyle:active {
-            box-shadow: none;
-            border: 0;
-        }
-
-        .buttonHideStyle:hover {
-            border-color: tabBackgroundColor;
-        }
-
-        .buttonShowStyle {
-            background: backgroundColor;
-            float: right;
-            margin-right: 5px;
-            border: 0;
-        }
-
-        .buttonShowStyle:active {
-            box-shadow: none;
-            border: 0;
-        }
-
-        .buttonShowStyle:hover {
-            border-color: tabBackgroundColor;
-        }
-
-        .buttonHideStyle > svg {
-            -webkit-transform: rotate(0deg);
-            -moz-transform: rotate(0deg);
-            transform: rotate(0deg);
-
-            float: left;
-            margin-top: 2px;
-            margin-left: 2px;
-        }
-
-        .buttonShowStyle > svg {
-            -webkit-transform: rotate(180deg);
-            -moz-transform: rotate(180deg);
-            transform: rotate(180deg);
-
-            float: left;
-            margin-top: 2px;
-            margin-left: 2px;
-        }
-
-        .mainPropertiesPanel {
-            border: 1px groove tabBackgroundColor;
-        }
-
-        .closeToolbarBtnStyle {
-            width: 6px;
-            height: 6px;
-            float: right;
-            margin-top: 7px;
-            margin-right: 5px;
+            height: 20px;
         }
 
         .labelToolbarStyle {
@@ -121,49 +37,57 @@
             position: relative;
         }
 
-        .palettePanel {
-            width: 100%;
-            height: 20px;
+        .closeToolbarBtnStyle {
+            width: 6px;
+            height: 6px;
+            float: right;
+            margin-top: 7px;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+        .labelStyle {
+            float: left;
+            margin-top: 4px;
+            margin-left: 12px;
+            position: relative;
         }
     </ui:style>
 
-    <g:SplitLayoutPanel ui:field="mainPanel" addStyleNames="{style.fullSize}">
+    <g:SplitLayoutPanel ui:field="mainPanel" addStyleNames="{res.editorCSS.fullSize}, {res.editorCSS.propertyBackground}">
 
         <g:west size="180">
             <g:FlowPanel ui:field="toolbarPanel">
 
-                <g:FlowPanel addStyleNames="{style.palettePanel},{resource.editorCSS.toolbarPalette}">
+                <g:FlowPanel addStyleNames="{style.palettePanel}, {res.editorCSS.toolbarPalette}">
                     <g:Label text="{locale.toolbarPalette}"
-                             addStyleNames="{style.labelToolbarStyle},{resource.editorCSS.toolbarTitleStyle}"/>
-                    <g:Image ui:field="closeToolbarBtn" resource="{resource.toolbarPanelClose}"
+                             addStyleNames="{style.labelToolbarStyle} {res.editorCSS.fontStyle} {res.editorCSS.fontStyle}"/>
+                    <g:Image ui:field="closeToolbarBtn" resource="{res.toolbarPanelClose}"
                              addStyleNames="{style.closeToolbarBtnStyle}"/>
                 </g:FlowPanel>
 
-                <g:SimpleLayoutPanel ui:field="toolbar" addStyleNames="{resource.editorCSS.toolbarMainPanel},{style.fullSize}"/>
+                <g:SimpleLayoutPanel ui:field="toolbar" addStyleNames="{res.editorCSS.toolbarMainPanel} {res.editorCSS.fullSize}"/>
             </g:FlowPanel>
         </g:west>
 
-        <g:east size="50">
-            <g:FlowPanel ui:field="showButtonPanel">
-                <g:Button ui:field="showBtn" addStyleNames="{style.buttonShowStyle}"/>
-            </g:FlowPanel>
-        </g:east>
+        <g:east size="200">
+            <g:FlowPanel ui:field="mainPropertiesPanel" addStyleNames="{res.editorCSS.mainPropertiesPanel}">
 
-        <g:east size="300">
-            <g:FlowPanel ui:field="mainPropertiesPanel" addStyleNames="{style.mainPropertiesPanel}">
-
-                <g:FlowPanel height="22px" ui:field="buttonPanel" addStyleNames="{style.buttonPanelStyle}">
+                <g:FlowPanel ui:field="buttonPanel" height="20px"
+                             addStyleNames="{res.editorCSS.propertyButtonPanelStyle}, {res.editorCSS.fontStyle}">
                     <g:Label text="{locale.panelLabelName}" addStyleNames="{style.labelStyle}"/>
-                    <g:Button ui:field="hideBtn" addStyleNames="{style.buttonHideStyle}"/>
+                    <g:Button ui:field="hideBtn" height="20px" addStyleNames="{res.editorCSS.propertyButtonHideStyle}"/>
                 </g:FlowPanel>
 
-                <g:SimpleLayoutPanel ui:field="propertiesPanel" addStyleNames="{style.fullSize}"/>
+                <g:SimpleLayoutPanel ui:field="propertiesPanel"
+                                     addStyleNames="{res.editorCSS.fullSize} {res.editorCSS.propertyBackground}"/>
 
             </g:FlowPanel>
         </g:east>
 
         <g:center>
-            <g:ScrollPanel ui:field="workspace" addStyleNames="{style.fullSize}"/>
+            <g:ScrollPanel ui:field="workspace"
+                           addStyleNames="{res.editorCSS.fullSize} {res.editorCSS.workspaceBackground}" width="calc(100%-15px)"/>
         </g:center>
 
     </g:SplitLayoutPanel>

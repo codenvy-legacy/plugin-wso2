@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 public interface ElementView extends View<ElementView.ActionDelegate> {
 
     int DEFAULT_HEIGHT = 100;
-    int DEFAULT_WIDTH  = 100;
+    int DEFAULT_WIDTH  = 86;
 
     /**
      * Change content of title visual element.

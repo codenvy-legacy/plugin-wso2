@@ -40,6 +40,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 @RunWith(MockitoJUnitRunner.class)
 public class WSO2EditorTest {
@@ -131,9 +132,11 @@ public class WSO2EditorTest {
     public void propertiesPanelShouldBeShown() throws Exception {
         reset(view);
 
-        presenter.onShowPropertyButtonClicked();
+        presenter.changePropertyPanelVisibility();
+        verify(view).setVisiblePropertyPanel(eq(false));
 
-        verify(view).setVisiblePropertyPanel(true);
+        presenter.changePropertyPanelVisibility();
+        verify(view).setVisiblePropertyPanel(eq(true));
     }
 
     @Test

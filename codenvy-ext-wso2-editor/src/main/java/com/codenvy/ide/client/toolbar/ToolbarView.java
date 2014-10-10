@@ -38,6 +38,8 @@ public interface ToolbarView extends View<ToolbarView.ActionDelegate> {
     void addGroup(@Nonnull ToolbarGroupPresenter toolbarGroup);
 
     public interface ActionDelegate {
+        /** Performs some actions in response to a user's clicking on the main panel of the view. */
+        void onMainPanelClicked();
     }
 
 }

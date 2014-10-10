@@ -19,6 +19,7 @@ import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.jira.CreateFilter;
 import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
+import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
 import com.codenvy.ide.client.propertiespanel.PropertyPanelFactory;
 import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
@@ -72,14 +73,16 @@ public class CreateFilterConnectorPresenter extends AbstractConnectorPropertiesP
                                           TwitterPropertyManager twitterPropertyManager,
                                           ParameterPresenter parameterPresenter,
                                           PropertyTypeManager propertyTypeManager,
-                                          PropertyPanelFactory propertyPanelFactory) {
+                                          PropertyPanelFactory propertyPanelFactory,
+                                          SelectionManager selectionManager) {
         super(view,
               twitterPropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,
               locale,
-              propertyPanelFactory);
+              propertyPanelFactory,
+              selectionManager);
 
         prepareView();
     }
