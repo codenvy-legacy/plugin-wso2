@@ -18,6 +18,7 @@ package com.codenvy.ide.client.elements.widgets.branch;
 import com.codenvy.ide.client.EditorState;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Element;
+import com.codenvy.ide.client.elements.widgets.branch.arrow.ArrowPresenter;
 import com.codenvy.ide.client.elements.widgets.element.ElementChangedListener;
 import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
 import com.codenvy.ide.client.inject.factories.ElementWidgetFactory;
@@ -44,7 +45,9 @@ import static com.codenvy.ide.client.elements.widgets.branch.BranchView.BORDER_S
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_HEIGHT;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_WIDTH;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.ELEMENTS_PADDING;
+import static com.codenvy.ide.client.elements.widgets.branch.BranchView.ELEMENT_ARROW_PADDING;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.TITLE_WIDTH;
+import static com.codenvy.ide.client.elements.widgets.branch.arrow.ArrowPresenter.ARROW_WIDTH;
 
 /**
  * The class that provides business logic of the element's branch widget.
@@ -57,12 +60,13 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
                                                                               ElementPresenter.ElementMoveListener,
                                                                               ElementChangedListener {
 
-    private final ConnectionsValidator   connectionsValidator;
-    private final SelectionManager       selectionManager;
-    private final InnerElementsValidator innerElementsValidator;
-    private final ElementWidgetFactory   elementWidgetFactory;
-    private final ElementCreatorsManager elementCreatorsManager;
-    private final EditorState            editorState;
+    private final ConnectionsValidator     connectionsValidator;
+    private final SelectionManager         selectionManager;
+    private final Provider<ArrowPresenter> arrowProvider;
+    private final InnerElementsValidator   innerElementsValidator;
+    private final ElementWidgetFactory     elementWidgetFactory;
+    private final ElementCreatorsManager   elementCreatorsManager;
+    private final EditorState              editorState;
 
     private final Branch branch;
 
@@ -79,6 +83,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
                            ElementCreatorsManager elementCreatorsManager,
                            EditorState editorState,
                            SelectionManager selectionManager,
+                           Provider<ArrowPresenter> arrowProvider,
                            @Assisted Branch branch) {
         super(elementWidgetFactory.createContainerView(branch));
 
@@ -88,6 +93,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         this.elementCreatorsManager = elementCreatorsManager;
         this.editorState = editorState;
         this.selectionManager = selectionManager;
+        this.arrowProvider = arrowProvider;
 
         this.elementChangedListeners = new ArrayList<>();
         this.widgetElements = new LinkedHashMap<>();
@@ -150,6 +156,11 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     public void setVisibleTopBorder(boolean visible) {
         view.setVisibleTopBorder(visible);
         isBorderVisible = visible;
+    }
+
+    private boolean needsToShowArrows() {
+        Element parent = branch.getParent();
+        return parent == null || !parent.needsToShowIconAndTitle() || branch.getElements().size() > 1;
     }
 
     /** {@inheritDoc} */
@@ -282,7 +293,17 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         int x = ARROW_PADDING;
         int y = 0;
 
+        boolean isFirst = true;
+        boolean needsToShowArrows = needsToShowArrows();
+
         for (Element element : branch.getElements()) {
+            if (needsToShowArrows && isFirst) {
+                addArrow(x, y);
+                x += ARROW_WIDTH;
+
+                isFirst = false;
+            }
+
             element.setX(x);
             element.setY(y);
 
@@ -295,9 +316,21 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
             }
 
             view.addElement(x, y, elementPresenter);
+            x += elementPresenter.getWidth() + ELEMENT_ARROW_PADDING;
 
-            x += ARROW_PADDING + elementPresenter.getWidth();
+            if (needsToShowArrows) {
+                addArrow(x, y);
+                x += ARROW_WIDTH;
+            }
         }
+    }
+
+    private void addArrow(@Nonnegative int x, @Nonnegative int y) {
+        ArrowPresenter arrow = arrowProvider.get();
+        arrow.setX(x);
+        arrow.setY(y);
+
+        view.addArrow(arrow);
     }
 
     private void showTitleOrNot() {
@@ -338,7 +371,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     private void detectElementSizeAndResizeView() {
         List<ElementPresenter> elements = new ArrayList<>(widgetElements.values());
 
-        int width = (elements.size() + 1) * ARROW_PADDING + getTitleWidth();
+        int width = (needsToShowArrows() ? (elements.size() + 1) * ARROW_WIDTH : 0) + getTitleWidth() + 2 * ARROW_PADDING;
         int height = elements.get(0).getHeight();
 
         for (ElementPresenter element : elements) {

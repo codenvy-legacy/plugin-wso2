@@ -470,4 +470,7 @@ public interface EditorResources extends ClientBundle {
     @Source("icons/cursors/NotAllowedCursor.png")
     DataResource errorCursor();
 
+    @Source("icons/editor/arrow.png")
+    ImageResource arrowImage();
+
 }

@@ -19,6 +19,7 @@ import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Element;
+import com.codenvy.ide.client.elements.widgets.branch.arrow.ArrowPresenter;
 import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.dom.client.NativeEvent;
@@ -73,9 +74,11 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
     @UiField(provided = true)
     final EditorResources resources;
 
-    private       DiagramController      controller;
-    private       PickupDragController   dragController;
     private final List<ElementPresenter> elements;
+    private final List<ArrowPresenter>   arrows;
+
+    private DiagramController    controller;
+    private PickupDragController dragController;
 
     private int height;
     private int width;
@@ -83,7 +86,9 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
     @Inject
     public BranchViewImpl(BranchViewImplUiBinder ourUiBinder, EditorResources resources, @Assisted Branch branch) {
         this.resources = resources;
+
         this.elements = new ArrayList<>();
+        this.arrows = new ArrayList<>();
 
         this.height = DEFAULT_HEIGHT;
         this.width = DEFAULT_WIDTH;
@@ -123,6 +128,10 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
 
         for (ElementPresenter element : elements) {
             addElementOnView(element.getX(), element.getY(), element);
+        }
+
+        for (ArrowPresenter arrowItem : arrows) {
+            addArrowOnView(arrowItem);
         }
     }
 
@@ -202,6 +211,17 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
 
     /** {@inheritDoc} */
     @Override
+    public void addArrow(@Nonnull ArrowPresenter arrow) {
+        arrows.add(arrow);
+        addArrowOnView(arrow);
+    }
+
+    private void addArrowOnView(@Nonnull ArrowPresenter arrow) {
+        controller.addWidget(arrow.getView().asWidget(), arrow.getX(), arrow.getY());
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void clear() {
         body.clear();
 
@@ -212,6 +232,7 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
         }
 
         elements.clear();
+        arrows.clear();
     }
 
     /** {@inheritDoc} */

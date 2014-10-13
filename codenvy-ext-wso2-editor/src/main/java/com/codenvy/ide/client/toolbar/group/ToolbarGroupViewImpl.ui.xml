@@ -19,7 +19,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
-    <ui:with field="resource" type="com.codenvy.ide.client.EditorResources"/>
+    <ui:with field="resources" type="com.codenvy.ide.client.EditorResources"/>
 
     <ui:style>
         .mainPanel {
@@ -53,11 +53,13 @@
 
     <g:FlowPanel ui:field="mainPanel" addStyleNames="{style.mainPanel}">
 
-        <g:FlowPanel addStyleNames="{style.headerPanel} {resource.editorCSS.toolbarGroupHeaderPanelStyle} {resource.editorCSS.panelHover}">
-            <g:SimpleLayoutPanel ui:field="icon" addStyleNames="{style.icon} {resource.editorCSS.toolbarGroupIconColor}"/>
-            <g:Label ui:field="title"
-                     addStyleNames="{resource.editorCSS.fontStyle} {resource.editorCSS.titleBold}
-                     {resource.editorCSS.fontStyle} {style.label}"/>
+        <g:FlowPanel addStyleNames="{style.headerPanel}
+                                    {resources.editorCSS.toolbarGroupHeaderPanelStyle}
+                                    {resources.editorCSS.panelHover}">
+            <g:SimpleLayoutPanel ui:field="icon" addStyleNames="{style.icon} {resources.editorCSS.toolbarGroupIconColor}"/>
+            <g:Label ui:field="title" addStyleNames="{resources.editorCSS.fontStyle}
+                                                     {resources.editorCSS.titleBold}
+                                                     {resources.editorCSS.fontStyle} {style.label}"/>
         </g:FlowPanel>
 
         <g:FlowPanel ui:field="itemsPanel"/>

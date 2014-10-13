@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.toolbar;
 
+import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.codenvy.ide.client.toolbar.group.ToolbarGroupPresenter;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -43,12 +44,16 @@ public class ToolbarViewImpl extends AbstractView<ToolbarView.ActionDelegate> im
     }
 
     @UiField
-    FlowPanel   mainPanel;
+    FlowPanel       mainPanel;
     @UiField
-    ScrollPanel scrollPanel;
+    ScrollPanel     scrollPanel;
+    @UiField(provided = true)
+    EditorResources res;
 
     @Inject
-    public ToolbarViewImpl(ToolbarViewImplUiBinder ourUiBinder) {
+    public ToolbarViewImpl(ToolbarViewImplUiBinder ourUiBinder, EditorResources resources) {
+        this.res = resources;
+
         initWidget(ourUiBinder.createAndBindUi(this));
 
         scrollPanel.addDomHandler(new ClickHandler() {

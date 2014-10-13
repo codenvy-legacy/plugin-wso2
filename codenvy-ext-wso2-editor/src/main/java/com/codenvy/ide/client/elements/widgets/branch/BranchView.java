@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.elements.widgets.branch;
 
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.client.elements.widgets.branch.arrow.ArrowPresenter;
 import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
 import com.google.inject.ImplementedBy;
 
@@ -31,12 +32,13 @@ import javax.annotation.Nullable;
 @ImplementedBy(BranchViewImpl.class)
 public interface BranchView extends View<BranchView.ActionDelegate> {
 
-    int ELEMENTS_PADDING = 25;
-    int ARROW_PADDING    = 15;
-    int DEFAULT_HEIGHT   = 100;
-    int DEFAULT_WIDTH    = 100;
-    int TITLE_WIDTH      = 40;
-    int BORDER_SIZE      = 1;
+    int ELEMENTS_PADDING      = 25;
+    int ARROW_PADDING         = 15;
+    int DEFAULT_HEIGHT        = 100;
+    int DEFAULT_WIDTH         = 100;
+    int TITLE_WIDTH           = 40;
+    int BORDER_SIZE           = 1;
+    int ELEMENT_ARROW_PADDING = 2;
 
     /**
      * Changes title on the view.
@@ -56,7 +58,15 @@ public interface BranchView extends View<BranchView.ActionDelegate> {
      * @param element
      *         the diagram element that needs to be added in container
      */
-    void addElement(int x, int y, @Nonnull ElementPresenter element);
+    void addElement(@Nonnegative int x, @Nonnegative int y, @Nonnull ElementPresenter element);
+
+    /**
+     * Adds an arrow in the container.The position where this element have to be located must be defined into a give element.
+     *
+     * @param arrow
+     *         arrow that needs to be added
+     */
+    void addArrow(@Nonnull ArrowPresenter arrow);
 
     /** Clear container's content. Removes all inner diagram elements. */
     void clear();

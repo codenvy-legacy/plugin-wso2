@@ -22,6 +22,7 @@ import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.widgets.branch.BranchPresenter;
 import com.codenvy.ide.client.elements.widgets.branch.BranchView;
+import com.codenvy.ide.client.elements.widgets.branch.arrow.ArrowPresenter;
 import com.codenvy.ide.client.elements.widgets.element.ElementChangedListener;
 import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
 import com.codenvy.ide.client.inject.factories.ElementWidgetFactory;
@@ -47,15 +48,19 @@ import static com.codenvy.ide.client.elements.widgets.branch.BranchView.BORDER_S
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_HEIGHT;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_WIDTH;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.ELEMENTS_PADDING;
+import static com.codenvy.ide.client.elements.widgets.branch.BranchView.ELEMENT_ARROW_PADDING;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.TITLE_WIDTH;
+import static com.codenvy.ide.client.elements.widgets.branch.arrow.ArrowPresenter.ARROW_WIDTH;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -101,6 +106,10 @@ public class BranchPresenterTest {
     private Provider<? extends Element> elementProvider;
     @Mock
     private ElementChangedListener      changingElementListener;
+    @Mock
+    private Provider<ArrowPresenter>    arrowProvider;
+    @Mock
+    private ArrowPresenter              arrow;
 
     @Mock
     private ElementPresenter elementPresenter;
@@ -118,6 +127,7 @@ public class BranchPresenterTest {
                                         elementCreatorsManager,
                                         editorState,
                                         selectionManager,
+                                        arrowProvider,
                                         branch);
     }
 
@@ -137,7 +147,13 @@ public class BranchPresenterTest {
 
         prepareCreateElementWidgetFactory();
 
+        prepareArrowProvider();
+
         when(view.getHeight()).thenReturn(VIEW_HEIGHT);
+    }
+
+    private void prepareArrowProvider() {
+        when(arrowProvider.get()).thenReturn(arrow);
     }
 
     private void prepareElementPresenterSize(ElementPresenter elementPresenter, int height, int width) {
@@ -194,6 +210,9 @@ public class BranchPresenterTest {
         reset(elementPresenter2);
         reset(elementWidgetFactory);
         reset(view);
+        reset(arrow);
+        //noinspection unchecked
+        reset(arrowProvider);
     }
 
     private void verifyElementChanges() {
@@ -205,8 +224,8 @@ public class BranchPresenterTest {
     private void verifyViewRedraw() {
         verify(view).clear();
 
-        elementShouldBeChangedXYPosition(element, ARROW_PADDING, 0);
-        elementShouldBeChangedXYPosition(element2, 2 * ARROW_PADDING + ELEMENT_WIDTH, 0);
+        elementShouldBeChangedXYPosition(element, ARROW_PADDING + ARROW_WIDTH, 0);
+        elementShouldBeChangedXYPosition(element2, ARROW_PADDING + 2 * ARROW_WIDTH + ELEMENT_ARROW_PADDING + ELEMENT_WIDTH, 0);
 
         verify(elementWidgetFactory, never()).createElementPresenter(any(Element.class));
 
@@ -215,7 +234,7 @@ public class BranchPresenterTest {
 
         elementsShouldBeAddedOnView();
 
-        viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 3 * ARROW_PADDING + 2 * ELEMENT_WIDTH);
+        viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 2 * ARROW_PADDING + 3 * ARROW_WIDTH + 2 * ELEMENT_WIDTH);
 
         int top = VIEW_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
         topPositionOfElementsShouldBeChanged(top, top);
@@ -261,8 +280,32 @@ public class BranchPresenterTest {
     }
 
     private void elementsShouldBeAddedOnView() {
-        verify(view).addElement(ARROW_PADDING, 0, elementPresenter);
-        verify(view).addElement(2 * ARROW_PADDING + ELEMENT_WIDTH, 0, elementPresenter2);
+        int firstElementXPosition = ARROW_PADDING + ARROW_WIDTH;
+        verify(view).addElement(firstElementXPosition, 0, elementPresenter);
+
+        int secondElementXPosition = firstElementXPosition + ARROW_WIDTH + ELEMENT_ARROW_PADDING + ELEMENT_WIDTH;
+        verify(view).addElement(secondElementXPosition, 0, elementPresenter2);
+
+        arrowShouldBeAdded(3);
+    }
+
+    private void arrowShouldBeAdded(int amount) {
+        verify(view, times(amount)).addArrow(arrow);
+        verify(arrowProvider, times(amount)).get();
+        verify(arrow, times(amount)).setY(0);
+
+        int x = ARROW_PADDING;
+        int arrowStepWidth = ARROW_WIDTH + ELEMENT_WIDTH + ELEMENT_ARROW_PADDING;
+
+        for (int i = 0; i < amount; i++) {
+            verify(arrow).setX(eq(x));
+            x += arrowStepWidth;
+        }
+    }
+
+    private void arrowShouldBeNotAdded() {
+        verify(arrowProvider, never()).get();
+        verify(view, never()).addArrow(arrow);
     }
 
     private void viewSizeShouldBeChanged(int height, int width) {
@@ -279,7 +322,7 @@ public class BranchPresenterTest {
     public void viewShouldBePreparedWhenDoNotNeedToShowTitle() throws Exception {
         viewShouldBePreparedGeneralCase();
 
-        viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 3 * ARROW_PADDING + 2 * ELEMENT_WIDTH);
+        viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 2 * ARROW_PADDING + 3 * ARROW_WIDTH + 2 * ELEMENT_WIDTH);
     }
 
     private void viewShouldBePreparedGeneralCase() {
@@ -289,8 +332,8 @@ public class BranchPresenterTest {
 
         verify(view).clear();
 
-        elementShouldBeChangedXYPosition(element, ARROW_PADDING, 0);
-        elementShouldBeChangedXYPosition(element2, 2 * ARROW_PADDING + ELEMENT_WIDTH, 0);
+        elementShouldBeChangedXYPosition(element, ARROW_PADDING + ARROW_WIDTH, 0);
+        elementShouldBeChangedXYPosition(element2, ARROW_PADDING + 2 * ARROW_WIDTH + ELEMENT_ARROW_PADDING + ELEMENT_WIDTH, 0);
 
         elementWidgetsShouldBeCreated();
 
@@ -310,7 +353,7 @@ public class BranchPresenterTest {
 
         viewShouldBePreparedGeneralCase();
 
-        viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 3 * ARROW_PADDING + 2 * ELEMENT_WIDTH + TITLE_WIDTH);
+        viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 2 * ARROW_PADDING + 3 * ARROW_WIDTH + 2 * ELEMENT_WIDTH + TITLE_WIDTH);
     }
 
     @Test
@@ -339,6 +382,8 @@ public class BranchPresenterTest {
 
         verify(elementPresenter, never()).setY(anyInt());
         verify(elementPresenter2, never()).setY(anyInt());
+
+        arrowShouldBeNotAdded();
     }
 
     @Test
@@ -352,6 +397,8 @@ public class BranchPresenterTest {
 
         prepareCreateElementWidgetFactory();
 
+        prepareArrowProvider();
+
         when(view.getHeight()).thenReturn(VIEW_HEIGHT);
 
         createPresenter();
@@ -360,17 +407,19 @@ public class BranchPresenterTest {
 
         verify(view).clear();
 
-        elementShouldBeChangedXYPosition(element, ARROW_PADDING, 0);
-        elementShouldBeChangedXYPosition(element2, 2 * ARROW_PADDING + ELEMENT_WIDTH, 0);
+        elementShouldBeChangedXYPosition(element, ARROW_PADDING + ARROW_WIDTH, 0);
+        elementShouldBeChangedXYPosition(element2, ARROW_PADDING + 2 * ARROW_WIDTH + ELEMENT_ARROW_PADDING + ELEMENT_WIDTH, 0);
 
         elementWidgetsShouldBeCreated();
 
         listenersShouldBeAdded(elementPresenter);
         listenersShouldBeAdded(elementPresenter2);
 
+        arrowShouldBeAdded(3);
+
         elementsShouldBeAddedOnView();
 
-        viewSizeShouldBeChanged(ELEMENTS_PADDING + MAX_ELEMENT_HEIGHT, 3 * ARROW_PADDING + 2 * ELEMENT_WIDTH);
+        viewSizeShouldBeChanged(ELEMENTS_PADDING + MAX_ELEMENT_HEIGHT, 2 * ARROW_PADDING + 3 * ARROW_WIDTH + 2 * ELEMENT_WIDTH);
 
         int firstTop = VIEW_HEIGHT / 2 - MAX_ELEMENT_HEIGHT / 2;
         int secondTop = VIEW_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
@@ -388,6 +437,8 @@ public class BranchPresenterTest {
 
         prepareCreateElementWidgetFactory();
 
+        prepareArrowProvider();
+
         when(view.getHeight()).thenReturn(VIEW_HEIGHT);
 
         createPresenter();
@@ -396,21 +447,59 @@ public class BranchPresenterTest {
 
         verify(view).clear();
 
-        elementShouldBeChangedXYPosition(element, ARROW_PADDING, 0);
-        elementShouldBeChangedXYPosition(element2, 2 * ARROW_PADDING + ELEMENT_WIDTH, 0);
+        elementShouldBeChangedXYPosition(element, ARROW_PADDING + ARROW_WIDTH, 0);
+        elementShouldBeChangedXYPosition(element2, ARROW_PADDING + 2 * ARROW_WIDTH + ELEMENT_ARROW_PADDING + ELEMENT_WIDTH, 0);
 
         elementWidgetsShouldBeCreated();
 
         listenersShouldBeAdded(elementPresenter);
         listenersShouldBeAdded(elementPresenter2);
 
+        arrowShouldBeAdded(3);
+
         elementsShouldBeAddedOnView();
 
-        viewSizeShouldBeChanged(ELEMENTS_PADDING + MAX_ELEMENT_HEIGHT, 3 * ARROW_PADDING + 2 * ELEMENT_WIDTH);
+        viewSizeShouldBeChanged(ELEMENTS_PADDING + MAX_ELEMENT_HEIGHT, 2 * ARROW_PADDING + 3 * ARROW_WIDTH + 2 * ELEMENT_WIDTH);
 
         int firstTop = VIEW_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
         int secondTop = VIEW_HEIGHT / 2 - MAX_ELEMENT_HEIGHT / 2;
         topPositionOfElementsShouldBeChanged(firstTop, secondTop);
+    }
+
+    @Test
+    public void viewShouldBePreparedWithoutArrowsWhenContainerHasOneInnerElement() throws Exception {
+        prepareBranchMock(branch, Arrays.asList(element));
+
+        prepareElementIds();
+
+        prepareElementPresenterSize(elementPresenter, ELEMENT_HEIGHT, ELEMENT_WIDTH);
+
+        prepareCreateElementWidgetFactory();
+
+        when(view.getHeight()).thenReturn(VIEW_HEIGHT);
+        when(branch.getParent()).thenReturn(element);
+        when(element.needsToShowIconAndTitle()).thenReturn(true);
+
+        createPresenter();
+
+        verifyConstructorExecution();
+
+        verify(view).clear();
+
+        elementShouldBeChangedXYPosition(element, ARROW_PADDING, 0);
+
+        verify(elementWidgetFactory).createElementPresenter(element);
+
+        listenersShouldBeAdded(elementPresenter);
+
+        verify(view).addElement(ARROW_PADDING, 0, elementPresenter);
+
+        viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_WIDTH, 2 * ARROW_PADDING + ELEMENT_WIDTH + TITLE_WIDTH);
+
+        int top = VIEW_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
+        verify(elementPresenter).setY(top);
+
+        arrowShouldBeNotAdded();
     }
 
     @Test
@@ -661,6 +750,8 @@ public class BranchPresenterTest {
 
         prepareCreateElementWidgetFactory();
 
+        prepareArrowProvider();
+
         when(view.getHeight()).thenReturn(VIEW_HEIGHT);
 
         when(selectionManager.getElement()).thenReturn(element);
@@ -676,7 +767,7 @@ public class BranchPresenterTest {
         verify(view).clear();
 
         elementShouldBeNotChangedXYPosition(element);
-        elementShouldBeChangedXYPosition(element2, ARROW_PADDING, 0);
+        elementShouldBeChangedXYPosition(element2, ARROW_PADDING + ARROW_WIDTH, 0);
 
         verify(elementWidgetFactory, never()).createElementPresenter(any(Element.class));
 
@@ -684,9 +775,11 @@ public class BranchPresenterTest {
         listenersShouldBeNotAdded(elementPresenter2);
 
         verify(view, never()).addElement(ARROW_PADDING, 0, elementPresenter);
-        verify(view).addElement(ARROW_PADDING, 0, elementPresenter2);
+        verify(view).addElement(ARROW_PADDING + ARROW_WIDTH, 0, elementPresenter2);
 
-        viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 2 * ARROW_PADDING + ELEMENT_WIDTH);
+        arrowShouldBeAdded(2);
+
+        viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 2 * ARROW_PADDING + 2 * ARROW_WIDTH + ELEMENT_WIDTH);
 
         verify(elementPresenter, never()).setY(anyInt());
 
@@ -708,6 +801,8 @@ public class BranchPresenterTest {
 
         prepareCreateElementWidgetFactory();
 
+        prepareArrowProvider();
+
         when(view.getHeight()).thenReturn(VIEW_HEIGHT);
 
         when(selectionManager.getElement()).thenReturn(element);
@@ -723,7 +818,7 @@ public class BranchPresenterTest {
         verify(view).clear();
 
         elementShouldBeNotChangedXYPosition(element);
-        elementShouldBeChangedXYPosition(element2, ARROW_PADDING, 0);
+        elementShouldBeChangedXYPosition(element2, ARROW_PADDING + ARROW_WIDTH, 0);
 
         verify(elementWidgetFactory, never()).createElementPresenter(any(Element.class));
 
@@ -731,9 +826,11 @@ public class BranchPresenterTest {
         listenersShouldBeNotAdded(elementPresenter2);
 
         verify(view, never()).addElement(ARROW_PADDING, 0, elementPresenter);
-        verify(view).addElement(ARROW_PADDING, 0, elementPresenter2);
+        verify(view).addElement(ARROW_PADDING + ARROW_WIDTH, 0, elementPresenter2);
 
-        viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 2 * ARROW_PADDING + ELEMENT_WIDTH);
+        arrowShouldBeAdded(2);
+
+        viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 2 * ARROW_PADDING + 2 * ARROW_WIDTH + ELEMENT_WIDTH);
 
         verify(elementPresenter, never()).setY(anyInt());
         verify(elementPresenter).unsubscribeWidget();

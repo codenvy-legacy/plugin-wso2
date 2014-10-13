@@ -56,9 +56,10 @@ public class ToolbarGroupViewImpl extends AbstractView<ToolbarGroupView.ActionDe
     Label             title;
     @UiField
     FlowPanel         itemsPanel;
+    @UiField(provided = true)
+    final EditorResources resources;
 
     private final AnimationController animator;
-    private final EditorResources     resources;
 
     @Inject
     public ToolbarGroupViewImpl(ToolbarGroupViewImplUiBinder ourUiBinder, EditorResources resources, @Assisted String title) {
