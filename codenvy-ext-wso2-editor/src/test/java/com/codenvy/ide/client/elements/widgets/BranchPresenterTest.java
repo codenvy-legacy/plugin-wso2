@@ -70,16 +70,30 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class BranchPresenterTest {
 
-    private static final String TITLE              = "title";
-    private static final String ELEMENT_NAME       = "element name";
-    private static final String ELEMENT1_ID        = "element1 id";
-    private static final String ELEMENT2_ID        = "element2 id";
-    private static final int    ELEMENT_WIDTH      = 100;
-    private static final int    ELEMENT_HEIGHT     = 100;
-    private static final int    VIEW_HEIGHT        = 1000;
-    private static final int    MAX_ELEMENT_HEIGHT = 200;
-    private static final int    X_POSITION         = 100;
-    private static final int    Y_POSITION         = 100;
+    private static final String TITLE        = "title";
+    private static final String ELEMENT_NAME = "element name";
+    private static final String ELEMENT1_ID  = "element1 id";
+    private static final String ELEMENT2_ID  = "element2 id";
+
+    private static final int VIEW_HEIGHT        = 1000;
+    private static final int MAX_ELEMENT_HEIGHT = 200;
+
+    private static final int ELEMENT_WIDTH               = 100;
+    private static final int ELEMENT_HEIGHT              = 100;
+    private static final int ELEMENT_TOP_POSITION        = VIEW_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
+    private static final int BIGGER_ELEMENT_TOP_POSITION = VIEW_HEIGHT / 2 - MAX_ELEMENT_HEIGHT / 2;
+
+    private static final int X_POSITION                = 100;
+    private static final int Y_POSITION                = 100;
+    private static final int FIRST_ELEMENT_X_POSITION  = ARROW_PADDING + ARROW_WIDTH;
+    private static final int SECOND_ELEMENT_X_POSITION = FIRST_ELEMENT_X_POSITION + ARROW_WIDTH + ELEMENT_ARROW_PADDING + ELEMENT_WIDTH;
+
+    private static final int ELEMENT_DEFAULT_Y_POSITION = 0;
+
+    private static final int VIEW_WIDTH_FOR_ONE_ELEMENT         = 2 * ARROW_PADDING + 2 * ARROW_WIDTH + ELEMENT_WIDTH;
+    private static final int VIEW_WIDTH_FOR_TWO_ELEMENTS        = VIEW_WIDTH_FOR_ONE_ELEMENT + ARROW_WIDTH + ELEMENT_WIDTH;
+    private static final int VIEW_HEIGHT_FOR_TWO_ELEMENTS       = ELEMENTS_PADDING + ELEMENT_HEIGHT;
+    private static final int VIEW_HEIGHT_FOR_DIFFERENT_ELEMENTS = ELEMENTS_PADDING + MAX_ELEMENT_HEIGHT;
 
     @Mock
     private BranchView             view;
@@ -224,8 +238,8 @@ public class BranchPresenterTest {
     private void verifyViewRedraw() {
         verify(view).clear();
 
-        elementShouldBeChangedXYPosition(element, ARROW_PADDING + ARROW_WIDTH, 0);
-        elementShouldBeChangedXYPosition(element2, ARROW_PADDING + 2 * ARROW_WIDTH + ELEMENT_ARROW_PADDING + ELEMENT_WIDTH, 0);
+        elementShouldBeChangedXYPosition(element, FIRST_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION);
+        elementShouldBeChangedXYPosition(element2, SECOND_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION);
 
         verify(elementWidgetFactory, never()).createElementPresenter(any(Element.class));
 
@@ -234,10 +248,9 @@ public class BranchPresenterTest {
 
         elementsShouldBeAddedOnView();
 
-        viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 2 * ARROW_PADDING + 3 * ARROW_WIDTH + 2 * ELEMENT_WIDTH);
+        viewSizeShouldBeChanged(VIEW_HEIGHT_FOR_TWO_ELEMENTS, VIEW_WIDTH_FOR_TWO_ELEMENTS);
 
-        int top = VIEW_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
-        topPositionOfElementsShouldBeChanged(top, top);
+        topPositionOfElementsShouldBeChanged(ELEMENT_TOP_POSITION, ELEMENT_TOP_POSITION);
     }
 
     private void elementShouldBeNotChangedXYPosition(Element element) {
@@ -280,11 +293,8 @@ public class BranchPresenterTest {
     }
 
     private void elementsShouldBeAddedOnView() {
-        int firstElementXPosition = ARROW_PADDING + ARROW_WIDTH;
-        verify(view).addElement(firstElementXPosition, 0, elementPresenter);
-
-        int secondElementXPosition = firstElementXPosition + ARROW_WIDTH + ELEMENT_ARROW_PADDING + ELEMENT_WIDTH;
-        verify(view).addElement(secondElementXPosition, 0, elementPresenter2);
+        verify(view).addElement(FIRST_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION, elementPresenter);
+        verify(view).addElement(SECOND_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION, elementPresenter2);
 
         arrowShouldBeAdded(3);
     }
@@ -322,7 +332,7 @@ public class BranchPresenterTest {
     public void viewShouldBePreparedWhenDoNotNeedToShowTitle() throws Exception {
         viewShouldBePreparedGeneralCase();
 
-        viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 2 * ARROW_PADDING + 3 * ARROW_WIDTH + 2 * ELEMENT_WIDTH);
+        viewSizeShouldBeChanged(VIEW_HEIGHT_FOR_TWO_ELEMENTS, VIEW_WIDTH_FOR_TWO_ELEMENTS);
     }
 
     private void viewShouldBePreparedGeneralCase() {
@@ -332,8 +342,8 @@ public class BranchPresenterTest {
 
         verify(view).clear();
 
-        elementShouldBeChangedXYPosition(element, ARROW_PADDING + ARROW_WIDTH, 0);
-        elementShouldBeChangedXYPosition(element2, ARROW_PADDING + 2 * ARROW_WIDTH + ELEMENT_ARROW_PADDING + ELEMENT_WIDTH, 0);
+        elementShouldBeChangedXYPosition(element, FIRST_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION);
+        elementShouldBeChangedXYPosition(element2, SECOND_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION);
 
         elementWidgetsShouldBeCreated();
 
@@ -342,8 +352,7 @@ public class BranchPresenterTest {
 
         elementsShouldBeAddedOnView();
 
-        int top = VIEW_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
-        topPositionOfElementsShouldBeChanged(top, top);
+        topPositionOfElementsShouldBeChanged(ELEMENT_TOP_POSITION, ELEMENT_TOP_POSITION);
     }
 
     @Test
@@ -353,7 +362,7 @@ public class BranchPresenterTest {
 
         viewShouldBePreparedGeneralCase();
 
-        viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 2 * ARROW_PADDING + 3 * ARROW_WIDTH + 2 * ELEMENT_WIDTH + TITLE_WIDTH);
+        viewSizeShouldBeChanged(VIEW_HEIGHT_FOR_TWO_ELEMENTS, VIEW_WIDTH_FOR_TWO_ELEMENTS + TITLE_WIDTH);
     }
 
     @Test
@@ -407,8 +416,8 @@ public class BranchPresenterTest {
 
         verify(view).clear();
 
-        elementShouldBeChangedXYPosition(element, ARROW_PADDING + ARROW_WIDTH, 0);
-        elementShouldBeChangedXYPosition(element2, ARROW_PADDING + 2 * ARROW_WIDTH + ELEMENT_ARROW_PADDING + ELEMENT_WIDTH, 0);
+        elementShouldBeChangedXYPosition(element, FIRST_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION);
+        elementShouldBeChangedXYPosition(element2, SECOND_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION);
 
         elementWidgetsShouldBeCreated();
 
@@ -419,11 +428,9 @@ public class BranchPresenterTest {
 
         elementsShouldBeAddedOnView();
 
-        viewSizeShouldBeChanged(ELEMENTS_PADDING + MAX_ELEMENT_HEIGHT, 2 * ARROW_PADDING + 3 * ARROW_WIDTH + 2 * ELEMENT_WIDTH);
+        viewSizeShouldBeChanged(VIEW_HEIGHT_FOR_DIFFERENT_ELEMENTS, VIEW_WIDTH_FOR_TWO_ELEMENTS);
 
-        int firstTop = VIEW_HEIGHT / 2 - MAX_ELEMENT_HEIGHT / 2;
-        int secondTop = VIEW_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
-        topPositionOfElementsShouldBeChanged(firstTop, secondTop);
+        topPositionOfElementsShouldBeChanged(BIGGER_ELEMENT_TOP_POSITION, ELEMENT_TOP_POSITION);
     }
 
     @Test
@@ -447,8 +454,8 @@ public class BranchPresenterTest {
 
         verify(view).clear();
 
-        elementShouldBeChangedXYPosition(element, ARROW_PADDING + ARROW_WIDTH, 0);
-        elementShouldBeChangedXYPosition(element2, ARROW_PADDING + 2 * ARROW_WIDTH + ELEMENT_ARROW_PADDING + ELEMENT_WIDTH, 0);
+        elementShouldBeChangedXYPosition(element, FIRST_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION);
+        elementShouldBeChangedXYPosition(element2, SECOND_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION);
 
         elementWidgetsShouldBeCreated();
 
@@ -459,11 +466,9 @@ public class BranchPresenterTest {
 
         elementsShouldBeAddedOnView();
 
-        viewSizeShouldBeChanged(ELEMENTS_PADDING + MAX_ELEMENT_HEIGHT, 2 * ARROW_PADDING + 3 * ARROW_WIDTH + 2 * ELEMENT_WIDTH);
+        viewSizeShouldBeChanged(VIEW_HEIGHT_FOR_DIFFERENT_ELEMENTS, VIEW_WIDTH_FOR_TWO_ELEMENTS);
 
-        int firstTop = VIEW_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
-        int secondTop = VIEW_HEIGHT / 2 - MAX_ELEMENT_HEIGHT / 2;
-        topPositionOfElementsShouldBeChanged(firstTop, secondTop);
+        topPositionOfElementsShouldBeChanged(ELEMENT_TOP_POSITION, BIGGER_ELEMENT_TOP_POSITION);
     }
 
     @Test
@@ -486,18 +491,17 @@ public class BranchPresenterTest {
 
         verify(view).clear();
 
-        elementShouldBeChangedXYPosition(element, ARROW_PADDING, 0);
+        elementShouldBeChangedXYPosition(element, ARROW_PADDING, ELEMENT_DEFAULT_Y_POSITION);
 
         verify(elementWidgetFactory).createElementPresenter(element);
 
         listenersShouldBeAdded(elementPresenter);
 
-        verify(view).addElement(ARROW_PADDING, 0, elementPresenter);
+        verify(view).addElement(ARROW_PADDING, ELEMENT_DEFAULT_Y_POSITION, elementPresenter);
 
         viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_WIDTH, 2 * ARROW_PADDING + ELEMENT_WIDTH + TITLE_WIDTH);
 
-        int top = VIEW_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
-        verify(elementPresenter).setY(top);
+        verify(elementPresenter).setY(ELEMENT_TOP_POSITION);
 
         arrowShouldBeNotAdded();
     }
@@ -542,9 +546,8 @@ public class BranchPresenterTest {
 
         verify(view).getHeight();
 
-        int top = VIEW_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
-        verify(elementPresenter).setY(top);
-        verify(elementPresenter2).setY(top);
+        verify(elementPresenter).setY(ELEMENT_TOP_POSITION);
+        verify(elementPresenter2).setY(ELEMENT_TOP_POSITION);
     }
 
     @Test
@@ -767,24 +770,23 @@ public class BranchPresenterTest {
         verify(view).clear();
 
         elementShouldBeNotChangedXYPosition(element);
-        elementShouldBeChangedXYPosition(element2, ARROW_PADDING + ARROW_WIDTH, 0);
+        elementShouldBeChangedXYPosition(element2, FIRST_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION);
 
         verify(elementWidgetFactory, never()).createElementPresenter(any(Element.class));
 
         listenersShouldBeNotAdded(elementPresenter);
         listenersShouldBeNotAdded(elementPresenter2);
 
-        verify(view, never()).addElement(ARROW_PADDING, 0, elementPresenter);
-        verify(view).addElement(ARROW_PADDING + ARROW_WIDTH, 0, elementPresenter2);
+        verify(view, never()).addElement(anyInt(), anyInt(), eq(elementPresenter));
+        verify(view).addElement(FIRST_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION, elementPresenter2);
 
         arrowShouldBeAdded(2);
 
-        viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 2 * ARROW_PADDING + 2 * ARROW_WIDTH + ELEMENT_WIDTH);
+        viewSizeShouldBeChanged(VIEW_HEIGHT_FOR_TWO_ELEMENTS, VIEW_WIDTH_FOR_ONE_ELEMENT);
 
         verify(elementPresenter, never()).setY(anyInt());
 
-        int top = VIEW_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
-        verify(elementPresenter2).setY(top);
+        verify(elementPresenter2).setY(ELEMENT_TOP_POSITION);
     }
 
     @Test
@@ -818,25 +820,24 @@ public class BranchPresenterTest {
         verify(view).clear();
 
         elementShouldBeNotChangedXYPosition(element);
-        elementShouldBeChangedXYPosition(element2, ARROW_PADDING + ARROW_WIDTH, 0);
+        elementShouldBeChangedXYPosition(element2, FIRST_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION);
 
         verify(elementWidgetFactory, never()).createElementPresenter(any(Element.class));
 
         listenersShouldBeNotAdded(elementPresenter);
         listenersShouldBeNotAdded(elementPresenter2);
 
-        verify(view, never()).addElement(ARROW_PADDING, 0, elementPresenter);
-        verify(view).addElement(ARROW_PADDING + ARROW_WIDTH, 0, elementPresenter2);
+        verify(view, never()).addElement(anyInt(), anyInt(), eq(elementPresenter));
+        verify(view).addElement(FIRST_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION, elementPresenter2);
 
         arrowShouldBeAdded(2);
 
-        viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_HEIGHT, 2 * ARROW_PADDING + 2 * ARROW_WIDTH + ELEMENT_WIDTH);
+        viewSizeShouldBeChanged(VIEW_HEIGHT_FOR_TWO_ELEMENTS, VIEW_WIDTH_FOR_ONE_ELEMENT);
 
         verify(elementPresenter, never()).setY(anyInt());
         verify(elementPresenter).unsubscribeWidget();
 
-        int top = VIEW_HEIGHT / 2 - ELEMENT_HEIGHT / 2;
-        verify(elementPresenter2).setY(top);
+        verify(elementPresenter2).setY(ELEMENT_TOP_POSITION);
     }
 
     @Test
