@@ -193,6 +193,7 @@ public class BranchPresenterTest {
 
     private void prepareDefaultUseCase() {
         prepareStartView();
+        arrowsShouldBeCreated(3);
 
         resetMocksUseInPrepareCase();
 
@@ -301,8 +302,8 @@ public class BranchPresenterTest {
 
     private void arrowShouldBeAdded(int amount) {
         verify(view, times(amount)).addArrow(arrow);
-        verify(arrowProvider, times(amount)).get();
-        verify(arrow, times(amount)).setY(0);
+
+        verify(arrow, times(amount)).setY(ELEMENT_DEFAULT_Y_POSITION);
 
         int x = ARROW_PADDING;
         int arrowStepWidth = ARROW_WIDTH + ELEMENT_WIDTH + ELEMENT_ARROW_PADDING;
@@ -311,6 +312,14 @@ public class BranchPresenterTest {
             verify(arrow).setX(eq(x));
             x += arrowStepWidth;
         }
+    }
+
+    private void arrowsShouldBeCreated(int amount) {
+        verify(arrowProvider, times(amount)).get();
+    }
+
+    private void arrowsShouldBeNotCreated() {
+        verify(arrowProvider, never()).get();
     }
 
     private void arrowShouldBeNotAdded() {
@@ -425,6 +434,7 @@ public class BranchPresenterTest {
         listenersShouldBeAdded(elementPresenter2);
 
         arrowShouldBeAdded(3);
+        arrowsShouldBeCreated(3);
 
         elementsShouldBeAddedOnView();
 
@@ -463,6 +473,7 @@ public class BranchPresenterTest {
         listenersShouldBeAdded(elementPresenter2);
 
         arrowShouldBeAdded(3);
+        arrowsShouldBeCreated(3);
 
         elementsShouldBeAddedOnView();
 
@@ -504,6 +515,7 @@ public class BranchPresenterTest {
         verify(elementPresenter).setY(ELEMENT_TOP_POSITION);
 
         arrowShouldBeNotAdded();
+        arrowsShouldBeNotCreated();
     }
 
     @Test
@@ -652,6 +664,7 @@ public class BranchPresenterTest {
         verify(branch).addElement(creatingElement);
 
         verifyElementChanges();
+        arrowsShouldBeNotCreated();
     }
 
     @Test
@@ -742,6 +755,7 @@ public class BranchPresenterTest {
     @Test
     public void elementShouldBeDeleted() throws Exception {
         prepareStartView();
+        arrowsShouldBeCreated(3);
 
         resetMocksUseInPrepareCase();
 
@@ -781,6 +795,7 @@ public class BranchPresenterTest {
         verify(view).addElement(FIRST_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION, elementPresenter2);
 
         arrowShouldBeAdded(2);
+        arrowsShouldBeNotCreated();
 
         viewSizeShouldBeChanged(VIEW_HEIGHT_FOR_TWO_ELEMENTS, VIEW_WIDTH_FOR_ONE_ELEMENT);
 
@@ -792,6 +807,7 @@ public class BranchPresenterTest {
     @Test
     public void elementShouldBeRemovedWhenContextMenuActionIsClicked() throws Exception {
         prepareStartView();
+        arrowsShouldBeCreated(3);
 
         resetMocksUseInPrepareCase();
 
@@ -831,6 +847,7 @@ public class BranchPresenterTest {
         verify(view).addElement(FIRST_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION, elementPresenter2);
 
         arrowShouldBeAdded(2);
+        arrowsShouldBeNotCreated();
 
         viewSizeShouldBeChanged(VIEW_HEIGHT_FOR_TWO_ELEMENTS, VIEW_WIDTH_FOR_ONE_ELEMENT);
 
@@ -849,6 +866,7 @@ public class BranchPresenterTest {
         elementShouldBeNotChangedXYPosition(element, X_POSITION, Y_POSITION);
 
         verifyElementChanges();
+        arrowsShouldBeNotCreated();
     }
 
     @Test
@@ -862,6 +880,7 @@ public class BranchPresenterTest {
         elementShouldBeNotChangedXYPosition(element, X_POSITION, Y_POSITION);
 
         verifyElementChanges();
+        arrowsShouldBeNotCreated();
     }
 
     @Test
@@ -876,6 +895,7 @@ public class BranchPresenterTest {
         elementShouldBeChangedXYPosition(element, X_POSITION, Y_POSITION);
 
         verifyElementChanges();
+        arrowsShouldBeNotCreated();
     }
 
     @Test
@@ -885,6 +905,7 @@ public class BranchPresenterTest {
         presenter.onElementChanged();
 
         verifyElementChanges();
+        arrowsShouldBeNotCreated();
     }
 
     @Test

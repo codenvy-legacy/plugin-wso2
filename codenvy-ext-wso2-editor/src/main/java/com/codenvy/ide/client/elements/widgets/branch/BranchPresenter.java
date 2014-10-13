@@ -73,6 +73,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     private final List<ElementChangedListener> elementChangedListeners;
 
     private final Map<String, ElementPresenter> widgetElements;
+    private final List<ArrowPresenter>          arrows;
 
     private boolean isBorderVisible;
 
@@ -97,6 +98,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
 
         this.elementChangedListeners = new ArrayList<>();
         this.widgetElements = new LinkedHashMap<>();
+        this.arrows = new ArrayList<>();
 
         this.branch = branch;
 
@@ -292,13 +294,14 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
 
         int x = ARROW_PADDING;
         int y = 0;
+        int arrowIndex = 0;
 
         boolean isFirst = true;
         boolean needsToShowArrows = needsToShowArrows();
 
         for (Element element : branch.getElements()) {
             if (needsToShowArrows && isFirst) {
-                addArrow(x, y);
+                addArrow(x, y, arrowIndex++);
                 x += ARROW_WIDTH;
 
                 isFirst = false;
@@ -319,14 +322,22 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
             x += elementPresenter.getWidth() + ELEMENT_ARROW_PADDING;
 
             if (needsToShowArrows) {
-                addArrow(x, y);
+                addArrow(x, y, arrowIndex++);
                 x += ARROW_WIDTH;
             }
         }
     }
 
-    private void addArrow(@Nonnegative int x, @Nonnegative int y) {
-        ArrowPresenter arrow = arrowProvider.get();
+    private void addArrow(@Nonnegative int x, @Nonnegative int y, @Nonnegative int index) {
+        ArrowPresenter arrow;
+
+        if (index + 1 > arrows.size()) {
+            arrow = arrowProvider.get();
+            arrows.add(arrow);
+        } else {
+            arrow = arrows.get(index);
+        }
+
         arrow.setX(x);
         arrow.setY(y);
 
