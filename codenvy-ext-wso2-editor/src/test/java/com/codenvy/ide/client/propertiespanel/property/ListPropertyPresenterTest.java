@@ -18,17 +18,17 @@ package com.codenvy.ide.client.propertiespanel.property;
 import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyView;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,32 +37,17 @@ import static org.mockito.Mockito.when;
  * @author Valeriy Svydenko
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ListPropertyPresenterTest {
+public class ListPropertyPresenterTest extends AbstractPropertyPresenterTest<ListPropertyPresenter, ListPropertyView> {
 
     private static final String STRING = "some text";
 
     @Mock
     private PropertyValueChangedListener listener;
-    @Mock
-    private ListPropertyView             view;
-    @InjectMocks
-    private ListPropertyPresenter        presenter;
 
-    @Test
-    public void viewShouldBePrepared() throws Exception {
-        verify(view).setDelegate(presenter);
-    }
-
-    @Test
-    public void viewShouldBeReturned() throws Exception {
-        assertEquals(view, presenter.getView());
-    }
-
-    @Test
-    public void titleShouldBeSet() throws Exception {
-        presenter.setTitle(STRING);
-
-        verify(view).setTitle(STRING);
+    @Before
+    public void setUp() throws Exception {
+        view = mock(ListPropertyView.class);
+        presenter = new ListPropertyPresenter(view);
     }
 
     @Test
@@ -86,13 +71,6 @@ public class ListPropertyPresenterTest {
         presenter.addValue(STRING);
 
         verify(view).addPropertyValue(STRING);
-    }
-
-    @Test
-    public void visibleStateShouldBeChanged() throws Exception {
-        presenter.setVisible(true);
-
-        verify(view).setVisible(true);
     }
 
     @Test

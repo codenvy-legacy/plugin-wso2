@@ -18,46 +18,29 @@ package com.codenvy.ide.client.propertiespanel.property;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyView;
 
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import static com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter.EditButtonClickedListener;
-import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 /**
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
-@RunWith(MockitoJUnitRunner.class)
-public class ComplexPropertyPresenterTest {
+public class ComplexPropertyPresenterTest extends AbstractPropertyPresenterTest<ComplexPropertyPresenter, ComplexPropertyView> {
 
     private static final String STRING = "some text";
 
     @Mock
     private EditButtonClickedListener listener;
-    @Mock
-    private ComplexPropertyView       view;
-    @InjectMocks
-    private ComplexPropertyPresenter  presenter;
 
-    @Test
-    public void viewShouldBePrepared() throws Exception {
-        verify(view).setDelegate(presenter);
-    }
-
-    @Test
-    public void viewShouldBeReturned() throws Exception {
-        assertEquals(view, presenter.getView());
-    }
-
-    @Test
-    public void titleShouldBeSet() throws Exception {
-        presenter.setTitle(STRING);
-
-        verify(view).setTitle(STRING);
+    @Before
+    public void setUp() throws Exception {
+        view = mock(ComplexPropertyView.class);
+        presenter = new ComplexPropertyPresenter(view);
     }
 
     @Test
@@ -65,13 +48,6 @@ public class ComplexPropertyPresenterTest {
         presenter.setProperty(STRING);
 
         verify(view).setProperty(STRING);
-    }
-
-    @Test
-    public void visibleStateShouldBeChanged() throws Exception {
-        presenter.setVisible(true);
-
-        verify(view).setVisible(true);
     }
 
     @Test

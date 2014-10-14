@@ -52,8 +52,10 @@
     <g:FlowPanel ui:field="mainPanel" addStyleNames="{style.mainPanel}">
 
         <g:FlowPanel ui:field="groupNamePanel"
-                     addStyleNames="{style.headerPanel} {res.editorCSS.propertyHeaderPanel} {res.editorCSS.fontStyle}
-                     {res.editorCSS.panelHover}">
+                     addStyleNames="{style.headerPanel}
+                                    {res.editorCSS.propertyHeaderPanel}
+                                    {res.editorCSS.fontStyle}
+                                    {res.editorCSS.panelHover}">
 
             <g:Label ui:field="title" addStyleNames="{style.title}"/>
             <g:SimpleLayoutPanel ui:field="icon" addStyleNames="{style.icon}"/>

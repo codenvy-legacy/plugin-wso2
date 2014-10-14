@@ -16,8 +16,8 @@
 
 package com.codenvy.ide.client.propertiespanel.property.group;
 
+import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.client.propertiespanel.property.general.AbstractPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.general.AbstractPropertyView;
 
 import javax.annotation.Nonnull;
 
@@ -27,7 +27,15 @@ import javax.annotation.Nonnull;
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
-public interface PropertyGroupView extends AbstractPropertyView<PropertyGroupView.ActionDelegate> {
+public interface PropertyGroupView extends View<PropertyGroupView.ActionDelegate> {
+
+    /**
+     * Changes visible state of the top border.
+     *
+     * @param visible
+     *         <code>true</code> the border will be shown, <code>false</code> it will not
+     */
+    void setBorderVisible(boolean visible);
 
     /** Changes state of property groups. When user clicks on group panel it expands. */
     void expendPropertyGroup();
@@ -60,7 +68,6 @@ public interface PropertyGroupView extends AbstractPropertyView<PropertyGroupVie
     void setTitleVisible(boolean isVisible);
 
     public interface ActionDelegate {
-
         /** Calls method on view which expand or collapse property group related to current state */
         void onPropertyGroupClicked();
     }

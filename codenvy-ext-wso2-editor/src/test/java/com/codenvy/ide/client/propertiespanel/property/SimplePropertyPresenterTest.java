@@ -18,14 +18,14 @@ package com.codenvy.ide.client.propertiespanel.property;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyView;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -35,32 +35,17 @@ import static org.mockito.Mockito.when;
  * @author Andrey Plotnikov
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SimplePropertyPresenterTest {
+public class SimplePropertyPresenterTest extends AbstractPropertyPresenterTest<SimplePropertyPresenter, SimplePropertyView> {
 
     private static final String STRING = "some text";
 
     @Mock
     private PropertyValueChangedListener listener;
-    @Mock
-    private SimplePropertyView           view;
-    @InjectMocks
-    private SimplePropertyPresenter      presenter;
 
-    @Test
-    public void viewShouldBePrepared() throws Exception {
-        verify(view).setDelegate(presenter);
-    }
-
-    @Test
-    public void viewShouldBeReturned() throws Exception {
-        assertEquals(view, presenter.getView());
-    }
-
-    @Test
-    public void titleShouldBeSet() throws Exception {
-        presenter.setTitle(STRING);
-
-        verify(view).setTitle(STRING);
+    @Before
+    public void setUp() throws Exception {
+        view = mock(SimplePropertyView.class);
+        presenter = new SimplePropertyPresenter(view);
     }
 
     @Test
@@ -68,13 +53,6 @@ public class SimplePropertyPresenterTest {
         presenter.setProperty(STRING);
 
         verify(view).setProperty(STRING);
-    }
-
-    @Test
-    public void visibleStateShouldBeChanged() throws Exception {
-        presenter.setVisible(true);
-
-        verify(view).setVisible(true);
     }
 
     @Test

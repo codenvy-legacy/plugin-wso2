@@ -97,9 +97,10 @@
                 <g:west size="180">
                     <g:FlowPanel>
 
-                        <g:FlowPanel ui:field="toolbarBtn" width="60px"
-                                     addStyleNames="{style.button} {style.paletteBtnLocation} {resources.wso2Style.editorButtonStyle}
-                                     {resources.wso2Style.palettePropertyBtnStyle}">
+                        <g:FlowPanel ui:field="toolbarBtn" width="60px" addStyleNames="{style.button}
+                                                                                       {style.paletteBtnLocation}
+                                                                                       {resources.wso2Style.editorButtonStyle}
+                                                                                       {resources.wso2Style.palettePropertyBtnStyle}">
                             <g:Image resource="{resources.paletteIcon}" addStyleNames="{style.iconPalette}"/>
                             <g:Label text="{locale.toolbarPalette}" addStyleNames="{style.labelPalette}"/>
                         </g:FlowPanel>
@@ -111,8 +112,10 @@
                     <g:FlowPanel>
 
                         <g:FlowPanel ui:field="showPropertyPanel" width="75px"
-                                     addStyleNames="{style.button} {style.propertyBtnLocation} {resources.wso2Style.editorButtonStyle}
-                                     {resources.wso2Style.palettePropertyBtnStyle}">
+                                     addStyleNames="{style.button}
+                                                    {style.propertyBtnLocation}
+                                                    {resources.wso2Style.editorButtonStyle}
+                                                    {resources.wso2Style.palettePropertyBtnStyle}">
                             <g:Image resource="{resources.propertiesIcon}" addStyleNames="{style.iconProperty}"/>
                             <g:Label text="{locale.editorProperty}" addStyleNames="{style.labelProperty}"/>
                         </g:FlowPanel>
@@ -122,7 +125,6 @@
 
                 <g:center>
                     <g:FlowPanel width="100%" height="100%">
-
                         <g:FlowPanel addStyleNames="{style.editorBtnLocation}">
 
                             <g:Button text="{locale.editorText}" ui:field="textEditorChoose" height="16px"
@@ -133,7 +135,6 @@
                                       addStyleNames="{style.button} {style.editorBtnStyle} {resources.wso2Style.editorButtonStyle}"/>
 
                         </g:FlowPanel>
-
                     </g:FlowPanel>
                 </g:center>
 

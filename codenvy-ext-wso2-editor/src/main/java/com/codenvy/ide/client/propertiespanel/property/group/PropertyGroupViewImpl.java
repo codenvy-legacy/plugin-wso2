@@ -16,8 +16,8 @@
 package com.codenvy.ide.client.propertiespanel.property.group;
 
 import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.mvp.AbstractView;
 import com.codenvy.ide.client.propertiespanel.property.general.AbstractPropertyPresenter;
-import com.codenvy.ide.client.propertiespanel.property.general.AbstractPropertyViewImpl;
 import com.codenvy.ide.util.AnimationController;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -40,7 +40,7 @@ import javax.annotation.Nonnull;
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
-public class PropertyGroupViewImpl extends AbstractPropertyViewImpl<PropertyGroupView.ActionDelegate> implements PropertyGroupView {
+public class PropertyGroupViewImpl extends AbstractView<PropertyGroupView.ActionDelegate> implements PropertyGroupView {
 
     @Singleton
     interface PropertyGroupViewImplUiBinder extends UiBinder<Widget, PropertyGroupViewImpl> {
@@ -65,8 +65,6 @@ public class PropertyGroupViewImpl extends AbstractPropertyViewImpl<PropertyGrou
     public PropertyGroupViewImpl(PropertyGroupViewImplUiBinder ourUiBinder,
                                  EditorResources resources,
                                  @Assisted String title) {
-        super(resources.editorCSS());
-
         res = resources;
 
         initWidget(ourUiBinder.createAndBindUi(this));

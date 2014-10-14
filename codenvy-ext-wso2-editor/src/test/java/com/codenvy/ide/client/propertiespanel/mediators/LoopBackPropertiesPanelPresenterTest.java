@@ -31,17 +31,17 @@ import static org.mockito.Mockito.when;
 /**
  * @author Dmitry Shnurenko
  */
-public class LoopBackPropertiesPanelPresenterTest extends AbstractPropertiesPanelTest {
+public class LoopBackPropertiesPanelPresenterTest extends AbstractPropertiesPanelTest<LoopBackPropertiesPanelPresenter> {
 
     private static final String GROUP_TITLE = "Miscellaneous";
     private static final String ITEM_TITLE  = "Description";
 
     @Mock
-    PropertyGroupPresenter  groupPresenter;
+    private PropertyGroupPresenter  groupPresenter;
     @Mock
-    SimplePropertyPresenter description;
+    private SimplePropertyPresenter description;
     @Mock
-    LoopBack                element;
+    private LoopBack                element;
 
     private PropertyValueChangedListener descriptionListener;
 
