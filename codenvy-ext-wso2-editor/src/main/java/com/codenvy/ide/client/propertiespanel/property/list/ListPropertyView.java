@@ -16,7 +16,7 @@
 
 package com.codenvy.ide.client.propertiespanel.property.list;
 
-import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.client.propertiespanel.property.general.AbstractPropertyView;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
@@ -31,15 +31,7 @@ import java.util.List;
  * @author Valeriy Svydenko
  */
 @ImplementedBy(ListPropertyViewImpl.class)
-public interface ListPropertyView extends View<ListPropertyView.ActionDelegate> {
-
-    /**
-     * Changes title of property on the view.
-     *
-     * @param title
-     *         title that needs to be changed
-     */
-    void setTitle(@Nullable String title);
+public interface ListPropertyView extends AbstractPropertyView<ListPropertyView.ActionDelegate> {
 
     /**
      * Adds available value.
@@ -68,14 +60,6 @@ public interface ListPropertyView extends View<ListPropertyView.ActionDelegate> 
     /** @return selected property value */
     @Nonnull
     String getProperty();
-
-    /**
-     * Changes visible state of the main panel.
-     *
-     * @param visible
-     *         <code>true</code> the panel will be shown, <code>false</code> it will not
-     */
-    void setVisible(boolean visible);
 
     public interface ActionDelegate {
         /** Performs some actions in response to a user's changing property value. */

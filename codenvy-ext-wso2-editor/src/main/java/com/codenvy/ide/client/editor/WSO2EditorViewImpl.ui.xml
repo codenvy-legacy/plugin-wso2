@@ -29,15 +29,16 @@
             height: 20px;
         }
 
-        .labelToolbarStyle {
+        .labelToolbarGroup {
             width: 50%;
             float: left;
-            margin-top: 1px;
+            top: 50%;
+            margin-top: -6px;
             margin-left: 12px;
             position: relative;
         }
 
-        .closeToolbarBtnStyle {
+        .closeToolbarBtn {
             width: 6px;
             height: 6px;
             float: right;
@@ -46,24 +47,24 @@
             cursor: pointer;
         }
 
-        .labelStyle {
+        .labelPalette {
             float: left;
             margin-top: 4px;
-            margin-left: 12px;
+            margin-left: 7px;
             position: relative;
         }
     </ui:style>
 
-    <g:SplitLayoutPanel ui:field="mainPanel" addStyleNames="{res.editorCSS.fullSize}, {res.editorCSS.propertyBackground}">
+    <g:SplitLayoutPanel ui:field="mainPanel" addStyleNames="{res.editorCSS.fullSize} {res.editorCSS.propertyBackground}">
 
         <g:west size="180">
             <g:FlowPanel ui:field="toolbarPanel">
 
-                <g:FlowPanel addStyleNames="{style.palettePanel}, {res.editorCSS.toolbarPalette}">
+                <g:FlowPanel addStyleNames="{style.palettePanel} {res.editorCSS.toolbarPalette}">
                     <g:Label text="{locale.toolbarPalette}"
-                             addStyleNames="{style.labelToolbarStyle} {res.editorCSS.fontStyle} {res.editorCSS.fontStyle}"/>
+                             addStyleNames="{style.labelToolbarGroup} {res.editorCSS.fontStyle} {res.editorCSS.fontStyle}"/>
                     <g:Image ui:field="closeToolbarBtn" resource="{res.toolbarPanelClose}"
-                             addStyleNames="{style.closeToolbarBtnStyle}"/>
+                             addStyleNames="{style.closeToolbarBtn}"/>
                 </g:FlowPanel>
 
                 <g:SimpleLayoutPanel ui:field="toolbar" addStyleNames="{res.editorCSS.toolbarMainPanel} {res.editorCSS.fullSize}"/>
@@ -74,8 +75,8 @@
             <g:FlowPanel ui:field="mainPropertiesPanel" addStyleNames="{res.editorCSS.mainPropertiesPanel}">
 
                 <g:FlowPanel ui:field="buttonPanel" height="20px"
-                             addStyleNames="{res.editorCSS.propertyButtonPanelStyle}, {res.editorCSS.fontStyle}">
-                    <g:Label text="{locale.panelLabelName}" addStyleNames="{style.labelStyle}"/>
+                             addStyleNames="{res.editorCSS.propertyButtonPanelStyle} {res.editorCSS.fontStyle}">
+                    <g:Label text="{locale.panelLabelName}" addStyleNames="{style.labelPalette}"/>
                     <g:Button ui:field="hideBtn" height="20px" addStyleNames="{res.editorCSS.propertyButtonHideStyle}"/>
                 </g:FlowPanel>
 

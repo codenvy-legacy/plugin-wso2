@@ -21,7 +21,7 @@
 
     <ui:with field="resource" type="com.codenvy.ide.client.EditorResources"/>
 
-    <g:ScrollPanel ui:field="scrollPanel" alwaysShowScrollBars="true" addStyleNames="{resource.editorCSS.fullSize}">
+    <g:ScrollPanel ui:field="scrollPanel" addStyleNames="{resource.editorCSS.fullSize}">
         <g:FlowPanel ui:field="mainPanel" addStyleNames="{resource.editorCSS.fullSize}"/>
     </g:ScrollPanel>
 

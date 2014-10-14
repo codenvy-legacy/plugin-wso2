@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.propertiespanel.property;
 
 import com.codenvy.ide.client.inject.factories.PropertiesGroupFactory;
+import com.codenvy.ide.client.propertiespanel.property.general.AbstractPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupView;
 
@@ -92,6 +93,7 @@ public class PropertyGroupPresenterTest {
         presenter.onPropertyGroupClicked();
 
         verify(view).expendPropertyGroup();
+        verify(view).setBorderVisible(true);
     }
 
     @Test
@@ -104,6 +106,7 @@ public class PropertyGroupPresenterTest {
 
         verify(view, never()).expendPropertyGroup();
         verify(view).collapsePropertyGroup();
+        verify(view).setBorderVisible(false);
     }
 
     @Test
@@ -129,6 +132,15 @@ public class PropertyGroupPresenterTest {
         presenter.setTitleVisible(true);
 
         verify(view).setTitleVisible(true);
+    }
+
+    @Test
+    public void visibleFirstItemShouldBeChanged() throws Exception {
+        presenter.addItem(property);
+
+        verify(view).addProperty(property);
+
+        verify(property).setTopBorderVisible(false);
     }
 
 }

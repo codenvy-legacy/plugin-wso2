@@ -16,8 +16,8 @@
 package com.codenvy.ide.client.propertiespanel.property.group;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.mvp.AbstractView;
-import com.codenvy.ide.client.propertiespanel.property.AbstractPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.general.AbstractPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.general.AbstractPropertyViewImpl;
 import com.codenvy.ide.util.AnimationController;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -40,7 +40,7 @@ import javax.annotation.Nonnull;
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
  */
-public class PropertyGroupViewImpl extends AbstractView<PropertyGroupView.ActionDelegate> implements PropertyGroupView {
+public class PropertyGroupViewImpl extends AbstractPropertyViewImpl<PropertyGroupView.ActionDelegate> implements PropertyGroupView {
 
     @Singleton
     interface PropertyGroupViewImplUiBinder extends UiBinder<Widget, PropertyGroupViewImpl> {
@@ -57,7 +57,7 @@ public class PropertyGroupViewImpl extends AbstractView<PropertyGroupView.Action
     @UiField
     FlowPanel         propertiesPanel;
     @UiField(provided = true)
-    EditorResources   res;
+    final EditorResources res;
 
     private final AnimationController animator;
 
@@ -65,6 +65,8 @@ public class PropertyGroupViewImpl extends AbstractView<PropertyGroupView.Action
     public PropertyGroupViewImpl(PropertyGroupViewImplUiBinder ourUiBinder,
                                  EditorResources resources,
                                  @Assisted String title) {
+        super(resources.editorCSS());
+
         res = resources;
 
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -112,6 +114,18 @@ public class PropertyGroupViewImpl extends AbstractView<PropertyGroupView.Action
 
         icon.removeStyleName(res.editorCSS().expandedImage());
         icon.addStyleName(res.editorCSS().normalImage());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setBorderVisible(boolean visible) {
+        String style = res.editorCSS().groupBottomBorder();
+
+        if (visible) {
+            addStyleName(style);
+        } else {
+            removeStyleName(style);
+        }
     }
 
     /** {@inheritDoc} */

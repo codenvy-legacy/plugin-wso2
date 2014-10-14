@@ -16,7 +16,7 @@
 
 package com.codenvy.ide.client.propertiespanel.property.simple;
 
-import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.client.propertiespanel.property.general.AbstractPropertyView;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
@@ -29,15 +29,7 @@ import javax.annotation.Nullable;
  * @author Andrey Plotnikov
  */
 @ImplementedBy(SimplePropertyViewImpl.class)
-public interface SimplePropertyView extends View<SimplePropertyView.ActionDelegate> {
-
-    /**
-     * Changes title of property on the view.
-     *
-     * @param title
-     *         title that needs to be changed
-     */
-    void setTitle(@Nullable String title);
+public interface SimplePropertyView extends AbstractPropertyView<SimplePropertyView.ActionDelegate> {
 
     /** @return selected property value */
     @Nonnull
@@ -50,14 +42,6 @@ public interface SimplePropertyView extends View<SimplePropertyView.ActionDelega
      *         property value that need to be set
      */
     void setProperty(@Nullable String property);
-
-    /**
-     * Changes visible state of the main panel.
-     *
-     * @param visible
-     *         <code>true</code> the panel will be shown, <code>false</code> it will not
-     */
-    void setVisible(boolean visible);
 
     public interface ActionDelegate {
         /** Performs some actions in response to a user's changing property value. */

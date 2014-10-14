@@ -72,6 +72,10 @@
     border-top: 1px solid #000000;
 }
 
+.groupBottomBorder {
+    border-bottom: 1px solid #272727;
+}
+
 .elementHeaderPanel {
     background: #545454;
     border-bottom: 1px solid #404040;
@@ -98,7 +102,6 @@
 
 .toolbarPalette {
     background-color: #2c2c2c;
-    border-bottom: 1px solid #545454;
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.5);
 }
 
@@ -127,6 +130,7 @@
     background: #545454;
     border-bottom: 1px solid #303030;
     border-top: 1px solid #878787;
+    border-left: 1px solid #878787;
 }
 
 .toolbarGroupHeaderPanelStyle:active {
@@ -156,8 +160,11 @@
     width: 100%;
     height: 40px;
     border-bottom: 1px solid #272727;
-    border-top: 1px solid #5a5c5c;
     padding: 8px 3px 10px;
+}
+
+.propertyBorderTop {
+    border-top: 1px solid #5a5c5c;
 }
 
 .propertyItem {
@@ -189,7 +196,6 @@
     background: #545454;
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.3);
-    border-top: 1px solid #2c2c2c;
     cursor: pointer;
 }
 
@@ -197,8 +203,6 @@
     background: #2c2c2c;
     font-weight: bold;
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
-    border-bottom: 1px solid #545454;
-    border-top: 1px solid #545454;
 }
 
 .propertyButtonHideStyle {
@@ -206,7 +210,6 @@
     background: #2c2c2c;
     border: 0;
     float: right;
-    margin-right: 5px;
 }
 
 .propertyButtonHideStyle:hover {
@@ -216,7 +219,7 @@
 }
 
 .fontStyle {
-    font-family: "Helvetica Neue", serif;
+    font-family: "Helvetica Neue", "Helvetica Arial", "Lucida Grande", sans-serif;;
     font-size: 11px;
     color: #dbdbdb;
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);

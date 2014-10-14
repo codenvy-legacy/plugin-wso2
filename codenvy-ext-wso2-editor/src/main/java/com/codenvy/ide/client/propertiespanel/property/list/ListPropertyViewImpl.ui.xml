@@ -21,7 +21,7 @@
 
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
 
-    <g:FlowPanel addStyleNames="{res.editorCSS.property}">
+    <g:FlowPanel addStyleNames="{res.editorCSS.property} {res.editorCSS.propertyBorderTop}">
         <g:Label ui:field="title" addStyleNames="{res.editorCSS.fontStyle} {res.editorCSS.propertyItem}"/>
         <g:ListBox ui:field="property" width="calc(100% - 15px)" addStyleNames="{res.editorCSS.propertyField} {res.editorCSS.fontStyle}"/>
     </g:FlowPanel>

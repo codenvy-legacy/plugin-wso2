@@ -16,7 +16,7 @@
 
 package com.codenvy.ide.client.propertiespanel.property.complex;
 
-import com.codenvy.ide.client.propertiespanel.property.AbstractPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.general.AbstractPropertyPresenter;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -43,12 +43,6 @@ public class ComplexPropertyPresenter extends AbstractPropertyPresenter<ComplexP
         listeners = new ArrayList<>();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void setTitle(@Nullable String title) {
-        view.setTitle(title);
-    }
-
     /**
      * Changes property value on the view.
      *
@@ -57,12 +51,6 @@ public class ComplexPropertyPresenter extends AbstractPropertyPresenter<ComplexP
      */
     public void setProperty(@Nullable String property) {
         view.setProperty(property);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setVisible(boolean visible) {
-        view.setVisible(visible);
     }
 
     /** {@inheritDoc} */

@@ -16,7 +16,7 @@
 package com.codenvy.ide.client.propertiespanel.property.complex;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.client.propertiespanel.property.general.AbstractPropertyViewImpl;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -32,8 +32,9 @@ import javax.annotation.Nullable;
 
 /**
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
-public class ComplexPropertyViewImpl extends AbstractView<ComplexPropertyView.ActionDelegate> implements ComplexPropertyView {
+public class ComplexPropertyViewImpl extends AbstractPropertyViewImpl<ComplexPropertyView.ActionDelegate> implements ComplexPropertyView {
 
     @Singleton
     interface ComplexPropertyViewImplUiBinder extends UiBinder<Widget, ComplexPropertyViewImpl> {
@@ -45,13 +46,13 @@ public class ComplexPropertyViewImpl extends AbstractView<ComplexPropertyView.Ac
     TextBox property;
     @UiField
     Button  btnEdit;
-
     @UiField(provided = true)
     final EditorResources res;
 
     @Inject
     public ComplexPropertyViewImpl(ComplexPropertyViewImplUiBinder ourUiBinder, EditorResources resources) {
-        this.res = resources;
+        super(resources.editorCSS());
+        res = resources;
 
         initWidget(ourUiBinder.createAndBindUi(this));
     }
@@ -69,7 +70,7 @@ public class ComplexPropertyViewImpl extends AbstractView<ComplexPropertyView.Ac
     }
 
     @UiHandler("btnEdit")
-    public void onEditButtonClicked(ClickEvent event) {
+    public void onEditButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onEditButtonClicked();
     }
 

@@ -13,41 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.codenvy.ide.client.propertiespanel.property;
+package com.codenvy.ide.client.propertiespanel.property.general;
 
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.client.mvp.AbstractPresenter;
-import com.google.gwt.user.client.ui.IsWidget;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * The abstract representation of the general property widget. It contains all important methods which are needed for all kinds of
- * properties.
+ * panels.
  *
- * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
-public abstract class AbstractPropertyPresenter<T extends View> extends AbstractPresenter<T> {
-
-    protected AbstractPropertyPresenter(T view) {
-        super(view);
-    }
-
-    /** @return the GWT widget that is controlled by the presenter */
-    @Nonnull
-    public IsWidget getView() {
-        return view;
-    }
-
+public interface AbstractPropertyView<T> extends View<T> {
     /**
-     * Changes property title on the view.
+     * Changes title of property on the view.
      *
      * @param title
-     *         title that needs to be set
+     *         title that needs to be changed
      */
-    public abstract void setTitle(@Nullable String title);
+    void setTitle(@Nullable String title);
+
+    /**
+     * Changes visible state of the top border.
+     *
+     * @param visible
+     *         <code>true</code> the border will be shown, <code>false</code> it will not
+     */
+    void setBorderVisible(boolean visible);
 
     /**
      * Changes visible state of the widget.
@@ -55,6 +48,6 @@ public abstract class AbstractPropertyPresenter<T extends View> extends Abstract
      * @param visible
      *         <code>true</code> the widget will be shown, <code>false</code> it will not
      */
-    public abstract void setVisible(boolean visible);
+    void setVisible(boolean visible);
 
 }

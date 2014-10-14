@@ -51,6 +51,7 @@
         }
 
         .editorBtnStyle {
+            position: relative;
             float: left;
             width: 90px;
             margin-left: 3px;

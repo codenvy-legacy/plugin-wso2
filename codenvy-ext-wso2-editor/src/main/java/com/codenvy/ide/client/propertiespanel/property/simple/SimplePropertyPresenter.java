@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.property.simple;
 
-import com.codenvy.ide.client.propertiespanel.property.AbstractPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.general.AbstractPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.PropertyValueChangedListener;
 import com.google.inject.Inject;
 
@@ -29,6 +29,7 @@ import java.util.List;
  * property value from simple field like TextBox.
  *
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class SimplePropertyPresenter extends AbstractPropertyPresenter<SimplePropertyView> implements SimplePropertyView.ActionDelegate {
 
@@ -41,12 +42,6 @@ public class SimplePropertyPresenter extends AbstractPropertyPresenter<SimplePro
         listeners = new ArrayList<>();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void setTitle(@Nullable String title) {
-        view.setTitle(title);
-    }
-
     /**
      * Changes property value on the view.
      *
@@ -55,12 +50,6 @@ public class SimplePropertyPresenter extends AbstractPropertyPresenter<SimplePro
      */
     public void setProperty(@Nullable String property) {
         view.setProperty(property);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setVisible(boolean visible) {
-        view.setVisible(visible);
     }
 
     /** {@inheritDoc} */

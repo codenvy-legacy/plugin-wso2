@@ -16,8 +16,8 @@
 
 package com.codenvy.ide.client.propertiespanel.property.group;
 
-import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.client.propertiespanel.property.AbstractPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.general.AbstractPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.general.AbstractPropertyView;
 
 import javax.annotation.Nonnull;
 
@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
  */
-public interface PropertyGroupView extends View<PropertyGroupView.ActionDelegate> {
+public interface PropertyGroupView extends AbstractPropertyView<PropertyGroupView.ActionDelegate> {
 
     /** Changes state of property groups. When user clicks on group panel it expands. */
     void expendPropertyGroup();

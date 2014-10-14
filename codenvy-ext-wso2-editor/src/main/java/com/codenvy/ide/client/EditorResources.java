@@ -102,6 +102,10 @@ public interface EditorResources extends ClientBundle {
         String workspaceBackground();
 
         String panelHover();
+
+        String groupBottomBorder();
+
+        String propertyBorderTop();
     }
 
     @Source("editor.css")

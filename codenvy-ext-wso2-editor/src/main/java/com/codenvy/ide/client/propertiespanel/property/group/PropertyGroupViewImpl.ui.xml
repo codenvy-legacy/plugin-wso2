@@ -34,20 +34,16 @@
         .icon {
             height: 12px;
             width: 12px;
-            float: left;
+            float: right;
             transition: all 300ms;
             position: relative;
             top: 50%;
-            margin-top: -12px;
-            margin-right: -5px;
-        }
-
-        .iconPanel {
-            position: absolute;
-            right: 10px;
+            margin-top: -6px;
+            margin-right: 6px;
         }
 
         .title {
+            float: left;
             margin-left: 7px;
             margin-top: 3px;
         }
@@ -58,11 +54,9 @@
         <g:FlowPanel ui:field="groupNamePanel"
                      addStyleNames="{style.headerPanel} {res.editorCSS.propertyHeaderPanel} {res.editorCSS.fontStyle}
                      {res.editorCSS.panelHover}">
-            <g:Label ui:field="title" addStyleNames="{style.title}"/>
 
-            <g:FlowPanel addStyleNames="{style.iconPanel}">
-                <g:SimpleLayoutPanel ui:field="icon" addStyleNames="{style.icon}"/>
-            </g:FlowPanel>
+            <g:Label ui:field="title" addStyleNames="{style.title}"/>
+            <g:SimpleLayoutPanel ui:field="icon" addStyleNames="{style.icon}"/>
         </g:FlowPanel>
 
         <g:FlowPanel ui:field="propertiesPanel" width="100%"/>

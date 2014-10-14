@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel;
 
+import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -31,6 +32,7 @@ import javax.annotation.Nonnull;
 
 /**
  * @author Andrey Plotnikov
+ * @author Dmitry Shnurenko
  */
 public class PropertiesPanelViewImpl extends AbstractView<PropertiesPanelView.ActionDelegate> implements PropertiesPanelView {
 
@@ -42,9 +44,13 @@ public class PropertiesPanelViewImpl extends AbstractView<PropertiesPanelView.Ac
     FlowPanel   mainPanel;
     @UiField
     ScrollPanel scrollPanel;
+    @UiField(provided = true)
+    final EditorResources resource;
 
     @Inject
-    public PropertiesPanelViewImpl(PropertiesPanelViewImplUiBinder ourUiBinder) {
+    public PropertiesPanelViewImpl(PropertiesPanelViewImplUiBinder ourUiBinder, EditorResources resources) {
+        this.resource = resources;
+
         initWidget(ourUiBinder.createAndBindUi(this));
 
         scrollPanel.addDomHandler(new ClickHandler() {

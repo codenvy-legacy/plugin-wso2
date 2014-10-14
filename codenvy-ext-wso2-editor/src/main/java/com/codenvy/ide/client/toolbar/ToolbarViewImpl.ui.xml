@@ -22,16 +22,10 @@
 
     <ui:with field="res" type="com.codenvy.ide.client.EditorResources"/>
 
-    <ui:style>
-        .fullSize {
-            width: 100%;
-            height: 100%;
-        }
-    </ui:style>
-
     <g:FlowPanel>
-        <g:ScrollPanel ui:field="scrollPanel" addStyleNames="{style.fullSize}" alwaysShowScrollBars="true">
-            <g:FlowPanel ui:field="mainPanel" addStyleNames="{style.fullSize} {res.editorCSS.toolbarPalette}" width="calc(100% - 1px)"/>
+        <g:ScrollPanel ui:field="scrollPanel" addStyleNames="{res.editorCSS.fullSize}">
+            <g:FlowPanel ui:field="mainPanel" addStyleNames="{res.editorCSS.fullSize} {res.editorCSS.toolbarPalette}"
+                         width="calc(100%-1px)"/>
         </g:ScrollPanel>
     </g:FlowPanel>
 

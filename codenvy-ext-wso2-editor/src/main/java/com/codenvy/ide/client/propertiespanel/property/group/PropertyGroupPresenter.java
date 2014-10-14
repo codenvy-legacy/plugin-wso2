@@ -18,7 +18,7 @@ package com.codenvy.ide.client.propertiespanel.property.group;
 
 import com.codenvy.ide.client.inject.factories.PropertiesGroupFactory;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
-import com.codenvy.ide.client.propertiespanel.property.AbstractPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.general.AbstractPropertyPresenter;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -33,11 +33,14 @@ import javax.annotation.Nonnull;
  */
 public class PropertyGroupPresenter extends AbstractPresenter<PropertyGroupView> implements PropertyGroupView.ActionDelegate {
 
+    private boolean isFirst;
     private boolean isFolded;
 
     @Inject
     public PropertyGroupPresenter(PropertiesGroupFactory propertiesGroupFactory, @Assisted String title) {
         super(propertiesGroupFactory.createPropertyGroupView(title));
+
+        isFirst = true;
 
         unfold();
     }
@@ -53,6 +56,8 @@ public class PropertyGroupPresenter extends AbstractPresenter<PropertyGroupView>
         isFolded = true;
 
         view.expendPropertyGroup();
+
+        view.setBorderVisible(isFolded);
     }
 
     /** The method display group of parameters which it contains. */
@@ -60,6 +65,8 @@ public class PropertyGroupPresenter extends AbstractPresenter<PropertyGroupView>
         isFolded = false;
 
         view.collapsePropertyGroup();
+
+        view.setBorderVisible(isFolded);
     }
 
     /**
@@ -80,6 +87,12 @@ public class PropertyGroupPresenter extends AbstractPresenter<PropertyGroupView>
      */
     public void addItem(@Nonnull AbstractPropertyPresenter property) {
         view.addProperty(property);
+
+        if (isFirst) {
+            property.setTopBorderVisible(false);
+
+            isFirst = false;
+        }
     }
 
     /**
@@ -101,4 +114,5 @@ public class PropertyGroupPresenter extends AbstractPresenter<PropertyGroupView>
             fold();
         }
     }
+
 }

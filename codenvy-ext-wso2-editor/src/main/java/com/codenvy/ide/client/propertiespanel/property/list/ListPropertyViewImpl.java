@@ -16,7 +16,7 @@
 package com.codenvy.ide.client.propertiespanel.property.list;
 
 import com.codenvy.ide.client.EditorResources;
-import com.codenvy.ide.client.mvp.AbstractView;
+import com.codenvy.ide.client.propertiespanel.property.general.AbstractPropertyViewImpl;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -35,23 +35,24 @@ import java.util.List;
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
-public class ListPropertyViewImpl extends AbstractView<ListPropertyView.ActionDelegate> implements ListPropertyView {
+public class ListPropertyViewImpl extends AbstractPropertyViewImpl<ListPropertyView.ActionDelegate> implements ListPropertyView {
 
     @Singleton
     interface ListPropertyViewImplUiBinder extends UiBinder<Widget, ListPropertyViewImpl> {
     }
 
     @UiField
-    Label   title;
+    Label           title;
     @UiField
-    ListBox property;
-
+    ListBox         property;
     @UiField(provided = true)
     final EditorResources res;
 
     @Inject
     public ListPropertyViewImpl(ListPropertyViewImplUiBinder ourUiBinder, EditorResources resources) {
-        this.res = resources;
+        super(resources.editorCSS());
+
+        res = resources;
 
         initWidget(ourUiBinder.createAndBindUi(this));
     }
@@ -88,7 +89,7 @@ public class ListPropertyViewImpl extends AbstractView<ListPropertyView.ActionDe
     }
 
     @UiHandler("property")
-    public void onPropertyChanged(ChangeEvent event) {
+    public void onPropertyChanged(@SuppressWarnings("UnusedParameters") ChangeEvent event) {
         delegate.onPropertyChanged();
     }
 

@@ -21,9 +21,9 @@ import com.codenvy.ide.client.elements.AbstractElement;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.managers.SelectionManager;
-import com.codenvy.ide.client.propertiespanel.property.AbstractPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.PropertyValueChangedListener;
 import com.codenvy.ide.client.propertiespanel.property.complex.ComplexPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.general.AbstractPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.group.PropertyGroupPresenter;
 import com.codenvy.ide.client.propertiespanel.property.list.ListPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.simple.SimplePropertyPresenter;
@@ -152,6 +152,12 @@ public abstract class AbstractPropertiesPanelTest<V extends AbstractPropertiesPa
         for (PropertyGroupPresenter group : groups) {
             verify(group).unfold();
         }
+    }
+
+    protected void oneGroupShouldBeUnfolded(PropertyGroupPresenter group) {
+        verify(group).unfold();
+
+        verify(group).setTitleVisible(false);
     }
 
     protected void listValuesShouldBeSet(ListPropertyPresenter listProperty, List<String> values) {

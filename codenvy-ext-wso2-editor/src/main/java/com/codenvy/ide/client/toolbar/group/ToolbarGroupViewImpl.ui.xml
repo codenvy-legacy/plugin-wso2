@@ -24,7 +24,6 @@
     <ui:style>
         .mainPanel {
             width: 100%;
-            margin: 1px 0 1px 0;
             overflow: hidden;
         }
 
@@ -53,13 +52,12 @@
 
     <g:FlowPanel ui:field="mainPanel" addStyleNames="{style.mainPanel}">
 
-        <g:FlowPanel addStyleNames="{style.headerPanel}
-                                    {resources.editorCSS.toolbarGroupHeaderPanelStyle}
-                                    {resources.editorCSS.panelHover}">
+        <g:FlowPanel addStyleNames="{style.headerPanel} {resources.editorCSS.toolbarGroupHeaderPanelStyle} {resources.editorCSS.panelHover}"
+                     width="calc(100%-1px)">
             <g:SimpleLayoutPanel ui:field="icon" addStyleNames="{style.icon} {resources.editorCSS.toolbarGroupIconColor}"/>
-            <g:Label ui:field="title" addStyleNames="{resources.editorCSS.fontStyle}
-                                                     {resources.editorCSS.titleBold}
-                                                     {resources.editorCSS.fontStyle} {style.label}"/>
+            <g:Label ui:field="title"
+                     addStyleNames="{resources.editorCSS.fontStyle} {resources.editorCSS.titleBold}
+                     {resources.editorCSS.fontStyle} {style.label}"/>
         </g:FlowPanel>
 
         <g:FlowPanel ui:field="itemsPanel"/>

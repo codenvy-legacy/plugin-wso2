@@ -16,7 +16,7 @@
 
 package com.codenvy.ide.client.propertiespanel.property.list;
 
-import com.codenvy.ide.client.propertiespanel.property.AbstractPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.property.general.AbstractPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.property.PropertyValueChangedListener;
 import com.google.inject.Inject;
 
@@ -42,12 +42,6 @@ public class ListPropertyPresenter extends AbstractPropertyPresenter<ListPropert
         super(view);
 
         listeners = new ArrayList<>();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setTitle(@Nullable String title) {
-        view.setTitle(title);
     }
 
     /**
@@ -78,12 +72,6 @@ public class ListPropertyPresenter extends AbstractPropertyPresenter<ListPropert
      */
     public void addValue(@Nullable String value) {
         view.addPropertyValue(value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setVisible(boolean visible) {
-        view.setVisible(visible);
     }
 
     /** {@inheritDoc} */
