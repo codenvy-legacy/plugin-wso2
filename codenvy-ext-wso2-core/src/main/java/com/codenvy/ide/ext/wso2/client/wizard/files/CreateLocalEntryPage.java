@@ -15,15 +15,18 @@
  */
 package com.codenvy.ide.ext.wso2.client.wizard.files;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ext.wso2.client.editor.ESBXmlFileType;
 import com.codenvy.ide.ext.wso2.client.wizard.files.view.CreateResourceView;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,29 +38,35 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.LOCAL_ENTRY_FOLDER_NAME;
  *
  * @author Andrey Plotnikov
  * @author Dmitriy Shnurenko
+ * @author Valeriy Svydenko
  */
 public class CreateLocalEntryPage extends AbstractCreateResourcePage {
 
     @Inject
     public CreateLocalEntryPage(CreateResourceView view,
                                 LocalizationConstant locale,
-                                ResourceProvider resourceProvider,
                                 WSO2Resources resources,
                                 EditorAgent editorAgent,
                                 @ESBXmlFileType FileType esbXmlFileType,
-                                NotificationManager notificationManager) {
-
+                                NotificationManager notificationManager,
+                                AppContext appContext,
+                                EventBus eventBus,
+                                ProjectServiceClient projectServiceClient,
+                                DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(view,
               locale.wizardFileLocalEntryTitle(),
               locale.wizardFileLocalEntryFieldsName(),
               resources.local_entry_wizard(),
               locale,
-              resourceProvider,
               editorAgent,
               LOCAL_ENTRY_FOLDER_NAME,
               esbXmlFileType,
               notificationManager,
-              resources);
+              resources,
+              projectServiceClient,
+              eventBus,
+              appContext,
+              dtoUnmarshallerFactory);
     }
 
     /** {@inheritDoc} */

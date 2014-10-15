@@ -15,12 +15,12 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.text;
 
-import com.codenvy.ide.text.BadLocationException;
-import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.DocumentCommand;
-import com.codenvy.ide.text.Region;
-import com.codenvy.ide.texteditor.api.AutoEditStrategy;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
+import com.codenvy.ide.api.text.BadLocationException;
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.text.DocumentCommand;
+import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.api.texteditor.AutoEditStrategy;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
 import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -36,7 +36,7 @@ import javax.annotation.Nonnull;
  */
 public class TagAutoCompleter implements AutoEditStrategy {
 
-    private TextEditorPartView editor;
+    private final TextEditorPartView editor;
 
     @Inject
     public TagAutoCompleter(@Assisted TextEditorPartView editor) {
@@ -100,4 +100,5 @@ public class TagAutoCompleter implements AutoEditStrategy {
     private String getTagCompletion(@Nonnull DocumentCommand command, @Nonnull String tag) {
         return command.text + "</" + tag + '>';
     }
+
 }

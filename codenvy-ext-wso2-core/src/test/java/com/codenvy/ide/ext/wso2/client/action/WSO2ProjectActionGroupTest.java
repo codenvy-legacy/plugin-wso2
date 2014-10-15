@@ -15,13 +15,13 @@
  */
 package com.codenvy.ide.ext.wso2.client.action;
 
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.api.ui.action.Presentation;
-import com.codenvy.ide.api.ui.wizard.DefaultWizard;
-import com.codenvy.ide.api.ui.wizard.DefaultWizardFactory;
-import com.codenvy.ide.api.ui.wizard.WizardDialog;
-import com.codenvy.ide.api.ui.wizard.WizardDialogFactory;
+import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.Presentation;
+import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.wizard.DefaultWizard;
+import com.codenvy.ide.api.wizard.DefaultWizardFactory;
+import com.codenvy.ide.api.wizard.WizardDialog;
+import com.codenvy.ide.api.wizard.WizardDialogFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ext.wso2.client.wizard.files.CreateEndpointPage;
@@ -59,7 +59,7 @@ public class WSO2ProjectActionGroupTest {
     @Mock
     private Provider<CreateEndpointPage> createEndpointPage;
     @Mock(answer = RETURNS_DEEP_STUBS)
-    private ResourceProvider             resourceProvider;
+    private AppContext                   appContext;
     @Mock
     private WSO2Resources                resources;
     @Mock
@@ -75,10 +75,12 @@ public class WSO2ProjectActionGroupTest {
         presentation = new Presentation();
     }
 
+    //TODO need rework tests
+
     @Test
     public void actionShouldBeInvisibleWhenNoProjectIsOpened() throws Exception {
         when(actionEvent.getPresentation()).thenReturn(presentation);
-        when(resourceProvider.getActiveProject()).thenReturn(null);
+        when(appContext.getCurrentProject()).thenReturn(null);
 
         assertEquals(true, presentation.isVisible());
 
@@ -90,7 +92,7 @@ public class WSO2ProjectActionGroupTest {
     @Test
     public void actionShouldBeInvisibleWhenProjectTypeIsNotValid() throws Exception {
         when(actionEvent.getPresentation()).thenReturn(presentation);
-        when((resourceProvider.getActiveProject().getDescription().getProjectTypeId())).thenReturn("projectType");
+        when((appContext.getCurrentProject().getProjectDescription().getType())).thenReturn("projectType");
 
         assertEquals(true, presentation.isVisible());
         action.update(actionEvent);
@@ -101,7 +103,7 @@ public class WSO2ProjectActionGroupTest {
     @Test
     public void actionShouldBeVisible() throws Exception {
         when(actionEvent.getPresentation()).thenReturn(presentation);
-        when((resourceProvider.getActiveProject().getDescription().getProjectTypeId())).thenReturn(ESB_CONFIGURATION_PROJECT_ID);
+        when((appContext.getCurrentProject().getProjectDescription().getType())).thenReturn(ESB_CONFIGURATION_PROJECT_ID);
 
         assertEquals(true, presentation.isVisible());
 

@@ -16,15 +16,15 @@
 package com.codenvy.ide.ext.wso2.client;
 
 
+import com.codenvy.ide.api.action.ActionManager;
+import com.codenvy.ide.api.action.DefaultActionGroup;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.action.ActionManager;
-import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
-import com.codenvy.ide.api.ui.wizard.ProjectWizard;
+import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
+import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.ext.wso2.client.action.CreateEndpointAction;
 import com.codenvy.ide.ext.wso2.client.action.CreateLocalEntryAction;
@@ -40,10 +40,10 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.api.ui.action.Constraints.FIRST;
-import static com.codenvy.ide.api.ui.action.Constraints.LAST;
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_MENU;
+import static com.codenvy.ide.api.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
+import static com.codenvy.ide.api.action.IdeActions.GROUP_MAIN_MENU;
+import static com.codenvy.ide.api.constraints.Constraints.FIRST;
+import static com.codenvy.ide.api.constraints.Constraints.LAST;
 import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_ENDPOINT_ACTION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_LOCAL_ENTRY_ACTION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.CREATE_PROXY_SERVICE_ACTION;
@@ -99,7 +99,7 @@ public class WSO2Extension {
     @Inject
     public void initActions(LocalizationConstant locale,
                             WSO2Resources wso2Resources,
-                            ResourceProvider resourceProvider,
+                            AppContext appContext,
                             ActionManager actionManager,
                             ImportSynapseAction importSynapseAction,
                             CreateEndpointAction createEndpointAction,
@@ -115,7 +115,7 @@ public class WSO2Extension {
 
         wso2MainGroup.getTemplatePresentation().setIcon(wso2Resources.wso2GroupIcon());
 
-        DefaultActionGroup wso2ActionGroup = new WSO2ProjectActionGroup(actionManager, resourceProvider);
+        DefaultActionGroup wso2ActionGroup = new WSO2ProjectActionGroup(actionManager, appContext);
         actionManager.registerAction(WSO2_ACTION_GROUP, wso2ActionGroup);
 
         DefaultActionGroup wso2NewGroup = new DefaultActionGroup(locale.wso2ActionNew(), true, actionManager);

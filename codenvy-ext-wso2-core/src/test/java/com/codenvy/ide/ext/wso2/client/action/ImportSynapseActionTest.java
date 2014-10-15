@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.ext.wso2.client.action;
 
-import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ext.wso2.client.upload.ImportFilePresenter;

@@ -15,16 +15,16 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.text;
 
+import com.codenvy.ide.api.text.BadLocationException;
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.text.Position;
+import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.api.texteditor.CodeAssistCallback;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.wso2.client.commons.XsdSchemaParser;
-import com.codenvy.ide.text.BadLocationException;
-import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.Position;
-import com.codenvy.ide.text.Region;
-import com.codenvy.ide.texteditor.api.CodeAssistCallback;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;

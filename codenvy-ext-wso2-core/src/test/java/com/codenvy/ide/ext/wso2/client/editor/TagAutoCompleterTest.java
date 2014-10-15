@@ -15,10 +15,10 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor;
 
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.text.DocumentCommand;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
 import com.codenvy.ide.ext.wso2.client.editor.text.TagAutoCompleter;
-import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.DocumentCommand;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -86,4 +86,5 @@ public class TagAutoCompleterTest {
 
         assertEquals(autocomplete, command.text);
     }
+
 }

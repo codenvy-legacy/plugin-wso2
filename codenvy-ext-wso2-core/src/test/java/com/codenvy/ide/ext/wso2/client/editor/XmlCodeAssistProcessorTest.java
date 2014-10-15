@@ -15,16 +15,16 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor;
 
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.text.Position;
+import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.api.texteditor.CodeAssistCallback;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.codeassistant.CompletionProposal;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.wso2.client.commons.XsdSchemaParser;
 import com.codenvy.ide.ext.wso2.client.editor.text.XmlCodeAssistProcessor;
-import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.Position;
-import com.codenvy.ide.text.Region;
-import com.codenvy.ide.texteditor.api.CodeAssistCallback;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

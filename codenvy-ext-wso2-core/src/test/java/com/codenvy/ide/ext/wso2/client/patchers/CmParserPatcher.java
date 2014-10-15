@@ -15,8 +15,8 @@
  */
 package com.codenvy.ide.ext.wso2.client.patchers;
 
-import com.codenvy.ide.texteditor.api.parser.CmParser;
-import com.codenvy.ide.texteditor.api.parser.TokenFactory;
+import com.codenvy.ide.api.texteditor.parser.CmParser;
+import com.codenvy.ide.api.texteditor.parser.TokenFactory;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 

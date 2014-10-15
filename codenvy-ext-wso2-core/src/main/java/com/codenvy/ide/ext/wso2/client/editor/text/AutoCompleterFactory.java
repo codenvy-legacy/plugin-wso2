@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.ext.wso2.client.editor.text;
 
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
 
 import javax.annotation.Nonnull;
 
@@ -25,7 +25,6 @@ import javax.annotation.Nonnull;
  * @author Andrey Plotnikov
  */
 public interface AutoCompleterFactory {
-
     /**
      * Create an instance of {@link TagAutoCompleter} with a given editor.
      *

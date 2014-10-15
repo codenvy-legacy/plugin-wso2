@@ -15,17 +15,14 @@
  */
 package com.codenvy.ide.ext.wso2.client.upload;
 
-import com.codenvy.ide.api.event.ResourceChangedEvent;
+import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.app.CurrentProject;
+import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.File;
-import com.codenvy.ide.api.resources.model.Folder;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
-import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncCallback;
 import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
 import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
@@ -41,9 +38,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-import static com.codenvy.ide.ext.wso2.shared.Constants.MAIN_FOLDER_NAME;
-import static com.codenvy.ide.ext.wso2.shared.Constants.SRC_FOLDER_NAME;
-import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NAME;
 
 /**
  * The class provides the business logic which allows us to import file from different places via special dialog window.
@@ -65,12 +59,12 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
     private final EventBus               eventBus;
     private final NotificationManager    notificationManager;
     private final String                 restContext;
-    private final ResourceProvider       resourceProvider;
     private final WSO2ClientService      service;
     private final DtoFactory             dtoFactory;
     private final LocalizationConstant   local;
     private final OverwriteFilePresenter overwrite;
     private final ViewCloseHandler       viewCloseHandler;
+    private final AppContext             appContext;
 
     @Inject
     public ImportFilePresenter(final ImportFileView view,
@@ -78,20 +72,20 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
                                WSO2ClientService service,
                                @Named("restContext") String restContext,
                                NotificationManager notificationManager,
-                               ResourceProvider resourceProvider,
                                DtoFactory dtoFactory,
                                LocalizationConstant local,
-                               EventBus eventBus) {
+                               EventBus eventBus,
+                               AppContext appContext) {
         this.view = view;
         this.eventBus = eventBus;
         this.view.setDelegate(this);
         this.notificationManager = notificationManager;
         this.restContext = restContext;
-        this.resourceProvider = resourceProvider;
         this.service = service;
         this.dtoFactory = dtoFactory;
         this.local = local;
         this.overwrite = overwrite;
+        this.appContext = appContext;
         viewCloseHandler = new ViewCloseHandler() {
             @Override
             public void onCloseView() {
@@ -109,19 +103,20 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onImportClicked() {
-        final Project activeProject = resourceProvider.getActiveProject();
+        CurrentProject currentProject = appContext.getCurrentProject();
 
-        if (activeProject == null) {
+        if (currentProject == null) {
             return;
         }
 
         if (view.isUseLocalPath()) {
-            view.setAction(restContext + "/project/" + Config.getWorkspaceId() + "/uploadFile" + activeProject.getPath());
+            view.setAction(
+                    restContext + "/project/" + Config.getWorkspaceId() + "/uploadfile" + currentProject.getProjectDescription().getPath());
             view.submit();
         } else {
             final FileInfo fileInfo = dtoFactory.createDto(FileInfo.class)
                                                 .withFileName(view.getUrl())
-                                                .withProjectName(activeProject.getName());
+                                                .withProjectName(currentProject.getProjectDescription().getName());
 
             try {
                 service.uploadFile(fileInfo, new WSO2AsyncRequestCallback<String>(new StringUnmarshaller(), notificationManager) {
@@ -141,14 +136,17 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onSubmitComplete(@Nonnull String result) {
+        CurrentProject currentProject = appContext.getCurrentProject();
+
         if (result.isEmpty()) {
             final FileInfo fileInfo = dtoFactory.createDto(FileInfo.class)
                                                 .withFileName(view.getFileName())
-                                                .withProjectName(resourceProvider.getActiveProject().getName());
+                                                .withProjectName(currentProject.getProjectDescription().getName());
             try {
                 service.detectConfigurationFile(fileInfo, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                     @Override
                     protected void onSuccess(final String callback) {
+                        view.close();
                         refreshTreeWithParentFolder(callback, fileInfo.getFileName());
                     }
 
@@ -181,66 +179,8 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
         if (response.endsWith("already exists. ")) {
             overwrite.showDialog(fileName, viewCloseHandler);
         } else {
-            refreshProjectExpolorerTree(response, fileName);
+            eventBus.fireEvent(new RefreshProjectTreeEvent());
         }
-    }
-
-    private void refreshProjectExpolorerTree(@Nonnull String response, @Nonnull final String fileName) {
-        Project activeProject = resourceProvider.getActiveProject();
-
-        if (activeProject == null) {
-            return;
-        }
-
-        Folder src = (Folder)activeProject.findChildByName(SRC_FOLDER_NAME);
-        if (src == null) {
-            refreshFolder(activeProject, activeProject, fileName);
-
-            return;
-        }
-
-        Folder main = (Folder)src.findChildByName(MAIN_FOLDER_NAME);
-        if (main == null) {
-            refreshFolder(activeProject, src, fileName);
-
-            return;
-        }
-
-        Folder synapse_config = (Folder)main.findChildByName(SYNAPSE_CONFIG_FOLDER_NAME);
-
-        if (synapse_config == null) {
-            refreshFolder(activeProject, main, fileName);
-
-            return;
-        }
-
-        if (response.isEmpty()) {
-            refreshFolder(activeProject, synapse_config, fileName);
-
-            return;
-        }
-
-        Folder parentFolder = (Folder)synapse_config.findChildByName(response);
-
-        if (parentFolder == null) {
-            refreshFolder(activeProject, synapse_config, response);
-
-            return;
-        }
-
-        refreshFolder(activeProject, parentFolder, fileName);
-    }
-
-    private void refreshFolder(@Nonnull Project project, @Nonnull final Folder parentFolder, @Nonnull final String resourceName) {
-        project.refreshChildren(parentFolder, new WSO2AsyncCallback<Folder>(notificationManager) {
-            @Override
-            public void onSuccess(Folder folder) {
-                File file = (File)parentFolder.findResourceByName(resourceName, File.TYPE);
-                eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(file));
-
-                view.close();
-            }
-        });
     }
 
     private void showError(@Nonnull String message) {

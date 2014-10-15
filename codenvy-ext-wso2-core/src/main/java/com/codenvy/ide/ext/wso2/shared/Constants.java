@@ -27,6 +27,7 @@ public interface Constants {
     String MAIN_FOLDER_NAME           = "main";
     String SRC_FOLDER_NAME            = "src";
     String SYNAPSE_CONFIG_FOLDER_NAME = "synapse-config";
+    String SYNAPSE_CONFIG_PATH        = '/' + SRC_FOLDER_NAME + '/' + MAIN_FOLDER_NAME + '/' + SYNAPSE_CONFIG_FOLDER_NAME + '/';
 
     String ENDPOINTS_FOLDER_NAME     = "endpoints";
     String SEQUENCE_FOLDER_NAME      = "sequences";

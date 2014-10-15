@@ -15,11 +15,13 @@
  */
 package com.codenvy.ide.ext.wso2.server.projecttypes;
 
+import com.codenvy.api.project.server.Attribute;
+import com.codenvy.api.project.server.Builders;
+import com.codenvy.api.project.server.ProjectTemplateDescription;
+import com.codenvy.api.project.server.ProjectType;
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.server.ProjectTypeExtension;
-import com.codenvy.api.project.shared.Attribute;
-import com.codenvy.api.project.shared.ProjectTemplateDescription;
-import com.codenvy.api.project.shared.ProjectType;
+import com.codenvy.api.project.server.Runners;
 import com.codenvy.ide.Constants;
 import com.google.inject.Singleton;
 
@@ -59,6 +61,16 @@ public class WSO2ProjectTypeExtension implements ProjectTypeExtension {
     public List<Attribute> getPredefinedAttributes() {
         return Arrays.asList(new Attribute(Constants.LANGUAGE, WSO2_PROJECT_ID),
                              new Attribute(Constants.FRAMEWORK, WSO2_PROJECT_ID));
+    }
+
+    @Override
+    public Builders getBuilders() {
+        return null;
+    }
+
+    @Override
+    public Runners getRunners() {
+        return null;
     }
 
     /** {@inheritDoc} */

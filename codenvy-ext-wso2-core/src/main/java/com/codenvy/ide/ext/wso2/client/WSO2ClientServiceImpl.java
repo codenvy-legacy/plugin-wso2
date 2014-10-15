@@ -69,10 +69,9 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
         String requestUrl = restContext + DETECT_CONFIGURATION_FILE;
 
         IdeLoader loader = ideLoaderProvider.get();
-        loader.setMessage(localizationConstant.importingFileMessage());
 
         asyncRequestFactory.createPostRequest(requestUrl, fileInfo, true)
-                           .loader(loader)
+                           .loader(loader, localizationConstant.importingFileMessage())
                            .header(CONTENT_TYPE, APPLICATION_JSON)
                            .send(callback);
     }
@@ -83,10 +82,9 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
         String requestUrl = restContext + UPLOAD_CONFIGURATION_FILE;
 
         IdeLoader loader = ideLoaderProvider.get();
-        loader.setMessage(localizationConstant.importingFileMessage());
 
         asyncRequestFactory.createPostRequest(requestUrl, fileInfo, true)
-                           .loader(loader)
+                           .loader(loader, localizationConstant.importingFileMessage())
                            .header(CONTENT_TYPE, APPLICATION_JSON)
                            .send(callback);
     }
@@ -98,10 +96,9 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
         String requestUrl = restContext + MODIFY_CONFIGURATION_FILE + "/" + operation;
 
         IdeLoader loader = ideLoaderProvider.get();
-        loader.setMessage(localizationConstant.modifyingFileMessage());
 
         asyncRequestFactory.createPostRequest(requestUrl, fileInfo, true)
-                           .loader(loader)
+                           .loader(loader, localizationConstant.modifyingFileMessage())
                            .header(CONTENT_TYPE, APPLICATION_JSON)
                            .send(callback);
     }

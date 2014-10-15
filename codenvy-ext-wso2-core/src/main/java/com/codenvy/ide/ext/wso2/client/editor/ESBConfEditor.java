@@ -22,8 +22,8 @@ import com.codenvy.ide.api.editor.EditorInitException;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.ui.workspace.PartPresenter;
-import com.codenvy.ide.api.ui.workspace.PropertyListener;
+import com.codenvy.ide.api.parts.PartPresenter;
+import com.codenvy.ide.api.parts.PropertyListener;
 import com.codenvy.ide.ext.wso2.client.editor.graphical.GraphicEditor;
 import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorConfiguration;
 import com.google.gwt.resources.client.ImageResource;
@@ -98,7 +98,8 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     public void doSave(@Nonnull AsyncCallback<EditorInput> callback) {
         doSave();
 
-        // We should throw null value because for our implementation it isn't needed method. This implementation provides skipping any logic.
+        // We should throw null value because for our implementation it isn't needed method. This implementation provides skipping any
+        // logic.
         callback.onSuccess(null);
     }
 

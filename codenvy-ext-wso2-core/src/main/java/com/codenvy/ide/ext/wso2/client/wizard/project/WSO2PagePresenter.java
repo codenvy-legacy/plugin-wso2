@@ -15,24 +15,12 @@
  */
 package com.codenvy.ide.ext.wso2.client.wizard.project;
 
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
-import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
-import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.codenvy.ide.api.wizard.AbstractWizardPage;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import static com.codenvy.ide.api.ui.wizard.ProjectWizard.PROJECT;
-import static com.codenvy.ide.api.ui.wizard.ProjectWizard.PROJECT_NAME;
-import static com.codenvy.ide.api.ui.wizard.ProjectWizard.PROJECT_TYPE;
-import static com.codenvy.ide.api.ui.wizard.ProjectWizard.PROJECT_VISIBILITY;
 
 /**
  * The wizard page provides creating an empty ESB configuration project.
@@ -42,22 +30,13 @@ import static com.codenvy.ide.api.ui.wizard.ProjectWizard.PROJECT_VISIBILITY;
  * @author Andrey Plotnikov
  */
 public class WSO2PagePresenter extends AbstractWizardPage implements WSO2PageView.ActionDelegate {
-    private final WSO2PageView         view;
-    private final ProjectServiceClient projectServiceClient;
-    private final ResourceProvider     resourceProvider;
-    private final DtoFactory           factory;
+    private final WSO2PageView view;
 
     @Inject
-    public WSO2PagePresenter(WSO2PageView view,
-                             ProjectServiceClient projectServiceClient,
-                             ResourceProvider resourceProvider,
-                             DtoFactory factory) {
+    public WSO2PagePresenter(WSO2PageView view) {
         super("WSO2 project settings", null);
 
         this.view = view;
-        this.projectServiceClient = projectServiceClient;
-        this.resourceProvider = resourceProvider;
-        this.factory = factory;
         this.view.setDelegate(this);
     }
 
@@ -88,95 +67,6 @@ public class WSO2PagePresenter extends AbstractWizardPage implements WSO2PageVie
     @Override
     public void go(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void commit(@Nonnull final CommitCallback callback) {
-        final ProjectDescriptor projectDescriptor = factory.createDto(ProjectDescriptor.class);
-        projectDescriptor.withProjectTypeId(wizardContext.getData(PROJECT_TYPE).getProjectTypeId());
-
-        boolean visibility = wizardContext.getData(PROJECT_VISIBILITY);
-        projectDescriptor.setVisibility(visibility ? "public" : "private");
-        final String name = wizardContext.getData(PROJECT_NAME);
-        final Project project = wizardContext.getData(PROJECT);
-
-        if (project != null) {
-            if (project.getName().equals(name)) {
-                updateProject(project, projectDescriptor, callback);
-            } else {
-                projectServiceClient.rename(project.getPath(), name, null, new AsyncRequestCallback<Void>() {
-                    @Override
-                    protected void onSuccess(Void result) {
-                        project.setName(name);
-
-                        updateProject(project, projectDescriptor, callback);
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        callback.onFailure(exception);
-                    }
-                });
-            }
-
-        } else {
-            createProject(callback, projectDescriptor, name);
-        }
-    }
-
-    private void updateProject(@Nonnull final Project project,
-                               @Nonnull ProjectDescriptor projectDescriptor,
-                               @Nonnull final CommitCallback callback) {
-        projectServiceClient.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
-            @Override
-            protected void onSuccess(ProjectDescriptor result) {
-                resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        callback.onFailure(caught);
-                    }
-
-                    @Override
-                    public void onSuccess(Project result) {
-                        callback.onSuccess();
-                    }
-                });
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                callback.onFailure(exception);
-            }
-        });
-    }
-
-    private void createProject(@Nonnull final CommitCallback callback,
-                               @Nonnull ProjectDescriptor projectDescriptor,
-                               @Nonnull final String name) {
-        projectServiceClient
-                .createProject(name, projectDescriptor,
-                               new AsyncRequestCallback<ProjectDescriptor>() {
-                                   @Override
-                                   protected void onSuccess(ProjectDescriptor result) {
-                                       resourceProvider.getProject(name, new AsyncCallback<Project>() {
-                                           @Override
-                                           public void onSuccess(Project project) {
-                                               callback.onSuccess();
-                                           }
-
-                                           @Override
-                                           public void onFailure(Throwable caught) {
-                                               callback.onFailure(caught);
-                                           }
-                                       });
-                                   }
-
-                                   @Override
-                                   protected void onFailure(Throwable exception) {
-                                       callback.onFailure(exception);
-                                   }
-                               });
     }
 
 }

@@ -15,15 +15,18 @@
  */
 package com.codenvy.ide.ext.wso2.client.wizard.files;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ext.wso2.client.editor.ESBXmlFileType;
 import com.codenvy.ide.ext.wso2.client.wizard.files.view.CreateResourceView;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,29 +38,35 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.PROXY_SERVICE_FOLDER_NAM
  *
  * @author Andrey Plotnikov
  * @author Dmitriy Shnurenko
+ * @author Valeriy Svydenko
  */
 public class CreateProxyServicePage extends AbstractCreateResourcePage {
 
     @Inject
     public CreateProxyServicePage(CreateResourceView view,
                                   LocalizationConstant locale,
-                                  ResourceProvider resourceProvider,
                                   WSO2Resources resources,
                                   EditorAgent editorAgent,
                                   @ESBXmlFileType FileType esbXmlFileType,
-                                  NotificationManager notificationManager) {
-
+                                  NotificationManager notificationManager,
+                                  ProjectServiceClient projectServiceClient,
+                                  AppContext appContext,
+                                  EventBus eventBus,
+                                  DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(view,
               locale.wizardFileProxyServiceTitle(),
               locale.wizardFileProxyServiceFieldsName(),
               resources.proxy_service_wizard(),
               locale,
-              resourceProvider,
               editorAgent,
               PROXY_SERVICE_FOLDER_NAME,
               esbXmlFileType,
               notificationManager,
-              resources);
+              resources,
+              projectServiceClient,
+              eventBus,
+              appContext,
+              dtoUnmarshallerFactory);
     }
 
     /** {@inheritDoc} */

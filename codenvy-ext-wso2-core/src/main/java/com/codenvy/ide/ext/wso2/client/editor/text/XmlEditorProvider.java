@@ -53,8 +53,10 @@ public class XmlEditorProvider implements EditorProvider {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public EditorPartPresenter getEditor() {
         return esbConfEditor.get();
     }
+
 }

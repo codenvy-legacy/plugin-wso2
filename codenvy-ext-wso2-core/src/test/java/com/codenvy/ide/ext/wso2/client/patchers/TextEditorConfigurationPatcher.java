@@ -15,8 +15,8 @@
  */
 package com.codenvy.ide.ext.wso2.client.patchers;
 
-import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
-import com.codenvy.ide.texteditor.api.parser.CmParser;
+import com.codenvy.ide.api.texteditor.TextEditorConfiguration;
+import com.codenvy.ide.api.texteditor.parser.CmParser;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 
@@ -34,4 +34,5 @@ public class TextEditorConfigurationPatcher {
     public static CmParser getParserForMime(String mime) {
         return mock(CmParser.class);
     }
+
 }
