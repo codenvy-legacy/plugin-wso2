@@ -106,6 +106,8 @@ public interface EditorResources extends ClientBundle {
         String groupBottomBorder();
 
         String propertyBorderTop();
+
+        String toolbarLineHeight();
     }
 
     @Source("editor.css")

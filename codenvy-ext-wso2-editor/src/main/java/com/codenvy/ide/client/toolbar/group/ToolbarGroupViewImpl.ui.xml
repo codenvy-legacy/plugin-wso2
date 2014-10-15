@@ -35,7 +35,7 @@
         .label {
             position: relative;
             top: 50%;
-            margin-top: -6px;
+            margin-top: -8px;
         }
 
         .icon {
@@ -55,9 +55,11 @@
         <g:FlowPanel addStyleNames="{style.headerPanel} {resources.editorCSS.toolbarGroupHeaderPanelStyle} {resources.editorCSS.panelHover}"
                      width="calc(100%-1px)">
             <g:SimpleLayoutPanel ui:field="icon" addStyleNames="{style.icon} {resources.editorCSS.toolbarGroupIconColor}"/>
-            <g:Label ui:field="title"
-                     addStyleNames="{resources.editorCSS.fontStyle} {resources.editorCSS.titleBold}
-                     {resources.editorCSS.fontStyle} {style.label}"/>
+            <g:Label ui:field="title" addStyleNames="{resources.editorCSS.toolbarLineHeight}
+                                                     {resources.editorCSS.fontStyle}
+                                                     {resources.editorCSS.titleBold}
+                                                     {resources.editorCSS.fontStyle}
+                                                     {style.label}"/>
         </g:FlowPanel>
 
         <g:FlowPanel ui:field="itemsPanel"/>

@@ -38,14 +38,14 @@
 
         .title {
             position: relative;
-            top: 4px;
+            top: 2px;
         }
     </ui:style>
 
     <g:FlowPanel ui:field="panel"
                  addStyleNames="{style.mainPanel} {resource.editorCSS.toolbarItemMainPanel} {resource.editorCSS.panelHover}">
         <g:Image ui:field="icon" addStyleNames="{style.icon}"/>
-        <g:Label ui:field="title" addStyleNames="{style.title} {resource.editorCSS.fontStyle}"/>
+        <g:Label ui:field="title" addStyleNames="{style.title} {resource.editorCSS.fontStyle} {resource.editorCSS.toolbarLineHeight}"/>
     </g:FlowPanel>
 
 </ui:UiBinder>
