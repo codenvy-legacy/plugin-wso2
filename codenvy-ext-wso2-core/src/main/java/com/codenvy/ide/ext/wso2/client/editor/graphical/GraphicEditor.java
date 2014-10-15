@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.validation.constraints.NotNull;
 
 /**
  * The graphical editor for ESB configuration.
@@ -63,7 +62,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
 
     /** {@inheritDoc} */
     @Override
-    public void doSave(@NotNull AsyncCallback<EditorInput> callback) {
+    public void doSave(@Nonnull AsyncCallback<EditorInput> callback) {
         doSave();
 
         // We should throw null value because for our implementation it isn't needed method. This implementation provides skipping any logic.
@@ -81,6 +80,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getTitle() {
         return "ESB Editor: " + input.getFile().getName();

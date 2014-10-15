@@ -45,9 +45,9 @@ import javax.annotation.Nullable;
  */
 public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEditorView.ActionDelegate, PropertyListener {
 
-    private final ESBConfEditorView view;
-    private final GraphicEditor     graphicEditor;
-    private final CodenvyTextEditor textEditor;
+    private final ESBConfEditorView   view;
+    private final GraphicEditor       graphicEditor;
+    private final CodenvyTextEditor   textEditor;
 
     private boolean isGraphicalEditorChanged;
 
@@ -206,8 +206,9 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
 
     /** {@inheritDoc} */
     @Override
-    public boolean onClose() {
-        return graphicEditor.onClose() && textEditor.onClose() && super.onClose();
+    public void onClose(@Nonnull final AsyncCallback<Void> callback) {
+        textEditor.onClose(callback);
+        handleClose();
     }
 
     /** {@inheritDoc} */
