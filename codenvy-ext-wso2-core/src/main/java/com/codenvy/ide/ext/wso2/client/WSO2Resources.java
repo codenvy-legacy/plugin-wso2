@@ -22,6 +22,8 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
 import com.google.inject.Singleton;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 /**
  * Resources for WSO2 plugin.
  *
@@ -112,4 +114,8 @@ public interface WSO2Resources extends ClientBundle {
 
     @Source("icons/propertiesIcon.png")
     ImageResource propertiesIcon();
+
+    @Source("icons/svg/xml.svg")
+    SVGResource xmlIcon();
+
 }

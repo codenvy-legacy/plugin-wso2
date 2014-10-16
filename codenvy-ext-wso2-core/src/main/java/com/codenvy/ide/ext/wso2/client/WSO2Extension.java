@@ -23,6 +23,8 @@ import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
+import com.codenvy.ide.api.icon.Icon;
+import com.codenvy.ide.api.icon.IconRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.client.EditorResources;
@@ -73,12 +75,16 @@ public class WSO2Extension {
                          EditorResources editorResources,
                          Provider<WSO2PagePresenter> wso2PagePresenter,
                          ProjectTypeWizardRegistry projectTypeWizardRegistry,
-                         ProjectWizard projectWizard) {
+                         ProjectWizard projectWizard,
+                         IconRegistry iconRegistry) {
+
         wso2Resources.wso2Style().ensureInjected();
         editorResources.editorCSS().ensureInjected();
 
         projectWizard.addPage(wso2PagePresenter);
         projectTypeWizardRegistry.addWizard(ESB_CONFIGURATION_PROJECT_ID, projectWizard);
+
+        iconRegistry.registerIcon(new Icon(ESB_CONFIGURATION_PROJECT_ID + "/xml.file.small.icon", wso2Resources.xmlIcon()));
     }
 
     @Inject
