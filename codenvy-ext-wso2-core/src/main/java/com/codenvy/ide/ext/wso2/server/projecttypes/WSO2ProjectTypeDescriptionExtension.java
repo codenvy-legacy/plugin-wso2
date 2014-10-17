@@ -31,7 +31,7 @@ import static com.codenvy.ide.Constants.FRAMEWORK;
 import static com.codenvy.ide.Constants.LANGUAGE;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_NAME;
-import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
+import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_CATEGORY;
 
 /**
  * Register WSO2 extension {@link ProjectTypeDescriptionExtension} to register project types.
@@ -50,7 +50,7 @@ public class WSO2ProjectTypeDescriptionExtension implements ProjectTypeDescripti
     @Nonnull
     @Override
     public List<ProjectType> getProjectTypes() {
-        return Arrays.asList(new ProjectType(ESB_CONFIGURATION_PROJECT_ID, ESB_CONFIGURATION_PROJECT_NAME, WSO2_PROJECT_ID));
+        return Arrays.asList(new ProjectType(ESB_CONFIGURATION_PROJECT_ID, ESB_CONFIGURATION_PROJECT_NAME, WSO2_PROJECT_CATEGORY));
     }
 
     /** {@inheritDoc} */

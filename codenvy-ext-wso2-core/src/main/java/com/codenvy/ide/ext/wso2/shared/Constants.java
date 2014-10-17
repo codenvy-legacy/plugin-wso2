@@ -34,7 +34,7 @@ public interface Constants {
     String PROXY_SERVICE_FOLDER_NAME = "proxy-services";
     String LOCAL_ENTRY_FOLDER_NAME   = "local-entries";
 
-    String WSO2_PROJECT_ID                = "WSO2Project";
+    String WSO2_PROJECT_CATEGORY          = "wso2project";
     String ESB_CONFIGURATION_PROJECT_ID   = "ESBConfigurationProject";
     String ESB_CONFIGURATION_PROJECT_NAME = "ESB Configuration";
 

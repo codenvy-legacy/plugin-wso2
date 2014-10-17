@@ -56,6 +56,7 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_ACTION_GROUP;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_IMPORT_RESOURCE_GROUP;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_MAIN_ACTION_GROUP;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_NEW_RESOURCE_GROUP;
+import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_CATEGORY;
 import static com.google.gwt.core.client.ScriptInjector.TOP_WINDOW;
 
 /**
@@ -85,6 +86,9 @@ public class WSO2Extension {
         projectTypeWizardRegistry.addWizard(ESB_CONFIGURATION_PROJECT_ID, projectWizard);
 
         iconRegistry.registerIcon(new Icon(ESB_CONFIGURATION_PROJECT_ID + "/xml.file.small.icon", wso2Resources.xmlIcon()));
+        iconRegistry.registerIcon(new Icon(ESB_CONFIGURATION_PROJECT_ID + ".projecttype.small.icon", wso2Resources.newProjectIcon()));
+        iconRegistry.registerIcon(new Icon(ESB_CONFIGURATION_PROJECT_ID + ".projecttype.big.icon", wso2Resources.newProjectIcon()));
+        iconRegistry.registerIcon(new Icon(WSO2_PROJECT_CATEGORY + ".samples.category.icon", wso2Resources.newProjectIcon()));
     }
 
     @Inject

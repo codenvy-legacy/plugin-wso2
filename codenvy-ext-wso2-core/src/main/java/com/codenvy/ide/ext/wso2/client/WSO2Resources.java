@@ -118,4 +118,7 @@ public interface WSO2Resources extends ClientBundle {
     @Source("icons/svg/xml.svg")
     SVGResource xmlIcon();
 
+    @Source("icons/svg/newproject-wso2.svg")
+    SVGResource newProjectIcon();
+
 }

@@ -33,7 +33,7 @@ import java.util.Map;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_NAME;
-import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_ID;
+import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_CATEGORY;
 
 /**
  * @author Valeriy Svydenko
@@ -52,15 +52,15 @@ public class WSO2ProjectTypeExtension implements ProjectTypeExtension {
     @Nonnull
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType(ESB_CONFIGURATION_PROJECT_ID, WSO2_PROJECT_ID, WSO2_PROJECT_ID);
+        return new ProjectType(ESB_CONFIGURATION_PROJECT_ID, ESB_CONFIGURATION_PROJECT_NAME, WSO2_PROJECT_CATEGORY);
     }
 
     /** {@inheritDoc} */
     @Nonnull
     @Override
     public List<Attribute> getPredefinedAttributes() {
-        return Arrays.asList(new Attribute(Constants.LANGUAGE, WSO2_PROJECT_ID),
-                             new Attribute(Constants.FRAMEWORK, WSO2_PROJECT_ID));
+        return Arrays.asList(new Attribute(Constants.LANGUAGE, ESB_CONFIGURATION_PROJECT_ID),
+                             new Attribute(Constants.FRAMEWORK, ESB_CONFIGURATION_PROJECT_ID));
     }
 
     @Override
