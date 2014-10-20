@@ -62,7 +62,7 @@ public class GinModule extends AbstractGinModule {
     @ESBXmlFileType
     @Singleton
     protected FileType createEsbXmlFileType(@Nonnull WSO2Resources wso2Resources) {
-        return new FileType(wso2Resources.xmlFileIcon(), ESB_XML_MIME_TYPE, ESB_XML_EXTENSION);
+        return new FileType(wso2Resources.xmlIcon(), ESB_XML_MIME_TYPE, ESB_XML_EXTENSION);
     }
 
 }

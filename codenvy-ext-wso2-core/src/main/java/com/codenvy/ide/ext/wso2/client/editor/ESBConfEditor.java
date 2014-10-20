@@ -32,6 +32,8 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -45,9 +47,9 @@ import javax.annotation.Nullable;
  */
 public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEditorView.ActionDelegate, PropertyListener {
 
-    private final ESBConfEditorView   view;
-    private final GraphicEditor       graphicEditor;
-    private final CodenvyTextEditor   textEditor;
+    private final ESBConfEditorView view;
+    private final GraphicEditor     graphicEditor;
+    private final CodenvyTextEditor textEditor;
 
     private boolean isGraphicalEditorChanged;
 
@@ -139,6 +141,13 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     @Override
     public ImageResource getTitleImage() {
         return input.getImageResource();
+    }
+
+    /** {@inheritDoc} */
+    @Nullable
+    @Override
+    public SVGResource getTitleSVGImage() {
+        return input.getSVGResource();
     }
 
     /** {@inheritDoc} */
