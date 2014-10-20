@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.common.propertyconfig;
 
+import com.codenvy.ide.client.CellTableResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.mediators.ValueType;
 import com.codenvy.ide.client.elements.mediators.log.Property;
@@ -65,17 +66,22 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
     TextBox valueExpressionTextBox;
 
     @UiField(provided = true)
-    final CellTable<Property>            tableOfProperties;
+    final CellTable<Property> tableOfProperties;
+
     @UiField(provided = true)
     final WSO2EditorLocalizationConstant locale;
+    @UiField(provided = true)
+    final CellTableResources             resource;
 
     private ActionDelegate delegate;
 
     @Inject
     public PropertyConfigViewImpl(WSO2EditorLocalizationConstant localizationConstant,
-                                  LogPropertiesConfigurationViewImplUiBinder uiBinder) {
+                                  LogPropertiesConfigurationViewImplUiBinder uiBinder,
+                                  CellTableResources resource) {
         this.locale = localizationConstant;
-        this.tableOfProperties = createTable(localizationConstant);
+        this.resource = resource;
+        this.tableOfProperties = createTable(localizationConstant, resource);
 
         setWidget(uiBinder.createAndBindUi(this));
 
@@ -104,8 +110,10 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
      * @param localizationConstant
      *         localization constant which contains special names of element in current table
      */
-    private CellTable<Property> createTable(final WSO2EditorLocalizationConstant localizationConstant) {
-        final CellTable<Property> table = new CellTable<>();
+    private CellTable<Property> createTable(@Nonnull final WSO2EditorLocalizationConstant localizationConstant,
+                                            @Nonnull CellTableResources resource) {
+
+        final CellTable<Property> table = new CellTable<>(0, resource);
 
         final SingleSelectionModel<Property> selectionModel = new SingleSelectionModel<>();
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
@@ -188,17 +196,17 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
     }
 
     @UiHandler("btnAdd")
-    public void onAddNewPropertyButtonClicked(ClickEvent event) {
+    public void onAddNewPropertyButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onAddPropertyButtonClicked();
     }
 
     @UiHandler("btnRemove")
-    public void onRemovePropertyButtonClicked(ClickEvent event) {
+    public void onRemovePropertyButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onRemovePropertyButtonClicked();
     }
 
     @UiHandler("btnEdit")
-    public void onEditPropertyButtonClicked(ClickEvent event) {
+    public void onEditPropertyButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onEditButtonClicked();
     }
 

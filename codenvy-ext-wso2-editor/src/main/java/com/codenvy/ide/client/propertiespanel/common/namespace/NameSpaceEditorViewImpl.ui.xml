@@ -22,6 +22,7 @@
              xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
 
     <ui:with field="locale" type="com.codenvy.ide.client.WSO2EditorLocalizationConstant"/>
+    <ui:with field="resource" type="com.codenvy.ide.client.CellTableResources"/>
 
     <ui:style>
         .nameSpacePropertyLabelStyle {

@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.common.namespace;
 
+import com.codenvy.ide.client.CellTableResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.ui.window.Window;
@@ -71,16 +72,22 @@ public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorVi
     Label   title;
 
     @UiField(provided = true)
-    final CellTable<NameSpace>           nameSpacesTable;
+    final CellTable<NameSpace> nameSpacesTable;
+
     @UiField(provided = true)
     final WSO2EditorLocalizationConstant locale;
+    @UiField(provided = true)
+    final CellTableResources             resource;
 
     private ActionDelegate delegate;
 
     @Inject
-    public NameSpaceEditorViewImpl(NameSpaceEditorViewImplUiBinder uiBinder, WSO2EditorLocalizationConstant locale) {
+    public NameSpaceEditorViewImpl(NameSpaceEditorViewImplUiBinder uiBinder,
+                                   WSO2EditorLocalizationConstant locale,
+                                   CellTableResources resource) {
         this.locale = locale;
-        this.nameSpacesTable = createTable();
+        this.resource = resource;
+        this.nameSpacesTable = createTable(resource);
 
         this.setTitle(locale.editorTitle());
         this.setWidget(uiBinder.createAndBindUi(this));
@@ -102,8 +109,8 @@ public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorVi
         getFooter().add(btnOk);
     }
 
-    private CellTable<NameSpace> createTable() {
-        CellTable<NameSpace> table = new CellTable<>();
+    private CellTable<NameSpace> createTable(@Nonnull CellTableResources resource) {
+        CellTable<NameSpace> table = new CellTable<>(0, resource);
 
         Column<NameSpace, String> nameSpace = new Column<NameSpace, String>(new TextCell()) {
             @Override
@@ -130,22 +137,22 @@ public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorVi
     }
 
     @UiHandler("btnAdd")
-    public void onAddNameSpaceButtonClicked(ClickEvent event) {
+    public void onAddNameSpaceButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onAddNameSpaceButtonClicked();
     }
 
     @UiHandler("btnEdit")
-    public void onEditButtonClicked(ClickEvent event) {
+    public void onEditButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onEditButtonClicked();
     }
 
     @UiHandler("btnRemove")
-    public void onRemoveButtonClicked(ClickEvent event) {
+    public void onRemoveButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onRemoveButtonClicked();
     }
 
     @UiHandler("selectPathButton")
-    public void onSelectXPathButtonClicked(ClickEvent event) {
+    public void onSelectXPathButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onSelectXPathButtonClicked();
     }
 

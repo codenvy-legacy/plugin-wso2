@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.endpoints.address.property;
 
+import com.codenvy.ide.client.CellTableResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.endpoints.address.Property;
 import com.codenvy.ide.client.elements.mediators.ValueType;
@@ -58,27 +59,30 @@ public class PropertyViewImpl extends Window implements PropertyView {
     interface PropertyViewImplUiBinder extends UiBinder<Widget, PropertyViewImpl> {
     }
 
-    @UiField
-    CellTable<Property> properties;
+    @UiField(provided = true)
+    final CellTable<Property> properties;
 
     @UiField(provided = true)
     final WSO2EditorLocalizationConstant locale;
+    @UiField(provided = true)
+    final CellTableResources             resource;
 
     private final Info info;
 
     private ActionDelegate delegate;
 
     @Inject
-    public PropertyViewImpl(PropertyViewImplUiBinder ourUiBinder, WSO2EditorLocalizationConstant locale) {
+    public PropertyViewImpl(PropertyViewImplUiBinder ourUiBinder, WSO2EditorLocalizationConstant locale, CellTableResources resource) {
         this.locale = locale;
+        this.resource = resource;
+
+        this.properties = createTable(resource);
 
         setTitle(locale.endpointPropertiesTitle());
         setWidget(ourUiBinder.createAndBindUi(this));
 
         info = new Info(locale.endpointTableError());
         info.setTitle(locale.errorMessage());
-
-        initializeTable();
 
         Button btnCancel = createButton(locale.buttonCancel(), "endpoint-properties-cancel", new ClickHandler() {
 
@@ -100,7 +104,9 @@ public class PropertyViewImpl extends Window implements PropertyView {
     }
 
     /** Adds columns names and values to table. Sets selection model to table. */
-    private void initializeTable() {
+    private CellTable<Property> createTable(@Nonnull CellTableResources resource) {
+        CellTable<Property> table = new CellTable<>(0, resource);
+
         final SingleSelectionModel<Property> selectionModel = new SingleSelectionModel<>();
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
@@ -108,7 +114,7 @@ public class PropertyViewImpl extends Window implements PropertyView {
                 delegate.onPropertySelected(selectionModel.getSelectedObject());
             }
         });
-        properties.setSelectionModel(selectionModel);
+        table.setSelectionModel(selectionModel);
 
         TextColumn<Property> name = new TextColumn<Property>() {
             @Override
@@ -154,17 +160,19 @@ public class PropertyViewImpl extends Window implements PropertyView {
             }
         };
 
-        properties.addColumn(name, locale.columnName());
-        properties.addColumn(value, locale.columnValue());
-        properties.addColumn(type, locale.columnType());
-        properties.addColumn(scope, locale.columnScope());
+        table.addColumn(name, locale.columnName());
+        table.addColumn(value, locale.columnValue());
+        table.addColumn(type, locale.columnType());
+        table.addColumn(scope, locale.columnScope());
 
-        properties.setColumnWidth(name, 170, Style.Unit.PX);
-        properties.setColumnWidth(value, 170, Style.Unit.PX);
-        properties.setColumnWidth(type, 60, Style.Unit.PX);
-        properties.setColumnWidth(scope, 60, Style.Unit.PX);
+        table.setColumnWidth(name, 170, Style.Unit.PX);
+        table.setColumnWidth(value, 170, Style.Unit.PX);
+        table.setColumnWidth(type, 60, Style.Unit.PX);
+        table.setColumnWidth(scope, 60, Style.Unit.PX);
 
-        properties.setLoadingIndicator(null);
+        table.setLoadingIndicator(null);
+
+        return table;
     }
 
     /** {@inheritDoc} */
@@ -210,17 +218,17 @@ public class PropertyViewImpl extends Window implements PropertyView {
     }
 
     @UiHandler("btnAdd")
-    public void onAddButtonClicked(ClickEvent event) {
+    public void onAddButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onAddButtonClicked();
     }
 
     @UiHandler("btnEdit")
-    public void onEditButtonClicked(ClickEvent event) {
+    public void onEditButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onEditButtonClicked();
     }
 
     @UiHandler("btnRemove")
-    public void onRemoveButtonClicked(ClickEvent event) {
+    public void onRemoveButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onRemoveButtonClicked();
     }
 

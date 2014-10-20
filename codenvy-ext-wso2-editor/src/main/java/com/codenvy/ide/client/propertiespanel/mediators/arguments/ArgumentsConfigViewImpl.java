@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.mediators.arguments;
 
+import com.codenvy.ide.client.CellTableResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.mediators.payload.Arg;
 import com.codenvy.ide.ui.window.Window;
@@ -72,6 +73,8 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
     ListBox typeValue;
 
     @UiField(provided = true)
+    final CellTableResources             resource;
+    @UiField(provided = true)
     final WSO2EditorLocalizationConstant locale;
 
     @UiField(provided = true)
@@ -80,10 +83,13 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
     private ActionDelegate delegate;
 
     @Inject
-    public ArgumentsConfigViewImpl(WSO2EditorLocalizationConstant localizationConstant, ArgumentsConfigViewImplUiBinder uiBinder) {
+    public ArgumentsConfigViewImpl(WSO2EditorLocalizationConstant localizationConstant,
+                                   ArgumentsConfigViewImplUiBinder uiBinder,
+                                   CellTableResources resource) {
         this.locale = localizationConstant;
+        this.resource = resource;
 
-        this.args = createTable(localizationConstant);
+        this.args = createTable(localizationConstant, resource);
 
         this.setTitle(localizationConstant.argsConfigurationTitle());
         this.setWidget(uiBinder.createAndBindUi(this));
@@ -106,8 +112,10 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
 
     }
 
-    private CellTable<Arg> createTable(@Nonnull final WSO2EditorLocalizationConstant localizationConstant) {
-        final CellTable<Arg> table = new CellTable<>();
+    private CellTable<Arg> createTable(@Nonnull final WSO2EditorLocalizationConstant localizationConstant,
+                                       @Nonnull CellTableResources resource) {
+
+        final CellTable<Arg> table = new CellTable<>(0, resource);
 
         final SingleSelectionModel<Arg> selectionModel = new SingleSelectionModel<>();
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
@@ -176,17 +184,17 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
     }
 
     @UiHandler("btnAdd")
-    public void onAddNewPropertyButtonClicked(ClickEvent event) {
+    public void onAddNewPropertyButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onAddArgButtonClicked();
     }
 
     @UiHandler("btnRemove")
-    public void onRemovePropertyButtonClicked(ClickEvent event) {
+    public void onRemovePropertyButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onRemoveArgButtonClicked();
     }
 
     @UiHandler("btnEdit")
-    public void onEditPropertyButtonClicked(ClickEvent event) {
+    public void onEditPropertyButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onEditButtonClicked();
     }
 
