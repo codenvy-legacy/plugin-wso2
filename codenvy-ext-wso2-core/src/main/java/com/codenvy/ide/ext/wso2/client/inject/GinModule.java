@@ -22,7 +22,6 @@ import com.codenvy.ide.ext.wso2.client.editor.ESBXmlFileType;
 import com.codenvy.ide.ext.wso2.client.editor.graphical.EditorViewFactory;
 import com.codenvy.ide.ext.wso2.client.editor.graphical.GraphicEditorView;
 import com.codenvy.ide.ext.wso2.client.editor.graphical.GraphicEditorViewImpl;
-import com.codenvy.ide.ext.wso2.client.editor.text.AutoCompleterFactory;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.inject.Provides;
@@ -45,7 +44,6 @@ public class GinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
-        install(new GinFactoryModuleBuilder().build(AutoCompleterFactory.class));
         install(new GinFactoryModuleBuilder()
                         .implement(GraphicEditorView.class, GraphicEditorViewImpl.class)
                         .build(EditorViewFactory.class));

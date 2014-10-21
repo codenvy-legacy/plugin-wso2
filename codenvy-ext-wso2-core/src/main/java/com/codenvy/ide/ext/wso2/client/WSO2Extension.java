@@ -37,7 +37,6 @@ import com.codenvy.ide.ext.wso2.client.action.WSO2ProjectActionGroup;
 import com.codenvy.ide.ext.wso2.client.editor.ESBXmlFileType;
 import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorProvider;
 import com.codenvy.ide.ext.wso2.client.wizard.project.WSO2PagePresenter;
-import com.google.gwt.core.client.ScriptInjector;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -57,7 +56,6 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_IMPORT_RESOURCE_GRO
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_MAIN_ACTION_GROUP;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_NEW_RESOURCE_GROUP;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_CATEGORY;
-import static com.google.gwt.core.client.ScriptInjector.TOP_WINDOW;
 
 /**
  * Codenvy IDE3 extension provides functionality for WSO2 integration. This at the time of this writing includes major operations for WSO2
@@ -92,13 +90,10 @@ public class WSO2Extension {
     }
 
     @Inject
-    public void initXmlEditor(WSO2Resources wso2Resources,
-                              EditorRegistry editorRegistry,
+    public void initXmlEditor(EditorRegistry editorRegistry,
                               FileTypeRegistry fileTypeRegistry,
                               XmlEditorProvider xmlEditorProvider,
                               @ESBXmlFileType FileType esbXmlFileType) {
-
-        ScriptInjector.fromUrl(wso2Resources.xmlParserJS().getSafeUri().asString()).setWindow(TOP_WINDOW).inject();
 
         editorRegistry.registerDefaultEditor(esbXmlFileType, xmlEditorProvider);
         fileTypeRegistry.registerFileType(esbXmlFileType);

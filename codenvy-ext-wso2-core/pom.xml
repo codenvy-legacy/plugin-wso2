@@ -54,6 +54,11 @@
             <version>${codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.codenvy.plugin-editor-codemirror</groupId>
+            <artifactId>plugin-editor-codemirror</artifactId>
+            <version>${codenvy.plugin-editor-codemirror.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.codenvy.plugin-wso2</groupId>
             <artifactId>wso2-editor</artifactId>
             <version>${project.parent.version}</version>

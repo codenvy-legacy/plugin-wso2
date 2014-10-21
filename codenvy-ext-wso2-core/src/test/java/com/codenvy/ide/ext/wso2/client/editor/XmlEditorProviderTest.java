@@ -16,7 +16,6 @@
 package com.codenvy.ide.ext.wso2.client.editor;
 
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorConfiguration;
 import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorProvider;
 import com.google.inject.Provider;
 
@@ -32,8 +31,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Here we're testing {@link XmlEditorConfiguration}.
- *
  * @author Andrey Plotnikov
  */
 @RunWith(MockitoJUnitRunner.class)

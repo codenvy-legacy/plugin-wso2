@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.codenvy.ide.client.initializers.propertiespanel;
 
 import com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint;

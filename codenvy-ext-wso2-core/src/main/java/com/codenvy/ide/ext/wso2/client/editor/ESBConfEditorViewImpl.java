@@ -16,15 +16,16 @@
 package com.codenvy.ide.ext.wso2.client.editor;
 
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
-import com.google.gwt.dom.client.Style;
+import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPresenter;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
@@ -50,26 +51,28 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
     }
 
     @UiField
-    SimplePanel          mainPanel;
+    Button      textEditorChoose;
     @UiField
-    Button               textEditorChoose;
+    Button      graphicalEditorChoose;
     @UiField
-    Button               graphicalEditorChoose;
+    Button      associateEditorChoose;
     @UiField
-    Button               associateEditorChoose;
+    FlowPanel   toolbarBtn;
     @UiField
-    FlowPanel            toolbarBtn;
+    FlowPanel   showPropertyPanel;
     @UiField
-    FlowPanel            showPropertyPanel;
+    SimplePanel graphicalEditorPanel;
+    @UiField
+    SimplePanel textEditorPanel;
+
     @UiField(provided = true)
     LocalizationConstant locale;
     @UiField(provided = true)
     WSO2Resources        resources;
+    @UiField
+    DockLayoutPanel      editorMainPanel;
 
-    private ActionDelegate  delegate;
-    private DockLayoutPanel bothEditorPanel;
-    private SimplePanel     graphicalEditorPanel;
-    private SimplePanel     textEditorPanel;
+    private ActionDelegate delegate;
 
     @Inject
     public ESBConfEditorViewImpl(ESBConfEditorViewImplUiBinder ourUiBinder, LocalizationConstant locale, WSO2Resources resources) {
@@ -77,15 +80,6 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
         this.resources = resources;
 
         initWidget(ourUiBinder.createAndBindUi(this));
-
-        bothEditorPanel = new DockLayoutPanel(Style.Unit.PCT);
-        bothEditorPanel.setSize("100%", "100%");
-
-        graphicalEditorPanel = new SimplePanel();
-        textEditorPanel = new SimplePanel();
-
-        bothEditorPanel.addWest(textEditorPanel, 50);
-        bothEditorPanel.add(graphicalEditorPanel);
 
         toolbarBtn.addDomHandler(new ClickHandler() {
             @Override
@@ -128,23 +122,55 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
 
     /** {@inheritDoc} */
     @Override
-    public void showSourceView(@Nonnull CodenvyTextEditor textEditor) {
-        textEditor.go(mainPanel);
+    public void showSourceView() {
+        showEditors(true, false);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void showDesignView(@Nonnull AbstractEditorPresenter graphicalEditor) {
-        graphicalEditor.go(mainPanel);
+    public void showDesignView() {
+        showEditors(false, true);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void showDualView(@Nonnull AbstractEditorPresenter graphicalEditor, @Nonnull CodenvyTextEditor textEditor) {
-        graphicalEditor.go(graphicalEditorPanel);
+    public void showDualView() {
+        showEditors(true, true);
+    }
+
+    private void showEditors(boolean isTextEditorVisible, boolean isGraphicalEditorVisible) {
+        editorMainPanel.setWidgetHidden(graphicalEditorPanel, !isGraphicalEditorVisible);
+
+        int textEditorSize;
+
+        if (isTextEditorVisible) {
+            textEditorSize = isGraphicalEditorVisible ? 50 : 100;
+        } else {
+            textEditorSize = 0;
+        }
+
+        editorMainPanel.setWidgetSize(textEditorPanel, textEditorSize);
+
+        editorMainPanel.onResize();
+
+        Scheduler.get().scheduleDeferred(new Command() {
+            @Override
+            public void execute() {
+                delegate.onEditorDOMChanged();
+            }
+        });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void addTextEditorWidget(@Nonnull EmbeddedTextEditorPresenter textEditor) {
         textEditor.go(textEditorPanel);
+    }
 
-        mainPanel.setWidget(bothEditorPanel);
+    /** {@inheritDoc} */
+    @Override
+    public void addGraphicalEditorWidget(@Nonnull AbstractEditorPresenter graphicalEditor) {
+        graphicalEditor.go(graphicalEditorPanel);
     }
 
     @UiHandler("textEditorChoose")

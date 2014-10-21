@@ -17,7 +17,6 @@ package com.codenvy.ide.ext.wso2.client;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
 import com.google.inject.Singleton;
@@ -48,9 +47,6 @@ public interface WSO2Resources extends ClientBundle {
 
     @Source({"WSO2GlobalStyle.css"})
     WSO2Style wso2Style();
-
-    @Source("xml.js")
-    DataResource xmlParserJS();
 
     @Source("icons/xml_file.png")
     ImageResource xmlFileIcon();

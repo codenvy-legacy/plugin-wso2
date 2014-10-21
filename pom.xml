@@ -49,8 +49,6 @@
         <version.gwt.dnd>3.3.0</version.gwt.dnd>
         <version.gwt.incubator>2.0.1</version.gwt.incubator>
         <version.gwt.links>1.4.3-SNAPSHOT</version.gwt.links>
-        <!--TODO remove this version after updating to 1.18.18 version of parent pom-->
-        <version.license-bundle>3</version.license-bundle>
         <version.license-header>codenvy-apache2-license-resource-bundle</version.license-header>
     </properties>
     <build>

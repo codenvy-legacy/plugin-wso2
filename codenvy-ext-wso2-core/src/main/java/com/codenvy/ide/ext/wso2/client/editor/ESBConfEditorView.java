@@ -16,8 +16,8 @@
 package com.codenvy.ide.ext.wso2.client.editor;
 
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPresenter;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nonnull;
@@ -52,6 +52,10 @@ public interface ESBConfEditorView extends View<ESBConfEditorView.ActionDelegate
 
         /** Performs some actions in response to user clicked on palette button. */
         void onChangeToolbarVisibilityClicked();
+
+        /** Performs some actions in response to DOM of editor is changed. */
+        void onEditorDOMChanged();
+
     }
 
     /**
@@ -78,30 +82,29 @@ public interface ESBConfEditorView extends View<ESBConfEditorView.ActionDelegate
      */
     void setEnableDualViewButton(boolean enable);
 
+    /** Shows panel for displaying source view of plugin. */
+    void showSourceView();
+
+    /** Shows panel for displaying design view of plugin. */
+    void showDesignView();
+
+    /** Shows panel for displaying dual view of plugin. */
+    void showDualView();
+
     /**
-     * Shows panel for displaying source view of plugin.
+     * Adds text editor widget into complex editor view.
      *
      * @param textEditor
      *         editor which provides displaying of source view
      */
-    void showSourceView(@Nonnull CodenvyTextEditor textEditor);
+    void addTextEditorWidget(@Nonnull EmbeddedTextEditorPresenter textEditor);
 
     /**
-     * Shows panel for displaying design view of plugin.
+     * Adds graphical editor widget into complex editor view.
      *
      * @param graphicalEditor
      *         editor which provides displaying of design view
      */
-    void showDesignView(@Nonnull AbstractEditorPresenter graphicalEditor);
-
-    /**
-     * Shows panel for displaying dual view of plugin.
-     *
-     * @param graphicalEditor
-     *         editor which provides displaying of design view
-     * @param textEditor
-     *         editor which provides displaying of source view
-     */
-    void showDualView(@Nonnull AbstractEditorPresenter graphicalEditor, @Nonnull CodenvyTextEditor textEditor);
+    void addGraphicalEditorWidget(@Nonnull AbstractEditorPresenter graphicalEditor);
 
 }

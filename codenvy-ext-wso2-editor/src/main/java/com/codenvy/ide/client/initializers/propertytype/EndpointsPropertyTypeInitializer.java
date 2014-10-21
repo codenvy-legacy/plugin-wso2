@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.codenvy.ide.client.initializers.propertytype;
 
 import com.codenvy.ide.client.managers.PropertyTypeManager;

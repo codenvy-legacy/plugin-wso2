@@ -87,9 +87,14 @@
             margin-left: 3px;
             margin-top: 1px;
         }
+
+        .fullSize {
+            height: 100%;
+            width: 100%;
+        }
     </ui:style>
 
-    <g:DockLayoutPanel height="100%" width="100%" unit="PX">
+    <g:DockLayoutPanel unit="PX" addStyleNames="{style.fullSize}">
 
         <g:south size="30">
             <g:DockLayoutPanel addStyleNames="{style.mainPanel}">
@@ -124,7 +129,7 @@
                 </g:east>
 
                 <g:center>
-                    <g:FlowPanel width="100%" height="100%">
+                    <g:FlowPanel addStyleNames="{style.fullSize}">
                         <g:FlowPanel addStyleNames="{style.editorBtnLocation}">
 
                             <g:Button text="{locale.editorText}" ui:field="textEditorChoose" height="16px"
@@ -142,7 +147,15 @@
         </g:south>
 
         <g:center>
-            <g:SimplePanel ui:field="mainPanel"/>
+            <g:DockLayoutPanel unit="PCT" ui:field="editorMainPanel" addStyleNames="{style.fullSize}">
+                <g:west size="50">
+                    <g:SimplePanel ui:field="textEditorPanel"/>
+                </g:west>
+
+                <g:center>
+                    <g:SimplePanel ui:field="graphicalEditorPanel"/>
+                </g:center>
+            </g:DockLayoutPanel>
         </g:center>
 
     </g:DockLayoutPanel>

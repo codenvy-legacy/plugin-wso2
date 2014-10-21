@@ -16,21 +16,24 @@
 package com.codenvy.ide.ext.wso2.client.editor;
 
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
-import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorInitException;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PropertyListener;
+import com.codenvy.ide.api.text.RegionImpl;
 import com.codenvy.ide.ext.wso2.client.editor.graphical.GraphicEditor;
-import com.codenvy.ide.ext.wso2.client.editor.text.XmlEditorConfiguration;
+import com.codenvy.ide.jseditor.client.defaulteditor.DefaultEditorProvider;
+import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
+import com.codenvy.ide.jseditor.client.editorconfig.DefaultTextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView;
+import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPresenter;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
@@ -47,27 +50,36 @@ import javax.annotation.Nullable;
  */
 public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEditorView.ActionDelegate, PropertyListener {
 
-    private final ESBConfEditorView view;
-    private final GraphicEditor     graphicEditor;
-    private final CodenvyTextEditor textEditor;
+    private final ESBConfEditorView           view;
+    private final GraphicEditor               graphicEditor;
+    private final EmbeddedTextEditorPresenter textEditor;
 
     private boolean isGraphicalEditorChanged;
 
     @Inject
     public ESBConfEditor(ESBConfEditorView view,
-                         DocumentProvider documentProvider,
-                         Provider<CodenvyTextEditor> editorProvider,
-                         Provider<XmlEditorConfiguration> xmlEditorConfigurationProvider,
-                         NotificationManager notificationManager,
-                         GraphicEditor graphicEditor) {
+                         DefaultEditorProvider editorProvider,
+                         GraphicEditor graphicEditor,
+                         NotificationManager notificationManager) {
         this.view = view;
         this.view.setDelegate(this);
-        this.graphicEditor = graphicEditor;
-        textEditor = editorProvider.get();
-        textEditor.initialize(xmlEditorConfigurationProvider.get(), documentProvider, notificationManager);
 
+        this.graphicEditor = graphicEditor;
         this.graphicEditor.addPropertyListener(this);
-        textEditor.addPropertyListener(this);
+        this.view.addGraphicalEditorWidget(graphicEditor);
+
+        EditorPartPresenter editor = editorProvider.getEditor();
+
+        if (editor instanceof EmbeddedTextEditorPresenter) {
+            textEditor = (EmbeddedTextEditorPresenter)editor;
+            textEditor.addPropertyListener(this);
+            textEditor.initialize(new DefaultTextEditorConfiguration(), notificationManager);
+
+            this.view.addTextEditorWidget(textEditor);
+        } else {
+            textEditor = null;
+            Log.error(getClass(), "classic implementation, no dedicated configuration available");
+        }
     }
 
     /** {@inheritDoc} */
@@ -108,14 +120,12 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     /** {@inheritDoc} */
     @Override
     public void doSaveAs() {
-        // TODO check active editor and execute saveAs on it
         textEditor.doSaveAs();
     }
 
     /** {@inheritDoc} */
     @Override
     public void activate() {
-        // TODO check active editor and execute active on it
         textEditor.activate();
     }
 
@@ -130,7 +140,7 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     @Override
     public String getTitle() {
         if (isDirty()) {
-            return "*" + input.getName();
+            return '*' + input.getName();
         } else {
             return input.getName();
         }
@@ -172,9 +182,7 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         view.setEnableDesignViewButton(true);
         view.setEnableDualViewButton(true);
 
-        view.showSourceView(textEditor);
-
-        graphicEditor.resizeEditor();
+        view.showSourceView();
     }
 
     /** {@inheritDoc} */
@@ -184,9 +192,7 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         view.setEnableDesignViewButton(false);
         view.setEnableDualViewButton(true);
 
-        view.showDesignView(graphicEditor);
-
-        graphicEditor.resizeEditor();
+        view.showDesignView();
     }
 
     /** {@inheritDoc} */
@@ -196,15 +202,20 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
         view.setEnableDesignViewButton(true);
         view.setEnableDualViewButton(false);
 
-        view.showDualView(graphicEditor, textEditor);
-
-        graphicEditor.resizeEditor();
+        view.showDualView();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onChangeToolbarVisibilityClicked() {
         graphicEditor.changeToolbarVisibility();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onEditorDOMChanged() {
+        graphicEditor.resizeEditor();
+        textEditor.getView().onResize();
     }
 
     /** {@inheritDoc} */
@@ -223,20 +234,31 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     /** {@inheritDoc} */
     @Override
     public void propertyChanged(@Nonnull PartPresenter source, int propId) {
-        if (propId == EditorPartPresenter.PROP_DIRTY && source instanceof GraphicEditor) {
-            textEditor.getDocument().set(graphicEditor.serialize());
-
-            isGraphicalEditorChanged = true;
-            updateDirtyState(true);
-        } else if ((propId == EditorPartPresenter.PROP_INPUT || propId == EditorPartPresenter.PROP_DIRTY) &&
-                   source instanceof CodenvyTextEditor) {
-            if (isGraphicalEditorChanged) {
-                isGraphicalEditorChanged = false;
-            } else {
-                graphicEditor.deserialize(textEditor.getDocument().get());
-            }
+        if (propId == PROP_DIRTY && source instanceof GraphicEditor) {
+            applyChangesToTextEditor();
+        } else if ((propId == PROP_INPUT || propId == PROP_DIRTY) && source instanceof EmbeddedTextEditorPresenter) {
+            applyChangesToGraphicalEditor();
         } else {
             firePropertyChange(propId);
+        }
+    }
+
+    private void applyChangesToTextEditor() {
+        EmbeddedTextEditorPartView textEditorView = textEditor.getView();
+
+        EmbeddedDocument document = textEditorView.getEmbeddedDocument();
+        String contents = document.getContents();
+        document.replace(new RegionImpl(0, contents.length()), graphicEditor.serialize());
+
+        isGraphicalEditorChanged = true;
+        updateDirtyState(true);
+    }
+
+    private void applyChangesToGraphicalEditor() {
+        if (isGraphicalEditorChanged) {
+            isGraphicalEditorChanged = false;
+        } else {
+            graphicEditor.deserialize(textEditor.getView().getContents());
         }
     }
 

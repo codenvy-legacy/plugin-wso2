@@ -83,7 +83,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     @Nonnull
     @Override
     public String getTitle() {
-        return "ESB Editor: " + input.getFile().getName();
+        return input.getFile().getName();
     }
 
     /** {@inheritDoc} */
