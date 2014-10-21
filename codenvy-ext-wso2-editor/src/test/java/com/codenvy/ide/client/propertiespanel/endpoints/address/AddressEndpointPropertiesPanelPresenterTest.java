@@ -40,6 +40,12 @@ import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.ADDRESSING_VERSION;
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.AddressingVersion;
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.AddressingVersion.FINAL;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DEFAULT_RETRY_COUNT;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DEFAULT_RETRY_DELAY;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DEFAULT_SUSPEND_INITIAL_DURATION;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DEFAULT_SUSPEND_MAXIMUM_DURATION;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DEFAULT_SUSPEND_PROGRESSION_FACTORY;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DEFAULT_TIMEOUT_DURATION;
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DESCRIPTION;
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.FORMAT;
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.Format;
@@ -83,9 +89,10 @@ import static org.mockito.Mockito.when;
  */
 public class AddressEndpointPropertiesPanelPresenterTest extends AbstractPropertiesPanelTest<AddressEndpointPropertiesPanelPresenter> {
 
-    private static final String  NOT_DIGIT = "not digit";
-    private static final Integer INTEGER   = 2;
-    private static final Double  DOUBLE    = 2.;
+    private static final String  NOT_DIGIT    = "not digit";
+    private static final String  EMPTY_STRING = "";
+    private static final Integer INTEGER      = 2;
+    private static final Double  DOUBLE       = 2.;
 
     private static final String BASIC_GROUP_TITLE = "basic group";
     private static final String FORMAT_TITLE      = "format title";
@@ -815,13 +822,20 @@ public class AddressEndpointPropertiesPanelPresenterTest extends AbstractPropert
 
     @Test
     public void suspendInitialDurationPropertyListenerShouldBeDoneWhenIncorrectValue() throws Exception {
-        prepareElement(element, SUSPEND_INITIAL_DURATION, INTEGER);
-
         suspendInitDurListener.onPropertyChanged(NOT_DIGIT);
 
-        simplePropertyValueShouldBeChanged(suspendInitialDuration, INTEGER.toString());
+        simplePropertyValueShouldBeTheSame(suspendInitialDuration);
         verify(element, never()).putProperty(eq(SUSPEND_INITIAL_DURATION), anyInt());
         noListenerShouldBeNotified();
+    }
+
+    @Test
+    public void defaultValueShouldBeSetWhenSuspendInitDurationIsEmptyString() throws Exception {
+        suspendInitDurListener.onPropertyChanged(EMPTY_STRING);
+
+        simplePropertyValueShouldBeTheSame(suspendInitialDuration);
+        verify(element).putProperty(eq(SUSPEND_INITIAL_DURATION), eq(DEFAULT_SUSPEND_INITIAL_DURATION));
+        listenerShouldBeNotified();
     }
 
     @Test
@@ -833,13 +847,20 @@ public class AddressEndpointPropertiesPanelPresenterTest extends AbstractPropert
 
     @Test
     public void suspendMaximumDurationPropertyListenerShouldBeDoneWhenIncorrectValue() throws Exception {
-        prepareElement(element, SUSPEND_MAXIMUM_DURATION, INTEGER);
-
         suspendMaxDurListener.onPropertyChanged(NOT_DIGIT);
 
-        simplePropertyValueShouldBeChanged(suspendMaximumDuration, INTEGER.toString());
-        verify(element, never()).putProperty(eq(SUSPEND_MAXIMUM_DURATION), anyInt());
+        simplePropertyValueShouldBeTheSame(suspendMaximumDuration);
+        verify(element, never()).putProperty(eq(SUSPEND_MAXIMUM_DURATION), eq(DEFAULT_SUSPEND_MAXIMUM_DURATION));
         noListenerShouldBeNotified();
+    }
+
+    @Test
+    public void defaultValueShouldBeSetWhenSuspendMaxDurationIsEmptyString() throws Exception {
+        suspendMaxDurListener.onPropertyChanged(EMPTY_STRING);
+
+        simplePropertyValueShouldBeTheSame(suspendMaximumDuration);
+        verify(element).putProperty(eq(SUSPEND_MAXIMUM_DURATION), eq(DEFAULT_SUSPEND_MAXIMUM_DURATION));
+        listenerShouldBeNotified();
     }
 
     @Test
@@ -851,13 +872,20 @@ public class AddressEndpointPropertiesPanelPresenterTest extends AbstractPropert
 
     @Test
     public void suspendProgressionFactoryPropertyListenerShouldBeDoneWhenIncorrectValue() throws Exception {
-        prepareElement(element, SUSPEND_PROGRESSION_FACTORY, DOUBLE);
-
         suspendProgressFactoryListener.onPropertyChanged(NOT_DIGIT);
 
-        simplePropertyValueShouldBeChanged(suspendProgressionFactory, DOUBLE.toString());
+        simplePropertyValueShouldBeTheSame(suspendProgressionFactory);
         verify(element, never()).putProperty(eq(SUSPEND_PROGRESSION_FACTORY), anyDouble());
         noListenerShouldBeNotified();
+    }
+
+    @Test
+    public void defaultValueShouldBeSetWhenSuspendProgressionFactoryIsEmptyString() throws Exception {
+        suspendProgressFactoryListener.onPropertyChanged(EMPTY_STRING);
+
+        simplePropertyValueShouldBeTheSame(suspendProgressionFactory);
+        verify(element).putProperty(eq(SUSPEND_PROGRESSION_FACTORY), eq(DEFAULT_SUSPEND_PROGRESSION_FACTORY));
+        listenerShouldBeNotified();
     }
 
     @Test
@@ -876,13 +904,20 @@ public class AddressEndpointPropertiesPanelPresenterTest extends AbstractPropert
 
     @Test
     public void retryCountPropertyListenerShouldBeDoneWhenIncorrectValue() throws Exception {
-        prepareElement(element, RETRY_COUNT, INTEGER);
-
         retryCountListener.onPropertyChanged(NOT_DIGIT);
 
-        simplePropertyValueShouldBeChanged(retryCount, INTEGER.toString());
+        simplePropertyValueShouldBeTheSame(retryCount);
         verify(element, never()).putProperty(eq(RETRY_COUNT), anyInt());
         noListenerShouldBeNotified();
+    }
+
+    @Test
+    public void defaultValueShouldBeSetWhenRetryCountIsEmptyString() throws Exception {
+        retryCountListener.onPropertyChanged(EMPTY_STRING);
+
+        simplePropertyValueShouldBeTheSame(retryCount);
+        verify(element).putProperty(eq(RETRY_COUNT), eq(DEFAULT_RETRY_COUNT));
+        listenerShouldBeNotified();
     }
 
     @Test
@@ -894,13 +929,20 @@ public class AddressEndpointPropertiesPanelPresenterTest extends AbstractPropert
 
     @Test
     public void retryDelayPropertyListenerShouldBeDoneWhenIncorrectValue() throws Exception {
-        prepareElement(element, RETRY_DELAY, INTEGER);
-
         retryDelayListener.onPropertyChanged(NOT_DIGIT);
 
-        simplePropertyValueShouldBeChanged(retryDelay, INTEGER.toString());
+        simplePropertyValueShouldBeTheSame(retryDelay);
         verify(element, never()).putProperty(eq(RETRY_DELAY), anyInt());
         noListenerShouldBeNotified();
+    }
+
+    @Test
+    public void defaultValueShouldBeSetWhenRetryDelayIsEmptyString() throws Exception {
+        retryDelayListener.onPropertyChanged(EMPTY_STRING);
+
+        simplePropertyValueShouldBeTheSame(retryDelay);
+        verify(element).putProperty(eq(RETRY_DELAY), eq(DEFAULT_RETRY_DELAY));
+        listenerShouldBeNotified();
     }
 
     @Test
@@ -1014,13 +1056,20 @@ public class AddressEndpointPropertiesPanelPresenterTest extends AbstractPropert
 
     @Test
     public void timeoutDurationPropertyListenerShouldBeDoneWhenIncorrectValue() throws Exception {
-        prepareElement(element, TIMEOUT_DURATION, INTEGER);
-
         timeoutDurationListener.onPropertyChanged(NOT_DIGIT);
 
-        simplePropertyValueShouldBeChanged(timeoutDuration, INTEGER.toString());
+        simplePropertyValueShouldBeTheSame(timeoutDuration);
         verify(element, never()).putProperty(eq(TIMEOUT_DURATION), anyInt());
         noListenerShouldBeNotified();
+    }
+
+    @Test
+    public void defaultValueShouldBeSetWhenTimeoutDurationIsEmptyString() throws Exception {
+        timeoutDurationListener.onPropertyChanged(EMPTY_STRING);
+
+        simplePropertyValueShouldBeTheSame(timeoutDuration);
+        verify(element).putProperty(eq(TIMEOUT_DURATION), eq(DEFAULT_TIMEOUT_DURATION));
+        listenerShouldBeNotified();
     }
 
     @Test

@@ -109,6 +109,13 @@ public class AddressEndpoint extends AbstractElement {
 
     private static final String DESCRIPTION_PROPERTY = "description";
 
+    public static final int    DEFAULT_SUSPEND_INITIAL_DURATION    = -1;
+    public static final int    DEFAULT_SUSPEND_MAXIMUM_DURATION    = 0;
+    public static final double DEFAULT_SUSPEND_PROGRESSION_FACTORY = -1.0;
+    public static final int    DEFAULT_RETRY_COUNT                 = 0;
+    public static final int    DEFAULT_RETRY_DELAY                 = 0;
+    public static final int    DEFAULT_TIMEOUT_DURATION            = 0;
+
     private static final List<String> SERIALIZATION_PROPERTIES = Arrays.asList(ENABLE_ADDRESSING_PROPERTY,
                                                                                ENABLE_RM_PROPERTY,
                                                                                ENABLE_SEC_PROPERTY,
@@ -143,13 +150,13 @@ public class AddressEndpoint extends AbstractElement {
         putProperty(URI, "http://www.example.org/service");
 
         putProperty(SUSPEND_ERROR_CODE, "");
-        putProperty(SUSPEND_INITIAL_DURATION, -1);
-        putProperty(SUSPEND_MAXIMUM_DURATION, 0);
-        putProperty(SUSPEND_PROGRESSION_FACTORY, -1.0);
+        putProperty(SUSPEND_INITIAL_DURATION, DEFAULT_SUSPEND_INITIAL_DURATION);
+        putProperty(SUSPEND_MAXIMUM_DURATION, DEFAULT_SUSPEND_MAXIMUM_DURATION);
+        putProperty(SUSPEND_PROGRESSION_FACTORY, DEFAULT_SUSPEND_PROGRESSION_FACTORY);
 
         putProperty(RETRY_ERROR_CODES, "");
-        putProperty(RETRY_COUNT, 0);
-        putProperty(RETRY_DELAY, 0);
+        putProperty(RETRY_COUNT, DEFAULT_RETRY_COUNT);
+        putProperty(RETRY_DELAY, DEFAULT_RETRY_DELAY);
 
         putProperty(PROPERTIES, new ArrayList<Property>());
         putProperty(OPTIMIZE, Optimize.LEAVE_AS_IS);
@@ -165,7 +172,7 @@ public class AddressEndpoint extends AbstractElement {
         putProperty(ADDRESSING_VERSION, FINAL);
         putProperty(ADDRESSING_SEPARATE_LISTENER, false);
 
-        putProperty(TIMEOUT_DURATION, 0);
+        putProperty(TIMEOUT_DURATION, DEFAULT_TIMEOUT_DURATION);
         putProperty(TIMEOUT_ACTION, NEVER);
     }
 

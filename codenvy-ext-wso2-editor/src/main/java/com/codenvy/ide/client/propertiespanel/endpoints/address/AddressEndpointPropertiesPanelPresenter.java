@@ -37,10 +37,17 @@ import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.codenvy.ide.client.elements.AbstractEntityElement.Key;
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.ADDRESSING_ENABLED;
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.ADDRESSING_SEPARATE_LISTENER;
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.ADDRESSING_VERSION;
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.AddressingVersion;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DEFAULT_RETRY_COUNT;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DEFAULT_RETRY_DELAY;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DEFAULT_SUSPEND_INITIAL_DURATION;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DEFAULT_SUSPEND_MAXIMUM_DURATION;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DEFAULT_SUSPEND_PROGRESSION_FACTORY;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DEFAULT_TIMEOUT_DURATION;
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DESCRIPTION;
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.FORMAT;
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.Format;
@@ -188,15 +195,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         PropertyValueChangedListener suspendInitDurListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                try {
-                    int value = Integer.valueOf(property);
-
-                    element.putProperty(SUSPEND_INITIAL_DURATION, value);
-
-                    notifyListeners();
-                } catch (NumberFormatException e) {
-                    suspendInitialDuration.setProperty(String.valueOf(element.getProperty(SUSPEND_INITIAL_DURATION)));
-                }
+                applyNumericParameter(property, SUSPEND_INITIAL_DURATION, DEFAULT_SUSPEND_INITIAL_DURATION);
             }
         };
         suspendInitialDuration = createSimpleProperty(suspendStateGroup,
@@ -206,15 +205,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         PropertyValueChangedListener suspendMaxDurListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                try {
-                    int value = Integer.valueOf(property);
-
-                    element.putProperty(SUSPEND_MAXIMUM_DURATION, value);
-
-                    notifyListeners();
-                } catch (NumberFormatException e) {
-                    suspendMaximumDuration.setProperty(String.valueOf(element.getProperty(SUSPEND_MAXIMUM_DURATION)));
-                }
+                applyNumericParameter(property, SUSPEND_MAXIMUM_DURATION, DEFAULT_SUSPEND_MAXIMUM_DURATION);
             }
         };
         suspendMaximumDuration = createSimpleProperty(suspendStateGroup,
@@ -228,11 +219,15 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
                     double value = Double.valueOf(property);
 
                     element.putProperty(SUSPEND_PROGRESSION_FACTORY, value);
-
-                    notifyListeners();
                 } catch (NumberFormatException e) {
-                    suspendProgressionFactory.setProperty(String.valueOf(element.getProperty(SUSPEND_PROGRESSION_FACTORY)));
+                    if (!property.isEmpty()) {
+                        return;
+                    }
+
+                    element.putProperty(SUSPEND_PROGRESSION_FACTORY, DEFAULT_SUSPEND_PROGRESSION_FACTORY);
                 }
+
+                notifyListeners();
             }
         };
         suspendProgressionFactory = createSimpleProperty(suspendStateGroup,
@@ -256,15 +251,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         PropertyValueChangedListener retryCountListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                try {
-                    int value = Integer.valueOf(property);
-
-                    element.putProperty(RETRY_COUNT, value);
-
-                    notifyListeners();
-                } catch (NumberFormatException e) {
-                    retryCount.setProperty(String.valueOf(element.getProperty(RETRY_COUNT)));
-                }
+                applyNumericParameter(property, RETRY_COUNT, DEFAULT_RETRY_COUNT);
             }
         };
         retryCount = createSimpleProperty(timeoutStateGroup, locale.addressEndpointRetryCount(), retryCountListener);
@@ -272,15 +259,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         PropertyValueChangedListener retryDelayListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                try {
-                    int value = Integer.valueOf(property);
-
-                    element.putProperty(RETRY_DELAY, value);
-
-                    notifyListeners();
-                } catch (NumberFormatException e) {
-                    retryDelay.setProperty(String.valueOf(element.getProperty(RETRY_DELAY)));
-                }
+                applyNumericParameter(property, RETRY_DELAY, DEFAULT_RETRY_DELAY);
             }
         };
         retryDelay = createSimpleProperty(timeoutStateGroup, locale.addressEndpointRetryDelay(), retryDelayListener);
@@ -417,15 +396,7 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
         PropertyValueChangedListener timeoutDurationListener = new PropertyValueChangedListener() {
             @Override
             public void onPropertyChanged(@Nonnull String property) {
-                try {
-                    int value = Integer.valueOf(property);
-
-                    element.putProperty(TIMEOUT_DURATION, value);
-
-                    notifyListeners();
-                } catch (NumberFormatException e) {
-                    timeoutDuration.setProperty(String.valueOf(element.getProperty(TIMEOUT_DURATION)));
-                }
+                applyNumericParameter(property, TIMEOUT_DURATION, DEFAULT_TIMEOUT_DURATION);
             }
         };
         timeoutDuration = createSimpleProperty(timeoutGroup, locale.addressEndpointTimeoutDuration(), timeoutDurationListener);
@@ -439,6 +410,23 @@ public class AddressEndpointPropertiesPanelPresenter extends AbstractPropertiesP
             }
         };
         timeoutAction = createListProperty(timeoutGroup, locale.addressEndpointTimeoutAction(), timeoutActionListener);
+    }
+
+    private void applyNumericParameter(@Nonnull String property, @Nonnull Key<Integer> key, int defaultValue) {
+        try {
+            int value = Integer.valueOf(property);
+
+            element.putProperty(key, value);
+
+        } catch (NumberFormatException e) {
+            if (!property.isEmpty()) {
+                return;
+            }
+
+            element.putProperty(key, defaultValue);
+        }
+
+        notifyListeners();
     }
 
     /** {@inheritDoc} */

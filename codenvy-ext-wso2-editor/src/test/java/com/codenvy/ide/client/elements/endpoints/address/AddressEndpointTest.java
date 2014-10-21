@@ -17,8 +17,6 @@
 package com.codenvy.ide.client.elements.endpoints.address;
 
 import com.codenvy.ide.client.elements.AbstractElementTest;
-import com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint;
-import com.codenvy.ide.client.elements.endpoints.address.Property;
 import com.google.gwt.xml.client.Node;
 import com.google.inject.Provider;
 
@@ -36,6 +34,12 @@ import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.AddressingVersion;
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.AddressingVersion.FINAL;
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.AddressingVersion.SUBMISSION;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DEFAULT_RETRY_COUNT;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DEFAULT_RETRY_DELAY;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DEFAULT_SUSPEND_INITIAL_DURATION;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DEFAULT_SUSPEND_MAXIMUM_DURATION;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DEFAULT_SUSPEND_PROGRESSION_FACTORY;
+import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DEFAULT_TIMEOUT_DURATION;
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.DESCRIPTION;
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.FORMAT;
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.Format;
@@ -91,17 +95,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
     private static final String            SUSPEND_ERROR_CODE_VALUE                   = "code";
     private static final String            SUSPEND_ERROR_CODE_DEFAULT_VALUE           = "";
     private static final Integer           SUSPEND_INITIAL_DURATION_VALUE             = 100;
-    private static final Integer           SUSPEND_INITIAL_DURATION_DEFAULT_VALUE     = -1;
     private static final Integer           SUSPEND_MAXIMUM_DURATION_VALUE             = 1;
-    private static final Integer           SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE     = 0;
     private static final Double            SUSPEND_PROGRESSION_FACTORY_VALUE          = 1.;
-    private static final Double            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE  = -1.;
     private static final String            RETRY_ERROR_CODES_VALUE                    = "code";
     private static final String            RETRY_ERROR_CODES_DEFAULT_VALUE            = "";
     private static final Integer           RETRY_COUNT_VALUE                          = 1;
-    private static final Integer           RETRY_COUNT_DEFAULT_VALUE                  = 0;
     private static final Integer           RETRY_DELAY_VALUE                          = 1;
-    private static final Integer           RETRY_DELAY_DEFAULT_VALUE                  = 0;
     private static final List<Property>    PROPERTIES_DEFAULT_VALUE                   = new ArrayList<>();
     private static final Optimize          OPTIMIZE_DEFAULT_VALUE                     = Optimize.LEAVE_AS_IS;
     private static final String            DESCRIPTION_VALUE                          = "description";
@@ -116,7 +115,6 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
     private static final AddressingVersion ADDRESSING_VERSION_DEFAULT_VALUE           = FINAL;
     private static final Boolean           ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE = false;
     private static final Integer           TIMEOUT_DURATION_VALUE                     = 1;
-    private static final Integer           TIMEOUT_DURATION_DEFAULT_VALUE             = 0;
     private static final TimeoutAction     TIMEOUT_ACTION_DEFAULT_VALUE               = NEVER;
 
     private static final String PROPERTY_SERIALIZE_CONTENT = "<property name=\"property_name\" value=\"property_value\"/>\n";
@@ -180,12 +178,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -196,7 +194,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -281,12 +279,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(SOUP11,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -297,7 +295,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -317,12 +315,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -333,7 +331,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -353,12 +351,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -369,7 +367,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -390,11 +388,11 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
                             SUSPEND_INITIAL_DURATION_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -405,7 +403,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -450,10 +448,10 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
                             SUSPEND_INITIAL_DURATION_VALUE,
                             SUSPEND_MAXIMUM_DURATION_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -464,7 +462,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -485,12 +483,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
                             SUSPEND_MAXIMUM_DURATION_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -501,7 +499,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -538,11 +536,11 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
                             SUSPEND_INITIAL_DURATION_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
                             SUSPEND_PROGRESSION_FACTORY_VALUE,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -553,7 +551,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -574,12 +572,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
                             SUSPEND_PROGRESSION_FACTORY_VALUE,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -590,7 +588,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -610,12 +608,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -626,7 +624,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -662,12 +660,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_VALUE,
                             RETRY_COUNT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -678,7 +676,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -699,9 +697,9 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
                             RETRY_COUNT_VALUE,
                             RETRY_DELAY_VALUE,
@@ -715,7 +713,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -742,11 +740,11 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
                             RETRY_DELAY_VALUE,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
@@ -758,7 +756,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -790,12 +788,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             properties,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -806,7 +804,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -826,12 +824,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             MTOM,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -842,7 +840,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -869,12 +867,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_VALUE,
@@ -885,7 +883,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -913,12 +911,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -929,7 +927,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -942,12 +940,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -958,7 +956,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -993,12 +991,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -1009,7 +1007,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -1022,12 +1020,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -1038,7 +1036,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -1073,12 +1071,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -1089,7 +1087,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             true,
                             SUBMISSION,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -1117,12 +1115,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -1133,7 +1131,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             true,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             true,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
@@ -1167,12 +1165,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -1217,12 +1215,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -1233,7 +1231,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             ADDRESSING_ENABLED_DEFAULT_VALUE,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             DISCARD);
     }
 
@@ -1314,12 +1312,12 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
         assertConfiguration(FORMAT_DEFAULT_VALUE,
                             URI_DEFAULT_VALUE,
                             SUSPEND_ERROR_CODE_DEFAULT_VALUE,
-                            SUSPEND_INITIAL_DURATION_DEFAULT_VALUE,
-                            SUSPEND_MAXIMUM_DURATION_DEFAULT_VALUE,
-                            SUSPEND_PROGRESSION_FACTORY_DEFAULT_VALUE,
+                            DEFAULT_SUSPEND_INITIAL_DURATION,
+                            DEFAULT_SUSPEND_MAXIMUM_DURATION,
+                            DEFAULT_SUSPEND_PROGRESSION_FACTORY,
                             RETRY_ERROR_CODES_DEFAULT_VALUE,
-                            RETRY_COUNT_DEFAULT_VALUE,
-                            RETRY_DELAY_DEFAULT_VALUE,
+                            DEFAULT_RETRY_COUNT,
+                            DEFAULT_RETRY_DELAY,
                             PROPERTIES_DEFAULT_VALUE,
                             OPTIMIZE_DEFAULT_VALUE,
                             DESCRIPTION_DEFAULT_VALUE,
@@ -1330,7 +1328,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
                             true,
                             ADDRESSING_VERSION_DEFAULT_VALUE,
                             ADDRESSING_SEPARATE_LISTENER_DEFAULT_VALUE,
-                            TIMEOUT_DURATION_DEFAULT_VALUE,
+                            DEFAULT_TIMEOUT_DURATION,
                             TIMEOUT_ACTION_DEFAULT_VALUE);
     }
 
