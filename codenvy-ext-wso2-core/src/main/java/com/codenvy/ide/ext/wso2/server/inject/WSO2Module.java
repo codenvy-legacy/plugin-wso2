@@ -15,11 +15,14 @@
  */
 package com.codenvy.ide.ext.wso2.server.inject;
 
+import com.codenvy.api.project.server.ProjectImporter;
+import com.codenvy.ide.ext.wso2.server.projectimporter.WSO2ProjectImporter;
 import com.codenvy.ide.ext.wso2.server.projecttypes.WSO2ProjectTypeDescriptionExtension;
 import com.codenvy.ide.ext.wso2.server.projecttypes.WSO2ProjectTypeExtension;
 import com.codenvy.ide.ext.wso2.server.rest.WSO2RestService;
 import com.codenvy.inject.DynaModule;
 import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.Multibinder;
 
 /**
  * The module that contains configuration of the server side part of the plugin.
@@ -34,6 +37,9 @@ public class WSO2Module extends AbstractModule {
     protected void configure() {
         bind(WSO2ProjectTypeDescriptionExtension.class);
         bind(WSO2ProjectTypeExtension.class);
+
+        Multibinder<ProjectImporter> projectImporterMultibinder = Multibinder.newSetBinder(binder(), ProjectImporter.class);
+        projectImporterMultibinder.addBinding().to(WSO2ProjectImporter.class);
 
         bind(WSO2RestService.class);
     }

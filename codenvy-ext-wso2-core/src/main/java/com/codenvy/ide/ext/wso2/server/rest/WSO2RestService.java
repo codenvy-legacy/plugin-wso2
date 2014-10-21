@@ -20,7 +20,6 @@ import com.codenvy.api.vfs.server.MountPoint;
 import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
-import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 
 import org.slf4j.Logger;
@@ -68,12 +67,14 @@ public class WSO2RestService {
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
 
+    @PathParam("ws-id")
+    private String wsId;
+
     @Path("detect")
     @POST
     @Consumes(APPLICATION_JSON)
     public Response detectConfigurationFile(FileInfo fileInfo) throws ApiException {
-
-        VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(getVfsID());
+        VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(wsId);
         MountPoint mountPoint = vfsProvider.getMountPoint(false);
 
         VirtualFile file = mountPoint.getVirtualFile(fileInfo.getProjectName() + File.separator + fileInfo.getFileName());
@@ -120,8 +121,7 @@ public class WSO2RestService {
     @POST
     @Consumes(APPLICATION_JSON)
     public Response uploadConfigurationFile(FileInfo fileInfo) throws ApiException {
-
-        VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(getVfsID());
+        VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(wsId);
         MountPoint mountPoint = vfsProvider.getMountPoint(false);
 
         String projectName = fileInfo.getProjectName();
@@ -134,8 +134,7 @@ public class WSO2RestService {
 
         String parentFolder;
 
-        try {
-            InputStream is = URI.create(filePath).toURL().openStream();
+        try (InputStream is = URI.create(filePath).toURL().openStream()) {
             VirtualFile file = projectParent.createFile(fileName, ESB_XML_MIME_TYPE, is);
 
             parentFolder = moveFile(file, mountPoint, projectName, getParentFolderForImportingFile(file));
@@ -151,8 +150,7 @@ public class WSO2RestService {
     @POST
     @Consumes(APPLICATION_JSON)
     public Response overwriteConfigurationFile(@PathParam("operation") String operation, FileInfo fileInfo) throws ApiException {
-
-        VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(getVfsID());
+        VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(wsId);
         MountPoint mountPoint = vfsProvider.getMountPoint(false);
 
         VirtualFile file = mountPoint.getVirtualFile(fileInfo.getProjectName() + File.separator + fileInfo.getFileName());
@@ -200,12 +198,11 @@ public class WSO2RestService {
      * @return parent folder for file or empty string if file is not esb configuration
      */
     private String getParentFolderForImportingFile(@Nonnull VirtualFile virtualFile) throws ApiException {
-        InputStream fileContent = virtualFile.getContent().getStream();
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 
         String parentFolder;
 
-        try {
+        try (InputStream fileContent = virtualFile.getContent().getStream()) {
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
             Document document = dBuilder.parse(fileContent);
@@ -240,11 +237,6 @@ public class WSO2RestService {
         }
 
         return parentFolder;
-    }
-
-    /** @return virtual file system id */
-    private String getVfsID() {
-        return EnvironmentContext.getCurrent().getWorkspaceId();
     }
 
 }
