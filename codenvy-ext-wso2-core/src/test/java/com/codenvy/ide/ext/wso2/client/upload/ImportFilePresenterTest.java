@@ -30,6 +30,7 @@ import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
 import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
@@ -112,11 +113,13 @@ public class ImportFilePresenterTest extends GwtTestWithMockito {
     private WSO2ClientService    service;
 
     @Mock(answer = RETURNS_DEEP_STUBS)
-    private AppContext           appContext;
+    private AppContext             appContext;
     @Mock(answer = RETURNS_DEEP_STUBS)
-    private ProjectServiceClient projectServiceClient;
+    private ProjectServiceClient   projectServiceClient;
     @Mock(answer = RETURNS_DEEP_STUBS)
-    private DtoFactory           dtoFactory;
+    private DtoFactory             dtoFactory;
+    @Mock
+    private DtoUnmarshallerFactory dtoUnmarshallerFactory;
 
     @InjectMocks
     private ImportFilePresenter importFilePresenter;

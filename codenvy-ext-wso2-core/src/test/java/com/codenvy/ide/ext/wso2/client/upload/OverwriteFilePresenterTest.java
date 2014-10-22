@@ -28,6 +28,7 @@ import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
 import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter;
 import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFileView;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.gwt.http.client.RequestException;
 import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -77,25 +78,28 @@ public class OverwriteFilePresenterTest {
     private final String PROJECT_NAME = "projectName";
 
     @Mock
-    private OverwriteFileView    view;
+    private OverwriteFileView      view;
     @Mock
-    private DtoFactory           dtoFactory;
+    private DtoFactory             dtoFactory;
     @Mock
-    private NotificationManager  notificationManager;
+    private NotificationManager    notificationManager;
     @Mock
-    private WSO2ClientService    service;
+    private WSO2ClientService      service;
     @Mock
-    private CurrentProject       currentProject;
+    private CurrentProject         currentProject;
     @Mock
-    private EventBus             eventBus;
+    private EventBus               eventBus;
     @Mock
-    private LocalizationConstant local;
+    private LocalizationConstant   local;
     @Mock
-    private FolderNode           src;
+    private FolderNode             src;
     @Mock
-    private FolderNode           main;
+    private FolderNode             main;
     @Mock
-    private FolderNode           synapse_config;
+    private FolderNode             synapse_config;
+    @Mock
+    private DtoUnmarshallerFactory dtoUnmarshallerFactory;
+
 
     @Mock(answer = RETURNS_DEEP_STUBS)
     private AppContext                           appContext;

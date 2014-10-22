@@ -16,6 +16,7 @@
 package com.codenvy.ide.ext.wso2.client.upload.overwrite;
 
 import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
@@ -25,7 +26,8 @@ import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
 import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
 import com.codenvy.ide.ext.wso2.client.upload.ImportFilePresenter;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
-import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -48,16 +50,18 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
     private static final String RENAME_FILE_OPERATION    = "rename";
     private static final String OVERWRITE_FILE_OPERATION = "overwrite";
 
-    private final OverwriteFileView    view;
-    private final DtoFactory           dtoFactory;
-    private final NotificationManager  notificationManager;
-    private final WSO2ClientService    service;
-    private final EventBus             eventBus;
-    private final LocalizationConstant local;
-    private final AppContext           appContext;
+    private final OverwriteFileView        view;
+    private final DtoFactory               dtoFactory;
+    private final NotificationManager      notificationManager;
+    private final WSO2ClientService        service;
+    private final LocalizationConstant     local;
+    private final AppContext               appContext;
+    private final WSO2AsyncRequestCallback modifyCallBack;
+    private final EventBus                 eventBus;
 
     private String                               oldFileName;
     private ImportFilePresenter.ViewCloseHandler parentViewUtils;
+    private String                               operation;
 
     @Inject
     public OverwriteFilePresenter(OverwriteFileView view,
@@ -66,15 +70,25 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
                                   NotificationManager notificationManager,
                                   EventBus eventBus,
                                   AppContext appContext,
-                                  LocalizationConstant local) {
+                                  LocalizationConstant local,
+                                  DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
         this.dtoFactory = dtoFactory;
         this.service = service;
+        this.eventBus = eventBus;
         this.notificationManager = notificationManager;
         this.view.setDelegate(this);
-        this.eventBus = eventBus;
         this.appContext = appContext;
         this.local = local;
+
+        Unmarshallable<String> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(String.class);
+
+        this.modifyCallBack = new WSO2AsyncRequestCallback<String>(unmarshaller, notificationManager) {
+            @Override
+            protected void onSuccess(String callback) {
+                modifyFile();
+            }
+        };
     }
 
     /** {@inheritDoc} */
@@ -111,24 +125,34 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
      *         name of the modification operation
      */
     private void modifyExistingFile(@Nonnull final String operation) {
-        final FileInfo fileInfo = dtoFactory.createDto(FileInfo.class)
+        this.operation = operation;
+
+        CurrentProject currentProject = appContext.getCurrentProject();
+
+        if (currentProject == null) {
+            return;
+        }
+
+        FileInfo modifyFileInfo = dtoFactory.createDto(FileInfo.class)
                                             .withFileName(oldFileName)
                                             .withNewFileName(view.getFileName())
-                                            .withProjectName(appContext.getCurrentProject().getProjectDescription().getName());
+                                            .withProjectName(currentProject.getProjectDescription().getName());
         try {
-            service.modifyFile(fileInfo, operation, new WSO2AsyncRequestCallback<String>(new StringUnmarshaller(), notificationManager) {
-                @Override
-                protected void onSuccess(String callback) {
-                    view.close();
-
-                    if (!"delete".equals(operation)) {
-                        eventBus.fireEvent(new RefreshProjectTreeEvent());
-                    }
-                }
-            });
+            service.modifyFile(modifyFileInfo, operation, modifyCallBack);
         } catch (RequestException e) {
             notificationManager.showNotification(new Notification(e.getMessage(), ERROR));
         }
+    }
+
+    /** The method used in modifyCallback. */
+    private void modifyFile() {
+        view.close();
+
+        if (DELETE_FILE_OPERATION.equals(operation)) {
+            return;
+        }
+
+        eventBus.fireEvent(new RefreshProjectTreeEvent());
     }
 
     /**

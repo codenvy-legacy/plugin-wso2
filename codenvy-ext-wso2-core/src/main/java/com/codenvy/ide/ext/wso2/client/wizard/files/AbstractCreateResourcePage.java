@@ -27,6 +27,7 @@ import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.wizard.AbstractWizardPage;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
@@ -54,15 +55,14 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_PATH;
  */
 public abstract class AbstractCreateResourcePage extends AbstractWizardPage implements CreateResourceView.ActionDelegate {
 
-    private final EditorAgent                   editorAgent;
-    private final ProjectServiceClient          projectServiceClient;
-    private final String                        parentFolderName;
-    private final FileType                      fileType;
-    private final EventBus                      eventBus;
-    private final AppContext                    appContext;
-    private final NotificationManager           notificationManager;
-    private final Unmarshallable<ItemReference> itemReferenceUnmarshaller;
-    private final Unmarshallable<TreeElement>   treeElementUnmarshaller;
+    private static final int DEPTH = 4;
+
+    private final ProjectServiceClient projectServiceClient;
+    private final String               parentFolderName;
+    private final FileType             fileType;
+    private final AppContext           appContext;
+    private final EditorAgent          editorAgent;
+    private final EventBus             eventBus;
 
     protected final CreateResourceView   view;
     protected final LocalizationConstant locale;
@@ -72,8 +72,15 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
     protected boolean incorrectName;
     protected String  content;
 
-    private TreeElement parentFolder;
-    private String      projectPath;
+    private TreeElement          parentFolder;
+    private String               projectPath;
+    private Array<ItemReference> items;
+    private CommitCallback       callback;
+
+    private WSO2AsyncRequestCallback treeCallback;
+    private WSO2AsyncRequestCallback childrenCallBack;
+    private WSO2AsyncRequestCallback createFolderCallback;
+    private WSO2AsyncRequestCallback createFileCallback;
 
     public AbstractCreateResourcePage(@Nonnull CreateResourceView view,
                                       @Nonnull String caption,
@@ -99,14 +106,48 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
         this.parentFolderName = parentFolderName;
         this.fileType = fileType;
         this.locale = locale;
-        this.notificationManager = notificationManager;
         this.resources = resources;
         this.projectServiceClient = projectServiceClient;
         this.eventBus = eventBus;
         this.appContext = appContext;
 
-        this.itemReferenceUnmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ItemReference.class);
-        this.treeElementUnmarshaller = dtoUnmarshallerFactory.newUnmarshaller(TreeElement.class);
+        initializeCallbacks(dtoUnmarshallerFactory, notificationManager);
+    }
+
+    private void initializeCallbacks(@Nonnull DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                                     @Nonnull NotificationManager notificationManager) {
+
+        Unmarshallable<ItemReference> itemReferenceUnmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ItemReference.class);
+        Unmarshallable<TreeElement> treeElementUnmarshaller = dtoUnmarshallerFactory.newUnmarshaller(TreeElement.class);
+        Unmarshallable<Array<ItemReference>> itemsUnmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
+
+        treeCallback = new WSO2AsyncRequestCallback<TreeElement>(treeElementUnmarshaller, notificationManager) {
+            @Override
+            protected void onSuccess(TreeElement treeElement) {
+                onGetTreeSuccessAction(treeElement);
+            }
+        };
+
+        childrenCallBack = new WSO2AsyncRequestCallback<Array<ItemReference>>(itemsUnmarshaller, notificationManager) {
+            @Override
+            protected void onSuccess(Array<ItemReference> result) {
+                items = result;
+            }
+        };
+
+        createFolderCallback = new WSO2AsyncRequestCallback<ItemReference>(itemReferenceUnmarshaller, notificationManager) {
+            @Override
+            protected void onSuccess(ItemReference itemReference) {
+                createFile(itemReference.getPath());
+            }
+        };
+
+        createFileCallback = new WSO2AsyncRequestCallback<ItemReference>(itemReferenceUnmarshaller, notificationManager) {
+            @Override
+            protected void onSuccess(ItemReference result) {
+                createFileNode(result);
+            }
+        };
     }
 
     /** {@inheritDoc} */
@@ -145,6 +186,8 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
     /** {@inheritDoc} */
     @Override
     public void go(@Nonnull AcceptsOneWidget container) {
+        items = null;
+
         findParentFolder();
 
         container.setWidget(view);
@@ -162,36 +205,36 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
 
         projectPath = currentProject.getProjectDescription().getPath();
 
-        projectServiceClient.getTree(projectPath, 4,
-                                     new WSO2AsyncRequestCallback<TreeElement>(treeElementUnmarshaller, notificationManager) {
-                                         @Override
-                                         protected void onSuccess(TreeElement treeElement) {
-                                             onGetTreeSuccessAction(treeElement);
-                                         }
-                                     });
+        projectServiceClient.getTree(projectPath, DEPTH, treeCallback);
     }
 
+    /** The method used in treeCallback. */
     private void onGetTreeSuccessAction(@Nonnull TreeElement treeElement) {
-        TreeElement srcFolder = findChildByName(treeElement, SRC_FOLDER_NAME);
+        TreeElement srcFolder = findFolderByName(treeElement, SRC_FOLDER_NAME);
         if (srcFolder == null) {
             return;
         }
 
-        TreeElement mainFolder = findChildByName(srcFolder, MAIN_FOLDER_NAME);
+        TreeElement mainFolder = findFolderByName(srcFolder, MAIN_FOLDER_NAME);
         if (mainFolder == null) {
             return;
         }
 
-        TreeElement synapseConfFolder = findChildByName(mainFolder, SYNAPSE_CONFIG_FOLDER_NAME);
+        TreeElement synapseConfFolder = findFolderByName(mainFolder, SYNAPSE_CONFIG_FOLDER_NAME);
         if (synapseConfFolder == null) {
             return;
         }
 
-        parentFolder = findChildByName(synapseConfFolder, parentFolderName);
+        parentFolder = findFolderByName(synapseConfFolder, parentFolderName);
+        if (parentFolder == null) {
+            return;
+        }
+
+        projectServiceClient.getChildren(parentFolder.getNode().getPath(), childrenCallBack);
     }
 
     @Nullable
-    private TreeElement findChildByName(@Nullable TreeElement treeElement, @Nonnull String name) {
+    private TreeElement findFolderByName(@Nullable TreeElement treeElement, @Nonnull String name) {
         if (treeElement == null) {
             return null;
         }
@@ -210,13 +253,26 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
     /** {@inheritDoc} */
     @Override
     public void onValueChanged() {
-        String resourceName = view.getResourceName();
+        String resourceName = getResourceNameWithExtension(view.getResourceName());
         incorrectName = !ResourceNameValidator.isFileNameValid(resourceName);
 
-        TreeElement file = findChildByName(parentFolder, getResourceNameWithExtension(resourceName));
-        hasSameFile = file != null;
+        hasSameFile = isFileWithSameName(resourceName);
 
         delegate.updateControls();
+    }
+
+    private boolean isFileWithSameName(@Nonnull String resourceName) {
+        if (items == null) {
+            return false;
+        }
+
+        for (ItemReference item : items.asIterable()) {
+            if (resourceName.equals(item.getName())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /** @return resource name with extension */
@@ -228,14 +284,10 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
     /** {@inheritDoc} */
     @Override
     public void commit(@Nonnull final CommitCallback callback) {
+        this.callback = callback;
+
         if (parentFolder == null) {
-            projectServiceClient.createFolder(projectPath + SYNAPSE_CONFIG_PATH + parentFolderName,
-                                              new WSO2AsyncRequestCallback<ItemReference>(itemReferenceUnmarshaller, notificationManager) {
-                                                  @Override
-                                                  protected void onSuccess(ItemReference itemReference) {
-                                                      createFile(itemReference.getPath());
-                                                  }
-                                              });
+            projectServiceClient.createFolder(projectPath + SYNAPSE_CONFIG_PATH + parentFolderName, createFolderCallback);
         } else {
             createFile(parentFolder.getNode().getPath());
         }
@@ -246,14 +298,16 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
                                         getResourceNameWithExtension(view.getResourceName()),
                                         content,
                                         fileType.getMimeTypes().get(0),
-                                        new WSO2AsyncRequestCallback<ItemReference>(itemReferenceUnmarshaller, notificationManager) {
-                                            @Override
-                                            protected void onSuccess(ItemReference result) {
-                                                eventBus.fireEvent(new RefreshProjectTreeEvent());
-                                                FileNode file = new FileNode(null, result, eventBus, projectServiceClient, null);
-                                                editorAgent.openEditor(file);
-                                            }
-                                        });
+                                        createFileCallback);
+    }
+
+    /** The method used in createFileCallback. */
+    private void createFileNode(@Nonnull ItemReference result) {
+        eventBus.fireEvent(new RefreshProjectTreeEvent());
+        FileNode file = new FileNode(null, result, eventBus, projectServiceClient, null);
+        editorAgent.openEditor(file);
+
+        callback.onSuccess();
     }
 
 }
