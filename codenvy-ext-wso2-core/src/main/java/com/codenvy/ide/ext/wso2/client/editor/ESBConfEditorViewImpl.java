@@ -19,13 +19,12 @@ import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPresenter;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.layout.client.Layout;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
@@ -49,6 +48,8 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
     @Singleton
     interface ESBConfEditorViewImplUiBinder extends UiBinder<Widget, ESBConfEditorViewImpl> {
     }
+
+    private static final int DURATION = 200;
 
     @UiField
     Button      textEditorChoose;
@@ -151,12 +152,15 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
 
         editorMainPanel.setWidgetSize(textEditorPanel, textEditorSize);
 
-        editorMainPanel.onResize();
-
-        Scheduler.get().scheduleDeferred(new Command() {
+        editorMainPanel.animate(DURATION, new Layout.AnimationCallback() {
             @Override
-            public void execute() {
+            public void onAnimationComplete() {
                 delegate.onEditorDOMChanged();
+            }
+
+            @Override
+            public void onLayout(Layout.Layer layer, double progress) {
+                // do nothing
             }
         });
     }

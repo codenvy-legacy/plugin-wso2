@@ -17,12 +17,11 @@ package com.codenvy.ide.client.editor;
 
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.client.mvp.AbstractView;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.layout.client.Layout;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -50,6 +49,7 @@ public class WSO2EditorViewImpl extends AbstractView<WSO2EditorView.ActionDelega
     }
 
     private static final int SIZE_OF_SEPARATOR = 1;
+    private static final int DURATION          = 200;
 
     @UiField
     SimpleLayoutPanel toolbar;
@@ -125,12 +125,15 @@ public class WSO2EditorViewImpl extends AbstractView<WSO2EditorView.ActionDelega
     }
 
     private void resizeMainPanel() {
-        mainPanel.onResize();
-
-        Scheduler.get().scheduleDeferred(new Command() {
+        mainPanel.animate(DURATION, new Layout.AnimationCallback() {
             @Override
-            public void execute() {
+            public void onAnimationComplete() {
                 delegate.onEditorDOMChanged();
+            }
+
+            @Override
+            public void onLayout(Layout.Layer layer, double progress) {
+                // do nothing
             }
         });
     }
