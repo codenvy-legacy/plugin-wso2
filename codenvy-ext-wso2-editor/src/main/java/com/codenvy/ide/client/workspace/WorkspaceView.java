@@ -47,6 +47,8 @@ public interface WorkspaceView extends View<WorkspaceView.ActionDelegate> {
     int getWidth();
 
     public interface ActionDelegate {
+        /** Performs some actions in response to a user's resizing browser window. */
+        void onWindowResize();
     }
 
 }

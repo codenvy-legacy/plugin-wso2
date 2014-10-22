@@ -17,8 +17,11 @@ package com.codenvy.ide.client.workspace;
 
 import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
 import com.codenvy.ide.client.mvp.AbstractView;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -43,6 +46,13 @@ public class WorkspaceViewImpl extends AbstractView<WorkspaceView.ActionDelegate
     @Inject
     public WorkspaceViewImpl(WorkspaceViewImplUiBinder ourUiBinder) {
         initWidget(ourUiBinder.createAndBindUi(this));
+
+        Window.addResizeHandler(new ResizeHandler() {
+            @Override
+            public void onResize(ResizeEvent event) {
+                delegate.onWindowResize();
+            }
+        });
     }
 
     /** {@inheritDoc} */

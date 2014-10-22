@@ -124,4 +124,10 @@ public class WorkspacePresenter extends AbstractPresenter<WorkspaceView> impleme
         }
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void onWindowResize() {
+        resize();
+    }
+
 }
