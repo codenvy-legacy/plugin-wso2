@@ -56,4 +56,8 @@ public interface Constants {
     /** Extension name for WSO2 ESB configuration files */
     String ESB_XML_EXTENSION = "xml";
 
+    String DELETE_FILE_OPERATION    = "delete";
+    String RENAME_FILE_OPERATION    = "rename";
+    String OVERWRITE_FILE_OPERATION = "overwrite";
+
 }

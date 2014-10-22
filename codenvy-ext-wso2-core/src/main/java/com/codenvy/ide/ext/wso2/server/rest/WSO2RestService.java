@@ -22,8 +22,6 @@ import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -47,7 +45,9 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.ENDPOINTS_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_MIME_TYPE;
 import static com.codenvy.ide.ext.wso2.shared.Constants.LOCAL_ENTRY_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.MAIN_FOLDER_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.OVERWRITE_FILE_OPERATION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.PROXY_SERVICE_FOLDER_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.RENAME_FILE_OPERATION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SEQUENCE_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SRC_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NAME;
@@ -62,7 +62,6 @@ import static javax.ws.rs.core.MediaType.TEXT_HTML;
  */
 @Path("/wso2/{ws-id}")
 public class WSO2RestService {
-    private static final Logger LOG = LoggerFactory.getLogger(WSO2RestService.class);
 
     @Inject
     private VirtualFileSystemRegistry vfsRegistry;
@@ -111,7 +110,7 @@ public class WSO2RestService {
                 return parentFolder;
             }
 
-            return e.getMessage();
+            return e.toString();
         }
 
         return parentFolder;
@@ -139,8 +138,7 @@ public class WSO2RestService {
 
             parentFolder = moveFile(file, mountPoint, projectName, getParentFolderForImportingFile(file));
         } catch (IOException e) {
-            LOG.error("Can't create " + fileName + " file", e);
-            parentFolder = e.getMessage();
+            parentFolder = e.toString();
         }
 
         return Response.ok(parentFolder, TEXT_HTML).build();
@@ -164,11 +162,11 @@ public class WSO2RestService {
                                                         fileInfo.getFileName());
 
         switch (operation) {
-            case "rename":
+            case RENAME_FILE_OPERATION:
                 renameFile(fileInfo, mountPoint, file, parentFolder);
                 break;
 
-            case "overwrite":
+            case OVERWRITE_FILE_OPERATION:
                 oldFile.updateContent(oldFile.getMediaType(), file.getContent().getStream(), null);
                 file.delete(null);
                 break;
@@ -229,7 +227,6 @@ public class WSO2RestService {
 
                 default:
                     parentFolder = "";
-                    break;
             }
         } catch (ParserConfigurationException | SAXException | IOException e) {
             virtualFile.delete(null);

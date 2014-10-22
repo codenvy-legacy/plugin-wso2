@@ -35,6 +35,9 @@ import com.google.web.bindery.event.shared.EventBus;
 import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.ext.wso2.shared.Constants.DELETE_FILE_OPERATION;
+import static com.codenvy.ide.ext.wso2.shared.Constants.OVERWRITE_FILE_OPERATION;
+import static com.codenvy.ide.ext.wso2.shared.Constants.RENAME_FILE_OPERATION;
 
 /**
  * The class provides the business logic which allows us to change name of existing file, to delete file or overwrite it
@@ -46,18 +49,14 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate {
 
-    private static final String DELETE_FILE_OPERATION    = "delete";
-    private static final String RENAME_FILE_OPERATION    = "rename";
-    private static final String OVERWRITE_FILE_OPERATION = "overwrite";
-
-    private final OverwriteFileView        view;
-    private final DtoFactory               dtoFactory;
-    private final NotificationManager      notificationManager;
-    private final WSO2ClientService        service;
-    private final LocalizationConstant     local;
-    private final AppContext               appContext;
-    private final WSO2AsyncRequestCallback modifyCallBack;
-    private final EventBus                 eventBus;
+    private final OverwriteFileView                view;
+    private final DtoFactory                       dtoFactory;
+    private final NotificationManager              notificationManager;
+    private final WSO2ClientService                service;
+    private final LocalizationConstant             local;
+    private final AppContext                       appContext;
+    private final WSO2AsyncRequestCallback<String> modifyCallBack;
+    private final EventBus                         eventBus;
 
     private String                               oldFileName;
     private ImportFilePresenter.ViewCloseHandler parentViewUtils;

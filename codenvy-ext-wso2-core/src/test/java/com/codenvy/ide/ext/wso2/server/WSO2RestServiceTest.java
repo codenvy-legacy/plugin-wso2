@@ -15,8 +15,7 @@
  */
 package com.codenvy.ide.ext.wso2.server;
 
-import com.codenvy.api.core.ForbiddenException;
-import com.codenvy.api.core.NotFoundException;
+import com.codenvy.api.core.ApiException;
 import com.codenvy.api.core.ServerException;
 import com.codenvy.api.vfs.server.ContentStream;
 import com.codenvy.api.vfs.server.VirtualFile;
@@ -49,13 +48,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.codenvy.ide.ext.wso2.shared.Constants.ENDPOINTS_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_MIME_TYPE;
+import static com.codenvy.ide.ext.wso2.shared.Constants.LOCAL_ENTRY_FOLDER_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.PROXY_SERVICE_FOLDER_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.SEQUENCE_FOLDER_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -69,19 +73,16 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class WSO2RestServiceTest {
 
-    private static final String PROJECT_NAME                      = "projectName";
-    private static final String FILE_NAME                         = "fileName";
-    private static final String BASE_URI                          = "http://localhost";
-    private static final String SEQUENCE_CONFIGURATION_CONTENT    = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                                                                    "<sequence></sequence>";
-    private static final String ENDPOINT_CONFIGURATION_CONTENT    = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                                                                    "<endpoint></endpoint>";
-    private static final String PROXY_CONFIGURATION_CONTENT       = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                                                                    "<proxy></proxy>";
-    private static final String LOCAL_ENTRY_CONFIGURATION_CONTENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                                                                    "<localEntry></localEntry>";
-    private static final String SOME_FILE_CONTENT                 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                                                                    "<tag></tag>";
+    private static final String PROJECT_NAME = "projectName";
+    private static final String FILE_NAME    = "fileName";
+    private static final String BASE_URI     = "http://localhost";
+
+    private static final String XML_HEADER                        = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    private static final String SEQUENCE_CONFIGURATION_CONTENT    = XML_HEADER + "<sequence></sequence>";
+    private static final String ENDPOINT_CONFIGURATION_CONTENT    = XML_HEADER + "<endpoint></endpoint>";
+    private static final String PROXY_CONFIGURATION_CONTENT       = XML_HEADER + "<proxy></proxy>";
+    private static final String LOCAL_ENTRY_CONFIGURATION_CONTENT = XML_HEADER + "<localEntry></localEntry>";
+    private static final String SOME_FILE_CONTENT                 = XML_HEADER + "<tag></tag>";
 
     @Mock(answer = RETURNS_DEEP_STUBS)
     private VirtualFileSystemRegistry vfsRegistry;
@@ -105,169 +106,85 @@ public class WSO2RestServiceTest {
         launcher = new ResourceLauncher(processor);
     }
 
-    private ContainerResponse prepareResponseLauncherService(String method, String path, byte[] data) throws Exception {
+    private ContainerResponse sendRequest(String method, String path, byte[] data) throws Exception {
         Map<String, List<String>> headers = new HashMap<>(1);
         headers.put("Content-Type", Arrays.asList("application/json"));
 
         return launcher.service(method, "/wso2/workspaceId/" + path, BASE_URI, headers, data, null);
     }
 
-    private void prepareForFileModificationRequestTest() throws ServerException, NotFoundException, ForbiddenException {
-        InputStream is = new ByteArrayInputStream(SEQUENCE_CONFIGURATION_CONTENT.getBytes());
+    private void prepareFileForTesting(String content) throws ApiException {
+        InputStream is = new ByteArrayInputStream(content.getBytes());
         ContentStream contentStream = new ContentStream(null, is, null);
 
         when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString())).thenReturn(synapseFile);
-        when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString()).getName())
-                .thenReturn("synapseName");
+        when(synapseFile.getName()).thenReturn("synapseName");
+        when(synapseFile.getMediaType()).thenReturn(ESB_XML_MIME_TYPE);
         when(synapseFile.getContent()).thenReturn(contentStream);
     }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void sequnceFileShouldBeDetected() throws Exception {
-        prepareForFileModificationRequestTest();
-
-        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
+    private byte[] getRequestData(String fileName) {
+        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class)
+                                      .withFileName(fileName)
+                                      .withNewFileName(FILE_NAME)
                                       .withProjectName(PROJECT_NAME);
 
-        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
+        return DtoFactory.getInstance().toJson(fileInfo).getBytes();
+    }
 
-        ContainerResponse response = prepareResponseLauncherService("POST", "detect", data);
+    private byte[] getRequestData() {
+        return getRequestData(FILE_NAME);
+    }
+
+    private void fileShouldBeDetected(String fileContent, String responseEntity) throws Exception {
+        prepareFileForTesting(fileContent);
+
+        ContainerResponse response = sendRequest("POST", "detect", getRequestData());
 
         assertEquals(200, response.getStatus());
-        verify(synapseFile).updateContent(eq(ESB_XML_MIME_TYPE), (InputStream)anyObject(), anyString());
+        assertEquals(responseEntity, response.getResponse().getEntity());
+
+        verify(synapseFile).updateContent(eq(ESB_XML_MIME_TYPE), any(InputStream.class), isNull(String.class));
     }
 
-    private void prepareEndpointForFileModificationRequestTest() throws ServerException, NotFoundException, ForbiddenException {
-        InputStream is = new ByteArrayInputStream(ENDPOINT_CONFIGURATION_CONTENT.getBytes());
-        ContentStream contentStream = new ContentStream(null, is, null);
-
-        when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString())).thenReturn(synapseFile);
-        when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString()).getName())
-                .thenReturn("synapseName");
-        when(synapseFile.getContent()).thenReturn(contentStream);
+    @Test
+    public void sequenceFileShouldBeDetected() throws Exception {
+        fileShouldBeDetected(SEQUENCE_CONFIGURATION_CONTENT, SEQUENCE_FOLDER_NAME);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void endpointFileShouldBeDetected() throws Exception {
-        prepareEndpointForFileModificationRequestTest();
-
-        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
-                                      .withProjectName(PROJECT_NAME);
-
-        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
-
-        ContainerResponse response = prepareResponseLauncherService("POST", "detect", data);
-
-        assertEquals(200, response.getStatus());
-        verify(synapseFile).updateContent(eq(ESB_XML_MIME_TYPE), (InputStream)anyObject(), anyString());
+        fileShouldBeDetected(ENDPOINT_CONFIGURATION_CONTENT, ENDPOINTS_FOLDER_NAME);
     }
 
-    private void prepareProxyForFileModificationRequestTest() throws ServerException, NotFoundException, ForbiddenException {
-        InputStream is = new ByteArrayInputStream(PROXY_CONFIGURATION_CONTENT.getBytes());
-        ContentStream contentStream = new ContentStream(null, is, null);
-
-        when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString())).thenReturn(synapseFile);
-        when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString()).getName())
-                .thenReturn("synapseName");
-        when(synapseFile.getContent()).thenReturn(contentStream);
-    }
-
-    @SuppressWarnings("unchecked")
     @Test
     public void proxyFileShouldBeDetected() throws Exception {
-        prepareProxyForFileModificationRequestTest();
-
-        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
-                                      .withProjectName(PROJECT_NAME);
-
-        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
-
-        ContainerResponse response = prepareResponseLauncherService("POST", "detect", data);
-
-        assertEquals(200, response.getStatus());
-        verify(synapseFile).updateContent(eq(ESB_XML_MIME_TYPE), (InputStream)anyObject(), anyString());
+        fileShouldBeDetected(PROXY_CONFIGURATION_CONTENT, PROXY_SERVICE_FOLDER_NAME);
     }
 
-    private void prepareUndetectFileForFileModificationRequestTest() throws ServerException, NotFoundException, ForbiddenException {
-        InputStream is = new ByteArrayInputStream(SOME_FILE_CONTENT.getBytes());
-        ContentStream contentStream = new ContentStream(null, is, null);
-
-        when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString())).thenReturn(synapseFile);
-        when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString()).getName())
-                .thenReturn("synapseName");
-        when(synapseFile.getContent()).thenReturn(contentStream);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Test
-    public void configurationFileShouldBeNotDetected() throws Exception {
-        prepareUndetectFileForFileModificationRequestTest();
-
-        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
-                                      .withProjectName(PROJECT_NAME);
-
-        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
-
-        ContainerResponse response = prepareResponseLauncherService("POST", "detect", data);
-
-        assertEquals(200, response.getStatus());
-        verify(synapseFile).updateContent(eq(ESB_XML_MIME_TYPE), (InputStream)anyObject(), anyString());
-    }
-
-    private void prepareLocalEntryForFileModificationRequestTest() throws ServerException, NotFoundException, ForbiddenException {
-        InputStream is = new ByteArrayInputStream(LOCAL_ENTRY_CONFIGURATION_CONTENT.getBytes());
-        ContentStream contentStream = new ContentStream(null, is, null);
-
-        when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString())).thenReturn(synapseFile);
-        when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString()).getName())
-                .thenReturn("synapseName");
-        when(synapseFile.getContent()).thenReturn(contentStream);
-    }
-
-    @SuppressWarnings("unchecked")
     @Test
     public void localEntryFileShouldBeDetected() throws Exception {
-        prepareLocalEntryForFileModificationRequestTest();
-
-        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
-                                      .withProjectName(PROJECT_NAME);
-
-        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
-
-        ContainerResponse response = prepareResponseLauncherService("POST", "detect", data);
-
-        assertEquals(200, response.getStatus());
-        verify(synapseFile).updateContent(eq(ESB_XML_MIME_TYPE), (InputStream)anyObject(), anyString());
+        fileShouldBeDetected(LOCAL_ENTRY_CONFIGURATION_CONTENT, LOCAL_ENTRY_FOLDER_NAME);
     }
 
-    @SuppressWarnings("unchecked")
+    @Test
+    public void configurationFileShouldBeNotDetected() throws Exception {
+        fileShouldBeDetected(SOME_FILE_CONTENT, "");
+    }
+
     @Test
     public void fileShouldBeDeleted() throws Exception {
-        prepareForFileModificationRequestTest();
+        prepareFileForTesting(SEQUENCE_CONFIGURATION_CONTENT);
 
-        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
-                                      .withProjectName(PROJECT_NAME);
+        ContainerResponse response = sendRequest("POST", "file/delete", getRequestData());
 
-        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
-
-        ContainerResponse response = prepareResponseLauncherService("POST", "file/delete", data);
-
-        verify(synapseFile).delete(anyString());
+        verify(synapseFile).delete(isNull(String.class));
         assertEquals(200, response.getStatus());
     }
 
-
-    @SuppressWarnings("unchecked")
     @Test
     public void fileShouldBeDetectWhenParentFolderDoesNotExist() throws Exception {
-        prepareForFileModificationRequestTest();
-
-        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
-                                      .withProjectName(PROJECT_NAME);
-
-        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
+        prepareFileForTesting(SEQUENCE_CONFIGURATION_CONTENT);
 
         doThrow(new ServerException("does not exists. "))
                 .doAnswer(new Answer() {
@@ -276,24 +193,18 @@ public class WSO2RestServiceTest {
                         // This code needs for not throwing exception when this method execute second time
                         return null;
                     }
-                })
-                .when(synapseFile).moveTo((VirtualFile)anyObject(), anyString());
+                }).when(synapseFile).moveTo(any(VirtualFile.class), anyString());
 
-        ContainerResponse response = prepareResponseLauncherService("POST", "detect", data);
+        ContainerResponse response = sendRequest("POST", "detect", getRequestData());
 
         assertEquals(200, response.getStatus());
-        verify(synapseFile).updateContent(eq(ESB_XML_MIME_TYPE), (InputStream)anyObject(), anyString());
+        assertEquals(SEQUENCE_FOLDER_NAME, response.getResponse().getEntity());
+        verify(synapseFile).updateContent(eq(ESB_XML_MIME_TYPE), any(InputStream.class), isNull(String.class));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void fileShouldBeNotDetectWhenVirtualFileSystemExceptionHappened() throws Exception {
-        prepareForFileModificationRequestTest();
-
-        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
-                                      .withProjectName(PROJECT_NAME);
-
-        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
+        prepareFileForTesting(SEQUENCE_CONFIGURATION_CONTENT);
 
         doThrow(new ServerException("some message"))
                 .doAnswer(new Answer() {
@@ -302,113 +213,96 @@ public class WSO2RestServiceTest {
                         // This code needs for not throwing exception when this method execute second time
                         return null;
                     }
-                })
-                .when(synapseFile).moveTo((VirtualFile)anyObject(), anyString());
+                }).when(synapseFile).moveTo(any(VirtualFile.class), anyString());
 
-        ContainerResponse response = prepareResponseLauncherService("POST", "detect", data);
+        ContainerResponse response = sendRequest("POST", "detect", getRequestData());
 
         assertEquals(200, response.getStatus());
-        verify(synapseFile).updateContent(eq(ESB_XML_MIME_TYPE), (InputStream)anyObject(), anyString());
+        assertEquals("com.codenvy.api.core.ServerException: some message", response.getResponse().getEntity());
+        verify(synapseFile).updateContent(eq(ESB_XML_MIME_TYPE), any(InputStream.class), isNull(String.class));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void fileShouldBeUploadWithRenamingName() throws Exception {
-        prepareForFileModificationRequestTest();
+        prepareFileForTesting(SEQUENCE_CONFIGURATION_CONTENT);
 
-        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
-                                      .withProjectName(PROJECT_NAME);
+        ContainerResponse response = sendRequest("POST", "file/rename", getRequestData());
 
-        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
+        verify(synapseFile).rename(eq(FILE_NAME), eq(ESB_XML_MIME_TYPE), isNull(String.class));
 
-        ContainerResponse response = prepareResponseLauncherService("POST", "file/rename", data);
-
-        verify(synapseFile).rename(eq(FILE_NAME), anyString(), anyString());
         assertEquals(200, response.getStatus());
+        assertEquals(SEQUENCE_FOLDER_NAME, response.getResponse().getEntity());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void fileShouldBeUploadWithSomeProblem() throws Exception {
-        prepareForFileModificationRequestTest();
+        prepareFileForTesting(SEQUENCE_CONFIGURATION_CONTENT);
 
-        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
-                                      .withProjectName(PROJECT_NAME);
-
-        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
-
-        ContainerResponse response = prepareResponseLauncherService("POST", "upload", data);
+        ContainerResponse response = sendRequest("POST", "upload", getRequestData());
 
         assertEquals(500, response.getStatus());
+        assertEquals("URI is not absolute", response.getResponse().getEntity());
     }
 
-    @SuppressWarnings("unchecked")
     @Ignore
     @Test
-    public void fileShouldBeUpload() throws Exception {
-        prepareForFileModificationRequestTest();
+    public void fileShouldBeUploaded() throws Exception {
+        prepareFileForTesting(SEQUENCE_CONFIGURATION_CONTENT);
+
+        when(synapseFile.createFile(eq("note.xml"), eq(ESB_XML_MIME_TYPE), any(InputStream.class))).thenReturn(synapseFile);
+
         //TODO need some url only with xml content.
-        String fileForUpload = "http://www.w3schools.com/xml/note.xml";
-
-        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(fileForUpload).withNewFileName(FILE_NAME)
-                                      .withProjectName(PROJECT_NAME);
-
-        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
-
-        when(synapseFile.createFile(eq("note.xml"), eq(ESB_XML_MIME_TYPE), (InputStream)anyObject())).thenReturn(synapseFile);
-
-        ContainerResponse response = prepareResponseLauncherService("POST", "upload", data);
+        ContainerResponse response = sendRequest("POST", "upload", getRequestData("http://www.w3schools.com/xml/note.xml"));
 
         assertEquals(200, response.getStatus());
+        assertEquals(SEQUENCE_FOLDER_NAME, response.getResponse().getEntity());
     }
 
-    @SuppressWarnings("unchecked")
+    @Ignore
+    @Test
+    public void fileShouldBeNotUploaded() throws Exception {
+        prepareFileForTesting(SEQUENCE_CONFIGURATION_CONTENT);
+
+        //TODO need some url only with xml content.
+        ContainerResponse response = sendRequest("POST", "upload", getRequestData("http://www.w3schools.com/xml/myNote.xml"));
+
+        assertEquals(200, response.getStatus());
+        assertEquals("java.io.FileNotFoundException: http://www.w3schools.com/xml/myNote.xml", response.getResponse().getEntity());
+    }
+
     @Test
     public void fileShouldBeDetectedWithSomeProblem() throws Exception {
-        prepareForFileModificationRequestTest();
+        prepareFileForTesting(SEQUENCE_CONFIGURATION_CONTENT);
         when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString())).thenReturn(null);
 
-        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
-                                      .withProjectName(PROJECT_NAME);
-
-        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
-
-        ContainerResponse response = prepareResponseLauncherService("POST", "detect", data);
+        ContainerResponse response = sendRequest("POST", "detect", getRequestData());
 
         assertEquals(500, response.getStatus());
+        assertEquals("java.lang.NullPointerException", response.getResponse().getEntity());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void fileShouldBeOverwrittenWithSomeProblem() throws Exception {
-        prepareForFileModificationRequestTest();
+        prepareFileForTesting(SEQUENCE_CONFIGURATION_CONTENT);
         when(vfsRegistry.getProvider(anyString()).getMountPoint(anyBoolean()).getVirtualFile(anyString())).thenReturn(null);
 
-        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
-                                      .withProjectName(PROJECT_NAME);
-
-        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
-
-        ContainerResponse response = prepareResponseLauncherService("POST", "file/overwrite", data);
+        ContainerResponse response = sendRequest("POST", "file/overwrite", getRequestData());
 
         assertEquals(500, response.getStatus());
+        assertEquals("java.lang.NullPointerException", response.getResponse().getEntity());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void fileShouldBeUploadWithOverwritingContent() throws Exception {
-        prepareForFileModificationRequestTest();
+        prepareFileForTesting(SEQUENCE_CONFIGURATION_CONTENT);
 
-        FileInfo fileInfo = DtoFactory.getInstance().createDto(FileInfo.class).withFileName(FILE_NAME).withNewFileName(FILE_NAME)
-                                      .withProjectName(PROJECT_NAME);
+        ContainerResponse response = sendRequest("POST", "file/overwrite", getRequestData());
 
-        byte[] data = DtoFactory.getInstance().toJson(fileInfo).getBytes();
-
-        ContainerResponse response = prepareResponseLauncherService("POST", "file/overwrite", data);
-
-        verify(synapseFile).updateContent(anyString(), (InputStream)anyObject(), anyString());
-        verify(synapseFile).delete(anyString());
+        verify(synapseFile).updateContent(eq(ESB_XML_MIME_TYPE), any(InputStream.class), isNull(String.class));
+        verify(synapseFile).delete(isNull(String.class));
 
         assertEquals(200, response.getStatus());
+        assertEquals(SEQUENCE_FOLDER_NAME, response.getResponse().getEntity());
     }
+
 }
