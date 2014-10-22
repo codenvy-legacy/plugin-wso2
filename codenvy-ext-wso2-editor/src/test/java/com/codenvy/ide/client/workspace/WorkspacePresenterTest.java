@@ -161,4 +161,15 @@ public class WorkspacePresenterTest {
         elementWidgetShouldBeNotResized();
     }
 
+    @Test
+    public void workspaceShouldBeResizedWhenBrowserWindowWasChanged() throws Exception {
+        prepareViewSize(VIEW_HEIGHT, VIEW_WIDTH);
+        prepareElementWidget(ELEMENT_HEIGHT, ELEMENT_WIDTH);
+
+        presenter.onWindowResize();
+
+        verify(elementWidget).setHeight(VIEW_HEIGHT);
+        verify(elementWidget).setWidth(VIEW_WIDTH);
+    }
+
 }
