@@ -67,8 +67,8 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
     private final ViewCloseHandler       viewCloseHandler;
     private final AppContext             appContext;
 
-    private WSO2AsyncRequestCallback uploadFileCallback;
-    private AsyncRequestCallback     detectConfigurationCallback;
+    private WSO2AsyncRequestCallback<String> uploadFileCallback;
+    private AsyncRequestCallback<String>     detectConfigurationCallback;
 
     private FileInfo fileUploadInfo;
     private FileInfo fileDetectConfigInfo;
@@ -202,6 +202,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
             overwrite.showDialog(fileName, viewCloseHandler);
         } else {
             eventBus.fireEvent(new RefreshProjectTreeEvent());
+            view.close();
         }
     }
 
@@ -246,11 +247,6 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
     /** Check format for upload file */
     private void checkValidFileName() {
         String fileName = view.getFileName();
-
-        if (fileName.isEmpty()) {
-            return;
-        }
-
         boolean isXMLFile = fileName.endsWith(".xml");
 
         view.setMessage(isXMLFile ? "" : local.wso2ImportFileFormatError());
@@ -270,4 +266,5 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
 
         view.showDialog();
     }
+
 }
