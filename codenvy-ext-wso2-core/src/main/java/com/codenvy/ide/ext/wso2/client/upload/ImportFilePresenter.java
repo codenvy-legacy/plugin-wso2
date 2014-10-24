@@ -119,7 +119,6 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
         detectConfigurationCallback = new AsyncRequestCallback<String>(unmarshaller) {
             @Override
             protected void onSuccess(final String callback) {
-                view.close();
                 refreshTreeWithParentFolder(callback, fileDetectConfigInfo.getFileName());
             }
 
@@ -202,7 +201,6 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
             overwrite.showDialog(fileName, viewCloseHandler);
         } else {
             eventBus.fireEvent(new RefreshProjectTreeEvent());
-            view.close();
         }
     }
 

@@ -343,7 +343,6 @@ public class ImportFilePresenterTest {
         invokeOnSuccessCallbackMethod(callback.getClass(), callback, MESSAGE);
 
         verify(eventBus).fireEvent(isA(RefreshProjectTreeEvent.class));
-        verify(view).close();
     }
 
     @Test
@@ -431,7 +430,6 @@ public class ImportFilePresenterTest {
         invokeOnSuccessCallbackMethod(callback.getClass(), callback, MESSAGE);
 
         verify(eventBus).fireEvent(isA(RefreshProjectTreeEvent.class));
-        verify(view).close();
     }
 
     @Test
