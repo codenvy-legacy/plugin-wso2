@@ -73,15 +73,16 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
     protected boolean incorrectName;
     protected String  content;
 
+    private boolean              isResponsePerformed;
     private TreeElement          parentFolder;
     private String               projectPath;
     private Array<ItemReference> items;
     private CommitCallback       callback;
 
-    private WSO2AsyncRequestCallback treeCallback;
-    private WSO2AsyncRequestCallback childrenCallBack;
-    private WSO2AsyncRequestCallback createFolderCallback;
-    private WSO2AsyncRequestCallback createFileCallback;
+    private WSO2AsyncRequestCallback<TreeElement>          treeCallback;
+    private WSO2AsyncRequestCallback<Array<ItemReference>> childrenCallBack;
+    private WSO2AsyncRequestCallback<ItemReference>        createFolderCallback;
+    private WSO2AsyncRequestCallback<ItemReference>        createFileCallback;
 
     public AbstractCreateResourcePage(@Nonnull CreateResourceView view,
                                       @Nonnull String caption,
@@ -135,6 +136,8 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
             @Override
             protected void onSuccess(Array<ItemReference> result) {
                 items = result;
+
+                isResponsePerformed = false;
             }
         };
 
@@ -159,6 +162,10 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
     public String getNotice() {
         if (incorrectName) {
             return locale.wizardFileResourceNoticeIncorrectName();
+        }
+
+        if (isResponsePerformed) {
+            return locale.waitingForResponse();
         }
 
         if (hasSameFile) {
@@ -190,6 +197,7 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
     @Override
     public void go(@Nonnull AcceptsOneWidget container) {
         items = null;
+        isResponsePerformed = false;
 
         findParentFolder();
 
@@ -233,6 +241,7 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
             return;
         }
 
+        isResponsePerformed = true;
         projectServiceClient.getChildren(parentFolder.getNode().getPath(), childrenCallBack);
     }
 

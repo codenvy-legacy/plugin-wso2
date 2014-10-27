@@ -173,4 +173,7 @@ public interface LocalizationConstant extends Messages {
 
     @Key("editor.property.panel")
     String editorProperty();
+
+    @Key("wizard.request")
+    String waitingForResponse();
 }

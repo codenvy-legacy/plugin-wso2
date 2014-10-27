@@ -32,7 +32,6 @@ import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
 import com.codenvy.ide.ext.wso2.client.wizard.files.view.CreateResourceView;
-import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -43,6 +42,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -188,7 +188,7 @@ public abstract class AbstractCreateResourcePageTest {
 
     @Test
     public void parentFolderShouldBeCreatedWhenExistOnlyRootFolder() throws Exception {
-        when(rootFolder.getChildren()).thenReturn(Collections.EMPTY_LIST);
+        when(rootFolder.getChildren()).thenReturn(Collections.<TreeElement>emptyList());
 
         verifyCreatingParentFolder();
     }
@@ -296,7 +296,7 @@ public abstract class AbstractCreateResourcePageTest {
 
         page.commit(commitCallback);
 
-        verify(projectServiceClient, never()).createFolder(anyString(), any(WSO2AsyncRequestCallback.class));
+        verify(projectServiceClient, never()).createFolder(anyString(), Matchers.<WSO2AsyncRequestCallback<ItemReference>>anyObject());
 
         verify(projectServiceClient).createFile(eq(PATH_TO_PROJECT + SYNAPSE_CONFIG_PATH + parentFolderName),
                                                 eq(SOME_TEXT_WITH_EXTENSION),
@@ -329,7 +329,8 @@ public abstract class AbstractCreateResourcePageTest {
 
         invokeOnSuccessCallbackMethod(treeCallback.getClass(), treeCallback, (TreeElement)null);
 
-        verify(projectServiceClient, never()).getChildren(anyString(), any(WSO2AsyncRequestCallback.class));
+        verify(projectServiceClient, never()).getChildren(anyString(),
+                                                          Matchers.<WSO2AsyncRequestCallback<Array<ItemReference>>>anyObject());
     }
 
     @Test
@@ -364,6 +365,8 @@ public abstract class AbstractCreateResourcePageTest {
         verify(projectServiceClient).getChildren(eq(PATH_TO_PARENT_FOLDER), childrenCallbackCaptor.capture());
 
         executeChildrenCallback(item, secondItem, thirdItem);
+
+        assertNull(page.getNotice());
 
         page.onValueChanged();
     }
@@ -427,7 +430,7 @@ public abstract class AbstractCreateResourcePageTest {
         page.go(container);
 
         verify(container).setWidget(view);
-        verify(projectServiceClient, never()).getTree(anyString(), anyInt(), any(AsyncRequestCallback.class));
+        verify(projectServiceClient, never()).getTree(anyString(), anyInt(), Matchers.<WSO2AsyncRequestCallback<TreeElement>>anyObject());
     }
 
     @Test
@@ -559,6 +562,24 @@ public abstract class AbstractCreateResourcePageTest {
         executeGetTreeCallback();
 
         verify(parentFolder).getNode();
+    }
+
+    @Test
+    public void waitingResponseMessageShouldBeShownWhenResponseNotCame() throws Exception {
+        when(locale.waitingForResponse()).thenReturn(SOME_TEXT);
+        configureParentFolder();
+
+        page.go(container);
+
+        verify(projectServiceClient).getTree(eq(PATH_TO_PROJECT), eq(DEPTH), treeCallbackCaptor.capture());
+
+        executeGetTreeCallback();
+
+        assertThat(page.getNotice(), equalTo(SOME_TEXT));
+        verify(locale).waitingForResponse();
+
+        verify(locale, never()).wizardFileResourceNoticeIncorrectName();
+        verify(locale, never()).wizardFileResourceNoticeFileExists();
     }
 
 }

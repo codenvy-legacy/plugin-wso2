@@ -216,7 +216,7 @@ public class OverwriteFilePresenterTest {
         overwriteFilePresenter.onCancelButtonClicked();
 
         verify(appContext).getCurrentProject();
-        verify(service, never()).modifyFile(any(FileInfo.class), anyString(), any(AsyncRequestCallback.class));
+        verify(service, never()).modifyFile(any(FileInfo.class), anyString(), Matchers.<AsyncRequestCallback<String>>anyObject());
     }
 
     @Test
@@ -224,7 +224,9 @@ public class OverwriteFilePresenterTest {
         when(appContext.getCurrentProject()).thenReturn(currentProject);
         when(dtoFactory.createDto(Matchers.<Class<FileInfo>>anyObject())).thenReturn(mock(FileInfo.class, RETURNS_MOCKS));
 
-        doThrow(new RequestException()).when(service).modifyFile(any(FileInfo.class), anyString(), any(AsyncRequestCallback.class));
+        doThrow(new RequestException()).when(service).modifyFile(any(FileInfo.class),
+                                                                 anyString(),
+                                                                 Matchers.<AsyncRequestCallback<String>>anyObject());
 
         overwriteFilePresenter.onCancelButtonClicked();
 
