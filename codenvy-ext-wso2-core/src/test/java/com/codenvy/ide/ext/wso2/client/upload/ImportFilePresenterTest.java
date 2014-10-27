@@ -26,11 +26,9 @@ import com.codenvy.ide.api.projecttree.generic.FolderNode;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
-import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
 import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.web.bindery.event.shared.EventBus;
@@ -61,6 +59,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -81,13 +80,11 @@ public class ImportFilePresenterTest {
 
     // captors
     @Captor
-    private ArgumentCaptor<Notification>                     notificationArgumentCaptor;
+    private ArgumentCaptor<Notification>               notificationArgumentCaptor;
     @Captor
-    private ArgumentCaptor<AsyncRequestCallback<String>>     stringAsyncRequestCallbackCaptor;
+    private ArgumentCaptor<AsyncRequestCallback<Void>> voidAsyncRequestCallbackCaptor;
     @Captor
-    private ArgumentCaptor<WSO2AsyncRequestCallback<String>> stringWSO2AsyncRequestCallbackCaptor;
-    @Captor
-    private ArgumentCaptor<ViewCloseHandler>                 viewCloseHandlerCaptor;
+    private ArgumentCaptor<ViewCloseHandler>           viewCloseHandlerCaptor;
 
     // different values
     @Mock(answer = RETURNS_DEEP_STUBS)
@@ -117,23 +114,21 @@ public class ImportFilePresenterTest {
 
     // constructor params
     @Mock
-    private ImportFileView         view;
+    private ImportFileView       view;
     @Mock
-    private NotificationManager    notificationManager;
+    private NotificationManager  notificationManager;
     @Mock
-    private LocalizationConstant   locale;
+    private LocalizationConstant locale;
     @Mock
-    private EventBus               eventBus;
+    private EventBus             eventBus;
     @Mock
-    private WSO2ClientService      service;
+    private WSO2ClientService    service;
     @Mock(answer = RETURNS_DEEP_STUBS)
-    private AppContext             appContext;
+    private AppContext           appContext;
     @Mock(answer = RETURNS_DEEP_STUBS)
-    private ProjectServiceClient   projectServiceClient;
+    private ProjectServiceClient projectServiceClient;
     @Mock(answer = RETURNS_DEEP_STUBS)
-    private DtoFactory             dtoFactory;
-    @Mock
-    private DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private DtoFactory           dtoFactory;
 
     @InjectMocks
     private ImportFilePresenter presenter;
@@ -284,11 +279,12 @@ public class ImportFilePresenterTest {
         when(view.getFileName()).thenReturn(MESSAGE);
         //noinspection ConstantConditions
         when(appContext.getCurrentProject().getProjectDescription().getName()).thenReturn(MESSAGE);
+        when(throwable.getMessage()).thenReturn(MESSAGE);
 
         presenter.onSubmitComplete(EMPTY_STRING);
 
-        verify(service).detectConfigurationFile(any(FileInfo.class), stringAsyncRequestCallbackCaptor.capture());
-        AsyncRequestCallback<String> callback = stringAsyncRequestCallbackCaptor.getValue();
+        verify(service).detectConfigurationFile(any(FileInfo.class), voidAsyncRequestCallbackCaptor.capture());
+        AsyncRequestCallback<Void> callback = voidAsyncRequestCallbackCaptor.getValue();
         invokeOnFailureCallbackMethod(AsyncRequestCallback.class, callback, throwable);
 
         verify(view).setMessage(MESSAGE);
@@ -301,13 +297,13 @@ public class ImportFilePresenterTest {
 
         presenter.onImportClicked();
 
-        verify(service).uploadFile(any(FileInfo.class), stringAsyncRequestCallbackCaptor.capture());
+        verify(service).uploadFile(any(FileInfo.class), voidAsyncRequestCallbackCaptor.capture());
 
-        AsyncRequestCallback<String> callback = stringAsyncRequestCallbackCaptor.getValue();
-        invokeOnFailureCallbackMethod(WSO2AsyncRequestCallback.class, callback, throwable);
+        AsyncRequestCallback<Void> callback = voidAsyncRequestCallbackCaptor.getValue();
+        invokeOnFailureCallbackMethod(AsyncRequestCallback.class, callback, throwable);
 
         //noinspection ThrowableResultOfMethodCallIgnored
-        verify(throwable).getMessage();
+        verify(throwable, times(2)).getMessage();
 
         notificationWithExceptionMessageShouldBeShown();
     }
@@ -315,13 +311,14 @@ public class ImportFilePresenterTest {
     @Test
     public void overwriteDialogShouldBeShownWhenFileUploadedAndAlreadyExists() throws Exception {
         prepareTestForSuccessResultWhenMethodSubmitCalled();
+        when(throwable.getMessage()).thenReturn("already exists. \"}");
 
         presenter.onImportClicked();
 
-        verify(service).uploadFile(any(FileInfo.class), stringWSO2AsyncRequestCallbackCaptor.capture());
+        verify(service).uploadFile(any(FileInfo.class), voidAsyncRequestCallbackCaptor.capture());
 
-        WSO2AsyncRequestCallback<String> callback = stringWSO2AsyncRequestCallbackCaptor.getValue();
-        invokeOnSuccessCallbackMethod(callback.getClass(), callback, "already exists. ");
+        AsyncRequestCallback<Void> callback = voidAsyncRequestCallbackCaptor.getValue();
+        invokeOnFailureCallbackMethod(callback.getClass(), callback, throwable);
 
         verify(overwrite).showDialog(eq(MESSAGE), viewCloseHandlerCaptor.capture());
 
@@ -337,12 +334,13 @@ public class ImportFilePresenterTest {
 
         presenter.onImportClicked();
 
-        verify(service).uploadFile(any(FileInfo.class), stringWSO2AsyncRequestCallbackCaptor.capture());
+        verify(service).uploadFile(any(FileInfo.class), voidAsyncRequestCallbackCaptor.capture());
 
-        WSO2AsyncRequestCallback<String> callback = stringWSO2AsyncRequestCallbackCaptor.getValue();
-        invokeOnSuccessCallbackMethod(callback.getClass(), callback, MESSAGE);
+        AsyncRequestCallback<Void> callback = voidAsyncRequestCallbackCaptor.getValue();
+        invokeOnSuccessCallbackMethod(callback.getClass(), callback, (Void)null);
 
         verify(eventBus).fireEvent(isA(RefreshProjectTreeEvent.class));
+        verify(view).close();
     }
 
     @Test
@@ -365,7 +363,7 @@ public class ImportFilePresenterTest {
 
         verify(view, never()).setAction(anyString());
         verify(view, never()).submit();
-        verify(service, never()).uploadFile(any(FileInfo.class), Matchers.<AsyncRequestCallback<String>>anyObject());
+        verify(service, never()).uploadFile(any(FileInfo.class), Matchers.<AsyncRequestCallback<Void>>anyObject());
     }
 
     @Test
@@ -374,7 +372,7 @@ public class ImportFilePresenterTest {
         when(appContext.getCurrentProject()).thenReturn(currentProject);
         when(view.isUseLocalPath()).thenReturn(false);
         when(dtoFactory.createDto(Matchers.<Class<FileInfo>>anyObject())).thenReturn(mock(FileInfo.class, RETURNS_MOCKS));
-        doThrow(requestException).when(service).uploadFile(any(FileInfo.class), Matchers.<AsyncRequestCallback<String>>anyObject());
+        doThrow(requestException).when(service).uploadFile(any(FileInfo.class), Matchers.<AsyncRequestCallback<Void>>anyObject());
 
         presenter.onImportClicked();
 
@@ -402,13 +400,14 @@ public class ImportFilePresenterTest {
     @Test
     public void overwriteDialogShouldBeShownWhenNoProblemHappenedAndResponseContainsAlreadyExist() throws Exception {
         prepareTestForSuccessResultWhenMethodSubmitCalled();
+        when(throwable.getMessage()).thenReturn("already exists. \"}");
 
         presenter.onSubmitComplete(EMPTY_STRING);
 
-        verify(service).detectConfigurationFile(any(FileInfo.class), stringAsyncRequestCallbackCaptor.capture());
+        verify(service).detectConfigurationFile(any(FileInfo.class), voidAsyncRequestCallbackCaptor.capture());
 
-        AsyncRequestCallback<String> callback = stringAsyncRequestCallbackCaptor.getValue();
-        invokeOnSuccessCallbackMethod(callback.getClass(), callback, "already exists. ");
+        AsyncRequestCallback<Void> callback = voidAsyncRequestCallbackCaptor.getValue();
+        invokeOnFailureCallbackMethod(callback.getClass(), callback, throwable);
 
         verify(overwrite).showDialog(eq(MESSAGE), viewCloseHandlerCaptor.capture());
 
@@ -424,12 +423,13 @@ public class ImportFilePresenterTest {
 
         presenter.onSubmitComplete(EMPTY_STRING);
 
-        verify(service).detectConfigurationFile(any(FileInfo.class), stringAsyncRequestCallbackCaptor.capture());
+        verify(service).detectConfigurationFile(any(FileInfo.class), voidAsyncRequestCallbackCaptor.capture());
 
-        AsyncRequestCallback<String> callback = stringAsyncRequestCallbackCaptor.getValue();
-        invokeOnSuccessCallbackMethod(callback.getClass(), callback, MESSAGE);
+        AsyncRequestCallback<Void> callback = voidAsyncRequestCallbackCaptor.getValue();
+        invokeOnSuccessCallbackMethod(callback.getClass(), callback, (Void)null);
 
         verify(eventBus).fireEvent(isA(RefreshProjectTreeEvent.class));
+        verify(view).close();
     }
 
     @Test
@@ -438,7 +438,7 @@ public class ImportFilePresenterTest {
 
         presenter.onSubmitComplete(EMPTY_STRING);
 
-        verify(service, never()).detectConfigurationFile(any(FileInfo.class), Matchers.<AsyncRequestCallback<String>>anyObject());
+        verify(service, never()).detectConfigurationFile(any(FileInfo.class), Matchers.<AsyncRequestCallback<Void>>anyObject());
         verify(notificationManager, never()).showNotification(any(Notification.class));
     }
 
@@ -448,7 +448,7 @@ public class ImportFilePresenterTest {
 
         when(requestException.getMessage()).thenReturn(MESSAGE);
         doThrow(requestException).when(service).detectConfigurationFile(any(FileInfo.class),
-                                                                        Matchers.<AsyncRequestCallback<String>>anyObject());
+                                                                        Matchers.<AsyncRequestCallback<Void>>anyObject());
 
         presenter.onSubmitComplete(EMPTY_STRING);
 

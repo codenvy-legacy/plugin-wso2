@@ -23,11 +23,11 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
+import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
 import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter;
 import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFileView;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.gwt.http.client.RequestException;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -76,9 +76,9 @@ public class OverwriteFilePresenterTest {
     private static final String SOME_TEXT    = "someText";
 
     @Captor
-    private ArgumentCaptor<AsyncRequestCallback<String>> callbackCaptor;
+    private ArgumentCaptor<WSO2AsyncRequestCallback<Void>> callbackCaptor;
     @Captor
-    private ArgumentCaptor<Notification>                 notificationCaptor;
+    private ArgumentCaptor<Notification>                   notificationCaptor;
 
     @Mock
     private OverwriteFileView      view;
@@ -92,8 +92,6 @@ public class OverwriteFilePresenterTest {
     private EventBus               eventBus;
     @Mock
     private LocalizationConstant   local;
-    @Mock
-    private DtoUnmarshallerFactory dtoUnmarshallerFactory;
     @Mock
     private ViewCloseHandler       closeHandler;
     @InjectMocks
@@ -179,9 +177,8 @@ public class OverwriteFilePresenterTest {
 
         verify(service).modifyFile(any(FileInfo.class), eq(operation), callbackCaptor.capture());
 
-        AsyncRequestCallback<String> callback = callbackCaptor.getValue();
-
-        invokeOnSuccessCallbackMethod(callback.getClass(), callback, SOME_TEXT);
+        WSO2AsyncRequestCallback<Void> callback = callbackCaptor.getValue();
+        invokeOnSuccessCallbackMethod(callback.getClass(), callback, (Void)null);
 
         verify(view).close();
     }
@@ -216,7 +213,7 @@ public class OverwriteFilePresenterTest {
         overwriteFilePresenter.onCancelButtonClicked();
 
         verify(appContext).getCurrentProject();
-        verify(service, never()).modifyFile(any(FileInfo.class), anyString(), Matchers.<AsyncRequestCallback<String>>anyObject());
+        verify(service, never()).modifyFile(any(FileInfo.class), anyString(), Matchers.<WSO2AsyncRequestCallback<Void>>anyObject());
     }
 
     @Test
@@ -226,7 +223,7 @@ public class OverwriteFilePresenterTest {
 
         doThrow(new RequestException()).when(service).modifyFile(any(FileInfo.class),
                                                                  anyString(),
-                                                                 Matchers.<AsyncRequestCallback<String>>anyObject());
+                                                                 Matchers.<WSO2AsyncRequestCallback<Void>>anyObject());
 
         overwriteFilePresenter.onCancelButtonClicked();
 
@@ -253,8 +250,7 @@ public class OverwriteFilePresenterTest {
 
         verify(service).modifyFile(any(FileInfo.class), eq(DELETE_FILE_OPERATION), callbackCaptor.capture());
 
-        AsyncRequestCallback<String> callback = callbackCaptor.getValue();
-
+        WSO2AsyncRequestCallback<Void> callback = callbackCaptor.getValue();
         invokeOnFailureCallbackMethod(AsyncRequestCallback.class, callback, throwable);
 
         assertNotification();

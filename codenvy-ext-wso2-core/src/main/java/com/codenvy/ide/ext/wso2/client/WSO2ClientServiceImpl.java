@@ -64,7 +64,7 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void detectConfigurationFile(@Nonnull FileInfo fileInfo, @Nonnull AsyncRequestCallback<String> callback)
+    public void detectConfigurationFile(@Nonnull FileInfo fileInfo, @Nonnull AsyncRequestCallback<Void> callback)
             throws RequestException {
         String requestUrl = restContext + DETECT_CONFIGURATION_FILE;
 
@@ -78,7 +78,7 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void uploadFile(@Nonnull FileInfo fileInfo, @Nonnull AsyncRequestCallback<String> callback) throws RequestException {
+    public void uploadFile(@Nonnull FileInfo fileInfo, @Nonnull AsyncRequestCallback<Void> callback) throws RequestException {
         String requestUrl = restContext + UPLOAD_CONFIGURATION_FILE;
 
         IdeLoader loader = ideLoaderProvider.get();
@@ -91,7 +91,7 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
 
     /** {@inheritDoc} */
     @Override
-    public void modifyFile(@Nonnull FileInfo fileInfo, @Nonnull String operation, @Nonnull AsyncRequestCallback<String> callback)
+    public void modifyFile(@Nonnull FileInfo fileInfo, @Nonnull String operation, @Nonnull AsyncRequestCallback<Void> callback)
             throws RequestException {
         String requestUrl = restContext + MODIFY_CONFIGURATION_FILE + "/" + operation;
 

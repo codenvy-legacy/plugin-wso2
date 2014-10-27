@@ -26,8 +26,6 @@ import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
 import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
 import com.codenvy.ide.ext.wso2.client.upload.ImportFilePresenter;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -49,14 +47,14 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.RENAME_FILE_OPERATION;
  */
 public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate {
 
-    private final OverwriteFileView                view;
-    private final DtoFactory                       dtoFactory;
-    private final NotificationManager              notificationManager;
-    private final WSO2ClientService                service;
-    private final LocalizationConstant             local;
-    private final AppContext                       appContext;
-    private final WSO2AsyncRequestCallback<String> modifyCallBack;
-    private final EventBus                         eventBus;
+    private final OverwriteFileView              view;
+    private final DtoFactory                     dtoFactory;
+    private final NotificationManager            notificationManager;
+    private final WSO2ClientService              service;
+    private final LocalizationConstant           local;
+    private final AppContext                     appContext;
+    private final WSO2AsyncRequestCallback<Void> modifyCallBack;
+    private final EventBus                       eventBus;
 
     private String                               oldFileName;
     private ImportFilePresenter.ViewCloseHandler closeHandler;
@@ -69,8 +67,7 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
                                   NotificationManager notificationManager,
                                   EventBus eventBus,
                                   AppContext appContext,
-                                  LocalizationConstant local,
-                                  DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                                  LocalizationConstant local) {
         this.view = view;
         this.dtoFactory = dtoFactory;
         this.service = service;
@@ -80,11 +77,9 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
         this.appContext = appContext;
         this.local = local;
 
-        Unmarshallable<String> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(String.class);
-
-        this.modifyCallBack = new WSO2AsyncRequestCallback<String>(unmarshaller, notificationManager) {
+        this.modifyCallBack = new WSO2AsyncRequestCallback<Void>(notificationManager) {
             @Override
-            protected void onSuccess(String callback) {
+            protected void onSuccess(Void callback) {
                 modifyFile();
             }
         };

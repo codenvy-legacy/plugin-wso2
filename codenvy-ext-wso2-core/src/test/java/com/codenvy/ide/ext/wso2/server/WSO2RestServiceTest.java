@@ -48,12 +48,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.ext.wso2.shared.Constants.ENDPOINTS_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_XML_MIME_TYPE;
-import static com.codenvy.ide.ext.wso2.shared.Constants.LOCAL_ENTRY_FOLDER_NAME;
-import static com.codenvy.ide.ext.wso2.shared.Constants.PROXY_SERVICE_FOLDER_NAME;
-import static com.codenvy.ide.ext.wso2.shared.Constants.SEQUENCE_FOLDER_NAME;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -136,40 +134,38 @@ public class WSO2RestServiceTest {
         return getRequestData(FILE_NAME);
     }
 
-    private void fileShouldBeDetected(String fileContent, String responseEntity) throws Exception {
+    private void fileShouldBeDetected(String fileContent) throws Exception {
         prepareFileForTesting(fileContent);
 
         ContainerResponse response = sendRequest("POST", "detect", getRequestData());
 
-        assertEquals(200, response.getStatus());
-        assertEquals(responseEntity, response.getResponse().getEntity());
-
+        assertThat(response.getStatus(), is(204));
         verify(synapseFile).updateContent(eq(ESB_XML_MIME_TYPE), any(InputStream.class), isNull(String.class));
     }
 
     @Test
     public void sequenceFileShouldBeDetected() throws Exception {
-        fileShouldBeDetected(SEQUENCE_CONFIGURATION_CONTENT, SEQUENCE_FOLDER_NAME);
+        fileShouldBeDetected(SEQUENCE_CONFIGURATION_CONTENT);
     }
 
     @Test
     public void endpointFileShouldBeDetected() throws Exception {
-        fileShouldBeDetected(ENDPOINT_CONFIGURATION_CONTENT, ENDPOINTS_FOLDER_NAME);
+        fileShouldBeDetected(ENDPOINT_CONFIGURATION_CONTENT);
     }
 
     @Test
     public void proxyFileShouldBeDetected() throws Exception {
-        fileShouldBeDetected(PROXY_CONFIGURATION_CONTENT, PROXY_SERVICE_FOLDER_NAME);
+        fileShouldBeDetected(PROXY_CONFIGURATION_CONTENT);
     }
 
     @Test
     public void localEntryFileShouldBeDetected() throws Exception {
-        fileShouldBeDetected(LOCAL_ENTRY_CONFIGURATION_CONTENT, LOCAL_ENTRY_FOLDER_NAME);
+        fileShouldBeDetected(LOCAL_ENTRY_CONFIGURATION_CONTENT);
     }
 
     @Test
     public void configurationFileShouldBeNotDetected() throws Exception {
-        fileShouldBeDetected(SOME_FILE_CONTENT, "");
+        fileShouldBeDetected(SOME_FILE_CONTENT);
     }
 
     @Test
@@ -179,7 +175,7 @@ public class WSO2RestServiceTest {
         ContainerResponse response = sendRequest("POST", "file/delete", getRequestData());
 
         verify(synapseFile).delete(isNull(String.class));
-        assertEquals(200, response.getStatus());
+        assertThat(response.getStatus(), is(204));
     }
 
     @Test
@@ -197,8 +193,8 @@ public class WSO2RestServiceTest {
 
         ContainerResponse response = sendRequest("POST", "detect", getRequestData());
 
-        assertEquals(200, response.getStatus());
-        assertEquals(SEQUENCE_FOLDER_NAME, response.getResponse().getEntity());
+        assertThat(response.getStatus(), is(500));
+        assertEquals("com.codenvy.api.core.ServerException: does not exists. ", response.getResponse().getEntity());
         verify(synapseFile).updateContent(eq(ESB_XML_MIME_TYPE), any(InputStream.class), isNull(String.class));
     }
 
@@ -217,7 +213,7 @@ public class WSO2RestServiceTest {
 
         ContainerResponse response = sendRequest("POST", "detect", getRequestData());
 
-        assertEquals(200, response.getStatus());
+        assertThat(response.getStatus(), is(500));
         assertEquals("com.codenvy.api.core.ServerException: some message", response.getResponse().getEntity());
         verify(synapseFile).updateContent(eq(ESB_XML_MIME_TYPE), any(InputStream.class), isNull(String.class));
     }
@@ -230,8 +226,7 @@ public class WSO2RestServiceTest {
 
         verify(synapseFile).rename(eq(FILE_NAME), eq(ESB_XML_MIME_TYPE), isNull(String.class));
 
-        assertEquals(200, response.getStatus());
-        assertEquals(SEQUENCE_FOLDER_NAME, response.getResponse().getEntity());
+        assertEquals(204, response.getStatus());
     }
 
     @Test
@@ -240,7 +235,7 @@ public class WSO2RestServiceTest {
 
         ContainerResponse response = sendRequest("POST", "upload", getRequestData());
 
-        assertEquals(500, response.getStatus());
+        assertThat(response.getStatus(), is(500));
         assertEquals("URI is not absolute", response.getResponse().getEntity());
     }
 
@@ -254,8 +249,7 @@ public class WSO2RestServiceTest {
         //TODO need some url only with xml content.
         ContainerResponse response = sendRequest("POST", "upload", getRequestData("http://www.w3schools.com/xml/note.xml"));
 
-        assertEquals(200, response.getStatus());
-        assertEquals(SEQUENCE_FOLDER_NAME, response.getResponse().getEntity());
+        assertThat(response.getStatus(), is(204));
     }
 
     @Ignore
@@ -266,7 +260,7 @@ public class WSO2RestServiceTest {
         //TODO need some url only with xml content.
         ContainerResponse response = sendRequest("POST", "upload", getRequestData("http://www.w3schools.com/xml/myNote.xml"));
 
-        assertEquals(200, response.getStatus());
+        assertThat(response.getStatus(), is(500));
         assertEquals("java.io.FileNotFoundException: http://www.w3schools.com/xml/myNote.xml", response.getResponse().getEntity());
     }
 
@@ -277,7 +271,7 @@ public class WSO2RestServiceTest {
 
         ContainerResponse response = sendRequest("POST", "detect", getRequestData());
 
-        assertEquals(500, response.getStatus());
+        assertThat(response.getStatus(), is(500));
         assertEquals("java.lang.NullPointerException", response.getResponse().getEntity());
     }
 
@@ -288,7 +282,7 @@ public class WSO2RestServiceTest {
 
         ContainerResponse response = sendRequest("POST", "file/overwrite", getRequestData());
 
-        assertEquals(500, response.getStatus());
+        assertThat(response.getStatus(), is(500));
         assertEquals("java.lang.NullPointerException", response.getResponse().getEntity());
     }
 
@@ -301,8 +295,7 @@ public class WSO2RestServiceTest {
         verify(synapseFile).updateContent(eq(ESB_XML_MIME_TYPE), any(InputStream.class), isNull(String.class));
         verify(synapseFile).delete(isNull(String.class));
 
-        assertEquals(200, response.getStatus());
-        assertEquals(SEQUENCE_FOLDER_NAME, response.getResponse().getEntity());
+        assertThat(response.getStatus(), is(204));
     }
 
 }

@@ -23,12 +23,9 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
-import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
 import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.util.Config;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
@@ -67,8 +64,8 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
     private final ViewCloseHandler       viewCloseHandler;
     private final AppContext             appContext;
 
-    private WSO2AsyncRequestCallback<String> uploadFileCallback;
-    private AsyncRequestCallback<String>     detectConfigurationCallback;
+    private AsyncRequestCallback<Void> uploadFileCallback;
+    private AsyncRequestCallback<Void> detectConfigurationCallback;
 
     private FileInfo fileUploadInfo;
     private FileInfo fileDetectConfigInfo;
@@ -82,8 +79,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
                                DtoFactory dtoFactory,
                                LocalizationConstant local,
                                EventBus eventBus,
-                               AppContext appContext,
-                               DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                               AppContext appContext) {
         this.view = view;
         this.eventBus = eventBus;
         this.view.setDelegate(this);
@@ -101,32 +97,53 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
             }
         };
 
-        initializeCallbacks(dtoUnmarshallerFactory);
+        initializeCallbacks();
     }
 
-    private void initializeCallbacks(@Nonnull DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        Unmarshallable<String> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(String.class);
-
-        uploadFileCallback = new WSO2AsyncRequestCallback<String>(unmarshaller, notificationManager) {
+    private void initializeCallbacks() {
+        uploadFileCallback = new AsyncRequestCallback<Void>() {
             @Override
-            protected void onSuccess(String callback) {
-                String fileName = fileUploadInfo.getFileName();
+            protected void onSuccess(Void callback) {
+                eventBus.fireEvent(new RefreshProjectTreeEvent());
+                view.close();
+            }
 
-                refreshTreeWithParentFolder(callback, fileName.substring(fileName.lastIndexOf('/') + 1, fileName.length()));
+            @Override
+            protected void onFailure(Throwable exception) {
+                if (!needsToShowErrorMessage(exception, fileUploadInfo.getFileName())) {
+                    return;
+                }
+
+                showError(exception.getMessage());
             }
         };
 
-        detectConfigurationCallback = new AsyncRequestCallback<String>(unmarshaller) {
+        detectConfigurationCallback = new AsyncRequestCallback<Void>() {
             @Override
-            protected void onSuccess(final String callback) {
-                refreshTreeWithParentFolder(callback, fileDetectConfigInfo.getFileName());
+            protected void onSuccess(final Void callback) {
+                eventBus.fireEvent(new RefreshProjectTreeEvent());
+                view.close();
             }
 
             @Override
             protected void onFailure(Throwable throwable) {
+                if (!needsToShowErrorMessage(throwable, fileDetectConfigInfo.getFileName())) {
+                    return;
+                }
+
                 view.setMessage(local.wso2ImportDialogError());
             }
         };
+    }
+
+    private boolean needsToShowErrorMessage(@Nonnull Throwable throwable, @Nonnull String fileName) {
+        if (throwable.getMessage().endsWith("already exists. \"}")) {
+            overwrite.showDialog(fileName, viewCloseHandler);
+
+            return false;
+        }
+
+        return true;
     }
 
     /** {@inheritDoc} */
@@ -185,22 +202,6 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
             }
 
             showError(result);
-        }
-    }
-
-    /**
-     * Refresh a parent tree.The method used in uploadFileCallback.
-     *
-     * @param response
-     *         the name of parent folder
-     * @param fileName
-     *         name of the file
-     */
-    private void refreshTreeWithParentFolder(@Nonnull String response, @Nonnull String fileName) {
-        if (response.endsWith("already exists. ")) {
-            overwrite.showDialog(fileName, viewCloseHandler);
-        } else {
-            eventBus.fireEvent(new RefreshProjectTreeEvent());
         }
     }
 

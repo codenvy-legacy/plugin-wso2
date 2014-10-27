@@ -39,7 +39,7 @@ public interface WSO2ClientService {
      *         callback that need to execute when the answer is come
      * @throws RequestException
      */
-    void detectConfigurationFile(@Nonnull FileInfo fileInfo, @Nonnull AsyncRequestCallback<String> callback) throws RequestException;
+    void detectConfigurationFile(@Nonnull FileInfo fileInfo, @Nonnull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Upload a configuration file from url.
@@ -50,7 +50,7 @@ public interface WSO2ClientService {
      *         callback that need to execute when the answer is come
      * @throws RequestException
      */
-    void uploadFile(@Nonnull FileInfo fileInfo, @Nonnull AsyncRequestCallback<String> callback) throws RequestException;
+    void uploadFile(@Nonnull FileInfo fileInfo, @Nonnull AsyncRequestCallback<Void> callback) throws RequestException;
 
     /**
      * Modify configuration file with given name.
@@ -61,6 +61,6 @@ public interface WSO2ClientService {
      *         callback that need to execute when the answer is come
      * @throws RequestException
      */
-    void modifyFile(@Nonnull FileInfo fileInfo, @Nonnull String operation, @Nonnull AsyncRequestCallback<String> callback)
+    void modifyFile(@Nonnull FileInfo fileInfo, @Nonnull String operation, @Nonnull AsyncRequestCallback<Void> callback)
             throws RequestException;
 }

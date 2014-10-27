@@ -32,11 +32,9 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Response;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -51,8 +49,8 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.RENAME_FILE_OPERATION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SEQUENCE_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SRC_FOLDER_NAME;
 import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_FOLDER_NAME;
+import static java.io.File.separator;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static javax.ws.rs.core.MediaType.TEXT_HTML;
 
 /**
  * RESTful service for creating 'WSO2' projects.
@@ -72,54 +70,45 @@ public class WSO2RestService {
     @Path("detect")
     @POST
     @Consumes(APPLICATION_JSON)
-    public Response detectConfigurationFile(FileInfo fileInfo) throws ApiException {
+    public void detectConfigurationFile(FileInfo fileInfo) throws ApiException {
         VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(wsId);
         MountPoint mountPoint = vfsProvider.getMountPoint(false);
 
-        VirtualFile file = mountPoint.getVirtualFile(fileInfo.getProjectName() + File.separator + fileInfo.getFileName());
+        VirtualFile file = mountPoint.getVirtualFile(fileInfo.getProjectName() + separator + fileInfo.getFileName());
         file.updateContent(ESB_XML_MIME_TYPE, file.getContent().getStream(), null);
 
-        String result = moveFile(file, mountPoint, fileInfo.getProjectName(), getParentFolderForImportingFile(file));
-
-        return Response.ok(result, TEXT_HTML).build();
+        moveFile(file, mountPoint, fileInfo.getProjectName(), getParentFolderForImportingFile(file));
     }
 
-    private String moveFile(@Nonnull VirtualFile file,
-                            @Nonnull MountPoint mountPoint,
-                            @Nonnull String projectName,
-                            @Nonnull String parentFolder) throws ApiException {
+    private void moveFile(@Nonnull VirtualFile file,
+                          @Nonnull MountPoint mountPoint,
+                          @Nonnull String projectName,
+                          @Nonnull String parentFolder) throws ApiException {
 
-        String pathToFolder = SRC_FOLDER_NAME + File.separator +
-                              MAIN_FOLDER_NAME + File.separator +
-                              SYNAPSE_CONFIG_FOLDER_NAME + File.separator +
+        String pathToFolder = SRC_FOLDER_NAME + separator +
+                              MAIN_FOLDER_NAME + separator +
+                              SYNAPSE_CONFIG_FOLDER_NAME + separator +
                               parentFolder;
 
-        String path = projectName + File.separator + pathToFolder;
+        String path = projectName + separator + pathToFolder;
 
         try {
-
             file.moveTo(mountPoint.getVirtualFile(path), null);
-
         } catch (ApiException e) {
-
             if (e.getMessage().endsWith("does not exists. ")) {
                 mountPoint.getVirtualFile(projectName).createFolder(pathToFolder);
 
                 file.moveTo(mountPoint.getVirtualFile(path), null);
-
-                return parentFolder;
             }
 
-            return e.toString();
+            throw new ApiException(e.toString(), e);
         }
-
-        return parentFolder;
     }
 
     @Path("upload")
     @POST
     @Consumes(APPLICATION_JSON)
-    public Response uploadConfigurationFile(FileInfo fileInfo) throws ApiException {
+    public void uploadConfigurationFile(FileInfo fileInfo) throws ApiException {
         VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(wsId);
         MountPoint mountPoint = vfsProvider.getMountPoint(false);
 
@@ -131,34 +120,30 @@ public class WSO2RestService {
         String[] pathElements = filePath.split("/");
         String fileName = pathElements[pathElements.length - 1];
 
-        String parentFolder;
-
         try (InputStream is = URI.create(filePath).toURL().openStream()) {
             VirtualFile file = projectParent.createFile(fileName, ESB_XML_MIME_TYPE, is);
 
-            parentFolder = moveFile(file, mountPoint, projectName, getParentFolderForImportingFile(file));
+            moveFile(file, mountPoint, projectName, getParentFolderForImportingFile(file));
         } catch (IOException e) {
-            parentFolder = e.toString();
+            throw new ApiException(e.toString(), e);
         }
-
-        return Response.ok(parentFolder, TEXT_HTML).build();
     }
 
     @Path("file/{operation}")
     @POST
     @Consumes(APPLICATION_JSON)
-    public Response overwriteConfigurationFile(@PathParam("operation") String operation, FileInfo fileInfo) throws ApiException {
+    public void overwriteConfigurationFile(@PathParam("operation") String operation, FileInfo fileInfo) throws ApiException {
         VirtualFileSystemProvider vfsProvider = vfsRegistry.getProvider(wsId);
         MountPoint mountPoint = vfsProvider.getMountPoint(false);
 
-        VirtualFile file = mountPoint.getVirtualFile(fileInfo.getProjectName() + File.separator + fileInfo.getFileName());
+        VirtualFile file = mountPoint.getVirtualFile(fileInfo.getProjectName() + separator + fileInfo.getFileName());
         String parentFolder = getParentFolderForImportingFile(file);
 
-        VirtualFile oldFile = mountPoint.getVirtualFile(fileInfo.getProjectName() + File.separator +
-                                                        SRC_FOLDER_NAME + File.separator +
-                                                        MAIN_FOLDER_NAME + File.separator +
-                                                        SYNAPSE_CONFIG_FOLDER_NAME + File.separator +
-                                                        parentFolder + File.separator +
+        VirtualFile oldFile = mountPoint.getVirtualFile(fileInfo.getProjectName() + separator +
+                                                        SRC_FOLDER_NAME + separator +
+                                                        MAIN_FOLDER_NAME + separator +
+                                                        SYNAPSE_CONFIG_FOLDER_NAME + separator +
+                                                        parentFolder + separator +
                                                         fileInfo.getFileName());
 
         switch (operation) {
@@ -174,8 +159,6 @@ public class WSO2RestService {
             default:
                 file.delete(null);
         }
-
-        return Response.ok(parentFolder, TEXT_HTML).build();
     }
 
     private void renameFile(@Nonnull FileInfo fileInfo,
@@ -184,7 +167,7 @@ public class WSO2RestService {
                             @Nonnull String parentFolder) throws ApiException {
 
         file.rename(fileInfo.getNewFileName(), file.getMediaType(), null);
-        file = mountPoint.getVirtualFile(fileInfo.getProjectName() + File.separator + fileInfo.getNewFileName());
+        file = mountPoint.getVirtualFile(fileInfo.getProjectName() + separator + fileInfo.getNewFileName());
         moveFile(file, mountPoint, fileInfo.getProjectName(), parentFolder);
     }
 
@@ -230,7 +213,7 @@ public class WSO2RestService {
             }
         } catch (ParserConfigurationException | SAXException | IOException e) {
             virtualFile.delete(null);
-            throw new IllegalStateException(e);
+            throw new IllegalStateException(e.getMessage(), e);
         }
 
         return parentFolder;
