@@ -29,7 +29,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.ENDPOINTS_FOLDER_NAME;
@@ -68,7 +67,8 @@ public class CreateEndpointPage extends AbstractCreateResourcePage {
               projectServiceClient,
               eventBus,
               appContext,
-              dtoUnmarshallerFactory);
+              dtoUnmarshallerFactory,
+              resources.endpointTemplate().getText());
     }
 
     /** {@inheritDoc} */
@@ -80,14 +80,5 @@ public class CreateEndpointPage extends AbstractCreateResourcePage {
         }
 
         return super.getNotice();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void commit(@Nonnull CommitCallback callback) {
-        String endpointTemplate = resources.endpointTemplate().getText();
-        content = endpointTemplate.replaceAll("@name", view.getResourceName());
-
-        super.commit(callback);
     }
 }

@@ -28,7 +28,6 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.PROXY_SERVICE_FOLDER_NAME;
@@ -66,7 +65,8 @@ public class CreateProxyServicePage extends AbstractCreateResourcePage {
               projectServiceClient,
               eventBus,
               appContext,
-              dtoUnmarshallerFactory);
+              dtoUnmarshallerFactory,
+              resources.proxyServiceTemplate().getText());
     }
 
     /** {@inheritDoc} */
@@ -78,14 +78,5 @@ public class CreateProxyServicePage extends AbstractCreateResourcePage {
         }
 
         return super.getNotice();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void commit(@Nonnull CommitCallback callback) {
-        String proxyServiceTemplate = resources.proxyServiceTemplate().getText();
-        content = proxyServiceTemplate.replaceAll("@name", view.getResourceName());
-
-        super.commit(callback);
     }
 }

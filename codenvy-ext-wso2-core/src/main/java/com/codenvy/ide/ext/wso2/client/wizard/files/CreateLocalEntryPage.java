@@ -28,7 +28,6 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.LOCAL_ENTRY_FOLDER_NAME;
@@ -66,7 +65,8 @@ public class CreateLocalEntryPage extends AbstractCreateResourcePage {
               projectServiceClient,
               eventBus,
               appContext,
-              dtoUnmarshallerFactory);
+              dtoUnmarshallerFactory,
+              resources.localEntryTemplate().getText());
     }
 
     /** {@inheritDoc} */
@@ -78,14 +78,5 @@ public class CreateLocalEntryPage extends AbstractCreateResourcePage {
         }
 
         return super.getNotice();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void commit(@Nonnull CommitCallback callback) {
-        String localEntryTemplate = resources.localEntryTemplate().getText();
-        content = localEntryTemplate.replaceAll("@name", view.getResourceName());
-
-        super.commit(callback);
     }
 }

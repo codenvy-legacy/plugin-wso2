@@ -15,12 +15,12 @@
  */
 package com.codenvy.ide.ext.wso2.client.wizard.files;
 
-import org.junit.Ignore;
+
 import org.junit.Test;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.ENDPOINTS_FOLDER_NAME;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,11 +28,17 @@ import static org.mockito.Mockito.when;
  * Here we're testing {@link CreateEndpointPage}.
  *
  * @author Andrey Plotnikov
+ * @author Dmitriy Shnurenko
  */
 public class CreateEndpointPageTest extends AbstractCreateResourcePageTest {
 
     @Override
     public void setUp() throws Exception {
+        when(resources.endpointTemplate()).thenReturn(textResource);
+        when(textResource.getText()).thenReturn(SOME_TEXT);
+
+        when(locale.wizardFileEndpointFieldsName()).thenReturn(SOME_TEXT);
+
         page = new CreateEndpointPage(view,
                                       locale,
                                       resources,
@@ -44,42 +50,28 @@ public class CreateEndpointPageTest extends AbstractCreateResourcePageTest {
                                       appContext,
                                       dtoUnmarshallerFactory);
 
-        verify(locale).wizardFileEndpointTitle();
-        verify(locale).wizardFileEndpointFieldsName();
-        verify(resources).endpoint_wizard();
-
         parentFolderName = ENDPOINTS_FOLDER_NAME;
 
         super.setUp();
     }
 
-    @Ignore("not ready yet")
     @Test
-    public void emptyResourceNameNoticeShouldBeShown() throws Exception {
-        when(view.getResourceName()).thenReturn(EMPTY_TEXT);
+    public void endpointPageShouldBePrepared() throws Exception {
+        verify(locale).wizardFileEndpointTitle();
+        verify(locale).wizardFileEndpointFieldsName();
+        verify(resources).endpoint_wizard();
+        verify(resources).endpointTemplate();
+    }
+
+    @Test
+    public void warningMessageShouldBeShownWhenEndpointNameIsEmpty() throws Exception {
+        when(view.getResourceName()).thenReturn("");
         when(locale.wizardFileEndpointNoticeEmptyName()).thenReturn(SOME_TEXT);
 
-        page.go(container);
-        page.onValueChanged();
+        assertThat(page.getNotice(), equalTo(SOME_TEXT));
 
-        assertEquals(SOME_TEXT, page.getNotice());
-
+        verify(view).getResourceName();
         verify(locale).wizardFileEndpointNoticeEmptyName();
     }
 
-    @Override
-    public void onFailureMethodInCommitCallbackShouldBeExecuted() throws Exception {
-        super.onFailureMethodInCommitCallbackShouldBeExecuted();
-
-        verify(resources).endpointTemplate();
-        verify(view, times(2)).getResourceName();
-    }
-
-    @Override
-    public void onSuccessMethodInCommitCallbackShouldBeExecuted() throws Exception {
-        super.onSuccessMethodInCommitCallbackShouldBeExecuted();
-
-        verify(resources).endpointTemplate();
-        verify(view, times(2)).getResourceName();
-    }
 }

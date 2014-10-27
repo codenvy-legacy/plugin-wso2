@@ -55,7 +55,8 @@ import static com.codenvy.ide.ext.wso2.shared.Constants.SYNAPSE_CONFIG_PATH;
  */
 public abstract class AbstractCreateResourcePage extends AbstractWizardPage implements CreateResourceView.ActionDelegate {
 
-    private static final int DEPTH = 4;
+    public static final  int    DEPTH           = 4;
+    private static final String NAME_TO_REPLACE = "@name";
 
     private final ProjectServiceClient projectServiceClient;
     private final String               parentFolderName;
@@ -95,7 +96,8 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
                                       @Nonnull ProjectServiceClient projectServiceClient,
                                       @Nonnull EventBus eventBus,
                                       @Nonnull AppContext appContext,
-                                      @Nonnull DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                                      @Nonnull DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                                      @Nonnull String content) {
         super(caption, icon);
 
         this.view = view;
@@ -110,6 +112,7 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
         this.projectServiceClient = projectServiceClient;
         this.eventBus = eventBus;
         this.appContext = appContext;
+        this.content = content;
 
         initializeCallbacks(dtoUnmarshallerFactory, notificationManager);
     }
@@ -285,6 +288,8 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
     @Override
     public void commit(@Nonnull final CommitCallback callback) {
         this.callback = callback;
+
+        content = content.replaceAll(NAME_TO_REPLACE, view.getResourceName());
 
         if (parentFolder == null) {
             projectServiceClient.createFolder(projectPath + SYNAPSE_CONFIG_PATH + parentFolderName, createFolderCallback);

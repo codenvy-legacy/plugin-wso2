@@ -15,12 +15,11 @@
  */
 package com.codenvy.ide.ext.wso2.client.wizard.files;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.LOCAL_ENTRY_FOLDER_NAME;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,11 +27,17 @@ import static org.mockito.Mockito.when;
  * Here we're testing {@link CreateLocalEntryPage}.
  *
  * @author Andrey Plotnikov
+ * @author Dmitriy Shnurenko
  */
 public class CreateLocalEntryPageTest extends AbstractCreateResourcePageTest {
 
     @Override
     public void setUp() throws Exception {
+        when(resources.localEntryTemplate()).thenReturn(textResource);
+        when(textResource.getText()).thenReturn(SOME_TEXT);
+
+        when(locale.wizardFileLocalEntryFieldsName()).thenReturn(SOME_TEXT);
+
         page = new CreateLocalEntryPage(view,
                                         locale,
                                         resources,
@@ -44,42 +49,27 @@ public class CreateLocalEntryPageTest extends AbstractCreateResourcePageTest {
                                         projectServiceClient,
                                         dtoUnmarshallerFactory);
 
-        verify(locale).wizardFileLocalEntryTitle();
-        verify(locale).wizardFileLocalEntryFieldsName();
-        verify(resources).local_entry_wizard();
-
         parentFolderName = LOCAL_ENTRY_FOLDER_NAME;
 
         super.setUp();
     }
 
-    @Ignore("not ready yet")
     @Test
-    public void emptyResourceNameNoticeShouldBeShown() throws Exception {
-        when(view.getResourceName()).thenReturn(EMPTY_TEXT);
+    public void localEntryPageShouldBePrepared() throws Exception {
+        verify(locale).wizardFileLocalEntryTitle();
+        verify(locale).wizardFileLocalEntryFieldsName();
+        verify(resources).local_entry_wizard();
+        verify(resources).localEntryTemplate();
+    }
+
+    @Test
+    public void warningMessageShouldBeShownWhenLocalEntryNameIsEmpty() throws Exception {
+        when(view.getResourceName()).thenReturn("");
         when(locale.wizardFileLocalEntryNoticeEmptyName()).thenReturn(SOME_TEXT);
 
-        page.go(container);
-        page.onValueChanged();
+        assertThat(page.getNotice(), equalTo(SOME_TEXT));
 
-        assertEquals(SOME_TEXT, page.getNotice());
-
+        verify(view).getResourceName();
         verify(locale).wizardFileLocalEntryNoticeEmptyName();
-    }
-
-    @Override
-    public void onFailureMethodInCommitCallbackShouldBeExecuted() throws Exception {
-        super.onFailureMethodInCommitCallbackShouldBeExecuted();
-
-        verify(resources).localEntryTemplate();
-        verify(view, times(2)).getResourceName();
-    }
-
-    @Override
-    public void onSuccessMethodInCommitCallbackShouldBeExecuted() throws Exception {
-        super.onSuccessMethodInCommitCallbackShouldBeExecuted();
-
-        verify(resources).localEntryTemplate();
-        verify(view, times(2)).getResourceName();
     }
 }

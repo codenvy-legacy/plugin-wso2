@@ -29,7 +29,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.SEQUENCE_FOLDER_NAME;
@@ -68,7 +67,8 @@ public class CreateSequencePage extends AbstractCreateResourcePage {
               projectServiceClient,
               eventBus,
               appContext,
-              dtoUnmarshallerFactory);
+              dtoUnmarshallerFactory,
+              resources.sequenceTemplate().getText());
     }
 
     /** {@inheritDoc} */
@@ -80,14 +80,5 @@ public class CreateSequencePage extends AbstractCreateResourcePage {
         }
 
         return super.getNotice();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void commit(@Nonnull CommitCallback callback) {
-        String sequenceTemplate = resources.sequenceTemplate().getText();
-        content = sequenceTemplate.replaceAll("@name", view.getResourceName());
-
-        super.commit(callback);
     }
 }

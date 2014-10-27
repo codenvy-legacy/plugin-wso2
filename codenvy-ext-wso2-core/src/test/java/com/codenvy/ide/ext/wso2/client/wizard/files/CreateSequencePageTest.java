@@ -15,12 +15,11 @@
  */
 package com.codenvy.ide.ext.wso2.client.wizard.files;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.SEQUENCE_FOLDER_NAME;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,11 +27,17 @@ import static org.mockito.Mockito.when;
  * Here we're testing {@link CreateSequencePage}.
  *
  * @author Andrey Plotnikov
+ * @author Dmitriy Shnurenko
  */
 public class CreateSequencePageTest extends AbstractCreateResourcePageTest {
 
     @Override
     public void setUp() throws Exception {
+        when(resources.sequenceTemplate()).thenReturn(textResource);
+        when(textResource.getText()).thenReturn(SOME_TEXT);
+
+        when(locale.wizardFileSequenceFieldsName()).thenReturn(SOME_TEXT);
+
         page = new CreateSequencePage(view,
                                       locale,
                                       resources,
@@ -44,42 +49,27 @@ public class CreateSequencePageTest extends AbstractCreateResourcePageTest {
                                       appContext,
                                       dtoUnmarshallerFactory);
 
-        verify(locale).wizardFileSequenceTitle();
-        verify(locale).wizardFileSequenceFieldsName();
-        verify(resources).sequence_wizard();
-
         parentFolderName = SEQUENCE_FOLDER_NAME;
 
         super.setUp();
     }
 
-    @Ignore("not ready yet")
     @Test
-    public void emptyResourceNameNoticeShouldBeShown() throws Exception {
-        when(view.getResourceName()).thenReturn(EMPTY_TEXT);
+    public void sequencePageShouldBePrepared() throws Exception {
+        verify(locale).wizardFileSequenceTitle();
+        verify(locale).wizardFileSequenceFieldsName();
+        verify(resources).sequence_wizard();
+        verify(resources).sequenceTemplate();
+    }
+
+    @Test
+    public void warningMessageShouldBeShownWhenSequenceNameIsEmpty() throws Exception {
+        when(view.getResourceName()).thenReturn("");
         when(locale.wizardFileSequenceNoticeEmptyName()).thenReturn(SOME_TEXT);
 
-        page.go(container);
-        page.onValueChanged();
+        assertThat(page.getNotice(), equalTo(SOME_TEXT));
 
-        assertEquals(SOME_TEXT, page.getNotice());
-
+        verify(view).getResourceName();
         verify(locale).wizardFileSequenceNoticeEmptyName();
-    }
-
-    @Override
-    public void onFailureMethodInCommitCallbackShouldBeExecuted() throws Exception {
-        super.onFailureMethodInCommitCallbackShouldBeExecuted();
-
-        verify(resources).sequenceTemplate();
-        verify(view, times(2)).getResourceName();
-    }
-
-    @Override
-    public void onSuccessMethodInCommitCallbackShouldBeExecuted() throws Exception {
-        super.onSuccessMethodInCommitCallbackShouldBeExecuted();
-
-        verify(resources).sequenceTemplate();
-        verify(view, times(2)).getResourceName();
     }
 }

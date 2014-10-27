@@ -59,7 +59,7 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
     private final EventBus                         eventBus;
 
     private String                               oldFileName;
-    private ImportFilePresenter.ViewCloseHandler parentViewUtils;
+    private ImportFilePresenter.ViewCloseHandler closeHandler;
     private String                               operation;
 
     @Inject
@@ -100,14 +100,14 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
     @Override
     public void onRenameButtonClicked() {
         modifyExistingFile(RENAME_FILE_OPERATION);
-        parentViewUtils.onCloseView();
+        closeHandler.onCloseView();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onOverwriteButtonClicked() {
         modifyExistingFile(OVERWRITE_FILE_OPERATION);
-        parentViewUtils.onCloseView();
+        closeHandler.onCloseView();
     }
 
     /** {@inheritDoc} */
@@ -159,11 +159,11 @@ public class OverwriteFilePresenter implements OverwriteFileView.ActionDelegate 
      *
      * @param fileName
      *         name of file which need to set to current file
-     * @param parentViewUtils
+     * @param closeHandler
      *         need to close the view in another model
      */
-    public void showDialog(@Nonnull String fileName, @Nonnull ImportFilePresenter.ViewCloseHandler parentViewUtils) {
-        this.parentViewUtils = parentViewUtils;
+    public void showDialog(@Nonnull String fileName, @Nonnull ImportFilePresenter.ViewCloseHandler closeHandler) {
+        this.closeHandler = closeHandler;
         oldFileName = fileName;
 
         view.setMessage(local.wso2ImportFileAlreadyExists());

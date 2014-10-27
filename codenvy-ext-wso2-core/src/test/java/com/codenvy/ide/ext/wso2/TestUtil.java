@@ -21,6 +21,8 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 
 /**
+ * The class contains methods, which allow us to invoke methods of {@link RequestCallback}.
+ *
  * @author Dmitry Shnurenko
  */
 public class TestUtil {

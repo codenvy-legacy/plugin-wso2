@@ -15,12 +15,11 @@
  */
 package com.codenvy.ide.ext.wso2.client.wizard.files;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.PROXY_SERVICE_FOLDER_NAME;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,11 +27,17 @@ import static org.mockito.Mockito.when;
  * Here we're testing {@link CreateProxyServicePage}.
  *
  * @author Andrey Plotnikov
+ * @author Dmitriy Shnurenko
  */
 public class CreateProxyServicePageTest extends AbstractCreateResourcePageTest {
 
     @Override
     public void setUp() throws Exception {
+        when(resources.proxyServiceTemplate()).thenReturn(textResource);
+        when(textResource.getText()).thenReturn(SOME_TEXT);
+
+        when(locale.wizardFileProxyServiceFieldsName()).thenReturn(SOME_TEXT);
+
         page = new CreateProxyServicePage(view,
                                           locale,
                                           resources,
@@ -44,44 +49,27 @@ public class CreateProxyServicePageTest extends AbstractCreateResourcePageTest {
                                           eventBus,
                                           dtoUnmarshallerFactory);
 
-        verify(locale).wizardFileProxyServiceTitle();
-        verify(locale).wizardFileProxyServiceFieldsName();
-        verify(resources).proxy_service_wizard();
-
         parentFolderName = PROXY_SERVICE_FOLDER_NAME;
 
         super.setUp();
     }
 
-    @Ignore("not ready yet")
     @Test
-    public void emptyResourceNameNoticeShouldBeShown() throws Exception {
-        when(view.getResourceName()).thenReturn(EMPTY_TEXT);
+    public void proxyServicePageShouldBePrepared() throws Exception {
+        verify(locale).wizardFileProxyServiceTitle();
+        verify(locale).wizardFileProxyServiceFieldsName();
+        verify(resources).proxy_service_wizard();
+        verify(resources).proxyServiceTemplate();
+    }
+
+    @Test
+    public void warningMessageShouldBeShownWhenProxyServiceNameIsEmpty() throws Exception {
+        when(view.getResourceName()).thenReturn("");
         when(locale.wizardFileProxyServiceNoticeEmptyName()).thenReturn(SOME_TEXT);
 
-        page.go(container);
-        page.onValueChanged();
+        assertThat(page.getNotice(), equalTo(SOME_TEXT));
 
-        assertEquals(SOME_TEXT, page.getNotice());
-
+        verify(view).getResourceName();
         verify(locale).wizardFileProxyServiceNoticeEmptyName();
-    }
-
-    @Ignore("not ready yet")
-    @Override
-    public void onFailureMethodInCommitCallbackShouldBeExecuted() throws Exception {
-        super.onFailureMethodInCommitCallbackShouldBeExecuted();
-
-        verify(resources).proxyServiceTemplate();
-        verify(view, times(2)).getResourceName();
-    }
-
-    @Ignore("not ready yet")
-    @Override
-    public void onSuccessMethodInCommitCallbackShouldBeExecuted() throws Exception {
-        super.onSuccessMethodInCommitCallbackShouldBeExecuted();
-
-        verify(resources).proxyServiceTemplate();
-        verify(view, times(2)).getResourceName();
     }
 }
