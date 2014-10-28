@@ -193,8 +193,7 @@ public class WSO2RestServiceTest {
 
         ContainerResponse response = sendRequest("POST", "detect", getRequestData());
 
-        assertThat(response.getStatus(), is(500));
-        assertEquals("com.codenvy.api.core.ServerException: does not exists. ", response.getResponse().getEntity());
+        assertThat(response.getStatus(), is(204));
         verify(synapseFile).updateContent(eq(ESB_XML_MIME_TYPE), any(InputStream.class), isNull(String.class));
     }
 

@@ -68,10 +68,8 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
             throws RequestException {
         String requestUrl = restContext + DETECT_CONFIGURATION_FILE;
 
-        IdeLoader loader = ideLoaderProvider.get();
-
-        asyncRequestFactory.createPostRequest(requestUrl, fileInfo, true)
-                           .loader(loader, localizationConstant.importingFileMessage())
+        asyncRequestFactory.createPostRequest(requestUrl, fileInfo)
+                           .loader(ideLoaderProvider.get(), localizationConstant.importingFileMessage())
                            .header(CONTENT_TYPE, APPLICATION_JSON)
                            .send(callback);
     }
@@ -81,10 +79,8 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
     public void uploadFile(@Nonnull FileInfo fileInfo, @Nonnull AsyncRequestCallback<Void> callback) throws RequestException {
         String requestUrl = restContext + UPLOAD_CONFIGURATION_FILE;
 
-        IdeLoader loader = ideLoaderProvider.get();
-
-        asyncRequestFactory.createPostRequest(requestUrl, fileInfo, true)
-                           .loader(loader, localizationConstant.importingFileMessage())
+        asyncRequestFactory.createPostRequest(requestUrl, fileInfo)
+                           .loader(ideLoaderProvider.get(), localizationConstant.importingFileMessage())
                            .header(CONTENT_TYPE, APPLICATION_JSON)
                            .send(callback);
     }
@@ -95,10 +91,8 @@ public class WSO2ClientServiceImpl implements WSO2ClientService {
             throws RequestException {
         String requestUrl = restContext + MODIFY_CONFIGURATION_FILE + "/" + operation;
 
-        IdeLoader loader = ideLoaderProvider.get();
-
-        asyncRequestFactory.createPostRequest(requestUrl, fileInfo, true)
-                           .loader(loader, localizationConstant.modifyingFileMessage())
+        asyncRequestFactory.createPostRequest(requestUrl, fileInfo)
+                           .loader(ideLoaderProvider.get(), localizationConstant.modifyingFileMessage())
                            .header(CONTENT_TYPE, APPLICATION_JSON)
                            .send(callback);
     }

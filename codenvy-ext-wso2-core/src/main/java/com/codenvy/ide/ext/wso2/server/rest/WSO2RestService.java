@@ -99,6 +99,8 @@ public class WSO2RestService {
                 mountPoint.getVirtualFile(projectName).createFolder(pathToFolder);
 
                 file.moveTo(mountPoint.getVirtualFile(path), null);
+
+                return;
             }
 
             throw new ApiException(e.toString(), e);
