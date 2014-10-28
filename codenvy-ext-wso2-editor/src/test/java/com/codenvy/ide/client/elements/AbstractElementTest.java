@@ -39,6 +39,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public abstract class AbstractElementTest<T extends AbstractElement> extends AbstractEntityTest<T> {
 
@@ -95,16 +96,24 @@ public abstract class AbstractElementTest<T extends AbstractElement> extends Abs
 
     @Test
     public void branchesAmountShouldBeNotChangedWhenNewAmountIsLessThanZero() throws Exception {
-        assertEquals(0, entity.getBranchesAmount());
+        branchesAmountShouldBeNotChangedWhenNewAmountIsLessThanZero(0);
+    }
+
+    protected void branchesAmountShouldBeNotChangedWhenNewAmountIsLessThanZero(int countBranches) throws Exception {
+        assertEquals(countBranches, entity.getBranchesAmount());
 
         entity.setBranchesAmount(-5);
 
-        assertEquals(0, entity.getBranchesAmount());
+        assertEquals(countBranches, entity.getBranchesAmount());
     }
 
     @Test
     public void branchesAmountShouldBeNotChangedWhenSizeTheSame() throws Exception {
-        assertEquals(0, entity.getBranchesAmount());
+        branchesAmountShouldBeNotChangedWhenSizeTheSame(0);
+    }
+
+    protected void branchesAmountShouldBeNotChangedWhenSizeTheSame(int countBranches) throws Exception {
+        assertEquals(countBranches, entity.getBranchesAmount());
 
         entity.setBranchesAmount(3);
 
@@ -123,7 +132,11 @@ public abstract class AbstractElementTest<T extends AbstractElement> extends Abs
 
     @Test
     public void branchesAmountShouldBeChanged() throws Exception {
-        assertEquals(0, entity.getBranchesAmount());
+        branchesAmountShouldBeChanged(0);
+    }
+
+    protected void branchesAmountShouldBeChanged(int countBranches) throws Exception {
+        assertEquals(countBranches, entity.getBranchesAmount());
 
         entity.setBranchesAmount(3);
 
@@ -136,26 +149,15 @@ public abstract class AbstractElementTest<T extends AbstractElement> extends Abs
         verify(branchProvider, times(3)).get();
     }
 
-    @Test
-    public void branchesAmountShouldBeChanged2() throws Exception {
-        assertEquals(0, entity.getBranchesAmount());
-
-        entity.setBranchesAmount(3);
-
-        if (!entity.isPossibleToAddBranches()) {
-            verify(branchProvider, never()).get();
-            return;
-        }
-
-        assertEquals(2, entity.getBranchesAmount());
-        verify(branchProvider, times(3)).get();
-    }
-
     @Test(expected = UnsupportedOperationException.class)
     public void addingBranchManuallyShouldBeImpossible() throws Exception {
+        addingBranchManuallyShouldBeImpossible(0);
+    }
+
+    protected void addingBranchManuallyShouldBeImpossible(int countBranches) throws Exception {
         when(branchProvider.get()).thenReturn(branch);
 
-        assertEquals(0, entity.getBranchesAmount());
+        assertEquals(countBranches, entity.getBranchesAmount());
 
         entity.setBranchesAmount(3);
 
@@ -165,9 +167,13 @@ public abstract class AbstractElementTest<T extends AbstractElement> extends Abs
 
     @Test(expected = UnsupportedOperationException.class)
     public void removingBranchManuallyShouldBeImpossible() throws Exception {
+        removingBranchManuallyShouldBeImpossible(0);
+    }
+
+    protected void removingBranchManuallyShouldBeImpossible(int countBranches) throws Exception {
         when(branchProvider.get()).thenReturn(branch);
 
-        assertEquals(0, entity.getBranchesAmount());
+        assertEquals(countBranches, entity.getBranchesAmount());
 
         entity.setBranchesAmount(3);
 

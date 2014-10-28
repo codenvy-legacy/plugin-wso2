@@ -1,0 +1,3 @@
+<call>
+<endpoint xmlns:prefix="uri" key-expression="/default/expression"/>
+</call>

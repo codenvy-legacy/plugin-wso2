@@ -144,11 +144,18 @@ public class Call extends AbstractElement {
     }
 
     private String serializeInlineParameter(@Nonnull String content) {
-        return content + ">\n" +
-               '<' + ENDPOINT_PROPERTY_NAME + ">\n" +
-               branches.get(0).serialize() +
-               "</" + ENDPOINT_PROPERTY_NAME + ">\n" +
-               "</" + SERIALIZATION_NAME + '>';
+        Branch branch = branches.get(0);
+
+        if (!branch.getElements().isEmpty()) {
+
+            return content + ">\n" +
+                   '<' + ENDPOINT_PROPERTY_NAME + ">\n" +
+                   branch.serialize() + '\n' +
+                   "</" + ENDPOINT_PROPERTY_NAME + ">\n" +
+                   "</" + SERIALIZATION_NAME + '>';
+        }
+
+        return content + "/>";
     }
 
     /** {@inheritDoc} */
@@ -171,16 +178,6 @@ public class Call extends AbstractElement {
     /** {@inheritDoc} */
     @Override
     protected void applyProperty(@Nonnull Node node) {
-        String nodeName = node.getNodeName();
-
-        if (!ENDPOINT_PROPERTY_NAME.equals(nodeName)) {
-            return;
-        }
-
-        applyEndpointPropertyType(node);
-    }
-
-    private void applyEndpointPropertyType(@Nonnull Node node) {
         isKeyAttributeFound = false;
         isKeyExpressionAttributeFound = false;
 
