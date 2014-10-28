@@ -26,7 +26,6 @@ import com.codenvy.ide.ext.wso2.client.WSO2ClientService;
 import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.util.Config;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -57,6 +56,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
     private final EventBus               eventBus;
     private final NotificationManager    notificationManager;
     private final String                 restContext;
+    private final String                 workSpaceId;
     private final WSO2ClientService      service;
     private final DtoFactory             dtoFactory;
     private final LocalizationConstant   local;
@@ -75,6 +75,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
                                OverwriteFilePresenter overwrite,
                                WSO2ClientService service,
                                @Named("restContext") String restContext,
+                               @Named("workspaceId") String workSpaceId,
                                NotificationManager notificationManager,
                                DtoFactory dtoFactory,
                                LocalizationConstant local,
@@ -85,6 +86,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
         this.view.setDelegate(this);
         this.notificationManager = notificationManager;
         this.restContext = restContext;
+        this.workSpaceId = workSpaceId;
         this.service = service;
         this.dtoFactory = dtoFactory;
         this.local = local;
@@ -163,7 +165,7 @@ public class ImportFilePresenter implements ImportFileView.ActionDelegate {
 
         if (view.isUseLocalPath()) {
             view.setAction(
-                    restContext + "/project/" + Config.getWorkspaceId() + "/uploadfile" + currentProject.getProjectDescription().getPath());
+                    restContext + "/project/" + workSpaceId + "/uploadfile" + currentProject.getProjectDescription().getPath());
             view.submit();
         } else {
             fileUploadInfo = dtoFactory.createDto(FileInfo.class)

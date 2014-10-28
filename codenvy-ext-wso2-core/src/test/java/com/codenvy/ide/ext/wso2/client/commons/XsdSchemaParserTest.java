@@ -25,6 +25,7 @@ import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -36,6 +37,7 @@ import org.mockito.Mock;
  * @author Valeriy Svydenko
  * @author Andrey Plotnikov
  */
+@Ignore("code which is testing here isn't using and we're going to remove it or move to another class.")
 @GwtModule("com.codenvy.ide.ext.wso2.WSO2")
 @RunWith(SonarAwareGwtRunner.class)
 public class XsdSchemaParserTest extends GwtTestWithMockito {

@@ -30,7 +30,6 @@ import com.codenvy.ide.ext.wso2.client.upload.overwrite.OverwriteFilePresenter;
 import com.codenvy.ide.ext.wso2.shared.FileInfo;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.junit.Test;
@@ -40,6 +39,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static com.codenvy.ide.ext.wso2.TestUtil.invokeOnFailureCallbackMethod;
 import static com.codenvy.ide.ext.wso2.TestUtil.invokeOnSuccessCallbackMethod;
@@ -69,7 +69,7 @@ import static org.mockito.Mockito.when;
  * @author Valeriy Svydenko
  * @author Andrey Plotnikov
  */
-@RunWith(GwtMockitoTestRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class ImportFilePresenterTest {
 
     private static final String MESSAGE        = "message";
