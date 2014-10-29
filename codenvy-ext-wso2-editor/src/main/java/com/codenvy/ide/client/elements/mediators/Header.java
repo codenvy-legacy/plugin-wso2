@@ -120,7 +120,7 @@ public class Header extends AbstractElement {
         String tagName = inlineXml.substring(0, tag.contains("/") ? index - 1 : index);
         String restString = inlineXml.substring(tag.contains("/") ? index - 1 : index);
 
-        return tagName + " xmlns=\"\"" + restString;
+        return tagName + " xmlns=\"\"" + restString + '\n';
     }
 
     /** {@inheritDoc} */
