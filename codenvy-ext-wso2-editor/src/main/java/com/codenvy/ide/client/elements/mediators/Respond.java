@@ -78,6 +78,10 @@ public class Respond extends AbstractElement {
     /** {@inheritDoc} */
     @Override
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        if (!DESCRIPTION_ATTRIBUTE.equals(attributeName)) {
+            return;
+        }
+
         putProperty(DESCRIPTION, String.valueOf(attributeValue));
     }
 }

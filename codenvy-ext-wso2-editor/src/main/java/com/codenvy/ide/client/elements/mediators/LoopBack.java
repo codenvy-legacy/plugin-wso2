@@ -41,7 +41,7 @@ import static java.util.Collections.emptyList;
  */
 public class LoopBack extends AbstractElement {
     public static final String ELEMENT_NAME       = "LoopBack";
-    public static final String SERIALIZATION_NAME = "loopBack";
+    public static final String SERIALIZATION_NAME = "loopback";
 
     public static final Key<String> DESCRIPTION = new Key<>("Description");
 
@@ -78,6 +78,10 @@ public class LoopBack extends AbstractElement {
     /** {@inheritDoc} */
     @Override
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
+        if (!DESCRIPTION_ATTRIBUTE.equals(attributeName)) {
+            return;
+        }
+
         putProperty(DESCRIPTION, String.valueOf(attributeValue));
     }
 }
