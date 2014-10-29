@@ -25,13 +25,14 @@ import org.mockito.Mock;
 
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -81,7 +82,7 @@ public abstract class AbstractElementTest<T extends AbstractElement> extends Abs
 
     @Test
     public void parentShouldBeChanged() throws Exception {
-        assertNull(entity.getParent());
+        assertThat(entity.getParent(), nullValue());
 
         Element parent = mock(Element.class);
         entity.setParent(parent);
@@ -118,7 +119,7 @@ public abstract class AbstractElementTest<T extends AbstractElement> extends Abs
         entity.setBranchesAmount(3);
 
         if (!entity.isPossibleToAddBranches()) {
-            verify(branchProvider, never()).get();
+            verify(branchProvider, times(countBranches)).get();
             return;
         }
 
@@ -141,7 +142,7 @@ public abstract class AbstractElementTest<T extends AbstractElement> extends Abs
         entity.setBranchesAmount(3);
 
         if (!entity.isPossibleToAddBranches()) {
-            verify(branchProvider, never()).get();
+            verify(branchProvider, times(countBranches)).get();
             return;
         }
 

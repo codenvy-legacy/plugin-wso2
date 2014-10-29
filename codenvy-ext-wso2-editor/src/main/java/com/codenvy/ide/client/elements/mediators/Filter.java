@@ -64,10 +64,10 @@ public class Filter extends AbstractElement {
     private static final String REGULAR_EXPRESSION_ATTRIBUTE_NAME = "regex";
     private static final String XPATH_ATTRIBUTE_NAME              = "xpath";
 
-    private static final String IF_BRANCH_TITLE                = "Then";
-    private static final String ELSE_BRANCH_TITLE              = "Else";
-    private static final String IF_BRANCH_SERIALIZATION_NAME   = "then";
-    private static final String ELSE_BRANCH_SERIALIZATION_NAME = "else";
+    public static final String IF_BRANCH_TITLE                = "Then";
+    public static final String ELSE_BRANCH_TITLE              = "Else";
+    public static final String IF_BRANCH_SERIALIZATION_NAME   = "then";
+    public static final String ELSE_BRANCH_SERIALIZATION_NAME = "else";
 
     private static final List<String> PROPERTIES = Collections.emptyList();
 

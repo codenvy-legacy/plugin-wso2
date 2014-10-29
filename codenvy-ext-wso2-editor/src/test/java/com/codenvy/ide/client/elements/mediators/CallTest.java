@@ -48,6 +48,7 @@ import static com.codenvy.ide.client.elements.mediators.Call.REGISTRY_KEY;
 import static com.codenvy.ide.client.elements.mediators.Call.SERIALIZATION_NAME;
 import static com.codenvy.ide.client.elements.mediators.Call.X_PATH;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
@@ -74,8 +75,6 @@ public class CallTest extends AbstractElementTest<Call> {
 
     @Mock
     private Provider<NameSpace>         nameSpaceProvider;
-    @Mock
-    private Provider<Branch>            branchProvider;
     @Mock(answer = RETURNS_DEEP_STUBS)
     private Branch                      branch;
     @Mock
@@ -305,7 +304,7 @@ public class CallTest extends AbstractElementTest<Call> {
         entity.applyAttribute("xmlns:prefix", "uri");
 
         assertThat(nameSpaces.size(), is(1));
-        assertThat(nameSpaces.get(0), equalTo(nameSpace));
+        assertThat(nameSpaces, hasItem(equalTo(nameSpace)));
     }
 
     @Test

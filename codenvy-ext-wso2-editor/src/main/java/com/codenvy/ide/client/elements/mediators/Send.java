@@ -147,10 +147,12 @@ public class Send extends AbstractElement {
 
         result.append('<').append(SERIALIZATION_NAME).append(' ').append(serializeAttributes()).append(">\n");
 
-        if (branches.get(0).hasElements()) {
+        Branch branch = branches.get(0);
+
+        if (branch.hasElements()) {
             result.append('<').append(ENDPOINT_PROPERTY_NAME).append(">\n");
 
-            result.append(branches.get(0).serialize());
+            result.append(branch.serialize()).append('\n');
 
             result.append("</").append(ENDPOINT_PROPERTY_NAME).append(">\n");
         }
@@ -196,27 +198,23 @@ public class Send extends AbstractElement {
     /** {@inheritDoc} */
     @Override
     protected void applyProperty(@Nonnull Node node) {
-        if (node.hasChildNodes()) {
-            if (!ENDPOINT_PROPERTY_NAME.equals(node.getNodeName())) {
-                return;
-            }
-
-            Branch branch = branchProvider.get();
-            branch.setParent(this);
-
-            if (node.hasChildNodes()) {
-                Node item = node.getChildNodes().item(0);
-
-                Element element = createElement(item.getNodeName());
-
-                if (element != null) {
-                    element.deserialize(node);
-                    branch.addElement(element);
-                }
-            }
-
-            branches.add(branch);
+        if (!node.hasChildNodes()) {
+            return;
         }
+
+        Branch branch = branchProvider.get();
+        branch.setParent(this);
+
+        Node item = node.getChildNodes().item(0);
+
+        Element element = createElement(item.getNodeName());
+
+        if (element != null) {
+            element.deserialize(node);
+            branch.addElement(element);
+        }
+
+        branches.add(branch);
     }
 
     /** {@inheritDoc} */

@@ -1,0 +1,8 @@
+<filter source="source" regex="regularExpression">
+<then>
+<log/>
+</then>
+<else>
+<call/>
+</else>
+</filter>

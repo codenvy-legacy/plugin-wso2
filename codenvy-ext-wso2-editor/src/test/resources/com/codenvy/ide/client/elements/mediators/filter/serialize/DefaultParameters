@@ -1,0 +1,4 @@
+<filter source="get-property('To')" regex="default_regex">
+<then/>
+<else/>
+</filter>

@@ -1,0 +1,4 @@
+<filter xmlns:prefix="uri" source="source" regex="regularExpression">
+<then/>
+<else/>
+</filter>
