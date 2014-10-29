@@ -52,6 +52,9 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author Dmitry Shnurenko
+ */
 public class FilterTest extends AbstractElementTest<Filter> {
 
     private static final String PATH_TO_EXAMPLES = "mediators/filter/serialize/";
@@ -67,10 +70,10 @@ public class FilterTest extends AbstractElementTest<Filter> {
     private static final List<NameSpace> SOURCE_NAMESPACE_DEFAULT_VALUE = Collections.emptyList();
     private static final List<NameSpace> XPATH_NAMESPACE_DEFAULT_VALUE  = Collections.emptyList();
 
-    private static final String THEN_SERIALIZATION_CONTENT_WITH_ELEMENT = "<then>" + '\n' + "<log/>" + '\n' + "</then>" + '\n';
-    private static final String ELSE_SERIALIZATION_CONTENT_WITH_ELEMENT = "<else>" + '\n' + "<call/>" + '\n' + "</else>" + '\n';
-    private static final String THEN_SERIALIZATION_CONTENT_DEFAULT      = "<then/>" + '\n';
-    private static final String ELSE_SERIALIZATION_CONTENT_DEFAULT      = "<else/>" + '\n';
+    private static final String THEN_SERIALIZATION_CONTENT_WITH_ELEMENT = "<then>\n<log/>\n</then>\n";
+    private static final String ELSE_SERIALIZATION_CONTENT_WITH_ELEMENT = "<else>\n<call/>\n</else>\n";
+    private static final String THEN_SERIALIZATION_CONTENT_DEFAULT      = "<then/>\n";
+    private static final String ELSE_SERIALIZATION_CONTENT_DEFAULT      = "<else/>\n";
 
     @Mock
     private Provider<NameSpace> nameSpaceProvider;

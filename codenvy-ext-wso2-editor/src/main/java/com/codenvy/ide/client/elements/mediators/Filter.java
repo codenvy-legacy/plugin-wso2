@@ -60,14 +60,14 @@ public class Filter extends AbstractElement {
     public static final Key<List<NameSpace>> XPATH_NAMESPACE    = new Key<>("XPathNamespace");
     public static final Key<List<NameSpace>> NAMESPACES         = new Key<>("Namespaces");
 
-    private static final String SOURCE_ATTRIBUTE_NAME             = "source";
-    private static final String REGULAR_EXPRESSION_ATTRIBUTE_NAME = "regex";
-    private static final String XPATH_ATTRIBUTE_NAME              = "xpath";
-
     public static final String IF_BRANCH_TITLE                = "Then";
     public static final String ELSE_BRANCH_TITLE              = "Else";
     public static final String IF_BRANCH_SERIALIZATION_NAME   = "then";
     public static final String ELSE_BRANCH_SERIALIZATION_NAME = "else";
+
+    private static final String SOURCE_ATTRIBUTE_NAME             = "source";
+    private static final String REGULAR_EXPRESSION_ATTRIBUTE_NAME = "regex";
+    private static final String XPATH_ATTRIBUTE_NAME              = "xpath";
 
     private static final List<String> PROPERTIES = Collections.emptyList();
 

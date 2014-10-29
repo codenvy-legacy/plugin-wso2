@@ -1,0 +1,4 @@
+<switch src="/default/xpath">
+<ca to=".*+"/>
+<de/>
+</switch>

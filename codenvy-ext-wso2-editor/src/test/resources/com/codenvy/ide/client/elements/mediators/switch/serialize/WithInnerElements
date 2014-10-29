@@ -1,0 +1,8 @@
+<switch xmlns:prefix="uri" source="xpathValue">
+<case regex=".*+">
+<log/>
+</case>
+<default>
+<call/>
+</default>
+</switch>

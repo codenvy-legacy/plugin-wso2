@@ -41,6 +41,9 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author Dmitry Shnurenko
+ */
 public class CallTemplateTest extends AbstractElementTest<CallTemplate> {
 
     private static final String PATH_TO_EXAMPLES = "mediators/calltemplate/serialize/";

@@ -45,6 +45,9 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author Dmitry Shnurenko
+ */
 public class LogTest extends AbstractElementTest<Log> {
 
     private static final String ROOT_PATH        = "mediators/log/";

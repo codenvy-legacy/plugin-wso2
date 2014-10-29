@@ -47,6 +47,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author Dmitry Shnurenko
+ */
 public class TargetTest extends AbstractEntityTest<Target> {
 
     private static final String PATH_TO_EXAMPLES = "mediators/enrich/targetelement/serialize/";

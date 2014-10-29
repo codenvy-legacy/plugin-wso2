@@ -33,6 +33,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author Dmitry Shnurenko
+ */
 public class EnrichTest extends AbstractElementTest<Enrich> {
 
     private static final String PATH_TO_EXAMPLES = "mediators/enrich/serialize/";

@@ -54,6 +54,9 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author Dmitry Shnurenko
+ */
 public class HeaderTest extends AbstractElementTest<Header> {
 
     private static final String PATH_TO_EXAMPLES = "mediators/header/serialize/";

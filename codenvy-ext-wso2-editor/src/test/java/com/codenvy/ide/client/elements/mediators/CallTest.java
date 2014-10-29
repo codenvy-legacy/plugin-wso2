@@ -58,6 +58,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author Dmitry Shnurenko
+ */
 public class CallTest extends AbstractElementTest<Call> {
 
     private static final String PATH_TO_EXAMPLES = "mediators/call/serialize/";

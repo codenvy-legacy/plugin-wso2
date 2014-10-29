@@ -44,6 +44,9 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author Dmitry Shnurenko
+ */
 public class PropertyTest extends AbstractEntityTest<Property> {
 
     private static final String PATH_TO_RESOURCES = "mediators/log/property/serialize/";

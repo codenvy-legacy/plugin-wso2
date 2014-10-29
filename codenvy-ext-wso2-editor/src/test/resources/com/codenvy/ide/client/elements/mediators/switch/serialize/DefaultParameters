@@ -1,0 +1,4 @@
+<switch source="default/xpath">
+<case regex=".*+"/>
+<default/>
+</switch>

@@ -56,13 +56,13 @@ public class Switch extends AbstractElement {
     public static final String REGEXP_ATTRIBUTE_NAME          = "regex";
     public static final String REGEXP_ATTRIBUTE_DEFAULT_VALUE = ".*+";
 
-    private static final String SOURCE_ATTRIBUTE_NAME = "source";
+    public static final String SOURCE_ATTRIBUTE_NAME = "source";
 
-    private static final String CASE_TITLE         = "Case";
-    public static final  String DEFAULT_CASE_TITLE = "Default";
+    public static final String CASE_TITLE         = "Case";
+    public static final String DEFAULT_CASE_TITLE = "Default";
 
-    private static final String CASE_SERIALIZATION_NAME    = "case";
-    private static final String DEFAULT_SERIALIZATION_NAME = "default";
+    public static final String CASE_SERIALIZATION_NAME    = "case";
+    public static final String DEFAULT_SERIALIZATION_NAME = "default";
 
     private static final List<String> PROPERTIES = Collections.emptyList();
 
@@ -136,7 +136,7 @@ public class Switch extends AbstractElement {
         branches.addAll(super.getBranches());
         branches.add(defaultBranch);
 
-        return branches;
+        return Collections.unmodifiableList(branches);
     }
 
     /** {@inheritDoc} */

@@ -61,6 +61,9 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author Dmitry Shnurenko
+ */
 public class SendTest extends AbstractElementTest<Send> {
 
     private static final String PATH_TO_EXAMPLES = "mediators/send/serialize/";
