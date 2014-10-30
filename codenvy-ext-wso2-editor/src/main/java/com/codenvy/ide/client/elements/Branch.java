@@ -127,8 +127,8 @@ public class Branch {
      * @param element
      *         element that need to be removed
      */
-    @SuppressWarnings("SuspiciousMethodCalls")
     public void removeElement(@Nonnull Element element) {
+        //noinspection SuspiciousMethodCalls
         elements.remove(element);
     }
 
