@@ -78,7 +78,7 @@ public class Sequence extends AbstractElement {
         this.nameSpaceProvider = nameSpaceProvider;
 
         putProperty(REFERRING_TYPE, STATIC);
-        putProperty(STATIC_REFERENCE_TYPE, "");
+        putProperty(STATIC_REFERENCE_TYPE, "Sequence");
         putProperty(DYNAMIC_REFERENCE_TYPE, "/default/expression");
         putProperty(NAMESPACES, new ArrayList<NameSpace>());
     }
