@@ -46,7 +46,7 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
     private int     y;
 
     private final String                 elementName;
-    private final List<String>           properties;
+    private final List<String>           propertiesName;
     private final String                 serializationName;
     private final boolean                isPossibleToAddBranches;
     private final boolean                needsToShowIconAndTitle;
@@ -59,7 +59,7 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
     protected AbstractElement(@Nonnull String elementName,
                               @Nonnull String title,
                               @Nonnull String serializationName,
-                              @Nonnull List<String> properties,
+                              @Nonnull List<String> propertiesName,
                               boolean isPossibleToAddBranches,
                               boolean needsToShowIconAndTitle,
                               @Nullable ImageResource resources,
@@ -68,7 +68,7 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
         this.elementName = elementName;
         this.title = title;
         this.serializationName = serializationName;
-        this.properties = properties;
+        this.propertiesName = propertiesName;
 
         id = UUID.get();
 
@@ -215,52 +215,24 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
 
     /** {@inheritDoc} */
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object other) {
+        if (this == other) {
             return true;
         }
 
-        if (!(o instanceof AbstractElement)) {
+        if (!(other instanceof AbstractElement)) {
             return false;
         }
 
-        AbstractElement that = (AbstractElement)o;
+        AbstractElement that = (AbstractElement)other;
 
-        boolean result = Objects.equals(isPossibleToAddBranches, that.isPossibleToAddBranches);
-        result &= Objects.equals(needsToShowIconAndTitle, that.needsToShowIconAndTitle);
-        result &= Objects.equals(x, that.x);
-        result &= Objects.equals(y, that.y);
-        result &= Objects.equals(branchProvider, that.branchProvider);
-        result &= Objects.equals(branches, that.branches);
-        result &= Objects.equals(elementCreatorsManager, that.elementCreatorsManager);
-        result &= Objects.equals(elementName, that.elementName);
-        result &= Objects.equals(id, that.id);
-        result &= Objects.equals(imageResources, that.imageResources);
-        result &= Objects.equals(parent, that.parent);
-        result &= Objects.equals(properties, that.properties);
-        result &= Objects.equals(serializationName, that.serializationName);
-        result &= Objects.equals(title, that.title);
-
-        return result;
+        return Objects.equals(id, that.id);
     }
 
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        return Objects.hash(id,
-                            parent,
-                            title,
-                            x,
-                            y,
-                            elementName,
-                            properties,
-                            serializationName,
-                            isPossibleToAddBranches,
-                            needsToShowIconAndTitle,
-                            elementCreatorsManager,
-                            imageResources,
-                            branchProvider,
-                            branches);
+        return Objects.hash(id);
     }
 
     /** {@inheritDoc} */
@@ -349,7 +321,7 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
      * @return <code>true</code> if a given XML tag name is property name, <code>false</code> if it is not
      */
     protected boolean isProperty(@Nonnull String name) {
-        return properties.contains(name);
+        return propertiesName.contains(name);
     }
 
     /**

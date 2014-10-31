@@ -25,13 +25,13 @@ import org.mockito.Mock;
 
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -265,26 +265,23 @@ public abstract class AbstractElementTest<T extends AbstractElement> extends Abs
     }
 
     @Test
-    public void sameElementsShouldBeEqualed() throws Exception {
-        assertTrue(entity.equals(entity));
-    }
-
-    @Test
-    public void otherObjectShouldBeNotEqualed() throws Exception {
-        //noinspection EqualsBetweenInconvertibleTypes
-        assertFalse(entity.equals("some text"));
-    }
+    public abstract void constructorPrepareOperationShouldBeDone() throws Exception;
 
     @Test
     public abstract void elementShouldBeNotEqualedForAnotherInstanceOfElement() throws Exception;
 
-    @Test
+    @Override
     public void elementShouldBeNotEqualedForAnotherElement() throws Exception {
         AbstractElement otherElement = mock(AbstractElement.class);
         assertFalse(entity.equals(otherElement));
     }
 
-    @Test
-    public abstract void constructorPrepareOperationShouldBeDone() throws Exception;
+    @Override
+    public void hashCodeMethodShouldBeTested() throws Exception {
+        int first = entity.hashCode();
 
+        entity.putProperty(INTEGER_PROPERTY, 1);
+
+        assertThat(first, equalTo(entity.hashCode()));
+    }
 }

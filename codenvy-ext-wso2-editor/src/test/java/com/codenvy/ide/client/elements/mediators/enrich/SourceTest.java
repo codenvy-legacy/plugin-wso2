@@ -45,7 +45,9 @@ import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType.ENVELOPE;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType.INLINE;
 import static com.codenvy.ide.client.elements.mediators.enrich.Source.SourceType.PROPERTY;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.never;
@@ -356,6 +358,13 @@ public class SourceTest extends AbstractEntityTest<Source> {
         entity.applyProperty(xml.getFirstChild());
 
         assertDefaultConfiguration();
+    }
+
+    @Test
+    public void sameHashCodeShouldBeReturnedForDifferentEntityWithSameState() throws Exception {
+        Source source = new Source(nameSpaceProvider);
+
+        assertThat(entity.hashCode(), equalTo(source.hashCode()));
     }
 
     @Test

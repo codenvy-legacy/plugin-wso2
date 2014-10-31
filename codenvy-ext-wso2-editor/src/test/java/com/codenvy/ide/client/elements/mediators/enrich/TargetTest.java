@@ -43,7 +43,9 @@ import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetType
 import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetType.CUSTOM;
 import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetType.ENVELOPE;
 import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetType.PROPERTY;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -231,6 +233,13 @@ public class TargetTest extends AbstractEntityTest<Target> {
         entity.deserialize(xml.getFirstChild());
 
         assertDefaultConfiguration();
+    }
+
+    @Test
+    public void sameHashCodeShouldBeReturnedForDifferentEntityWithSameState() throws Exception {
+        Target target = new Target(nameSpaceProvider);
+
+        assertThat(entity.hashCode(), equalTo(target.hashCode()));
     }
 
     @Test

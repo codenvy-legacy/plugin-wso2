@@ -44,8 +44,10 @@ import static com.codenvy.ide.client.elements.endpoints.address.Property.Scope.T
 import static com.codenvy.ide.client.elements.endpoints.address.Property.TYPE;
 import static com.codenvy.ide.client.elements.endpoints.address.Property.VALUE;
 import static com.codenvy.ide.client.elements.mediators.ValueType.LITERAL;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -81,7 +83,6 @@ public class PropertyTest extends AbstractEntityTest<Property> {
     private ArgumentCaptor<ValueType>            valueTypeArgumentCaptor;
     @Captor
     private ArgumentCaptor<Scope>                scopeArgumentCaptor;
-
 
     @Before
     public void setUp() throws Exception {
@@ -303,6 +304,13 @@ public class PropertyTest extends AbstractEntityTest<Property> {
 
         assertEquals(1, nameSpaces.size());
         assertEquals(nameSpace, nameSpaces.get(0));
+    }
+
+    @Test
+    public void sameHashCodeShouldBeReturnedForDifferentEntityWithSameState() throws Exception {
+        Property property = new Property(propertyProvider, nameSpaceProvider);
+
+        assertThat(entity.hashCode(), equalTo(property.hashCode()));
     }
 
     @Test

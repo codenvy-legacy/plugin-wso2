@@ -37,8 +37,10 @@ import static com.codenvy.ide.client.elements.mediators.log.Property.NAME;
 import static com.codenvy.ide.client.elements.mediators.log.Property.NAMESPACES;
 import static com.codenvy.ide.client.elements.mediators.log.Property.TYPE;
 import static com.codenvy.ide.client.elements.mediators.log.Property.VALUE;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -205,6 +207,13 @@ public class PropertyTest extends AbstractEntityTest<Property> {
 
         assertEquals(propertyList, copyPropertyList);
         assertNotSame(propertyList, copyPropertyList);
+    }
+
+    @Test
+    public void sameHashCodeShouldBeReturnedForDifferentEntityWithSameState() throws Exception {
+        Property property = new Property(propertyProvider, nameSpaceProvider);
+
+        assertThat(entity.hashCode(), equalTo(property.hashCode()));
     }
 
 }

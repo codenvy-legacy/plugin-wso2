@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The abstract class which contains general methods for serialization/deserialization properties and attributes.
@@ -31,7 +32,7 @@ import java.util.Map;
  */
 public abstract class AbstractEntityElement {
 
-    private final Map<Key<Object>, Object> properties;
+    protected final Map<Key<Object>, Object> properties;
 
     protected AbstractEntityElement() {
         properties = new HashMap<>();
@@ -65,6 +66,28 @@ public abstract class AbstractEntityElement {
     public <T> T getProperty(@Nonnull Key<T> key) {
         //noinspection unchecked,SuspiciousMethodCalls
         return (T)properties.get(key);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+
+        AbstractEntityElement that = (AbstractEntityElement)other;
+
+        return Objects.equals(properties, that.properties);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(properties);
     }
 
     /**

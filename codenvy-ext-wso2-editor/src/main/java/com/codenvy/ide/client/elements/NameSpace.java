@@ -49,6 +49,7 @@ public class NameSpace extends AbstractEntityElement {
     }
 
     /** Returns copy of element. */
+    @Nonnull
     public NameSpace copy() {
         NameSpace nameSpace = nameSpaceProvider.get();
 
@@ -56,6 +57,12 @@ public class NameSpace extends AbstractEntityElement {
         nameSpace.putProperty(URI, getProperty(URI));
 
         return nameSpace;
+    }
+
+    /** @return string representation of the namespace */
+    @Nonnull
+    public String toString() {
+        return PREFIX + ':' + getProperty(PREFIX_KEY) + "=\"" + getProperty(URI) + '"';
     }
 
     /**
@@ -120,12 +127,6 @@ public class NameSpace extends AbstractEntityElement {
         return result.toString();
     }
 
-    /** @return string representation of the namespace */
-    @Nonnull
-    public String toString() {
-        return PREFIX + ':' + getProperty(PREFIX_KEY) + "=\"" + getProperty(URI) + '"';
-    }
-
     /**
      * Returns copy of list. If list which we send to method is null, method return empty list. If list isn't null
      * method returns copy of list.
@@ -133,6 +134,7 @@ public class NameSpace extends AbstractEntityElement {
      * @param listToCopy
      *         list which need to copy
      */
+    @Nonnull
     public static List<NameSpace> copyNameSpaceList(@Nullable List<NameSpace> listToCopy) {
         List<NameSpace> properties = new ArrayList<>();
 
@@ -141,7 +143,7 @@ public class NameSpace extends AbstractEntityElement {
         }
 
         for (NameSpace nameSpace : listToCopy) {
-            properties.add(nameSpace);
+            properties.add(nameSpace.copy());
         }
 
         return properties;

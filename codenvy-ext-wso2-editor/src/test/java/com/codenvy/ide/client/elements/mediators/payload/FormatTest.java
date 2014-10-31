@@ -30,7 +30,9 @@ import static com.codenvy.ide.client.elements.mediators.payload.Format.FORMAT_TY
 import static com.codenvy.ide.client.elements.mediators.payload.Format.FormatType;
 import static com.codenvy.ide.client.elements.mediators.payload.Format.FormatType.INLINE;
 import static com.codenvy.ide.client.elements.mediators.payload.Format.FormatType.REGISTRY;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.when;
 
@@ -126,6 +128,13 @@ public class FormatTest extends AbstractEntityTest<Format> {
         entity.putProperty(FORMAT_INLINE, null);
 
         assertEquals("", entity.serialize(false));
+    }
+
+    @Test
+    public void sameHashCodeShouldBeReturnedForDifferentEntityWithSameState() throws Exception {
+        Format format = new Format();
+
+        assertThat(entity.hashCode(), equalTo(format.hashCode()));
     }
 
     @Test

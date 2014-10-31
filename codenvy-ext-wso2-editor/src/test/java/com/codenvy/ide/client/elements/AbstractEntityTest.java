@@ -31,10 +31,15 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.AbstractEntityElement.Key;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 /**
  * @author Andrey Plotnikov
@@ -43,10 +48,10 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SonarAwareGwtRunner.class)
 public abstract class AbstractEntityTest<T extends AbstractEntityElement> extends GwtTestWithMockito {
 
-    private static final Key<Boolean>      BOOLEAN_PROPERTY = new Key<>("BooleanProperty");
-    private static final Key<String>       STRING_PROPERTY  = new Key<>("StringProperty");
-    private static final Key<Integer>      INTEGER_PROPERTY = new Key<>("IntegerProperty");
-    private static final Key<List<String>> LIST_PROPERTY    = new Key<>("ListProperty");
+    private static final   Key<Boolean>      BOOLEAN_PROPERTY = new Key<>("BooleanProperty");
+    private static final   Key<String>       STRING_PROPERTY  = new Key<>("StringProperty");
+    private static final   Key<List<String>> LIST_PROPERTY    = new Key<>("ListProperty");
+    protected static final Key<Integer>      INTEGER_PROPERTY = new Key<>("IntegerProperty");
 
     protected T entity;
 
@@ -133,6 +138,34 @@ public abstract class AbstractEntityTest<T extends AbstractEntityElement> extend
     @Test
     public void listPropertyShouldBeAbsentWhenNoOneAddedIt() throws Exception {
         assertNull(entity.getProperty(LIST_PROPERTY));
+    }
+
+    @Test
+    public void sameElementsShouldBeEqualed() throws Exception {
+        assertThat(entity.equals(entity), is(true));
+    }
+
+    @Test
+    public void otherObjectShouldBeNotEqualed() throws Exception {
+        //noinspection EqualsBetweenInconvertibleTypes
+        assertFalse(entity.equals("some text"));
+    }
+
+    @Test
+    public void elementShouldBeNotEqualedForAnotherElement() throws Exception {
+        AbstractEntityElement otherElement = mock(AbstractEntityElement.class);
+        assertFalse(entity.equals(otherElement));
+    }
+
+    @Test
+    public void hashCodeMethodShouldBeTested() throws Exception {
+        int first = entity.hashCode();
+
+        assertThat(first, equalTo(entity.hashCode()));
+
+        entity.putProperty(BOOLEAN_PROPERTY, true);
+
+        assertThat(first, not(equalTo(entity.hashCode())));
     }
 
 }

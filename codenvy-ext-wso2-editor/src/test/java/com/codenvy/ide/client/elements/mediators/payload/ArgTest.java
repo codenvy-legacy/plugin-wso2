@@ -42,8 +42,10 @@ import static com.codenvy.ide.client.elements.mediators.payload.Arg.ArgType.VALU
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.Evaluator;
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.Evaluator.JSON;
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.Evaluator.XML;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -232,6 +234,13 @@ public class ArgTest extends AbstractEntityTest<Arg> {
     public void valueOfArgTypeShouldBeReturned() throws Exception {
         assertEquals("Value", VALUE.getValue());
         assertEquals("Expression", EXPRESSION.getValue());
+    }
+
+    @Test
+    public void sameHashCodeShouldBeReturnedForDifferentEntityWithSameState() throws Exception {
+        Arg arg = new Arg(nameSpaceProvider, argProvider);
+
+        assertThat(entity.hashCode(), equalTo(arg.hashCode()));
     }
 
     @Test
