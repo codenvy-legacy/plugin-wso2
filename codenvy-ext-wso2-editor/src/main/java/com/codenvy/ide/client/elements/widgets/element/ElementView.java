@@ -163,22 +163,12 @@ public interface ElementView extends View<ElementView.ActionDelegate> {
          * @param y
          *         the mouse y-position
          */
-        void onMouseRightButtonClicked(int x, int y);
+        void onMouseRightButtonClicked(@Nonnegative int x, @Nonnegative int y);
 
-        /**
-         * Performs some actions in response to a user's moving the widget.
-         *
-         * @param x
-         *         the mouse x-position
-         * @param y
-         *         the mouse y-position
-         */
-        void onMoved(int x, int y);
-
-        /** Performs some actions in response to a user's moving mouse over diagram element. */
+        /** Performs some actions in response to a user's moving mouse over the diagram element. */
         void onMouseOver();
 
-        /** Performs some actions in response to a user's moving mouse out diagram element. */
+        /** Performs some actions in response to a user's moving mouse out the diagram element. */
         void onMouseOut();
 
         /** Performs some actions in response to a user's clicking on 'Delete' action in the context menu. */
@@ -186,6 +176,12 @@ public interface ElementView extends View<ElementView.ActionDelegate> {
 
         /** Performs some actions in response to a user's clicking on 'Number of branches' action in the context menu. */
         void onChangeNumberBranchesActionClicked();
+
+        /** Performs some actions in response to a user's dragging the diagram element. */
+        void onElementDragged(@Nonnegative int x, @Nonnegative int y);
+
+        /** Performs some actions in response to a user's stopping dragging the diagram element. */
+        void onDragFinished();
 
     }
 

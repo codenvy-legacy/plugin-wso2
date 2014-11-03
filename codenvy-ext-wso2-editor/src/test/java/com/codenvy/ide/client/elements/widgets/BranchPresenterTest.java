@@ -50,7 +50,9 @@ import static com.codenvy.ide.client.elements.widgets.branch.BranchView.ELEMENTS
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.ELEMENT_ARROW_PADDING;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.TITLE_WIDTH;
 import static com.codenvy.ide.client.elements.widgets.branch.arrow.ArrowPresenter.ARROW_WIDTH;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
@@ -269,12 +271,14 @@ public class BranchPresenterTest {
     }
 
     private void listenersShouldBeAdded(ElementPresenter elementPresenter) {
+        verify(elementPresenter).setParent(presenter);
         verify(elementPresenter).addElementChangedListener(presenter);
         verify(elementPresenter).addElementMoveListener(presenter);
         verify(elementPresenter).addElementDeleteListener(presenter);
     }
 
     private void listenersShouldBeNotAdded(ElementPresenter elementPresenter) {
+        verify(elementPresenter, never()).setParent(any(BranchPresenter.class));
         verify(elementPresenter, never()).addElementChangedListener(presenter);
         verify(elementPresenter, never()).addElementMoveListener(presenter);
         verify(elementPresenter, never()).addElementDeleteListener(presenter);
@@ -293,15 +297,13 @@ public class BranchPresenterTest {
     }
 
     private void elementsShouldBeAddedOnView() {
-        verify(view).addElement(FIRST_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION, elementPresenter);
-        verify(view).addElement(SECOND_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION, elementPresenter2);
+        verify(view).addElement(elementPresenter, FIRST_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION);
+        verify(view).addElement(elementPresenter2, SECOND_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION);
 
         arrowShouldBeAdded(3);
     }
 
     private void arrowShouldBeAdded(int amount) {
-        verify(view, times(amount)).addArrow(arrow);
-
         verify(arrow, times(amount)).setY(ELEMENT_DEFAULT_Y_POSITION);
 
         int x = ARROW_PADDING;
@@ -309,6 +311,7 @@ public class BranchPresenterTest {
 
         for (int i = 0; i < amount; i++) {
             verify(arrow).setX(eq(x));
+            verify(view).addArrow(arrow, x, ELEMENT_DEFAULT_Y_POSITION);
             x += arrowStepWidth;
         }
     }
@@ -323,7 +326,7 @@ public class BranchPresenterTest {
 
     private void arrowShouldBeNotAdded() {
         verify(arrowProvider, never()).get();
-        verify(view, never()).addArrow(arrow);
+        verify(view, never()).addArrow(eq(arrow), anyInt(), anyInt());
     }
 
     private void viewSizeShouldBeChanged(int height, int width) {
@@ -393,7 +396,7 @@ public class BranchPresenterTest {
         listenersShouldBeNotAdded(elementPresenter);
         listenersShouldBeNotAdded(elementPresenter2);
 
-        verify(view, never()).addElement(anyInt(), anyInt(), any(ElementPresenter.class));
+        verify(view, never()).addElement(any(ElementPresenter.class), anyInt(), anyInt());
 
         viewSizeShouldBeChanged(DEFAULT_HEIGHT, DEFAULT_WIDTH);
 
@@ -507,7 +510,7 @@ public class BranchPresenterTest {
 
         listenersShouldBeAdded(elementPresenter);
 
-        verify(view).addElement(ARROW_PADDING, ELEMENT_DEFAULT_Y_POSITION, elementPresenter);
+        verify(view).addElement(elementPresenter, ARROW_PADDING, ELEMENT_DEFAULT_Y_POSITION);
 
         viewSizeShouldBeChanged(ELEMENTS_PADDING + ELEMENT_WIDTH, 2 * ARROW_PADDING + ELEMENT_WIDTH + TITLE_WIDTH);
 
@@ -530,7 +533,7 @@ public class BranchPresenterTest {
 
         when(view.getHeight()).thenReturn(ELEMENT_HEIGHT);
 
-        assertEquals(ELEMENT_HEIGHT, presenter.getHeight());
+        assertThat(presenter.getHeight(), is(ELEMENT_HEIGHT));
 
         verify(view).getHeight();
     }
@@ -542,7 +545,7 @@ public class BranchPresenterTest {
         when(view.getHeight()).thenReturn(ELEMENT_HEIGHT);
         presenter.setVisibleTopBorder(true);
 
-        assertEquals(ELEMENT_HEIGHT + BORDER_SIZE, presenter.getHeight());
+        assertThat(presenter.getHeight(), is(ELEMENT_HEIGHT + BORDER_SIZE));
 
         verify(view).getHeight();
     }
@@ -567,7 +570,7 @@ public class BranchPresenterTest {
 
         when(view.getWidth()).thenReturn(ELEMENT_WIDTH);
 
-        assertEquals(ELEMENT_WIDTH, presenter.getWidth());
+        assertThat(presenter.getWidth(), is(ELEMENT_WIDTH));
 
         verify(view).getWidth();
     }
@@ -579,6 +582,24 @@ public class BranchPresenterTest {
         presenter.setWidth(ELEMENT_WIDTH);
 
         verify(view).setWidth(ELEMENT_WIDTH);
+    }
+
+    @Test
+    public void absoluteTopPositionShouldBeReturned() throws Exception {
+        prepareDefaultUseCase();
+
+        when(view.getAbsoluteTop()).thenReturn(X_POSITION);
+
+        assertThat(presenter.getY(), is(X_POSITION));
+    }
+
+    @Test
+    public void absoluteLeftPositionShouldBeReturned() throws Exception {
+        prepareDefaultUseCase();
+
+        when(view.getAbsoluteLeft()).thenReturn(X_POSITION);
+
+        assertThat(presenter.getX(), is(X_POSITION));
     }
 
     @Test
@@ -790,8 +811,8 @@ public class BranchPresenterTest {
         listenersShouldBeNotAdded(elementPresenter);
         listenersShouldBeNotAdded(elementPresenter2);
 
-        verify(view, never()).addElement(anyInt(), anyInt(), eq(elementPresenter));
-        verify(view).addElement(FIRST_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION, elementPresenter2);
+        verify(view, never()).addElement(eq(elementPresenter), anyInt(), anyInt());
+        verify(view).addElement(elementPresenter2, FIRST_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION);
 
         arrowShouldBeAdded(2);
         arrowsShouldBeNotCreated();
@@ -842,8 +863,8 @@ public class BranchPresenterTest {
         listenersShouldBeNotAdded(elementPresenter);
         listenersShouldBeNotAdded(elementPresenter2);
 
-        verify(view, never()).addElement(anyInt(), anyInt(), eq(elementPresenter));
-        verify(view).addElement(FIRST_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION, elementPresenter2);
+        verify(view, never()).addElement(eq(elementPresenter), anyInt(), anyInt());
+        verify(view).addElement(elementPresenter2, FIRST_ELEMENT_X_POSITION, ELEMENT_DEFAULT_Y_POSITION);
 
         arrowShouldBeAdded(2);
         arrowsShouldBeNotCreated();

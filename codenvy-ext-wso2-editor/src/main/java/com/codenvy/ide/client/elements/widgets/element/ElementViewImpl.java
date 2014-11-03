@@ -16,11 +16,28 @@
 package com.codenvy.ide.client.elements.widgets.element;
 
 import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.widgets.branch.BranchPresenter;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DragEndEvent;
+import com.google.gwt.event.dom.client.DragEndHandler;
+import com.google.gwt.event.dom.client.DragEnterEvent;
+import com.google.gwt.event.dom.client.DragEnterHandler;
+import com.google.gwt.event.dom.client.DragEvent;
+import com.google.gwt.event.dom.client.DragHandler;
+import com.google.gwt.event.dom.client.DragLeaveEvent;
+import com.google.gwt.event.dom.client.DragLeaveHandler;
+import com.google.gwt.event.dom.client.DragOverEvent;
+import com.google.gwt.event.dom.client.DragOverHandler;
+import com.google.gwt.event.dom.client.DragStartEvent;
+import com.google.gwt.event.dom.client.DragStartHandler;
+import com.google.gwt.event.dom.client.DropEvent;
+import com.google.gwt.event.dom.client.DropHandler;
+import com.google.gwt.event.dom.client.HasAllDragAndDropHandlers;
 import com.google.gwt.event.dom.client.HasAllMouseHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -44,15 +61,19 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.MenuBar;
+import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.assistedinject.Assisted;
-import com.orange.links.client.menu.ContextMenu;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import static com.google.gwt.dom.client.Element.DRAGGABLE_TRUE;
 
 /**
  * Provides a graphical representation of the diagram's element.
@@ -60,8 +81,10 @@ import javax.annotation.Nullable;
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
  */
-public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
-        implements ElementView, HasAllMouseHandlers, HasClickHandlers {
+public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> implements ElementView,
+                                                                                         HasClickHandlers,
+                                                                                         HasAllMouseHandlers,
+                                                                                         HasAllDragAndDropHandlers {
 
     @Singleton
     interface ElementViewImplUiBinder extends UiBinder<Widget, ElementViewImpl> {
@@ -88,42 +111,60 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
     FlowPanel       headerPanel;
 
     private final EditorResources resources;
-    private final ContextMenu     contextMenu;
 
-    private int height;
-    private int width;
-
-    private boolean isComplexMediator;
+    private PopupPanel popup;
+    private int        height;
+    private int        width;
+    private boolean    isComplexMediator;
 
     @Inject
-    public ElementViewImpl(ElementViewImplUiBinder ourUiBinder, EditorResources resources, @Assisted boolean isPossibleChangeCases) {
+    public ElementViewImpl(ElementViewImplUiBinder ourUiBinder, EditorResources resources, @Assisted Element element) {
         this.resources = resources;
-        this.contextMenu = new ContextMenu();
 
         this.height = DEFAULT_HEIGHT;
         this.width = DEFAULT_WIDTH;
 
-        this.contextMenu.addItem("Delete", new Command() {
+        initWidget(ourUiBinder.createAndBindUi(this));
+
+        if (element.needsToShowIconAndTitle()) {
+            getElement().setDraggable(DRAGGABLE_TRUE);
+        }
+
+        bind();
+        preparePopup(element);
+
+        this.isComplexMediator = false;
+    }
+
+    private void preparePopup(@Nonnull Element element) {
+        MenuBar menuBar = new MenuBar(true);
+
+        menuBar.addStyleName(resources.editorCSS().branchBackground());
+        menuBar.addStyleName(resources.editorCSS().gwtMenuItemSelected());
+
+        MenuItem delete = new MenuItem("Delete", true, new Command() {
             @Override
             public void execute() {
                 delegate.onDeleteActionClicked();
             }
         });
 
-        if (isPossibleChangeCases) {
-            this.contextMenu.addItem("Number of branches", new Command() {
+        menuBar.addItem(delete);
+        menuBar.setAutoOpen(true);
+
+        if (element.isPossibleToAddBranches()) {
+            MenuItem amountOfBranches = new MenuItem("Number of branches", true, new Command() {
                 @Override
                 public void execute() {
                     delegate.onChangeNumberBranchesActionClicked();
                 }
             });
+
+            menuBar.addItem(amountOfBranches);
         }
 
-        initWidget(ourUiBinder.createAndBindUi(this));
-
-        bind();
-
-        this.isComplexMediator = false;
+        popup = new PopupPanel(true, true);
+        popup.add(menuBar);
     }
 
     private void bind() {
@@ -144,15 +185,6 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
             }
         });
 
-        addMouseUpHandler(new MouseUpHandler() {
-            @Override
-            public void onMouseUp(MouseUpEvent event) {
-                delegate.onMoved(event.getRelativeX(getParent().getElement()), event.getRelativeY(getParent().getElement()));
-
-                event.stopPropagation();
-            }
-        });
-
         addMouseOutHandler(new MouseOutHandler() {
             @Override
             public void onMouseOut(MouseOutEvent event) {
@@ -166,6 +198,26 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
             @Override
             public void onMouseOver(MouseOverEvent event) {
                 delegate.onMouseOver();
+
+                event.stopPropagation();
+            }
+        });
+
+        addDragHandler(new DragHandler() {
+            @Override
+            public void onDrag(DragEvent event) {
+                NativeEvent nativeEvent = event.getNativeEvent();
+
+                delegate.onElementDragged(nativeEvent.getClientX(), nativeEvent.getClientY());
+
+                event.stopPropagation();
+            }
+        });
+
+        addDragEndHandler(new DragEndHandler() {
+            @Override
+            public void onDragEnd(DragEndEvent event) {
+                delegate.onDragFinished();
 
                 event.stopPropagation();
             }
@@ -225,9 +277,7 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
     public void selectBelowCursor(boolean isError) {
         EditorResources.EditorCSS css = resources.editorCSS();
 
-        mainPanel.addStyleName(isError ?
-                               css.selectErrorElementBelowCursor() :
-                               css.selectElementBelowCursor());
+        mainPanel.addStyleName(isError ? css.selectErrorElementBelowCursor() : css.selectElementBelowCursor());
     }
 
     /** {@inheritDoc} */
@@ -242,14 +292,14 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
     /** {@inheritDoc} */
     @Override
     public void showContextMenu(int x, int y) {
-        contextMenu.setPopupPosition(x, y);
-        contextMenu.show();
+        popup.setPopupPosition(x, y);
+        popup.show();
     }
 
     /** {@inheritDoc} */
     @Override
     public void hideContextMenu() {
-        contextMenu.hide();
+        popup.hide();
     }
 
     /** {@inheritDoc} */
@@ -282,14 +332,13 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
     @Override
     public void setHeight(@Nonnegative int height) {
         this.height = height - MARGIN;
-
-        setHeight(height + "px");
+        getElement().getStyle().setHeight(height, Style.Unit.PX);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setY(@Nonnegative int y) {
-        getElement().getStyle().setProperty("top", y + "px");
+        getElement().getStyle().setTop(y, Style.Unit.PX);
     }
 
     /** {@inheritDoc} */
@@ -302,8 +351,7 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
     @Override
     public void setWidth(@Nonnegative int width) {
         this.width = width - MARGIN;
-
-        setWidth(width + "px");
+        getElement().getStyle().setWidth(width, Style.Unit.PX);
     }
 
     /** {@inheritDoc} */
@@ -346,6 +394,48 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate>
     @Override
     public HandlerRegistration addMouseWheelHandler(MouseWheelHandler handler) {
         return addDomHandler(handler, MouseWheelEvent.getType());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public HandlerRegistration addDragEndHandler(DragEndHandler handler) {
+        return addDomHandler(handler, DragEndEvent.getType());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public HandlerRegistration addDragEnterHandler(DragEnterHandler handler) {
+        return addDomHandler(handler, DragEnterEvent.getType());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public HandlerRegistration addDragHandler(DragHandler handler) {
+        return addDomHandler(handler, DragEvent.getType());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public HandlerRegistration addDragLeaveHandler(DragLeaveHandler handler) {
+        return addDomHandler(handler, DragLeaveEvent.getType());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public HandlerRegistration addDragOverHandler(DragOverHandler handler) {
+        return addDomHandler(handler, DragOverEvent.getType());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public HandlerRegistration addDragStartHandler(DragStartHandler handler) {
+        return addDomHandler(handler, DragStartEvent.getType());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public HandlerRegistration addDropHandler(DropHandler handler) {
+        return addDomHandler(handler, DropEvent.getType());
     }
 
 }

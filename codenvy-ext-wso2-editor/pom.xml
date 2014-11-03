@@ -34,11 +34,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.allen-sauer.gwt.dnd</groupId>
-            <artifactId>gwt-dnd</artifactId>
-            <version>${version.gwt.dnd}</version>
-        </dependency>
-        <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-api</artifactId>
             <version>${codenvy.ide-sdk.version}</version>
@@ -65,19 +60,9 @@
             <version>${version.google.findbugs}</version>
         </dependency>
         <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-incubator</artifactId>
-            <version>${version.gwt.incubator}</version>
-        </dependency>
-        <dependency>
             <groupId>com.google.gwt.inject</groupId>
             <artifactId>gin</artifactId>
             <version>${com.google.gwt.gin.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.orange.links</groupId>
-            <artifactId>gwt-links</artifactId>
-            <version>${version.gwt.links}</version>
         </dependency>
         <dependency>
             <groupId>org.vectomatic</groupId>

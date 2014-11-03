@@ -63,8 +63,11 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
 
     private final Map<String, BranchPresenter> widgetBranches;
 
-    private int x;
-    private int y;
+    private BranchPresenter parent;
+    private int             x;
+    private int             y;
+    private int             prev_x;
+    private int             prev_y;
 
     @Inject
     public ElementPresenter(ElementWidgetFactory elementWidgetFactory,
@@ -73,7 +76,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
                             InnerElementsValidator innerElementsValidator,
                             EditorState editorState,
                             @Assisted Element element) {
-        super(elementWidgetFactory.createElementView(element.isPossibleToAddBranches()));
+        super(elementWidgetFactory.createElementView(element));
 
         this.view.setVisibleTitleAndIcon(element.needsToShowIconAndTitle());
 
@@ -144,6 +147,16 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
         view.setHeight(height);
 
         updateBranchesHeight(height);
+    }
+
+    /**
+     * Set parent branch for the current element.
+     *
+     * @param parent
+     *         parent that needs to be set
+     */
+    public void setParent(@Nonnull BranchPresenter parent) {
+        this.parent = parent;
     }
 
     private void updateBranchesHeight(@Nonnegative int height) {
@@ -319,7 +332,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
 
     /** {@inheritDoc} */
     @Override
-    public void onMouseRightButtonClicked(int x, int y) {
+    public void onMouseRightButtonClicked(@Nonnegative int x, @Nonnegative int y) {
         onMouseLeftButtonClicked();
 
         if (element.needsToShowIconAndTitle()) {
@@ -329,23 +342,14 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
 
     /** {@inheritDoc} */
     @Override
-    public void onMoved(int x, int y) {
-        this.x = x;
-        this.y = y;
-
-        notifyElementMoveListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void onMouseOver() {
-        String elementName = elementCreatorsManager.getElementNameByState(editorState.getState());
+        String creatingElementName = elementCreatorsManager.getElementNameByState(editorState.getState());
 
-        if (elementName == null) {
+        if (creatingElementName == null) {
             return;
         }
 
-        view.selectBelowCursor(!innerElementsValidator.canInsertElement(element.getElementName(), elementName));
+        view.selectBelowCursor(!innerElementsValidator.canInsertElement(element.getElementName(), creatingElementName));
     }
 
     /** {@inheritDoc} */
@@ -379,6 +383,31 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
         onElementChanged();
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void onElementDragged(@Nonnegative int x, @Nonnegative int y) {
+        if (parent == null) {
+            return;
+        }
+
+        this.prev_x = this.x;
+        this.prev_y = this.y;
+
+        this.x = x - parent.getX();
+        this.y = y - parent.getY();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onDragFinished() {
+        notifyElementMoveListeners();
+
+        prev_x = 0;
+        prev_y = 0;
+        x = 0;
+        y = 0;
+    }
+
     /** Unsubsribe from notifications. */
     public void unsubscribeWidget() {
         selectionManager.removeListener(this);
@@ -410,7 +439,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     /** Notify all listeners about moving element. */
     public void notifyElementMoveListeners() {
         for (ElementMoveListener listener : elementMoveListeners) {
-            listener.onElementMoved(element, x, y);
+            listener.onElementMoved(element, prev_x, prev_y);
         }
     }
 

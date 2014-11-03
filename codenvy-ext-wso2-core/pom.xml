@@ -64,11 +64,6 @@
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-incubator</artifactId>
-            <version>${version.gwt.incubator}</version>
-        </dependency>
-        <dependency>
             <groupId>com.google.gwt.inject</groupId>
             <artifactId>gin</artifactId>
             <version>${com.google.gwt.gin.version}</version>

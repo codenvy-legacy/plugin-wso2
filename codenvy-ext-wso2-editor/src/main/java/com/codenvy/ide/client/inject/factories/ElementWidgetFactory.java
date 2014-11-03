@@ -66,11 +66,11 @@ public interface ElementWidgetFactory {
     /**
      * Create an instance of {@link ElementView} with allow to enhance branches.
      *
-     * @param isPossibleChangeCases
-     *         <code>true</code> possible to add branches,<code>false</code> impossible to add branches
+     * @param element
+     *         element for which view will be created
      * @return an instance of {@link ElementView}
      */
     @Nonnull
-    ElementView createElementView(boolean isPossibleChangeCases);
+    ElementView createElementView(@Nonnull Element element);
 
 }

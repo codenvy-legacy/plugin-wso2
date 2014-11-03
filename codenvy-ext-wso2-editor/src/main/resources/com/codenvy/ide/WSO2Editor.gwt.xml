@@ -22,9 +22,6 @@
     <inherits name='com.google.gwt.inject.Inject'/>
     <inherits name='com.google.gwt.xml.XML'/>
 
-    <inherits name='com.orange.links.Links'/>
-    <inherits name='com.google.gwt.widgetideas.WidgetIdeas'/>
-    <inherits name='com.google.gwt.libideas.LibIdeas'/>
     <inherits name='com.codenvy.ide.collections.Collections'/>
     <inherits name='com.codenvy.ide.ui.CodenvyUI'/>
 

@@ -42,7 +42,7 @@
         </g:west>
 
         <g:center>
-            <g:FlowPanel ui:field="body"/>
+            <g:AbsolutePanel ui:field="body"/>
         </g:center>
     </g:DockLayoutPanel>
 

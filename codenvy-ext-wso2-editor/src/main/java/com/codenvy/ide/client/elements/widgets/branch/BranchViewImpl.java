@@ -15,7 +15,6 @@
  */
 package com.codenvy.ide.client.elements.widgets.branch;
 
-import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Element;
@@ -23,6 +22,7 @@ import com.codenvy.ide.client.elements.widgets.branch.arrow.ArrowPresenter;
 import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -36,6 +36,7 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -43,13 +44,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.assistedinject.Assisted;
-import com.orange.links.client.DiagramController;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Provides a graphical representation of the element's branch.
@@ -66,19 +64,13 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
     @UiField
     Label           title;
     @UiField
-    FlowPanel       body;
+    AbsolutePanel   body;
     @UiField
     DockLayoutPanel focusPanel;
     @UiField
     FlowPanel       titlePanel;
     @UiField(provided = true)
     final EditorResources resources;
-
-    private final List<ElementPresenter> elements;
-    private final List<ArrowPresenter>   arrows;
-
-    private DiagramController    controller;
-    private PickupDragController dragController;
 
     private int height;
     private int width;
@@ -87,15 +79,10 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
     public BranchViewImpl(BranchViewImplUiBinder ourUiBinder, EditorResources resources, @Assisted Branch branch) {
         this.resources = resources;
 
-        this.elements = new ArrayList<>();
-        this.arrows = new ArrayList<>();
-
         this.height = DEFAULT_HEIGHT;
         this.width = DEFAULT_WIDTH;
 
         initWidget(ourUiBinder.createAndBindUi(this));
-
-        createCanvas();
 
         Element branchParent = branch.getParent();
 
@@ -104,35 +91,6 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
         }
 
         bind();
-    }
-
-    private void createCanvas() {
-        body.clear();
-
-        if (controller != null && dragController != null) {
-            controller.clearDiagram();
-            controller.removeDragController();
-
-            for (ElementPresenter element : elements) {
-                dragController.makeNotDraggable(element.getView().asWidget());
-            }
-        }
-
-        controller = new DiagramController(width + TITLE_WIDTH, height);
-
-        body.add(controller.getView());
-
-        dragController = new PickupDragController(controller.getView(), true);
-
-        controller.registerDragController(dragController);
-
-        for (ElementPresenter element : elements) {
-            addElementOnView(element.getX(), element.getY(), element);
-        }
-
-        for (ArrowPresenter arrowItem : arrows) {
-            addArrowOnView(arrowItem);
-        }
     }
 
     private void bind() {
@@ -196,43 +154,20 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
 
     /** {@inheritDoc} */
     @Override
-    public void addElement(int x, int y, @Nonnull ElementPresenter elementPresenter) {
-        addElementOnView(x, y, elementPresenter);
-
-        elements.add(elementPresenter);
-    }
-
-    private void addElementOnView(int x, int y, @Nonnull ElementPresenter elementPresenter) {
-        Widget elementView = elementPresenter.getView().asWidget();
-
-        controller.addWidget(elementView, x, y);
-        dragController.makeDraggable(elementView);
+    public void addElement(@Nonnull ElementPresenter elementPresenter, @Nonnegative int x, @Nonnegative int y) {
+        body.add(elementPresenter.getView(), x, y);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void addArrow(@Nonnull ArrowPresenter arrow) {
-        arrows.add(arrow);
-        addArrowOnView(arrow);
-    }
-
-    private void addArrowOnView(@Nonnull ArrowPresenter arrow) {
-        controller.addWidget(arrow.getView().asWidget(), arrow.getX(), arrow.getY());
+    public void addArrow(@Nonnull ArrowPresenter arrow, @Nonnegative int x, @Nonnegative int y) {
+        body.add(arrow.getView(), x, y);
     }
 
     /** {@inheritDoc} */
     @Override
     public void clear() {
         body.clear();
-
-        controller.clearDiagram();
-
-        for (ElementPresenter element : elements) {
-            dragController.makeNotDraggable(element.getView().asWidget());
-        }
-
-        elements.clear();
-        arrows.clear();
     }
 
     /** {@inheritDoc} */
@@ -267,9 +202,7 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
     public void setHeight(@Nonnegative int height) {
         this.height = height;
 
-        setHeight(height + "px");
-
-        createCanvas();
+        getElement().getStyle().setHeight(height, Style.Unit.PX);
     }
 
     /** {@inheritDoc} */
@@ -283,9 +216,7 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
     public void setWidth(@Nonnegative int width) {
         this.width = width;
 
-        setWidth(width + "px");
-
-        createCanvas();
+        getElement().getStyle().setWidth(width, Style.Unit.PX);
     }
 
     /** {@inheritDoc} */

@@ -149,6 +149,18 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         alignElements();
     }
 
+    /** @return x-position of the widget */
+    @Nonnegative
+    public int getX() {
+        return view.getAbsoluteLeft();
+    }
+
+    /** @return y-position of the widget */
+    @Nonnegative
+    public int getY() {
+        return view.getAbsoluteTop();
+    }
+
     /**
      * Change visible state of border at the top of element.
      *
@@ -318,7 +330,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
                 widgetElements.put(elementId, elementPresenter);
             }
 
-            view.addElement(x, y, elementPresenter);
+            view.addElement(elementPresenter, x, y);
             x += elementPresenter.getWidth() + ELEMENT_ARROW_PADDING;
 
             if (needsToShowArrows) {
@@ -341,7 +353,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         arrow.setX(x);
         arrow.setY(y);
 
-        view.addArrow(arrow);
+        view.addArrow(arrow, x, y);
     }
 
     private void showTitleOrNot() {
@@ -352,6 +364,8 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     @Nonnull
     private ElementPresenter createElementPresenter(@Nonnull Element element) {
         ElementPresenter elementPresenter = elementWidgetFactory.createElementPresenter(element);
+
+        elementPresenter.setParent(this);
 
         elementPresenter.addElementChangedListener(this);
         elementPresenter.addElementMoveListener(this);

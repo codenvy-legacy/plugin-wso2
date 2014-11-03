@@ -58,7 +58,7 @@ public interface BranchView extends View<BranchView.ActionDelegate> {
      * @param element
      *         the diagram element that needs to be added in container
      */
-    void addElement(@Nonnegative int x, @Nonnegative int y, @Nonnull ElementPresenter element);
+    void addElement(@Nonnull ElementPresenter element, @Nonnegative int x, @Nonnegative int y);
 
     /**
      * Adds an arrow in the container.The position where this element have to be located must be defined into a give element.
@@ -66,7 +66,7 @@ public interface BranchView extends View<BranchView.ActionDelegate> {
      * @param arrow
      *         arrow that needs to be added
      */
-    void addArrow(@Nonnull ArrowPresenter arrow);
+    void addArrow(@Nonnull ArrowPresenter arrow, @Nonnegative int x, @Nonnegative int y);
 
     /** Clear container's content. Removes all inner diagram elements. */
     void clear();
@@ -119,6 +119,22 @@ public interface BranchView extends View<BranchView.ActionDelegate> {
      *         <code>true</code> the border will be shown, <code>false</code> it will not
      */
     void setVisibleTopBorder(boolean visible);
+
+    /**
+     * Gets the object's absolute left position in pixels, as measured from the browser window's client area.
+     *
+     * @return the object's absolute left position
+     */
+    @Nonnegative
+    int getAbsoluteLeft();
+
+    /**
+     * Gets the object's absolute top position in pixels, as measured from the browser window's client area.
+     *
+     * @return the object's absolute top position
+     */
+    @Nonnegative
+    int getAbsoluteTop();
 
     public interface ActionDelegate {
 

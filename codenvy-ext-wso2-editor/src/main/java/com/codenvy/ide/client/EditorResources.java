@@ -108,6 +108,12 @@ public interface EditorResources extends ClientBundle {
         String propertyBorderTop();
 
         String toolbarLineHeight();
+
+        @ClassName("gwt-MenuItem-selected")
+        String gwtMenuItemSelected();
+
+        @ClassName("gwt-MenuBar")
+        String gwtMenuBar();
     }
 
     @Source("editor.css")

@@ -167,7 +167,7 @@ public class ElementPresenterTest {
         when(element.getBranches()).thenReturn(branches);
         when(element.getBranchesAmount()).thenReturn(branches.size());
 
-        when(elementWidgetFactory.createElementView(anyBoolean())).thenReturn(view);
+        when(elementWidgetFactory.createElementView(any(Element.class))).thenReturn(view);
     }
 
     private void prepareBranchIds() {
@@ -192,7 +192,6 @@ public class ElementPresenterTest {
         verify(element).getIcon();
 
         verify(element, times(2)).needsToShowIconAndTitle();
-        verify(element).isPossibleToAddBranches();
     }
 
     private void branchPresenterShouldBeCreatedAndShown(BranchPresenter branchPresenter, int width) {
@@ -541,14 +540,40 @@ public class ElementPresenterTest {
     }
 
     @Test
-    public void movingElementListenerShouldBeNotifiedWhenElementIsMoved() throws Exception {
+    public void movingElementListenerShouldBeNotifiedWhenElementIsMovedAndParentIsEmpty() throws Exception {
         prepareDefaultUseCase();
 
         presenter.addElementMoveListener(movingElementListener);
 
-        presenter.onMoved(X_POSITION, Y_POSITION);
+        presenter.onElementDragged(X_POSITION, Y_POSITION);
+        presenter.onElementDragged(X_POSITION, Y_POSITION);
+        presenter.onElementDragged(X_POSITION, Y_POSITION);
 
-        verify(movingElementListener).onElementMoved(element, X_POSITION, Y_POSITION);
+        presenter.onDragFinished();
+
+        verify(movingElementListener).onElementMoved(element, 0, 0);
+    }
+
+    @Test
+    public void movingElementListenerShouldBeNotifiedWhenElementIsMoved() throws Exception {
+        prepareDefaultUseCase();
+
+        BranchPresenter parent = mock(BranchPresenter.class);
+
+        int value = 50;
+        when(parent.getX()).thenReturn(value);
+        when(parent.getY()).thenReturn(value);
+
+        presenter.addElementMoveListener(movingElementListener);
+        presenter.setParent(parent);
+
+        presenter.onElementDragged(X_POSITION, Y_POSITION);
+        presenter.onElementDragged(X_POSITION, Y_POSITION);
+        presenter.onElementDragged(X_POSITION, Y_POSITION);
+
+        presenter.onDragFinished();
+
+        verify(movingElementListener).onElementMoved(element, value, value);
     }
 
     @Test
