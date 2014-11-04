@@ -16,8 +16,9 @@
 package com.codenvy.ide.client.propertiespanel.endpoints.address.property;
 
 import com.codenvy.ide.client.elements.endpoints.address.Property;
-import com.codenvy.ide.client.propertiespanel.endpoints.address.editoraddressproperty.EditorAddressPropertyCallBack;
-import com.codenvy.ide.client.propertiespanel.endpoints.address.editoraddressproperty.EditorAddressPropertyPresenter;
+import com.codenvy.ide.client.propertiespanel.common.addpropertydialog.AddPropertyAddressEPPresenter;
+import com.codenvy.ide.client.propertiespanel.common.addpropertydialog.AddPropertyCallBack;
+import com.codenvy.ide.client.propertiespanel.common.addpropertydialog.general.AddPropertyPresenter;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -38,24 +39,24 @@ import static com.codenvy.ide.client.elements.endpoints.address.Property.copyEnd
 public class PropertyPresenter implements PropertyView.ActionDelegate {
 
     private final PropertyView                   view;
-    private final EditorAddressPropertyPresenter editPropertyPresenter;
-    private final EditorAddressPropertyCallBack  addCallBack;
-    private final EditorAddressPropertyCallBack  editCallBack;
+    private final AddPropertyPresenter<Property> editPropertyPresenter;
+    private final AddPropertyCallBack<Property>  addCallBack;
+    private final AddPropertyCallBack<Property>  editCallBack;
 
     private Property                  selectedProperty;
     private PropertiesChangedCallback callback;
     private List<Property>            properties;
 
     @Inject
-    public PropertyPresenter(PropertyView view, final EditorAddressPropertyPresenter editPropertyPresenter) {
+    public PropertyPresenter(PropertyView view, final AddPropertyAddressEPPresenter editPropertyPresenter) {
         this.view = view;
         this.view.setDelegate(this);
 
         this.editPropertyPresenter = editPropertyPresenter;
 
-        this.addCallBack = new EditorAddressPropertyCallBack() {
+        this.addCallBack = new AddPropertyCallBack<Property>() {
             @Override
-            public void onAddressPropertyChanged(@Nonnull Property property) {
+            public void onPropertyChanged(@Nonnull Property property) {
                 if (!isElementNameContained(property)) {
                     properties.add(property);
 
@@ -68,9 +69,9 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
             }
         };
 
-        this.editCallBack = new EditorAddressPropertyCallBack() {
+        this.editCallBack = new AddPropertyCallBack<Property>() {
             @Override
-            public void onAddressPropertyChanged(@Nonnull Property property) {
+            public void onPropertyChanged(@Nonnull Property property) {
                 int index = properties.indexOf(selectedProperty);
 
                 String innerPropertyName = property.getProperty(NAME);

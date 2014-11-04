@@ -90,13 +90,13 @@ public class Property extends AbstractEntityElement {
 
         StringBuilder result = new StringBuilder();
 
-        result.append('<').append(propertyName).append(' ').append(convertNameSpacesToXML(getProperty(NAMESPACES)))
-              .append("name=\"").append(getProperty(NAME));
+        result.append('<').append(propertyName).append(" name=\"").append(getProperty(NAME)).append('"');
 
         if (LITERAL.equals(type)) {
-            result.append("\" value=\"").append(getProperty(VALUE));
+            result.append(" value=\"").append(getProperty(VALUE));
         } else {
-            result.append("\" expression=\"").append(getProperty(EXPRESSION));
+            result.append(' ').append(convertNameSpacesToXML(getProperty(NAMESPACES))).append("expression=\"")
+                  .append(getProperty(EXPRESSION));
         }
 
         result.append("\"/>");

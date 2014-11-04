@@ -24,6 +24,7 @@ import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.Format;
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.Optimize;
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.TimeoutAction;
+import static com.codenvy.ide.client.elements.endpoints.address.Property.Scope;
 
 /**
  * @author Andrey Plotnikov
@@ -55,6 +56,11 @@ public class EndpointsPropertyTypeInitializer extends AbstractPropertyTypeInitia
         manager.register(TimeoutAction.TYPE_NAME, Arrays.asList(TimeoutAction.NEVER.getValue(),
                                                                 TimeoutAction.DISCARD.getValue(),
                                                                 TimeoutAction.FAULT.getValue()));
+
+        manager.register(Scope.TYPE_NAME, Arrays.asList(Scope.DEFAULT.getValue(),
+                                                        Scope.AXIS2.getValue(),
+                                                        Scope.AXIS2_CLIENT.getValue(),
+                                                        Scope.TRANSPORT.getValue()));
     }
 
 }

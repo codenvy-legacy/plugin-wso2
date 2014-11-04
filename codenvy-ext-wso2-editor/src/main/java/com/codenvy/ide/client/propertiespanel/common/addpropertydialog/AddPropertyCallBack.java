@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.codenvy.ide.client.propertiespanel.endpoints.address.editoraddressproperty;
+package com.codenvy.ide.client.propertiespanel.common.addpropertydialog;
 
-import com.codenvy.ide.client.elements.endpoints.address.Property;
+import com.codenvy.ide.client.elements.AbstractEntityElement;
 
 import javax.annotation.Nonnull;
 
 /**
- * The entity which includes property of address endpoint, that may be modified, must implement this interface. This
+ * The entity which includes property, that may be modified, must implement this interface. This
  * method will be call when property is changed.
  *
  * @author Dmitry Shnurenko
  */
-public interface EditorAddressPropertyCallBack {
+public interface AddPropertyCallBack<T extends AbstractEntityElement> {
     /**
-     * Performs some actions when property of address end point was changed.
+     * Performs some actions when property was changed.
      *
      * @param property
      *         changed property of address end point
      */
-    void onAddressPropertyChanged(@Nonnull Property property);
+    void onPropertyChanged(@Nonnull T property);
 }

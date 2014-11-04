@@ -144,7 +144,7 @@ public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Se
 
                 nameSpaceEditorPresenter.showWindowWithParameters(nameSpaces,
                                                                   addNameSpacesCallBack,
-                                                                  locale.callExpressionTitle(),
+                                                                  locale.sequenceExpressionTitle(),
                                                                   dynamicRefKey);
             }
         };

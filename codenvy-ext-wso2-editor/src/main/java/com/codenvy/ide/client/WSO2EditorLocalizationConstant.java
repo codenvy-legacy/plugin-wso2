@@ -246,9 +246,6 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("propertiespanel.sequence.expression.title")
     String sequenceExpressionTitle();
 
-    @Key("propertiespanel.call.template.configuration.title")
-    String callTemplateConfigTitle();
-
     @Key("propertiespanel.call.endpointType")
     String endpointType();
 
@@ -262,7 +259,7 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     String description();
 
     @Key("propertiespanel.call.expression.title")
-    String callExpressionTitle();
+    String expressionTitle();
 
     @Key("propertiespanel.filter.conditionType")
     String conditionType();
@@ -281,9 +278,6 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.filter.source.title")
     String filterSourceTitle();
-
-    @Key("propertiespanel.enrich.source.description")
-    String enrichDescription();
 
     @Key("propertiespanel.enrich.source.cloneSource")
     String enrichCloneSource();
@@ -330,9 +324,6 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("propertiespanel.payload.args.configuration.title")
     String argsConfigurationTitle();
 
-    @Key("propertiespanel.payload.args.label")
-    String argsLabel();
-
     @Key("propertiespanel.payload.payloadFormat")
     String payloadFormat();
 
@@ -374,9 +365,6 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.property.propertyScope")
     String propertyScope();
-
-    @Key("propertiespanel.property.valueExpression")
-    String propertyValueExpression();
 
     @Key("propertiespanel.send.namespace.label")
     String sendNamespaceLabel();
@@ -513,18 +501,6 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("propertiespanel.addressEndpoint.timeoutAction")
     String addressEndpointTimeoutAction();
 
-    @Key("propertiespanel.addressEndpoint.table.addresspropertyedit.name")
-    String addressPropertyEditName();
-
-    @Key("propertiespanel.addressEndpoint.table.addresspropertyedit.value")
-    String addressPropertyEditValue();
-
-    @Key("propertiespanel.addressEndpoint.table.addresspropertyedit.type")
-    String addressPropertyEditType();
-
-    @Key("propertiespanel.addressEndpoint.table.addresspropertyedit.scope")
-    String addressPropertyEditScope();
-
     @Key("propertiespanel.endpoint.properties.title")
     String endpointPropertiesTitle();
 
@@ -549,17 +525,14 @@ public interface WSO2EditorLocalizationConstant extends Messages {
     @Key("propertiespanel.connector.salesForce.loginUrl")
     String connectorLoginUrl();
 
-    @Key("propertiespanel.connector.salesForce.createNewConfiguration")
-    String connectorNewConfigValue();
-
     @Key("propertiespanel.connector.salesForce.forceLogin")
     String connectorForceLogin();
 
-    @Key("propertiespanel.addressEndpoint.table.title")
+    @Key("propertiespanel.addressEndpoint.edit.table.title")
     String editPropAdrrEndTableTitle();
 
     @Key("propertiespanel.addressEndpoint.table.error")
-    String endpointTableError();
+    String nameAlreadyExistsError();
 
     @Key("propertiespanel.error.message")
     String errorMessage();
@@ -1532,4 +1505,10 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("toolbar.palette")
     String toolbarPalette();
+
+    @Key("propertiespanel.property.log.edit.table.title")
+    String propertyLogEditTableTitle();
+
+    @Key("propertiespanel.property.payload.edit.table.title")
+    String propertyArgEditTableTitle();
 }

@@ -18,6 +18,7 @@ package com.codenvy.ide.client.propertiespanel.common.namespace;
 import com.codenvy.ide.client.CellTableResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
+import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.dom.client.Style;
@@ -79,6 +80,8 @@ public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorVi
     @UiField(provided = true)
     final CellTableResources             resource;
 
+    private final Info info;
+
     private ActionDelegate delegate;
 
     @Inject
@@ -91,6 +94,9 @@ public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorVi
 
         this.setTitle(locale.editorTitle());
         this.setWidget(uiBinder.createAndBindUi(this));
+
+        this.info = new Info(locale.nameAlreadyExistsError());
+        this.info.setTitle(locale.errorMessage());
 
         Button btnCancel = createButton(locale.buttonCancel(), "namespace-button-cancel", new ClickHandler() {
             @Override
@@ -154,6 +160,12 @@ public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorVi
     @UiHandler("selectPathButton")
     public void onSelectXPathButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onSelectXPathButtonClicked();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void showErrorMessage() {
+        info.show();
     }
 
     /** {@inheritDoc} */

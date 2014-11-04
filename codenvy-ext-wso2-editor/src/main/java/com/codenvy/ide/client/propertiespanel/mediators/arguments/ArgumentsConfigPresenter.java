@@ -15,24 +15,16 @@
  */
 package com.codenvy.ide.client.propertiespanel.mediators.arguments;
 
-import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.payload.Arg;
-import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
-import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
+import com.codenvy.ide.client.propertiespanel.common.addpropertydialog.AddPropertyArgPresenter;
+import com.codenvy.ide.client.propertiespanel.common.addpropertydialog.AddPropertyCallBack;
+import com.codenvy.ide.client.propertiespanel.common.addpropertydialog.general.AddPropertyPresenter;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.mediators.payload.Arg.ARG_EVALUATOR;
-import static com.codenvy.ide.client.elements.mediators.payload.Arg.ARG_EXPRESSION;
-import static com.codenvy.ide.client.elements.mediators.payload.Arg.ARG_NAMESPACES;
-import static com.codenvy.ide.client.elements.mediators.payload.Arg.ARG_TYPE;
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.ARG_VALUE;
-import static com.codenvy.ide.client.elements.mediators.payload.Arg.ArgType;
-import static com.codenvy.ide.client.elements.mediators.payload.Arg.Evaluator;
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.copyArgsList;
 
 /**
@@ -45,36 +37,62 @@ import static com.codenvy.ide.client.elements.mediators.payload.Arg.copyArgsList
  */
 public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDelegate {
 
-    private final WSO2EditorLocalizationConstant local;
-    private final ArgumentsConfigView            argView;
-    private final Provider<Arg>                  argProvider;
-    private final NameSpaceEditorPresenter       nameSpacePresenter;
-    private final AddNameSpacesCallBack          addNameSpacesCallBack;
+    private final ArgumentsConfigView       argView;
+    private final AddPropertyPresenter<Arg> addPropertyArgPresenter;
+    private final AddPropertyCallBack<Arg>  addPropertyCallBack;
+    private final AddPropertyCallBack<Arg>  editPropertyCallBack;
 
     private AddArgumentCallBack argumentCallBack;
     private List<Arg>           arrayTemporary;
     private Arg                 selectedArg;
-    private int                 index;
 
     @Inject
-    public ArgumentsConfigPresenter(ArgumentsConfigView argumentsConfigView,
-                                    NameSpaceEditorPresenter nameSpacePresenter,
-                                    WSO2EditorLocalizationConstant local,
-                                    Provider<Arg> argProvider) {
-        this.local = local;
-        this.nameSpacePresenter = nameSpacePresenter;
-        this.argView = argumentsConfigView;
-        this.argProvider = argProvider;
-        this.argView.setDelegate(this);
-        this.index = -1;
+    public ArgumentsConfigPresenter(ArgumentsConfigView argumentsConfigView, final AddPropertyArgPresenter addPropertyArgPresenter) {
 
-        this.addNameSpacesCallBack = new AddNameSpacesCallBack() {
+        this.argView = argumentsConfigView;
+        this.addPropertyArgPresenter = addPropertyArgPresenter;
+        this.argView.setDelegate(this);
+
+        this.addPropertyCallBack = new AddPropertyCallBack<Arg>() {
             @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
-                selectedArg.putProperty(ARG_EXPRESSION, expression);
-                selectedArg.putProperty(ARG_NAMESPACES, nameSpaces);
+            public void onPropertyChanged(@Nonnull Arg property) {
+                if (!arrayTemporary.contains(property)) {
+                    arrayTemporary.add(property);
+
+                    ArgumentsConfigPresenter.this.argView.setArgs(arrayTemporary);
+
+                    addPropertyArgPresenter.hideDialog();
+                } else {
+                    ArgumentsConfigPresenter.this.argView.showErrorMessage();
+                }
             }
         };
+
+        this.editPropertyCallBack = new AddPropertyCallBack<Arg>() {
+            @Override
+            public void onPropertyChanged(@Nonnull Arg property) {
+                int index = arrayTemporary.indexOf(selectedArg);
+
+                String innerPropertyName = property.getProperty(ARG_VALUE);
+                String selectedPropertyName = selectedArg.getProperty(ARG_VALUE);
+
+                if (innerPropertyName == null || selectedPropertyName == null) {
+                    return;
+                }
+
+                if (innerPropertyName.equals(selectedPropertyName) || !arrayTemporary.contains(property)) {
+                    arrayTemporary.set(index, property);
+
+                    ArgumentsConfigPresenter.this.argView.setArgs(arrayTemporary);
+
+                    addPropertyArgPresenter.hideDialog();
+
+                } else {
+                    ArgumentsConfigPresenter.this.argView.showErrorMessage();
+                }
+            }
+        };
+
     }
 
     /** {@inheritDoc} */
@@ -92,26 +110,7 @@ public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDeleg
     /** {@inheritDoc} */
     @Override
     public void onAddArgButtonClicked() {
-        String value = argView.getValueExpression().isEmpty() ? "default" : argView.getValueExpression();
-        String evaluator = argView.getEvaluator().isEmpty() ? "xml" : argView.getEvaluator();
-        String type = argView.getTypeValue().isEmpty() ? "Value" : argView.getTypeValue();
-
-        Arg arg = argProvider.get();
-        arg.putProperty(ARG_TYPE, ArgType.getItemByValue(type));
-        arg.putProperty(ARG_EVALUATOR, Evaluator.getItemByValue(evaluator));
-        arg.putProperty(ARG_VALUE, value);
-
-        argView.setValueExpression("");
-        argView.clearEvaluator();
-
-        if (index != -1) {
-            arrayTemporary.set(index, arg);
-            index = -1;
-        } else {
-            arrayTemporary.add(arg);
-        }
-
-        argView.setArgs(arrayTemporary);
+        addPropertyArgPresenter.showDialog(null, addPropertyCallBack);
     }
 
     /** {@inheritDoc} */
@@ -124,41 +123,8 @@ public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDeleg
 
     /** {@inheritDoc} */
     @Override
-    public void onEditArgsButtonClicked() {
-        List<NameSpace> nameSpaces = selectedArg.getProperty(ARG_NAMESPACES);
-
-        if (nameSpaces == null) {
-            return;
-        }
-
-        nameSpacePresenter.showWindowWithParameters(nameSpaces,
-                                                    addNameSpacesCallBack,
-                                                    local.argsLabel(),
-                                                    selectedArg.getProperty(ARG_EXPRESSION));
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void onEditButtonClicked() {
-        String expression = selectedArg.getProperty(ARG_EXPRESSION);
-        Evaluator evaluator = selectedArg.getProperty(ARG_EVALUATOR);
-        ArgType argType = selectedArg.getProperty(ARG_TYPE);
-
-        if (expression == null || evaluator == null || argType == null) {
-            return;
-        }
-
-        argView.setValueExpression(expression);
-
-        argView.setEvaluator();
-        argView.selectEvaluator(evaluator.getValue());
-
-        argView.setTypeValue();
-        argView.selectType(argType.getValue());
-
-        index = arrayTemporary.indexOf(selectedArg);
-
-        argView.setArgs(arrayTemporary);
+        addPropertyArgPresenter.showDialog(selectedArg, editPropertyCallBack);
     }
 
     /** {@inheritDoc} */

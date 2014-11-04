@@ -48,42 +48,17 @@
         .centerPanel {
             margin-left: 10px;
         }
-
-        .descriptionLabel {
-            margin: 10px 10px;
-        }
-
-        .alignLeft {
-            float: left;
-            margin-left: 10px;
-        }
-
     </ui:style>
 
     <g:DockLayoutPanel unit="PX" width="650px" height="300px">
 
         <g:center>
             <g:FlowPanel addStyleNames="{style.centerPanel}">
-                <g:Label text="{locale.arguments}" addStyleNames="{style.descriptionLabel}"/>
-
-                <g:FlowPanel addStyleNames="{style.alignLeft}">
-                    <g:Label text="{locale.columnType}"/>
-                    <g:ListBox ui:field="typeValue" height="24px" width="156px"/>
-                </g:FlowPanel>
-
-                <g:FlowPanel addStyleNames="{style.alignLeft}">
-                    <g:Label text="{locale.valueExpression}"/>
-                    <g:TextBox ui:field="valueExpressionTextBox" height="17px"/>
-                </g:FlowPanel>
-
-                <g:FlowPanel addStyleNames="{style.alignLeft}">
-                    <g:Label text="{locale.columnEvaluator}"/>
-                    <g:ListBox ui:field="valueEvaluator" height="24px" width="156px"/>
-                </g:FlowPanel>
 
                 <g:ScrollPanel width="100%" height="100%">
                     <c:CellTable ui:field="args" addStyleNames="{style.tableStyle}"/>
                 </g:ScrollPanel>
+
             </g:FlowPanel>
         </g:center>
 

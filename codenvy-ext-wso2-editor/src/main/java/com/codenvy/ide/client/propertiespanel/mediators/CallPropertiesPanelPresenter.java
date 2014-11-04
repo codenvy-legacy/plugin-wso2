@@ -123,7 +123,7 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call> 
                 }
                 nameSpaceEditorPresenter.showWindowWithParameters(nameSpaces,
                                                                   addNameSpacesCallBack,
-                                                                  locale.callExpressionTitle(),
+                                                                  locale.expressionTitle(),
                                                                   xPath);
             }
         };

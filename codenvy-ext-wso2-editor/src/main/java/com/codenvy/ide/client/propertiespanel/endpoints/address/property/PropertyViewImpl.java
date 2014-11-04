@@ -81,7 +81,7 @@ public class PropertyViewImpl extends Window implements PropertyView {
         setTitle(locale.endpointPropertiesTitle());
         setWidget(ourUiBinder.createAndBindUi(this));
 
-        info = new Info(locale.endpointTableError());
+        info = new Info(locale.nameAlreadyExistsError());
         info.setTitle(locale.errorMessage());
 
         Button btnCancel = createButton(locale.buttonCancel(), "endpoint-properties-cancel", new ClickHandler() {
@@ -165,10 +165,10 @@ public class PropertyViewImpl extends Window implements PropertyView {
         table.addColumn(type, locale.columnType());
         table.addColumn(scope, locale.columnScope());
 
-        table.setColumnWidth(name, 170, Style.Unit.PX);
-        table.setColumnWidth(value, 170, Style.Unit.PX);
+        table.setColumnWidth(name, 150, Style.Unit.PX);
+        table.setColumnWidth(value, 150, Style.Unit.PX);
         table.setColumnWidth(type, 60, Style.Unit.PX);
-        table.setColumnWidth(scope, 60, Style.Unit.PX);
+        table.setColumnWidth(scope, 100, Style.Unit.PX);
 
         table.setLoadingIndicator(null);
 

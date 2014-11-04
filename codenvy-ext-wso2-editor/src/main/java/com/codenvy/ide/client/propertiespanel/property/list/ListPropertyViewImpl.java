@@ -42,9 +42,9 @@ public class ListPropertyViewImpl extends AbstractPropertyViewImpl<ListPropertyV
     }
 
     @UiField
-    Label           title;
+    Label   title;
     @UiField
-    ListBox         property;
+    ListBox property;
     @UiField(provided = true)
     final EditorResources res;
 
@@ -72,20 +72,34 @@ public class ListPropertyViewImpl extends AbstractPropertyViewImpl<ListPropertyV
     /** {@inheritDoc} */
     @Override
     public void setPropertyValues(@Nullable List<String> values) {
-        setTypes(property, values);
+        if (values == null) {
+            return;
+        }
+
+        property.clear();
+
+        for (String value : values) {
+            property.addItem(value);
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectPropertyValue(@Nullable String value) {
-        selectType(property, value);
+        for (int i = 0; i < property.getItemCount(); i++) {
+            if (property.getValue(i).equals(value)) {
+                property.setItemSelected(i, true);
+                return;
+            }
+        }
     }
 
     /** {@inheritDoc} */
     @Nonnull
     @Override
     public String getProperty() {
-        return getSelectedItem(property);
+        int index = property.getSelectedIndex();
+        return index != -1 ? property.getValue(property.getSelectedIndex()) : "";
     }
 
     @UiHandler("property")

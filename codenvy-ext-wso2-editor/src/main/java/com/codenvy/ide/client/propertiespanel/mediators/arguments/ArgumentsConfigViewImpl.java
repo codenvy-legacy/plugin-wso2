@@ -18,20 +18,16 @@ package com.codenvy.ide.client.propertiespanel.mediators.arguments;
 import com.codenvy.ide.client.CellTableResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.mediators.payload.Arg;
+import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.ui.window.Window;
-import com.google.gwt.cell.client.ButtonCell;
-import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
@@ -47,8 +43,6 @@ import static com.codenvy.ide.client.elements.mediators.payload.Arg.ARG_TYPE;
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.ARG_VALUE;
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.ArgType;
 import static com.codenvy.ide.client.elements.mediators.payload.Arg.Evaluator;
-import static com.codenvy.ide.client.elements.mediators.payload.Arg.Evaluator.JSON;
-import static com.codenvy.ide.client.elements.mediators.payload.Arg.Evaluator.XML;
 import static com.google.gwt.dom.client.Style.Unit.PX;
 
 /**
@@ -63,15 +57,6 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
     interface ArgumentsConfigViewImplUiBinder extends UiBinder<Widget, ArgumentsConfigViewImpl> {
     }
 
-    @UiField
-    TextBox valueExpressionTextBox;
-
-    @UiField
-    ListBox valueEvaluator;
-
-    @UiField
-    ListBox typeValue;
-
     @UiField(provided = true)
     final CellTableResources             resource;
     @UiField(provided = true)
@@ -80,21 +65,26 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
     @UiField(provided = true)
     final CellTable<Arg> args;
 
+    private final Info info;
+
     private ActionDelegate delegate;
 
     @Inject
-    public ArgumentsConfigViewImpl(WSO2EditorLocalizationConstant localizationConstant,
+    public ArgumentsConfigViewImpl(WSO2EditorLocalizationConstant locale,
                                    ArgumentsConfigViewImplUiBinder uiBinder,
                                    CellTableResources resource) {
-        this.locale = localizationConstant;
+        this.locale = locale;
         this.resource = resource;
 
-        this.args = createTable(localizationConstant, resource);
+        this.info = new Info(locale.nameAlreadyExistsError());
+        this.info.setTitle(locale.errorMessage());
 
-        this.setTitle(localizationConstant.argsConfigurationTitle());
+        this.args = createTable(locale, resource);
+
+        this.setTitle(locale.argsConfigurationTitle());
         this.setWidget(uiBinder.createAndBindUi(this));
 
-        Button btnCancel = createButton(localizationConstant.buttonCancel(), "args-configuration-cancel", new ClickHandler() {
+        Button btnCancel = createButton(locale.buttonCancel(), "args-configuration-cancel", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onCancelButtonClicked();
@@ -102,7 +92,7 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
         });
         getFooter().add(btnCancel);
 
-        Button btnOk = createButton(localizationConstant.buttonOk(), "args-configuration-ok", new ClickHandler() {
+        Button btnOk = createButton(locale.buttonOk(), "args-configuration-ok", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onOkButtonClicked();
@@ -142,23 +132,6 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
             }
         };
 
-        ButtonCell namespaceEditor = new ButtonCell();
-
-        Column<Arg, String> namespaceEditorButton = new Column<Arg, String>(namespaceEditor) {
-            @Override
-            public String getValue(Arg object) {
-                return localizationConstant.buttonEditConfig();
-            }
-        };
-
-        namespaceEditorButton.setFieldUpdater(new FieldUpdater<Arg, String>() {
-            @Override
-            public void update(int index, Arg object, String value) {
-                delegate.onSelectedArg(selectionModel.getSelectedObject());
-                delegate.onEditArgsButtonClicked();
-            }
-        });
-
         TextColumn<Arg> evaluator = new TextColumn<Arg>() {
             @Override
             public String getValue(Arg arg) {
@@ -170,12 +143,10 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
 
         table.addColumn(type, localizationConstant.columnType());
         table.addColumn(value, localizationConstant.columnValue());
-        table.addColumn(namespaceEditorButton);
         table.addColumn(evaluator, localizationConstant.columnEvaluator());
 
         table.setColumnWidth(type, 120, PX);
         table.setColumnWidth(value, 210, PX);
-        table.setColumnWidth(namespaceEditorButton, 30, PX);
         table.setColumnWidth(evaluator, 120, PX);
 
         table.setLoadingIndicator(null);
@@ -218,6 +189,12 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
 
     /** {@inheritDoc} */
     @Override
+    public void showErrorMessage() {
+        info.show();
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void setArgs(@Nonnull List<Arg> argsList) {
         List<Arg> list = new ArrayList<>();
 
@@ -226,79 +203,6 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
         }
 
         args.setRowData(list);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    public String getTypeValue() {
-        int index = typeValue.getSelectedIndex();
-        return index != -1 ? typeValue.getValue(typeValue.getSelectedIndex()) : "";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setTypeValue() {
-        this.typeValue.clear();
-        this.typeValue.addItem(ArgType.EXPRESSION.getValue());
-        this.typeValue.addItem(ArgType.VALUE.getValue());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void selectType(@Nonnull String type) {
-        for (int i = 0; i < this.typeValue.getItemCount(); i++) {
-            if (this.typeValue.getValue(i).equals(type)) {
-                this.typeValue.setItemSelected(i, true);
-                return;
-            }
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    public String getValueExpression() {
-        return valueExpressionTextBox.getText();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setValueExpression(@Nonnull String text) {
-        this.valueExpressionTextBox.setText(text);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    public String getEvaluator() {
-        int index = valueEvaluator.getSelectedIndex();
-        return index != -1 ? valueEvaluator.getValue(valueEvaluator.getSelectedIndex()) : "";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void selectEvaluator(@Nonnull String target) {
-        for (int i = 0; i < this.valueEvaluator.getItemCount(); i++) {
-            if (this.valueEvaluator.getValue(i).equals(target)) {
-                this.valueEvaluator.setItemSelected(i, true);
-                return;
-            }
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setEvaluator() {
-        this.valueEvaluator.clear();
-        this.valueEvaluator.addItem(JSON.getValue());
-        this.valueEvaluator.addItem(XML.getValue());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void clearEvaluator() {
-        valueEvaluator.clear();
     }
 
     /** {@inheritDoc} */

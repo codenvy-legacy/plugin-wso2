@@ -107,6 +107,12 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
         nameSpace.putProperty(PREFIX_KEY, prefix);
         nameSpace.putProperty(URI, uri);
 
+        if (isContainsSamePrefix(prefix)) {
+            nameSpaceEditorView.showErrorMessage();
+
+            return;
+        }
+
         nameSpaceEditorView.setPrefix("");
         nameSpaceEditorView.setUri("");
 
@@ -118,6 +124,16 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
         }
 
         nameSpaceEditorView.setNameSpaces(nameSpacesTemporary);
+    }
+
+    private boolean isContainsSamePrefix(@Nonnull String prefix) {
+        for (NameSpace nameSpace : nameSpacesTemporary) {
+            if (prefix.equals(nameSpace.getProperty(PREFIX_KEY))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /** {@inheritDoc} */

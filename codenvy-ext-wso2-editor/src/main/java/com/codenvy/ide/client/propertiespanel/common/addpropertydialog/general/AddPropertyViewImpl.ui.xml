@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright 2014 Codenvy, S.A.
@@ -20,22 +21,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:with field='res' type='com.codenvy.ide.client.EditorResources'/>
-    <ui:with field='locale' type='com.codenvy.ide.client.WSO2EditorLocalizationConstant'/>
 
-    <ui:style>
-        .propertyButton {
-            margin-left: 2px;
-            text-align: center;
-            width: 30px;
-        }
-    </ui:style>
-
-    <g:FlowPanel addStyleNames="{res.editorCSS.property} {res.editorCSS.propertyBorderTop}">
-        <g:Label ui:field="title" addStyleNames="{res.editorCSS.propertyItem}
-                                                 {res.editorCSS.fontStyle}"/>
-        <g:TextBox enabled="false" width="calc(100% - 55px)" ui:field="property"
-                   addStyleNames="{res.editorCSS.fontStyle} {res.editorCSS.propertyField}"/>
-        <g:Button ui:field="btnEdit" addStyleNames="{style.propertyButton}" text="{locale.buttonEditConfig}"/>
-    </g:FlowPanel>
+    <g:FlowPanel ui:field="mainPanel" width="400px" addStyleNames="{res.editorCSS.fullSize}"/>
 
 </ui:UiBinder>

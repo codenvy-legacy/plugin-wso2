@@ -163,7 +163,7 @@
 }
 
 .property {
-    width: 100%;
+    width: calc(100% - 10px);
     height: 40px;
     border-bottom: 1px solid #272727;
     padding: 8px 3px 10px;
@@ -174,7 +174,7 @@
 }
 
 .propertyItem {
-    width: 100%;
+    width: calc(100% - 10px);
     font-weight: normal;
     color: #a0a0a0 !important;
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);

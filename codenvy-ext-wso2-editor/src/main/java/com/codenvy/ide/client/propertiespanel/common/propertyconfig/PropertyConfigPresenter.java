@@ -15,21 +15,17 @@
  */
 package com.codenvy.ide.client.propertiespanel.common.propertyconfig;
 
-import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.elements.mediators.log.Property;
+import com.codenvy.ide.client.propertiespanel.common.addpropertydialog.AddPropertyCallBack;
+import com.codenvy.ide.client.propertiespanel.common.addpropertydialog.AddPropertyLogPresenter;
+import com.codenvy.ide.client.propertiespanel.common.addpropertydialog.general.AddPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.common.namespace.AddPropertyCallback;
-import com.codenvy.ide.client.propertiespanel.common.namespace.NameSpaceEditorPresenter;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
-import static com.codenvy.ide.client.elements.mediators.log.Property.EXPRESSION;
 import static com.codenvy.ide.client.elements.mediators.log.Property.NAME;
-import static com.codenvy.ide.client.elements.mediators.log.Property.NAMESPACES;
-import static com.codenvy.ide.client.elements.mediators.log.Property.VALUE;
 import static com.codenvy.ide.client.elements.mediators.log.Property.copyPropertyList;
 
 /**
@@ -42,34 +38,62 @@ import static com.codenvy.ide.client.elements.mediators.log.Property.copyPropert
  */
 public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegate {
 
-    private final PropertyConfigView       propertiesView;
-    private final NameSpaceEditorPresenter nameSpacePresenter;
-    private final Provider<Property>       propertyProvider;
-    private final AddNameSpacesCallBack    addNameSpacesCallBack;
+    private final PropertyConfigView             view;
+    private final AddPropertyPresenter<Property> addPropertyLogPresenter;
+    private final AddPropertyCallBack<Property>  editorAddPropertyCallBack;
+    private final AddPropertyCallBack<Property>  editPropertyCallBack;
 
-    private List<Property>      arrayTemporary;
+    private List<Property>      temporaryList;
     private Property            selectedProperty;
     private AddPropertyCallback addPropertyCallback;
-    private int                 index;
 
     @Inject
-    public PropertyConfigPresenter(PropertyConfigView propertyConfigView,
-                                   NameSpaceEditorPresenter nameSpacePresenter,
-                                   Provider<Property> propertyProvider) {
-        this.propertiesView = propertyConfigView;
-        this.nameSpacePresenter = nameSpacePresenter;
-        this.propertyProvider = propertyProvider;
-        this.index = -1;
+    public PropertyConfigPresenter(PropertyConfigView propertyConfigView, final AddPropertyLogPresenter addPropertyLogPresenter) {
+        this.view = propertyConfigView;
+        this.addPropertyLogPresenter = addPropertyLogPresenter;
 
-        this.propertiesView.setDelegate(this);
+        this.view.setDelegate(this);
 
-        this.addNameSpacesCallBack = new AddNameSpacesCallBack() {
+        this.editorAddPropertyCallBack = new AddPropertyCallBack<Property>() {
             @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nullable String expression) {
-                selectedProperty.putProperty(NAMESPACES, nameSpaces);
-                selectedProperty.putProperty(EXPRESSION, expression);
+            public void onPropertyChanged(@Nonnull Property property) {
+                if (!temporaryList.contains(property)) {
+                    temporaryList.add(property);
+
+                    PropertyConfigPresenter.this.view.setProperties(temporaryList);
+
+                    addPropertyLogPresenter.hideDialog();
+                } else {
+                    PropertyConfigPresenter.this.view.showErrorMessage();
+                }
             }
         };
+
+        this.editPropertyCallBack = new AddPropertyCallBack<Property>() {
+            @Override
+            public void onPropertyChanged(@Nonnull Property property) {
+                int index = temporaryList.indexOf(selectedProperty);
+
+                String innerPropertyName = property.getProperty(NAME);
+                String selectedPropertyName = selectedProperty.getProperty(NAME);
+
+                if (innerPropertyName == null || selectedPropertyName == null) {
+                    return;
+                }
+
+                if (innerPropertyName.equals(selectedPropertyName) || !temporaryList.contains(property)) {
+                    temporaryList.set(index, property);
+
+                    PropertyConfigPresenter.this.view.setProperties(temporaryList);
+
+                    addPropertyLogPresenter.hideDialog();
+
+                } else {
+                    PropertyConfigPresenter.this.view.showErrorMessage();
+                }
+            }
+        };
+
     }
 
     /** {@inheritDoc} */
@@ -81,77 +105,35 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
     /** {@inheritDoc} */
     @Override
     public void onCancelButtonClicked() {
-        propertiesView.hideWindow();
+        view.hideWindow();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onAddPropertyButtonClicked() {
-        String name = propertiesView.getName().isEmpty() ? "property_name" : propertiesView.getName();
-        String value = propertiesView.getValue().isEmpty() ? "property_value" : propertiesView.getValue();
-
-        Property property = propertyProvider.get();
-
-        property.putProperty(NAME, name);
-        property.putProperty(VALUE, value);
-
-        propertiesView.setName("");
-        propertiesView.setValue("");
-
-        if (index != -1) {
-            arrayTemporary.set(index, property);
-            index = -1;
-        } else {
-            arrayTemporary.add(property);
-        }
-
-        propertiesView.setProperties(arrayTemporary);
+        addPropertyLogPresenter.showDialog(null, editorAddPropertyCallBack);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onRemovePropertyButtonClicked() {
-        arrayTemporary.remove(selectedProperty);
+        temporaryList.remove(selectedProperty);
 
-        propertiesView.setProperties(arrayTemporary);
+        view.setProperties(temporaryList);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onOkButtonClicked() {
-        addPropertyCallback.onPropertiesChanged(arrayTemporary);
+        addPropertyCallback.onPropertiesChanged(temporaryList);
 
-        propertiesView.hideWindow();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onEditPropertiesButtonClicked() {
-        List<NameSpace> nameSpaces = selectedProperty.getProperty(NAMESPACES);
-
-        if (nameSpaces == null) {
-            return;
-        }
-
-        nameSpacePresenter.showDefaultWindow(nameSpaces, addNameSpacesCallBack);
+        view.hideWindow();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onEditButtonClicked() {
-        String name = selectedProperty.getProperty(NAME);
-        String expression = selectedProperty.getProperty(EXPRESSION);
-
-        if (name == null || expression == null) {
-            return;
-        }
-
-        propertiesView.setName(name);
-        propertiesView.setValue(expression);
-
-        index = arrayTemporary.indexOf(selectedProperty);
-
-        propertiesView.setProperties(arrayTemporary);
+        addPropertyLogPresenter.showDialog(selectedProperty, editPropertyCallBack);
     }
 
     /**
@@ -165,11 +147,11 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
      *         callback that need to be handled when properties editing is successful
      */
     public void showConfigWindow(@Nonnull List<Property> properties, @Nonnull String title, @Nonnull AddPropertyCallback callback) {
-        arrayTemporary = copyPropertyList(properties);
+        temporaryList = copyPropertyList(properties);
         addPropertyCallback = callback;
 
-        propertiesView.setProperties(arrayTemporary);
+        view.setProperties(temporaryList);
 
-        propertiesView.showWindow(title);
+        view.showWindow(title);
     }
 }

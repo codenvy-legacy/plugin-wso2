@@ -19,10 +19,8 @@ import com.codenvy.ide.client.CellTableResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.mediators.ValueType;
 import com.codenvy.ide.client.elements.mediators.log.Property;
+import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.ui.window.Window;
-import com.google.gwt.cell.client.ButtonCell;
-import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.cell.client.SelectionCell;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -30,10 +28,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
@@ -60,11 +56,6 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
     interface LogPropertiesConfigurationViewImplUiBinder extends UiBinder<Widget, PropertyConfigViewImpl> {
     }
 
-    @UiField
-    TextBox nameTextBox;
-    @UiField
-    TextBox valueExpressionTextBox;
-
     @UiField(provided = true)
     final CellTable<Property> tableOfProperties;
 
@@ -72,6 +63,8 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
     final WSO2EditorLocalizationConstant locale;
     @UiField(provided = true)
     final CellTableResources             resource;
+
+    private final Info info;
 
     private ActionDelegate delegate;
 
@@ -82,6 +75,9 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
         this.locale = localizationConstant;
         this.resource = resource;
         this.tableOfProperties = createTable(localizationConstant, resource);
+
+        this.info = new Info(locale.nameAlreadyExistsError());
+        this.info.setTitle(locale.errorMessage());
 
         setWidget(uiBinder.createAndBindUi(this));
 
@@ -142,53 +138,22 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
             }
         };
 
-        ButtonCell namespaceEditor = new ButtonCell();
-
-        Column<Property, String> namespaceEditorButton = new Column<Property, String>(namespaceEditor) {
-            @Override
-            public String getValue(Property object) {
-                return localizationConstant.buttonEditConfig();
-            }
-        };
-        namespaceEditorButton.setFieldUpdater(new FieldUpdater<Property, String>() {
-            @Override
-            public void update(int index, Property object, String value) {
-                delegate.onSelectedProperty(selectionModel.getSelectedObject());
-                delegate.onEditPropertiesButtonClicked();
-            }
-        });
-
-        final List<String> typeProperty = new ArrayList<>();
-        typeProperty.add(ValueType.LITERAL.name());
-        typeProperty.add(ValueType.EXPRESSION.name());
-        SelectionCell categoryCell = new SelectionCell(typeProperty);
-        Column<Property, String> type = new Column<Property, String>(categoryCell) {
+        TextColumn<Property> type = new TextColumn<Property>() {
             @Override
             public String getValue(Property property) {
                 ValueType type = property.getProperty(TYPE);
 
-                if (type == null) {
-                    return "";
-                }
-                return type.name();
+                return type == null ? "" : type.name();
             }
         };
-        type.setFieldUpdater(new FieldUpdater<Property, String>() {
-            @Override
-            public void update(int index, Property property, String value) {
-                property.putProperty(TYPE, ValueType.valueOf(value));
-            }
-        });
 
         table.addColumn(name, localizationConstant.columnName());
         table.addColumn(type, localizationConstant.columnType());
         table.addColumn(expression, localizationConstant.columnExpression());
-        table.addColumn(namespaceEditorButton);
 
         table.setColumnWidth(name, 210, Style.Unit.PX);
         table.setColumnWidth(type, 120, Style.Unit.PX);
         table.setColumnWidth(expression, 210, Style.Unit.PX);
-        table.setColumnWidth(namespaceEditorButton, 30, Style.Unit.PX);
 
         table.setLoadingIndicator(null);
 
@@ -231,6 +196,12 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
 
     /** {@inheritDoc} */
     @Override
+    public void showErrorMessage() {
+        info.show();
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void setProperties(@Nonnull List<Property> propertyList) {
         List<Property> list = new ArrayList<>();
 
@@ -239,32 +210,6 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
         }
 
         tableOfProperties.setRowData(list);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    public String getName() {
-        return nameTextBox.getText();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setName(@Nonnull String text) {
-        this.nameTextBox.setText(text);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @Nonnull
-    public String getValue() {
-        return valueExpressionTextBox.getText();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setValue(@Nonnull String text) {
-        this.valueExpressionTextBox.setText(text);
     }
 
     /** {@inheritDoc} */

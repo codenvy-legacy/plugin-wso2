@@ -31,6 +31,9 @@ import java.util.List;
 @ImplementedBy(PropertyConfigViewImpl.class)
 public interface PropertyConfigView extends View<PropertyConfigView.ActionDelegate> {
 
+    /** Shows message which contain info about error. */
+    void showErrorMessage();
+
     /**
      * Sets the list to table on view.
      *
@@ -49,30 +52,6 @@ public interface PropertyConfigView extends View<PropertyConfigView.ActionDelega
 
     /** Hides dialog window. */
     void hideWindow();
-
-    /** @return name value from the special place on the view which uses for showing name parameter */
-    @Nonnull
-    String getName();
-
-    /**
-     * Sets name value to the special place on the view which uses for showing name parameter.
-     *
-     * @param text
-     *         value which need to set to special place of view
-     */
-    void setName(@Nonnull String text);
-
-    /** @return expression value from the special place on the view which uses for showing expression parameter */
-    @Nonnull
-    String getValue();
-
-    /**
-     * Sets expression value to the special place on the view which uses for showing expression parameter.
-     *
-     * @param text
-     *         value which need to set to special place of view
-     */
-    void setValue(@Nonnull String text);
 
     /**
      * Interface defines methods of {@link PropertyConfigPresenter} which calls from view. These methods defines
@@ -101,9 +80,6 @@ public interface PropertyConfigView extends View<PropertyConfigView.ActionDelega
 
         /** Performs any actions appropriate in response to the user having pressed the Edit button. */
         void onEditButtonClicked();
-
-        /** Shows the dialog window which needed to be for editing properties of element. */
-        void onEditPropertiesButtonClicked();
     }
 
 }

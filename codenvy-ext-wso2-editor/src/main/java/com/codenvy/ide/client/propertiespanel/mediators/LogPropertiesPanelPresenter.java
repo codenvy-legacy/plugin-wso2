@@ -131,7 +131,7 @@ public class LogPropertiesPanelPresenter extends AbstractPropertiesPanel<Log> {
                 List<Property> properties = element.getProperty(LOG_PROPERTIES);
 
                 if (properties != null) {
-                    propertyConfigPresenter.showConfigWindow(properties, locale.properties(), addPropertyCallback);
+                    propertyConfigPresenter.showConfigWindow(properties, locale.configurationTitle(), addPropertyCallback);
                 }
             }
         };

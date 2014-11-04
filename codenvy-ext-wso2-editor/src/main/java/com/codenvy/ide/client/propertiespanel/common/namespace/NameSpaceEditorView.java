@@ -65,6 +65,9 @@ public interface NameSpaceEditorView extends View<NameSpaceEditorView.ActionDele
         void onSelectedNameSpace(@Nonnull NameSpace nameSpace);
     }
 
+    /** Shows message which contain info about error. */
+    void showErrorMessage();
+
     /** Shows name space dialog window. */
     void showWindow();
 
@@ -73,7 +76,7 @@ public interface NameSpaceEditorView extends View<NameSpaceEditorView.ActionDele
 
     /** @return prefix value from the special place on the view which uses for showing prefix */
     @Nonnull
-    public String getPrefix();
+    String getPrefix();
 
     /**
      * Set prefix value to the special place on the view which uses for showing prefix.
@@ -81,11 +84,11 @@ public interface NameSpaceEditorView extends View<NameSpaceEditorView.ActionDele
      * @param text
      *         value of prefix which need set to element
      */
-    public void setPrefix(@Nonnull String text);
+    void setPrefix(@Nonnull String text);
 
     /** @return uri value from the special place on the view which uses for showing uri */
     @Nonnull
-    public String getUri();
+    String getUri();
 
     /**
      * Set uri value to the special place on the view which uses for showing uri.
@@ -93,11 +96,11 @@ public interface NameSpaceEditorView extends View<NameSpaceEditorView.ActionDele
      * @param text
      *         value of uri which need set to element
      */
-    public void setUri(@Nonnull String text);
+    void setUri(@Nonnull String text);
 
     /** @return expression value from the special place on the view which uses for showing expression */
     @Nonnull
-    public String getExpression();
+    String getExpression();
 
     /**
      * Set expression value to the special place on the view which uses for showing expression.
@@ -105,7 +108,7 @@ public interface NameSpaceEditorView extends View<NameSpaceEditorView.ActionDele
      * @param expression
      *         value of expression which need set to element
      */
-    public void setExpression(@Nullable String expression);
+    void setExpression(@Nullable String expression);
 
     /**
      * Sets the list to table on view.
@@ -113,8 +116,8 @@ public interface NameSpaceEditorView extends View<NameSpaceEditorView.ActionDele
      * @param nameSpaces
      *         namespaces which need to be displayed.
      */
-    public void setNameSpaces(@Nonnull List<NameSpace> nameSpaces);
+    void setNameSpaces(@Nonnull List<NameSpace> nameSpaces);
 
     /** Set name NameSpace dialog window. */
-    public void setNameSpaceLabelName(@Nonnull String nameSpace);
+    void setNameSpaceLabelName(@Nonnull String nameSpace);
 }

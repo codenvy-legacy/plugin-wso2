@@ -37,6 +37,8 @@ import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetActi
 import static com.codenvy.ide.client.elements.mediators.enrich.Target.TargetType;
 import static com.codenvy.ide.client.elements.mediators.log.Log.LogCategory;
 import static com.codenvy.ide.client.elements.mediators.log.Log.LogLevel;
+import static com.codenvy.ide.client.elements.mediators.payload.Arg.ArgType;
+import static com.codenvy.ide.client.elements.mediators.payload.Arg.Evaluator;
 import static com.codenvy.ide.client.elements.mediators.payload.Format.FormatType;
 import static com.codenvy.ide.client.elements.mediators.payload.PayloadFactory.MediaType;
 
@@ -63,8 +65,7 @@ public class MediatorsPropertyTypeInitializer extends AbstractPropertyTypeInitia
                                                                      AvailableTemplates.SELECT_FROM_TEMPLATE.getValue(),
                                                                      AvailableTemplates.SDF.getValue()));
 
-        manager.register(ConditionType.TYPE_NAME, Arrays.asList(ConditionType.SOURCE_AND_REGEX.name(),
-                                                                ConditionType.XPATH.name()));
+        manager.register(ConditionType.TYPE_NAME, Arrays.asList(ConditionType.SOURCE_AND_REGEX.name(), ConditionType.XPATH.name()));
 
         manager.register(Action.TYPE_NAME, Arrays.asList(Action.SET.getValue(), Action.REMOVE.getValue()));
 
@@ -93,8 +94,7 @@ public class MediatorsPropertyTypeInitializer extends AbstractPropertyTypeInitia
                                                                SequenceType.STATIC.getValue(),
                                                                SequenceType.DYNAMIC.getValue()));
 
-        manager.register(ReferringType.TYPE_NAME, Arrays.asList(ReferringType.STATIC.getValue(),
-                                                                ReferringType.DYNAMIC.getValue()));
+        manager.register(ReferringType.TYPE_NAME, Arrays.asList(ReferringType.STATIC.getValue(), ReferringType.DYNAMIC.getValue()));
 
         manager.register(LogCategory.TYPE_NAME, Arrays.asList(LogCategory.TRACE.name(),
                                                               LogCategory.DEBUG.name(),
@@ -129,8 +129,11 @@ public class MediatorsPropertyTypeInitializer extends AbstractPropertyTypeInitia
                                                              TargetType.BODY.getValue(),
                                                              TargetType.PROPERTY.getValue()));
 
-        manager.register(InlineType.TYPE_NAME, Arrays.asList(InlineType.REGISTRY_KEY.getValue(),
-                                                             InlineType.SOURCE_XML.getValue()));
+        manager.register(InlineType.TYPE_NAME, Arrays.asList(InlineType.REGISTRY_KEY.getValue(), InlineType.SOURCE_XML.getValue()));
+
+        manager.register(ArgType.TYPE_NAME, Arrays.asList(ArgType.VALUE.getValue(), ArgType.EXPRESSION.getValue()));
+
+        manager.register(Evaluator.TYPE_NAME, Arrays.asList(Evaluator.XML.getValue(), Evaluator.JSON.getValue()));
     }
 
 }

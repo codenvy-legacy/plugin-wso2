@@ -32,19 +32,8 @@ import java.util.List;
 @ImplementedBy(ArgumentsConfigViewImpl.class)
 public interface ArgumentsConfigView extends View<ArgumentsConfigView.ActionDelegate> {
 
-    /** @return type value from the special place on the view which uses for showing type parameter */
-    String getTypeValue();
-
-    /** Sets type values to special place of the view */
-    void setTypeValue();
-
-    /**
-     * Select type format in place on view.
-     *
-     * @param type
-     *         argument type value
-     */
-    void selectType(@Nonnull String type);
+    /** Shows message which contain info about error. */
+    void showErrorMessage();
 
     /**
      * Sets the list to table on view.
@@ -59,24 +48,6 @@ public interface ArgumentsConfigView extends View<ArgumentsConfigView.ActionDele
 
     /** Hides dialog window. */
     void hideWindow();
-
-    /** @return expression value from the special place on the view which uses for showing expression parameter */
-    String getValueExpression();
-
-    /** Sets expression value to the special place on the view which uses for showing expression parameter. */
-    void setValueExpression(@Nonnull String text);
-
-    /** @return evaluator value from the special place on the view which uses for showing expression parameter */
-    String getEvaluator();
-
-    /** Select evaluator value */
-    void selectEvaluator(@Nonnull String text);
-
-    /** Set evaluator value */
-    void setEvaluator();
-
-    /** Clear evaluator value */
-    void clearEvaluator();
 
     /**
      * Interface defines methods of {@link ArgumentsConfigPresenter} which calls from view. These methods defines
@@ -102,9 +73,6 @@ public interface ArgumentsConfigView extends View<ArgumentsConfigView.ActionDele
 
         /** Performs any actions appropriate in response to the user having pressed the Ok button. */
         void onOkButtonClicked();
-
-        /** Shows the dialog window which needed to be for editing properties of element. */
-        void onEditArgsButtonClicked();
 
         /** Performs any actions appropriate in response to the user having pressed the Edit button. */
         void onEditButtonClicked();
