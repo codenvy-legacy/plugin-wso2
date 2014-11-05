@@ -32,18 +32,19 @@
         .focusPanel:focus {
             outline: none !important;
         }
+
+        .floatLeft {
+            float: left;
+        }
     </ui:style>
 
-    <g:DockLayoutPanel ui:field="focusPanel" addStyleNames="{style.focusPanel} {resources.editorCSS.branchBackground}" unit="PX">
-        <g:west size="40">
-            <g:FlowPanel ui:field="titlePanel" addStyleNames="{resources.editorCSS.fullSize} {resources.editorCSS.branchTitlePanel}">
-                <g:Label ui:field="title" addStyleNames="{style.title} {resources.editorCSS.fontStyle}"/>
-            </g:FlowPanel>
-        </g:west>
+    <g:FlowPanel ui:field="focusPanel" addStyleNames="{style.focusPanel} {resources.editorCSS.branchBackground}">
+        <g:FlowPanel ui:field="titlePanel" width="40px" height="100%"
+                     addStyleNames="{resources.editorCSS.branchTitlePanel} {style.floatLeft}">
+            <g:Label ui:field="title" addStyleNames="{style.title} {resources.editorCSS.fontStyle}"/>
+        </g:FlowPanel>
 
-        <g:center>
-            <g:AbsolutePanel ui:field="body"/>
-        </g:center>
-    </g:DockLayoutPanel>
+        <g:AbsolutePanel ui:field="body" height="100%" width="calc(100%-40px)"/>
+    </g:FlowPanel>
 
 </ui:UiBinder>

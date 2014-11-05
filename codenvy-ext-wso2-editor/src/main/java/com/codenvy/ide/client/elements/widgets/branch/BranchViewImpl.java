@@ -37,7 +37,6 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -62,13 +61,13 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
     }
 
     @UiField
-    Label           title;
+    Label         title;
     @UiField
-    AbsolutePanel   body;
+    AbsolutePanel body;
     @UiField
-    DockLayoutPanel focusPanel;
+    FlowPanel     focusPanel;
     @UiField
-    FlowPanel       titlePanel;
+    FlowPanel     titlePanel;
     @UiField(provided = true)
     final EditorResources resources;
 
@@ -222,8 +221,7 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
     /** {@inheritDoc} */
     @Override
     public void setVisibleTitle(boolean visible) {
-        focusPanel.setWidgetHidden(titlePanel, !visible);
-        focusPanel.onResize();
+        titlePanel.setVisible(visible);
     }
 
     /** {@inheritDoc} */
