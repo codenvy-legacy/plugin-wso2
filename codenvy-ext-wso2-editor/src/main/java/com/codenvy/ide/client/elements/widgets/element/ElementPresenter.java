@@ -66,8 +66,8 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     private BranchPresenter parent;
     private int             x;
     private int             y;
-    private int             prev_x;
-    private int             prev_y;
+    private int             prevX;
+    private int             prevY;
 
     @Inject
     public ElementPresenter(ElementWidgetFactory elementWidgetFactory,
@@ -390,8 +390,8 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
             return;
         }
 
-        this.prev_x = this.x;
-        this.prev_y = this.y;
+        this.prevX = this.x;
+        this.prevY = this.y;
 
         this.x = x - parent.getX();
         this.y = y - parent.getY();
@@ -402,8 +402,8 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     public void onDragFinished() {
         notifyElementMoveListeners();
 
-        prev_x = 0;
-        prev_y = 0;
+        prevX = 0;
+        prevY = 0;
         x = 0;
         y = 0;
     }
@@ -439,7 +439,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     /** Notify all listeners about moving element. */
     public void notifyElementMoveListeners() {
         for (ElementMoveListener listener : elementMoveListeners) {
-            listener.onElementMoved(element, prev_x, prev_y);
+            listener.onElementMoved(element, prevX, prevY);
         }
     }
 

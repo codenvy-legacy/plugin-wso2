@@ -203,6 +203,16 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
             }
         });
 
+        addDragStartHandler(new DragStartHandler() {
+            @Override
+            public void onDragStart(DragStartEvent event) {
+                // this code needs for stopping moving icon in the middle of the element
+                event.getDataTransfer().setDragImage(getElement(), 0, 0);
+
+                event.stopPropagation();
+            }
+        });
+
         addDragHandler(new DragHandler() {
             @Override
             public void onDrag(DragEvent event) {
@@ -210,6 +220,7 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
 
                 delegate.onElementDragged(nativeEvent.getClientX(), nativeEvent.getClientY());
 
+                event.preventDefault();
                 event.stopPropagation();
             }
         });
@@ -219,6 +230,7 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
             public void onDragEnd(DragEndEvent event) {
                 delegate.onDragFinished();
 
+                event.preventDefault();
                 event.stopPropagation();
             }
         });
