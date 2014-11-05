@@ -102,7 +102,7 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
     @UiField
     FlowPanel       rightPanel;
     @UiField
-    DockLayoutPanel mainPanel;
+    FlowPanel       mainPanel;
     @UiField
     DockLayoutPanel leftPanel;
     @UiField
@@ -317,8 +317,7 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
     /** {@inheritDoc} */
     @Override
     public void setVisibleTitleAndIcon(boolean visible) {
-        mainPanel.setWidgetHidden(leftPanel, !visible);
-        mainPanel.onResize();
+        leftPanel.setVisible(visible);
     }
 
     /** {@inheritDoc} */

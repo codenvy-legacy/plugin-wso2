@@ -38,48 +38,55 @@
             position: relative;
             top: 2px;
         }
+
+        .floatLeft {
+            float: left;
+        }
+
+        .rightPanel {
+            left: 86px;
+            height: 100%;
+            position: absolute;
+        }
     </ui:style>
 
-    <g:DockLayoutPanel ui:field="mainPanel" width="86px" height="100px" addStyleNames="{styles.editorCSS.elementMainPanel}">
+    <g:FlowPanel ui:field="mainPanel" addStyleNames="{styles.editorCSS.elementMainPanel}">
 
-        <g:west size="86">
-            <g:DockLayoutPanel ui:field="leftPanel" addStyleNames="{styles.editorCSS.branchBackground} {styles.editorCSS.fullSize}">
+        <g:DockLayoutPanel ui:field="leftPanel" width="86px" height="100%"
+                           addStyleNames="{styles.editorCSS.branchBackground} {style.floatLeft}" unit="PX">
 
-                <g:north size="20">
-                    <g:FlowPanel ui:field="headerPanel" width="100%" height="19px" addStyleNames="{styles.editorCSS.elementHeaderPanel}">
+            <g:north size="20">
+                <g:FlowPanel ui:field="headerPanel" width="100%" height="19px" addStyleNames="{styles.editorCSS.elementHeaderPanel}">
 
-                        <g:FlowPanel width="100%" height="18px" addStyleNames="{styles.editorCSS.elementHeaderInnerPanel}">
-                            <g:Label ui:field="header" addStyleNames="{styles.editorCSS.fontStyle}
-                                                                      {styles.editorCSS.titleBold}
-                                                                      {styles.editorCSS.textAlign}
-                                                                      {style.headerText}"/>
-                        </g:FlowPanel>
+                    <g:FlowPanel width="100%" height="18px" addStyleNames="{styles.editorCSS.elementHeaderInnerPanel}">
+                        <g:Label ui:field="header" addStyleNames="{styles.editorCSS.fontStyle}
+                                                                  {styles.editorCSS.titleBold}
+                                                                  {styles.editorCSS.textAlign}
+                                                                  {style.headerText}"/>
+                    </g:FlowPanel>
+
+                </g:FlowPanel>
+            </g:north>
+
+            <g:center>
+                <g:FlowPanel addStyleNames="{styles.editorCSS.fullSize}">
+
+                    <g:FlowPanel addStyleNames="{style.iconAndTitlePanel} {styles.editorCSS.fullSize}">
+                        <g:Label ui:field="title" addStyleNames="{styles.editorCSS.fontStyle}
+                                                                 {styles.editorCSS.titleBold}
+                                                                 {styles.editorCSS.textAlign}"/>
+
+                        <g:Image ui:field="icon" addStyleNames="{style.icon}"/>
 
                     </g:FlowPanel>
-                </g:north>
 
-                <g:center>
-                    <g:FlowPanel addStyleNames="{styles.editorCSS.fullSize}">
+                </g:FlowPanel>
+            </g:center>
 
-                        <g:FlowPanel addStyleNames="{style.iconAndTitlePanel} {styles.editorCSS.fullSize}">
-                            <g:Label ui:field="title" addStyleNames="{styles.editorCSS.fontStyle}
-                                                                     {styles.editorCSS.titleBold}
-                                                                     {styles.editorCSS.textAlign}"/>
+        </g:DockLayoutPanel>
 
-                            <g:Image ui:field="icon" addStyleNames="{style.icon}"/>
+        <g:FlowPanel ui:field="rightPanel" addStyleNames="{style.rightPanel}"/>
 
-                        </g:FlowPanel>
-
-                    </g:FlowPanel>
-                </g:center>
-
-            </g:DockLayoutPanel>
-        </g:west>
-
-        <g:center>
-            <g:FlowPanel ui:field="rightPanel" addStyleNames="{styles.editorCSS.fullSize}"/>
-        </g:center>
-
-    </g:DockLayoutPanel>
+    </g:FlowPanel>
 
 </ui:UiBinder>
