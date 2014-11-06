@@ -21,6 +21,7 @@ import com.codenvy.ide.client.elements.widgets.branch.BranchPresenter;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DragEndEvent;
@@ -73,6 +74,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static com.google.gwt.dom.client.Element.DRAGGABLE_TRUE;
+import static com.google.gwt.dom.client.Style.Position.ABSOLUTE;
+import static com.google.gwt.dom.client.Style.Position.RELATIVE;
+import static com.google.gwt.dom.client.Style.Unit.PX;
 
 /**
  * Provides a graphical representation of the diagram's element.
@@ -116,7 +120,6 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
     private int        width;
     private boolean    isComplexMediator;
     private String     titleText;
-    private boolean    isHeaderTitleVisible;
     private boolean    isIconTitleVisible;
 
     @Inject
@@ -136,7 +139,6 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
         preparePopup(element);
 
         isComplexMediator = false;
-        isHeaderTitleVisible = true;
         isIconTitleVisible = true;
     }
 
@@ -249,11 +251,9 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
     }
 
     private void updateTitle() {
-        if (isHeaderTitleVisible) {
+        if (headerPanel.isVisible()) {
             header.setText(titleText);
         }
-
-        headerPanel.setVisible(isHeaderTitleVisible);
 
         if (isIconTitleVisible) {
             title.setText(titleText);
@@ -350,7 +350,7 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
     /** {@inheritDoc} */
     @Override
     public void setVisibleHeader(boolean visible) {
-        isHeaderTitleVisible = visible;
+        headerPanel.setVisible(visible);
 
         updateTitle();
     }
@@ -365,13 +365,13 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
     @Override
     public void setHeight(@Nonnegative int height) {
         this.height = height - MARGIN;
-        getElement().getStyle().setHeight(height, Style.Unit.PX);
+        getElement().getStyle().setHeight(height, PX);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setY(@Nonnegative int y) {
-        getElement().getStyle().setTop(y, Style.Unit.PX);
+        getElement().getStyle().setTop(y, PX);
     }
 
     /** {@inheritDoc} */
@@ -384,7 +384,15 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
     @Override
     public void setWidth(@Nonnegative int width) {
         this.width = width - MARGIN;
-        getElement().getStyle().setWidth(width, Style.Unit.PX);
+        getElement().getStyle().setWidth(width, PX);
+
+        Style rightPanelStyle = rightPanel.getElement().getStyle();
+
+        int rightPanelLeft = leftPanel.isVisible() ? DEFAULT_WIDTH : 0;
+        rightPanelStyle.setLeft(rightPanelLeft, PX);
+
+        Position position = leftPanel.isVisible() ? ABSOLUTE : RELATIVE;
+        rightPanelStyle.setPosition(position);
     }
 
     /** {@inheritDoc} */

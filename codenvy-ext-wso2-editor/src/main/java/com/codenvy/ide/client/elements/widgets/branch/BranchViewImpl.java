@@ -22,7 +22,6 @@ import com.codenvy.ide.client.elements.widgets.branch.arrow.ArrowPresenter;
 import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -47,6 +46,8 @@ import com.google.inject.assistedinject.Assisted;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import static com.google.gwt.dom.client.Style.Unit.PX;
 
 /**
  * Provides a graphical representation of the element's branch.
@@ -201,7 +202,7 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
     public void setHeight(@Nonnegative int height) {
         this.height = height;
 
-        getElement().getStyle().setHeight(height, Style.Unit.PX);
+        getElement().getStyle().setHeight(height, PX);
     }
 
     /** {@inheritDoc} */
@@ -215,7 +216,7 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
     public void setWidth(@Nonnegative int width) {
         this.width = width;
 
-        getElement().getStyle().setWidth(width, Style.Unit.PX);
+        getElement().getStyle().setWidth(width, PX);
     }
 
     /** {@inheritDoc} */
