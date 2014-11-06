@@ -19,7 +19,6 @@ import com.codenvy.ide.client.CellTableResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.mediators.ValueType;
 import com.codenvy.ide.client.elements.mediators.log.Property;
-import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -49,6 +48,7 @@ import static com.codenvy.ide.client.elements.mediators.log.Property.VALUE;
  *
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
+ * @author Andrey Plotnikov
  */
 public class PropertyConfigViewImpl extends Window implements PropertyConfigView {
 
@@ -64,8 +64,6 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
     @UiField(provided = true)
     final CellTableResources             resource;
 
-    private final Info info;
-
     private ActionDelegate delegate;
 
     @Inject
@@ -75,9 +73,6 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
         this.locale = localizationConstant;
         this.resource = resource;
         this.tableOfProperties = createTable(localizationConstant, resource);
-
-        this.info = new Info(locale.nameAlreadyExistsError());
-        this.info.setTitle(locale.errorMessage());
 
         setWidget(uiBinder.createAndBindUi(this));
 
@@ -192,12 +187,6 @@ public class PropertyConfigViewImpl extends Window implements PropertyConfigView
     @Override
     public void setDelegate(@Nonnull ActionDelegate delegate) {
         this.delegate = delegate;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void showErrorMessage() {
-        info.show();
     }
 
     /** {@inheritDoc} */

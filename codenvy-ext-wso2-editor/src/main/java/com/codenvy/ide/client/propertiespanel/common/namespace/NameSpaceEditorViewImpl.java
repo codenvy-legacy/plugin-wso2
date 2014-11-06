@@ -18,7 +18,6 @@ package com.codenvy.ide.client.propertiespanel.common.namespace;
 import com.codenvy.ide.client.CellTableResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
-import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.dom.client.Style;
@@ -48,6 +47,7 @@ import java.util.List;
  *
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
+ * @author Andrey Plotnikov
  */
 public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorView {
 
@@ -58,17 +58,9 @@ public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorVi
     @UiField
     TextBox expression;
     @UiField
-    Button  selectPathButton;
-    @UiField
     TextBox prefixTextBox;
     @UiField
     TextBox uriTextBox;
-    @UiField
-    Button  btnAdd;
-    @UiField
-    Button  btnEdit;
-    @UiField
-    Button  btnRemove;
     @UiField
     Label   title;
 
@@ -79,8 +71,6 @@ public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorVi
     final WSO2EditorLocalizationConstant locale;
     @UiField(provided = true)
     final CellTableResources             resource;
-
-    private final Info info;
 
     private ActionDelegate delegate;
 
@@ -94,9 +84,6 @@ public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorVi
 
         this.setTitle(locale.editorTitle());
         this.setWidget(uiBinder.createAndBindUi(this));
-
-        this.info = new Info(locale.nameAlreadyExistsError());
-        this.info.setTitle(locale.errorMessage());
 
         Button btnCancel = createButton(locale.buttonCancel(), "namespace-button-cancel", new ClickHandler() {
             @Override
@@ -160,12 +147,6 @@ public class NameSpaceEditorViewImpl extends Window implements NameSpaceEditorVi
     @UiHandler("selectPathButton")
     public void onSelectXPathButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onSelectXPathButtonClicked();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void showErrorMessage() {
-        info.show();
     }
 
     /** {@inheritDoc} */

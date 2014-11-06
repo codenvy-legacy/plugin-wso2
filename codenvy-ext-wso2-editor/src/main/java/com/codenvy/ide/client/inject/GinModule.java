@@ -54,6 +54,19 @@ import com.codenvy.ide.client.toolbar.group.ToolbarGroupView;
 import com.codenvy.ide.client.toolbar.group.ToolbarGroupViewImpl;
 import com.codenvy.ide.client.toolbar.item.ToolbarItemView;
 import com.codenvy.ide.client.toolbar.item.ToolbarItemViewImpl;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmDialogPresenter;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmDialogView;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmDialogViewImpl;
+import com.codenvy.ide.ui.dialogs.input.InputDialog;
+import com.codenvy.ide.ui.dialogs.input.InputDialogPresenter;
+import com.codenvy.ide.ui.dialogs.input.InputDialogView;
+import com.codenvy.ide.ui.dialogs.input.InputDialogViewImpl;
+import com.codenvy.ide.ui.dialogs.message.MessageDialog;
+import com.codenvy.ide.ui.dialogs.message.MessageDialogPresenter;
+import com.codenvy.ide.ui.dialogs.message.MessageDialogView;
+import com.codenvy.ide.ui.dialogs.message.MessageDialogViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.gwt.inject.client.multibindings.GinMultibinder;
@@ -84,6 +97,20 @@ public class GinModule extends AbstractGinModule {
         configureValidators(initializers);
         configureCreators(initializers);
         configureToolbar(initializers);
+
+        /*
+         * TODO: this configuration was copied from CoreGinModule from ide-core project. It is important because this gin module is
+         *       separated from IDE injection circle. In order to update version of IDE one has to review this configuration and
+         *       synchronize it.
+         */
+        bind(MessageDialogView.class).to(MessageDialogViewImpl.class);
+        bind(ConfirmDialogView.class).to(ConfirmDialogViewImpl.class);
+        bind(InputDialogView.class).to(InputDialogViewImpl.class);
+
+        install(new GinFactoryModuleBuilder().implement(MessageDialog.class, MessageDialogPresenter.class)
+                                             .implement(ConfirmDialog.class, ConfirmDialogPresenter.class)
+                                             .implement(InputDialog.class, InputDialogPresenter.class)
+                                             .build(DialogFactory.class));
     }
 
     private void configurePropertiesPanels(GinMultibinder<Initializer> initializers) {

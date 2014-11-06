@@ -19,7 +19,6 @@ import com.codenvy.ide.client.CellTableResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.endpoints.address.Property;
 import com.codenvy.ide.client.elements.mediators.ValueType;
-import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -67,8 +66,6 @@ public class PropertyViewImpl extends Window implements PropertyView {
     @UiField(provided = true)
     final CellTableResources             resource;
 
-    private final Info info;
-
     private ActionDelegate delegate;
 
     @Inject
@@ -80,9 +77,6 @@ public class PropertyViewImpl extends Window implements PropertyView {
 
         setTitle(locale.endpointPropertiesTitle());
         setWidget(ourUiBinder.createAndBindUi(this));
-
-        info = new Info(locale.nameAlreadyExistsError());
-        info.setTitle(locale.errorMessage());
 
         Button btnCancel = createButton(locale.buttonCancel(), "endpoint-properties-cancel", new ClickHandler() {
 
@@ -191,12 +185,6 @@ public class PropertyViewImpl extends Window implements PropertyView {
         }
 
         this.properties.setRowData(list);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void showErrorMessage() {
-        info.show();
     }
 
     /** {@inheritDoc} */

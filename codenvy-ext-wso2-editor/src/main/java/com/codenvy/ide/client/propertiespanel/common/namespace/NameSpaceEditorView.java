@@ -28,6 +28,7 @@ import java.util.List;
  *
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
+ * @author Andrey Plotnikov
  */
 @ImplementedBy(NameSpaceEditorViewImpl.class)
 public interface NameSpaceEditorView extends View<NameSpaceEditorView.ActionDelegate> {
@@ -64,9 +65,6 @@ public interface NameSpaceEditorView extends View<NameSpaceEditorView.ActionDele
          */
         void onSelectedNameSpace(@Nonnull NameSpace nameSpace);
     }
-
-    /** Shows message which contain info about error. */
-    void showErrorMessage();
 
     /** Shows name space dialog window. */
     void showWindow();

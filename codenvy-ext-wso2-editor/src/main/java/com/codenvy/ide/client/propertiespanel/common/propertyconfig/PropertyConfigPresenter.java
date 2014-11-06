@@ -15,11 +15,14 @@
  */
 package com.codenvy.ide.client.propertiespanel.common.propertyconfig;
 
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.mediators.log.Property;
 import com.codenvy.ide.client.propertiespanel.common.addpropertydialog.AddPropertyCallBack;
 import com.codenvy.ide.client.propertiespanel.common.addpropertydialog.AddPropertyLogPresenter;
 import com.codenvy.ide.client.propertiespanel.common.addpropertydialog.general.AddPropertyPresenter;
 import com.codenvy.ide.client.propertiespanel.common.namespace.AddPropertyCallback;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.ui.dialogs.message.MessageDialog;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -48,11 +51,17 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
     private AddPropertyCallback addPropertyCallback;
 
     @Inject
-    public PropertyConfigPresenter(PropertyConfigView propertyConfigView, final AddPropertyLogPresenter addPropertyLogPresenter) {
+    public PropertyConfigPresenter(PropertyConfigView propertyConfigView,
+                                   AddPropertyLogPresenter addPropertyLogPresenter,
+                                   WSO2EditorLocalizationConstant locale,
+                                   DialogFactory dialogFactory) {
         this.view = propertyConfigView;
         this.addPropertyLogPresenter = addPropertyLogPresenter;
 
         this.view.setDelegate(this);
+
+        final MessageDialog errorMessageDialog =
+                dialogFactory.createMessageDialog(locale.errorMessage(), locale.nameAlreadyExistsError(), null);
 
         this.editorAddPropertyCallBack = new AddPropertyCallBack<Property>() {
             @Override
@@ -62,9 +71,9 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
 
                     PropertyConfigPresenter.this.view.setProperties(temporaryList);
 
-                    addPropertyLogPresenter.hideDialog();
+                    PropertyConfigPresenter.this.addPropertyLogPresenter.hideDialog();
                 } else {
-                    PropertyConfigPresenter.this.view.showErrorMessage();
+                    errorMessageDialog.show();
                 }
             }
         };
@@ -86,14 +95,13 @@ public class PropertyConfigPresenter implements PropertyConfigView.ActionDelegat
 
                     PropertyConfigPresenter.this.view.setProperties(temporaryList);
 
-                    addPropertyLogPresenter.hideDialog();
+                    PropertyConfigPresenter.this.addPropertyLogPresenter.hideDialog();
 
                 } else {
-                    PropertyConfigPresenter.this.view.showErrorMessage();
+                    errorMessageDialog.show();
                 }
             }
         };
-
     }
 
     /** {@inheritDoc} */

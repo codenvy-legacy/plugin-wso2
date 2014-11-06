@@ -46,9 +46,6 @@ public interface PropertyView extends View<PropertyView.ActionDelegate> {
     /** Hides the view. */
     void hideDialog();
 
-    /** Shows message which contain info about error. */
-    void showErrorMessage();
-
     /**
      * Interface defines methods of {@link PropertyPresenter} presenter which calls from view. These methods defines
      * some actions when user click the button of dialog view for editing properties of address endpoint.

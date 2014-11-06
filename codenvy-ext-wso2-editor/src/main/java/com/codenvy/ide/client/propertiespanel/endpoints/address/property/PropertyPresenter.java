@@ -15,10 +15,13 @@
  */
 package com.codenvy.ide.client.propertiespanel.endpoints.address.property;
 
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.endpoints.address.Property;
 import com.codenvy.ide.client.propertiespanel.common.addpropertydialog.AddPropertyAddressEPPresenter;
 import com.codenvy.ide.client.propertiespanel.common.addpropertydialog.AddPropertyCallBack;
 import com.codenvy.ide.client.propertiespanel.common.addpropertydialog.general.AddPropertyPresenter;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.ui.dialogs.message.MessageDialog;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -48,11 +51,17 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
     private List<Property>            properties;
 
     @Inject
-    public PropertyPresenter(PropertyView view, final AddPropertyAddressEPPresenter editPropertyPresenter) {
+    public PropertyPresenter(PropertyView view,
+                             AddPropertyAddressEPPresenter editPropertyPresenter,
+                             WSO2EditorLocalizationConstant locale,
+                             DialogFactory dialogFactory) {
         this.view = view;
         this.view.setDelegate(this);
 
         this.editPropertyPresenter = editPropertyPresenter;
+
+        final MessageDialog errorMessageDialog =
+                dialogFactory.createMessageDialog(locale.errorMessage(), locale.nameAlreadyExistsError(), null);
 
         this.addCallBack = new AddPropertyCallBack<Property>() {
             @Override
@@ -62,9 +71,9 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
 
                     PropertyPresenter.this.view.setProperties(properties);
 
-                    editPropertyPresenter.hideDialog();
+                    PropertyPresenter.this.editPropertyPresenter.hideDialog();
                 } else {
-                    PropertyPresenter.this.view.showErrorMessage();
+                    errorMessageDialog.show();
                 }
             }
         };
@@ -86,10 +95,10 @@ public class PropertyPresenter implements PropertyView.ActionDelegate {
 
                     PropertyPresenter.this.view.setProperties(properties);
 
-                    editPropertyPresenter.hideDialog();
+                    PropertyPresenter.this.editPropertyPresenter.hideDialog();
 
                 } else {
-                    PropertyPresenter.this.view.showErrorMessage();
+                    errorMessageDialog.show();
                 }
             }
         };

@@ -28,12 +28,10 @@ import java.util.List;
  *
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
+ * @author Andrey Plotnikov
  */
 @ImplementedBy(ArgumentsConfigViewImpl.class)
 public interface ArgumentsConfigView extends View<ArgumentsConfigView.ActionDelegate> {
-
-    /** Shows message which contain info about error. */
-    void showErrorMessage();
 
     /**
      * Sets the list to table on view.

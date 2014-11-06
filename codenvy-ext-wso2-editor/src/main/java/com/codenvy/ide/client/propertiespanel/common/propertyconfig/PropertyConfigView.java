@@ -27,12 +27,10 @@ import java.util.List;
  *
  * @author Dmitry Shnurenko
  * @author Valeriy Svydenko
+ * @author Andrey Plotnikov
  */
 @ImplementedBy(PropertyConfigViewImpl.class)
 public interface PropertyConfigView extends View<PropertyConfigView.ActionDelegate> {
-
-    /** Shows message which contain info about error. */
-    void showErrorMessage();
 
     /**
      * Sets the list to table on view.

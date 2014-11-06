@@ -15,7 +15,7 @@
  */
 package com.codenvy.ide.client.propertiespanel.mediators.inline;
 
-import com.codenvy.ide.ui.dialogs.info.Info;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
 import com.google.gwt.xml.client.impl.DOMParseException;
@@ -33,12 +33,14 @@ import javax.annotation.Nonnull;
 public class InlineConfigurationPresenter implements InlineConfigurationView.ActionDelegate {
 
     private final InlineConfigurationView    view;
+    private final DialogFactory              dialogFactory;
     private       ChangeInlineFormatCallBack changeInlineFormatCallBack;
 
     @Inject
-    public InlineConfigurationPresenter(InlineConfigurationView inlineConfigurationView) {
+    public InlineConfigurationPresenter(InlineConfigurationView inlineConfigurationView, DialogFactory dialogFactory) {
         this.view = inlineConfigurationView;
         this.view.setDelegate(this);
+        this.dialogFactory = dialogFactory;
     }
 
     /** {@inheritDoc} */
@@ -49,8 +51,8 @@ public class InlineConfigurationPresenter implements InlineConfigurationView.Act
             view.closeDialog();
             changeInlineFormatCallBack.onInlineChanged(document.toString());
         } catch (DOMParseException e) {
-            Info info = new Info("Malformed xml");
-            info.show();
+            dialogFactory.createMessageDialog("Error", "Malformed xml", null)
+                         .show();
         }
     }
 

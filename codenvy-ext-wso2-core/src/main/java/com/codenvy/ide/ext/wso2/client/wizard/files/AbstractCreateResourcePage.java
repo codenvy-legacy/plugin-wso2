@@ -18,7 +18,6 @@ package com.codenvy.ide.ext.wso2.client.wizard.files;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.project.shared.dto.TreeElement;
-import com.codenvy.ide.api.ResourceNameValidator;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.editor.EditorAgent;
@@ -34,6 +33,7 @@ import com.codenvy.ide.ext.wso2.client.commons.WSO2AsyncRequestCallback;
 import com.codenvy.ide.ext.wso2.client.wizard.files.view.CreateResourceView;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
+import com.codenvy.ide.util.NameUtils;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
@@ -266,7 +266,7 @@ public abstract class AbstractCreateResourcePage extends AbstractWizardPage impl
     @Override
     public void onValueChanged() {
         String resourceName = getResourceNameWithExtension(view.getResourceName());
-        incorrectName = !ResourceNameValidator.isFileNameValid(resourceName);
+        incorrectName = !NameUtils.checkFileName(resourceName);
 
         hasSameFile = isFileWithSameName(resourceName);
 

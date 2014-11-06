@@ -15,10 +15,13 @@
  */
 package com.codenvy.ide.client.propertiespanel.mediators.arguments;
 
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.mediators.payload.Arg;
 import com.codenvy.ide.client.propertiespanel.common.addpropertydialog.AddPropertyArgPresenter;
 import com.codenvy.ide.client.propertiespanel.common.addpropertydialog.AddPropertyCallBack;
 import com.codenvy.ide.client.propertiespanel.common.addpropertydialog.general.AddPropertyPresenter;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.ui.dialogs.message.MessageDialog;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -47,11 +50,17 @@ public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDeleg
     private Arg                 selectedArg;
 
     @Inject
-    public ArgumentsConfigPresenter(ArgumentsConfigView argumentsConfigView, final AddPropertyArgPresenter addPropertyArgPresenter) {
+    public ArgumentsConfigPresenter(ArgumentsConfigView argumentsConfigView,
+                                    AddPropertyArgPresenter addPropertyArgPresenter,
+                                    WSO2EditorLocalizationConstant locale,
+                                    DialogFactory dialogFactory) {
 
         this.argView = argumentsConfigView;
         this.addPropertyArgPresenter = addPropertyArgPresenter;
         this.argView.setDelegate(this);
+
+        final MessageDialog errorMessageDialog =
+                dialogFactory.createMessageDialog(locale.errorMessage(), locale.nameAlreadyExistsError(), null);
 
         this.addPropertyCallBack = new AddPropertyCallBack<Arg>() {
             @Override
@@ -61,9 +70,9 @@ public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDeleg
 
                     ArgumentsConfigPresenter.this.argView.setArgs(arrayTemporary);
 
-                    addPropertyArgPresenter.hideDialog();
+                    ArgumentsConfigPresenter.this.addPropertyArgPresenter.hideDialog();
                 } else {
-                    ArgumentsConfigPresenter.this.argView.showErrorMessage();
+                    errorMessageDialog.show();
                 }
             }
         };
@@ -85,10 +94,10 @@ public class ArgumentsConfigPresenter implements ArgumentsConfigView.ActionDeleg
 
                     ArgumentsConfigPresenter.this.argView.setArgs(arrayTemporary);
 
-                    addPropertyArgPresenter.hideDialog();
+                    ArgumentsConfigPresenter.this.addPropertyArgPresenter.hideDialog();
 
                 } else {
-                    ArgumentsConfigPresenter.this.argView.showErrorMessage();
+                    errorMessageDialog.show();
                 }
             }
         };

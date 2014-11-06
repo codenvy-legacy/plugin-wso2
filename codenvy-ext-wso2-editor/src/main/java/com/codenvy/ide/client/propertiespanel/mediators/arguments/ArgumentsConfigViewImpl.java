@@ -18,7 +18,6 @@ package com.codenvy.ide.client.propertiespanel.mediators.arguments;
 import com.codenvy.ide.client.CellTableResources;
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.mediators.payload.Arg;
-import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -50,6 +49,7 @@ import static com.google.gwt.dom.client.Style.Unit.PX;
  *
  * @author Valeriy Svydenko
  * @author Dmitry Shnurenko
+ * @author Andrey Plotnikov
  */
 public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigView {
 
@@ -65,8 +65,6 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
     @UiField(provided = true)
     final CellTable<Arg> args;
 
-    private final Info info;
-
     private ActionDelegate delegate;
 
     @Inject
@@ -75,9 +73,6 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
                                    CellTableResources resource) {
         this.locale = locale;
         this.resource = resource;
-
-        this.info = new Info(locale.nameAlreadyExistsError());
-        this.info.setTitle(locale.errorMessage());
 
         this.args = createTable(locale, resource);
 
@@ -185,12 +180,6 @@ public class ArgumentsConfigViewImpl extends Window implements ArgumentsConfigVi
     @Override
     public void setDelegate(@Nonnull ActionDelegate delegate) {
         this.delegate = delegate;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void showErrorMessage() {
-        info.show();
     }
 
     /** {@inheritDoc} */

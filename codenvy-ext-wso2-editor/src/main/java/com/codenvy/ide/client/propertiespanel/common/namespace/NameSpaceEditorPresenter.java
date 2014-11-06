@@ -15,8 +15,11 @@
  */
 package com.codenvy.ide.client.propertiespanel.common.namespace;
 
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.NameSpace;
 import com.codenvy.ide.client.propertiespanel.common.propertyconfig.AddNameSpacesCallBack;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.ui.dialogs.message.MessageDialog;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -37,8 +40,9 @@ import static com.codenvy.ide.client.elements.NameSpace.copyNameSpaceList;
  */
 public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDelegate {
 
-    private final NameSpaceEditorView nameSpaceEditorView;
+    private final NameSpaceEditorView view;
     private final Provider<NameSpace> nameSpaceProvider;
+    private final MessageDialog       errorMessageDialog;
 
     private NameSpace             selectedNameSpace;
     private List<NameSpace>       nameSpacesTemporary;
@@ -46,12 +50,16 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
     private int                   index;
 
     @Inject
-    public NameSpaceEditorPresenter(NameSpaceEditorView nameSpaceEditorView, Provider<NameSpace> nameSpaceProvider) {
-        this.nameSpaceEditorView = nameSpaceEditorView;
+    public NameSpaceEditorPresenter(NameSpaceEditorView view,
+                                    Provider<NameSpace> nameSpaceProvider,
+                                    WSO2EditorLocalizationConstant locale,
+                                    DialogFactory dialogFactory) {
+        this.view = view;
+        this.view.setDelegate(this);
         this.nameSpaceProvider = nameSpaceProvider;
         this.index = -1;
 
-        this.nameSpaceEditorView.setDelegate(this);
+        errorMessageDialog = dialogFactory.createMessageDialog(locale.errorMessage(), locale.nameAlreadyExistsError(), null);
     }
 
     /**
@@ -66,11 +74,11 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
         nameSpacesTemporary = copyNameSpaceList(nameSpaces);
         callBack = innerCallBack;
 
-        nameSpaceEditorView.setNameSpaces(nameSpacesTemporary);
-        nameSpaceEditorView.setUri("");
-        nameSpaceEditorView.setPrefix("");
+        view.setNameSpaces(nameSpacesTemporary);
+        view.setUri("");
+        view.setPrefix("");
 
-        nameSpaceEditorView.showWindow();
+        view.showWindow();
     }
 
     /**
@@ -92,15 +100,15 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
 
         showDefaultWindow(nameSpaces, callBack);
 
-        nameSpaceEditorView.setNameSpaceLabelName(labelName);
-        nameSpaceEditorView.setExpression(expression);
+        view.setNameSpaceLabelName(labelName);
+        view.setExpression(expression);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onAddNameSpaceButtonClicked() {
-        String prefix = nameSpaceEditorView.getPrefix();
-        String uri = nameSpaceEditorView.getUri();
+        String prefix = view.getPrefix();
+        String uri = view.getUri();
 
         NameSpace nameSpace = nameSpaceProvider.get();
 
@@ -108,13 +116,13 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
         nameSpace.putProperty(URI, uri);
 
         if (isContainsSamePrefix(prefix)) {
-            nameSpaceEditorView.showErrorMessage();
+            errorMessageDialog.show();
 
             return;
         }
 
-        nameSpaceEditorView.setPrefix("");
-        nameSpaceEditorView.setUri("");
+        view.setPrefix("");
+        view.setUri("");
 
         if (index != -1) {
             nameSpacesTemporary.set(index, nameSpace);
@@ -123,7 +131,7 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
             nameSpacesTemporary.add(nameSpace);
         }
 
-        nameSpaceEditorView.setNameSpaces(nameSpacesTemporary);
+        view.setNameSpaces(nameSpacesTemporary);
     }
 
     private boolean isContainsSamePrefix(@Nonnull String prefix) {
@@ -146,12 +154,12 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
             return;
         }
 
-        nameSpaceEditorView.setPrefix(prefix);
-        nameSpaceEditorView.setUri(uri);
+        view.setPrefix(prefix);
+        view.setUri(uri);
 
         index = nameSpacesTemporary.indexOf(selectedNameSpace);
 
-        nameSpaceEditorView.setNameSpaces(nameSpacesTemporary);
+        view.setNameSpaces(nameSpacesTemporary);
     }
 
     /** {@inheritDoc} */
@@ -159,22 +167,22 @@ public class NameSpaceEditorPresenter implements NameSpaceEditorView.ActionDeleg
     public void onRemoveButtonClicked() {
         nameSpacesTemporary.remove(selectedNameSpace);
 
-        nameSpaceEditorView.setNameSpaces(nameSpacesTemporary);
+        view.setNameSpaces(nameSpacesTemporary);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onOkButtonClicked() {
-        callBack.onNameSpacesChanged(nameSpacesTemporary, nameSpaceEditorView.getExpression());
+        callBack.onNameSpacesChanged(nameSpacesTemporary, view.getExpression());
 
-        nameSpaceEditorView.hideWindow();
+        view.hideWindow();
     }
 
 
     /** {@inheritDoc} */
     @Override
     public void onCancelButtonClicked() {
-        nameSpaceEditorView.hideWindow();
+        view.hideWindow();
     }
 
     /** {@inheritDoc} */
