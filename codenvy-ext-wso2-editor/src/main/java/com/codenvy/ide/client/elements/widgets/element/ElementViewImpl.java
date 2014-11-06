@@ -57,7 +57,6 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -96,33 +95,36 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
     private static final int MARGIN      = 2 * BORDER_SIZE + 2 * SHADOW_SIZE + 2 * SHADOW_BLUR;
 
     @UiField
-    Label           title;
+    Label     title;
     @UiField
-    Image           icon;
+    Image     icon;
     @UiField
-    FlowPanel       rightPanel;
+    FlowPanel rightPanel;
     @UiField
-    FlowPanel       mainPanel;
+    FlowPanel mainPanel;
     @UiField
-    DockLayoutPanel leftPanel;
+    FlowPanel leftPanel;
     @UiField
-    Label           header;
+    Label     header;
     @UiField
-    FlowPanel       headerPanel;
-
-    private final EditorResources resources;
+    FlowPanel headerPanel;
+    @UiField(provided = true)
+    final EditorResources resources;
 
     private PopupPanel popup;
     private int        height;
     private int        width;
     private boolean    isComplexMediator;
+    private String     titleText;
+    private boolean    isHeaderTitleVisible;
+    private boolean    isIconTitleVisible;
 
     @Inject
     public ElementViewImpl(ElementViewImplUiBinder ourUiBinder, EditorResources resources, @Assisted Element element) {
         this.resources = resources;
 
-        this.height = DEFAULT_HEIGHT;
-        this.width = DEFAULT_WIDTH;
+        height = DEFAULT_HEIGHT;
+        width = DEFAULT_WIDTH;
 
         initWidget(ourUiBinder.createAndBindUi(this));
 
@@ -133,7 +135,9 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
         bind();
         preparePopup(element);
 
-        this.isComplexMediator = false;
+        isComplexMediator = false;
+        isHeaderTitleVisible = true;
+        isIconTitleVisible = true;
     }
 
     private void preparePopup(@Nonnull Element element) {
@@ -239,8 +243,23 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
     /** {@inheritDoc} */
     @Override
     public void setTitle(@Nonnull String title) {
-        this.title.setText(title);
-        header.setText(title);
+        titleText = title;
+
+        updateTitle();
+    }
+
+    private void updateTitle() {
+        if (isHeaderTitleVisible) {
+            header.setText(titleText);
+        }
+
+        headerPanel.setVisible(isHeaderTitleVisible);
+
+        if (isIconTitleVisible) {
+            title.setText(titleText);
+        } else {
+            title.setText("");
+        }
     }
 
     /** {@inheritDoc} */
@@ -323,14 +342,17 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
     /** {@inheritDoc} */
     @Override
     public void setVisibleTitle(boolean visible) {
-        title.setVisible(visible);
+        isIconTitleVisible = visible;
+
+        updateTitle();
     }
 
     /** {@inheritDoc} */
     @Override
     public void setVisibleHeader(boolean visible) {
-        leftPanel.setWidgetHidden(headerPanel, !visible);
-        leftPanel.onResize();
+        isHeaderTitleVisible = visible;
+
+        updateTitle();
     }
 
     /** {@inheritDoc} */

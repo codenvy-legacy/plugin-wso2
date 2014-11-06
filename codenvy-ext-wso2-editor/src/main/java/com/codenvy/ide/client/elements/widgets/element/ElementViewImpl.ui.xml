@@ -20,11 +20,11 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
-    <ui:with field="styles" type="com.codenvy.ide.client.EditorResources"/>
+    <ui:with field="resources" type="com.codenvy.ide.client.EditorResources"/>
 
     <ui:style>
         .iconAndTitlePanel {
-            position: relative;
+            position: absolute;
             top: 50%;
             margin-top: -32px;
         }
@@ -50,40 +50,31 @@
         }
     </ui:style>
 
-    <g:FlowPanel ui:field="mainPanel" addStyleNames="{styles.editorCSS.elementMainPanel}">
+    <g:FlowPanel ui:field="mainPanel" addStyleNames="{resources.editorCSS.elementMainPanel}">
 
-        <g:DockLayoutPanel ui:field="leftPanel" width="86px" height="100%"
-                           addStyleNames="{styles.editorCSS.branchBackground} {style.floatLeft}" unit="PX">
+        <g:FlowPanel ui:field="leftPanel" width="86px" height="100%"
+                     addStyleNames="{resources.editorCSS.branchBackground} {style.floatLeft}">
 
-            <g:north size="20">
-                <g:FlowPanel ui:field="headerPanel" width="100%" height="19px" addStyleNames="{styles.editorCSS.elementHeaderPanel}">
+            <g:FlowPanel ui:field="headerPanel" width="86px" height="19px" addStyleNames="{resources.editorCSS.elementHeaderPanel}">
 
-                    <g:FlowPanel width="100%" height="18px" addStyleNames="{styles.editorCSS.elementHeaderInnerPanel}">
-                        <g:Label ui:field="header" addStyleNames="{styles.editorCSS.fontStyle}
-                                                                  {styles.editorCSS.titleBold}
-                                                                  {styles.editorCSS.textAlign}
-                                                                  {style.headerText}"/>
-                    </g:FlowPanel>
-
+                <g:FlowPanel width="86px" height="18px" addStyleNames="{resources.editorCSS.elementHeaderInnerPanel}">
+                    <g:Label ui:field="header" addStyleNames="{resources.editorCSS.fontStyle}
+                                                              {resources.editorCSS.titleBold}
+                                                              {resources.editorCSS.textAlign}
+                                                              {style.headerText}"/>
                 </g:FlowPanel>
-            </g:north>
 
-            <g:center>
-                <g:FlowPanel addStyleNames="{styles.editorCSS.fullSize}">
+            </g:FlowPanel>
 
-                    <g:FlowPanel addStyleNames="{style.iconAndTitlePanel} {styles.editorCSS.fullSize}">
-                        <g:Label ui:field="title" addStyleNames="{styles.editorCSS.fontStyle}
-                                                                 {styles.editorCSS.titleBold}
-                                                                 {styles.editorCSS.textAlign}"/>
+            <g:FlowPanel width="86px" height="calc(100%-19px)" addStyleNames="{style.iconAndTitlePanel}">
+                <g:Label ui:field="title" height="12px" width="86px" addStyleNames="{resources.editorCSS.fontStyle}
+                                                                                    {resources.editorCSS.titleBold}
+                                                                                    {resources.editorCSS.textAlign}"/>
 
-                        <g:Image ui:field="icon" addStyleNames="{style.icon}"/>
+                <g:Image ui:field="icon" width="60px" height="54px" addStyleNames="{style.icon}"/>
+            </g:FlowPanel>
 
-                    </g:FlowPanel>
-
-                </g:FlowPanel>
-            </g:center>
-
-        </g:DockLayoutPanel>
+        </g:FlowPanel>
 
         <g:FlowPanel ui:field="rightPanel" addStyleNames="{style.rightPanel}"/>
 
