@@ -110,11 +110,12 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
     /** {@inheritDoc} */
     @Override
     public void doSave(@Nonnull AsyncCallback<EditorInput> callback) {
-        doSave();
+        if (isDirty()) {
+            isGraphicalEditorChanged = true;
 
-        // We should throw null value because for our implementation it isn't needed method. This implementation provides skipping any
-        // logic.
-        callback.onSuccess(null);
+            textEditor.doSave(callback);
+            graphicEditor.doSave();
+        }
     }
 
     /** {@inheritDoc} */

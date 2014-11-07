@@ -47,7 +47,6 @@ import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -165,9 +164,7 @@ public class ESBConfEditorTest {
         editor.doSave(callback);
 
         verify(graphicEditor).doSave();
-        verify(textEditor).doSave();
-
-        verify(callback).onSuccess(isNull(EditorInput.class));
+        verify(textEditor).doSave(callback);
     }
 
     @Test

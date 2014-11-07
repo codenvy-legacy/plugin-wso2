@@ -65,8 +65,7 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
     public void doSave(@Nonnull AsyncCallback<EditorInput> callback) {
         doSave();
 
-        // We should throw null value because for our implementation it isn't needed method. This implementation provides skipping any logic.
-        callback.onSuccess(null);
+        callback.onSuccess(getEditorInput());
     }
 
     /** {@inheritDoc} */

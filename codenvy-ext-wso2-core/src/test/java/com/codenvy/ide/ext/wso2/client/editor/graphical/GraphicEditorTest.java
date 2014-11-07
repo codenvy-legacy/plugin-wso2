@@ -34,7 +34,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -100,7 +99,7 @@ public class GraphicEditorTest {
         graphicEditor.doSave(callback);
 
         assertFalse(graphicEditor.isDirty());
-        verify(callback).onSuccess(isNull(EditorInput.class));
+        verify(callback).onSuccess(any(EditorInput.class));
     }
 
     @Test
