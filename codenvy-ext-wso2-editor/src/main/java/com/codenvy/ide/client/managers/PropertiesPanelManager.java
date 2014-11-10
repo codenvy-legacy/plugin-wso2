@@ -34,6 +34,7 @@ import java.util.Map;
  * diagram element).
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 @Singleton
 public class PropertiesPanelManager implements SelectionManager.SelectionStateListener, PropertyChangedListener {
@@ -85,7 +86,6 @@ public class PropertiesPanelManager implements SelectionManager.SelectionStateLi
      * @param <T>
      *         type of diagram element
      */
-    @SuppressWarnings("unchecked")
     public <T extends Element> void show(@Nullable T element) {
         if (shownPanel != null) {
             shownPanel.removeListener(this);
@@ -96,6 +96,7 @@ public class PropertiesPanelManager implements SelectionManager.SelectionStateLi
 
         if (value != null) {
             if (element != null) {
+                //noinspection unchecked
                 value.setElement(element);
             }
 
