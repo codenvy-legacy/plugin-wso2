@@ -24,12 +24,11 @@ import org.junit.runner.RunWith;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static com.codenvy.ide.client.TestUtil.getContentByPath;
 import static com.codenvy.ide.client.elements.AbstractEntityElement.Key;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -59,11 +58,9 @@ public abstract class AbstractEntityTest<T extends AbstractEntityElement> extend
         assertEquals(getContent(path), content);
     }
 
-    @SuppressWarnings("NonJREEmulationClassesInClientCode")
     @Nonnull
     protected String getContent(@Nonnull String path) throws IOException {
-        String file = AbstractEntityTest.class.getResource(path).getFile();
-        return new String(Files.readAllBytes(Paths.get(file)));
+        return getContentByPath(AbstractEntityTest.class, path);
     }
 
     @Test

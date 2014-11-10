@@ -58,7 +58,7 @@ public class SonarAwareGwtRunner extends GwtRunner {
         String pathSeparator = System.getProperty("path.separator");
         String[] array = classPath.split(pathSeparator);
 
-        List<URL> files = new ArrayList<URL>();
+        List<URL> files = new ArrayList<>();
         for (String a : array) {
             files.add(new File(a).toURI().toURL());
         }

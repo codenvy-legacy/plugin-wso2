@@ -1,0 +1,52 @@
+<sequence name="as">
+    <salesforce.search></salesforce.search>
+    <switch source="default/xpath">
+        <case regex=".*+">
+            <call>
+                <endpoint>
+                    <address uri="http://www.example.org/service"></address>
+                </endpoint>
+            </call>
+        </case>
+        <default></default>
+    </switch>
+    <switch source="default/xpath">
+        <case regex=".*+">
+            <respond description="sdsdsd"></respond>
+        </case>
+        <case regex=".*+">
+            <respond></respond>
+        </case>
+        <case regex=".*+">
+            <respond></respond>
+        </case>
+        <default>
+            <respond description="sdsd"></respond>
+        </default>
+    </switch>
+    <enrich>
+        <source clone="true" xpath="/default/xpath"></source>
+        <target xpath="/default/xpath"></target>
+    </enrich>
+    <log level="headers" category="ERROR" separator="sdsdsd" description="sdsdsds">
+        <property name="property_name" value="property_value"></property>
+        <property name="sdsdssd" expression="/default/expression"></property>
+    </log>
+    <call></call>
+    <twitter.retweet></twitter.retweet>
+    <twitter.getdirectmessages></twitter.getdirectmessages>
+    <call-template target=""></call-template>
+    <call>
+        <endpoint>
+            <address uri="http://www.example.org/service">
+                <markForSuspension>
+                    <errorCodes>5656</errorCodes>
+                    <retriesBeforeSuspension>5656</retriesBeforeSuspension>
+                </markForSuspension>
+            </address>
+            <property name="property_name" value="sdsdsssssssdsds"></property>
+            <property name="sd" expression="/default/expression" scope="axis2-client"></property>
+            <description>decription</description>
+        </endpoint>
+    </call>
+</sequence>

@@ -22,6 +22,7 @@ import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
 /**
@@ -74,7 +75,7 @@ public class ContentFormatter {
      * @return node in text format
      */
     @Nonnull
-    private static String parseXMLNode(@Nonnull Node node, int depth) {
+    private static String parseXMLNode(@Nonnull Node node, @Nonnegative int depth) {
         StringBuilder outputXml = new StringBuilder();
 
         if (depth > 0) {
@@ -102,7 +103,7 @@ public class ContentFormatter {
      * @return tab for a tag
      */
     @Nonnull
-    private static String createTab(int depth) {
+    private static String createTab(@Nonnegative int depth) {
         StringBuilder tabs = new StringBuilder();
 
         for (int i = 0; i < depth; i++) {
@@ -141,7 +142,7 @@ public class ContentFormatter {
      * @return children nodes in text format
      */
     @Nonnull
-    private static String transformChildrenNodes(@Nonnull Node node, int depth) {
+    private static String transformChildrenNodes(@Nonnull Node node, @Nonnegative int depth) {
         StringBuilder text = new StringBuilder();
         NodeList nodeList = node.getChildNodes();
 

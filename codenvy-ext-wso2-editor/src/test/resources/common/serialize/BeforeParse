@@ -1,0 +1,54 @@
+<sequence name="as">
+<salesforce.search/>
+<switch source="default/xpath">
+<case regex=".*+">
+<call>
+                <endpoint>
+<address uri="http://www.example.org/service"/>
+                </endpoint>
+            </call>
+        </case>
+<default/>
+    </switch>
+<switch source="default/xpath">
+        <case regex=".*+">
+            <respond description="sdsdsd"/>
+        </case>
+
+
+<case regex=".*+">
+            <respond/>
+        </case>
+<case regex=".*+">
+            <respond/>
+</case>
+        <default>
+            <respond description="sdsd"/>
+        </default>
+</switch>
+    <enrich>
+<source clone="true" xpath="/default/xpath"/>
+        <target xpath="/default/xpath"/>
+    </enrich>
+    <log level="headers" category="ERROR" separator="sdsdsd" description="sdsdsds">
+<property name="property_name" value="property_value"/>
+        <property xmlns:sdsd="sdsd" name="sdsdssd" expression="/default/expression"/>
+</log>
+    <call/>
+<twitter.retweet/>
+    <twitter.getDirectMessages/>
+    <call-template target=""/>
+    <call>
+<endpoint>
+            <address uri="http://www.example.org/service">
+                <markForSuspension>
+                    <errorCodes>5656</errorCodes>
+                    <retriesBeforeSuspension>5656</retriesBeforeSuspension>
+</markForSuspension>
+            </address>
+            <property name="property_name" value="sdsdsssssssdsds"/>
+            <property name="sd" expression="/default/expression" scope="axis2-client"/>
+<description>decription</description>
+</endpoint>
+</call>
+</sequence>
