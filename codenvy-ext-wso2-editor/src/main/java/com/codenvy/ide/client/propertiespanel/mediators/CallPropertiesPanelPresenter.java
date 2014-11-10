@@ -56,7 +56,6 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call> 
     private final NameSpaceEditorPresenter nameSpaceEditorPresenter;
     private final AddNameSpacesCallBack    addNameSpacesCallBack;
 
-
     private ListPropertyPresenter    endpointType;
     private SimplePropertyPresenter  endpointRegistryKeyPanel;
     private ComplexPropertyPresenter endpointXpathPanel;
@@ -77,10 +76,12 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call> 
         addNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
             public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nullable String expression) {
-                element.putProperty(NAMESPACES, nameSpaces);
-                element.putProperty(X_PATH, expression != null ? expression : "");
+                String expressionValue = expression != null ? expression : "";
 
-                endpointXpathPanel.setProperty(expression);
+                element.putProperty(NAMESPACES, nameSpaces);
+                element.putProperty(X_PATH, expressionValue);
+
+                endpointXpathPanel.setProperty(expressionValue);
 
                 notifyListeners();
             }
@@ -137,7 +138,7 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call> 
                 notifyListeners();
             }
         };
-        description = createSimpleProperty(basicGroup, locale.addressEndpointDescription(), descriptionListener);
+        description = createSimpleProperty(basicGroup, locale.description(), descriptionListener);
     }
 
     /** Modifies the view of the panel depending on the type of endpoint of call element. */
