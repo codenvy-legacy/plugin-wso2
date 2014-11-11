@@ -26,6 +26,7 @@ import com.codenvy.ide.Constants;
 import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +34,9 @@ import java.util.Map;
 
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_ID;
 import static com.codenvy.ide.ext.wso2.shared.Constants.ESB_CONFIGURATION_PROJECT_NAME;
+import static com.codenvy.ide.ext.wso2.shared.Constants.IMPORTER_TYPE;
+import static com.codenvy.ide.ext.wso2.shared.Constants.PROJECT_DESCRIPTION;
+import static com.codenvy.ide.ext.wso2.shared.Constants.PROJECT_LOCATION;
 import static com.codenvy.ide.ext.wso2.shared.Constants.WSO2_PROJECT_CATEGORY;
 
 /**
@@ -63,12 +67,16 @@ public class WSO2ProjectTypeExtension implements ProjectTypeExtension {
                              new Attribute(Constants.FRAMEWORK, ESB_CONFIGURATION_PROJECT_ID));
     }
 
+    /** {@inheritDoc} */
     @Override
+    @Nullable
     public Builders getBuilders() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
+    @Nullable
     public Runners getRunners() {
         return null;
     }
@@ -77,14 +85,15 @@ public class WSO2ProjectTypeExtension implements ProjectTypeExtension {
     @Nonnull
     @Override
     public List<ProjectTemplateDescription> getTemplates() {
-        return Arrays.asList(new ProjectTemplateDescription("zip",
+        return Arrays.asList(new ProjectTemplateDescription(IMPORTER_TYPE,
                                                             ESB_CONFIGURATION_PROJECT_NAME,
-                                                            "This is a simple ESB configuration project.",
-                                                            "templates/esbproject.zip"));
+                                                            PROJECT_DESCRIPTION,
+                                                            PROJECT_LOCATION));
     }
 
     /** {@inheritDoc} */
     @Override
+    @Nullable
     public Map<String, String> getIconRegistry() {
         return null;
     }

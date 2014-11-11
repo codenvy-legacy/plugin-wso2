@@ -60,4 +60,8 @@ public interface Constants {
     String RENAME_FILE_OPERATION    = "rename";
     String OVERWRITE_FILE_OPERATION = "overwrite";
 
+    String PROJECT_DESCRIPTION = "This is a simple ESB configuration project.";
+    String IMPORTER_TYPE       = "zip";
+    String PROJECT_LOCATION    = "templates/esbproject.zip";
+
 }
