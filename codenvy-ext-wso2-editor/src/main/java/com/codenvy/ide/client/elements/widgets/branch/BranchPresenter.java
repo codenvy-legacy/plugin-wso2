@@ -27,7 +27,6 @@ import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.validators.ConnectionsValidator;
 import com.codenvy.ide.client.validators.InnerElementsValidator;
-import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -216,6 +215,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         newElement.setX(x);
         newElement.setY(y);
         newElement.setParent(branchParent);
+        newElement.setHorizontalOrientation(branchParent.isHorizontalOrientation());
 
         branch.addElement(newElement);
         branch.sortElements();

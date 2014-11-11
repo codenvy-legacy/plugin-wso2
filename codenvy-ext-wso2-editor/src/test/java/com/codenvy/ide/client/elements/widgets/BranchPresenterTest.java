@@ -791,6 +791,8 @@ public class BranchPresenterTest {
         verify(selectionManager).setElement(creatingElement);
 
         elementShouldBeVerifiedXYPosition(creatingElement, X_POSITION, Y_POSITION);
+        verify(creatingElement).setParent(element);
+        verify(creatingElement).setHorizontalOrientation(true);
 
         verify(branch).addElement(creatingElement);
 
