@@ -45,36 +45,17 @@
 
         .rightPanel {
             left: 86px;
-            height: 100%;
+            /*height: 100%;*/
             position: absolute;
         }
     </ui:style>
 
     <g:FlowPanel ui:field="mainPanel" addStyleNames="{resources.editorCSS.elementMainPanel}">
 
-        <g:FlowPanel ui:field="leftPanel" width="86px" height="100%"
-                     addStyleNames="{resources.editorCSS.branchBackground} {style.floatLeft}">
-
-            <g:FlowPanel ui:field="headerPanel" width="86px" height="19px" addStyleNames="{resources.editorCSS.elementHeaderPanel}">
-
-                <g:FlowPanel width="86px" height="18px" addStyleNames="{resources.editorCSS.elementHeaderInnerPanel}">
-                    <g:Label ui:field="header" addStyleNames="{resources.editorCSS.fontStyle}
-                                                              {resources.editorCSS.titleBold}
-                                                              {resources.editorCSS.textAlign}
-                                                              {style.headerText}"/>
-                </g:FlowPanel>
-
-            </g:FlowPanel>
-
-            <g:FlowPanel width="86px" height="calc(100%-19px)" addStyleNames="{style.iconAndTitlePanel}">
-                <g:Label ui:field="title" height="12px" width="86px" addStyleNames="{resources.editorCSS.fontStyle}
-                                                                                    {resources.editorCSS.titleBold}
-                                                                                    {resources.editorCSS.textAlign}"/>
-
-                <g:Image ui:field="icon" width="60px" height="54px" addStyleNames="{style.icon}"/>
-            </g:FlowPanel>
-
-        </g:FlowPanel>
+        <g:SimplePanel ui:field="topPanel" width="100%" height="86px"
+                       addStyleNames="{resources.editorCSS.branchBackground} {style.floatLeft}"/>
+        <g:SimplePanel ui:field="westPanel" width="86px" height="100%"
+                       addStyleNames="{resources.editorCSS.branchBackground} {style.floatLeft}"/>
 
         <g:FlowPanel ui:field="rightPanel" addStyleNames="{style.rightPanel}"/>
 

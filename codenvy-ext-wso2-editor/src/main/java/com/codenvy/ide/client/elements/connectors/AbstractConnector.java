@@ -46,8 +46,6 @@ public class AbstractConnector extends AbstractElement {
                                 @Nonnull String title,
                                 @Nonnull String serializationName,
                                 @Nonnull List<String> properties,
-                                boolean isPossibleToAddBranches,
-                                boolean needsToShowIconAndTitle,
                                 @Nonnull ImageResource resources,
                                 @Nonnull Provider<Branch> branchProvider,
                                 @Nonnull ElementCreatorsManager elementCreatorsManager) {
@@ -55,8 +53,8 @@ public class AbstractConnector extends AbstractElement {
               title,
               serializationName,
               properties,
-              isPossibleToAddBranches,
-              needsToShowIconAndTitle,
+              false,
+              false,
               resources,
               branchProvider,
               elementCreatorsManager);

@@ -73,7 +73,6 @@ import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.
 import static com.codenvy.ide.client.elements.endpoints.address.AddressEndpoint.URI;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -153,7 +152,7 @@ public class AddressEndpointTest extends AbstractElementTest<AddressEndpoint> {
 
     @Override
     public void needToShowTitleAndIconParamShouldBeInitializedWithDefaultValue() throws Exception {
-        assertTrue(entity.needsToShowIconAndTitle());
+        assertFalse(entity.isRoot());
     }
 
     @Override

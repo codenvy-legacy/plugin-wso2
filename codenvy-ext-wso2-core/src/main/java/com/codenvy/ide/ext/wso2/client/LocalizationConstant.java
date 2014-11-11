@@ -176,4 +176,10 @@ public interface LocalizationConstant extends Messages {
 
     @Key("wizard.request")
     String waitingForResponse();
+
+    @Key("orientation.horizontal")
+    String orientationHorizontal();
+
+    @Key("orientation.vertical")
+    String orientationVertical();
 }

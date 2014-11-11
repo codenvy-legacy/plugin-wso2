@@ -32,6 +32,7 @@ import java.util.List;
  * to show root element of diagram. The main function of workspace is detect position and size of root element and change it.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public class WorkspacePresenter extends AbstractPresenter<WorkspaceView> implements WorkspaceView.ActionDelegate, ElementChangedListener {
 
@@ -122,6 +123,18 @@ public class WorkspacePresenter extends AbstractPresenter<WorkspaceView> impleme
         for (ElementChangedListener listener : listeners) {
             listener.onElementChanged();
         }
+    }
+
+    /**
+     * Calls method which changes orientation of diagram.
+     *
+     * @param isHorizontal
+     *         <code>true</code> sets horizontal orientation of diagram <code>false</code> sets vertical orientation of diagram
+     */
+    public void setHorizontalOrientation(boolean isHorizontal) {
+        element.setHorizontalOrientation(isHorizontal);
+
+        resize();
     }
 
     /** {@inheritDoc} */

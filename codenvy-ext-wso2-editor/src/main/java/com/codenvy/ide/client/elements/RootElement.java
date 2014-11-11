@@ -53,7 +53,7 @@ public class RootElement extends AbstractElement {
 
     @Inject
     public RootElement(Provider<Branch> branchProvider, ElementCreatorsManager elementCreatorsManager) {
-        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, false, null, branchProvider, elementCreatorsManager);
+        super(ELEMENT_NAME, ELEMENT_NAME, SERIALIZATION_NAME, PROPERTIES, false, true, null, branchProvider, elementCreatorsManager);
 
         putProperty(NAME, "");
         putProperty(ON_ERROR, "");

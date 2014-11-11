@@ -24,6 +24,7 @@
 
     <inherits name='com.codenvy.ide.collections.Collections'/>
     <inherits name='com.codenvy.ide.ui.CodenvyUI'/>
+    <inherits name="org.vectomatic.libgwtsvg"/>
 
     <source path='client'/>
 </module>

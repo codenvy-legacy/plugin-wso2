@@ -70,7 +70,7 @@ public class Sequence extends AbstractElement {
               SERIALIZATION_NAME,
               PROPERTIES,
               false,
-              true,
+              false,
               resources.sequence(),
               branchProvider,
               elementCreatorsManager);

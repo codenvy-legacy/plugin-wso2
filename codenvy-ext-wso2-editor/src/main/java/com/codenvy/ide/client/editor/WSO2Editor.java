@@ -155,6 +155,11 @@ public class WSO2Editor extends AbstractPresenter<WSO2EditorView> implements Pro
         view.setVisiblePropertyPanel(isVisiblePropertyPanel = !isVisiblePropertyPanel);
     }
 
+    /** Calls method which changes orientation of diagram. */
+    public void changeDiagramOrientation(boolean isHorizontal) {
+        workspace.setHorizontalOrientation(isHorizontal);
+    }
+
     /** {@inheritDoc} */
     @Override
     public void onEditorDOMChanged() {

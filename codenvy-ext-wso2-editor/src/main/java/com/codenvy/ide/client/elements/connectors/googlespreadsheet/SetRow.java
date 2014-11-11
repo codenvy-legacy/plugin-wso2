@@ -75,8 +75,6 @@ public class SetRow extends AbstractConnector {
               ELEMENT_NAME,
               SERIALIZATION_NAME,
               PROPERTIES,
-              false,
-              true,
               resources.googleSpreadsheetElement(),
               branchProvider,
               elementCreatorsManager);

@@ -85,7 +85,7 @@ public class Header extends AbstractElement {
               SERIALIZATION_NAME,
               PROPERTIES,
               false,
-              true,
+              false,
               resources.header(),
               branchProvider,
               elementCreatorsManager);

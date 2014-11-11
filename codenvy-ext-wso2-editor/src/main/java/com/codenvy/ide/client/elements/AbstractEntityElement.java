@@ -187,6 +187,7 @@ public abstract class AbstractEntityElement {
     protected void applyAttribute(@Nonnull String attributeName, @Nonnull String attributeValue) {
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public static class Key<T> {
 
         private final String name;

@@ -29,6 +29,7 @@ import static org.mockito.Mockito.verify;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ArrowPresenterTest {
@@ -62,6 +63,18 @@ public class ArrowPresenterTest {
     @Test
     public void viewShouldBePrepared() throws Exception {
         verify(view).setDelegate(presenter);
+    }
+
+    @Test
+    public void horizontalAlignmentShouldBeSet() throws Exception {
+        presenter.applyHorizontalAlign();
+        verify(view).applyHorizontalAlign();
+    }
+
+    @Test
+    public void verticalAlignmentShouldBeSet() throws Exception {
+        presenter.applyVerticalAlign();
+        verify(view).applyVerticalAlign();
     }
 
 }

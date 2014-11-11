@@ -86,7 +86,7 @@ public class Filter extends AbstractElement {
               SERIALIZATION_NAME,
               PROPERTIES,
               false,
-              true,
+              false,
               resources.filter(),
               branchProvider,
               elementCreatorsManager);

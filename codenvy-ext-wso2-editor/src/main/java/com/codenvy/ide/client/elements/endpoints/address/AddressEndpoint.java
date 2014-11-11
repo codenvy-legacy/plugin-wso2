@@ -135,7 +135,7 @@ public class AddressEndpoint extends AbstractElement {
               SERIALIZATION_NAME,
               SERIALIZATION_PROPERTIES,
               false,
-              true,
+              false,
               resources.address(),
               branchProvider,
               elementCreatorsManager);

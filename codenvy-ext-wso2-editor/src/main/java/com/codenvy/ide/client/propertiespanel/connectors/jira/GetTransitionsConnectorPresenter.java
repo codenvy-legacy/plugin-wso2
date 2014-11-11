@@ -17,7 +17,7 @@ package com.codenvy.ide.client.propertiespanel.connectors.jira;
 
 import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.connectors.jira.GetTransitions;
-import com.codenvy.ide.client.elements.connectors.twitter.TwitterPropertyManager;
+import com.codenvy.ide.client.elements.connectors.jira.JiraPropertyManager;
 import com.codenvy.ide.client.managers.PropertyTypeManager;
 import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.propertiespanel.PropertiesPanelView;
@@ -54,13 +54,13 @@ public class GetTransitionsConnectorPresenter extends AbstractConnectorPropertie
     public GetTransitionsConnectorPresenter(WSO2EditorLocalizationConstant locale,
                                             NameSpaceEditorPresenter nameSpacePresenter,
                                             PropertiesPanelView view,
-                                            TwitterPropertyManager twitterPropertyManager,
+                                            JiraPropertyManager jiraPropertyManager,
                                             ParameterPresenter parameterPresenter,
                                             PropertyTypeManager propertyTypeManager,
                                             PropertyPanelFactory propertyPanelFactory,
                                             SelectionManager selectionManager) {
         super(view,
-              twitterPropertyManager,
+              jiraPropertyManager,
               parameterPresenter,
               nameSpacePresenter,
               propertyTypeManager,

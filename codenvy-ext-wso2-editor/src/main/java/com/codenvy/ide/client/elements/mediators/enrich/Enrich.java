@@ -66,7 +66,7 @@ public class Enrich extends AbstractElement {
               SERIALIZATION_NAME,
               PROPERTIES,
               false,
-              true,
+              false,
               resources.enrich(),
               branchProvider,
               elementCreatorsManager);

@@ -56,6 +56,11 @@ public interface ESBConfEditorView extends View<ESBConfEditorView.ActionDelegate
         /** Performs some actions in response to DOM of editor is changed. */
         void onEditorDOMChanged();
 
+        /** Performs some actions in response to user clicked on horizontal button. */
+        void onHorizontalOrientationClicked();
+
+        /** Performs some actions in response to user clicked on vertical button. */
+        void onVerticalOrientationClicked();
     }
 
     /**

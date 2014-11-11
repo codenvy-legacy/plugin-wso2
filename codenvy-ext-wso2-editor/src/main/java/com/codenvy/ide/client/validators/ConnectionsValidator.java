@@ -183,8 +183,16 @@ public class ConnectionsValidator {
      * isn't
      */
     public boolean canInsertElement(@Nonnull Branch branch, @Nonnull String newElement, int x, int y) {
-        Element prevElement = findPrevElementByPosition(branch, x, y);
-        Element nextElement = findNextElementByPosition(branch, x, y);
+        Element prevElement;
+        Element nextElement;
+
+        if (branch.getParent().isHorizontalOrientation()) {
+            prevElement = findPrevElementByXPosition(branch, x, y);
+            nextElement = findNextElementByXPosition(branch, x, y);
+        } else {
+            prevElement = findPrevElementByYPosition(branch, x, y);
+            nextElement = findNextElementByYPosition(branch, x, y);
+        }
 
         if (prevElement == null && nextElement == null) {
             return true;
@@ -203,7 +211,7 @@ public class ConnectionsValidator {
     }
 
     /**
-     * Return previous element of a given position.
+     * Return previous element of a given position for horizontal orientation of diagram.
      *
      * @param branch
      *         branch that needs to be analyzed
@@ -214,7 +222,7 @@ public class ConnectionsValidator {
      * @return the previous diagram element of a given position
      */
     @Nullable
-    private Element findPrevElementByPosition(@Nonnull Branch branch, int x, int y) {
+    private Element findPrevElementByXPosition(@Nonnull Branch branch, int x, int y) {
         List<Element> elements = branch.getElements();
 
         for (int i = 0; i < elements.size(); i++) {
@@ -230,7 +238,34 @@ public class ConnectionsValidator {
     }
 
     /**
-     * Return previous element of a given position.
+     * Return previous element of a given position for vertical orientation of diagram.
+     *
+     * @param branch
+     *         branch that needs to be analyzed
+     * @param x
+     *         x-position
+     * @param y
+     *         y-position
+     * @return the previous diagram element of a given position
+     */
+    @Nullable
+    private Element findPrevElementByYPosition(@Nonnull Branch branch, int x, int y) {
+        List<Element> elements = branch.getElements();
+
+        for (int i = 0; i < elements.size(); i++) {
+            Element element = elements.get(i);
+            int elementY = element.getY();
+
+            if (elementY > y || (elementY == y && element.getX() > x)) {
+                return i == 0 ? null : elements.get(i - 1);
+            }
+        }
+
+        return elements.isEmpty() ? null : elements.get(elements.size() - 1);
+    }
+
+    /**
+     * Return previous element of a given position for horizontal orientation of diagram.
      *
      * @param branch
      *         branch that needs to be analyzed
@@ -241,10 +276,33 @@ public class ConnectionsValidator {
      * @return the next diagram element of a given position
      */
     @Nullable
-    private Element findNextElementByPosition(@Nonnull Branch branch, int x, int y) {
+    private Element findNextElementByXPosition(@Nonnull Branch branch, int x, int y) {
         for (Element element : branch.getElements()) {
             int elementX = element.getX();
             if (elementX > x || (elementX == x && element.getY() > y)) {
+                return element;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Return previous element of a given position for vertical orientation of diagram.
+     *
+     * @param branch
+     *         branch that needs to be analyzed
+     * @param x
+     *         x-position
+     * @param y
+     *         y-position
+     * @return the next diagram element of a given position
+     */
+    @Nullable
+    private Element findNextElementByYPosition(@Nonnull Branch branch, int x, int y) {
+        for (Element element : branch.getElements()) {
+            int elementY = element.getY();
+            if (elementY > y || (elementY == y && element.getX() > x)) {
                 return element;
             }
         }

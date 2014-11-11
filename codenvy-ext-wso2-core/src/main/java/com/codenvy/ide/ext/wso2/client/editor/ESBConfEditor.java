@@ -37,6 +37,7 @@ import com.google.inject.Inject;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -221,6 +222,18 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
 
     /** {@inheritDoc} */
     @Override
+    public void onHorizontalOrientationClicked() {
+        graphicEditor.setHorizontalOrientation(true);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onVerticalOrientationClicked() {
+        graphicEditor.setHorizontalOrientation(false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void onPropertyButtonClicked() {
         graphicEditor.changePropertyPanelVisibility();
     }
@@ -234,7 +247,7 @@ public class ESBConfEditor extends AbstractEditorPresenter implements ESBConfEdi
 
     /** {@inheritDoc} */
     @Override
-    public void propertyChanged(@Nonnull PartPresenter source, int propId) {
+    public void propertyChanged(@Nonnull PartPresenter source, @Nonnegative int propId) {
         if (propId == PROP_DIRTY && source instanceof GraphicEditor) {
             applyChangesToTextEditor();
         } else if ((propId == PROP_INPUT || propId == PROP_DIRTY) && source instanceof EmbeddedTextEditorPresenter) {

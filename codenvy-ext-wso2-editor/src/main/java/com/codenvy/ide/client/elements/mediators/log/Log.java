@@ -76,7 +76,7 @@ public class Log extends AbstractElement {
               SERIALIZATION_NAME,
               PROPERTIES,
               false,
-              true,
+              false,
               resources.log(),
               branchProvider,
               elementCreatorsManager);

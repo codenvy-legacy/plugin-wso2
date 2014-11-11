@@ -28,17 +28,20 @@ import javax.annotation.Nullable;
  * The abstract view that represents the branch of a diagram element visual part of the widget.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 @ImplementedBy(BranchViewImpl.class)
 public interface BranchView extends View<BranchView.ActionDelegate> {
 
-    int ELEMENTS_PADDING      = 25;
-    int ARROW_PADDING         = 15;
-    int DEFAULT_HEIGHT        = 100;
-    int DEFAULT_WIDTH         = 100;
-    int TITLE_WIDTH           = 40;
-    int BORDER_SIZE           = 1;
-    int ELEMENT_ARROW_PADDING = 2;
+    int ELEMENTS_PADDING                 = 25;
+    int ARROW_PADDING                    = 15;
+    int DEFAULT_HEIGHT                   = 100;
+    int DEFAULT_WIDTH                    = 100;
+    int TITLE_WIDTH                      = 40;
+    int BORDER_SIZE                      = 1;
+    int HORIZONTAL_ELEMENT_ARROW_PADDING = 2;
+    int VERTICAL_ELEMENT_ARROW_PADDING   = 6;
 
     /**
      * Changes title on the view.
@@ -51,12 +54,12 @@ public interface BranchView extends View<BranchView.ActionDelegate> {
     /**
      * Adds a diagram element in the container in a given place.
      *
+     * @param element
+     *         the diagram element that needs to be added in container
      * @param x
      *         x-position where a new diagram element needs to be added
      * @param y
      *         y-position where a new diagram element needs to be added
-     * @param element
-     *         the diagram element that needs to be added in container
      */
     void addElement(@Nonnull ElementPresenter element, @Nonnegative int x, @Nonnegative int y);
 
@@ -65,6 +68,10 @@ public interface BranchView extends View<BranchView.ActionDelegate> {
      *
      * @param arrow
      *         arrow that needs to be added
+     * @param x
+     *         x-position where a new diagram element needs to be added
+     * @param y
+     *         y-position where a new diagram element needs to be added
      */
     void addArrow(@Nonnull ArrowPresenter arrow, @Nonnegative int x, @Nonnegative int y);
 
@@ -119,6 +126,28 @@ public interface BranchView extends View<BranchView.ActionDelegate> {
      *         <code>true</code> the border will be shown, <code>false</code> it will not
      */
     void setVisibleTopBorder(boolean visible);
+
+    /**
+     * Changes visible state of left border of the view.
+     *
+     * @param visible
+     *         <code>true</code> the border will be shown, <code>false</code> it will not
+     */
+    void setVisibleLeftBorder(boolean visible);
+
+    /**
+     * Changes visible state of horizontal title panel of the view.
+     *
+     * @param visible
+     *         <code>true</code> the panel will be shown, <code>false</code> it will not
+     */
+    void setVisibleHorizontalTitlePanel(boolean visible);
+
+    /** Sets alignment for arrows if vertical orientation of the diagram is activated */
+    void applyVerticalAlign();
+
+    /** Sets alignment for arrows if horizontal orientation of the diagram is activated */
+    void applyHorizontalAlign();
 
     /**
      * Gets the object's absolute left position in pixels, as measured from the browser window's client area.

@@ -20,13 +20,6 @@
 
     <ui:with field="res" type="com.codenvy.ide.client.EditorResources"/>
 
-    <ui:style>
-        .align {
-            top: 50% !important;
-            margin-top: -5px;
-        }
-    </ui:style>
-
-    <g:Image resource="{res.arrowImage}" addStyleNames="{style.align}"/>
+    <g:Image ui:field="arrow" resource="{res.arrowImage}"/>
 
 </ui:UiBinder>

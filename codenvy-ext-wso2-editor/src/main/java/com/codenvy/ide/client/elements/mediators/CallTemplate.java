@@ -67,7 +67,7 @@ public class CallTemplate extends AbstractElement {
               SERIALIZATION_NAME,
               PROPERTIES,
               false,
-              true,
+              false,
               resources.callTemplate(),
               branchProvider,
               elementCreatorsManager);

@@ -130,6 +130,11 @@ public class GraphicEditor extends AbstractEditorPresenter implements GraphicEdi
         editor.changeToolbarPanelVisibility();
     }
 
+    /** Calls method which changes orientation of diagram. */
+    public void setHorizontalOrientation(boolean isHorizontal) {
+        editor.changeDiagramOrientation(isHorizontal);
+    }
+
     /** Changes visible state of the property panel. */
     public void changePropertyPanelVisibility() {
         editor.changePropertyPanelVisibility();

@@ -111,7 +111,7 @@ public class PropertyTest extends AbstractElementTest<Property> {
 
     @Override
     public void needToShowTitleAndIconParamShouldBeInitializedWithDefaultValue() throws Exception {
-        assertTrue(entity.needsToShowIconAndTitle());
+        assertFalse(entity.isRoot());
     }
 
     @Override

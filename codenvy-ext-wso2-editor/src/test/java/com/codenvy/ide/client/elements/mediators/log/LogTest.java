@@ -41,7 +41,6 @@ import static com.codenvy.ide.client.elements.mediators.log.Log.LogLevel.HEADERS
 import static com.codenvy.ide.client.elements.mediators.log.Log.LogLevel.SIMPLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -98,7 +97,7 @@ public class LogTest extends AbstractElementTest<Log> {
 
     @Override
     public void needToShowTitleAndIconParamShouldBeInitializedWithDefaultValue() throws Exception {
-        assertTrue(entity.needsToShowIconAndTitle());
+        assertFalse(entity.isRoot());
     }
 
     @Override

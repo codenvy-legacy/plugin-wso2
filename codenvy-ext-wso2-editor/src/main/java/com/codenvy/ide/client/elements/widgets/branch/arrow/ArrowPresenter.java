@@ -30,7 +30,8 @@ import javax.annotation.Nonnull;
  */
 public class ArrowPresenter extends AbstractPresenter<ArrowView> implements ArrowView.ActionDelegate {
 
-    public static final int ARROW_WIDTH = 67;
+    public static final int ARROW_VERTICAL_SIZE   = 67;
+    public static final int ARROW_HORIZONTAL_SIZE = 67;
 
     private int x;
     private int y;
@@ -76,6 +77,16 @@ public class ArrowPresenter extends AbstractPresenter<ArrowView> implements Arro
      */
     public void setY(@Nonnegative int y) {
         this.y = y;
+    }
+
+    /** Sets alignment for arrows if horizontal orientation of the diagram is activated */
+    public void applyVerticalAlign() {
+        view.applyVerticalAlign();
+    }
+
+    /** Sets alignment for arrows if vertical orientation of the diagram is activated */
+    public void applyHorizontalAlign() {
+        view.applyHorizontalAlign();
     }
 
 }

@@ -99,8 +99,6 @@ public class GetSentDirectMessages extends AbstractConnector {
               ELEMENT_NAME,
               SERIALIZATION_NAME,
               PROPERTIES,
-              false,
-              true,
               resources.twitterElement(),
               branchProvider,
               elementCreatorsManager);

@@ -41,8 +41,7 @@ import java.util.List;
 
 import static com.codenvy.ide.client.elements.widgets.element.ElementPresenter.ElementDeleteListener;
 import static com.codenvy.ide.client.elements.widgets.element.ElementPresenter.ElementMoveListener;
-import static com.codenvy.ide.client.elements.widgets.element.ElementView.DEFAULT_HEIGHT;
-import static com.codenvy.ide.client.elements.widgets.element.ElementView.DEFAULT_WIDTH;
+import static com.codenvy.ide.client.elements.widgets.element.ElementView.DEFAULT_SIZE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -57,6 +56,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ElementPresenterTest {
@@ -132,12 +132,28 @@ public class ElementPresenterTest {
         prepareElementWidgetFactory();
     }
 
-    private void prepareDefaultUseCase() {
+    private void prepareDefaultUseCaseForHorizontalOrientation() {
+        when(element.isHorizontalOrientation()).thenReturn(true);
         prepareStartView();
 
         resetComponentsUseInPrepareCase();
 
         prepareGeneralElements();
+
+        when(element.isHorizontalOrientation()).thenReturn(true);
+
+        presenter.addElementChangedListener(changingElementListener);
+    }
+
+    private void prepareDefaultUseCaseForVerticalOrientation() {
+        when(element.isHorizontalOrientation()).thenReturn(false);
+        prepareStartView();
+
+        resetComponentsUseInPrepareCase();
+
+        prepareGeneralElements();
+
+        when(element.isHorizontalOrientation()).thenReturn(false);
 
         presenter.addElementChangedListener(changingElementListener);
     }
@@ -161,7 +177,7 @@ public class ElementPresenterTest {
     private void prepareComponents(boolean needsToShowIconAndTitle, List<Branch> branches) {
         when(element.getTitle()).thenReturn(TITLE);
         when(element.getElementName()).thenReturn(ELEMENT_NAME);
-        when(element.needsToShowIconAndTitle()).thenReturn(needsToShowIconAndTitle);
+        when(element.isRoot()).thenReturn(!needsToShowIconAndTitle);
         when(element.getIcon()).thenReturn(icon);
 
         when(element.getBranches()).thenReturn(branches);
@@ -190,8 +206,6 @@ public class ElementPresenterTest {
 
         verify(element).getTitle();
         verify(element).getIcon();
-
-        verify(element, times(2)).needsToShowIconAndTitle();
     }
 
     private void branchPresenterShouldBeCreatedAndShown(BranchPresenter branchPresenter, int width) {
@@ -206,19 +220,12 @@ public class ElementPresenterTest {
         verify(branchPresenter, never()).setWidth(anyInt());
     }
 
-    private void branchPresenterShouldBeNotReCreatedButShown(BranchPresenter branchPresenter) {
-        verify(branchPresenter, never()).addElementChangedListener(presenter);
-
-        verify(branchPresenter).resizeView();
-        verify(branchPresenter).setWidth(BRANCH_WIDTH);
-    }
-
     private void elementWidgetsShouldBeCreated() {
         verify(elementWidgetFactory).createContainer(branch1);
         verify(elementWidgetFactory).createContainer(branch2);
     }
 
-    private void branchesShouldBeAddedOnView() {
+    private void branchesShouldBeAddedOnViewIfOrientationIsHorizontal() {
         verify(view).addBranch(branchPresenter);
         verify(view).addBranch(branchPresenter2);
 
@@ -237,12 +244,14 @@ public class ElementPresenterTest {
     }
 
     @Test
-    public void viewShouldBePrepared() throws Exception {
+    public void viewShouldBePreparedIfOrientationIsHorizontal() throws Exception {
+        when(element.isHorizontalOrientation()).thenReturn(true);
         prepareStartView();
 
         verifyConstructorAction(NEEDS_TO_SHOW_ICON_AND_TITLE);
 
         verify(view).removeBranches();
+        verify(element, times(5)).isRoot();
 
         verifyShowTitle(true);
 
@@ -251,9 +260,9 @@ public class ElementPresenterTest {
         branchPresenterShouldBeCreatedAndShown(branchPresenter, BRANCH_WIDTH);
         branchPresenterShouldBeCreatedAndShown(branchPresenter2, BRANCH_WIDTH);
 
-        branchesShouldBeAddedOnView();
+        branchesShouldBeAddedOnViewIfOrientationIsHorizontal();
 
-        viewSizeShouldBeChanged(2 * BRANCH_HEIGHT, BRANCH_WIDTH + DEFAULT_WIDTH);
+        viewSizeShouldBeChanged(2 * BRANCH_HEIGHT, BRANCH_WIDTH + DEFAULT_SIZE);
     }
 
     @Test
@@ -265,6 +274,7 @@ public class ElementPresenterTest {
         verifyConstructorAction(NEEDS_TO_SHOW_ICON_AND_TITLE);
 
         verify(view).removeBranches();
+        verify(element, times(2)).isRoot();
 
         verifyShowTitle(false);
 
@@ -274,7 +284,7 @@ public class ElementPresenterTest {
 
         verify(view, never()).addBranch(any(BranchPresenter.class));
 
-        viewSizeShouldBeChanged(DEFAULT_HEIGHT, DEFAULT_WIDTH);
+        viewSizeShouldBeChanged(DEFAULT_SIZE, DEFAULT_SIZE);
     }
 
     @Test
@@ -286,6 +296,7 @@ public class ElementPresenterTest {
         verifyConstructorAction(false);
 
         verify(view).removeBranches();
+        verify(element, times(2)).isRoot();
 
         verifyShowTitle(false);
 
@@ -295,13 +306,13 @@ public class ElementPresenterTest {
 
         verify(view, never()).addBranch(any(BranchPresenter.class));
 
-        viewSizeShouldBeChanged(DEFAULT_HEIGHT, 0);
+        viewSizeShouldBeChanged(DEFAULT_SIZE, 0);
     }
 
     @Test
     public void viewShouldBePreparedWhenHasBranchesAndNotNeedToShowTitle() throws Exception {
+        when(element.isHorizontalOrientation()).thenReturn(true);
         prepareComponents(false, Arrays.asList(branch1, branch2));
-
         prepareBranchIds();
 
         prepareBranchWidgetSize(branchPresenter, BRANCH_HEIGHT, BRANCH_WIDTH);
@@ -319,10 +330,12 @@ public class ElementPresenterTest {
 
         elementWidgetsShouldBeCreated();
 
-        branchPresenterShouldBeCreatedAndShown(branchPresenter, BRANCH_WIDTH);
-        branchPresenterShouldBeCreatedAndShown(branchPresenter2, BRANCH_WIDTH);
+        verify(element, times(5)).isRoot();
 
-        branchesShouldBeAddedOnView();
+        verify(branchPresenter).addElementChangedListener(presenter);
+        verify(branchPresenter2).addElementChangedListener(presenter);
+
+        branchesShouldBeAddedOnViewIfOrientationIsHorizontal();
 
         viewSizeShouldBeChanged(2 * BRANCH_HEIGHT, BRANCH_WIDTH);
     }
@@ -331,6 +344,7 @@ public class ElementPresenterTest {
     public void viewShouldBePreparedWhenFirstBranchIsTheBiggestOne() throws Exception {
         prepareComponents(false, Arrays.asList(branch1, branch2));
 
+        when(element.isHorizontalOrientation()).thenReturn(true);
         prepareBranchIds();
 
         prepareBranchWidgetSize(branchPresenter, BRANCH_HEIGHT, MAX_BRANCH_WIDTH);
@@ -343,15 +357,16 @@ public class ElementPresenterTest {
         verifyConstructorAction(false);
 
         verify(view).removeBranches();
+        verify(element, times(5)).isRoot();
 
         verifyShowTitle(true);
 
         elementWidgetsShouldBeCreated();
 
-        branchPresenterShouldBeCreatedAndShown(branchPresenter, MAX_BRANCH_WIDTH);
-        branchPresenterShouldBeCreatedAndShown(branchPresenter2, MAX_BRANCH_WIDTH);
+        verify(branchPresenter).addElementChangedListener(presenter);
+        verify(branchPresenter2).addElementChangedListener(presenter);
 
-        branchesShouldBeAddedOnView();
+        branchesShouldBeAddedOnViewIfOrientationIsHorizontal();
 
         viewSizeShouldBeChanged(2 * BRANCH_HEIGHT, MAX_BRANCH_WIDTH);
     }
@@ -360,6 +375,7 @@ public class ElementPresenterTest {
     public void viewShouldBePreparedWhenSecondBranchIsTheBiggestOne() throws Exception {
         prepareComponents(NEEDS_TO_SHOW_ICON_AND_TITLE, Arrays.asList(branch1, branch2));
 
+        when(element.isHorizontalOrientation()).thenReturn(true);
         prepareBranchIds();
 
         prepareBranchWidgetSize(branchPresenter, BRANCH_HEIGHT, BRANCH_WIDTH);
@@ -372,6 +388,7 @@ public class ElementPresenterTest {
         verifyConstructorAction(NEEDS_TO_SHOW_ICON_AND_TITLE);
 
         verify(view).removeBranches();
+        verify(element, times(5)).isRoot();
 
         verifyShowTitle(true);
 
@@ -380,21 +397,21 @@ public class ElementPresenterTest {
         branchPresenterShouldBeCreatedAndShown(branchPresenter, MAX_BRANCH_WIDTH);
         branchPresenterShouldBeCreatedAndShown(branchPresenter2, MAX_BRANCH_WIDTH);
 
-        branchesShouldBeAddedOnView();
+        branchesShouldBeAddedOnViewIfOrientationIsHorizontal();
 
-        viewSizeShouldBeChanged(2 * BRANCH_HEIGHT, MAX_BRANCH_WIDTH + DEFAULT_WIDTH);
+        viewSizeShouldBeChanged(2 * BRANCH_HEIGHT, MAX_BRANCH_WIDTH + DEFAULT_SIZE);
     }
 
     @Test
     public void viewShouldBeReturned() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         assertEquals(view, presenter.getView());
     }
 
     @Test
     public void viewHeightShouldBeReturned() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         when(view.getHeight()).thenReturn(BRANCH_HEIGHT);
 
@@ -405,7 +422,7 @@ public class ElementPresenterTest {
 
     @Test
     public void heightShouldBeChanged() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         presenter.setHeight(BRANCH_HEIGHT);
 
@@ -418,7 +435,7 @@ public class ElementPresenterTest {
 
     @Test
     public void viewWidthShouldBeReturned() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         when(view.getWidth()).thenReturn(BRANCH_WIDTH);
 
@@ -428,8 +445,8 @@ public class ElementPresenterTest {
     }
 
     @Test
-    public void widthShouldBeChanged() throws Exception {
-        prepareDefaultUseCase();
+    public void widthShouldBeChangedIfOrientationIsHorizontal() throws Exception {
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         presenter.setWidth(BRANCH_WIDTH);
 
@@ -440,8 +457,21 @@ public class ElementPresenterTest {
     }
 
     @Test
+    public void widthShouldBeChangedIfOrientationIsVertical() throws Exception {
+        prepareDefaultUseCaseForVerticalOrientation();
+
+        presenter.setWidth(BRANCH_WIDTH);
+
+        verify(view).setWidth(BRANCH_WIDTH);
+
+        int branchWidth = BRANCH_WIDTH / 2;
+        verify(branchPresenter).setWidth(branchWidth);
+        verify(branchPresenter2).setWidth(branchWidth);
+    }
+
+    @Test
     public void xPositionShouldBeReturned() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         when(element.getX()).thenReturn(X_POSITION);
 
@@ -452,7 +482,7 @@ public class ElementPresenterTest {
 
     @Test
     public void yPositionShouldBeReturned() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         when(element.getY()).thenReturn(Y_POSITION);
 
@@ -463,7 +493,7 @@ public class ElementPresenterTest {
 
     @Test
     public void yPositionShouldBeChanged() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         presenter.setY(Y_POSITION);
 
@@ -472,12 +502,22 @@ public class ElementPresenterTest {
     }
 
     @Test
+    public void xPositionShouldBeChanged() throws Exception {
+        prepareDefaultUseCaseForHorizontalOrientation();
+
+        presenter.setX(X_POSITION);
+
+        verify(element).setX(X_POSITION);
+        verify(view).setX(X_POSITION);
+    }
+
+    @Test
     public void currentElementShouldBeSelected() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         presenter.onStateChanged(element);
 
-        verify(view).unselectBelowCursor();
+        verify(view).unSelectBelowCursor();
 
         verify(branchPresenter).resetToDefaultState();
         verify(branchPresenter2).resetToDefaultState();
@@ -488,11 +528,11 @@ public class ElementPresenterTest {
 
     @Test
     public void currentElementShouldBeNotSelected() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         presenter.onStateChanged(mock(Element.class));
 
-        verify(view).unselectBelowCursor();
+        verify(view).unSelectBelowCursor();
 
         verify(branchPresenter).resetToDefaultState();
         verify(branchPresenter2).resetToDefaultState();
@@ -503,7 +543,7 @@ public class ElementPresenterTest {
 
     @Test
     public void elementShouldBeSelected() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         presenter.onMouseLeftButtonClicked();
 
@@ -512,10 +552,19 @@ public class ElementPresenterTest {
     }
 
     @Test
-    public void contextMenuShouldBeShown() throws Exception {
-        prepareDefaultUseCase();
+    public void orientationOfHeaderPanelShouldBeChanged() throws Exception {
+        prepareDefaultUseCaseForHorizontalOrientation();
 
-        when(element.needsToShowIconAndTitle()).thenReturn(true);
+        presenter.setHorizontalHeaderPanelOrientation(anyBoolean());
+
+        verify(view).setHorizontalHeaderPanelOrientation(anyBoolean());
+    }
+
+    @Test
+    public void contextMenuShouldBeShown() throws Exception {
+        prepareDefaultUseCaseForHorizontalOrientation();
+
+        when(element.isRoot()).thenReturn(false);
 
         presenter.onMouseRightButtonClicked(X_POSITION, Y_POSITION);
 
@@ -527,9 +576,9 @@ public class ElementPresenterTest {
 
     @Test
     public void contextMenuShouldBeNotShown() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
-        when(element.needsToShowIconAndTitle()).thenReturn(false);
+        when(element.isRoot()).thenReturn(true);
 
         presenter.onMouseRightButtonClicked(X_POSITION, Y_POSITION);
 
@@ -541,7 +590,7 @@ public class ElementPresenterTest {
 
     @Test
     public void movingElementListenerShouldBeNotifiedWhenElementIsMovedAndParentIsEmpty() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         presenter.addElementMoveListener(movingElementListener);
 
@@ -556,7 +605,7 @@ public class ElementPresenterTest {
 
     @Test
     public void movingElementListenerShouldBeNotifiedWhenElementIsMoved() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         BranchPresenter parent = mock(BranchPresenter.class);
 
@@ -578,7 +627,7 @@ public class ElementPresenterTest {
 
     @Test
     public void elementShouldBeNotSelectedWhenMouseOverAndDoNotHaveInformationAboutThisElement() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         presenter.onMouseOver();
 
@@ -589,7 +638,7 @@ public class ElementPresenterTest {
 
     @Test
     public void elementShouldBeNotSelectedWhenMouseOver() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         when(elementCreatorsManager.getElementNameByState(anyString())).thenReturn(ELEMENT_NAME);
         when(innerElementsValidator.canInsertElement(anyString(), anyString())).thenReturn(true);
@@ -603,7 +652,7 @@ public class ElementPresenterTest {
 
     @Test
     public void elementShouldBeSelectedWhenMouseOver() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         when(elementCreatorsManager.getElementNameByState(anyString())).thenReturn(ELEMENT_NAME);
         when(innerElementsValidator.canInsertElement(anyString(), anyString())).thenReturn(false);
@@ -617,16 +666,16 @@ public class ElementPresenterTest {
 
     @Test
     public void elementShouldBeUnSelected() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         presenter.onMouseOut();
 
-        verify(view).unselectBelowCursor();
+        verify(view).unSelectBelowCursor();
     }
 
     @Test
     public void deletingElementListenerShouldBeNotifiedWhenDeleteActionIsClicked() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         presenter.addElementDeleteListener(deletingElementListener);
 
@@ -644,7 +693,7 @@ public class ElementPresenterTest {
 
     @Test
     public void widgetShouldBeUnSubscribedFromSelectionManager() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         presenter.unsubscribeWidget();
 
@@ -653,44 +702,18 @@ public class ElementPresenterTest {
 
     @Test
     public void changingElementListenerShouldBeNotifiedWhenChildElementIsChanged() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         presenter.onElementChanged();
-
-        verify(view).removeBranches();
-
-        verifyShowTitle(true);
-
-        verify(elementWidgetFactory, never()).createContainer(any(Branch.class));
-
-        branchPresenterShouldBeNotReCreatedButShown(branchPresenter);
-        branchPresenterShouldBeNotReCreatedButShown(branchPresenter2);
-
-        branchesShouldBeAddedOnView();
-
-        viewSizeShouldBeChanged(2 * BRANCH_HEIGHT, BRANCH_WIDTH + DEFAULT_WIDTH);
 
         verify(changingElementListener).onElementChanged();
     }
 
     @Test
     public void widgetShouldBeUpdated() throws Exception {
-        prepareDefaultUseCase();
+        prepareDefaultUseCaseForHorizontalOrientation();
 
         presenter.onElementChanged();
-
-        verify(view).removeBranches();
-
-        verifyShowTitle(true);
-
-        verify(elementWidgetFactory, never()).createContainer(any(Branch.class));
-
-        branchPresenterShouldBeNotReCreatedButShown(branchPresenter);
-        branchPresenterShouldBeNotReCreatedButShown(branchPresenter2);
-
-        branchesShouldBeAddedOnView();
-
-        viewSizeShouldBeChanged(2 * BRANCH_HEIGHT, BRANCH_WIDTH + DEFAULT_WIDTH);
 
         verify(changingElementListener).onElementChanged();
     }

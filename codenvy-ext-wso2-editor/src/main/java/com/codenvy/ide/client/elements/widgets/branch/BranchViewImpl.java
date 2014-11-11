@@ -17,11 +17,11 @@ package com.codenvy.ide.client.elements.widgets.branch;
 
 import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.elements.Branch;
-import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.widgets.branch.arrow.ArrowPresenter;
 import com.codenvy.ide.client.elements.widgets.element.ElementPresenter;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -47,6 +47,7 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static com.google.gwt.dom.client.Style.Unit.PCT;
 import static com.google.gwt.dom.client.Style.Unit.PX;
 
 /**
@@ -54,6 +55,7 @@ import static com.google.gwt.dom.client.Style.Unit.PX;
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> implements BranchView {
 
@@ -62,13 +64,17 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
     }
 
     @UiField
-    Label         title;
-    @UiField
     AbsolutePanel body;
     @UiField
     FlowPanel     focusPanel;
     @UiField
-    FlowPanel     titlePanel;
+    FlowPanel     topTitlePanel;
+    @UiField
+    Label         topTitle;
+    @UiField
+    FlowPanel     westTitlePanel;
+    @UiField
+    Label         westTitle;
     @UiField(provided = true)
     final EditorResources resources;
 
@@ -79,15 +85,13 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
     public BranchViewImpl(BranchViewImplUiBinder ourUiBinder, EditorResources resources, @Assisted Branch branch) {
         this.resources = resources;
 
-        this.height = DEFAULT_HEIGHT;
-        this.width = DEFAULT_WIDTH;
+        height = DEFAULT_HEIGHT;
+        width = DEFAULT_WIDTH;
 
         initWidget(ourUiBinder.createAndBindUi(this));
 
-        Element branchParent = branch.getParent();
-
-        if (branchParent != null && !branchParent.needsToShowIconAndTitle()) {
-            this.addStyleName(resources.editorCSS().dottedBackground());
+        if (branch.getParent().isRoot()) {
+            addStyleName(resources.editorCSS().dottedBackground());
         }
 
         bind();
@@ -149,7 +153,8 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
     /** {@inheritDoc} */
     @Override
     public void setTitle(@Nullable String title) {
-        this.title.setText(title);
+        topTitle.setText(title);
+        westTitle.setText(title);
     }
 
     /** {@inheritDoc} */
@@ -203,6 +208,8 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
         this.height = height;
 
         getElement().getStyle().setHeight(height, PX);
+
+        resizeBodyPanel();
     }
 
     /** {@inheritDoc} */
@@ -217,12 +224,15 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
         this.width = width;
 
         getElement().getStyle().setWidth(width, PX);
+
+        resizeBodyPanel();
     }
 
     /** {@inheritDoc} */
     @Override
     public void setVisibleTitle(boolean visible) {
-        titlePanel.setVisible(visible);
+        westTitlePanel.setVisible(visible);
+        topTitlePanel.setVisible(visible);
     }
 
     /** {@inheritDoc} */
@@ -235,6 +245,65 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
         } else {
             removeStyleName(style);
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleLeftBorder(boolean visible) {
+        String style = resources.editorCSS().leftBorder();
+
+        if (visible) {
+            addStyleName(style);
+        } else {
+            removeStyleName(style);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVisibleHorizontalTitlePanel(boolean visible) {
+        westTitlePanel.setVisible(visible);
+        topTitlePanel.setVisible(!visible);
+
+        resizeBodyPanel();
+    }
+
+    private void resizeBodyPanel() {
+        Style style = body.getElement().getStyle();
+
+        if (westTitlePanel.isVisible()) {
+            style.setHeight(100, PCT);
+            style.setWidth(width - TITLE_WIDTH - BORDER_SIZE, PX);
+        }
+
+        if (topTitlePanel.isVisible()) {
+            style.setHeight(height - TITLE_WIDTH - BORDER_SIZE, PX);
+            style.setWidth(100, PCT);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void applyVerticalAlign() {
+        focusPanel.addStyleName(resources.editorCSS().verticalBranchAlign());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void applyHorizontalAlign() {
+        focusPanel.removeStyleName(resources.editorCSS().verticalBranchAlign());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int getAbsoluteLeft() {
+        return body.getAbsoluteLeft();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int getAbsoluteTop() {
+        return body.getAbsoluteTop();
     }
 
 }

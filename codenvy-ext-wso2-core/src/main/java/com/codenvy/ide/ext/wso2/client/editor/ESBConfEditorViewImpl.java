@@ -58,6 +58,10 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
     @UiField
     Button      associateEditorChoose;
     @UiField
+    Button      horizontalBtn;
+    @UiField
+    Button      verticalBtn;
+    @UiField
     FlowPanel   toolbarBtn;
     @UiField
     FlowPanel   showPropertyPanel;
@@ -99,7 +103,7 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
 
     /** {@inheritDoc} */
     @Override
-    public void setDelegate(ActionDelegate delegate) {
+    public void setDelegate(@Nonnull ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
@@ -190,6 +194,25 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
     @UiHandler("associateEditorChoose")
     public void onAssociateEditorButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         delegate.onDualViewButtonClicked();
+    }
+
+    @UiHandler("horizontalBtn")
+    public void onHorizontalButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
+        changeVisibilityOrientationButton(true);
+
+        delegate.onHorizontalOrientationClicked();
+    }
+
+    @UiHandler("verticalBtn")
+    public void onVerticalButtonClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
+        changeVisibilityOrientationButton(false);
+
+        delegate.onVerticalOrientationClicked();
+    }
+
+    private void changeVisibilityOrientationButton(boolean isHorizontalClicked) {
+        horizontalBtn.setVisible(!isHorizontalClicked);
+        verticalBtn.setVisible(isHorizontalClicked);
     }
 
 }

@@ -21,6 +21,7 @@
 
     <ui:with field="locale" type="com.codenvy.ide.ext.wso2.client.LocalizationConstant"/>
     <ui:with field="resources" type="com.codenvy.ide.ext.wso2.client.WSO2Resources"/>
+    <ui:with field="editorStyle" type="com.codenvy.ide.client.EditorResources"/>
 
     <ui:style>
         .mainPanel {
@@ -47,7 +48,7 @@
             width: 300px;
             height: 20px;
             left: 50%;
-            margin-left: -150px;
+            margin-left: -195px;
         }
 
         .editorBtnStyle {
@@ -99,7 +100,7 @@
         <g:south size="30">
             <g:DockLayoutPanel addStyleNames="{style.mainPanel}">
 
-                <g:west size="180">
+                <g:west size="190">
                     <g:FlowPanel>
 
                         <g:FlowPanel ui:field="toolbarBtn" width="60px" addStyleNames="{style.button}
@@ -109,6 +110,17 @@
                             <g:Image resource="{resources.paletteIcon}" addStyleNames="{style.iconPalette}"/>
                             <g:Label text="{locale.toolbarPalette}" addStyleNames="{style.labelPalette}"/>
                         </g:FlowPanel>
+
+                    </g:FlowPanel>
+                </g:west>
+
+                <g:west size="90">
+                    <g:FlowPanel>
+
+                        <g:Button text="{locale.orientationHorizontal}" ui:field="horizontalBtn" height="16px" visible="false"
+                                  addStyleNames="{style.button} {style.editorBtnStyle} {resources.wso2Style.editorButtonStyle}"/>
+                        <g:Button text="{locale.orientationVertical}" ui:field="verticalBtn" height="16px"
+                                  addStyleNames="{style.button} {style.editorBtnStyle} {resources.wso2Style.editorButtonStyle}"/>
 
                     </g:FlowPanel>
                 </g:west>

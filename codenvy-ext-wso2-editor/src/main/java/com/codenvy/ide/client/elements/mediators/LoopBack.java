@@ -56,7 +56,7 @@ public class LoopBack extends AbstractElement {
               SERIALIZATION_NAME,
               PROPERTIES,
               false,
-              true,
+              false,
               resources.loopBack(),
               branchProvider,
               elementCreatorsManager);

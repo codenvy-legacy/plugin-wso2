@@ -77,7 +77,7 @@ public class PayloadFactory extends AbstractElement {
               SERIALIZATION_NAME,
               PROPERTIES,
               false,
-              true,
+              false,
               resources.payloadFactory(),
               branchProvider,
               elementCreatorsManager);

@@ -62,8 +62,6 @@ public class GetFilterById extends AbstractConnector {
               ELEMENT_NAME,
               SERIALIZATION_NAME,
               PROPERTIES,
-              false,
-              true,
               resources.jiraIcon(),
               branchProvider,
               elementCreatorsManager);

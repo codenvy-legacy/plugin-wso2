@@ -22,11 +22,19 @@ import com.google.inject.ImplementedBy;
  * The abstract view that represents the arrow of a diagram element visual part of the widget.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 @ImplementedBy(ArrowViewImpl.class)
 public interface ArrowView extends View<ArrowView.ActionDelegate> {
 
-    public interface ActionDelegate {
+    /** Sets vertical alignment for arrows if vertical orientation of the diagram is activated */
+    void applyVerticalAlign();
+
+    /** Sets horizontal alignment for arrows if horizontal orientation of the diagram is activated */
+    void applyHorizontalAlign();
+
+    interface ActionDelegate {
     }
 
 }

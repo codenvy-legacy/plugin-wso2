@@ -38,6 +38,7 @@ import java.util.Map;
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class Branch {
 
@@ -96,7 +97,7 @@ public class Branch {
     }
 
     /** @return parent of the branch */
-    @Nullable
+    @Nonnull
     public Element getParent() {
         return parent;
     }
@@ -135,12 +136,15 @@ public class Branch {
     /** @return a list of inner elements */
     @Nonnull
     public List<Element> getElements() {
-        Collections.sort(elements);
-
         List<Element> result = new ArrayList<>();
         result.addAll(elements);
 
         return result;
+    }
+
+    /** Sorts inner elements */
+    public void sortElements() {
+        Collections.sort(elements);
     }
 
     /** @return true if branch has elements */

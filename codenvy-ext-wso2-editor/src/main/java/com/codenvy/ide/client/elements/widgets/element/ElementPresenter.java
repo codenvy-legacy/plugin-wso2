@@ -38,14 +38,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.codenvy.ide.client.elements.widgets.element.ElementView.DEFAULT_HEIGHT;
-import static com.codenvy.ide.client.elements.widgets.element.ElementView.DEFAULT_WIDTH;
+import static com.codenvy.ide.client.elements.widgets.element.ElementView.DEFAULT_SIZE;
 
 /**
  * The class that provides business logic of the diagram element widget.
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class ElementPresenter extends AbstractPresenter<ElementView> implements ElementView.ActionDelegate,
                                                                                 SelectionManager.SelectionStateListener,
@@ -78,7 +78,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
                             @Assisted Element element) {
         super(elementWidgetFactory.createElementView(element));
 
-        this.view.setVisibleTitleAndIcon(element.needsToShowIconAndTitle());
+        this.view.setVisibleTitleAndIcon(!element.isRoot());
 
         this.selectionManager = selectionManager;
         this.elementWidgetFactory = elementWidgetFactory;
@@ -126,7 +126,12 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     }
 
     private void updateBranchesWidth(@Nonnegative int width) {
-        for (BranchPresenter branch : widgetBranches.values()) {
+        Collection<BranchPresenter> branches = widgetBranches.values();
+        if (!element.isHorizontalOrientation()) {
+            width /= branches.size();
+        }
+
+        for (BranchPresenter branch : branches) {
             branch.setWidth(width);
         }
     }
@@ -161,11 +166,12 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
 
     private void updateBranchesHeight(@Nonnegative int height) {
         Collection<BranchPresenter> branches = widgetBranches.values();
-
-        int branchHeight = height / branches.size();
+        if (element.isHorizontalOrientation()) {
+            height /= branches.size();
+        }
 
         for (BranchPresenter branch : branches) {
-            branch.setHeight(branchHeight);
+            branch.setHeight(height);
         }
     }
 
@@ -190,6 +196,17 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     public void setY(@Nonnegative int y) {
         element.setY(y);
         view.setY(y);
+    }
+
+    /**
+     * Changes x-position of the widget.
+     *
+     * @param x
+     *         new x-position of the widget
+     */
+    public void setX(@Nonnegative int x) {
+        element.setX(x);
+        view.setX(x);
     }
 
     private void redrawBranches() {
@@ -239,10 +256,13 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
         if (branchPresenter == null) {
             branchPresenter = createBranchPresenter(branch);
             widgetBranches.put(branchId, branchPresenter);
+        } else {
+            branchPresenter.redrawElements();
         }
 
         if (!isFirst) {
-            branchPresenter.setVisibleTopBorder(true);
+            branchPresenter.setVisibleLeftBorder(!element.isHorizontalOrientation());
+            branchPresenter.setVisibleTopBorder(element.isHorizontalOrientation());
         }
 
         view.addBranch(branchPresenter);
@@ -268,8 +288,8 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
 
     private void detectWidgetSize() {
         if (element.getBranches().isEmpty()) {
-            view.setHeight(DEFAULT_HEIGHT);
-            view.setWidth(element.needsToShowIconAndTitle() ? DEFAULT_WIDTH : 0);
+            view.setHeight(DEFAULT_SIZE);
+            view.setWidth(!element.isRoot() ? DEFAULT_SIZE : 0);
         } else {
             resizeWidgetToBranchesSize();
         }
@@ -277,37 +297,72 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
 
     private void resizeWidgetToBranchesSize() {
         int height = 0;
-        int width;
+        int width = 0;
 
         List<BranchPresenter> branchesWidgets = new ArrayList<>(widgetBranches.values());
-        int maxWidth = -1;
+        int maxBranchWidth = -1;
+        int maxBranchHeight = -1;
 
         for (BranchPresenter branch : branchesWidgets) {
-            branch.resizeView();
+            if (!element.isRoot()) {
+                branch.resizeView();
+            }
 
             height += branch.getHeight();
+            width += branch.getWidth();
 
             int branchWidth = branch.getWidth();
+            int branchHeight = branch.getHeight();
 
-            if (branchWidth > maxWidth) {
-                maxWidth = branchWidth;
+            if (branchWidth > maxBranchWidth) {
+                maxBranchWidth = branchWidth;
+            }
+
+            if (branchHeight > maxBranchHeight) {
+                maxBranchHeight = branchHeight;
             }
         }
 
-        for (BranchPresenter branch : branchesWidgets) {
-            branch.setWidth(maxWidth);
+        resizeBranchesToMaxBranchSize(branchesWidgets, maxBranchHeight, maxBranchWidth);
+
+        if (element.isHorizontalOrientation()) {
+            view.setHeight(height);
+            view.setWidth(maxBranchWidth + (!element.isRoot() ? DEFAULT_SIZE : 0));
+        } else {
+            view.setHeight(maxBranchHeight + (!element.isRoot() ? DEFAULT_SIZE : 0));
+            view.setWidth(width);
         }
+    }
 
-        width = maxWidth + (element.needsToShowIconAndTitle() ? DEFAULT_WIDTH : 0);
+    private void resizeBranchesToMaxBranchSize(@Nonnull List<BranchPresenter> branchesWidgets,
+                                               @Nonnegative int maxHeight,
+                                               @Nonnegative int maxWidth) {
+        if (element.isRoot()) {
+            return;
+        }
+        for (BranchPresenter branch : branchesWidgets) {
+            if (element.isHorizontalOrientation()) {
+                branch.setWidth(maxWidth);
+            } else {
+                branch.setHeight(maxHeight);
+            }
+            setBranchPosition(branch);
+        }
+    }
 
-        view.setHeight(height);
-        view.setWidth(width);
+    private void setBranchPosition(@Nonnull BranchPresenter branch) {
+        if (element.isHorizontalOrientation()) {
+            branch.applyHorizontalAlign();
+        } else {
+            branch.applyVerticalAlign();
+        }
+        branch.setVisibleHorizontalTitlePanel(element.isHorizontalOrientation());
     }
 
     /** {@inheritDoc} */
     @Override
     public void onStateChanged(@Nullable Element element) {
-        view.unselectBelowCursor();
+        view.unSelectBelowCursor();
         resetCursors();
 
         if (this.element.equals(element)) {
@@ -335,7 +390,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     public void onMouseRightButtonClicked(@Nonnegative int x, @Nonnegative int y) {
         onMouseLeftButtonClicked();
 
-        if (element.needsToShowIconAndTitle()) {
+        if (!element.isRoot()) {
             view.showContextMenu(x, y);
         }
     }
@@ -355,7 +410,7 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     /** {@inheritDoc} */
     @Override
     public void onMouseOut() {
-        view.unselectBelowCursor();
+        view.unSelectBelowCursor();
     }
 
     /** {@inheritDoc} */
@@ -475,6 +530,16 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
         for (ElementChangedListener listener : elementChangedListeners) {
             listener.onElementChanged();
         }
+    }
+
+    /**
+     * Changes the orientation of a header panel.
+     *
+     * @param isHorizontal
+     *         <code>true</code> if the orientation of header panel is horizontal <code>false</code> if it is vertical
+     */
+    public void setHorizontalHeaderPanelOrientation(boolean isHorizontal) {
+        view.setHorizontalHeaderPanelOrientation(isHorizontal);
     }
 
     public interface ElementMoveListener {

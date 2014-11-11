@@ -15,24 +15,51 @@
  */
 package com.codenvy.ide.client.elements.widgets.branch.arrow;
 
+import com.codenvy.ide.client.EditorResources;
 import com.codenvy.ide.client.mvp.AbstractView;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class ArrowViewImpl extends AbstractView<ArrowView.ActionDelegate> implements ArrowView {
+
+    @UiField
+    Image arrow;
+
+    private final EditorResources resources;
 
     @Singleton
     interface ArrowViewImplUiBinder extends UiBinder<Widget, ArrowViewImpl> {
     }
 
     @Inject
-    public ArrowViewImpl(ArrowViewImplUiBinder ourUiBinder) {
+    public ArrowViewImpl(ArrowViewImplUiBinder ourUiBinder, EditorResources resources) {
+        this.resources = resources;
+
         initWidget(ourUiBinder.createAndBindUi(this));
+        arrow.addStyleName(resources.editorCSS().arrowVerticalAlign());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void applyVerticalAlign() {
+        arrow.removeStyleName(resources.editorCSS().arrowHorizontalAlign());
+        arrow.addStyleName(resources.editorCSS().arrowVerticalAlign());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void applyHorizontalAlign() {
+        arrow.removeStyleName(resources.editorCSS().arrowVerticalAlign());
+        arrow.addStyleName(resources.editorCSS().arrowHorizontalAlign());
     }
 
 }

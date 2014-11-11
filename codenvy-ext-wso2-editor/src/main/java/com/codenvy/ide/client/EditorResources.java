@@ -57,6 +57,8 @@ public interface EditorResources extends ClientBundle {
 
         String topBorder();
 
+        String leftBorder();
+
         String propertyItem();
 
         String propertyHeaderPanel();
@@ -109,11 +111,35 @@ public interface EditorResources extends ClientBundle {
 
         String toolbarLineHeight();
 
+        String arrowVerticalAlign();
+
+        String arrowHorizontalAlign();
+
+        String verticalBranchAlign();
+
+        String headerText();
+
+        String iconAndTitlePanel();
+
+        String headerPanel();
+
+        String containerTitle();
+
+        String headerTitleLabelSize();
+
+        String branchesContainer();
+
         @ClassName("gwt-MenuItem-selected")
         String gwtMenuItemSelected();
 
         @ClassName("gwt-MenuBar")
         String gwtMenuBar();
+
+        String wrapIconAndTitlePanel();
+
+        String bottomBorder();
+
+        String rightBorder();
     }
 
     @Source("editor.css")

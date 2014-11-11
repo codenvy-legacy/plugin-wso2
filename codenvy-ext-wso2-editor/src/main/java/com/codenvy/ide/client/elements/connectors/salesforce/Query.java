@@ -66,8 +66,6 @@ public class Query extends AbstractConnector {
               ELEMENT_NAME,
               SERIALIZATION_NAME,
               PROPERTIES,
-              false,
-              true,
               resources.salesforce(),
               branchProvider,
               elementCreatorsManager);

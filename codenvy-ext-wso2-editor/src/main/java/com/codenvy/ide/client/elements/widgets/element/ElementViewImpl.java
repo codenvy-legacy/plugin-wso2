@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.elements.widgets.element;
 
 import com.codenvy.ide.client.EditorResources;
+import com.codenvy.ide.client.EditorResources.EditorCSS;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.widgets.branch.BranchPresenter;
 import com.codenvy.ide.client.mvp.AbstractView;
@@ -64,6 +65,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -76,6 +78,7 @@ import javax.annotation.Nullable;
 import static com.google.gwt.dom.client.Element.DRAGGABLE_TRUE;
 import static com.google.gwt.dom.client.Style.Position.ABSOLUTE;
 import static com.google.gwt.dom.client.Style.Position.RELATIVE;
+import static com.google.gwt.dom.client.Style.Unit.PCT;
 import static com.google.gwt.dom.client.Style.Unit.PX;
 
 /**
@@ -99,39 +102,46 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
     private static final int MARGIN      = 2 * BORDER_SIZE + 2 * SHADOW_SIZE + 2 * SHADOW_BLUR;
 
     @UiField
-    Label     title;
+    FlowPanel   rightPanel;
     @UiField
-    Image     icon;
+    FlowPanel   mainPanel;
     @UiField
-    FlowPanel rightPanel;
+    SimplePanel topPanel;
     @UiField
-    FlowPanel mainPanel;
-    @UiField
-    FlowPanel leftPanel;
-    @UiField
-    Label     header;
-    @UiField
-    FlowPanel headerPanel;
+    SimplePanel westPanel;
     @UiField(provided = true)
-    final EditorResources resources;
+    final         EditorResources resources;
+    private final FlowPanel       iconAndTitlePanel;
+
+    private FlowPanel headerPanel;
+    private Label     headerTitle;
+    private FlowPanel iconPanel;
+    private Label     iconTitle;
+    private Image     icon;
+
+    private final EditorCSS editorCSS;
+    private final Element   element;
 
     private PopupPanel popup;
-    private int        height;
-    private int        width;
-    private boolean    isComplexMediator;
-    private String     titleText;
-    private boolean    isIconTitleVisible;
+
+    private int     height;
+    private int     width;
+    private boolean isComplexMediator;
+    private String  titleText;
+    private boolean isIconTitleVisible;
 
     @Inject
     public ElementViewImpl(ElementViewImplUiBinder ourUiBinder, EditorResources resources, @Assisted Element element) {
         this.resources = resources;
+        this.element = element;
+        this.editorCSS = resources.editorCSS();
 
-        height = DEFAULT_HEIGHT;
-        width = DEFAULT_WIDTH;
+        this.height = DEFAULT_SIZE;
+        this.width = DEFAULT_SIZE;
 
         initWidget(ourUiBinder.createAndBindUi(this));
 
-        if (element.needsToShowIconAndTitle()) {
+        if (!element.isRoot()) {
             getElement().setDraggable(DRAGGABLE_TRUE);
         }
 
@@ -140,6 +150,104 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
 
         isComplexMediator = false;
         isIconTitleVisible = true;
+
+        iconAndTitlePanel = createIconAndTitlePanel();
+    }
+
+    @Nonnull
+    private FlowPanel createIconAndTitlePanel() {
+        FlowPanel iconAndTitlePanel = new FlowPanel();
+        iconAndTitlePanel.addStyleName(editorCSS.fullSize());
+
+        headerPanel = createHeaderPanel();
+        iconPanel = createIconPanel();
+
+        iconAndTitlePanel.add(headerPanel);
+        iconAndTitlePanel.add(iconPanel);
+
+        return iconAndTitlePanel;
+    }
+
+    @Nonnull
+    private FlowPanel createHeaderPanel() {
+        FlowPanel headerPanel = new FlowPanel();
+        headerPanel.addStyleName(editorCSS.elementHeaderPanel());
+
+        Style style = headerPanel.getElement().getStyle();
+        style.setWidth(100, PCT);
+        style.setHeight(19, PX);
+
+        headerPanel.add(createInnerHeaderPanel());
+
+        return headerPanel;
+    }
+
+    @Nonnull
+    private FlowPanel createInnerHeaderPanel() {
+        FlowPanel innerHeaderPanel = new FlowPanel();
+        innerHeaderPanel.addStyleName(editorCSS.elementHeaderInnerPanel());
+
+        Style style = innerHeaderPanel.getElement().getStyle();
+        style.setWidth(100, PCT);
+        style.setHeight(19, PX);
+
+        headerTitle = createHeaderTitle();
+        innerHeaderPanel.add(headerTitle);
+
+        return innerHeaderPanel;
+    }
+
+    @Nonnull
+    private Label createHeaderTitle() {
+        Label title = createTitle();
+
+        Style style = title.getElement().getStyle();
+        style.setPosition(RELATIVE);
+        style.setTop(2, PX);
+
+        return title;
+    }
+
+    @Nonnull
+    private FlowPanel createIconPanel() {
+        FlowPanel wrapPanel = new FlowPanel();
+        wrapPanel.addStyleName(editorCSS.wrapIconAndTitlePanel());
+
+        FlowPanel iconPanel = new FlowPanel();
+
+        iconPanel.addStyleName(editorCSS.iconAndTitlePanel());
+
+        iconTitle = createIconTitle();
+        icon = new Image();
+
+        iconPanel.add(iconTitle);
+        iconPanel.add(icon);
+
+        wrapPanel.add(iconPanel);
+
+        return wrapPanel;
+    }
+
+    @Nonnull
+    private Label createIconTitle() {
+        Label title = createTitle();
+
+        Style style = title.getElement().getStyle();
+        style.setHeight(15, PX);
+        style.setWidth(100, PCT);
+
+        return title;
+    }
+
+    @Nonnull
+    private Label createTitle() {
+        Label title = new Label();
+
+        title.addStyleName(editorCSS.fontStyle());
+        title.addStyleName(editorCSS.titleBold());
+        title.addStyleName(editorCSS.textAlign());
+
+        return title;
     }
 
     private void preparePopup(@Nonnull Element element) {
@@ -252,14 +360,11 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
 
     private void updateTitle() {
         if (headerPanel.isVisible()) {
-            header.setText(titleText);
+            headerTitle.setText(titleText);
         }
 
-        if (isIconTitleVisible) {
-            title.setText(titleText);
-        } else {
-            title.setText("");
-        }
+        String title = isIconTitleVisible ? titleText : "";
+        iconTitle.setText(title);
     }
 
     /** {@inheritDoc} */
@@ -276,7 +381,9 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
     @Override
     public void addBranch(@Nonnull BranchPresenter branchPresenter) {
         if (!isComplexMediator) {
-            leftPanel.addStyleName(resources.editorCSS().complexMediatorBackground());
+            westPanel.addStyleName(editorCSS.complexMediatorBackground());
+            topPanel.addStyleName(editorCSS.complexMediatorBackground());
+
             isComplexMediator = true;
         }
 
@@ -287,37 +394,55 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
     @Override
     public void removeBranches() {
         isComplexMediator = false;
-        leftPanel.removeStyleName(resources.editorCSS().complexMediatorBackground());
+
+        westPanel.removeStyleName(editorCSS.complexMediatorBackground());
+        topPanel.removeStyleName(editorCSS.complexMediatorBackground());
+
         rightPanel.clear();
     }
 
     /** {@inheritDoc} */
     @Override
     public void select() {
-        mainPanel.addStyleName(resources.editorCSS().selectedElement());
+        mainPanel.addStyleName(editorCSS.selectedElement());
     }
 
     /** {@inheritDoc} */
     @Override
     public void unselect() {
-        mainPanel.removeStyleName(resources.editorCSS().selectedElement());
+        mainPanel.removeStyleName(editorCSS.selectedElement());
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectBelowCursor(boolean isError) {
-        EditorResources.EditorCSS css = resources.editorCSS();
-
-        mainPanel.addStyleName(isError ? css.selectErrorElementBelowCursor() : css.selectElementBelowCursor());
+        mainPanel.addStyleName(isError ? editorCSS.selectErrorElementBelowCursor() : editorCSS.selectElementBelowCursor());
     }
 
     /** {@inheritDoc} */
     @Override
-    public void unselectBelowCursor() {
-        EditorResources.EditorCSS css = resources.editorCSS();
+    public void setHorizontalHeaderPanelOrientation(boolean isHorizontal) {
+        if (isHorizontal) {
+            changePanelOrientation(westPanel, topPanel);
+            rightPanel.removeStyleName(editorCSS.branchesContainer());
+        } else {
+            changePanelOrientation(topPanel, westPanel);
+            rightPanel.addStyleName(editorCSS.branchesContainer());
+        }
+    }
 
-        mainPanel.removeStyleName(css.selectElementBelowCursor());
-        mainPanel.removeStyleName(css.selectErrorElementBelowCursor());
+    private void changePanelOrientation(@Nonnull SimplePanel shownPanel, @Nonnull SimplePanel disablePanel) {
+        disablePanel.setVisible(false);
+
+        shownPanel.setWidget(iconAndTitlePanel);
+        shownPanel.setVisible(true);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void unSelectBelowCursor() {
+        mainPanel.removeStyleName(editorCSS.selectElementBelowCursor());
+        mainPanel.removeStyleName(editorCSS.selectErrorElementBelowCursor());
     }
 
     /** {@inheritDoc} */
@@ -336,7 +461,8 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
     /** {@inheritDoc} */
     @Override
     public void setVisibleTitleAndIcon(boolean visible) {
-        leftPanel.setVisible(visible);
+        topPanel.setVisible(visible);
+        westPanel.setVisible(visible);
     }
 
     /** {@inheritDoc} */
@@ -352,7 +478,19 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
     public void setVisibleHeader(boolean visible) {
         headerPanel.setVisible(visible);
 
+        resizeIconPanel();
+
         updateTitle();
+    }
+
+    private void resizeIconPanel() {
+        Style style = iconPanel.getElement().getStyle();
+
+        if (headerPanel.isVisible()) {
+            style.setHeight(height - 19, PX);
+        } else {
+            style.setHeight(100, PCT);
+        }
     }
 
     /** {@inheritDoc} */
@@ -366,12 +504,20 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
     public void setHeight(@Nonnegative int height) {
         this.height = height - MARGIN;
         getElement().getStyle().setHeight(height, PX);
+
+        resizeIconPanel();
     }
 
     /** {@inheritDoc} */
     @Override
     public void setY(@Nonnegative int y) {
         getElement().getStyle().setTop(y, PX);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setX(@Nonnegative int x) {
+        getElement().getStyle().setLeft(x, Style.Unit.PX);
     }
 
     /** {@inheritDoc} */
@@ -388,10 +534,17 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
 
         Style rightPanelStyle = rightPanel.getElement().getStyle();
 
-        int rightPanelLeft = leftPanel.isVisible() ? DEFAULT_WIDTH : 0;
-        rightPanelStyle.setLeft(rightPanelLeft, PX);
+        if (element.isHorizontalOrientation()) {
+            int rightPanelLeft = element.isRoot() ? 0 : DEFAULT_SIZE;
+            rightPanelStyle.setLeft(rightPanelLeft, PX);
+            rightPanelStyle.setTop(0, PX);
+        } else {
+            int rightPanelTop = element.isRoot() ? 0 : DEFAULT_SIZE;
+            rightPanelStyle.setTop(rightPanelTop, PX);
+            rightPanelStyle.setLeft(0, PX);
+        }
 
-        Position position = leftPanel.isVisible() ? ABSOLUTE : RELATIVE;
+        Position position = element.isRoot() ? RELATIVE : ABSOLUTE;
         rightPanelStyle.setPosition(position);
     }
 

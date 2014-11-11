@@ -27,11 +27,11 @@ import javax.annotation.Nullable;
  * The abstract view that represents the diagram element visual part of the widget.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public interface ElementView extends View<ElementView.ActionDelegate> {
 
-    int DEFAULT_HEIGHT = 100;
-    int DEFAULT_WIDTH  = 86;
+    int DEFAULT_SIZE = 86;
 
     /**
      * Change content of title visual element.
@@ -78,8 +78,16 @@ public interface ElementView extends View<ElementView.ActionDelegate> {
      */
     void selectBelowCursor(boolean isError);
 
-    /** Unselect widget when mouse cursor is moved out. */
-    void unselectBelowCursor();
+    /**
+     * Changes the orientation of a header panel.
+     *
+     * @param isHorizontal
+     *         <code>true</code> sets horizontal orientation of diagram <code>false</code> sets vertical orientation of diagram
+     */
+    void setHorizontalHeaderPanelOrientation(boolean isHorizontal);
+
+    /** Un select widget when mouse cursor is moved out. */
+    void unSelectBelowCursor();
 
     /**
      * Shows context menu that is needed for the current element.
@@ -149,6 +157,14 @@ public interface ElementView extends View<ElementView.ActionDelegate> {
      *         new y-position of the view
      */
     void setY(@Nonnegative int y);
+
+    /**
+     * Changes x-position of the view on the parent container.
+     *
+     * @param x
+     *         new x-position of the view
+     */
+    void setX(@Nonnegative int x);
 
     public interface ActionDelegate {
 

@@ -90,7 +90,7 @@ public class Property extends AbstractElement {
               SERIALIZATION_NAME,
               PROPERTIES,
               false,
-              true,
+              false,
               resources.property(),
               branchProvider,
               elementCreatorsManager);

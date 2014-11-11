@@ -80,7 +80,7 @@ public class Send extends AbstractElement {
               SERIALIZATION_NAME,
               PROPERTIES,
               false,
-              true,
+              false,
               resources.send(),
               branchProvider,
               elementCreatorsManager);

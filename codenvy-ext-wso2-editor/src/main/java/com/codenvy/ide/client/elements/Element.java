@@ -28,6 +28,7 @@ import java.util.List;
  * diagram elements.
  *
  * @author Andrey Plotnikov
+ * @author Valeriy Svydenko
  */
 public interface Element {
 
@@ -121,8 +122,8 @@ public interface Element {
     /** @return <code>true</code> if this element has an ability to add new branches, <code>false</code> it doesn't */
     boolean isPossibleToAddBranches();
 
-    /** @return <code>true</code> if this element needs to show title and icon in the widget, <code>false</code> it doesn't */
-    boolean needsToShowIconAndTitle();
+    /** @return <code>true</code> if this element is root, <code>false</code> it doesn't */
+    boolean isRoot();
 
     /**
      * Deserialize diagram element with all inner elements.
@@ -136,4 +137,14 @@ public interface Element {
     @Nullable
     ImageResource getIcon();
 
+    /** @return <code>true</code> if the orientation of diagram is horizontal, <code>false</code> it doesn't */
+    boolean isHorizontalOrientation();
+
+    /**
+     * Calls method which sets orientation of diagram.
+     *
+     * @param isHorizontal
+     *         <code>true</code> the orientation is horizontal,<code>false</code> the orientation is vertical
+     */
+    void setHorizontalOrientation(boolean isHorizontal);
 }

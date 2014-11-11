@@ -27,6 +27,7 @@ import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.validators.ConnectionsValidator;
 import com.codenvy.ide.client.validators.InnerElementsValidator;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -45,15 +46,18 @@ import static com.codenvy.ide.client.elements.widgets.branch.BranchView.BORDER_S
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_HEIGHT;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_WIDTH;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.ELEMENTS_PADDING;
-import static com.codenvy.ide.client.elements.widgets.branch.BranchView.ELEMENT_ARROW_PADDING;
+import static com.codenvy.ide.client.elements.widgets.branch.BranchView.HORIZONTAL_ELEMENT_ARROW_PADDING;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.TITLE_WIDTH;
-import static com.codenvy.ide.client.elements.widgets.branch.arrow.ArrowPresenter.ARROW_WIDTH;
+import static com.codenvy.ide.client.elements.widgets.branch.BranchView.VERTICAL_ELEMENT_ARROW_PADDING;
+import static com.codenvy.ide.client.elements.widgets.branch.arrow.ArrowPresenter.ARROW_HORIZONTAL_SIZE;
+import static com.codenvy.ide.client.elements.widgets.branch.arrow.ArrowPresenter.ARROW_VERTICAL_SIZE;
 
 /**
  * The class that provides business logic of the element's branch widget.
  *
  * @author Andrey Plotnikov
  * @author Dmitry Shnurenko
+ * @author Valeriy Svydenko
  */
 public class BranchPresenter extends AbstractPresenter<BranchView> implements BranchView.ActionDelegate,
                                                                               ElementPresenter.ElementDeleteListener,
@@ -75,7 +79,8 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     private final Map<String, ElementPresenter> widgetElements;
     private final List<ArrowPresenter>          arrows;
 
-    private boolean isBorderVisible;
+    private boolean isBorderTopVisible;
+    private boolean isBorderLeftVisible;
 
     @Inject
     public BranchPresenter(ConnectionsValidator connectionsValidator,
@@ -104,7 +109,8 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
 
         this.view.setTitle(branch.getTitle());
 
-        this.isBorderVisible = false;
+        this.isBorderTopVisible = false;
+        this.isBorderLeftVisible = false;
 
         redrawElements();
     }
@@ -118,7 +124,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     /** @return the width of the widget */
     @Nonnegative
     public int getWidth() {
-        return view.getWidth();
+        return view.getWidth() + (isBorderLeftVisible ? BORDER_SIZE : 0);
     }
 
     /**
@@ -129,12 +135,14 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
      */
     public void setWidth(@Nonnegative int width) {
         view.setWidth(width);
+
+        alignElements();
     }
 
     /** @return the height of the widget */
     @Nonnegative
     public int getHeight() {
-        return view.getHeight() + (isBorderVisible ? BORDER_SIZE : 0);
+        return view.getHeight() + (isBorderTopVisible ? BORDER_SIZE : 0);
     }
 
     /**
@@ -169,34 +177,48 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
      */
     public void setVisibleTopBorder(boolean visible) {
         view.setVisibleTopBorder(visible);
-        isBorderVisible = visible;
+        isBorderTopVisible = visible;
+    }
+
+    /**
+     * Change visible state of border at the left of element.
+     *
+     * @param visible
+     *         visible state of border
+     */
+    public void setVisibleLeftBorder(boolean visible) {
+        view.setVisibleLeftBorder(visible);
+        isBorderLeftVisible = visible;
     }
 
     private boolean needsToShowArrows() {
         Element parent = branch.getParent();
-        return parent == null || !parent.needsToShowIconAndTitle() || branch.getElements().size() > 1;
+        return parent.isRoot() || branch.getElements().size() > 1;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onMouseLeftButtonClicked(int x, int y) {
+    public void onMouseLeftButtonClicked(@Nonnegative int x, @Nonnegative int y) {
         Element newElement = getCreatingElement();
         Element branchParent = branch.getParent();
 
         editorState.resetState();
         view.setDefaultCursor();
 
-        if (newElement == null || !connectionsValidator.canInsertElement(branch, newElement.getElementName(), x, y)
-            || (branchParent != null &&
-                !innerElementsValidator.canInsertElement(branchParent.getElementName(), newElement.getElementName()))) {
+        if (newElement == null
+            || !connectionsValidator.canInsertElement(branch, newElement.getElementName(), x, y)
+            || !innerElementsValidator.canInsertElement(branchParent.getElementName(), newElement.getElementName())) {
+
             selectionManager.setElement(branchParent);
             return;
         }
 
         newElement.setX(x);
         newElement.setY(y);
+        newElement.setParent(branchParent);
 
         branch.addElement(newElement);
+        branch.sortElements();
 
         onElementChanged();
 
@@ -211,7 +233,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
 
     /** {@inheritDoc} */
     @Override
-    public void onMouseMoved(int x, int y) {
+    public void onMouseMoved(@Nonnegative int x, @Nonnegative int y) {
         String elementName = elementCreatorsManager.getElementNameByState(editorState.getState());
 
         if (elementName == null) {
@@ -256,9 +278,11 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
             connectionsValidator.canInsertElement(branch, element.getElementName(), x, y)) {
             element.setX(x);
             element.setY(y);
-        }
 
-        onElementChanged();
+            branch.sortElements();
+
+            onElementChanged();
+        }
     }
 
     /** {@inheritDoc} */
@@ -291,7 +315,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         onElementChanged();
     }
 
-    private void redrawElements() {
+    public void redrawElements() {
         displayElements();
 
         resizeView();
@@ -304,17 +328,30 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
 
         showTitleOrNot();
 
-        int x = ARROW_PADDING;
-        int y = 0;
+        int x;
+        int y;
         int arrowIndex = 0;
 
         boolean isFirst = true;
         boolean needsToShowArrows = needsToShowArrows();
+        boolean isHorizontal = branch.getParent().isHorizontalOrientation();
+
+        if (!isHorizontal) {
+            x = 0;
+            y = ARROW_PADDING;
+        } else {
+            x = ARROW_PADDING;
+            y = 0;
+        }
 
         for (Element element : branch.getElements()) {
             if (needsToShowArrows && isFirst) {
                 addArrow(x, y, arrowIndex++);
-                x += ARROW_WIDTH;
+                if (isHorizontal) {
+                    x += ARROW_HORIZONTAL_SIZE;
+                } else {
+                    y += ARROW_VERTICAL_SIZE;
+                }
 
                 isFirst = false;
             }
@@ -328,14 +365,28 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
             if (elementPresenter == null) {
                 elementPresenter = createElementPresenter(element);
                 widgetElements.put(elementId, elementPresenter);
+            } else {
+                elementPresenter.updateView();
             }
 
+            elementPresenter.setHorizontalHeaderPanelOrientation(isHorizontal);
+
             view.addElement(elementPresenter, x, y);
-            x += elementPresenter.getWidth() + ELEMENT_ARROW_PADDING;
+
+            if (isHorizontal) {
+                x += elementPresenter.getWidth() + HORIZONTAL_ELEMENT_ARROW_PADDING;
+            } else {
+                y += elementPresenter.getHeight() + VERTICAL_ELEMENT_ARROW_PADDING;
+            }
 
             if (needsToShowArrows) {
                 addArrow(x, y, arrowIndex++);
-                x += ARROW_WIDTH;
+
+                if (isHorizontal) {
+                    x += ARROW_HORIZONTAL_SIZE;
+                } else {
+                    y += ARROW_VERTICAL_SIZE;
+                }
             }
         }
     }
@@ -353,12 +404,14 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         arrow.setX(x);
         arrow.setY(y);
 
+        rotateArrow(arrow);
+
         view.addArrow(arrow, x, y);
     }
 
     private void showTitleOrNot() {
         Element parent = branch.getParent();
-        view.setVisibleTitle(parent != null && parent.needsToShowIconAndTitle());
+        view.setVisibleTitle(!parent.isRoot());
     }
 
     @Nonnull
@@ -374,6 +427,16 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         return elementPresenter;
     }
 
+    /** Sets alignment for arrows if vertical orientation of the diagram is activated */
+    public void applyVerticalAlign() {
+        view.applyVerticalAlign();
+    }
+
+    /** Sets alignment for arrows if horizontal orientation of the diagram is activated */
+    public void applyHorizontalAlign() {
+        view.applyHorizontalAlign();
+    }
+
     public void resizeView() {
         if (branch.hasElements()) {
             detectElementSizeAndResizeView();
@@ -386,7 +449,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     private int getTitleWidth() {
         Element parent = branch.getParent();
 
-        if (parent == null || !parent.needsToShowIconAndTitle()) {
+        if (parent.isRoot()) {
             return 0;
         }
 
@@ -395,20 +458,39 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
 
     private void detectElementSizeAndResizeView() {
         List<ElementPresenter> elements = new ArrayList<>(widgetElements.values());
+        boolean isHorizontal = branch.getParent().isHorizontalOrientation();
+        boolean isShowArrow = needsToShowArrows();
 
-        int width = (needsToShowArrows() ? (elements.size() + 1) * ARROW_WIDTH : 0) + getTitleWidth() + 2 * ARROW_PADDING;
-        int height = elements.get(0).getHeight();
+        int widthElementAndArrow = (elements.size() + 1) * ARROW_HORIZONTAL_SIZE;
+        int widthTitleWithArrowPadding = getTitleWidth() + 2 * ARROW_PADDING;
+        int firstElementWidth = elements.get(0).getWidth();
+
+        int width = isHorizontal ? (isShowArrow ? widthElementAndArrow : 0) + widthTitleWithArrowPadding : firstElementWidth;
+        int height = isHorizontal ? firstElementWidth : (isShowArrow ? widthElementAndArrow : 0) + widthTitleWithArrowPadding;
 
         for (ElementPresenter element : elements) {
-            width += element.getWidth();
+            if (isHorizontal) {
+                width += element.getWidth() + HORIZONTAL_ELEMENT_ARROW_PADDING;
 
-            int elementHeight = element.getHeight();
-            if (height < elementHeight) {
-                height = elementHeight;
+                int elementHeight = element.getHeight();
+                if (height < elementHeight) {
+                    height = elementHeight;
+                }
+            } else {
+                height += element.getHeight() + VERTICAL_ELEMENT_ARROW_PADDING;
+
+                int elementWidth = element.getWidth();
+                if (width < elementWidth) {
+                    width = elementWidth;
+                }
             }
         }
 
-        height += ELEMENTS_PADDING;
+        if (isHorizontal) {
+            height += ELEMENTS_PADDING;
+        } else {
+            width += ELEMENTS_PADDING;
+        }
 
         view.setHeight(height);
         view.setWidth(width);
@@ -416,9 +498,14 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
 
     private void alignElements() {
         int top = view.getHeight() / 2;
+        int left = view.getWidth() / 2;
 
         for (ElementPresenter element : widgetElements.values()) {
-            element.setY(top - element.getHeight() / 2);
+            if (branch.getParent().isHorizontalOrientation()) {
+                element.setY(top - element.getHeight() / 2);
+            } else {
+                element.setX(left - element.getWidth() / 2);
+            }
         }
     }
 
@@ -441,6 +528,24 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     public void notifyElementChangedListeners() {
         for (ElementChangedListener listener : elementChangedListeners) {
             listener.onElementChanged();
+        }
+    }
+
+    /**
+     * Changes visible state of horizontal title panel of the view.
+     *
+     * @param visible
+     *         <code>true</code> the panel will be shown, <code>false</code> it will not
+     */
+    public void setVisibleHorizontalTitlePanel(boolean visible) {
+        view.setVisibleHorizontalTitlePanel(visible);
+    }
+
+    private void rotateArrow(@Nonnull ArrowPresenter arrow) {
+        if (branch.getParent().isHorizontalOrientation()) {
+            arrow.applyVerticalAlign();
+        } else {
+            arrow.applyHorizontalAlign();
         }
     }
 

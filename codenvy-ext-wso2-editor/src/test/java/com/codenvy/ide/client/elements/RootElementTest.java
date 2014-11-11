@@ -73,7 +73,7 @@ public class RootElementTest extends AbstractElementTest<RootElement> {
 
     @Override
     public void needToShowTitleAndIconParamShouldBeInitializedWithDefaultValue() throws Exception {
-        assertThat(entity.needsToShowIconAndTitle(), is(false));
+        assertThat(entity.isRoot(), is(true));
     }
 
     @Override

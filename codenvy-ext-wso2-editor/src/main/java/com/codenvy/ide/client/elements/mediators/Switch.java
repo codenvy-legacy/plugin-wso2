@@ -82,7 +82,7 @@ public class Switch extends AbstractElement {
               SERIALIZATION_NAME,
               PROPERTIES,
               true,
-              true,
+              false,
               resources.switchMediator(),
               branchProvider,
               elementCreatorsManager);

@@ -36,7 +36,6 @@ import static com.codenvy.ide.client.elements.mediators.payload.PayloadFactory.M
 import static com.codenvy.ide.client.elements.mediators.payload.PayloadFactory.MediaType.XML;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -106,7 +105,7 @@ public class PayloadFactoryTest extends AbstractElementTest<PayloadFactory> {
 
     @Override
     public void needToShowTitleAndIconParamShouldBeInitializedWithDefaultValue() throws Exception {
-        assertTrue(entity.needsToShowIconAndTitle());
+        assertFalse(entity.isRoot());
     }
 
     @Override

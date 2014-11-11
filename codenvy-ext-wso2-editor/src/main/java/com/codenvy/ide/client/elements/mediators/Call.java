@@ -80,7 +80,7 @@ public class Call extends AbstractElement {
               SERIALIZATION_NAME,
               PROPERTIES,
               false,
-              true,
+              false,
               resources.call(),
               branchProvider,
               elementCreatorsManager);

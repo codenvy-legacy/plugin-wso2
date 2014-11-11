@@ -56,7 +56,7 @@ public class Respond extends AbstractElement {
               SERIALIZATION_NAME,
               PROPERTIES,
               false,
-              true,
+              false,
               resources.respond(),
               branchProvider,
               elementCreatorsManager);

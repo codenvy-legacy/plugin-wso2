@@ -37,7 +37,6 @@ import static com.codenvy.ide.client.elements.mediators.CallTemplate.PARAMETERS;
 import static com.codenvy.ide.client.elements.mediators.CallTemplate.TARGET_TEMPLATES;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -92,7 +91,7 @@ public class CallTemplateTest extends AbstractElementTest<CallTemplate> {
 
     @Override
     public void needToShowTitleAndIconParamShouldBeInitializedWithDefaultValue() throws Exception {
-        assertTrue(entity.needsToShowIconAndTitle());
+        assertFalse(entity.isRoot());
     }
 
     @Override

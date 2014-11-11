@@ -36,6 +36,7 @@ import java.util.Objects;
  *
  * @author Andrey Plotnikov
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public abstract class AbstractElement extends AbstractEntityElement implements Element, Comparable<AbstractElement> {
 
@@ -44,12 +45,13 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
     private String  title;
     private int     x;
     private int     y;
+    private boolean isHorizontalOrientation;
 
     private final String                 elementName;
     private final List<String>           propertiesName;
     private final String                 serializationName;
     private final boolean                isPossibleToAddBranches;
-    private final boolean                needsToShowIconAndTitle;
+    private final boolean                isRoot;
     private final ElementCreatorsManager elementCreatorsManager;
 
     protected final ImageResource    imageResources;
@@ -61,7 +63,7 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
                               @Nonnull String serializationName,
                               @Nonnull List<String> propertiesName,
                               boolean isPossibleToAddBranches,
-                              boolean needsToShowIconAndTitle,
+                              boolean isRoot,
                               @Nullable ImageResource resources,
                               @Nonnull Provider<Branch> branchProvider,
                               @Nonnull ElementCreatorsManager elementCreatorsManager) {
@@ -73,13 +75,15 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
         id = UUID.get();
 
         this.isPossibleToAddBranches = isPossibleToAddBranches;
-        this.needsToShowIconAndTitle = needsToShowIconAndTitle;
+        this.isRoot = isRoot;
 
         this.branches = new ArrayList<>();
 
         this.imageResources = resources;
         this.branchProvider = branchProvider;
         this.elementCreatorsManager = elementCreatorsManager;
+
+        isHorizontalOrientation = true;
     }
 
     /** {@inheritDoc} */
@@ -204,13 +208,8 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
     /** {@inheritDoc} */
     @Override
     public int compareTo(@Nonnull AbstractElement element) {
-        int diff = Integer.compare(this.getX(), element.getX());
-
-        if (diff != 0) {
-            return diff;
-        }
-
-        return Integer.compare(this.getY(), element.getY());
+        return element.isHorizontalOrientation() ? Integer.compare(this.getX(), element.getX())
+                                                 : Integer.compare(this.getY(), element.getY());
     }
 
     /** {@inheritDoc} */
@@ -309,8 +308,8 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
 
     /** {@inheritDoc} */
     @Override
-    public boolean needsToShowIconAndTitle() {
-        return needsToShowIconAndTitle;
+    public boolean isRoot() {
+        return isRoot;
     }
 
     /**
@@ -357,5 +356,23 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
     @Nonnull
     protected String serializeAttributes() {
         return "";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setHorizontalOrientation(boolean isHorizontal) {
+        isHorizontalOrientation = isHorizontal;
+
+        for (Branch branch : branches) {
+            for (Element element : branch.getElements()) {
+                element.setHorizontalOrientation(isHorizontal);
+            }
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isHorizontalOrientation() {
+        return isHorizontalOrientation;
     }
 }

@@ -117,7 +117,7 @@ public class HeaderTest extends AbstractElementTest<Header> {
 
     @Override
     public void needToShowTitleAndIconParamShouldBeInitializedWithDefaultValue() throws Exception {
-        assertThat(entity.needsToShowIconAndTitle(), is(true));
+        assertThat(entity.isRoot(), is(false));
     }
 
     @Override

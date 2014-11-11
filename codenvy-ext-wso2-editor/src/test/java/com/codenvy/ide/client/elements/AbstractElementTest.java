@@ -57,6 +57,8 @@ public abstract class AbstractElementTest<T extends AbstractElement> extends Abs
     private Branch          branch;
     @Mock
     private AbstractElement element;
+    @Mock
+    private RootElement     rootElement;
 
     @Test
     public void elementIdShouldBeNotNull() throws Exception {
@@ -217,6 +219,7 @@ public abstract class AbstractElementTest<T extends AbstractElement> extends Abs
         entity.setY(100);
 
         when(element.getX()).thenReturn(150);
+        when(element.isHorizontalOrientation()).thenReturn(true);
 
         assertEquals(-1, entity.compareTo(element));
     }

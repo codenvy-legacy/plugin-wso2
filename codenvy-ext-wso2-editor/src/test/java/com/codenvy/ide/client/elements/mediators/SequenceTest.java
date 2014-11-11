@@ -94,7 +94,7 @@ public class SequenceTest extends AbstractElementTest<Sequence> {
 
     @Override
     public void needToShowTitleAndIconParamShouldBeInitializedWithDefaultValue() throws Exception {
-        assertThat(entity.needsToShowIconAndTitle(), is(true));
+        assertThat(entity.isRoot(), is(false));
     }
 
     @Override
