@@ -18,6 +18,7 @@ package com.codenvy.ide.ext.wso2.client.upload.overwrite;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ui.window.Window;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -29,10 +30,8 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import javax.validation.constraints.NotNull;
 
 /**
  * Provides a graphical representation which allows user to change name of file.
@@ -43,9 +42,10 @@ import javax.validation.constraints.NotNull;
  */
 public class OverwriteFileViewImpl extends Window implements OverwriteFileView {
 
-    @Singleton
     interface OverwriteFileViewImplUiBinder extends UiBinder<Widget, OverwriteFileViewImpl> {
     }
+
+    private static final OverwriteFileViewImplUiBinder uiBinder = GWT.create(OverwriteFileViewImplUiBinder.class);
 
     @UiField
     TextBox fileName;
@@ -61,14 +61,12 @@ public class OverwriteFileViewImpl extends Window implements OverwriteFileView {
     private       ActionDelegate delegate;
 
     @Inject
-    public OverwriteFileViewImpl(OverwriteFileViewImplUiBinder ourUiBinder,
-                                 LocalizationConstant locale,
-                                 WSO2Resources res) {
+    public OverwriteFileViewImpl(LocalizationConstant locale, WSO2Resources res) {
         this.locale = locale;
         this.res = res;
 
         this.setTitle(locale.wso2FileOverwriteTitle());
-        this.setWidget(ourUiBinder.createAndBindUi(this));
+        this.setWidget(uiBinder.createAndBindUi(this));
 
         Button btnCancel = createButton(locale.wso2ButtonCancel(), "esb-conf-file-cancel", new ClickHandler() {
             @Override
@@ -144,9 +142,8 @@ public class OverwriteFileViewImpl extends Window implements OverwriteFileView {
         this.delegate = actionDelegate;
     }
 
-    @SuppressWarnings("UnusedParameters")
     @UiHandler("fileName")
-    public void onFileNameChanged(KeyUpEvent event) {
+    public void onFileNameChanged(@SuppressWarnings("UnusedParameters") KeyUpEvent event) {
         delegate.onNameChanged();
     }
 

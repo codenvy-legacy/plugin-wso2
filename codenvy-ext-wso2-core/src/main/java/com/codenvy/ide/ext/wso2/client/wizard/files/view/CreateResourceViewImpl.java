@@ -15,6 +15,7 @@
  */
 package com.codenvy.ide.ext.wso2.client.wizard.files.view;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -24,7 +25,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 
@@ -36,18 +36,20 @@ import javax.annotation.Nonnull;
  */
 public class CreateResourceViewImpl extends Composite implements CreateResourceView {
 
-    @Singleton
     interface CreateResourceViewImplUiBinder extends UiBinder<Widget, CreateResourceViewImpl> {
     }
+
+    private static final CreateResourceViewImplUiBinder ourUiBinder = GWT.create(CreateResourceViewImplUiBinder.class);
 
     @UiField
     Label   resourceNameTitle;
     @UiField
     TextBox resourceName;
+
     private ActionDelegate delegate;
 
     @Inject
-    public CreateResourceViewImpl(CreateResourceViewImplUiBinder ourUiBinder) {
+    public CreateResourceViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -76,9 +78,9 @@ public class CreateResourceViewImpl extends Composite implements CreateResourceV
         resourceName.setText(name);
     }
 
-    @SuppressWarnings("UnusedParameters")
     @UiHandler("resourceName")
-    public void onValueChanged(KeyUpEvent event) {
+    public void onValueChanged(@SuppressWarnings("UnusedParameters") KeyUpEvent event) {
         delegate.onValueChanged();
     }
+
 }

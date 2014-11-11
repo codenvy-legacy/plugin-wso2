@@ -18,6 +18,7 @@ package com.codenvy.ide.ext.wso2.client.upload;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.ui.window.Window;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -34,7 +35,6 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 
@@ -49,9 +49,10 @@ import static com.google.gwt.user.client.ui.FormPanel.METHOD_POST;
  */
 public class ImportFileViewImpl extends Window implements ImportFileView {
 
-    @Singleton
     interface ImportFileViewImplUiBinder extends UiBinder<Widget, ImportFileViewImpl> {
     }
+
+    private static final ImportFileViewImplUiBinder uiBinder = GWT.create(ImportFileViewImplUiBinder.class);
 
     @UiField
     FormPanel   uploadForm;
@@ -74,14 +75,12 @@ public class ImportFileViewImpl extends Window implements ImportFileView {
     private       ActionDelegate delegate;
 
     @Inject
-    public ImportFileViewImpl(ImportFileViewImplUiBinder ourUiBinder,
-                              LocalizationConstant locale,
-                              WSO2Resources res) {
+    public ImportFileViewImpl(LocalizationConstant locale, WSO2Resources res) {
         this.locale = locale;
         this.res = res;
 
         this.setTitle(locale.wso2ImportDialogTitle());
-        this.setWidget(ourUiBinder.createAndBindUi(this));
+        this.setWidget(uiBinder.createAndBindUi(this));
 
         Button btnCancel = createButton(locale.wso2ButtonCancel(), "esb-conf-import-cancel", new ClickHandler() {
             @Override
@@ -240,23 +239,21 @@ public class ImportFileViewImpl extends Window implements ImportFileView {
         this.delegate = actionDelegate;
     }
 
-    @SuppressWarnings("UnusedParameters")
     @UiHandler("useUrl")
-    public void onUseUrlClicked(ClickEvent event) {
+    public void onUseUrlClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         file.setEnabled(false);
         delegate.onUseUrlChosen();
     }
 
-    @SuppressWarnings("UnusedParameters")
     @UiHandler("useLocalPath")
-    public void onUseLocalPathClicked(ClickEvent event) {
+    public void onUseLocalPathClicked(@SuppressWarnings("UnusedParameters") ClickEvent event) {
         file.setEnabled(true);
         delegate.onUseLocalPathChosen();
     }
 
-    @SuppressWarnings("UnusedParameters")
     @UiHandler("url")
-    public void onUrlChanged(KeyUpEvent event) {
+    public void onUrlChanged(@SuppressWarnings("UnusedParameters") KeyUpEvent event) {
         delegate.onUrlChanged();
     }
+
 }

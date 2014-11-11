@@ -19,6 +19,7 @@ import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.ext.wso2.client.LocalizationConstant;
 import com.codenvy.ide.ext.wso2.client.WSO2Resources;
 import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPresenter;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.layout.client.Layout;
@@ -32,7 +33,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 
@@ -45,46 +45,47 @@ import javax.annotation.Nonnull;
  */
 public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorView {
 
-    @Singleton
     interface ESBConfEditorViewImplUiBinder extends UiBinder<Widget, ESBConfEditorViewImpl> {
     }
+
+    private static final ESBConfEditorViewImplUiBinder uiBinder = GWT.create(ESBConfEditorViewImplUiBinder.class);
 
     private static final int DURATION = 200;
 
     @UiField
-    Button      textEditorChoose;
+    Button          textEditorChoose;
     @UiField
-    Button      graphicalEditorChoose;
+    Button          graphicalEditorChoose;
     @UiField
-    Button      associateEditorChoose;
+    Button          associateEditorChoose;
     @UiField
-    Button      horizontalBtn;
+    Button          horizontalBtn;
     @UiField
-    Button      verticalBtn;
+    Button          verticalBtn;
     @UiField
-    FlowPanel   toolbarBtn;
+    FlowPanel       toolbarBtn;
     @UiField
-    FlowPanel   showPropertyPanel;
+    FlowPanel       showPropertyPanel;
     @UiField
-    SimplePanel graphicalEditorPanel;
+    SimplePanel     graphicalEditorPanel;
     @UiField
-    SimplePanel textEditorPanel;
+    SimplePanel     textEditorPanel;
+    @UiField
+    DockLayoutPanel editorMainPanel;
 
     @UiField(provided = true)
-    LocalizationConstant locale;
+    final LocalizationConstant locale;
     @UiField(provided = true)
-    WSO2Resources        resources;
-    @UiField
-    DockLayoutPanel      editorMainPanel;
+    final WSO2Resources        resources;
 
     private ActionDelegate delegate;
 
     @Inject
-    public ESBConfEditorViewImpl(ESBConfEditorViewImplUiBinder ourUiBinder, LocalizationConstant locale, WSO2Resources resources) {
+    public ESBConfEditorViewImpl(LocalizationConstant locale, WSO2Resources resources) {
         this.locale = locale;
         this.resources = resources;
 
-        initWidget(ourUiBinder.createAndBindUi(this));
+        initWidget(uiBinder.createAndBindUi(this));
 
         toolbarBtn.addDomHandler(new ClickHandler() {
             @Override

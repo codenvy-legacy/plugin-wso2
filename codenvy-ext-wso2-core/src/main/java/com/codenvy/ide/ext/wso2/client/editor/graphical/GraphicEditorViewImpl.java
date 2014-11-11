@@ -16,13 +16,13 @@
 package com.codenvy.ide.ext.wso2.client.editor.graphical;
 
 import com.codenvy.ide.client.editor.WSO2Editor;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.inject.assistedinject.Assisted;
 
 /**
@@ -32,16 +32,17 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class GraphicEditorViewImpl extends Composite implements GraphicEditorView {
 
-    @Singleton
-    interface GEUIBinder extends UiBinder<Widget, GraphicEditorViewImpl> {
+    interface GraphicEditorViewImplUiBinder extends UiBinder<Widget, GraphicEditorViewImpl> {
     }
+
+    private static final GraphicEditorViewImplUiBinder uiBinder = GWT.create(GraphicEditorViewImplUiBinder.class);
 
     @UiField
     SimpleLayoutPanel editor;
 
     @Inject
-    public GraphicEditorViewImpl(GEUIBinder binder, @Assisted WSO2Editor wso2Editor) {
-        initWidget(binder.createAndBindUi(this));
+    public GraphicEditorViewImpl(@Assisted WSO2Editor wso2Editor) {
+        initWidget(uiBinder.createAndBindUi(this));
 
         wso2Editor.go(editor);
     }
