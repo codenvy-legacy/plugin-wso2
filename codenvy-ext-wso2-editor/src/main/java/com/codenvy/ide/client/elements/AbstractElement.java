@@ -363,7 +363,7 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
     public void setHorizontalOrientation(boolean isHorizontal) {
         isHorizontalOrientation = isHorizontal;
 
-        for (Branch branch : branches) {
+        for (Branch branch : getBranches()) {
             for (Element element : branch.getElements()) {
                 element.setHorizontalOrientation(isHorizontal);
             }
@@ -375,4 +375,5 @@ public abstract class AbstractElement extends AbstractEntityElement implements E
     public boolean isHorizontalOrientation() {
         return isHorizontalOrientation;
     }
+
 }

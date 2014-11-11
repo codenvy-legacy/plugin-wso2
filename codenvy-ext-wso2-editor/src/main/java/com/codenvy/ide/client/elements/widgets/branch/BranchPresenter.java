@@ -328,21 +328,13 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
 
         showTitleOrNot();
 
-        int x;
-        int y;
-        int arrowIndex = 0;
-
         boolean isFirst = true;
         boolean needsToShowArrows = needsToShowArrows();
         boolean isHorizontal = branch.getParent().isHorizontalOrientation();
 
-        if (!isHorizontal) {
-            x = 0;
-            y = ARROW_PADDING;
-        } else {
-            x = ARROW_PADDING;
-            y = 0;
-        }
+        int x = isHorizontal ? ARROW_PADDING : 0;
+        int y = isHorizontal ? 0 : ARROW_PADDING;
+        int arrowIndex = 0;
 
         for (Element element : branch.getElements()) {
             if (needsToShowArrows && isFirst) {

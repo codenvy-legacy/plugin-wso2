@@ -23,15 +23,18 @@ import com.google.inject.Provider;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assume.assumeTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -52,9 +55,9 @@ public abstract class AbstractElementTest<T extends AbstractElement> extends Abs
     protected ElementCreatorsManager elementCreatorsManager;
     @Mock
     protected ImageResource          icon;
-
     @Mock
-    private Branch          branch;
+    protected Branch                 branch;
+
     @Mock
     private AbstractElement element;
     @Mock
@@ -287,4 +290,20 @@ public abstract class AbstractElementTest<T extends AbstractElement> extends Abs
 
         assertThat(first, equalTo(entity.hashCode()));
     }
+
+    @Test
+    public void orientationShouldBeChanged() throws Exception {
+        assumeTrue(entity.isPossibleToAddBranches());
+
+        entity.setBranchesAmount(3);
+
+        Element childElement = mock(Element.class);
+        when(branch.getElements()).thenReturn(Arrays.asList(childElement));
+
+        entity.setHorizontalOrientation(true);
+
+        assertThat(entity.isHorizontalOrientation(), is(true));
+        verify(childElement).setHorizontalOrientation(true);
+    }
+
 }

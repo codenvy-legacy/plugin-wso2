@@ -72,8 +72,6 @@ public class SwitchTest extends AbstractElementTest<Switch> {
     private Branch              firstBranch;
     @Mock
     private Branch              defaultBranch;
-    @Mock
-    private Branch              branch;
 
     @Before
     public void setUp() throws Exception {
