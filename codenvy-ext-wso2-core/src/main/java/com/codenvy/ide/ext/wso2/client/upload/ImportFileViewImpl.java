@@ -52,7 +52,7 @@ public class ImportFileViewImpl extends Window implements ImportFileView {
     interface ImportFileViewImplUiBinder extends UiBinder<Widget, ImportFileViewImpl> {
     }
 
-    private static final ImportFileViewImplUiBinder uiBinder = GWT.create(ImportFileViewImplUiBinder.class);
+    private static final ImportFileViewImplUiBinder UI_BINDER = GWT.create(ImportFileViewImplUiBinder.class);
 
     @UiField
     FormPanel   uploadForm;
@@ -80,7 +80,7 @@ public class ImportFileViewImpl extends Window implements ImportFileView {
         this.res = res;
 
         this.setTitle(locale.wso2ImportDialogTitle());
-        this.setWidget(uiBinder.createAndBindUi(this));
+        this.setWidget(UI_BINDER.createAndBindUi(this));
 
         Button btnCancel = createButton(locale.wso2ButtonCancel(), "esb-conf-import-cancel", new ClickHandler() {
             @Override

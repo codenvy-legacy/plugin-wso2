@@ -45,7 +45,7 @@ public class OverwriteFileViewImpl extends Window implements OverwriteFileView {
     interface OverwriteFileViewImplUiBinder extends UiBinder<Widget, OverwriteFileViewImpl> {
     }
 
-    private static final OverwriteFileViewImplUiBinder uiBinder = GWT.create(OverwriteFileViewImplUiBinder.class);
+    private static final OverwriteFileViewImplUiBinder UI_BINDER = GWT.create(OverwriteFileViewImplUiBinder.class);
 
     @UiField
     TextBox fileName;
@@ -66,7 +66,7 @@ public class OverwriteFileViewImpl extends Window implements OverwriteFileView {
         this.res = res;
 
         this.setTitle(locale.wso2FileOverwriteTitle());
-        this.setWidget(uiBinder.createAndBindUi(this));
+        this.setWidget(UI_BINDER.createAndBindUi(this));
 
         Button btnCancel = createButton(locale.wso2ButtonCancel(), "esb-conf-file-cancel", new ClickHandler() {
             @Override

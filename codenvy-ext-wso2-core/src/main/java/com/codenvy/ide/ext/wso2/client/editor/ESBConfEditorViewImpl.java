@@ -48,7 +48,7 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
     interface ESBConfEditorViewImplUiBinder extends UiBinder<Widget, ESBConfEditorViewImpl> {
     }
 
-    private static final ESBConfEditorViewImplUiBinder uiBinder = GWT.create(ESBConfEditorViewImplUiBinder.class);
+    private static final ESBConfEditorViewImplUiBinder UI_BINDER = GWT.create(ESBConfEditorViewImplUiBinder.class);
 
     private static final int DURATION = 200;
 
@@ -85,7 +85,7 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
         this.locale = locale;
         this.resources = resources;
 
-        initWidget(uiBinder.createAndBindUi(this));
+        initWidget(UI_BINDER.createAndBindUi(this));
 
         toolbarBtn.addDomHandler(new ClickHandler() {
             @Override

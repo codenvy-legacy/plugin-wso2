@@ -35,14 +35,14 @@ public class GraphicEditorViewImpl extends Composite implements GraphicEditorVie
     interface GraphicEditorViewImplUiBinder extends UiBinder<Widget, GraphicEditorViewImpl> {
     }
 
-    private static final GraphicEditorViewImplUiBinder uiBinder = GWT.create(GraphicEditorViewImplUiBinder.class);
+    private static final GraphicEditorViewImplUiBinder UI_BINDER = GWT.create(GraphicEditorViewImplUiBinder.class);
 
     @UiField
     SimpleLayoutPanel editor;
 
     @Inject
     public GraphicEditorViewImpl(@Assisted WSO2Editor wso2Editor) {
-        initWidget(uiBinder.createAndBindUi(this));
+        initWidget(UI_BINDER.createAndBindUi(this));
 
         wso2Editor.go(editor);
     }

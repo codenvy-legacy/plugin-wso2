@@ -39,7 +39,7 @@ public class CreateResourceViewImpl extends Composite implements CreateResourceV
     interface CreateResourceViewImplUiBinder extends UiBinder<Widget, CreateResourceViewImpl> {
     }
 
-    private static final CreateResourceViewImplUiBinder ourUiBinder = GWT.create(CreateResourceViewImplUiBinder.class);
+    private static final CreateResourceViewImplUiBinder UI_BINDER = GWT.create(CreateResourceViewImplUiBinder.class);
 
     @UiField
     Label   resourceNameTitle;
@@ -50,7 +50,7 @@ public class CreateResourceViewImpl extends Composite implements CreateResourceV
 
     @Inject
     public CreateResourceViewImpl() {
-        initWidget(ourUiBinder.createAndBindUi(this));
+        initWidget(UI_BINDER.createAndBindUi(this));
     }
 
     /** {@inheritDoc} */
