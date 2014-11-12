@@ -72,7 +72,8 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     private final ElementCreatorsManager   elementCreatorsManager;
     private final EditorState              editorState;
 
-    private final Branch branch;
+    private final Branch  branch;
+    private final Element parent;
 
     private final List<ElementChangedListener> elementChangedListeners;
 
@@ -106,6 +107,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         this.arrows = new ArrayList<>();
 
         this.branch = branch;
+        this.parent = branch.getParent();
 
         this.view.setTitle(branch.getTitle());
 
@@ -192,7 +194,6 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     }
 
     private boolean needsToShowArrows() {
-        Element parent = branch.getParent();
         return parent.isRoot() || branch.getElements().size() > 1;
     }
 
@@ -200,23 +201,22 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     @Override
     public void onMouseLeftButtonClicked(@Nonnegative int x, @Nonnegative int y) {
         Element newElement = getCreatingElement();
-        Element branchParent = branch.getParent();
 
         editorState.resetState();
         view.setDefaultCursor();
 
         if (newElement == null
             || !connectionsValidator.canInsertElement(branch, newElement.getElementName(), x, y)
-            || !innerElementsValidator.canInsertElement(branchParent.getElementName(), newElement.getElementName())) {
+            || !innerElementsValidator.canInsertElement(parent.getElementName(), newElement.getElementName())) {
 
-            selectionManager.setElement(branchParent);
+            selectionManager.setElement(parent);
             return;
         }
 
         newElement.setX(x);
         newElement.setY(y);
-        newElement.setParent(branchParent);
-        newElement.setHorizontalOrientation(branchParent.isHorizontalOrientation());
+        newElement.setParent(parent);
+        newElement.setHorizontalOrientation(parent.isHorizontalOrientation());
 
         branch.addElement(newElement);
         branch.sortElements();
@@ -229,7 +229,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     /** {@inheritDoc} */
     @Override
     public void onMouseRightButtonClicked() {
-        selectionManager.setElement(branch.getParent());
+        selectionManager.setElement(parent);
     }
 
     /** {@inheritDoc} */
@@ -331,7 +331,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
 
         boolean isFirst = true;
         boolean needsToShowArrows = needsToShowArrows();
-        boolean isHorizontal = branch.getParent().isHorizontalOrientation();
+        boolean isHorizontal = parent.isHorizontalOrientation();
 
         int x = isHorizontal ? ARROW_PADDING : 0;
         int y = isHorizontal ? 0 : ARROW_PADDING;
@@ -340,6 +340,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         for (Element element : branch.getElements()) {
             if (needsToShowArrows && isFirst) {
                 addArrow(x, y, arrowIndex++);
+
                 if (isHorizontal) {
                     x += ARROW_HORIZONTAL_SIZE;
                 } else {
@@ -352,18 +353,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
             element.setX(x);
             element.setY(y);
 
-            String elementId = element.getId();
-            ElementPresenter elementPresenter = widgetElements.get(elementId);
-
-            if (elementPresenter == null) {
-                elementPresenter = createElementPresenter(element);
-                widgetElements.put(elementId, elementPresenter);
-            } else {
-                elementPresenter.updateView();
-            }
-
-            elementPresenter.setHorizontalHeaderPanelOrientation(isHorizontal);
-
+            ElementPresenter elementPresenter = getElementWidgetAndUpdateIt(element);
             view.addElement(elementPresenter, x, y);
 
             if (isHorizontal) {
@@ -382,6 +372,23 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
                 }
             }
         }
+    }
+
+    @Nonnull
+    private ElementPresenter getElementWidgetAndUpdateIt(@Nonnull Element element) {
+        String elementId = element.getId();
+        ElementPresenter elementPresenter = widgetElements.get(elementId);
+
+        if (elementPresenter == null) {
+            elementPresenter = createElementPresenter(element);
+            widgetElements.put(elementId, elementPresenter);
+        } else {
+            elementPresenter.updateView();
+        }
+
+        elementPresenter.setHorizontalHeaderPanelOrientation(parent.isHorizontalOrientation());
+
+        return elementPresenter;
     }
 
     private void addArrow(@Nonnegative int x, @Nonnegative int y, @Nonnegative int index) {
@@ -403,7 +410,6 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     }
 
     private void showTitleOrNot() {
-        Element parent = branch.getParent();
         view.setVisibleTitle(!parent.isRoot());
     }
 
@@ -439,9 +445,8 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         }
     }
 
+    @Nonnegative
     private int getTitleWidth() {
-        Element parent = branch.getParent();
-
         if (parent.isRoot()) {
             return 0;
         }
@@ -451,7 +456,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
 
     private void detectElementSizeAndResizeView() {
         List<ElementPresenter> elements = new ArrayList<>(widgetElements.values());
-        boolean isHorizontal = branch.getParent().isHorizontalOrientation();
+        boolean isHorizontal = parent.isHorizontalOrientation();
         boolean isShowArrow = needsToShowArrows();
 
         int widthElementAndArrow = (elements.size() + 1) * ARROW_HORIZONTAL_SIZE;
@@ -497,7 +502,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
         int left = view.getWidth() / 2;
 
         for (ElementPresenter element : widgetElements.values()) {
-            if (branch.getParent().isHorizontalOrientation()) {
+            if (parent.isHorizontalOrientation()) {
                 element.setY(top - element.getHeight() / 2);
             } else {
                 element.setX(left - element.getWidth() / 2);
@@ -538,7 +543,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
     }
 
     private void rotateArrow(@Nonnull ArrowPresenter arrow) {
-        if (branch.getParent().isHorizontalOrientation()) {
+        if (parent.isHorizontalOrientation()) {
             arrow.applyVerticalAlign();
         } else {
             arrow.applyHorizontalAlign();

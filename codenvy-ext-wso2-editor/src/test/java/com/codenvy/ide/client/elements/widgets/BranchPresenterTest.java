@@ -762,7 +762,6 @@ public class BranchPresenterTest {
     public void newElementShouldBeNotCreatedWhenBranchParentIsNotEmptyAndCanNotInsertElement() throws Exception {
         prepareDefaultUseCase();
 
-        when(branch.getParent()).thenReturn(element2);
         when(innerElementsValidator.canInsertElement(anyString(), anyString())).thenReturn(false);
 
         presenter.onMouseLeftButtonClicked(X_POSITION, Y_POSITION);
@@ -770,7 +769,7 @@ public class BranchPresenterTest {
         verify(editorState).resetState();
         verify(view).setDefaultCursor();
 
-        verify(selectionManager).setElement(element2);
+        verify(selectionManager).setElement(element);
         verify(branch, never()).addElement(any(Element.class));
     }
 
@@ -805,11 +804,9 @@ public class BranchPresenterTest {
     public void parentElementShouldBeSelectedWhenRightMouseButtonIsClicked() throws Exception {
         prepareDefaultUseCase();
 
-        when(branch.getParent()).thenReturn(element2);
-
         presenter.onMouseRightButtonClicked();
 
-        verify(selectionManager).setElement(element2);
+        verify(selectionManager).setElement(element);
     }
 
     @Test
