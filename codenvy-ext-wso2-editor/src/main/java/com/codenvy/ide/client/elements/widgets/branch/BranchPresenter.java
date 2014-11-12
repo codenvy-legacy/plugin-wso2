@@ -456,10 +456,13 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
 
         int widthElementAndArrow = (elements.size() + 1) * ARROW_HORIZONTAL_SIZE;
         int widthTitleWithArrowPadding = getTitleWidth() + 2 * ARROW_PADDING;
-        int firstElementWidth = elements.get(0).getWidth();
+
+        ElementPresenter firstElement = elements.get(0);
+        int firstElementWidth = firstElement.getWidth();
+        int firstElementHeight = firstElement.getHeight();
 
         int width = isHorizontal ? (isShowArrow ? widthElementAndArrow : 0) + widthTitleWithArrowPadding : firstElementWidth;
-        int height = isHorizontal ? firstElementWidth : (isShowArrow ? widthElementAndArrow : 0) + widthTitleWithArrowPadding;
+        int height = isHorizontal ? firstElementHeight : (isShowArrow ? widthElementAndArrow : 0) + widthTitleWithArrowPadding;
 
         for (ElementPresenter element : elements) {
             if (isHorizontal) {
