@@ -37,6 +37,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -94,8 +95,12 @@ public class BranchTest extends GwtTestWithMockito {
 
     @Test
     public void elementShouldBeAddedToBranch() throws Exception {
+        Element parent = mock(Element.class);
+        branch.setParent(parent);
+
         branch.addElement(element);
 
+        verify(element).setParent(parent);
         assertThat(branch.getElements().size(), is(1));
         assertThat(branch.getElements(), hasItem(sameInstance(element)));
     }
@@ -193,6 +198,13 @@ public class BranchTest extends GwtTestWithMockito {
 
         verify(addressEndpoint, never()).deserialize(any(Node.class));
         assertThat(branch.getElements().size(), is(0));
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void elementsListShouldNotBeChanged() throws Exception {
+        List<Element> elements = branch.getElements();
+
+        elements.add(element);
     }
 
 }

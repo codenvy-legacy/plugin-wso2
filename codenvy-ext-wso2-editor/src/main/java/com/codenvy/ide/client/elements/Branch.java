@@ -120,6 +120,7 @@ public class Branch {
      */
     public void addElement(@Nonnull Element element) {
         elements.add((AbstractElement)element);
+        element.setParent(parent);
     }
 
     /**
@@ -136,10 +137,7 @@ public class Branch {
     /** @return a list of inner elements */
     @Nonnull
     public List<Element> getElements() {
-        List<Element> result = new ArrayList<>();
-        result.addAll(elements);
-
-        return result;
+        return Collections.<Element>unmodifiableList(elements);
     }
 
     /** Sorts inner elements */
