@@ -273,11 +273,11 @@ public class BranchViewImpl extends AbstractView<BranchView.ActionDelegate> impl
 
         if (westTitlePanel.isVisible()) {
             style.setHeight(100, PCT);
-            style.setWidth(width - TITLE_WIDTH - BORDER_SIZE, PX);
+            style.setWidth(width - HORIZONTAL_TITLE_WIDTH - BORDER_SIZE, PX);
         }
 
         if (topTitlePanel.isVisible()) {
-            style.setHeight(height - TITLE_WIDTH - BORDER_SIZE, PX);
+            style.setHeight(height - VERTICAL_TITLE_WIDTH - BORDER_SIZE, PX);
             style.setWidth(100, PCT);
         }
     }

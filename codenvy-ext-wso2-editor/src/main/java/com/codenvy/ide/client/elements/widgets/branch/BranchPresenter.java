@@ -46,8 +46,9 @@ import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_WIDTH;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.ELEMENTS_PADDING;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.HORIZONTAL_ELEMENT_ARROW_PADDING;
-import static com.codenvy.ide.client.elements.widgets.branch.BranchView.TITLE_WIDTH;
+import static com.codenvy.ide.client.elements.widgets.branch.BranchView.HORIZONTAL_TITLE_WIDTH;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.VERTICAL_ELEMENT_ARROW_PADDING;
+import static com.codenvy.ide.client.elements.widgets.branch.BranchView.VERTICAL_TITLE_WIDTH;
 import static com.codenvy.ide.client.elements.widgets.branch.arrow.ArrowPresenter.ARROW_HORIZONTAL_SIZE;
 import static com.codenvy.ide.client.elements.widgets.branch.arrow.ArrowPresenter.ARROW_VERTICAL_SIZE;
 
@@ -445,7 +446,7 @@ public class BranchPresenter extends AbstractPresenter<BranchView> implements Br
             return 0;
         }
 
-        return TITLE_WIDTH;
+        return parent.isHorizontalOrientation() ? HORIZONTAL_TITLE_WIDTH : VERTICAL_TITLE_WIDTH;
     }
 
     private void detectElementSizeAndResizeView() {

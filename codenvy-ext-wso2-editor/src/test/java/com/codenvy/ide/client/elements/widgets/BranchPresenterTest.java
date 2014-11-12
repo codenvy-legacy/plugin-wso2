@@ -48,8 +48,9 @@ import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.DEFAULT_WIDTH;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.ELEMENTS_PADDING;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.HORIZONTAL_ELEMENT_ARROW_PADDING;
-import static com.codenvy.ide.client.elements.widgets.branch.BranchView.TITLE_WIDTH;
+import static com.codenvy.ide.client.elements.widgets.branch.BranchView.HORIZONTAL_TITLE_WIDTH;
 import static com.codenvy.ide.client.elements.widgets.branch.BranchView.VERTICAL_ELEMENT_ARROW_PADDING;
+import static com.codenvy.ide.client.elements.widgets.branch.BranchView.VERTICAL_TITLE_WIDTH;
 import static com.codenvy.ide.client.elements.widgets.branch.arrow.ArrowPresenter.ARROW_HORIZONTAL_SIZE;
 import static com.codenvy.ide.client.elements.widgets.branch.arrow.ArrowPresenter.ARROW_VERTICAL_SIZE;
 import static org.hamcrest.CoreMatchers.is;
@@ -441,14 +442,14 @@ public class BranchPresenterTest {
     public void viewShouldBePrepared() throws Exception {
         viewShouldBePreparedGeneralCase(false);
 
-        viewSizeShouldBeVerified(VIEW_HEIGHT_FOR_TWO_HORIZONTAL_ELEMENTS, VIEW_WIDTH_FOR_TWO_ELEMENTS + TITLE_WIDTH);
+        viewSizeShouldBeVerified(VIEW_HEIGHT_FOR_TWO_HORIZONTAL_ELEMENTS, VIEW_WIDTH_FOR_TWO_ELEMENTS + HORIZONTAL_TITLE_WIDTH);
     }
 
     @Test
     public void viewShouldBePreparedIfOrientationIsVertical() throws Exception {
         viewShouldBePreparedForVerticalOrientationGeneralCase();
 
-        viewSizeShouldBeVerified(VIEW_HEIGHT_FOR_TWO_VERTICAL_ELEMENTS + TITLE_WIDTH, VIEW_WIDTH_FOR_TWO_VERTICAL_ELEMENTS);
+        viewSizeShouldBeVerified(VIEW_HEIGHT_FOR_TWO_VERTICAL_ELEMENTS + VERTICAL_TITLE_WIDTH, VIEW_WIDTH_FOR_TWO_VERTICAL_ELEMENTS);
     }
 
     @Test
@@ -515,7 +516,7 @@ public class BranchPresenterTest {
 
         elementsShouldBeAddedOnViewIfVerticalOrientation();
 
-        viewSizeShouldBeVerified(VIEW_HEIGHT_FOR_TWO_VERTICAL_ELEMENTS + TITLE_WIDTH, VIEW_WIDTH_FOR_DIFFERENT_ELEMENTS);
+        viewSizeShouldBeVerified(VIEW_HEIGHT_FOR_TWO_VERTICAL_ELEMENTS + VERTICAL_TITLE_WIDTH, VIEW_WIDTH_FOR_DIFFERENT_ELEMENTS);
     }
 
     @Test
@@ -622,7 +623,7 @@ public class BranchPresenterTest {
         verify(view).addElement(elementPresenter, ARROW_PADDING, ELEMENT_DEFAULT_Y_POSITION);
 
         viewSizeShouldBeVerified(ELEMENTS_PADDING + ELEMENT_WIDTH,
-                                 2 * ARROW_PADDING + ELEMENT_WIDTH + TITLE_WIDTH + HORIZONTAL_ELEMENT_ARROW_PADDING);
+                                 2 * ARROW_PADDING + ELEMENT_WIDTH + HORIZONTAL_TITLE_WIDTH + HORIZONTAL_ELEMENT_ARROW_PADDING);
 
         verify(elementPresenter).setY(ELEMENT_TOP_POSITION);
 
