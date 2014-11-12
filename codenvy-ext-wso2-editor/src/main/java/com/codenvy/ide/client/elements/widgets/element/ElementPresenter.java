@@ -135,13 +135,15 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     }
 
     private void updateBranchesWidth(@Nonnegative int width) {
+        int branchWidth = width;
+
         Collection<BranchPresenter> branches = widgetBranches.values();
         if (!element.isHorizontalOrientation()) {
-            width /= branches.size();
+            branchWidth = width / branches.size();
         }
 
         for (BranchPresenter branch : branches) {
-            branch.setWidth(width);
+            branch.setWidth(branchWidth);
         }
     }
 
@@ -174,13 +176,15 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     }
 
     private void updateBranchesHeight(@Nonnegative int height) {
+        int branchHeight = height;
+
         Collection<BranchPresenter> branches = widgetBranches.values();
         if (element.isHorizontalOrientation()) {
-            height /= branches.size();
+            branchHeight = height / branches.size();
         }
 
         for (BranchPresenter branch : branches) {
-            branch.setHeight(height);
+            branch.setHeight(branchHeight);
         }
     }
 
