@@ -156,30 +156,30 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
 
     @Nonnull
     private FlowPanel createIconAndTitlePanel() {
-        FlowPanel iconAndTitlePanel = new FlowPanel();
-        iconAndTitlePanel.addStyleName(editorCSS.fullSize());
+        FlowPanel iconTitlePanel = new FlowPanel();
+        iconTitlePanel.addStyleName(editorCSS.fullSize());
 
         headerPanel = createHeaderPanel();
         iconPanel = createIconPanel();
 
-        iconAndTitlePanel.add(headerPanel);
-        iconAndTitlePanel.add(iconPanel);
+        iconTitlePanel.add(headerPanel);
+        iconTitlePanel.add(iconPanel);
 
-        return iconAndTitlePanel;
+        return iconTitlePanel;
     }
 
     @Nonnull
     private FlowPanel createHeaderPanel() {
-        FlowPanel headerPanel = new FlowPanel();
-        headerPanel.addStyleName(editorCSS.elementHeaderPanel());
+        FlowPanel header = new FlowPanel();
+        header.addStyleName(editorCSS.elementHeaderPanel());
 
-        Style style = headerPanel.getElement().getStyle();
+        Style style = header.getElement().getStyle();
         style.setWidth(100, PCT);
         style.setHeight(19, PX);
 
-        headerPanel.add(createInnerHeaderPanel());
+        header.add(createInnerHeaderPanel());
 
-        return headerPanel;
+        return header;
     }
 
     @Nonnull
@@ -213,17 +213,17 @@ public class ElementViewImpl extends AbstractView<ElementView.ActionDelegate> im
         FlowPanel wrapPanel = new FlowPanel();
         wrapPanel.addStyleName(editorCSS.wrapIconAndTitlePanel());
 
-        FlowPanel iconPanel = new FlowPanel();
+        FlowPanel iconViewPanel = new FlowPanel();
 
-        iconPanel.addStyleName(editorCSS.iconAndTitlePanel());
+        iconViewPanel.addStyleName(editorCSS.iconAndTitlePanel());
 
         iconTitle = createIconTitle();
         icon = new Image();
 
-        iconPanel.add(iconTitle);
-        iconPanel.add(icon);
+        iconViewPanel.add(iconTitle);
+        iconViewPanel.add(icon);
 
-        wrapPanel.add(iconPanel);
+        wrapPanel.add(iconViewPanel);
 
         return wrapPanel;
     }
