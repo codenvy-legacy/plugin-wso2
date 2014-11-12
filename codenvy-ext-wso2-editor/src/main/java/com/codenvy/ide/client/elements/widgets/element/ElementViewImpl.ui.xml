@@ -23,29 +23,12 @@
     <ui:with field="resources" type="com.codenvy.ide.client.EditorResources"/>
 
     <ui:style>
-        .iconAndTitlePanel {
-            position: absolute;
-            top: 50%;
-            margin-top: -32px;
-        }
-
-        .icon {
-            padding-left: 15px;
-            padding-top: 8px;
-        }
-
-        .headerText {
-            position: relative;
-            top: 2px;
-        }
-
         .floatLeft {
             float: left;
         }
 
         .rightPanel {
             left: 86px;
-            /*height: 100%;*/
             position: absolute;
         }
     </ui:style>

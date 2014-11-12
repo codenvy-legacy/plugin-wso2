@@ -26,7 +26,7 @@
         .title {
             position: relative;
             top: 50%;
-            margin-top: -8px;
+            margin-top: -6px;
         }
 
         .focusPanel:focus {
@@ -45,7 +45,7 @@
     </ui:style>
 
     <g:FlowPanel ui:field="focusPanel" addStyleNames="{style.focusPanel} {resources.editorCSS.branchBackground}">
-        <g:FlowPanel ui:field="topTitlePanel" width="100%" height="40px"
+        <g:FlowPanel ui:field="topTitlePanel" width="100%" height="19px"
                      addStyleNames="{resources.editorCSS.branchTitlePanel} {resources.editorCSS.bottomBorder} {style.floatLeft}">
             <g:Label ui:field="topTitle" addStyleNames="{style.title} {resources.editorCSS.fontStyle}"/>
         </g:FlowPanel>
