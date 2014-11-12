@@ -16,6 +16,7 @@
 package com.codenvy.ide.client.elements.widgets.element;
 
 import com.codenvy.ide.client.EditorState;
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.widgets.branch.BranchPresenter;
@@ -24,7 +25,9 @@ import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.mvp.AbstractPresenter;
 import com.codenvy.ide.client.validators.InnerElementsValidator;
-import com.google.gwt.user.client.Window;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.ui.dialogs.InputCallback;
+import com.codenvy.ide.ui.dialogs.input.InputDialog;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -50,12 +53,14 @@ import static com.codenvy.ide.client.elements.widgets.element.ElementView.DEFAUL
 public class ElementPresenter extends AbstractPresenter<ElementView> implements ElementView.ActionDelegate,
                                                                                 SelectionManager.SelectionStateListener,
                                                                                 ElementChangedListener {
-    private final SelectionManager       selectionManager;
-    private final ElementWidgetFactory   elementWidgetFactory;
-    private final EditorState            editorState;
-    private final ElementCreatorsManager elementCreatorsManager;
-    private final Element                element;
-    private final InnerElementsValidator innerElementsValidator;
+    private final SelectionManager               selectionManager;
+    private final ElementWidgetFactory           elementWidgetFactory;
+    private final EditorState                    editorState;
+    private final ElementCreatorsManager         elementCreatorsManager;
+    private final Element                        element;
+    private final InnerElementsValidator         innerElementsValidator;
+    private final DialogFactory                  dialogFactory;
+    private final WSO2EditorLocalizationConstant local;
 
     private final List<ElementDeleteListener>  elementDeleteListeners;
     private final List<ElementMoveListener>    elementMoveListeners;
@@ -75,6 +80,8 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
                             ElementCreatorsManager elementCreatorsManager,
                             InnerElementsValidator innerElementsValidator,
                             EditorState editorState,
+                            DialogFactory dialogFactory,
+                            WSO2EditorLocalizationConstant locale,
                             @Assisted Element element) {
         super(elementWidgetFactory.createElementView(element));
 
@@ -84,8 +91,10 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
         this.elementWidgetFactory = elementWidgetFactory;
         this.editorState = editorState;
         this.element = element;
+        this.dialogFactory = dialogFactory;
         this.elementCreatorsManager = elementCreatorsManager;
         this.innerElementsValidator = innerElementsValidator;
+        this.local = locale;
 
         this.elementMoveListeners = new ArrayList<>();
         this.elementDeleteListeners = new ArrayList<>();
@@ -426,16 +435,30 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
     public void onChangeNumberBranchesActionClicked() {
         view.hideContextMenu();
 
-        // TODO need to change it. It is like prototype
-        String amount = Window.prompt("input amount of branches", String.valueOf(element.getBranchesAmount()));
+        InputCallback inputCallback = new InputCallback() {
+            @Override
+            public void accepted(String value) {
+                if (value.isEmpty()) {
+                    return;
+                }
 
-        if (amount.isEmpty()) {
-            return;
-        }
+                element.setBranchesAmount(Integer.valueOf(value));
 
-        element.setBranchesAmount(Integer.valueOf(amount));
+                onElementChanged();
+            }
+        };
 
-        onElementChanged();
+        String branchesAmount = String.valueOf(element.getBranchesAmount());
+
+        InputDialog inputDialog = dialogFactory.createInputDialog(local.inputBranchesWindowTitle(),
+                                                                  local.inputBranchesWindowLabel(),
+                                                                  branchesAmount,
+                                                                  0,
+                                                                  branchesAmount.length(),
+                                                                  inputCallback,
+                                                                  null);
+
+        inputDialog.show();
     }
 
     /** {@inheritDoc} */

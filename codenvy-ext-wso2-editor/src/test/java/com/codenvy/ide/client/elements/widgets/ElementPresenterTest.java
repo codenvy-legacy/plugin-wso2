@@ -17,6 +17,7 @@ package com.codenvy.ide.client.elements.widgets;
 
 
 import com.codenvy.ide.client.EditorState;
+import com.codenvy.ide.client.WSO2EditorLocalizationConstant;
 import com.codenvy.ide.client.elements.Branch;
 import com.codenvy.ide.client.elements.Element;
 import com.codenvy.ide.client.elements.widgets.branch.BranchPresenter;
@@ -27,11 +28,16 @@ import com.codenvy.ide.client.inject.factories.ElementWidgetFactory;
 import com.codenvy.ide.client.managers.ElementCreatorsManager;
 import com.codenvy.ide.client.managers.SelectionManager;
 import com.codenvy.ide.client.validators.InnerElementsValidator;
+import com.codenvy.ide.ui.dialogs.CancelCallback;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.ui.dialogs.InputCallback;
+import com.codenvy.ide.ui.dialogs.input.InputDialog;
 import com.google.gwt.resources.client.ImageResource;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -65,12 +71,16 @@ public class ElementPresenterTest {
     private static final String  ELEMENT_NAME                 = "element name";
     private static final String  BRANCH1_ID                   = "branch1 id";
     private static final String  BRANCH2_ID                   = "branch2 id";
+    private static final String  SOME_STRING                  = "some strng";
     private static final boolean NEEDS_TO_SHOW_ICON_AND_TITLE = true;
     private static final int     BRANCH_HEIGHT                = 100;
     private static final int     BRANCH_WIDTH                 = 100;
     private static final int     MAX_BRANCH_WIDTH             = 200;
     private static final int     X_POSITION                   = 100;
     private static final int     Y_POSITION                   = 100;
+
+    @Captor
+    private ArgumentCaptor<InputCallback> inputCallbackArgumentCaptor;
 
     @Mock
     private ImageResource          icon;
@@ -103,6 +113,12 @@ public class ElementPresenterTest {
     private EditorState            editorState;
     @Mock
     private Element                element;
+    @Mock
+    InputDialog inputDialog;
+    @Mock
+    private DialogFactory dialogFactory;
+    @Mock
+    WSO2EditorLocalizationConstant locale;
 
     private ElementPresenter presenter;
 
@@ -112,6 +128,8 @@ public class ElementPresenterTest {
                                          elementCreatorsManager,
                                          innerElementsValidator,
                                          editorState,
+                                         dialogFactory,
+                                         locale,
                                          element);
     }
 
@@ -686,9 +704,68 @@ public class ElementPresenterTest {
     }
 
     @Test
-    @Ignore
-    public void amountOfBranchesShouldBeChanged() throws Exception {
-        // TODO needs to add this test when the dialog of changing amount of branches was changed
+    public void amountOfBranchesShouldBeChangedIfValueOfBranchesIsNotEmpty() throws Exception {
+        Integer branchesAmount = 2;
+
+        prepareStartView();
+        when(locale.inputBranchesWindowLabel()).thenReturn(SOME_STRING);
+        when(locale.inputBranchesWindowTitle()).thenReturn(SOME_STRING);
+        when(dialogFactory.createInputDialog(anyString(),
+                                             anyString(),
+                                             anyString(),
+                                             anyInt(),
+                                             anyInt(),
+                                             inputCallbackArgumentCaptor.capture(),
+                                             any(CancelCallback.class))).thenReturn(inputDialog);
+
+        presenter.onChangeNumberBranchesActionClicked();
+
+        verify(view).hideContextMenu();
+        verify(element, times(2)).getBranchesAmount();
+        verify(dialogFactory).createInputDialog(anyString(),
+                                                anyString(),
+                                                anyString(),
+                                                anyInt(),
+                                                anyInt(),
+                                                inputCallbackArgumentCaptor.capture(),
+                                                any(CancelCallback.class));
+        verify(inputDialog).show();
+
+        inputCallbackArgumentCaptor.getValue().accepted(branchesAmount.toString());
+
+        verify(element).setBranchesAmount(branchesAmount);
+    }
+
+    @Test
+    public void amountOfBranchesShouldBeNotChangedIfValueOfBranchesIsEmpty() throws Exception {
+        prepareStartView();
+
+        when(locale.inputBranchesWindowLabel()).thenReturn(SOME_STRING);
+        when(locale.inputBranchesWindowTitle()).thenReturn(SOME_STRING);
+        when(dialogFactory.createInputDialog(anyString(),
+                                             anyString(),
+                                             anyString(),
+                                             anyInt(),
+                                             anyInt(),
+                                             inputCallbackArgumentCaptor.capture(),
+                                             any(CancelCallback.class))).thenReturn(inputDialog);
+
+        presenter.onChangeNumberBranchesActionClicked();
+
+        verify(view).hideContextMenu();
+        verify(element, times(2)).getBranchesAmount();
+        verify(dialogFactory).createInputDialog(anyString(),
+                                                anyString(),
+                                                anyString(),
+                                                anyInt(),
+                                                anyInt(),
+                                                inputCallbackArgumentCaptor.capture(),
+                                                any(CancelCallback.class));
+        verify(inputDialog).show();
+
+        inputCallbackArgumentCaptor.getValue().accepted("");
+
+        verify(element, never()).setBranchesAmount(anyInt());
     }
 
     @Test

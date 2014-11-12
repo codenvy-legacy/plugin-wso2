@@ -1511,4 +1511,10 @@ public interface WSO2EditorLocalizationConstant extends Messages {
 
     @Key("propertiespanel.property.payload.edit.table.title")
     String propertyArgEditTableTitle();
+
+    @Key("input.branches.window.title")
+    String inputBranchesWindowTitle();
+
+    @Key("input.branches.window.label")
+    String inputBranchesWindowLabel();
 }
