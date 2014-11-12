@@ -317,11 +317,11 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
                 branch.resizeView();
             }
 
-            height += branch.getHeight();
-            width += branch.getWidth();
-
             int branchWidth = branch.getWidth();
             int branchHeight = branch.getHeight();
+
+            height += branchHeight;
+            width += branchWidth;
 
             if (branchWidth > maxBranchWidth) {
                 maxBranchWidth = branchWidth;
@@ -336,9 +336,9 @@ public class ElementPresenter extends AbstractPresenter<ElementView> implements 
 
         if (element.isHorizontalOrientation()) {
             view.setHeight(height);
-            view.setWidth(maxBranchWidth + (!element.isRoot() ? DEFAULT_SIZE : 0));
+            view.setWidth(maxBranchWidth + (element.isRoot() ? 0 : DEFAULT_SIZE));
         } else {
-            view.setHeight(maxBranchHeight + (!element.isRoot() ? DEFAULT_SIZE : 0));
+            view.setHeight(maxBranchHeight + (element.isRoot() ? 0 : DEFAULT_SIZE));
             view.setWidth(width);
         }
     }
