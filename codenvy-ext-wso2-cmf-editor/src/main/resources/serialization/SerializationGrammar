@@ -1,7 +1,0 @@
-Elements:
-{
-    name                    : testNameOne
-    template                : test.template
-    elementDesignation      : INSERTION
-    connectionDesignation   : ORDERING
-}

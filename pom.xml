@@ -30,7 +30,6 @@
     <name>Codenvy :: WSO2 Plugin</name>
     <modules>
         <module>codenvy-ext-wso2-core</module>
-        <module>codenvy-ext-wso2-cmf-editor</module>
         <module>codenvy-ext-wso2-editor</module>
     </modules>
     <properties>
@@ -44,7 +43,6 @@
         <!-- Sonar -->
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.language>java</sonar.language>
-        <version.cmf>1.0.0-M1-SNAPSHOT</version.cmf>
         <version.google.findbugs>2.0.2</version.google.findbugs>
         <version.gwt.mockito>1.1.4</version.gwt.mockito>
         <version.license-header>codenvy-apache2-license-resource-bundle</version.license-header>
