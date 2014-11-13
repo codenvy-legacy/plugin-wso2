@@ -36,7 +36,6 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.Property.DESCRIPTION;
@@ -93,9 +92,9 @@ public class PropertyPropertiesPanelPresenter extends AbstractPropertiesPanel<Pr
 
         addNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nullable String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.putProperty(NAMESPACES, nameSpaces);
-                element.putProperty(VALUE_EXPRESSION, expression != null ? expression : "");
+                element.putProperty(VALUE_EXPRESSION, expression);
 
                 valueExpression.setProperty(expression);
 

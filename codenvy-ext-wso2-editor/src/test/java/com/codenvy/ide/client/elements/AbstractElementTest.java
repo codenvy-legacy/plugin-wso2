@@ -34,7 +34,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assume.assumeTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -293,7 +292,9 @@ public abstract class AbstractElementTest<T extends AbstractElement> extends Abs
 
     @Test
     public void orientationShouldBeChanged() throws Exception {
-        assumeTrue(entity.isPossibleToAddBranches());
+        if (!entity.isPossibleToAddBranches()) {
+            return;
+        }
 
         entity.setBranchesAmount(3);
 

@@ -34,7 +34,6 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.Filter.CONDITION_TYPE;
@@ -81,9 +80,9 @@ public class FilterPropertiesPanelPresenter extends AbstractPropertiesPanel<Filt
 
         addSourceNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nullable String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.putProperty(SOURCE_NAMESPACE, nameSpaces);
-                element.putProperty(SOURCE, expression != null ? expression : "");
+                element.putProperty(SOURCE, expression);
 
                 source.setProperty(expression);
 

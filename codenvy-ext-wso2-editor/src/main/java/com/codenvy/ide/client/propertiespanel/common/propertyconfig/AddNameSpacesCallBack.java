@@ -18,7 +18,6 @@ package com.codenvy.ide.client.propertiespanel.common.propertyconfig;
 import com.codenvy.ide.client.elements.NameSpace;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -37,5 +36,5 @@ public interface AddNameSpacesCallBack {
      * @param expression
      *         value of expression from special place of view
      */
-    void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nullable String expression);
+    void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression);
 }

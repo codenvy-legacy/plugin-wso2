@@ -170,4 +170,11 @@ public class GraphicEditorTest {
         verify(editor).onEditorDOMChanged();
     }
 
+    @Test
+    public void diagramOrientationShouldBeChanged() throws Exception {
+        graphicEditor.setHorizontalOrientation(true);
+
+        verify(editor).changeDiagramOrientation(true);
+    }
+
 }

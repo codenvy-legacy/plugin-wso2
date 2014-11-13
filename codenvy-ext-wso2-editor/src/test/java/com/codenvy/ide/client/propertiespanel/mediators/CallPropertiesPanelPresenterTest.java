@@ -275,15 +275,6 @@ public class CallPropertiesPanelPresenterTest extends AbstractPropertiesPanelTes
 
     @Test
     public void addNameSpaceListenerShouldBeDone() throws Exception {
-        prepareAddNameSpaceCallBackMocksAndCallCallback(SOME_TEXT);
-
-        verify(element).putProperty(NAMESPACES, nameSpaces);
-        verify(element).putProperty(X_PATH, SOME_TEXT);
-        verify(endpointXpathPanel).setProperty(SOME_TEXT);
-        listenerShouldBeNotified();
-    }
-
-    private void prepareAddNameSpaceCallBackMocksAndCallCallback(@Nullable String expressionValue) throws Exception {
         prepareElement(element, NAMESPACES, nameSpaces);
         prepareElement(element, X_PATH, SOME_TEXT);
         when(locale.expressionTitle()).thenReturn(SOME_TEXT);
@@ -297,16 +288,11 @@ public class CallPropertiesPanelPresenterTest extends AbstractPropertiesPanelTes
 
         AddNameSpacesCallBack nameSpacesCallBack = addNameSpacesCallBackCaptor.getValue();
 
-        nameSpacesCallBack.onNameSpacesChanged(nameSpaces, expressionValue);
-    }
-
-    @Test
-    public void addNameSpaceCallBackShouldBeDoneWhenExpressionIsNull() throws Exception {
-        prepareAddNameSpaceCallBackMocksAndCallCallback(null);
+        nameSpacesCallBack.onNameSpacesChanged(nameSpaces, SOME_TEXT);
 
         verify(element).putProperty(NAMESPACES, nameSpaces);
-        verify(element).putProperty(X_PATH, "");
-        verify(endpointXpathPanel).setProperty("");
+        verify(element).putProperty(X_PATH, SOME_TEXT);
+        verify(endpointXpathPanel).setProperty(SOME_TEXT);
         listenerShouldBeNotified();
     }
 

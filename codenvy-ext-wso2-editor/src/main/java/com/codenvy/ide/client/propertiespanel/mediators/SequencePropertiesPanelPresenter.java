@@ -35,7 +35,6 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.Sequence.DYNAMIC_REFERENCE_TYPE;
@@ -92,9 +91,9 @@ public class SequencePropertiesPanelPresenter extends AbstractPropertiesPanel<Se
 
         addNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nullable String expression) {
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.putProperty(NAMESPACES, nameSpaces);
-                element.putProperty(DYNAMIC_REFERENCE_TYPE, expression != null ? expression : "");
+                element.putProperty(DYNAMIC_REFERENCE_TYPE, expression);
 
                 dynamicReferenceKey.setProperty(expression);
 

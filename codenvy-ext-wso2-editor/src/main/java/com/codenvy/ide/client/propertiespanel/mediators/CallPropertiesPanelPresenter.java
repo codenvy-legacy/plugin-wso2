@@ -34,7 +34,6 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.codenvy.ide.client.elements.mediators.Call.DESCRIPTION;
@@ -50,6 +49,7 @@ import static com.codenvy.ide.client.propertiespanel.property.complex.ComplexPro
  * depending on user's changes of properties.
  *
  * @author Valeriy Svydenko
+ * @author Dmitry Shnurenko
  */
 public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call> {
 
@@ -75,13 +75,11 @@ public class CallPropertiesPanelPresenter extends AbstractPropertiesPanel<Call> 
 
         addNameSpacesCallBack = new AddNameSpacesCallBack() {
             @Override
-            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nullable String expression) {
-                String expressionValue = expression != null ? expression : "";
-
+            public void onNameSpacesChanged(@Nonnull List<NameSpace> nameSpaces, @Nonnull String expression) {
                 element.putProperty(NAMESPACES, nameSpaces);
-                element.putProperty(X_PATH, expressionValue);
+                element.putProperty(X_PATH, expression);
 
-                endpointXpathPanel.setProperty(expressionValue);
+                endpointXpathPanel.setProperty(expression);
 
                 notifyListeners();
             }
