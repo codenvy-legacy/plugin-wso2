@@ -150,7 +150,7 @@ public class ESBConfEditorViewImpl extends Composite implements ESBConfEditorVie
         int textEditorSize;
 
         if (isTextEditorVisible) {
-            textEditorSize = isGraphicalEditorVisible ? 50 : 100;
+            textEditorSize = isGraphicalEditorVisible ? 37 : 100;
         } else {
             textEditorSize = 0;
         }

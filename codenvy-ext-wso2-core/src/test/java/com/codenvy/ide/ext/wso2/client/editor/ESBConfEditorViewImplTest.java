@@ -142,7 +142,7 @@ public class ESBConfEditorViewImplTest {
         view.showDualView();
 
         verify(view.editorMainPanel).setWidgetHidden(view.graphicalEditorPanel, false);
-        verify(view.editorMainPanel).setWidgetSize(view.textEditorPanel, 50);
+        verify(view.editorMainPanel).setWidgetSize(view.textEditorPanel, 37);
         verify(view.editorMainPanel).animate(eq(200), any(AnimationCallback.class));
     }
 

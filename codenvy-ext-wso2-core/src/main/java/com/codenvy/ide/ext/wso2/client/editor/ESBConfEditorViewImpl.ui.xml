@@ -160,7 +160,7 @@
 
         <g:center>
             <g:DockLayoutPanel unit="PCT" ui:field="editorMainPanel" addStyleNames="{style.fullSize}">
-                <g:west size="50">
+                <g:west size="37">
                     <g:SimplePanel ui:field="textEditorPanel"/>
                 </g:west>
 
